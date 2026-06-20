@@ -35,6 +35,15 @@ enum scvSensorShapeKind:
     scvSensorShapeKind_CONIC = 0
     scvSensorShapeKind_RECTANGULAR = 1
     scvSensorShapeKind_CUSTOM_POLYGON = 2
+    scvSensorShapeKind_SAR_ANNULAR_SECTOR = 3
+
+enum scvSensorAxisConvention:
+    scvSensorAxisConvention_UNKNOWN = 0
+    scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1
+
+enum scvSensorRangeBoundaryKind:
+    scvSensorRangeBoundaryKind_RADIAL_SPHERICAL = 0
+    scvSensorRangeBoundaryKind_LOCAL_Z_PLANE = 1
 
 enum scvGeometryDomain:
     scvGeometryDomain_SURFACE = 0
@@ -78,6 +87,8 @@ class SCVVec3
 class SCVEllipsoid
 
 class SCVTimeGrid
+
+class SCVSensorShapeContract
 
 class SCVSensor
 
@@ -235,6 +246,107 @@ struct SCVTimeGridBuilder:
     def end():
         return b_.EndObject()
 
+class SCVSensorShapeContract : flatbuffers.handle
+    def SHAPE() -> scvSensorShapeKind:
+        return scvSensorShapeKind(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    def AXIS_CONVENTION() -> scvSensorAxisConvention:
+        return scvSensorAxisConvention(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    def RANGE_BOUNDARY_KIND() -> scvSensorRangeBoundaryKind:
+        return scvSensorRangeBoundaryKind(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    def OUTER_HALF_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    def INNER_HALF_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    def MIN_CLOCK_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    def MAX_CLOCK_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 360.0)
+    def X_HALF_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    def Y_HALF_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    def INNER_LOOK_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    def OUTER_LOOK_ANGLE_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    def SAR_SAMPLING_DENSITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    def MIN_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    def MAX_RANGE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    def POLYGON_VERTICES(i:int) -> SCVVec3:
+        return SCVVec3 { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+    def POLYGON_VERTICES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+    def POLYGON_FRAME() -> scvCoordinateFrame:
+        return scvCoordinateFrame(flatbuffers.field_uint8(buf_, pos_, 34, 0))
+
+def GetRootAsSCVSensorShapeContract(buf:string): return SCVSensorShapeContract { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVSensorShapeContractBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(16)
+        return this
+    def add_SHAPE(SHAPE:scvSensorShapeKind):
+        b_.PrependUint8Slot(0, SHAPE, 0)
+        return this
+    def add_AXIS_CONVENTION(AXIS_CONVENTION:scvSensorAxisConvention):
+        b_.PrependUint8Slot(1, AXIS_CONVENTION, 0)
+        return this
+    def add_RANGE_BOUNDARY_KIND(RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind):
+        b_.PrependUint8Slot(2, RANGE_BOUNDARY_KIND, 0)
+        return this
+    def add_OUTER_HALF_ANGLE_DEG(OUTER_HALF_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(3, OUTER_HALF_ANGLE_DEG, 0.0)
+        return this
+    def add_INNER_HALF_ANGLE_DEG(INNER_HALF_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(4, INNER_HALF_ANGLE_DEG, 0.0)
+        return this
+    def add_MIN_CLOCK_ANGLE_DEG(MIN_CLOCK_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(5, MIN_CLOCK_ANGLE_DEG, 0.0)
+        return this
+    def add_MAX_CLOCK_ANGLE_DEG(MAX_CLOCK_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(6, MAX_CLOCK_ANGLE_DEG, 360.0)
+        return this
+    def add_X_HALF_ANGLE_DEG(X_HALF_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(7, X_HALF_ANGLE_DEG, 0.0)
+        return this
+    def add_Y_HALF_ANGLE_DEG(Y_HALF_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(8, Y_HALF_ANGLE_DEG, 0.0)
+        return this
+    def add_INNER_LOOK_ANGLE_DEG(INNER_LOOK_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(9, INNER_LOOK_ANGLE_DEG, 0.0)
+        return this
+    def add_OUTER_LOOK_ANGLE_DEG(OUTER_LOOK_ANGLE_DEG:float):
+        b_.PrependFloat64Slot(10, OUTER_LOOK_ANGLE_DEG, 0.0)
+        return this
+    def add_SAR_SAMPLING_DENSITY(SAR_SAMPLING_DENSITY:float):
+        b_.PrependFloat64Slot(11, SAR_SAMPLING_DENSITY, 0.0)
+        return this
+    def add_MIN_RANGE_M(MIN_RANGE_M:float):
+        b_.PrependFloat64Slot(12, MIN_RANGE_M, 0.0)
+        return this
+    def add_MAX_RANGE_M(MAX_RANGE_M:float):
+        b_.PrependFloat64Slot(13, MAX_RANGE_M, 0.0)
+        return this
+    def add_POLYGON_VERTICES(POLYGON_VERTICES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, POLYGON_VERTICES)
+        return this
+    def add_POLYGON_FRAME(POLYGON_FRAME:scvCoordinateFrame):
+        b_.PrependUint8Slot(15, POLYGON_FRAME, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCVSensorShapeContractStartPOLYGONVERTICESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVSensorShapeContractCreatePOLYGONVERTICESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 class SCVSensor : flatbuffers.handle
     def SENSOR_ID() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 4, 0)
@@ -274,13 +386,16 @@ class SCVSensor : flatbuffers.handle
         return flatbuffers.field_vector_len(buf_, pos_, 32)
     def POLYGON_FRAME() -> scvCoordinateFrame:
         return scvCoordinateFrame(flatbuffers.field_uint8(buf_, pos_, 34, 0))
+    def SHAPE_CONTRACT() -> SCVSensorShapeContract?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: SCVSensorShapeContract { buf_, o } else: nil
 
 def GetRootAsSCVSensor(buf:string): return SCVSensor { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVSensorBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(17)
         return this
     def add_SENSOR_ID(SENSOR_ID:int):
         b_.PrependUint32Slot(0, SENSOR_ID, 0)
@@ -329,6 +444,9 @@ struct SCVSensorBuilder:
         return this
     def add_POLYGON_FRAME(POLYGON_FRAME:scvCoordinateFrame):
         b_.PrependUint8Slot(15, POLYGON_FRAME, 0)
+        return this
+    def add_SHAPE_CONTRACT(SHAPE_CONTRACT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, SHAPE_CONTRACT)
         return this
     def end():
         return b_.EndObject()

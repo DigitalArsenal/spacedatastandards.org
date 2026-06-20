@@ -389,13 +389,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvBodyKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_SENSOR_SHAPE_KIND: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_SENSOR_SHAPE_KIND: u8 = 2;
+pub const ENUM_MAX_SCV_SENSOR_SHAPE_KIND: u8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_SENSOR_SHAPE_KIND: [scvSensorShapeKind; 3] = [
+pub const ENUM_VALUES_SCV_SENSOR_SHAPE_KIND: [scvSensorShapeKind; 4] = [
   scvSensorShapeKind::CONIC,
   scvSensorShapeKind::RECTANGULAR,
   scvSensorShapeKind::CUSTOM_POLYGON,
+  scvSensorShapeKind::SAR_ANNULAR_SECTOR,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -406,13 +407,15 @@ impl scvSensorShapeKind {
   pub const CONIC: Self = Self(0);
   pub const RECTANGULAR: Self = Self(1);
   pub const CUSTOM_POLYGON: Self = Self(2);
+  pub const SAR_ANNULAR_SECTOR: Self = Self(3);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_MAX: u8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::CONIC,
     Self::RECTANGULAR,
     Self::CUSTOM_POLYGON,
+    Self::SAR_ANNULAR_SECTOR,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -420,6 +423,7 @@ impl scvSensorShapeKind {
       Self::CONIC => Some("CONIC"),
       Self::RECTANGULAR => Some("RECTANGULAR"),
       Self::CUSTOM_POLYGON => Some("CUSTOM_POLYGON"),
+      Self::SAR_ANNULAR_SECTOR => Some("SAR_ANNULAR_SECTOR"),
       _ => None,
     }
   }
@@ -474,6 +478,174 @@ impl<'a> ::flatbuffers::Verifiable for scvSensorShapeKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorShapeKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_SENSOR_AXIS_CONVENTION: u8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_SENSOR_AXIS_CONVENTION: [scvSensorAxisConvention; 2] = [
+  scvSensorAxisConvention::UNKNOWN,
+  scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvSensorAxisConvention(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvSensorAxisConvention {
+  pub const UNKNOWN: Self = Self(0);
+  pub const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: Self = Self(1);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNKNOWN,
+    Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNKNOWN => Some("UNKNOWN"),
+      Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT => Some("LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvSensorAxisConvention {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvSensorAxisConvention {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvSensorAxisConvention {
+    type Output = scvSensorAxisConvention;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvSensorAxisConvention {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvSensorAxisConvention {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorAxisConvention {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_SENSOR_RANGE_BOUNDARY_KIND: [scvSensorRangeBoundaryKind; 2] = [
+  scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+  scvSensorRangeBoundaryKind::LOCAL_Z_PLANE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvSensorRangeBoundaryKind(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvSensorRangeBoundaryKind {
+  pub const RADIAL_SPHERICAL: Self = Self(0);
+  pub const LOCAL_Z_PLANE: Self = Self(1);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::RADIAL_SPHERICAL,
+    Self::LOCAL_Z_PLANE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::RADIAL_SPHERICAL => Some("RADIAL_SPHERICAL"),
+      Self::LOCAL_Z_PLANE => Some("LOCAL_Z_PLANE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvSensorRangeBoundaryKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvSensorRangeBoundaryKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvSensorRangeBoundaryKind {
+    type Output = scvSensorRangeBoundaryKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvSensorRangeBoundaryKind {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvSensorRangeBoundaryKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorRangeBoundaryKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_GEOMETRY_DOMAIN: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1644,6 +1816,480 @@ impl SCVTimeGridT {
     })
   }
 }
+pub enum SCVSensorShapeContractOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVSensorShapeContract<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVSensorShapeContract<'a> {
+  type Inner = SCVSensorShapeContract<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVSensorShapeContract<'a> {
+  pub const VT_SHAPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_AXIS_CONVENTION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_RANGE_BOUNDARY_KIND: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OUTER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 10;
+  pub const VT_INNER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MIN_CLOCK_ANGLE_DEG: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAX_CLOCK_ANGLE_DEG: ::flatbuffers::VOffsetT = 16;
+  pub const VT_X_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 18;
+  pub const VT_Y_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 20;
+  pub const VT_INNER_LOOK_ANGLE_DEG: ::flatbuffers::VOffsetT = 22;
+  pub const VT_OUTER_LOOK_ANGLE_DEG: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SAR_SAMPLING_DENSITY: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 30;
+  pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
+  pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVSensorShapeContract { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVSensorShapeContractArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'bldr>> {
+    let mut builder = SCVSensorShapeContractBuilder::new(_fbb);
+    builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
+    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
+    builder.add_SAR_SAMPLING_DENSITY(args.SAR_SAMPLING_DENSITY);
+    builder.add_OUTER_LOOK_ANGLE_DEG(args.OUTER_LOOK_ANGLE_DEG);
+    builder.add_INNER_LOOK_ANGLE_DEG(args.INNER_LOOK_ANGLE_DEG);
+    builder.add_Y_HALF_ANGLE_DEG(args.Y_HALF_ANGLE_DEG);
+    builder.add_X_HALF_ANGLE_DEG(args.X_HALF_ANGLE_DEG);
+    builder.add_MAX_CLOCK_ANGLE_DEG(args.MAX_CLOCK_ANGLE_DEG);
+    builder.add_MIN_CLOCK_ANGLE_DEG(args.MIN_CLOCK_ANGLE_DEG);
+    builder.add_INNER_HALF_ANGLE_DEG(args.INNER_HALF_ANGLE_DEG);
+    builder.add_OUTER_HALF_ANGLE_DEG(args.OUTER_HALF_ANGLE_DEG);
+    if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
+    builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
+    builder.add_RANGE_BOUNDARY_KIND(args.RANGE_BOUNDARY_KIND);
+    builder.add_AXIS_CONVENTION(args.AXIS_CONVENTION);
+    builder.add_SHAPE(args.SHAPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVSensorShapeContractT {
+    let SHAPE = self.SHAPE();
+    let AXIS_CONVENTION = self.AXIS_CONVENTION();
+    let RANGE_BOUNDARY_KIND = self.RANGE_BOUNDARY_KIND();
+    let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG();
+    let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG();
+    let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG();
+    let MAX_CLOCK_ANGLE_DEG = self.MAX_CLOCK_ANGLE_DEG();
+    let X_HALF_ANGLE_DEG = self.X_HALF_ANGLE_DEG();
+    let Y_HALF_ANGLE_DEG = self.Y_HALF_ANGLE_DEG();
+    let INNER_LOOK_ANGLE_DEG = self.INNER_LOOK_ANGLE_DEG();
+    let OUTER_LOOK_ANGLE_DEG = self.OUTER_LOOK_ANGLE_DEG();
+    let SAR_SAMPLING_DENSITY = self.SAR_SAMPLING_DENSITY();
+    let MIN_RANGE_M = self.MIN_RANGE_M();
+    let MAX_RANGE_M = self.MAX_RANGE_M();
+    let POLYGON_VERTICES = self.POLYGON_VERTICES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let POLYGON_FRAME = self.POLYGON_FRAME();
+    SCVSensorShapeContractT {
+      SHAPE,
+      AXIS_CONVENTION,
+      RANGE_BOUNDARY_KIND,
+      OUTER_HALF_ANGLE_DEG,
+      INNER_HALF_ANGLE_DEG,
+      MIN_CLOCK_ANGLE_DEG,
+      MAX_CLOCK_ANGLE_DEG,
+      X_HALF_ANGLE_DEG,
+      Y_HALF_ANGLE_DEG,
+      INNER_LOOK_ANGLE_DEG,
+      OUTER_LOOK_ANGLE_DEG,
+      SAR_SAMPLING_DENSITY,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      POLYGON_VERTICES,
+      POLYGON_FRAME,
+    }
+  }
+
+  #[inline]
+  pub fn SHAPE(&self) -> scvSensorShapeKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE, Some(scvSensorShapeKind::CONIC)).unwrap()}
+  }
+  #[inline]
+  pub fn AXIS_CONVENTION(&self) -> scvSensorAxisConvention {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, Some(scvSensorAxisConvention::UNKNOWN)).unwrap()}
+  }
+  #[inline]
+  pub fn RANGE_BOUNDARY_KIND(&self) -> scvSensorRangeBoundaryKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, Some(scvSensorRangeBoundaryKind::RADIAL_SPHERICAL)).unwrap()}
+  }
+  #[inline]
+  pub fn OUTER_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INNER_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_INNER_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MIN_CLOCK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MIN_CLOCK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_CLOCK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MAX_CLOCK_ANGLE_DEG, Some(360.0)).unwrap()}
+  }
+  #[inline]
+  pub fn X_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_X_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn Y_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_Y_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INNER_LOOK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_INNER_LOOK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn OUTER_LOOK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_OUTER_LOOK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn SAR_SAMPLING_DENSITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_SAR_SAMPLING_DENSITY, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MIN_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MAX_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn POLYGON_VERTICES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>(SCVSensorShapeContract::VT_POLYGON_VERTICES, None)}
+  }
+  #[inline]
+  pub fn POLYGON_FRAME(&self) -> scvCoordinateFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvCoordinateFrame>(SCVSensorShapeContract::VT_POLYGON_FRAME, Some(scvCoordinateFrame::UNKNOWN)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<scvSensorShapeKind>("SHAPE", Self::VT_SHAPE, false)?
+     .visit_field::<scvSensorAxisConvention>("AXIS_CONVENTION", Self::VT_AXIS_CONVENTION, false)?
+     .visit_field::<scvSensorRangeBoundaryKind>("RANGE_BOUNDARY_KIND", Self::VT_RANGE_BOUNDARY_KIND, false)?
+     .visit_field::<f64>("OUTER_HALF_ANGLE_DEG", Self::VT_OUTER_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("INNER_HALF_ANGLE_DEG", Self::VT_INNER_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("MIN_CLOCK_ANGLE_DEG", Self::VT_MIN_CLOCK_ANGLE_DEG, false)?
+     .visit_field::<f64>("MAX_CLOCK_ANGLE_DEG", Self::VT_MAX_CLOCK_ANGLE_DEG, false)?
+     .visit_field::<f64>("X_HALF_ANGLE_DEG", Self::VT_X_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("Y_HALF_ANGLE_DEG", Self::VT_Y_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("INNER_LOOK_ANGLE_DEG", Self::VT_INNER_LOOK_ANGLE_DEG, false)?
+     .visit_field::<f64>("OUTER_LOOK_ANGLE_DEG", Self::VT_OUTER_LOOK_ANGLE_DEG, false)?
+     .visit_field::<f64>("SAR_SAMPLING_DENSITY", Self::VT_SAR_SAMPLING_DENSITY, false)?
+     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
+     .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
+     .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVSensorShapeContractArgs<'a> {
+    pub SHAPE: scvSensorShapeKind,
+    pub AXIS_CONVENTION: scvSensorAxisConvention,
+    pub RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind,
+    pub OUTER_HALF_ANGLE_DEG: f64,
+    pub INNER_HALF_ANGLE_DEG: f64,
+    pub MIN_CLOCK_ANGLE_DEG: f64,
+    pub MAX_CLOCK_ANGLE_DEG: f64,
+    pub X_HALF_ANGLE_DEG: f64,
+    pub Y_HALF_ANGLE_DEG: f64,
+    pub INNER_LOOK_ANGLE_DEG: f64,
+    pub OUTER_LOOK_ANGLE_DEG: f64,
+    pub SAR_SAMPLING_DENSITY: f64,
+    pub MIN_RANGE_M: f64,
+    pub MAX_RANGE_M: f64,
+    pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
+    pub POLYGON_FRAME: scvCoordinateFrame,
+}
+impl<'a> Default for SCVSensorShapeContractArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCVSensorShapeContractArgs {
+      SHAPE: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::UNKNOWN,
+      RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      OUTER_HALF_ANGLE_DEG: 0.0,
+      INNER_HALF_ANGLE_DEG: 0.0,
+      MIN_CLOCK_ANGLE_DEG: 0.0,
+      MAX_CLOCK_ANGLE_DEG: 360.0,
+      X_HALF_ANGLE_DEG: 0.0,
+      Y_HALF_ANGLE_DEG: 0.0,
+      INNER_LOOK_ANGLE_DEG: 0.0,
+      OUTER_LOOK_ANGLE_DEG: 0.0,
+      SAR_SAMPLING_DENSITY: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      POLYGON_VERTICES: None,
+      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+    }
+  }
+}
+
+pub struct SCVSensorShapeContractBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHAPE(&mut self, SHAPE: scvSensorShapeKind) {
+    self.fbb_.push_slot::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE, SHAPE, scvSensorShapeKind::CONIC);
+  }
+  #[inline]
+  pub fn add_AXIS_CONVENTION(&mut self, AXIS_CONVENTION: scvSensorAxisConvention) {
+    self.fbb_.push_slot::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, AXIS_CONVENTION, scvSensorAxisConvention::UNKNOWN);
+  }
+  #[inline]
+  pub fn add_RANGE_BOUNDARY_KIND(&mut self, RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind) {
+    self.fbb_.push_slot::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, RANGE_BOUNDARY_KIND, scvSensorRangeBoundaryKind::RADIAL_SPHERICAL);
+  }
+  #[inline]
+  pub fn add_OUTER_HALF_ANGLE_DEG(&mut self, OUTER_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, OUTER_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_HALF_ANGLE_DEG(&mut self, INNER_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_INNER_HALF_ANGLE_DEG, INNER_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_CLOCK_ANGLE_DEG(&mut self, MIN_CLOCK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MIN_CLOCK_ANGLE_DEG, MIN_CLOCK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_CLOCK_ANGLE_DEG(&mut self, MAX_CLOCK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MAX_CLOCK_ANGLE_DEG, MAX_CLOCK_ANGLE_DEG, 360.0);
+  }
+  #[inline]
+  pub fn add_X_HALF_ANGLE_DEG(&mut self, X_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_X_HALF_ANGLE_DEG, X_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_HALF_ANGLE_DEG(&mut self, Y_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_Y_HALF_ANGLE_DEG, Y_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_LOOK_ANGLE_DEG(&mut self, INNER_LOOK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_INNER_LOOK_ANGLE_DEG, INNER_LOOK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_OUTER_LOOK_ANGLE_DEG(&mut self, OUTER_LOOK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_OUTER_LOOK_ANGLE_DEG, OUTER_LOOK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_SAR_SAMPLING_DENSITY(&mut self, SAR_SAMPLING_DENSITY: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_SAR_SAMPLING_DENSITY, SAR_SAMPLING_DENSITY, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RANGE_M(&mut self, MAX_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_POLYGON_VERTICES(&mut self, POLYGON_VERTICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVVec3<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVSensorShapeContract::VT_POLYGON_VERTICES, POLYGON_VERTICES);
+  }
+  #[inline]
+  pub fn add_POLYGON_FRAME(&mut self, POLYGON_FRAME: scvCoordinateFrame) {
+    self.fbb_.push_slot::<scvCoordinateFrame>(SCVSensorShapeContract::VT_POLYGON_FRAME, POLYGON_FRAME, scvCoordinateFrame::UNKNOWN);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorShapeContractBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVSensorShapeContractBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVSensorShapeContract");
+      ds.field("SHAPE", &self.SHAPE());
+      ds.field("AXIS_CONVENTION", &self.AXIS_CONVENTION());
+      ds.field("RANGE_BOUNDARY_KIND", &self.RANGE_BOUNDARY_KIND());
+      ds.field("OUTER_HALF_ANGLE_DEG", &self.OUTER_HALF_ANGLE_DEG());
+      ds.field("INNER_HALF_ANGLE_DEG", &self.INNER_HALF_ANGLE_DEG());
+      ds.field("MIN_CLOCK_ANGLE_DEG", &self.MIN_CLOCK_ANGLE_DEG());
+      ds.field("MAX_CLOCK_ANGLE_DEG", &self.MAX_CLOCK_ANGLE_DEG());
+      ds.field("X_HALF_ANGLE_DEG", &self.X_HALF_ANGLE_DEG());
+      ds.field("Y_HALF_ANGLE_DEG", &self.Y_HALF_ANGLE_DEG());
+      ds.field("INNER_LOOK_ANGLE_DEG", &self.INNER_LOOK_ANGLE_DEG());
+      ds.field("OUTER_LOOK_ANGLE_DEG", &self.OUTER_LOOK_ANGLE_DEG());
+      ds.field("SAR_SAMPLING_DENSITY", &self.SAR_SAMPLING_DENSITY());
+      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
+      ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
+      ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
+      ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVSensorShapeContractT {
+  pub SHAPE: scvSensorShapeKind,
+  pub AXIS_CONVENTION: scvSensorAxisConvention,
+  pub RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind,
+  pub OUTER_HALF_ANGLE_DEG: f64,
+  pub INNER_HALF_ANGLE_DEG: f64,
+  pub MIN_CLOCK_ANGLE_DEG: f64,
+  pub MAX_CLOCK_ANGLE_DEG: f64,
+  pub X_HALF_ANGLE_DEG: f64,
+  pub Y_HALF_ANGLE_DEG: f64,
+  pub INNER_LOOK_ANGLE_DEG: f64,
+  pub OUTER_LOOK_ANGLE_DEG: f64,
+  pub SAR_SAMPLING_DENSITY: f64,
+  pub MIN_RANGE_M: f64,
+  pub MAX_RANGE_M: f64,
+  pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
+  pub POLYGON_FRAME: scvCoordinateFrame,
+}
+impl Default for SCVSensorShapeContractT {
+  fn default() -> Self {
+    Self {
+      SHAPE: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::UNKNOWN,
+      RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      OUTER_HALF_ANGLE_DEG: 0.0,
+      INNER_HALF_ANGLE_DEG: 0.0,
+      MIN_CLOCK_ANGLE_DEG: 0.0,
+      MAX_CLOCK_ANGLE_DEG: 360.0,
+      X_HALF_ANGLE_DEG: 0.0,
+      Y_HALF_ANGLE_DEG: 0.0,
+      INNER_LOOK_ANGLE_DEG: 0.0,
+      OUTER_LOOK_ANGLE_DEG: 0.0,
+      SAR_SAMPLING_DENSITY: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      POLYGON_VERTICES: None,
+      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+    }
+  }
+}
+impl SCVSensorShapeContractT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'b>> {
+    let SHAPE = self.SHAPE;
+    let AXIS_CONVENTION = self.AXIS_CONVENTION;
+    let RANGE_BOUNDARY_KIND = self.RANGE_BOUNDARY_KIND;
+    let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG;
+    let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG;
+    let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG;
+    let MAX_CLOCK_ANGLE_DEG = self.MAX_CLOCK_ANGLE_DEG;
+    let X_HALF_ANGLE_DEG = self.X_HALF_ANGLE_DEG;
+    let Y_HALF_ANGLE_DEG = self.Y_HALF_ANGLE_DEG;
+    let INNER_LOOK_ANGLE_DEG = self.INNER_LOOK_ANGLE_DEG;
+    let OUTER_LOOK_ANGLE_DEG = self.OUTER_LOOK_ANGLE_DEG;
+    let SAR_SAMPLING_DENSITY = self.SAR_SAMPLING_DENSITY;
+    let MIN_RANGE_M = self.MIN_RANGE_M;
+    let MAX_RANGE_M = self.MAX_RANGE_M;
+    let POLYGON_VERTICES = self.POLYGON_VERTICES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let POLYGON_FRAME = self.POLYGON_FRAME;
+    SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
+      SHAPE,
+      AXIS_CONVENTION,
+      RANGE_BOUNDARY_KIND,
+      OUTER_HALF_ANGLE_DEG,
+      INNER_HALF_ANGLE_DEG,
+      MIN_CLOCK_ANGLE_DEG,
+      MAX_CLOCK_ANGLE_DEG,
+      X_HALF_ANGLE_DEG,
+      Y_HALF_ANGLE_DEG,
+      INNER_LOOK_ANGLE_DEG,
+      OUTER_LOOK_ANGLE_DEG,
+      SAR_SAMPLING_DENSITY,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      POLYGON_VERTICES,
+      POLYGON_FRAME,
+    })
+  }
+}
 pub enum SCVSensorOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1676,6 +2322,7 @@ impl<'a> SCVSensor<'a> {
   pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 30;
   pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
   pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SHAPE_CONTRACT: ::flatbuffers::VOffsetT = 36;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1692,6 +2339,7 @@ impl<'a> SCVSensor<'a> {
     builder.add_ALONG_TRACK_HALF_ANGLE_DEG(args.ALONG_TRACK_HALF_ANGLE_DEG);
     builder.add_CROSS_TRACK_HALF_ANGLE_DEG(args.CROSS_TRACK_HALF_ANGLE_DEG);
     builder.add_HALF_ANGLE_DEG(args.HALF_ANGLE_DEG);
+    if let Some(x) = args.SHAPE_CONTRACT { builder.add_SHAPE_CONTRACT(x); }
     if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
     if let Some(x) = args.UP_UNIT { builder.add_UP_UNIT(x); }
     if let Some(x) = args.BORESIGHT_UNIT { builder.add_BORESIGHT_UNIT(x); }
@@ -1737,6 +2385,9 @@ impl<'a> SCVSensor<'a> {
       x.iter().map(|t| t.unpack()).collect()
     });
     let POLYGON_FRAME = self.POLYGON_FRAME();
+    let SHAPE_CONTRACT = self.SHAPE_CONTRACT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     SCVSensorT {
       SENSOR_ID,
       OBJECT_ID,
@@ -1754,6 +2405,7 @@ impl<'a> SCVSensor<'a> {
       MAX_RANGE_M,
       POLYGON_VERTICES,
       POLYGON_FRAME,
+      SHAPE_CONTRACT,
     }
   }
 
@@ -1869,6 +2521,13 @@ impl<'a> SCVSensor<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<scvCoordinateFrame>(SCVSensor::VT_POLYGON_FRAME, Some(scvCoordinateFrame::UNKNOWN)).unwrap()}
   }
+  #[inline]
+  pub fn SHAPE_CONTRACT(&self) -> Option<SCVSensorShapeContract<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVSensorShapeContract>>(SCVSensor::VT_SHAPE_CONTRACT, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCVSensor<'_> {
@@ -1893,6 +2552,7 @@ impl ::flatbuffers::Verifiable for SCVSensor<'_> {
      .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
      .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVSensorShapeContract>>("SHAPE_CONTRACT", Self::VT_SHAPE_CONTRACT, false)?
      .finish();
     Ok(())
   }
@@ -1914,6 +2574,7 @@ pub struct SCVSensorArgs<'a> {
     pub MAX_RANGE_M: f64,
     pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
     pub POLYGON_FRAME: scvCoordinateFrame,
+    pub SHAPE_CONTRACT: Option<::flatbuffers::WIPOffset<SCVSensorShapeContract<'a>>>,
 }
 impl<'a> Default for SCVSensorArgs<'a> {
   #[inline]
@@ -1935,6 +2596,7 @@ impl<'a> Default for SCVSensorArgs<'a> {
       MAX_RANGE_M: 0.0,
       POLYGON_VERTICES: None,
       POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+      SHAPE_CONTRACT: None,
     }
   }
 }
@@ -2009,6 +2671,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<scvCoordinateFrame>(SCVSensor::VT_POLYGON_FRAME, POLYGON_FRAME, scvCoordinateFrame::UNKNOWN);
   }
   #[inline]
+  pub fn add_SHAPE_CONTRACT(&mut self, SHAPE_CONTRACT: ::flatbuffers::WIPOffset<SCVSensorShapeContract<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVSensorShapeContract>>(SCVSensor::VT_SHAPE_CONTRACT, SHAPE_CONTRACT);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCVSensorBuilder {
@@ -2042,6 +2708,7 @@ impl ::core::fmt::Debug for SCVSensor<'_> {
       ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
       ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
       ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
+      ds.field("SHAPE_CONTRACT", &self.SHAPE_CONTRACT());
       ds.finish()
   }
 }
@@ -2064,6 +2731,7 @@ pub struct SCVSensorT {
   pub MAX_RANGE_M: f64,
   pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
   pub POLYGON_FRAME: scvCoordinateFrame,
+  pub SHAPE_CONTRACT: Option<alloc::boxed::Box<SCVSensorShapeContractT>>,
 }
 impl Default for SCVSensorT {
   fn default() -> Self {
@@ -2084,6 +2752,7 @@ impl Default for SCVSensorT {
       MAX_RANGE_M: 0.0,
       POLYGON_VERTICES: None,
       POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+      SHAPE_CONTRACT: None,
     }
   }
 }
@@ -2122,6 +2791,9 @@ impl SCVSensorT {
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let POLYGON_FRAME = self.POLYGON_FRAME;
+    let SHAPE_CONTRACT = self.SHAPE_CONTRACT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     SCVSensor::create(_fbb, &SCVSensorArgs{
       SENSOR_ID,
       OBJECT_ID,
@@ -2139,6 +2811,7 @@ impl SCVSensorT {
       MAX_RANGE_M,
       POLYGON_VERTICES,
       POLYGON_FRAME,
+      SHAPE_CONTRACT,
     })
   }
 }

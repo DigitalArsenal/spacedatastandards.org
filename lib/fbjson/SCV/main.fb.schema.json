@@ -118,7 +118,8 @@
       "enum": [
         "CONIC",
         "RECTANGULAR",
-        "CUSTOM_POLYGON"
+        "CUSTOM_POLYGON",
+        "SAR_ANNULAR_SECTOR"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -131,6 +132,43 @@
         },
         "CUSTOM_POLYGON": {
           "value": 2
+        },
+        "SAR_ANNULAR_SECTOR": {
+          "value": 3
+        }
+      }
+    },
+    "scvSensorAxisConvention": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
+          "value": 1
+        }
+      }
+    },
+    "scvSensorRangeBoundaryKind": {
+      "type": "string",
+      "enum": [
+        "RADIAL_SPHERICAL",
+        "LOCAL_Z_PLANE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "RADIAL_SPHERICAL": {
+          "value": 0
+        },
+        "LOCAL_Z_PLANE": {
+          "value": 1
         }
       }
     },
@@ -409,6 +447,132 @@
       },
       "additionalProperties": false
     },
+    "SCVSensorShapeContract": {
+      "type": "object",
+      "properties": {
+        "SHAPE": {
+          "$ref": "#/definitions/scvSensorShapeKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CONIC": {
+              "value": 0
+            },
+            "RECTANGULAR": {
+              "value": 1
+            },
+            "CUSTOM_POLYGON": {
+              "value": 2
+            },
+            "SAR_ANNULAR_SECTOR": {
+              "value": 3
+            }
+          }
+        },
+        "AXIS_CONVENTION": {
+          "$ref": "#/definitions/scvSensorAxisConvention",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
+              "value": 1
+            }
+          }
+        },
+        "RANGE_BOUNDARY_KIND": {
+          "$ref": "#/definitions/scvSensorRangeBoundaryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "RADIAL_SPHERICAL": {
+              "value": 0
+            },
+            "LOCAL_Z_PLANE": {
+              "value": 1
+            }
+          }
+        },
+        "OUTER_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INNER_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_CLOCK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_CLOCK_ANGLE_DEG": {
+          "type": "number"
+        },
+        "X_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INNER_LOOK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OUTER_LOOK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SAR_SAMPLING_DENSITY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POLYGON_VERTICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVVec3"
+          },
+          "x-flatbuffer-type": "[SCVVec3]"
+        },
+        "POLYGON_FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "SCVSensor": {
       "type": "object",
       "properties": {
@@ -439,6 +603,9 @@
             },
             "CUSTOM_POLYGON": {
               "value": 2
+            },
+            "SAR_ANNULAR_SECTOR": {
+              "value": 3
             }
           }
         },
@@ -534,6 +701,10 @@
               "value": 5
             }
           }
+        },
+        "SHAPE_CONTRACT": {
+          "$ref": "#/definitions/SCVSensorShapeContract",
+          "x-flatbuffer-type": "SCVSensorShapeContract"
         }
       },
       "additionalProperties": false

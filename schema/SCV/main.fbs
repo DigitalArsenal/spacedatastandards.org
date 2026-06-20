@@ -39,7 +39,18 @@ enum scvBodyKind : ubyte {
 enum scvSensorShapeKind : ubyte {
   CONIC,
   RECTANGULAR,
-  CUSTOM_POLYGON
+  CUSTOM_POLYGON,
+  SAR_ANNULAR_SECTOR
+}
+
+enum scvSensorAxisConvention : ubyte {
+  UNKNOWN,
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+}
+
+enum scvSensorRangeBoundaryKind : ubyte {
+  RADIAL_SPHERICAL,
+  LOCAL_Z_PLANE
 }
 
 enum scvGeometryDomain : ubyte {
@@ -109,6 +120,25 @@ table SCVTimeGrid {
   GRID_INDEX_COUNT:uint32;
 }
 
+table SCVSensorShapeContract {
+  SHAPE:scvSensorShapeKind;
+  AXIS_CONVENTION:scvSensorAxisConvention;
+  RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind;
+  OUTER_HALF_ANGLE_DEG:double;
+  INNER_HALF_ANGLE_DEG:double;
+  MIN_CLOCK_ANGLE_DEG:double;
+  MAX_CLOCK_ANGLE_DEG:double = 360.0;
+  X_HALF_ANGLE_DEG:double;
+  Y_HALF_ANGLE_DEG:double;
+  INNER_LOOK_ANGLE_DEG:double;
+  OUTER_LOOK_ANGLE_DEG:double;
+  SAR_SAMPLING_DENSITY:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  POLYGON_VERTICES:[SCVVec3];
+  POLYGON_FRAME:scvCoordinateFrame;
+}
+
 table SCVSensor {
   SENSOR_ID:uint32;
   OBJECT_ID:string;
@@ -126,6 +156,7 @@ table SCVSensor {
   MAX_RANGE_M:double;
   POLYGON_VERTICES:[SCVVec3];
   POLYGON_FRAME:scvCoordinateFrame;
+  SHAPE_CONTRACT:SCVSensorShapeContract;
 }
 
 table SCVStateSample {

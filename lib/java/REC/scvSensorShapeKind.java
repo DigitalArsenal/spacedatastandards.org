@@ -6,8 +6,9 @@ public final class scvSensorShapeKind {
   public static final int CONIC = 0;
   public static final int RECTANGULAR = 1;
   public static final int CUSTOM_POLYGON = 2;
+  public static final int SAR_ANNULAR_SECTOR = 3;
 
-  public static final String[] names = { "CONIC", "RECTANGULAR", "CUSTOM_POLYGON", };
+  public static final String[] names = { "CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR", };
 
   public static String name(int e) { return names[e]; }
 }

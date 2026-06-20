@@ -174,8 +174,19 @@ class SCVSensor(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # SCVSensor
+    def SHAPE_CONTRACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVSensorShapeContract import SCVSensorShapeContract
+            obj = SCVSensorShapeContract()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCVSensorStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(17)
 
 def Start(builder):
     SCVSensorStart(builder)
@@ -288,12 +299,19 @@ def SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME):
 def AddPOLYGON_FRAME(builder, POLYGON_FRAME):
     SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME)
 
+def SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE_CONTRACT), 0)
+
+def AddSHAPE_CONTRACT(builder, SHAPE_CONTRACT):
+    SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
+
 def SCVSensorEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return SCVSensorEnd(builder)
 
+import SCVSensorShapeContract
 import SCVVec3
 try:
     from typing import List, Optional
@@ -321,6 +339,7 @@ class SCVSensorT(object):
         MAX_RANGE_M = 0.0,
         POLYGON_VERTICES = None,
         POLYGON_FRAME = 0,
+        SHAPE_CONTRACT = None,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: int
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -338,6 +357,7 @@ class SCVSensorT(object):
         self.MAX_RANGE_M = MAX_RANGE_M  # type: float
         self.POLYGON_VERTICES = POLYGON_VERTICES  # type: Optional[List[SCVVec3.SCVVec3T]]
         self.POLYGON_FRAME = POLYGON_FRAME  # type: int
+        self.SHAPE_CONTRACT = SHAPE_CONTRACT  # type: Optional[SCVSensorShapeContract.SCVSensorShapeContractT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -387,6 +407,8 @@ class SCVSensorT(object):
                     sCVVec3_ = SCVVec3.SCVVec3T.InitFromObj(SCVSensor.POLYGON_VERTICES(i))
                     self.POLYGON_VERTICES.append(sCVVec3_)
         self.POLYGON_FRAME = SCVSensor.POLYGON_FRAME()
+        if SCVSensor.SHAPE_CONTRACT() is not None:
+            self.SHAPE_CONTRACT = SCVSensorShapeContract.SCVSensorShapeContractT.InitFromObj(SCVSensor.SHAPE_CONTRACT())
 
     # SCVSensorT
     def Pack(self, builder):
@@ -410,6 +432,8 @@ class SCVSensorT(object):
             for i in reversed(range(len(self.POLYGON_VERTICES))):
                 builder.PrependUOffsetTRelative(POLYGON_VERTICESlist[i])
             POLYGON_VERTICES = builder.EndVector()
+        if self.SHAPE_CONTRACT is not None:
+            SHAPE_CONTRACT = self.SHAPE_CONTRACT.Pack(builder)
         SCVSensorStart(builder)
         SCVSensorAddSENSOR_ID(builder, self.SENSOR_ID)
         if self.OBJECT_ID is not None:
@@ -434,5 +458,7 @@ class SCVSensorT(object):
         if self.POLYGON_VERTICES is not None:
             SCVSensorAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
         SCVSensorAddPOLYGON_FRAME(builder, self.POLYGON_FRAME)
+        if self.SHAPE_CONTRACT is not None:
+            SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
         SCVSensor = SCVSensorEnd(builder)
         return SCVSensor

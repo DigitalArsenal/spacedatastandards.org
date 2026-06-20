@@ -52,6 +52,8 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
   public SCVVec3.Vector polygonVerticesVector() { return polygonVerticesVector(new SCVVec3.Vector()); }
   public SCVVec3.Vector polygonVerticesVector(SCVVec3.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public int POLYGON_FRAME() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public SCVSensorShapeContract SHAPE_CONTRACT() { return SHAPE_CONTRACT(new SCVSensorShapeContract()); }
+  public SCVSensorShapeContract SHAPE_CONTRACT(SCVSensorShapeContract obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCVSensor(FlatBufferBuilder builder,
       long SENSOR_ID,
@@ -69,13 +71,15 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
       double MIN_RANGE_M,
       double MAX_RANGE_M,
       int POLYGON_VERTICESOffset,
-      int POLYGON_FRAME) {
-    builder.startTable(16);
+      int POLYGON_FRAME,
+      int SHAPE_CONTRACTOffset) {
+    builder.startTable(17);
     SCVSensor.addMaxRangeM(builder, MAX_RANGE_M);
     SCVSensor.addMinRangeM(builder, MIN_RANGE_M);
     SCVSensor.addAlongTrackHalfAngleDeg(builder, ALONG_TRACK_HALF_ANGLE_DEG);
     SCVSensor.addCrossTrackHalfAngleDeg(builder, CROSS_TRACK_HALF_ANGLE_DEG);
     SCVSensor.addHalfAngleDeg(builder, HALF_ANGLE_DEG);
+    SCVSensor.addShapeContract(builder, SHAPE_CONTRACTOffset);
     SCVSensor.addPolygonVertices(builder, POLYGON_VERTICESOffset);
     SCVSensor.addUpUnit(builder, UP_UNITOffset);
     SCVSensor.addBoresightUnit(builder, BORESIGHT_UNITOffset);
@@ -90,7 +94,7 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
     return SCVSensor.endSCVSensor(builder);
   }
 
-  public static void startSCVSensor(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSCVSensor(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addSensorId(FlatBufferBuilder builder, long SENSOR_ID) { builder.addInt(0, (int) SENSOR_ID, (int) 0L); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
@@ -109,6 +113,7 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
   public static int createPolygonVerticesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPolygonVerticesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addPolygonFrame(FlatBufferBuilder builder, int POLYGON_FRAME) { builder.addByte(15, (byte) POLYGON_FRAME, (byte) 0); }
+  public static void addShapeContract(FlatBufferBuilder builder, int SHAPE_CONTRACTOffset) { builder.addOffset(16, SHAPE_CONTRACTOffset, 0); }
   public static int endSCVSensor(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

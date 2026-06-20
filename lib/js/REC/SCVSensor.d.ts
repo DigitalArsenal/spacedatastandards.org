@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { SCVSensorShapeContract, SCVSensorShapeContractT } from './SCVSensorShapeContract.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorShapeKind } from './scvSensorShapeKind.js';
@@ -27,6 +28,7 @@ export declare class SCVSensor implements flatbuffers.IUnpackableObject<SCVSenso
     POLYGON_VERTICES(index: number, obj?: SCVVec3): SCVVec3 | null;
     polygonVerticesLength(): number;
     POLYGON_FRAME(): scvCoordinateFrame;
+    SHAPE_CONTRACT(obj?: SCVSensorShapeContract): SCVSensorShapeContract | null;
     static startSCVSensor(builder: flatbuffers.Builder): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_ID: number): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -46,6 +48,7 @@ export declare class SCVSensor implements flatbuffers.IUnpackableObject<SCVSenso
     static createPolygonVerticesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startPolygonVerticesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addPolygonFrame(builder: flatbuffers.Builder, POLYGON_FRAME: scvCoordinateFrame): void;
+    static addShapeContract(builder: flatbuffers.Builder, SHAPE_CONTRACTOffset: flatbuffers.Offset): void;
     static endSCVSensor(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): SCVSensorT;
     unpackTo(_o: SCVSensorT): void;
@@ -67,7 +70,8 @@ export declare class SCVSensorT implements flatbuffers.IGeneratedObject {
     MAX_RANGE_M: number;
     POLYGON_VERTICES: (SCVVec3T)[];
     POLYGON_FRAME: scvCoordinateFrame;
-    constructor(SENSOR_ID?: number, OBJECT_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SHAPE?: scvSensorShapeKind, FRAME?: scvCoordinateFrame, POSITION_M?: SCVVec3T | null, VELOCITY_MPS?: SCVVec3T | null, BORESIGHT_UNIT?: SCVVec3T | null, UP_UNIT?: SCVVec3T | null, HALF_ANGLE_DEG?: number, CROSS_TRACK_HALF_ANGLE_DEG?: number, ALONG_TRACK_HALF_ANGLE_DEG?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame);
+    SHAPE_CONTRACT: SCVSensorShapeContractT | null;
+    constructor(SENSOR_ID?: number, OBJECT_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, SHAPE?: scvSensorShapeKind, FRAME?: scvCoordinateFrame, POSITION_M?: SCVVec3T | null, VELOCITY_MPS?: SCVVec3T | null, BORESIGHT_UNIT?: SCVVec3T | null, UP_UNIT?: SCVVec3T | null, HALF_ANGLE_DEG?: number, CROSS_TRACK_HALF_ANGLE_DEG?: number, ALONG_TRACK_HALF_ANGLE_DEG?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame, SHAPE_CONTRACT?: SCVSensorShapeContractT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVSensor.d.ts.map

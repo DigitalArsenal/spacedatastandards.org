@@ -180,22 +180,29 @@ class SCVSensor extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvCoordinateFrame::UNKNOWN;
     }
 
+    public function getSHAPE_CONTRACT()
+    {
+        $obj = new SCVSensorShapeContract();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVSensor(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVSensor
      */
-    public static function createSCVSensor(FlatBufferBuilder $builder, $SENSOR_ID, $OBJECT_ID, $NAME, $SHAPE, $FRAME, $POSITION_M, $VELOCITY_MPS, $BORESIGHT_UNIT, $UP_UNIT, $HALF_ANGLE_DEG, $CROSS_TRACK_HALF_ANGLE_DEG, $ALONG_TRACK_HALF_ANGLE_DEG, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME)
+    public static function createSCVSensor(FlatBufferBuilder $builder, $SENSOR_ID, $OBJECT_ID, $NAME, $SHAPE, $FRAME, $POSITION_M, $VELOCITY_MPS, $BORESIGHT_UNIT, $UP_UNIT, $HALF_ANGLE_DEG, $CROSS_TRACK_HALF_ANGLE_DEG, $ALONG_TRACK_HALF_ANGLE_DEG, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME, $SHAPE_CONTRACT)
     {
-        $builder->startObject(16);
+        $builder->startObject(17);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNAME($builder, $NAME);
@@ -212,6 +219,7 @@ class SCVSensor extends Table
         self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
         self::addPOLYGON_VERTICES($builder, $POLYGON_VERTICES);
         self::addPOLYGON_FRAME($builder, $POLYGON_FRAME);
+        self::addSHAPE_CONTRACT($builder, $SHAPE_CONTRACT);
         $o = $builder->endObject();
         return $o;
     }
@@ -398,6 +406,16 @@ class SCVSensor extends Table
     public static function addPOLYGON_FRAME(FlatBufferBuilder $builder, $POLYGON_FRAME)
     {
         $builder->addByteX(15, $POLYGON_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSHAPE_CONTRACT(FlatBufferBuilder $builder, $SHAPE_CONTRACT)
+    {
+        $builder->addOffsetX(16, $SHAPE_CONTRACT, 0);
     }
 
     /**

@@ -77,9 +77,34 @@ public enum scvSensorShapeKind: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case conic = 0
   case rectangular = 1
   case customPolygon = 2
+  case sarAnnularSector = 3
 
-  public static var max: scvSensorShapeKind { return .customPolygon }
+  public static var max: scvSensorShapeKind { return .sarAnnularSector }
   public static var min: scvSensorShapeKind { return .conic }
+}
+
+
+public enum scvSensorAxisConvention: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unknown = 0
+  case localXRightYUpZBoresight = 1
+
+  public static var max: scvSensorAxisConvention { return .localXRightYUpZBoresight }
+  public static var min: scvSensorAxisConvention { return .unknown }
+}
+
+
+public enum scvSensorRangeBoundaryKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case radialSpherical = 0
+  case localZPlane = 1
+
+  public static var max: scvSensorRangeBoundaryKind { return .localZPlane }
+  public static var min: scvSensorRangeBoundaryKind { return .radialSpherical }
 }
 
 
@@ -345,6 +370,131 @@ public struct SCVTimeGrid: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   }
 }
 
+public struct SCVSensorShapeContract: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVSensorShapeContract.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SHAPE: VOffset = 4
+    static let AXIS_CONVENTION: VOffset = 6
+    static let RANGE_BOUNDARY_KIND: VOffset = 8
+    static let OUTER_HALF_ANGLE_DEG: VOffset = 10
+    static let INNER_HALF_ANGLE_DEG: VOffset = 12
+    static let MIN_CLOCK_ANGLE_DEG: VOffset = 14
+    static let MAX_CLOCK_ANGLE_DEG: VOffset = 16
+    static let X_HALF_ANGLE_DEG: VOffset = 18
+    static let Y_HALF_ANGLE_DEG: VOffset = 20
+    static let INNER_LOOK_ANGLE_DEG: VOffset = 22
+    static let OUTER_LOOK_ANGLE_DEG: VOffset = 24
+    static let SAR_SAMPLING_DENSITY: VOffset = 26
+    static let MIN_RANGE_M: VOffset = 28
+    static let MAX_RANGE_M: VOffset = 30
+    static let POLYGON_VERTICES: VOffset = 32
+    static let POLYGON_FRAME: VOffset = 34
+  }
+
+  public var SHAPE: scvSensorShapeKind { let o = _accessor.offset(VT.SHAPE); return o == 0 ? .conic : scvSensorShapeKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .conic }
+  public var AXIS_CONVENTION: scvSensorAxisConvention { let o = _accessor.offset(VT.AXIS_CONVENTION); return o == 0 ? .unknown : scvSensorAxisConvention(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unknown }
+  public var RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind { let o = _accessor.offset(VT.RANGE_BOUNDARY_KIND); return o == 0 ? .radialSpherical : scvSensorRangeBoundaryKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .radialSpherical }
+  public var OUTER_HALF_ANGLE_DEG: Double { let o = _accessor.offset(VT.OUTER_HALF_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_HALF_ANGLE_DEG: Double { let o = _accessor.offset(VT.INNER_HALF_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_CLOCK_ANGLE_DEG: Double { let o = _accessor.offset(VT.MIN_CLOCK_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_CLOCK_ANGLE_DEG: Double { let o = _accessor.offset(VT.MAX_CLOCK_ANGLE_DEG); return o == 0 ? 360.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var X_HALF_ANGLE_DEG: Double { let o = _accessor.offset(VT.X_HALF_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y_HALF_ANGLE_DEG: Double { let o = _accessor.offset(VT.Y_HALF_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INNER_LOOK_ANGLE_DEG: Double { let o = _accessor.offset(VT.INNER_LOOK_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var OUTER_LOOK_ANGLE_DEG: Double { let o = _accessor.offset(VT.OUTER_LOOK_ANGLE_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var SAR_SAMPLING_DENSITY: Double { let o = _accessor.offset(VT.SAR_SAMPLING_DENSITY); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MIN_RANGE_M: Double { let o = _accessor.offset(VT.MIN_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var POLYGON_VERTICES: FlatbufferVector<SCVVec3> { return _accessor.vector(at: VT.POLYGON_VERTICES, byteSize: 4) }
+  public var POLYGON_FRAME: scvCoordinateFrame { let o = _accessor.offset(VT.POLYGON_FRAME); return o == 0 ? .unknown : scvCoordinateFrame(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unknown }
+  public static func startSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func add(SHAPE: scvSensorShapeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHAPE.rawValue, def: 0, at: VT.SHAPE) }
+  public static func add(AXIS_CONVENTION: scvSensorAxisConvention, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_CONVENTION.rawValue, def: 0, at: VT.AXIS_CONVENTION) }
+  public static func add(RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BOUNDARY_KIND.rawValue, def: 0, at: VT.RANGE_BOUNDARY_KIND) }
+  public static func add(OUTER_HALF_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTER_HALF_ANGLE_DEG, def: 0.0, at: VT.OUTER_HALF_ANGLE_DEG) }
+  public static func add(INNER_HALF_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_HALF_ANGLE_DEG, def: 0.0, at: VT.INNER_HALF_ANGLE_DEG) }
+  public static func add(MIN_CLOCK_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_CLOCK_ANGLE_DEG, def: 0.0, at: VT.MIN_CLOCK_ANGLE_DEG) }
+  public static func add(MAX_CLOCK_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_CLOCK_ANGLE_DEG, def: 360.0, at: VT.MAX_CLOCK_ANGLE_DEG) }
+  public static func add(X_HALF_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_HALF_ANGLE_DEG, def: 0.0, at: VT.X_HALF_ANGLE_DEG) }
+  public static func add(Y_HALF_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_HALF_ANGLE_DEG, def: 0.0, at: VT.Y_HALF_ANGLE_DEG) }
+  public static func add(INNER_LOOK_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INNER_LOOK_ANGLE_DEG, def: 0.0, at: VT.INNER_LOOK_ANGLE_DEG) }
+  public static func add(OUTER_LOOK_ANGLE_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTER_LOOK_ANGLE_DEG, def: 0.0, at: VT.OUTER_LOOK_ANGLE_DEG) }
+  public static func add(SAR_SAMPLING_DENSITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAR_SAMPLING_DENSITY, def: 0.0, at: VT.SAR_SAMPLING_DENSITY) }
+  public static func add(MIN_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_RANGE_M, def: 0.0, at: VT.MIN_RANGE_M) }
+  public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
+  public static func addVectorOf(POLYGON_VERTICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_VERTICES, at: VT.POLYGON_VERTICES) }
+  public static func add(POLYGON_FRAME: scvCoordinateFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYGON_FRAME.rawValue, def: 0, at: VT.POLYGON_FRAME) }
+  public static func endSCVSensorShapeContract(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVSensorShapeContract(
+    _ fbb: inout FlatBufferBuilder,
+    SHAPE: scvSensorShapeKind = .conic,
+    AXIS_CONVENTION: scvSensorAxisConvention = .unknown,
+    RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind = .radialSpherical,
+    OUTER_HALF_ANGLE_DEG: Double = 0.0,
+    INNER_HALF_ANGLE_DEG: Double = 0.0,
+    MIN_CLOCK_ANGLE_DEG: Double = 0.0,
+    MAX_CLOCK_ANGLE_DEG: Double = 360.0,
+    X_HALF_ANGLE_DEG: Double = 0.0,
+    Y_HALF_ANGLE_DEG: Double = 0.0,
+    INNER_LOOK_ANGLE_DEG: Double = 0.0,
+    OUTER_LOOK_ANGLE_DEG: Double = 0.0,
+    SAR_SAMPLING_DENSITY: Double = 0.0,
+    MIN_RANGE_M: Double = 0.0,
+    MAX_RANGE_M: Double = 0.0,
+    POLYGON_VERTICESVectorOffset POLYGON_VERTICES: Offset = Offset(),
+    POLYGON_FRAME: scvCoordinateFrame = .unknown
+  ) -> Offset {
+    let __start = SCVSensorShapeContract.startSCVSensorShapeContract(&fbb)
+    SCVSensorShapeContract.add(SHAPE: SHAPE, &fbb)
+    SCVSensorShapeContract.add(AXIS_CONVENTION: AXIS_CONVENTION, &fbb)
+    SCVSensorShapeContract.add(RANGE_BOUNDARY_KIND: RANGE_BOUNDARY_KIND, &fbb)
+    SCVSensorShapeContract.add(OUTER_HALF_ANGLE_DEG: OUTER_HALF_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(INNER_HALF_ANGLE_DEG: INNER_HALF_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(MIN_CLOCK_ANGLE_DEG: MIN_CLOCK_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(MAX_CLOCK_ANGLE_DEG: MAX_CLOCK_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(X_HALF_ANGLE_DEG: X_HALF_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(Y_HALF_ANGLE_DEG: Y_HALF_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(INNER_LOOK_ANGLE_DEG: INNER_LOOK_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(OUTER_LOOK_ANGLE_DEG: OUTER_LOOK_ANGLE_DEG, &fbb)
+    SCVSensorShapeContract.add(SAR_SAMPLING_DENSITY: SAR_SAMPLING_DENSITY, &fbb)
+    SCVSensorShapeContract.add(MIN_RANGE_M: MIN_RANGE_M, &fbb)
+    SCVSensorShapeContract.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
+    SCVSensorShapeContract.addVectorOf(POLYGON_VERTICES: POLYGON_VERTICES, &fbb)
+    SCVSensorShapeContract.add(POLYGON_FRAME: POLYGON_FRAME, &fbb)
+    return SCVSensorShapeContract.endSCVSensorShapeContract(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SHAPE, fieldName: "SHAPE", required: false, type: scvSensorShapeKind.self)
+    try _v.visit(field: VT.AXIS_CONVENTION, fieldName: "AXIS_CONVENTION", required: false, type: scvSensorAxisConvention.self)
+    try _v.visit(field: VT.RANGE_BOUNDARY_KIND, fieldName: "RANGE_BOUNDARY_KIND", required: false, type: scvSensorRangeBoundaryKind.self)
+    try _v.visit(field: VT.OUTER_HALF_ANGLE_DEG, fieldName: "OUTER_HALF_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_HALF_ANGLE_DEG, fieldName: "INNER_HALF_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_CLOCK_ANGLE_DEG, fieldName: "MIN_CLOCK_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_CLOCK_ANGLE_DEG, fieldName: "MAX_CLOCK_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.X_HALF_ANGLE_DEG, fieldName: "X_HALF_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.Y_HALF_ANGLE_DEG, fieldName: "Y_HALF_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.INNER_LOOK_ANGLE_DEG, fieldName: "INNER_LOOK_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.OUTER_LOOK_ANGLE_DEG, fieldName: "OUTER_LOOK_ANGLE_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.SAR_SAMPLING_DENSITY, fieldName: "SAR_SAMPLING_DENSITY", required: false, type: Double.self)
+    try _v.visit(field: VT.MIN_RANGE_M, fieldName: "MIN_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.POLYGON_VERTICES, fieldName: "POLYGON_VERTICES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVVec3>, SCVVec3>>.self)
+    try _v.visit(field: VT.POLYGON_FRAME, fieldName: "POLYGON_FRAME", required: false, type: scvCoordinateFrame.self)
+    _v.finish()
+  }
+}
+
 public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -373,6 +523,7 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let MAX_RANGE_M: VOffset = 30
     static let POLYGON_VERTICES: VOffset = 32
     static let POLYGON_FRAME: VOffset = 34
+    static let SHAPE_CONTRACT: VOffset = 36
   }
 
   public var SENSOR_ID: UInt32 { let o = _accessor.offset(VT.SENSOR_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
@@ -393,7 +544,8 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var MAX_RANGE_M: Double { let o = _accessor.offset(VT.MAX_RANGE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public var POLYGON_VERTICES: FlatbufferVector<SCVVec3> { return _accessor.vector(at: VT.POLYGON_VERTICES, byteSize: 4) }
   public var POLYGON_FRAME: scvCoordinateFrame { let o = _accessor.offset(VT.POLYGON_FRAME); return o == 0 ? .unknown : scvCoordinateFrame(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unknown }
-  public static func startSCVSensor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public var SHAPE_CONTRACT: SCVSensorShapeContract? { let o = _accessor.offset(VT.SHAPE_CONTRACT); return o == 0 ? nil : SCVSensorShapeContract(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCVSensor(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(SENSOR_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_ID, def: 0, at: VT.SENSOR_ID) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
@@ -410,6 +562,7 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func add(MAX_RANGE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RANGE_M, def: 0.0, at: VT.MAX_RANGE_M) }
   public static func addVectorOf(POLYGON_VERTICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_VERTICES, at: VT.POLYGON_VERTICES) }
   public static func add(POLYGON_FRAME: scvCoordinateFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLYGON_FRAME.rawValue, def: 0, at: VT.POLYGON_FRAME) }
+  public static func add(SHAPE_CONTRACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SHAPE_CONTRACT, at: VT.SHAPE_CONTRACT) }
   public static func endSCVSensor(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVSensor(
     _ fbb: inout FlatBufferBuilder,
@@ -428,7 +581,8 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     MIN_RANGE_M: Double = 0.0,
     MAX_RANGE_M: Double = 0.0,
     POLYGON_VERTICESVectorOffset POLYGON_VERTICES: Offset = Offset(),
-    POLYGON_FRAME: scvCoordinateFrame = .unknown
+    POLYGON_FRAME: scvCoordinateFrame = .unknown,
+    SHAPE_CONTRACTOffset SHAPE_CONTRACT: Offset = Offset()
   ) -> Offset {
     let __start = SCVSensor.startSCVSensor(&fbb)
     SCVSensor.add(SENSOR_ID: SENSOR_ID, &fbb)
@@ -447,6 +601,7 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     SCVSensor.add(MAX_RANGE_M: MAX_RANGE_M, &fbb)
     SCVSensor.addVectorOf(POLYGON_VERTICES: POLYGON_VERTICES, &fbb)
     SCVSensor.add(POLYGON_FRAME: POLYGON_FRAME, &fbb)
+    SCVSensor.add(SHAPE_CONTRACT: SHAPE_CONTRACT, &fbb)
     return SCVSensor.endSCVSensor(&fbb, start: __start)
   }
 
@@ -468,6 +623,7 @@ public struct SCVSensor: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.MAX_RANGE_M, fieldName: "MAX_RANGE_M", required: false, type: Double.self)
     try _v.visit(field: VT.POLYGON_VERTICES, fieldName: "POLYGON_VERTICES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVVec3>, SCVVec3>>.self)
     try _v.visit(field: VT.POLYGON_FRAME, fieldName: "POLYGON_FRAME", required: false, type: scvCoordinateFrame.self)
+    try _v.visit(field: VT.SHAPE_CONTRACT, fieldName: "SHAPE_CONTRACT", required: false, type: ForwardOffset<SCVSensorShapeContract>.self)
     _v.finish()
   }
 }

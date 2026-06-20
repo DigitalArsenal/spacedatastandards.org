@@ -6,11 +6,13 @@ class scvSensorShapeKind
     const CONIC = 0;
     const RECTANGULAR = 1;
     const CUSTOM_POLYGON = 2;
+    const SAR_ANNULAR_SECTOR = 3;
 
     private static $names = array(
         scvSensorShapeKind::CONIC=>"CONIC",
         scvSensorShapeKind::RECTANGULAR=>"RECTANGULAR",
         scvSensorShapeKind::CUSTOM_POLYGON=>"CUSTOM_POLYGON",
+        scvSensorShapeKind::SAR_ANNULAR_SECTOR=>"SAR_ANNULAR_SECTOR",
     );
 
     public static function Name($e)

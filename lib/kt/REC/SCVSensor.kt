@@ -142,6 +142,15 @@ class SCVSensor : Table() {
             val o = __offset(34)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    val shapeContract : SCVSensorShapeContract? get() = shapeContract(SCVSensorShapeContract())
+    fun shapeContract(obj: SCVSensorShapeContract) : SCVSensorShapeContract? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVSensor(_bb: ByteBuffer): SCVSensor = getRootAsSCVSensor(_bb, SCVSensor())
@@ -149,13 +158,14 @@ class SCVSensor : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVSensor(builder: FlatBufferBuilder, sensorId: UInt, objectIdOffset: Int, nameOffset: Int, shape: UByte, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, boresightUnitOffset: Int, upUnitOffset: Int, halfAngleDeg: Double, crossTrackHalfAngleDeg: Double, alongTrackHalfAngleDeg: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte) : Int {
-            builder.startTable(16)
+        fun createSCVSensor(builder: FlatBufferBuilder, sensorId: UInt, objectIdOffset: Int, nameOffset: Int, shape: UByte, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, boresightUnitOffset: Int, upUnitOffset: Int, halfAngleDeg: Double, crossTrackHalfAngleDeg: Double, alongTrackHalfAngleDeg: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte, shapeContractOffset: Int) : Int {
+            builder.startTable(17)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
             addALONGTRACKHALFANGLEDEG(builder, alongTrackHalfAngleDeg)
             addCROSSTRACKHALFANGLEDEG(builder, crossTrackHalfAngleDeg)
             addHALFANGLEDEG(builder, halfAngleDeg)
+            addSHAPECONTRACT(builder, shapeContractOffset)
             addPOLYGONVERTICES(builder, polygonVerticesOffset)
             addUPUNIT(builder, upUnitOffset)
             addBORESIGHTUNIT(builder, boresightUnitOffset)
@@ -169,7 +179,7 @@ class SCVSensor : Table() {
             addSHAPE(builder, shape)
             return endSCVSensor(builder)
         }
-        fun startSCVSensor(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSCVSensor(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addSENSORID(builder: FlatBufferBuilder, sensorId: UInt) = builder.addInt(0, sensorId.toInt(), 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
@@ -194,6 +204,7 @@ class SCVSensor : Table() {
         }
         fun startPolygonVerticesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPOLYGONFRAME(builder: FlatBufferBuilder, polygonFrame: UByte) = builder.addByte(15, polygonFrame.toByte(), 0)
+        fun addSHAPECONTRACT(builder: FlatBufferBuilder, shapeContract: Int) = builder.addOffset(16, shapeContract, 0)
         fun endSCVSensor(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

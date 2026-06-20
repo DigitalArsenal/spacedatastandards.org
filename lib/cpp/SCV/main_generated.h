@@ -22,6 +22,9 @@ struct SCVEllipsoidBuilder;
 struct SCVTimeGrid;
 struct SCVTimeGridBuilder;
 
+struct SCVSensorShapeContract;
+struct SCVSensorShapeContractBuilder;
+
 struct SCVSensor;
 struct SCVSensorBuilder;
 
@@ -242,33 +245,96 @@ enum scvSensorShapeKind : uint8_t {
   scvSensorShapeKind_CONIC = 0,
   scvSensorShapeKind_RECTANGULAR = 1,
   scvSensorShapeKind_CUSTOM_POLYGON = 2,
+  scvSensorShapeKind_SAR_ANNULAR_SECTOR = 3,
   scvSensorShapeKind_MIN = scvSensorShapeKind_CONIC,
-  scvSensorShapeKind_MAX = scvSensorShapeKind_CUSTOM_POLYGON
+  scvSensorShapeKind_MAX = scvSensorShapeKind_SAR_ANNULAR_SECTOR
 };
 
-inline const scvSensorShapeKind (&EnumValuesscvSensorShapeKind())[3] {
+inline const scvSensorShapeKind (&EnumValuesscvSensorShapeKind())[4] {
   static const scvSensorShapeKind values[] = {
     scvSensorShapeKind_CONIC,
     scvSensorShapeKind_RECTANGULAR,
-    scvSensorShapeKind_CUSTOM_POLYGON
+    scvSensorShapeKind_CUSTOM_POLYGON,
+    scvSensorShapeKind_SAR_ANNULAR_SECTOR
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvSensorShapeKind() {
-  static const char * const names[4] = {
+  static const char * const names[5] = {
     "CONIC",
     "RECTANGULAR",
     "CUSTOM_POLYGON",
+    "SAR_ANNULAR_SECTOR",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescvSensorShapeKind(scvSensorShapeKind e) {
-  if (::flatbuffers::IsOutRange(e, scvSensorShapeKind_CONIC, scvSensorShapeKind_CUSTOM_POLYGON)) return "";
+  if (::flatbuffers::IsOutRange(e, scvSensorShapeKind_CONIC, scvSensorShapeKind_SAR_ANNULAR_SECTOR)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvSensorShapeKind()[index];
+}
+
+enum scvSensorAxisConvention : uint8_t {
+  scvSensorAxisConvention_UNKNOWN = 0,
+  scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1,
+  scvSensorAxisConvention_MIN = scvSensorAxisConvention_UNKNOWN,
+  scvSensorAxisConvention_MAX = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+};
+
+inline const scvSensorAxisConvention (&EnumValuesscvSensorAxisConvention())[2] {
+  static const scvSensorAxisConvention values[] = {
+    scvSensorAxisConvention_UNKNOWN,
+    scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvSensorAxisConvention() {
+  static const char * const names[3] = {
+    "UNKNOWN",
+    "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvSensorAxisConvention(scvSensorAxisConvention e) {
+  if (::flatbuffers::IsOutRange(e, scvSensorAxisConvention_UNKNOWN, scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvSensorAxisConvention()[index];
+}
+
+enum scvSensorRangeBoundaryKind : uint8_t {
+  scvSensorRangeBoundaryKind_RADIAL_SPHERICAL = 0,
+  scvSensorRangeBoundaryKind_LOCAL_Z_PLANE = 1,
+  scvSensorRangeBoundaryKind_MIN = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+  scvSensorRangeBoundaryKind_MAX = scvSensorRangeBoundaryKind_LOCAL_Z_PLANE
+};
+
+inline const scvSensorRangeBoundaryKind (&EnumValuesscvSensorRangeBoundaryKind())[2] {
+  static const scvSensorRangeBoundaryKind values[] = {
+    scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+    scvSensorRangeBoundaryKind_LOCAL_Z_PLANE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvSensorRangeBoundaryKind() {
+  static const char * const names[3] = {
+    "RADIAL_SPHERICAL",
+    "LOCAL_Z_PLANE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvSensorRangeBoundaryKind(scvSensorRangeBoundaryKind e) {
+  if (::flatbuffers::IsOutRange(e, scvSensorRangeBoundaryKind_RADIAL_SPHERICAL, scvSensorRangeBoundaryKind_LOCAL_Z_PLANE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvSensorRangeBoundaryKind()[index];
 }
 
 enum scvGeometryDomain : uint8_t {
@@ -770,6 +836,239 @@ inline ::flatbuffers::Offset<SCVTimeGrid> CreateSCVTimeGridDirect(
       GRID_INDEX_COUNT);
 }
 
+struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCVSensorShapeContractBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SHAPE = 4,
+    VT_AXIS_CONVENTION = 6,
+    VT_RANGE_BOUNDARY_KIND = 8,
+    VT_OUTER_HALF_ANGLE_DEG = 10,
+    VT_INNER_HALF_ANGLE_DEG = 12,
+    VT_MIN_CLOCK_ANGLE_DEG = 14,
+    VT_MAX_CLOCK_ANGLE_DEG = 16,
+    VT_X_HALF_ANGLE_DEG = 18,
+    VT_Y_HALF_ANGLE_DEG = 20,
+    VT_INNER_LOOK_ANGLE_DEG = 22,
+    VT_OUTER_LOOK_ANGLE_DEG = 24,
+    VT_SAR_SAMPLING_DENSITY = 26,
+    VT_MIN_RANGE_M = 28,
+    VT_MAX_RANGE_M = 30,
+    VT_POLYGON_VERTICES = 32,
+    VT_POLYGON_FRAME = 34
+  };
+  scvSensorShapeKind SHAPE() const {
+    return static_cast<scvSensorShapeKind>(GetField<uint8_t>(VT_SHAPE, 0));
+  }
+  scvSensorAxisConvention AXIS_CONVENTION() const {
+    return static_cast<scvSensorAxisConvention>(GetField<uint8_t>(VT_AXIS_CONVENTION, 0));
+  }
+  scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND() const {
+    return static_cast<scvSensorRangeBoundaryKind>(GetField<uint8_t>(VT_RANGE_BOUNDARY_KIND, 0));
+  }
+  double OUTER_HALF_ANGLE_DEG() const {
+    return GetField<double>(VT_OUTER_HALF_ANGLE_DEG, 0.0);
+  }
+  double INNER_HALF_ANGLE_DEG() const {
+    return GetField<double>(VT_INNER_HALF_ANGLE_DEG, 0.0);
+  }
+  double MIN_CLOCK_ANGLE_DEG() const {
+    return GetField<double>(VT_MIN_CLOCK_ANGLE_DEG, 0.0);
+  }
+  double MAX_CLOCK_ANGLE_DEG() const {
+    return GetField<double>(VT_MAX_CLOCK_ANGLE_DEG, 360.0);
+  }
+  double X_HALF_ANGLE_DEG() const {
+    return GetField<double>(VT_X_HALF_ANGLE_DEG, 0.0);
+  }
+  double Y_HALF_ANGLE_DEG() const {
+    return GetField<double>(VT_Y_HALF_ANGLE_DEG, 0.0);
+  }
+  double INNER_LOOK_ANGLE_DEG() const {
+    return GetField<double>(VT_INNER_LOOK_ANGLE_DEG, 0.0);
+  }
+  double OUTER_LOOK_ANGLE_DEG() const {
+    return GetField<double>(VT_OUTER_LOOK_ANGLE_DEG, 0.0);
+  }
+  double SAR_SAMPLING_DENSITY() const {
+    return GetField<double>(VT_SAR_SAMPLING_DENSITY, 0.0);
+  }
+  double MIN_RANGE_M() const {
+    return GetField<double>(VT_MIN_RANGE_M, 0.0);
+  }
+  double MAX_RANGE_M() const {
+    return GetField<double>(VT_MAX_RANGE_M, 0.0);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>> *>(VT_POLYGON_VERTICES);
+  }
+  scvCoordinateFrame POLYGON_FRAME() const {
+    return static_cast<scvCoordinateFrame>(GetField<uint8_t>(VT_POLYGON_FRAME, 0));
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_SHAPE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_AXIS_CONVENTION, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGE_BOUNDARY_KIND, 1) &&
+           VerifyField<double>(verifier, VT_OUTER_HALF_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_INNER_HALF_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_MIN_CLOCK_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_MAX_CLOCK_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_X_HALF_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_Y_HALF_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_INNER_LOOK_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_OUTER_LOOK_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_SAR_SAMPLING_DENSITY, 8) &&
+           VerifyField<double>(verifier, VT_MIN_RANGE_M, 8) &&
+           VerifyField<double>(verifier, VT_MAX_RANGE_M, 8) &&
+           VerifyOffset(verifier, VT_POLYGON_VERTICES) &&
+           verifier.VerifyVector(POLYGON_VERTICES()) &&
+           verifier.VerifyVectorOfTables(POLYGON_VERTICES()) &&
+           VerifyField<uint8_t>(verifier, VT_POLYGON_FRAME, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCVSensorShapeContractBuilder {
+  typedef SCVSensorShapeContract Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SHAPE(scvSensorShapeKind SHAPE) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_SHAPE, static_cast<uint8_t>(SHAPE), 0);
+  }
+  void add_AXIS_CONVENTION(scvSensorAxisConvention AXIS_CONVENTION) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_AXIS_CONVENTION, static_cast<uint8_t>(AXIS_CONVENTION), 0);
+  }
+  void add_RANGE_BOUNDARY_KIND(scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, static_cast<uint8_t>(RANGE_BOUNDARY_KIND), 0);
+  }
+  void add_OUTER_HALF_ANGLE_DEG(double OUTER_HALF_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, OUTER_HALF_ANGLE_DEG, 0.0);
+  }
+  void add_INNER_HALF_ANGLE_DEG(double INNER_HALF_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_INNER_HALF_ANGLE_DEG, INNER_HALF_ANGLE_DEG, 0.0);
+  }
+  void add_MIN_CLOCK_ANGLE_DEG(double MIN_CLOCK_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_MIN_CLOCK_ANGLE_DEG, MIN_CLOCK_ANGLE_DEG, 0.0);
+  }
+  void add_MAX_CLOCK_ANGLE_DEG(double MAX_CLOCK_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_MAX_CLOCK_ANGLE_DEG, MAX_CLOCK_ANGLE_DEG, 360.0);
+  }
+  void add_X_HALF_ANGLE_DEG(double X_HALF_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_X_HALF_ANGLE_DEG, X_HALF_ANGLE_DEG, 0.0);
+  }
+  void add_Y_HALF_ANGLE_DEG(double Y_HALF_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_Y_HALF_ANGLE_DEG, Y_HALF_ANGLE_DEG, 0.0);
+  }
+  void add_INNER_LOOK_ANGLE_DEG(double INNER_LOOK_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_INNER_LOOK_ANGLE_DEG, INNER_LOOK_ANGLE_DEG, 0.0);
+  }
+  void add_OUTER_LOOK_ANGLE_DEG(double OUTER_LOOK_ANGLE_DEG) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_OUTER_LOOK_ANGLE_DEG, OUTER_LOOK_ANGLE_DEG, 0.0);
+  }
+  void add_SAR_SAMPLING_DENSITY(double SAR_SAMPLING_DENSITY) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_SAR_SAMPLING_DENSITY, SAR_SAMPLING_DENSITY, 0.0);
+  }
+  void add_MIN_RANGE_M(double MIN_RANGE_M) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  void add_MAX_RANGE_M(double MAX_RANGE_M) {
+    fbb_.AddElement<double>(SCVSensorShapeContract::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  void add_POLYGON_VERTICES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES) {
+    fbb_.AddOffset(SCVSensorShapeContract::VT_POLYGON_VERTICES, POLYGON_VERTICES);
+  }
+  void add_POLYGON_FRAME(scvCoordinateFrame POLYGON_FRAME) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_POLYGON_FRAME, static_cast<uint8_t>(POLYGON_FRAME), 0);
+  }
+  explicit SCVSensorShapeContractBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCVSensorShapeContract> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCVSensorShapeContract>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContract(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    scvSensorShapeKind SHAPE = scvSensorShapeKind_CONIC,
+    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_UNKNOWN,
+    scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+    double OUTER_HALF_ANGLE_DEG = 0.0,
+    double INNER_HALF_ANGLE_DEG = 0.0,
+    double MIN_CLOCK_ANGLE_DEG = 0.0,
+    double MAX_CLOCK_ANGLE_DEG = 360.0,
+    double X_HALF_ANGLE_DEG = 0.0,
+    double Y_HALF_ANGLE_DEG = 0.0,
+    double INNER_LOOK_ANGLE_DEG = 0.0,
+    double OUTER_LOOK_ANGLE_DEG = 0.0,
+    double SAR_SAMPLING_DENSITY = 0.0,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES = 0,
+    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN) {
+  SCVSensorShapeContractBuilder builder_(_fbb);
+  builder_.add_MAX_RANGE_M(MAX_RANGE_M);
+  builder_.add_MIN_RANGE_M(MIN_RANGE_M);
+  builder_.add_SAR_SAMPLING_DENSITY(SAR_SAMPLING_DENSITY);
+  builder_.add_OUTER_LOOK_ANGLE_DEG(OUTER_LOOK_ANGLE_DEG);
+  builder_.add_INNER_LOOK_ANGLE_DEG(INNER_LOOK_ANGLE_DEG);
+  builder_.add_Y_HALF_ANGLE_DEG(Y_HALF_ANGLE_DEG);
+  builder_.add_X_HALF_ANGLE_DEG(X_HALF_ANGLE_DEG);
+  builder_.add_MAX_CLOCK_ANGLE_DEG(MAX_CLOCK_ANGLE_DEG);
+  builder_.add_MIN_CLOCK_ANGLE_DEG(MIN_CLOCK_ANGLE_DEG);
+  builder_.add_INNER_HALF_ANGLE_DEG(INNER_HALF_ANGLE_DEG);
+  builder_.add_OUTER_HALF_ANGLE_DEG(OUTER_HALF_ANGLE_DEG);
+  builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
+  builder_.add_POLYGON_FRAME(POLYGON_FRAME);
+  builder_.add_RANGE_BOUNDARY_KIND(RANGE_BOUNDARY_KIND);
+  builder_.add_AXIS_CONVENTION(AXIS_CONVENTION);
+  builder_.add_SHAPE(SHAPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContractDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    scvSensorShapeKind SHAPE = scvSensorShapeKind_CONIC,
+    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_UNKNOWN,
+    scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+    double OUTER_HALF_ANGLE_DEG = 0.0,
+    double INNER_HALF_ANGLE_DEG = 0.0,
+    double MIN_CLOCK_ANGLE_DEG = 0.0,
+    double MAX_CLOCK_ANGLE_DEG = 360.0,
+    double X_HALF_ANGLE_DEG = 0.0,
+    double Y_HALF_ANGLE_DEG = 0.0,
+    double INNER_LOOK_ANGLE_DEG = 0.0,
+    double OUTER_LOOK_ANGLE_DEG = 0.0,
+    double SAR_SAMPLING_DENSITY = 0.0,
+    double MIN_RANGE_M = 0.0,
+    double MAX_RANGE_M = 0.0,
+    const std::vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES = nullptr,
+    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN) {
+  auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
+  return CreateSCVSensorShapeContract(
+      _fbb,
+      SHAPE,
+      AXIS_CONVENTION,
+      RANGE_BOUNDARY_KIND,
+      OUTER_HALF_ANGLE_DEG,
+      INNER_HALF_ANGLE_DEG,
+      MIN_CLOCK_ANGLE_DEG,
+      MAX_CLOCK_ANGLE_DEG,
+      X_HALF_ANGLE_DEG,
+      Y_HALF_ANGLE_DEG,
+      INNER_LOOK_ANGLE_DEG,
+      OUTER_LOOK_ANGLE_DEG,
+      SAR_SAMPLING_DENSITY,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      POLYGON_VERTICES__,
+      POLYGON_FRAME);
+}
+
 struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVSensorBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -788,7 +1087,8 @@ struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MIN_RANGE_M = 28,
     VT_MAX_RANGE_M = 30,
     VT_POLYGON_VERTICES = 32,
-    VT_POLYGON_FRAME = 34
+    VT_POLYGON_FRAME = 34,
+    VT_SHAPE_CONTRACT = 36
   };
   uint32_t SENSOR_ID() const {
     return GetField<uint32_t>(VT_SENSOR_ID, 0);
@@ -838,6 +1138,9 @@ struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   scvCoordinateFrame POLYGON_FRAME() const {
     return static_cast<scvCoordinateFrame>(GetField<uint8_t>(VT_POLYGON_FRAME, 0));
   }
+  const SCVSensorShapeContract *SHAPE_CONTRACT() const {
+    return GetPointer<const SCVSensorShapeContract *>(VT_SHAPE_CONTRACT);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -865,6 +1168,8 @@ struct SCVSensor FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(POLYGON_VERTICES()) &&
            verifier.VerifyVectorOfTables(POLYGON_VERTICES()) &&
            VerifyField<uint8_t>(verifier, VT_POLYGON_FRAME, 1) &&
+           VerifyOffset(verifier, VT_SHAPE_CONTRACT) &&
+           verifier.VerifyTable(SHAPE_CONTRACT()) &&
            verifier.EndTable();
   }
 };
@@ -921,6 +1226,9 @@ struct SCVSensorBuilder {
   void add_POLYGON_FRAME(scvCoordinateFrame POLYGON_FRAME) {
     fbb_.AddElement<uint8_t>(SCVSensor::VT_POLYGON_FRAME, static_cast<uint8_t>(POLYGON_FRAME), 0);
   }
+  void add_SHAPE_CONTRACT(::flatbuffers::Offset<SCVSensorShapeContract> SHAPE_CONTRACT) {
+    fbb_.AddOffset(SCVSensor::VT_SHAPE_CONTRACT, SHAPE_CONTRACT);
+  }
   explicit SCVSensorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -949,13 +1257,15 @@ inline ::flatbuffers::Offset<SCVSensor> CreateSCVSensor(
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES = 0,
-    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN) {
+    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
+    ::flatbuffers::Offset<SCVSensorShapeContract> SHAPE_CONTRACT = 0) {
   SCVSensorBuilder builder_(_fbb);
   builder_.add_MAX_RANGE_M(MAX_RANGE_M);
   builder_.add_MIN_RANGE_M(MIN_RANGE_M);
   builder_.add_ALONG_TRACK_HALF_ANGLE_DEG(ALONG_TRACK_HALF_ANGLE_DEG);
   builder_.add_CROSS_TRACK_HALF_ANGLE_DEG(CROSS_TRACK_HALF_ANGLE_DEG);
   builder_.add_HALF_ANGLE_DEG(HALF_ANGLE_DEG);
+  builder_.add_SHAPE_CONTRACT(SHAPE_CONTRACT);
   builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
   builder_.add_UP_UNIT(UP_UNIT);
   builder_.add_BORESIGHT_UNIT(BORESIGHT_UNIT);
@@ -987,7 +1297,8 @@ inline ::flatbuffers::Offset<SCVSensor> CreateSCVSensorDirect(
     double MIN_RANGE_M = 0.0,
     double MAX_RANGE_M = 0.0,
     const std::vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES = nullptr,
-    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN) {
+    scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame_UNKNOWN,
+    ::flatbuffers::Offset<SCVSensorShapeContract> SHAPE_CONTRACT = 0) {
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
@@ -1008,7 +1319,8 @@ inline ::flatbuffers::Offset<SCVSensor> CreateSCVSensorDirect(
       MIN_RANGE_M,
       MAX_RANGE_M,
       POLYGON_VERTICES__,
-      POLYGON_FRAME);
+      POLYGON_FRAME,
+      SHAPE_CONTRACT);
 }
 
 struct SCVStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

@@ -344,8 +344,25 @@ func (rcv *SCVSensor) MutatePolygonFrame(n scvCoordinateFrame) bool {
 	return rcv.MutatePOLYGON_FRAME(n)
 }
 
+func (rcv *SCVSensor) SHAPE_CONTRACT(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVSensorShapeContract)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVSensor) ShapeContract(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	return rcv.SHAPE_CONTRACT(obj)
+}
+
 func SCVSensorStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func SCVSensorAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID uint32) {
 	builder.PrependUint32Slot(0, SENSOR_ID, 0)
@@ -448,6 +465,12 @@ func SCVSensorAddPOLYGON_FRAME(builder *flatbuffers.Builder, POLYGON_FRAME scvCo
 }
 func SCVSensorAddPolygonFrame(builder *flatbuffers.Builder, POLYGON_FRAME scvCoordinateFrame) {
 	SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME)
+}
+func SCVSensorAddSHAPE_CONTRACT(builder *flatbuffers.Builder, SHAPE_CONTRACT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SHAPE_CONTRACT), 0)
+}
+func SCVSensorAddShapeContract(builder *flatbuffers.Builder, SHAPE_CONTRACT flatbuffers.UOffsetT) {
+	SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
 }
 func SCVSensorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

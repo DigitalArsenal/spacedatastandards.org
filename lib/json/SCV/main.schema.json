@@ -19,7 +19,15 @@
     },
     "scvSensorShapeKind" : {
       "type" : "string",
-      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON"]
+      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR"]
+    },
+    "scvSensorAxisConvention" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"]
+    },
+    "scvSensorRangeBoundaryKind" : {
+      "type" : "string",
+      "enum": ["RADIAL_SPHERICAL", "LOCAL_Z_PLANE"]
     },
     "scvGeometryDomain" : {
       "type" : "string",
@@ -107,6 +115,60 @@
       },
       "additionalProperties" : false
     },
+    "SCVSensorShapeContract" : {
+      "type" : "object",
+      "properties" : {
+        "SHAPE" : {
+                "$ref" : "#/definitions/scvSensorShapeKind"
+              },
+        "AXIS_CONVENTION" : {
+                "$ref" : "#/definitions/scvSensorAxisConvention"
+              },
+        "RANGE_BOUNDARY_KIND" : {
+                "$ref" : "#/definitions/scvSensorRangeBoundaryKind"
+              },
+        "OUTER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MIN_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MAX_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "X_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "Y_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "OUTER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "SAR_SAMPLING_DENSITY" : {
+                "type" : "number"
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "POLYGON_VERTICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
+              },
+        "POLYGON_FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCVSensor" : {
       "type" : "object",
       "properties" : {
@@ -157,6 +219,9 @@
               },
         "POLYGON_FRAME" : {
                 "$ref" : "#/definitions/scvCoordinateFrame"
+              },
+        "SHAPE_CONTRACT" : {
+                "$ref" : "#/definitions/SCVSensorShapeContract"
               }
       },
       "additionalProperties" : false

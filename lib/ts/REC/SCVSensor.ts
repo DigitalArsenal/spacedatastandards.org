@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { SCVSensorShapeContract, SCVSensorShapeContractT } from './SCVSensorShapeContract.js';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
 import { scvSensorShapeKind } from './scvSensorShapeKind.js';
@@ -116,8 +117,13 @@ POLYGON_FRAME():scvCoordinateFrame {
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvCoordinateFrame.UNKNOWN;
 }
 
+SHAPE_CONTRACT(obj?:SCVSensorShapeContract):SCVSensorShapeContract|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new SCVSensorShapeContract()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCVSensor(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_ID:number) {
@@ -196,6 +202,10 @@ static addPolygonFrame(builder:flatbuffers.Builder, POLYGON_FRAME:scvCoordinateF
   builder.addFieldInt8(15, POLYGON_FRAME, scvCoordinateFrame.UNKNOWN);
 }
 
+static addShapeContract(builder:flatbuffers.Builder, SHAPE_CONTRACTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, SHAPE_CONTRACTOffset, 0);
+}
+
 static endSCVSensor(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -219,7 +229,8 @@ unpack(): SCVSensorT {
     this.MIN_RANGE_M(),
     this.MAX_RANGE_M(),
     this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength()),
-    this.POLYGON_FRAME()
+    this.POLYGON_FRAME(),
+    (this.SHAPE_CONTRACT() !== null ? this.SHAPE_CONTRACT()!.unpack() : null)
   );
 }
 
@@ -241,6 +252,7 @@ unpackTo(_o: SCVSensorT): void {
   _o.MAX_RANGE_M = this.MAX_RANGE_M();
   _o.POLYGON_VERTICES = this.bb!.createObjList<SCVVec3, SCVVec3T>(this.POLYGON_VERTICES.bind(this), this.polygonVerticesLength());
   _o.POLYGON_FRAME = this.POLYGON_FRAME();
+  _o.SHAPE_CONTRACT = (this.SHAPE_CONTRACT() !== null ? this.SHAPE_CONTRACT()!.unpack() : null);
 }
 }
 
@@ -261,7 +273,8 @@ constructor(
   public MIN_RANGE_M: number = 0.0,
   public MAX_RANGE_M: number = 0.0,
   public POLYGON_VERTICES: (SCVVec3T)[] = [],
-  public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN
+  public POLYGON_FRAME: scvCoordinateFrame = scvCoordinateFrame.UNKNOWN,
+  public SHAPE_CONTRACT: SCVSensorShapeContractT|null = null
 ){}
 
 
@@ -273,6 +286,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const BORESIGHT_UNIT = (this.BORESIGHT_UNIT !== null ? this.BORESIGHT_UNIT!.pack(builder) : 0);
   const UP_UNIT = (this.UP_UNIT !== null ? this.UP_UNIT!.pack(builder) : 0);
   const POLYGON_VERTICES = SCVSensor.createPolygonVerticesVector(builder, builder.createObjectOffsetList(this.POLYGON_VERTICES));
+  const SHAPE_CONTRACT = (this.SHAPE_CONTRACT !== null ? this.SHAPE_CONTRACT!.pack(builder) : 0);
 
   SCVSensor.startSCVSensor(builder);
   SCVSensor.addSensorId(builder, this.SENSOR_ID);
@@ -291,6 +305,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVSensor.addMaxRangeM(builder, this.MAX_RANGE_M);
   SCVSensor.addPolygonVertices(builder, POLYGON_VERTICES);
   SCVSensor.addPolygonFrame(builder, this.POLYGON_FRAME);
+  SCVSensor.addShapeContract(builder, SHAPE_CONTRACT);
 
   return SCVSensor.endSCVSensor(builder);
 }
