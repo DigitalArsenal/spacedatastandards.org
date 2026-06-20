@@ -105,4 +105,3 @@ public final class SDRSingleInput extends com.google.flatbuffers.Table {
     public SDRSingleInput get(SDRSingleInput obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

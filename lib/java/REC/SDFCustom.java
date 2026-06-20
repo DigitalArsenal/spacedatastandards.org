@@ -64,4 +64,3 @@ public final class SDFCustom extends com.google.flatbuffers.Table {
     public SDFCustom get(SDFCustom obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

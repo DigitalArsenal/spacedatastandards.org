@@ -88,4 +88,3 @@ public final class FPCPathResult extends com.google.flatbuffers.Table {
     public FPCPathResult get(FPCPathResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -511,7 +511,8 @@
               "value": 1,
               "description": "Least significant byte first"
             }
-          }
+          },
+          "x-flatbuffer-default": "BIG_ENDIAN"
         },
         "ENCODING": {
           "$ref": "#/definitions/IntegerEncodingType",
@@ -543,7 +544,8 @@
               "value": 5,
               "description": "Packed BCD"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNSIGNED"
         },
         "DEFAULT_CALIBRATOR": {
           "type": "string",
@@ -586,7 +588,8 @@
               "value": 1,
               "description": "Least significant byte first"
             }
-          }
+          },
+          "x-flatbuffer-default": "BIG_ENDIAN"
         },
         "ENCODING": {
           "$ref": "#/definitions/FloatEncodingType",
@@ -614,7 +617,8 @@
               "value": 4,
               "description": "Texas Instruments TI format"
             }
-          }
+          },
+          "x-flatbuffer-default": "IEEE754_1985"
         },
         "DEFAULT_CALIBRATOR": {
           "type": "string",
@@ -670,7 +674,8 @@
               "value": 6,
               "description": "UTF-16 Little Endian"
             }
-          }
+          },
+          "x-flatbuffer-default": "UTF_8"
         },
         "SIZE_TYPE": {
           "$ref": "#/definitions/StringSizeType",
@@ -690,7 +695,8 @@
               "value": 2,
               "description": "Variable with termination character"
             }
-          }
+          },
+          "x-flatbuffer-default": "FIXED"
         },
         "SIZE_IN_BITS": {
           "type": "integer",
@@ -1057,7 +1063,8 @@
               "value": 11,
               "description": "String does not contain"
             }
-          }
+          },
+          "x-flatbuffer-default": "EQ"
         },
         "VALUE": {
           "type": "string",
@@ -1067,7 +1074,8 @@
         "USE_CALIBRATED_VALUE": {
           "type": "boolean",
           "description": "Use calibrated value (true) or raw value (false)",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         }
       },
       "additionalProperties": false
@@ -1094,7 +1102,8 @@
               "value": 2,
               "description": "Logical XOR"
             }
-          }
+          },
+          "x-flatbuffer-default": "AND"
         },
         "CONDITIONS": {
           "type": "array",
@@ -1576,7 +1585,8 @@
               "value": 4,
               "description": "Custom epoch specified in offset"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNIX"
         },
         "EPOCH_DATE": {
           "type": "string",
@@ -1885,12 +1895,14 @@
               "value": 4,
               "description": "Ground-generated data"
             }
-          }
+          },
+          "x-flatbuffer-default": "TELEMETERED"
         },
         "READ_ONLY": {
           "type": "boolean",
           "description": "Read-only parameter",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         },
         "SYSTEM_NAME": {
           "type": "string",
@@ -1988,7 +2000,8 @@
               "value": 3,
               "description": "Start of next entry"
             }
-          }
+          },
+          "x-flatbuffer-default": "PREVIOUS_ENTRY"
         },
         "OFFSET_IN_BITS": {
           "type": "integer",
@@ -2217,7 +2230,8 @@
               "value": 1,
               "description": "Rate per container occurrence"
             }
-          }
+          },
+          "x-flatbuffer-default": "PER_SECOND"
         }
       },
       "additionalProperties": false
@@ -2248,7 +2262,8 @@
               "value": 3,
               "description": "Parity"
             }
-          }
+          },
+          "x-flatbuffer-default": "NONE"
         },
         "CRC_POLYNOMIAL": {
           "type": "string",
@@ -3047,7 +3062,8 @@
               "value": 1,
               "description": "Relative to last verifier passed"
             }
-          }
+          },
+          "x-flatbuffer-default": "COMMAND_RELEASE"
         }
       },
       "additionalProperties": false
@@ -3176,7 +3192,8 @@
               "value": 11,
               "description": "String does not contain"
             }
-          }
+          },
+          "x-flatbuffer-default": "EQ"
         }
       },
       "additionalProperties": false
@@ -17272,6 +17289,18 @@
               "description": "Orekit-compatible EarthStandardAtmosphereRefraction correction."
             }
           }
+        },
+        "PRESSURE_PA": {
+          "type": "number",
+          "description": "Local pressure in pascals.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "101000.0"
+        },
+        "TEMPERATURE_K": {
+          "type": "number",
+          "description": "Local temperature in kelvin.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "283.0"
         }
       },
       "description": "Atmospheric refraction model for apparent-elevation access checks."
@@ -48437,6 +48466,11 @@
           "type": "number",
           "x-flatbuffer-type": "double"
         },
+        "MAX_CLOCK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "360.0"
+        },
         "X_HALF_ANGLE_DEG": {
           "type": "number",
           "x-flatbuffer-type": "double"
@@ -54131,6 +54165,11 @@
           "type": "integer",
           "x-flatbuffer-type": "uint16",
           "x-flatbuffer-default": "100"
+        },
+        "VERTICAL_EXAGGERATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
         }
       },
       "description": "Terrain Models"

@@ -12,4 +12,3 @@ public enum seoParticleType : sbyte
   COSMIC_RAY = 5,
   MIXED = 6,
 };
-

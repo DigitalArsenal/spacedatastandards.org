@@ -79,7 +79,8 @@
             "LONG": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "SHORT"
         },
         "MAX_REVS": {
           "type": "integer",

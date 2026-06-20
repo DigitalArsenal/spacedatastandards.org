@@ -70,4 +70,3 @@ public final class uvwSigmas extends com.google.flatbuffers.Table {
     public uvwSigmas get(uvwSigmas obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

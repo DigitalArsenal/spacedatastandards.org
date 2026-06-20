@@ -79,4 +79,3 @@ public final class SpatialCoverage extends com.google.flatbuffers.Table {
     public SpatialCoverage get(SpatialCoverage obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

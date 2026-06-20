@@ -78,4 +78,3 @@ public final class SDFConical extends com.google.flatbuffers.Table {
     public SDFConical get(SDFConical obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

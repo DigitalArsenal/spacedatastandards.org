@@ -78,4 +78,3 @@ public final class PLGBuildArtifact extends com.google.flatbuffers.Table {
     public PLGBuildArtifact get(PLGBuildArtifact obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

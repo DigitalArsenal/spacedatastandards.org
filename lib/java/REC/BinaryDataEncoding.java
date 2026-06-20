@@ -67,4 +67,3 @@ public final class BinaryDataEncoding extends com.google.flatbuffers.Table {
     public BinaryDataEncoding get(BinaryDataEncoding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

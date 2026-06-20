@@ -80,4 +80,3 @@ public final class FixedFrameStream extends com.google.flatbuffers.Table {
     public FixedFrameStream get(FixedFrameStream obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

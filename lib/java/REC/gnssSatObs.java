@@ -103,4 +103,3 @@ public final class gnssSatObs extends com.google.flatbuffers.Table {
     public gnssSatObs get(gnssSatObs obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

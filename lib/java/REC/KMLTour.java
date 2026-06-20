@@ -79,4 +79,3 @@ public final class KMLTour extends com.google.flatbuffers.Table {
     public KMLTour get(KMLTour obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

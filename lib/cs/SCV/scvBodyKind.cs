@@ -9,4 +9,3 @@ public enum scvBodyKind : byte
   MARS = 2,
   CUSTOM = 3,
 };
-

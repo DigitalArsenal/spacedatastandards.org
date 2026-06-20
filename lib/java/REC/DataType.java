@@ -10,4 +10,3 @@ public final class DataType {
 
   public static String name(int e) { return names[e]; }
 }
-

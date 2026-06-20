@@ -86,4 +86,3 @@ public final class AggregateArgumentType extends com.google.flatbuffers.Table {
     public AggregateArgumentType get(AggregateArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

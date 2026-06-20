@@ -176,4 +176,3 @@ public final class ParameterTypeSet extends com.google.flatbuffers.Table {
     public ParameterTypeSet get(ParameterTypeSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

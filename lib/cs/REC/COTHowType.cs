@@ -19,4 +19,3 @@ public enum COTHowType : sbyte
   /// Configured
   M_C = 6,
 };
-

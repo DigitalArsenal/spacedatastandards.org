@@ -81,4 +81,3 @@ public final class SCVMemoryRegion extends com.google.flatbuffers.Table {
     public SCVMemoryRegion get(SCVMemoryRegion obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

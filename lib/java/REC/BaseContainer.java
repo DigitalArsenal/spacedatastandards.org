@@ -63,4 +63,3 @@ public final class BaseContainer extends com.google.flatbuffers.Table {
     public BaseContainer get(BaseContainer obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

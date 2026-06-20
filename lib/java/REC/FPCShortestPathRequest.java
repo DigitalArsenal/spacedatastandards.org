@@ -60,4 +60,3 @@ public final class FPCShortestPathRequest extends com.google.flatbuffers.Table {
     public FPCShortestPathRequest get(FPCShortestPathRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

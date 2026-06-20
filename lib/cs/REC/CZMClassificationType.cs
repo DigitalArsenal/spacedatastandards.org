@@ -8,4 +8,3 @@ public enum CZMClassificationType : sbyte
   CESIUM_3D_TILE = 1,
   BOTH = 2,
 };
-

@@ -9,4 +9,3 @@ public enum scvSensorShapeKind : byte
   CUSTOM_POLYGON = 2,
   SAR_ANNULAR_SECTOR = 3,
 };
-

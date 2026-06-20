@@ -122,7 +122,8 @@
             "DecryptKey": {
               "value": 4
             }
-          }
+          },
+          "x-flatbuffer-default": "Unknown"
         },
         "ALGORITHM": {
           "$ref": "#/definitions/keyMaterialAlgorithm",
@@ -151,7 +152,8 @@
             "Opaque": {
               "value": 6
             }
-          }
+          },
+          "x-flatbuffer-default": "Unknown"
         },
         "ENCODING": {
           "$ref": "#/definitions/keyMaterialEncoding",
@@ -171,7 +173,8 @@
             "PublicKey32": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "Unknown"
         },
         "KEY_BYTES": {
           "type": "array",

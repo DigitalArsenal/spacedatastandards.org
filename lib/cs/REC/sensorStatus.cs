@@ -12,4 +12,3 @@ public enum sensorStatus : sbyte
   TESTING = 5,
   DECOMMISSIONED = 6,
 };
-

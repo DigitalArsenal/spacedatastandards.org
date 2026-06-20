@@ -9,4 +9,3 @@ public enum TerrainInterpolation : sbyte
   BICUBIC = 2,
   KRIGING = 3,
 };
-

@@ -86,4 +86,3 @@ public final class AggregateParameterType extends com.google.flatbuffers.Table {
     public AggregateParameterType get(AggregateParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

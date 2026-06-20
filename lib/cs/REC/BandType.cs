@@ -18,4 +18,3 @@ public enum BandType : sbyte
   W_BAND = 11,
   MM_WAVE = 12,
 };
-

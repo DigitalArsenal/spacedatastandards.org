@@ -80,4 +80,3 @@ public final class ACWAccessWindow extends com.google.flatbuffers.Table {
     public ACWAccessWindow get(ACWAccessWindow obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

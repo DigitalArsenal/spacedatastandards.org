@@ -9,4 +9,3 @@ public enum scvGeometryEncoding : byte
   QUANTIZED_UINT16 = 2,
   SHARED_MEMORY_OFFSET = 3,
 };
-

@@ -81,4 +81,3 @@ public final class SDFBatchRequest extends com.google.flatbuffers.Table {
     public SDFBatchRequest get(SDFBatchRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -55,4 +55,3 @@ public final class KMLTimeStamp extends com.google.flatbuffers.Table {
     public KMLTimeStamp get(KMLTimeStamp obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

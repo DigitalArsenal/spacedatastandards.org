@@ -14,4 +14,3 @@ public enum ReferenceLocationType : sbyte
   /// Start of next entry
   NEXT_ENTRY = 3,
 };
-

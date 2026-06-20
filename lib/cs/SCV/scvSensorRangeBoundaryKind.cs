@@ -7,4 +7,3 @@ public enum scvSensorRangeBoundaryKind : byte
   RADIAL_SPHERICAL = 0,
   LOCAL_Z_PLANE = 1,
 };
-

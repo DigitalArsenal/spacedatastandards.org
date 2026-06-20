@@ -10,4 +10,3 @@ public enum manifoldStatus : sbyte
   CORRELATED = 3,
   EXPIRED = 4,
 };
-

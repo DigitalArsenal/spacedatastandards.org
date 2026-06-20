@@ -77,4 +77,3 @@ public final class KMLSchema extends com.google.flatbuffers.Table {
     public KMLSchema get(KMLSchema obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

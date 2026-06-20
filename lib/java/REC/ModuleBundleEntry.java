@@ -172,4 +172,3 @@ public final class ModuleBundleEntry extends com.google.flatbuffers.Table {
     public ModuleBundleEntry getByKey(ModuleBundleEntry obj, String key) {  return __lookup_by_key(obj, __vector(), key, bb); }
   }
 }
-

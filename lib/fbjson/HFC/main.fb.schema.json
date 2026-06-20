@@ -4084,7 +4084,8 @@
               "value": 3,
               "description": "3"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OPS_STATUS_CODE": {
           "$ref": "#/definitions/operationalState",
@@ -4124,7 +4125,8 @@
               "value": 7,
               "description": "?"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -4767,7 +4769,8 @@
             "WET": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "DRY"
         },
         "PAYLOADS": {
           "type": "array",
@@ -4828,7 +4831,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "POS_COEFF_X": {
           "type": "array",
@@ -4941,7 +4945,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "SIZE_SHAPE_TYPE": {
           "$ref": "#/definitions/sizeShapeProfile",
@@ -4957,7 +4962,8 @@
               "value": 1,
               "description": "Radius of periapsis (km). Preferred for hyperbolic orbits."
             }
-          }
+          },
+          "x-flatbuffer-default": "SMA"
         },
         "ANOMALY_TYPE": {
           "$ref": "#/definitions/ppeAnomalyType",
@@ -4977,7 +4983,8 @@
               "value": 2,
               "description": "Eccentric anomaly (auxiliary angle in the Kepler equation)."
             }
-          }
+          },
+          "x-flatbuffer-default": "TRUE_ANOMALY"
         },
         "COEFF_SIZE_SHAPE": {
           "type": "array",
@@ -5198,7 +5205,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "POSITION_RECORDS": {
           "type": "array",
@@ -6055,7 +6063,8 @@
               "value": 5,
               "description": "Lagrange interpolating polynomial representation."
             }
-          }
+          },
+          "x-flatbuffer-default": "CARTESIAN_PV"
         },
         "TRAJ_TYPE_DESCRIPTION": {
           "type": "string",
@@ -6072,7 +6081,8 @@
           "minimum": 0,
           "maximum": 255,
           "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
-          "x-flatbuffer-type": "uint8"
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "6"
         },
         "STATE_DATA": {
           "type": "array",

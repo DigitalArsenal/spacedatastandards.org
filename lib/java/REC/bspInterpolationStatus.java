@@ -24,4 +24,3 @@ public final class bspInterpolationStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

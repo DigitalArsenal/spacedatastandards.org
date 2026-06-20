@@ -62,4 +62,3 @@ public final class ContextAlarm extends com.google.flatbuffers.Table {
     public ContextAlarm get(ContextAlarm obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

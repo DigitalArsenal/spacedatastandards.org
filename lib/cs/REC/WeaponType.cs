@@ -19,4 +19,3 @@ public enum WeaponType : sbyte
   MINE = 12,
   GRENADE = 13,
 };
-

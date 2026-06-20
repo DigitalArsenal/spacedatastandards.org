@@ -105,4 +105,3 @@ public final class FCS extends com.google.flatbuffers.Table {
     public FCS get(FCS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

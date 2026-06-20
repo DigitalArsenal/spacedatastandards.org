@@ -109,4 +109,3 @@ public final class ENV extends com.google.flatbuffers.Table {
     public ENV get(ENV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

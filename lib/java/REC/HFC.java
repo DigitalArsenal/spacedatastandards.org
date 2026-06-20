@@ -557,4 +557,3 @@ public final class HFC extends com.google.flatbuffers.Table {
     public HFC get(HFC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

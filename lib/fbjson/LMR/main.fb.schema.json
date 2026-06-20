@@ -48,7 +48,8 @@
             "Error": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "Fetch"
         },
         "REQUEST_ID": {
           "type": "string",

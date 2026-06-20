@@ -121,4 +121,3 @@ public final class CTR extends com.google.flatbuffers.Table {
     public CTR get(CTR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

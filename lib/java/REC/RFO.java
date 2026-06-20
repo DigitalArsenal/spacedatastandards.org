@@ -612,4 +612,3 @@ public final class RFO extends com.google.flatbuffers.Table {
     public RFO get(RFO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

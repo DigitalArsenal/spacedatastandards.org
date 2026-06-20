@@ -7,4 +7,3 @@ public enum KMLStyleState : sbyte
   NORMAL = 0,
   HIGHLIGHT = 1,
 };
-

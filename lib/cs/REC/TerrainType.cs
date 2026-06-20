@@ -17,4 +17,3 @@ public enum TerrainType : sbyte
   MARSH = 10,
   URBAN = 11,
 };
-

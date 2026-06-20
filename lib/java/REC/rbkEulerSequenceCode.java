@@ -21,4 +21,3 @@ public final class rbkEulerSequenceCode {
 
   public static String name(int e) { return names[e]; }
 }
-

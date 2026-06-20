@@ -10,4 +10,3 @@ public final class transmissionClass {
 
   public static String name(int e) { return names[e]; }
 }
-

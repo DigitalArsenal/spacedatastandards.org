@@ -16,4 +16,3 @@ public enum MaterialType : sbyte
   AIR = 9,
   CUSTOM = 10,
 };
-

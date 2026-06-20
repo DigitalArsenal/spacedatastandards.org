@@ -59,4 +59,3 @@ public final class RBK extends com.google.flatbuffers.Table {
     public RBK get(RBK obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

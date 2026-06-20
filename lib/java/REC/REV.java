@@ -135,4 +135,3 @@ public final class REV extends com.google.flatbuffers.Table {
     public REV get(REV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -1202,4 +1202,3 @@ static public class RecordTypeVerify
     return result;
   }
 }
-

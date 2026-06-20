@@ -124,4 +124,3 @@ public final class GPXTrack extends com.google.flatbuffers.Table {
     public GPXTrack get(GPXTrack obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

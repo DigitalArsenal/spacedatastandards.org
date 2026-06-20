@@ -18,4 +18,3 @@ public enum thrusterType : sbyte
   NUCLEAR_THERMAL = 11,
   SOLAR_THERMAL = 12,
 };
-

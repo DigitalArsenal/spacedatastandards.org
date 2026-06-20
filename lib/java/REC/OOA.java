@@ -186,4 +186,3 @@ public final class OOA extends com.google.flatbuffers.Table {
     public OOA get(OOA obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -129,4 +129,3 @@ public final class IntegerArgumentType extends com.google.flatbuffers.Table {
     public IntegerArgumentType get(IntegerArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

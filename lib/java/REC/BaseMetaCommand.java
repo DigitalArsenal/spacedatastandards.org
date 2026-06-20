@@ -68,4 +68,3 @@ public final class BaseMetaCommand extends com.google.flatbuffers.Table {
     public BaseMetaCommand get(BaseMetaCommand obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

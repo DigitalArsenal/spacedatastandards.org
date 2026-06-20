@@ -219,4 +219,3 @@ public final class KML extends com.google.flatbuffers.Table {
     public KML get(KML obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

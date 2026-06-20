@@ -77,4 +77,3 @@ public final class SCVTarget extends com.google.flatbuffers.Table {
     public SCVTarget get(SCVTarget obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

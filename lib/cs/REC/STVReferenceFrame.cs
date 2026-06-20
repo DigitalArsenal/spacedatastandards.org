@@ -12,4 +12,3 @@ public enum STVReferenceFrame : sbyte
   MOON_CI = 5,
   MARS_CI = 6,
 };
-

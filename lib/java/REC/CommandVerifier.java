@@ -100,4 +100,3 @@ public final class CommandVerifier extends com.google.flatbuffers.Table {
     public CommandVerifier get(CommandVerifier obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

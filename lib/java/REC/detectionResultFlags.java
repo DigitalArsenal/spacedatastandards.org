@@ -14,4 +14,3 @@ public final class detectionResultFlags {
   public static final long SIDELOBE = 32L;
   public static final long MERGED = 64L;
 }
-

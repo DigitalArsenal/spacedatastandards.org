@@ -222,4 +222,3 @@ public final class SCVPackedGeometryChunk extends com.google.flatbuffers.Table {
     public SCVPackedGeometryChunk get(SCVPackedGeometryChunk obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -88,4 +88,3 @@ public final class KMLPolygon extends com.google.flatbuffers.Table {
     public KMLPolygon get(KMLPolygon obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

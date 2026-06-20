@@ -115,4 +115,3 @@ public final class RelativeTimeParameterType extends com.google.flatbuffers.Tabl
     public RelativeTimeParameterType get(RelativeTimeParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

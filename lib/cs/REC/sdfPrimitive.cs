@@ -23,4 +23,3 @@ public enum sdfPrimitive : byte
   /// Plugin-defined custom SDF.
   CUSTOM = 255,
 };
-

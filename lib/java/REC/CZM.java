@@ -123,4 +123,3 @@ public final class CZM extends com.google.flatbuffers.Table {
     public CZM get(CZM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

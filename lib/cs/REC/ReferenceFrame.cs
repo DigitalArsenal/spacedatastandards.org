@@ -15,4 +15,3 @@ public enum ReferenceFrame : sbyte
   SEZ = 8,
   LVLH = 9,
 };
-

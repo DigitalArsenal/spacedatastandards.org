@@ -13,4 +13,3 @@ public enum numResultStatus : sbyte
   /// Iteration did not reach ACCURACY within MAX_ITERATIONS.
   DID_NOT_CONVERGE = 3,
 };
-

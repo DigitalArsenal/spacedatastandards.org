@@ -13,4 +13,3 @@ public final class missileEnvironment {
 
   public static String name(int e) { return names[e]; }
 }
-

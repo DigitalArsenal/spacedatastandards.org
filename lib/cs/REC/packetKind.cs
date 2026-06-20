@@ -7,4 +7,3 @@ public enum packetKind : sbyte
   TM = 0,
   TC = 1,
 };
-

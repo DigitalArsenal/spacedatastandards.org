@@ -501,7 +501,9 @@
           "x-flatbuffer-type": "double"
         },
         "MAX_CLOCK_ANGLE_DEG": {
-          "type": "number"
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "360.0"
         },
         "X_HALF_ANGLE_DEG": {
           "type": "number",

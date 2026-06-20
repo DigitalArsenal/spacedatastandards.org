@@ -247,4 +247,3 @@ public final class LGR extends com.google.flatbuffers.Table {
     public LGR get(LGR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

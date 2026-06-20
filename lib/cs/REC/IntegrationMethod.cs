@@ -15,4 +15,3 @@ public enum IntegrationMethod : sbyte
   ADAMS_BASHFORTH = 8,
   GAUSS_JACKSON = 9,
 };
-

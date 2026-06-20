@@ -25,4 +25,3 @@ public final class numOperationCode {
 
   public static String name(int e) { return names[e]; }
 }
-

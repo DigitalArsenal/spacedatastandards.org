@@ -91,4 +91,3 @@ public final class Argument extends com.google.flatbuffers.Table {
     public Argument get(Argument obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

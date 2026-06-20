@@ -14,4 +14,3 @@ public enum drainBehavior : byte
   /// Invocation drains to empty before returning.
   DRAIN_TO_EMPTY = 2,
 };
-

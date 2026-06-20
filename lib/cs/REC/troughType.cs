@@ -8,4 +8,3 @@ public enum troughType : sbyte
   WEST = 1,
   NEITHER = 2,
 };
-

@@ -18,4 +18,3 @@ public enum pivStatus : int
   /// Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure.
   FAILED = 3,
 };
-

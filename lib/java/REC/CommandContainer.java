@@ -76,4 +76,3 @@ public final class CommandContainer extends com.google.flatbuffers.Table {
     public CommandContainer get(CommandContainer obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -73,4 +73,3 @@ public final class AggregateMember extends com.google.flatbuffers.Table {
     public AggregateMember get(AggregateMember obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

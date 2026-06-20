@@ -10,4 +10,3 @@ public enum orbitObjectType : sbyte
   TBA = 3,
   UNKNOWN = 4,
 };
-

@@ -74,4 +74,3 @@ public final class CZMColor extends com.google.flatbuffers.Table {
     public CZMColor get(CZMColor obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

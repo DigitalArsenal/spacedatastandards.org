@@ -14,4 +14,3 @@ public final class Ellipsoid {
 
   public static String name(int e) { return names[e]; }
 }
-

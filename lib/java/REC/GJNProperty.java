@@ -108,4 +108,3 @@ public final class GJNProperty extends com.google.flatbuffers.Table {
     public GJNProperty get(GJNProperty obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

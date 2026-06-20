@@ -121,4 +121,3 @@ public final class SNR extends com.google.flatbuffers.Table {
     public SNR get(SNR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

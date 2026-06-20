@@ -103,4 +103,3 @@ public final class XTCHeader extends com.google.flatbuffers.Table {
     public XTCHeader get(XTCHeader obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

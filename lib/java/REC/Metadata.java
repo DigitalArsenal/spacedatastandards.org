@@ -475,4 +475,3 @@ public final class Metadata extends com.google.flatbuffers.Table {
     public Metadata get(Metadata obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

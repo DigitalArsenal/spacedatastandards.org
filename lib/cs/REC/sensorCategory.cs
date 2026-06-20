@@ -17,4 +17,3 @@ public enum sensorCategory : byte
   LIDAR = 5,
   CUSTOM = 255,
 };
-

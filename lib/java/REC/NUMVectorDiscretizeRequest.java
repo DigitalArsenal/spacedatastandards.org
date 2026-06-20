@@ -111,4 +111,3 @@ public final class NUMVectorDiscretizeRequest extends com.google.flatbuffers.Tab
     public NUMVectorDiscretizeRequest get(NUMVectorDiscretizeRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

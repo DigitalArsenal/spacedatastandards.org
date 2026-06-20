@@ -160,4 +160,3 @@ public final class CZMPolyline extends com.google.flatbuffers.Table {
     public CZMPolyline get(CZMPolyline obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

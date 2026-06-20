@@ -20,4 +20,3 @@ public enum MissileType : sbyte
   BALLISTIC = 13,
   TORPEDO = 14,
 };
-

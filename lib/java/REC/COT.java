@@ -154,4 +154,3 @@ public final class COT extends com.google.flatbuffers.Table {
     public COT get(COT obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

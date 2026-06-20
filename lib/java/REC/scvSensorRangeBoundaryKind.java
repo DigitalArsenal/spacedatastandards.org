@@ -10,4 +10,3 @@ public final class scvSensorRangeBoundaryKind {
 
   public static String name(int e) { return names[e]; }
 }
-

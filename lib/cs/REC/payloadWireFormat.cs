@@ -13,4 +13,3 @@ public enum payloadWireFormat : byte
   /// Body is a raw aligned binary chunk (for example zero-copy structs).
   ALIGNED_BINARY = 1,
 };
-

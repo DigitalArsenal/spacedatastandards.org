@@ -10,4 +10,3 @@ public enum LeadMethod : sbyte
   CONSTANT_BEARING = 3,
   PURSUIT = 4,
 };
-

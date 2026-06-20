@@ -12,4 +12,3 @@ public enum StringSizeType : sbyte
   /// Variable with termination character
   TERMINATION_CHAR = 2,
 };
-

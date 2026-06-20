@@ -76,4 +76,3 @@ public final class SCHEMA_STANDARD extends com.google.flatbuffers.Table {
     public SCHEMA_STANDARD get(SCHEMA_STANDARD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

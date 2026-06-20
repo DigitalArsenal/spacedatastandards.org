@@ -76,4 +76,3 @@ public final class PLGTimerSpec extends com.google.flatbuffers.Table {
     public PLGTimerSpec get(PLGTimerSpec obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

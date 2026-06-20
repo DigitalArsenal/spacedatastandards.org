@@ -124,4 +124,3 @@ public final class GPXRoute extends com.google.flatbuffers.Table {
     public GPXRoute get(GPXRoute obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

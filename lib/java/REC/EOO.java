@@ -772,4 +772,3 @@ public final class EOO extends com.google.flatbuffers.Table {
     public EOO get(EOO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

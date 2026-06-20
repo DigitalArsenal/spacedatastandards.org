@@ -87,4 +87,3 @@ public final class SCVProgress extends com.google.flatbuffers.Table {
     public SCVProgress get(SCVProgress obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

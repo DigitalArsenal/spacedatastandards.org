@@ -14,4 +14,3 @@ public enum scvMetricSeriesKind : ushort
   OVERLAP_COUNT = 7,
   LATITUDE_BAND_COVERAGE = 8,
 };
-

@@ -53,4 +53,3 @@ public final class KMLWait extends com.google.flatbuffers.Table {
     public KMLWait get(KMLWait obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

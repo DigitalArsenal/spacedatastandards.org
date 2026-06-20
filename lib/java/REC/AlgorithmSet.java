@@ -72,4 +72,3 @@ public final class AlgorithmSet extends com.google.flatbuffers.Table {
     public AlgorithmSet get(AlgorithmSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

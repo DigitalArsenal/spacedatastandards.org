@@ -43,4 +43,3 @@ public final class lambertVector3 extends Struct {
     public lambertVector3 get(lambertVector3 obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

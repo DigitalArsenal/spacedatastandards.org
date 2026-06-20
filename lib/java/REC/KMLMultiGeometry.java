@@ -150,4 +150,3 @@ public final class KMLMultiGeometry extends com.google.flatbuffers.Table {
     public KMLMultiGeometry get(KMLMultiGeometry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

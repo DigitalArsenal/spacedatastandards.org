@@ -11,4 +11,3 @@ public enum CountermeasureStatus : sbyte
   RELOADING = 4,
   FAILED = 5,
 };
-

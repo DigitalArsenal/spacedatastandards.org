@@ -99,4 +99,3 @@ public final class KMLLineStyle extends com.google.flatbuffers.Table {
     public KMLLineStyle get(KMLLineStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

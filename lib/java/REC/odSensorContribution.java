@@ -97,4 +97,3 @@ public final class odSensorContribution extends com.google.flatbuffers.Table {
     public odSensorContribution get(odSensorContribution obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

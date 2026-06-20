@@ -95,4 +95,3 @@ public final class ArrayParameterType extends com.google.flatbuffers.Table {
     public ArrayParameterType get(ArrayParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

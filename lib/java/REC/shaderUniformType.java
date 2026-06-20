@@ -33,4 +33,3 @@ public final class shaderUniformType {
 
   public static String name(int e) { return names[e]; }
 }
-

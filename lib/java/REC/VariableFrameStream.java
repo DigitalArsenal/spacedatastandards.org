@@ -92,4 +92,3 @@ public final class VariableFrameStream extends com.google.flatbuffers.Table {
     public VariableFrameStream get(VariableFrameStream obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

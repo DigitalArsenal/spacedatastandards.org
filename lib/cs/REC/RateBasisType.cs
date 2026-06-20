@@ -10,4 +10,3 @@ public enum RateBasisType : sbyte
   /// Rate per container occurrence
   PER_CONTAINER = 1,
 };
-

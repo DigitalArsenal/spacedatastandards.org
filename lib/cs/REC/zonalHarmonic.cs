@@ -18,4 +18,3 @@ public enum zonalHarmonic : sbyte
   J11 = 10,
   J12 = 11,
 };
-

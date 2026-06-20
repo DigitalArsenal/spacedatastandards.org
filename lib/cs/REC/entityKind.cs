@@ -15,4 +15,3 @@ public enum entityKind : sbyte
   SENSOR = 7,
   OTHER = 127,
 };
-

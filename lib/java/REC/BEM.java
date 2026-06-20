@@ -184,4 +184,3 @@ public final class BEM extends com.google.flatbuffers.Table {
     public BEM get(BEM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

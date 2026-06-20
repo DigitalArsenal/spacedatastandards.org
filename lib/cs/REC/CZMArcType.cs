@@ -8,4 +8,3 @@ public enum CZMArcType : sbyte
   GEODESIC = 1,
   RHUMB = 2,
 };
-

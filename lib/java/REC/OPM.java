@@ -179,4 +179,3 @@ public final class OPM extends com.google.flatbuffers.Table {
     public OPM get(OPM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -63,4 +63,3 @@ public final class Score extends com.google.flatbuffers.Table {
     public Score get(Score obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

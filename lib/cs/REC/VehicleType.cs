@@ -21,4 +21,3 @@ public enum VehicleType : sbyte
   SAM = 14,
   RADAR = 15,
 };
-

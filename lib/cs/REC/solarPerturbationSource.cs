@@ -9,4 +9,3 @@ public enum solarPerturbationSource : sbyte
   DE430 = 1,
   DE431 = 2,
 };
-

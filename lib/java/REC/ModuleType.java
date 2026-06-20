@@ -42,4 +42,3 @@ public final class ModuleType {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -79,4 +79,3 @@ public final class FRMMatrix3 extends com.google.flatbuffers.Table {
     public FRMMatrix3 get(FRMMatrix3 obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

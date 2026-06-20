@@ -238,4 +238,3 @@ public final class CZMLabel extends com.google.flatbuffers.Table {
     public CZMLabel get(CZMLabel obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

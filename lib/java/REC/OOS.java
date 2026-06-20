@@ -173,4 +173,3 @@ public final class OOS extends com.google.flatbuffers.Table {
     public OOS get(OOS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

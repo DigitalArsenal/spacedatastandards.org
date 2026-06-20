@@ -12,4 +12,3 @@ public enum TorpedoGuidanceMode : sbyte
   SNAKE_SEARCH = 5,
   CEILING_BOUNCE = 6,
 };
-

@@ -74,4 +74,3 @@ public final class KMLLod extends com.google.flatbuffers.Table {
     public KMLLod get(KMLLod obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

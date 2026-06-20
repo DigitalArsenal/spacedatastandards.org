@@ -8,4 +8,3 @@ public enum acwOperationCode : sbyte
   /// Compute access windows from pre-sampled target Cartesian states.
   COMPUTE_ACCESS_WINDOWS = 1,
 };
-

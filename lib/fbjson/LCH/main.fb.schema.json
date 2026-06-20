@@ -58,7 +58,8 @@
             "Error": {
               "value": 2
             }
-          }
+          },
+          "x-flatbuffer-default": "Request"
         },
         "ROLE": {
           "$ref": "#/definitions/licensingChallengeRole",
@@ -72,7 +73,8 @@
             "Provider": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "Requester"
         },
         "REQUEST_ID": {
           "type": "string",

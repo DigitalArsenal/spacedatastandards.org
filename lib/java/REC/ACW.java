@@ -59,4 +59,3 @@ public final class ACW extends com.google.flatbuffers.Table {
     public ACW get(ACW obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -67,4 +67,3 @@ public final class SCVLatitudeBandStat extends com.google.flatbuffers.Table {
     public SCVLatitudeBandStat get(SCVLatitudeBandStat obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

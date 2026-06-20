@@ -7,4 +7,3 @@ public enum DataType : sbyte
   OBSERVED = 0,
   PREDICTED = 1,
 };
-

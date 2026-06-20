@@ -87,4 +87,3 @@ public final class KMLLineString extends com.google.flatbuffers.Table {
     public KMLLineString get(KMLLineString obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

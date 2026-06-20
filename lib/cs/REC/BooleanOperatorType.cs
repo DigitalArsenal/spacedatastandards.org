@@ -12,4 +12,3 @@ public enum BooleanOperatorType : sbyte
   /// Logical XOR
   XOR = 2,
 };
-

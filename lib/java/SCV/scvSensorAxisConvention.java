@@ -9,4 +9,3 @@ public final class scvSensorAxisConvention {
 
   public static String name(int e) { return names[e]; }
 }
-

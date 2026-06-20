@@ -118,4 +118,3 @@ public final class LMO extends com.google.flatbuffers.Table {
     public LMO get(LMO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -6,4 +6,3 @@ public enum ScoreType : sbyte
 {
   OUTLIER = 0,
 };
-

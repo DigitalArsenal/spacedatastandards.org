@@ -11,4 +11,3 @@ public final class KMLUnits {
 
   public static String name(int e) { return names[e]; }
 }
-

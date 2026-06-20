@@ -11,4 +11,3 @@ public enum BusStabilizationType : sbyte
   DUAL_SPIN = 4,
   NONE = 5,
 };
-

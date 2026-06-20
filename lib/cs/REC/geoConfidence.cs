@@ -9,4 +9,3 @@ public enum geoConfidence : sbyte
   LOW = 2,
   TENTATIVE = 3,
 };
-

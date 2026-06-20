@@ -1,9 +1,74 @@
 import assert from "node:assert/strict";
+import { execFile as execFileCallback } from "node:child_process";
+import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const execFile = promisify(execFileCallback);
+const archiveLanguages = [
+  "cpp",
+  "cs",
+  "dart",
+  "go",
+  "java",
+  "js",
+  "json",
+  "kt",
+  "lob",
+  "php",
+  "py",
+  "rs",
+  "sw",
+  "ts",
+];
+
+const headerMarker = "// -----------------------------------END_HEADER";
+
+function parseSchemaHeader(schemaSource) {
+  const [header, body] = schemaSource.split(headerMarker);
+  assert.ok(body, "schema should contain a generated header marker");
+  const hash = header.match(/^\/\/ Hash: ([a-f0-9]{64})$/m)?.[1];
+  const version = header.match(/^\/\/ Version: ([^\n]+)$/m)?.[1];
+  assert.ok(hash, "schema should contain a generated hash header");
+  assert.ok(version, "schema should contain a generated version header");
+  return { hash, version, body: body.trim() };
+}
+
+async function readJson(relativePath) {
+  return JSON.parse(await fs.readFile(path.join(repoRoot, relativePath), "utf8"));
+}
+
+async function readTarText(archivePath) {
+  const { stdout: listing } = await execFile("tar", ["-tzf", archivePath], {
+    maxBuffer: 1024 * 1024 * 8,
+  });
+  const entries = listing
+    .split("\n")
+    .map((entry) => entry.trim())
+    .filter((entry) => entry && !entry.endsWith("/"));
+  assert.ok(entries.length > 0, `${archivePath} should contain files`);
+  const { stdout } = await execFile("tar", ["-xOf", archivePath, ...entries], {
+    maxBuffer: 1024 * 1024 * 80,
+  });
+  return `${listing}\n${stdout}`;
+}
+
+async function listFiles(dir, extension) {
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const entryPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        return listFiles(entryPath, extension);
+      }
+      return entry.name.endsWith(extension) ? [entryPath] : [];
+    }),
+  );
+  return files.flat();
+}
 
 describe("SCV sensor coverage schema", () => {
   it("defines the canonical coverage analytics ABI", async () => {
@@ -126,6 +191,108 @@ describe("SCV sensor coverage schema", () => {
     assert.match(schemaSource, /\bMARS\b/);
     assert.match(tsMainSource, /\bSCV\b/);
     assert.match(jsMainSource, /\bSCV\b/);
+  });
+
+  it("records the generated schema hash in the SCV header and manifest", async () => {
+    const schemaPath = path.join(repoRoot, "schema", "SCV", "main.fbs");
+    const [schemaSource, packageJson, manifest] = await Promise.all([
+      fs.readFile(schemaPath, "utf8"),
+      readJson("package.json"),
+      readJson("dist/manifest.json"),
+    ]);
+    const { hash } = parseSchemaHeader(schemaSource);
+    const actualHash = createHash("sha256").update(parseSchemaHeader(schemaSource).body).digest("hex");
+
+    assert.equal(hash, actualHash);
+    assert.equal(manifest.version, packageJson.version);
+    assert.equal(manifest.STANDARDS.SCV.IDL, schemaSource);
+    assert.match(manifest.STANDARDS.SCV.IDL, /table SCVSensorShapeContract/);
+    assert.match(manifest.STANDARDS.SCV.IDL, /SHAPE_CONTRACT:SCVSensorShapeContract/);
+    assert.match(manifest.STANDARDS.SCV.IDL, new RegExp(`// Hash: ${actualHash}`));
+  });
+
+  it("keeps SCV and REC distribution archives in generated binding parity", async () => {
+    const requiredTokens = [
+      "SCVSensorShapeContract",
+      "scvSensorAxisConvention",
+      "scvSensorRangeBoundaryKind",
+    ];
+
+    for (const standard of ["SCV", "REC"]) {
+      for (const language of archiveLanguages) {
+        const archivePath = path.join(repoRoot, "dist", standard, `${standard}.${language}.tar.gz`);
+        const archiveText = await readTarText(archivePath);
+        for (const token of requiredTokens) {
+          assert.match(
+            archiveText,
+            new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+            `${archivePath} should include ${token}`,
+          );
+        }
+        assert.match(
+          archiveText,
+          /\b(?:SHAPE_CONTRACT|SHAPECONTRACT|shapeContract|ShapeContract)\b/,
+          `${archivePath} should include the SCVSensor.SHAPE_CONTRACT binding`,
+        );
+        assert.match(
+          archiveText,
+          /(?:LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT|localXRightYUpZBoresight|LocalXRightYUpZBoresight)\b/,
+          `${archivePath} should include the scvSensorAxisConvention value`,
+        );
+        assert.match(
+          archiveText,
+          /(?:SAR_ANNULAR_SECTOR|sarAnnularSector|SarAnnularSector)\b/,
+          `${archivePath} should include the SAR annular sector shape kind`,
+        );
+        assert.match(
+          archiveText,
+          /\b(?:SHAPE_KIND|SHAPEKIND|shapeKind|ShapeKind)\b/,
+          `${archivePath} should include the SCVSensorShapeContract.SHAPE_KIND binding`,
+        );
+        assert.match(
+          archiveText,
+          /\b(?:RANGE_BOUNDARY|RANGEBOUNDARY|rangeBoundary|RangeBoundary)\b/,
+          `${archivePath} should include the SCVSensorShapeContract.RANGE_BOUNDARY binding`,
+        );
+        assert.doesNotMatch(archiveText, /\bRANGE_BOUNDARY_KIND\b/);
+      }
+    }
+  });
+
+  it("adds complete fbjson metadata for sensor shape contract defaults", async () => {
+    const [scvFbjson, recFbjson] = await Promise.all([
+      readJson("lib/fbjson/SCV/main.fb.schema.json"),
+      readJson("lib/fbjson/REC/main.fb.schema.json"),
+    ]);
+
+    for (const [label, schema] of [
+      ["SCV", scvFbjson],
+      ["REC", recFbjson],
+    ]) {
+      const props = schema.definitions.SCVSensorShapeContract.properties;
+      assert.ok(props.MAX_CLOCK_ANGLE_DEG, `${label} should expose MAX_CLOCK_ANGLE_DEG`);
+      assert.deepEqual(props.MAX_CLOCK_ANGLE_DEG, {
+        type: "number",
+        "x-flatbuffer-type": "double",
+        "x-flatbuffer-default": "360.0",
+      });
+    }
+  });
+
+  it("does not emit blank lines at EOF in generated C# and Java bindings", async () => {
+    const files = (
+      await Promise.all([
+        listFiles(path.join(repoRoot, "lib", "cs", "SCV"), ".cs"),
+        listFiles(path.join(repoRoot, "lib", "cs", "REC"), ".cs"),
+        listFiles(path.join(repoRoot, "lib", "java", "SCV"), ".java"),
+        listFiles(path.join(repoRoot, "lib", "java", "REC"), ".java"),
+      ])
+    ).flat();
+
+    for (const file of files) {
+      const source = await fs.readFile(file, "utf8");
+      assert.doesNotMatch(source, /\n[ \t]*\n$/, file);
+    }
   });
 
   it("generates sensor shape contract bindings without enum or field collisions", async () => {

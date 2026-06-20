@@ -9,4 +9,3 @@ public enum scvAnalysisMode : byte
   SWATH = 2,
   COMBINED = 3,
 };
-

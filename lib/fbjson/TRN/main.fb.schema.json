@@ -172,20 +172,25 @@
             "KRIGING": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "BILINEAR"
         },
         "CACHE_ENABLED": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         },
         "MAX_CACHE_TILES": {
           "type": "integer",
           "minimum": 0,
           "maximum": 65535,
-          "x-flatbuffer-type": "uint16"
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "100"
         },
         "VERTICAL_EXAGGERATION": {
-          "type": "number"
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
         }
       },
       "additionalProperties": false

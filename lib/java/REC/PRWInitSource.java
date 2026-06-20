@@ -90,4 +90,3 @@ public final class PRWInitSource extends com.google.flatbuffers.Table {
     public PRWInitSource get(PRWInitSource obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

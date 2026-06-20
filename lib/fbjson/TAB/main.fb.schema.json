@@ -105,7 +105,8 @@
         "ACCEPTS_ANY_FLATBUFFER": {
           "type": "boolean",
           "description": "True when this port/type set accepts any FlatBuffer frame.",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         },
         "WIRE_FORMAT": {
           "$ref": "#/definitions/payloadWireFormat",
@@ -121,7 +122,8 @@
               "value": 1,
               "description": "Body is a raw aligned binary chunk (for example zero-copy structs)."
             }
-          }
+          },
+          "x-flatbuffer-default": "FLATBUFFER"
         },
         "FIXED_STRING_LENGTH": {
           "type": "integer",

@@ -63,4 +63,3 @@ public final class SCVHeatmapCell extends com.google.flatbuffers.Table {
     public SCVHeatmapCell get(SCVHeatmapCell obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -109,4 +109,3 @@ public final class SCVCellStat extends com.google.flatbuffers.Table {
     public SCVCellStat get(SCVCellStat obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

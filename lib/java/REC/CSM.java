@@ -114,4 +114,3 @@ public final class CSM extends com.google.flatbuffers.Table {
     public CSM get(CSM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

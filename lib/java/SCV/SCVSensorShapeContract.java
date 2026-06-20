@@ -113,4 +113,3 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     public SCVSensorShapeContract get(SCVSensorShapeContract obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

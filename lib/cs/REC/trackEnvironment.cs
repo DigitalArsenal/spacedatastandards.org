@@ -11,4 +11,3 @@ public enum trackEnvironment : sbyte
   LAND = 4,
   UNKNOWN = 5,
 };
-

@@ -74,4 +74,3 @@ public final class CZMOrientation extends com.google.flatbuffers.Table {
     public CZMOrientation get(CZMOrientation obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

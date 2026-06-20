@@ -4,6 +4,7 @@ import shutil
 import flatbuffers
 import json
 import sys
+import re
 
 # Set the path for the FlatBuffers schema files
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -16,6 +17,23 @@ from SCHEMA_STANDARD import SCHEMA_STANDARDT
 
 
 PRESERVED_DIST_FILES = {"sds_parsers.js", "sds_parsers.wasm"}
+ARCHIVED_LIB_DIRS = {
+    "cpp",
+    "cs",
+    "dart",
+    "go",
+    "java",
+    "js",
+    "json",
+    "kt",
+    "lob",
+    "php",
+    "py",
+    "rs",
+    "sw",
+    "ts",
+}
+DEPENDENCY_ARCHIVE_LIB_DIRS = {"cpp", "dart", "json", "lob", "rs", "sw"}
 
 
 def read_manifest_flatbuffer(file_path):
@@ -84,10 +102,42 @@ def write_json(file_path, data):
         json.dump(data, f, indent=4)
 
 
-def create_tar_gz_of_directory(directory, output_dir):
-    """Create a tar.gz file from a directory."""
+def read_schema_dependencies(schema_dir, schema_name):
+    """Read transitive schema include dependencies for a standard."""
+    dependencies = []
+    visited = {schema_name}
+
+    def visit(current_name):
+        schema_path = os.path.join(schema_dir, current_name, "main.fbs")
+        if not os.path.exists(schema_path):
+            return
+        with open(schema_path, "r") as schema_file:
+            source = schema_file.read()
+        for include_path in re.findall(r'include\s+"([^"]+)";', source):
+            normalized = include_path.replace("\\", "/")
+            parts = normalized.split("/")
+            if normalized.startswith("../") and len(parts) >= 2:
+                dependency_name = parts[1]
+            elif normalized.endswith("/main.fbs") and len(parts) >= 2:
+                dependency_name = parts[-2]
+            else:
+                continue
+            if dependency_name in visited:
+                continue
+            visited.add(dependency_name)
+            dependencies.append(dependency_name)
+            visit(dependency_name)
+
+    visit(schema_name)
+    return dependencies
+
+
+def create_tar_gz_of_directory(directory, output_dir, extra_directories=None):
+    """Create a tar.gz file from a directory and optional dependency directories."""
     with tarfile.open(output_dir, "w:gz") as tar:
         tar.add(directory, arcname=os.path.basename(directory))
+        for extra_directory in extra_directories or []:
+            tar.add(extra_directory, arcname=os.path.basename(extra_directory))
 
 
 def main():
@@ -116,10 +166,13 @@ def main():
         os.makedirs(dist_dir)
 
     # Process each child directory in lib_dir
-    for subdir in os.listdir(lib_dir):
+    schema_dependencies = {}
+    for subdir in sorted(os.listdir(lib_dir)):
+        if subdir not in ARCHIVED_LIB_DIRS:
+            continue
         subdir_path = os.path.join(lib_dir, subdir)
         if os.path.isdir(subdir_path):
-            for child in os.listdir(subdir_path):
+            for child in sorted(os.listdir(subdir_path)):
                 child_path = os.path.join(subdir_path, child)
                 if os.path.isdir(child_path):
                     child_dist_dir = os.path.join(dist_dir, child)
@@ -127,7 +180,20 @@ def main():
 
                     archive_name = f"{child}.{subdir}.tar.gz"
                     output_file = os.path.join(child_dist_dir, archive_name)
-                    create_tar_gz_of_directory(child_path, output_file)
+                    extra_directories = []
+                    if child == "REC" and subdir in DEPENDENCY_ARCHIVE_LIB_DIRS:
+                        if child not in schema_dependencies:
+                            schema_dependencies[child] = read_schema_dependencies(
+                                schema_dir, child
+                            )
+                        extra_directories = [
+                            os.path.join(subdir_path, dependency)
+                            for dependency in schema_dependencies[child]
+                            if os.path.isdir(os.path.join(subdir_path, dependency))
+                        ]
+                    create_tar_gz_of_directory(
+                        child_path, output_file, extra_directories
+                    )
 
                     # Initialize or append to 'files' in the manifest
                     if child not in standards:

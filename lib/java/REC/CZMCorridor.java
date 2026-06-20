@@ -198,4 +198,3 @@ public final class CZMCorridor extends com.google.flatbuffers.Table {
     public CZMCorridor get(CZMCorridor obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

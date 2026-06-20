@@ -6,4 +6,3 @@ public enum scvSensorAxisConvention : byte
 {
   LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0,
 };
-

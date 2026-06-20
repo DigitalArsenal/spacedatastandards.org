@@ -63,4 +63,3 @@ public final class SCVHistogramBin extends com.google.flatbuffers.Table {
     public SCVHistogramBin get(SCVHistogramBin obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

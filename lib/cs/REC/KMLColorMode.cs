@@ -7,4 +7,3 @@ public enum KMLColorMode : sbyte
   NORMAL = 0,
   RANDOM = 1,
 };
-

@@ -22,4 +22,3 @@ public final class payloadWireFormat {
 
   public static String name(int e) { return names[e]; }
 }
-

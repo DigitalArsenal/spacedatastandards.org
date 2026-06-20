@@ -74,7 +74,8 @@
             "MULTI_SHORT_PERIOD": {
               "value": 2
             }
-          }
+          },
+          "x-flatbuffer-default": "SINGLE"
         },
         "N_REVS": {
           "type": "integer",
@@ -124,7 +125,8 @@
             "ERROR": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "OK"
         },
         "ERROR_CODE": {
           "type": "string",

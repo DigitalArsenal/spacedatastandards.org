@@ -74,4 +74,3 @@ public final class GJNPosition extends com.google.flatbuffers.Table {
     public GJNPosition get(GJNPosition obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

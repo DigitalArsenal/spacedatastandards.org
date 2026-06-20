@@ -555,4 +555,3 @@ public final class SOI extends com.google.flatbuffers.Table {
     public SOI get(SOI obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

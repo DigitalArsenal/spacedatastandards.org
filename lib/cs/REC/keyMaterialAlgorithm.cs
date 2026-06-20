@@ -12,4 +12,3 @@ public enum keyMaterialAlgorithm : sbyte
   Aes256Gcm = 5,
   Opaque = 6,
 };
-

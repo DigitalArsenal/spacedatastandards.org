@@ -57,4 +57,3 @@ public final class sdfResult extends Struct {
     public sdfResult get(sdfResult obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

@@ -96,4 +96,3 @@ public final class SHWCompileResponse extends com.google.flatbuffers.Table {
     public SHWCompileResponse get(SHWCompileResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

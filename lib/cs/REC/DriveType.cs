@@ -10,4 +10,3 @@ public enum DriveType : sbyte
   WHEELED_8X8 = 3,
   HALF_TRACK = 4,
 };
-

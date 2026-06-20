@@ -16,4 +16,3 @@ public enum DataSourceType : sbyte
   /// Ground-generated data
   GROUND = 4,
 };
-

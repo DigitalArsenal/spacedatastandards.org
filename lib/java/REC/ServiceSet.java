@@ -59,4 +59,3 @@ public final class ServiceSet extends com.google.flatbuffers.Table {
     public ServiceSet get(ServiceSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

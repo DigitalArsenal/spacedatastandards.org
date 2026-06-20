@@ -60,4 +60,3 @@ public final class CZMDistanceDisplayCondition extends com.google.flatbuffers.Ta
     public CZMDistanceDisplayCondition get(CZMDistanceDisplayCondition obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

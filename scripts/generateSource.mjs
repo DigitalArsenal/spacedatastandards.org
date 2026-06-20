@@ -100,11 +100,29 @@ function runCodeGeneration(flatc, schemaInput, datatype) {
   return outputs;
 }
 
-async function writeOutputs(baseDir, outputs) {
+function normalizeGeneratedSource(source, datatypeExt, schemaName) {
+  let cleanedSource = source.replace(/[ \t]+$/gm, "");
+  if (
+    (datatypeExt === "cs" || datatypeExt === "java") &&
+    (schemaName === "SCV" || schemaName === "REC")
+  ) {
+    cleanedSource = cleanedSource.replace(/\n+$/, "\n");
+    if (cleanedSource && !cleanedSource.endsWith("\n")) {
+      cleanedSource += "\n";
+    }
+  }
+  return cleanedSource;
+}
+
+async function writeOutputs(baseDir, outputs, datatypeExt, schemaName) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    await fs.writeFile(outputPath, source.replace(/[ \t]+$/gm, ""), "utf8");
+    await fs.writeFile(
+      outputPath,
+      normalizeGeneratedSource(source, datatypeExt, schemaName),
+      "utf8",
+    );
   }
 }
 
@@ -120,7 +138,7 @@ async function main() {
     for (const datatype of datatypes) {
       const outputs = runCodeGeneration(flatc, schemaInput, datatype);
       const outputDir = path.join(LIB_DIR, datatype.ext, schemaName);
-      await writeOutputs(outputDir, outputs);
+      await writeOutputs(outputDir, outputs, datatype.ext, schemaName);
     }
   }
 

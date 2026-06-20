@@ -25,4 +25,3 @@ public final class drainBehavior {
 
   public static String name(int e) { return names[e]; }
 }
-

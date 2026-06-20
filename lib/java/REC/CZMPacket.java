@@ -374,4 +374,3 @@ public final class CZMPacket extends com.google.flatbuffers.Table {
     public CZMPacket get(CZMPacket obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

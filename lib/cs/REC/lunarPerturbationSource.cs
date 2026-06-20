@@ -10,4 +10,3 @@ public enum lunarPerturbationSource : sbyte
   DE431 = 2,
   LP150Q = 3,
 };
-

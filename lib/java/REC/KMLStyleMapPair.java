@@ -62,4 +62,3 @@ public final class KMLStyleMapPair extends com.google.flatbuffers.Table {
     public KMLStyleMapPair get(KMLStyleMapPair obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

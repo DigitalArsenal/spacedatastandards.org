@@ -206,4 +206,3 @@ public final class CZMBillboard extends com.google.flatbuffers.Table {
     public CZMBillboard get(CZMBillboard obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

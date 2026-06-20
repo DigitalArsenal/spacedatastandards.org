@@ -78,4 +78,3 @@ public final class keplerianElements extends com.google.flatbuffers.Table {
     public keplerianElements get(keplerianElements obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

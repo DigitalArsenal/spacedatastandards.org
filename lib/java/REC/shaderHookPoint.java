@@ -20,4 +20,3 @@ public final class shaderHookPoint {
 
   public static String name(int e) { return names[e]; }
 }
-

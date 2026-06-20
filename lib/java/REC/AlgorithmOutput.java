@@ -64,4 +64,3 @@ public final class AlgorithmOutput extends com.google.flatbuffers.Table {
     public AlgorithmOutput get(AlgorithmOutput obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

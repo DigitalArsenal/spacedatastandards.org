@@ -62,4 +62,3 @@ public final class ArrayDimension extends com.google.flatbuffers.Table {
     public ArrayDimension get(ArrayDimension obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -114,4 +114,3 @@ public final class AtmosphericModelFamily {
 
   public static String name(int e) { return names[e]; }
 }
-

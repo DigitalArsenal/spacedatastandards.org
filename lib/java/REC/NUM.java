@@ -99,4 +99,3 @@ public final class NUM extends com.google.flatbuffers.Table {
     public NUM get(NUM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -441,7 +441,8 @@
           "minimum": 0,
           "maximum": 255,
           "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)",
-          "x-flatbuffer-type": "uint8"
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "6"
         },
         "VECTORS": {
           "type": "array",

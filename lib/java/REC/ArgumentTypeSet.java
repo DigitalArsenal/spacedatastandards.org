@@ -137,4 +137,3 @@ public final class ArgumentTypeSet extends com.google.flatbuffers.Table {
     public ArgumentTypeSet get(ArgumentTypeSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

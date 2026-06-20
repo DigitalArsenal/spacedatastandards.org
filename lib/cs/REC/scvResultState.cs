@@ -9,4 +9,3 @@ public enum scvResultState : byte
   CANCELLED = 2,
   FAILED = 3,
 };
-

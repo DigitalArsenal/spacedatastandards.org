@@ -14,4 +14,3 @@ public enum GPXFixType : sbyte
   /// PPP fix
   PPS = 4,
 };
-

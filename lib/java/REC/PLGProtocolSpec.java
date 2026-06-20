@@ -124,4 +124,3 @@ public final class PLGProtocolSpec extends com.google.flatbuffers.Table {
     public PLGProtocolSpec get(PLGProtocolSpec obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

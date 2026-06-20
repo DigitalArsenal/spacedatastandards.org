@@ -8,4 +8,3 @@ public enum lambertSolveState : sbyte
   OK = 0,
   ERROR = 1,
 };
-

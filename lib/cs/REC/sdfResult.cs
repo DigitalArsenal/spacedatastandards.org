@@ -67,4 +67,3 @@ public class sdfResultT
     this.CLOSEST_DISTANCE = 0.0;
   }
 }
-

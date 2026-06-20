@@ -151,4 +151,3 @@ public final class MetaCommand extends com.google.flatbuffers.Table {
     public MetaCommand get(MetaCommand obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

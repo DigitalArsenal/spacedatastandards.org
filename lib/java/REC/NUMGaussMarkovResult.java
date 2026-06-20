@@ -149,4 +149,3 @@ public final class NUMGaussMarkovResult extends com.google.flatbuffers.Table {
     public NUMGaussMarkovResult get(NUMGaussMarkovResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

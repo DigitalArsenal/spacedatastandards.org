@@ -8,4 +8,3 @@ public enum CZMColorBlendMode : sbyte
   REPLACE = 1,
   MIX = 2,
 };
-

@@ -93,4 +93,3 @@ public final class SCVCoverageGrid extends com.google.flatbuffers.Table {
     public SCVCoverageGrid get(SCVCoverageGrid obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

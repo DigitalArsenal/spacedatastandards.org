@@ -126,4 +126,3 @@ public enum rbkOperationCode : sbyte
   /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
   M3_ROTATION_MATRIX = 60,
 };
-

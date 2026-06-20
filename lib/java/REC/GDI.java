@@ -227,4 +227,3 @@ public final class GDI extends com.google.flatbuffers.Table {
     public GDI get(GDI obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

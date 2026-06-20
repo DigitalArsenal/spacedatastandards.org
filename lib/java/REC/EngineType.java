@@ -16,4 +16,3 @@ public final class EngineType {
 
   public static String name(int e) { return names[e]; }
 }
-

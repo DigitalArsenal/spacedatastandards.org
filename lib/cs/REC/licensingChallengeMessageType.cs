@@ -9,4 +9,3 @@ public enum licensingChallengeMessageType : sbyte
   Response = 1,
   Error = 2,
 };
-

@@ -23,4 +23,3 @@ public enum AmmoType : sbyte
   TOP_ATTACK = 16,
   EFP = 17,
 };
-

@@ -36,4 +36,3 @@ public enum propagatorStateFlags : uint
   /// Reserved.
   RESERVED_7 = 128,
 };
-

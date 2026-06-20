@@ -13,4 +13,3 @@ public enum bspInterpolationStatus : sbyte
   /// The interpolation linear system is singular or numerically unstable.
   SINGULAR_SYSTEM = 3,
 };
-

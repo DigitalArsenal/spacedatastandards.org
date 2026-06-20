@@ -11,4 +11,3 @@ public enum DestructionCause : sbyte
   STRUCTURAL_FAILURE = 4,
   FLOODING = 5,
 };
-

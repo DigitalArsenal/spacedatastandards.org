@@ -278,4 +278,3 @@ public final class ATD extends com.google.flatbuffers.Table {
     public ATD get(ATD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

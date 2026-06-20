@@ -10,4 +10,3 @@ public enum keyMaterialRole : sbyte
   VerificationKey = 3,
   DecryptKey = 4,
 };
-

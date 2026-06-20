@@ -71,4 +71,3 @@ public final class SCM extends com.google.flatbuffers.Table {
     public SCM get(SCM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

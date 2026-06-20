@@ -101,4 +101,3 @@ public final class APM extends com.google.flatbuffers.Table {
     public APM get(APM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

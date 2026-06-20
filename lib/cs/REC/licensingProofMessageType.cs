@@ -9,4 +9,3 @@ public enum licensingProofMessageType : sbyte
   ProofAccepted = 1,
   ProofRejected = 2,
 };
-

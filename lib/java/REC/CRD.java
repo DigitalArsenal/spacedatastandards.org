@@ -93,4 +93,3 @@ public final class CRD extends com.google.flatbuffers.Table {
     public CRD get(CRD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

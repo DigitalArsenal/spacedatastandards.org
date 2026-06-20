@@ -12,4 +12,3 @@ public enum TargetType : sbyte
   WRECK = 5,
   UNKNOWN = 6,
 };
-

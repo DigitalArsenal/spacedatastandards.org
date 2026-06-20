@@ -67,4 +67,3 @@ public final class CZMViewFrom extends com.google.flatbuffers.Table {
     public CZMViewFrom get(CZMViewFrom obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

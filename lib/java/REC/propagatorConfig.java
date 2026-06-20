@@ -87,4 +87,3 @@ public final class propagatorConfig extends com.google.flatbuffers.Table {
     public propagatorConfig get(propagatorConfig obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

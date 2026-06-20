@@ -10,4 +10,3 @@ public enum RangefinderType : sbyte
   LASER = 3,
   RADAR = 4,
 };
-

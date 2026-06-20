@@ -10,4 +10,3 @@ public final class KMLGridOrigin {
 
   public static String name(int e) { return names[e]; }
 }
-

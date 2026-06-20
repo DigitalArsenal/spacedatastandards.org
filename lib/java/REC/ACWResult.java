@@ -75,4 +75,3 @@ public final class ACWResult extends com.google.flatbuffers.Table {
     public ACWResult get(ACWResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

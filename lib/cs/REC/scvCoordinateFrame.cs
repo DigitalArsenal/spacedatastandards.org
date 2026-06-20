@@ -11,4 +11,3 @@ public enum scvCoordinateFrame : byte
   ECI = 4,
   CUSTOM = 5,
 };
-

@@ -12,4 +12,3 @@ public enum beamPolarization : sbyte
   DUAL_LINEAR = 5,
   CROSS_POL = 6,
 };
-

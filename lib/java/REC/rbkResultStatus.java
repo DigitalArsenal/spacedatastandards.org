@@ -20,4 +20,3 @@ public final class rbkResultStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

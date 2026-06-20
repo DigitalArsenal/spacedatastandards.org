@@ -121,4 +121,3 @@ public final class EOP extends com.google.flatbuffers.Table {
     public EOP get(EOP obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

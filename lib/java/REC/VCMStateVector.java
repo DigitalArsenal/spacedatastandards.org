@@ -76,4 +76,3 @@ public final class VCMStateVector extends com.google.flatbuffers.Table {
     public VCMStateVector get(VCMStateVector obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

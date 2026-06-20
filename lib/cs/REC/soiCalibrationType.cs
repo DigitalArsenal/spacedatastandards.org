@@ -11,4 +11,3 @@ public enum soiCalibrationType : sbyte
   TEMPORAL = 4,
   NONE = 5,
 };
-

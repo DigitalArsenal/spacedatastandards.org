@@ -417,4 +417,3 @@ public final class OOE extends com.google.flatbuffers.Table {
     public OOE get(OOE obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

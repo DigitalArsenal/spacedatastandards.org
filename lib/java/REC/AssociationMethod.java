@@ -15,4 +15,3 @@ public final class AssociationMethod {
 
   public static String name(int e) { return names[e]; }
 }
-

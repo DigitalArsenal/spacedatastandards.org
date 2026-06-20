@@ -10,4 +10,3 @@ public enum ModuleState : sbyte
   DESTROYED = 3,
   REPAIRING = 4,
 };
-

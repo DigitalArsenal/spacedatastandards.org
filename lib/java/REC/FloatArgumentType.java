@@ -122,4 +122,3 @@ public final class FloatArgumentType extends com.google.flatbuffers.Table {
     public FloatArgumentType get(FloatArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

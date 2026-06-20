@@ -79,4 +79,3 @@ public final class SCVInterval extends com.google.flatbuffers.Table {
     public SCVInterval get(SCVInterval obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -375,4 +375,3 @@ public final class WTH extends com.google.flatbuffers.Table {
     public WTH get(WTH obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -116,4 +116,3 @@ public final class KMF extends com.google.flatbuffers.Table {
     public KMF get(KMF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

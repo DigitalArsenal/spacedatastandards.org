@@ -174,4 +174,3 @@ public final class DFH extends com.google.flatbuffers.Table {
     public DFH get(DFH obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

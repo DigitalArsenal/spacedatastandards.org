@@ -34,4 +34,3 @@ public final class sdfPrimitive {
    */
   public static final int CUSTOM = 255;
 }
-

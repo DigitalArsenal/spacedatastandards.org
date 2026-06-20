@@ -107,4 +107,3 @@ public final class CZMDynInterval extends com.google.flatbuffers.Table {
     public CZMDynInterval get(CZMDynInterval obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -213,4 +213,3 @@ public final class DSS extends com.google.flatbuffers.Table {
     public DSS get(DSS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

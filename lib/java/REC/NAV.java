@@ -201,4 +201,3 @@ public final class NAV extends com.google.flatbuffers.Table {
     public NAV get(NAV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

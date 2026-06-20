@@ -13,4 +13,3 @@ public final class RangefinderType {
 
   public static String name(int e) { return names[e]; }
 }
-

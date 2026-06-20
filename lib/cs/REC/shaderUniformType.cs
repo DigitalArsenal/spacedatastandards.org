@@ -28,4 +28,3 @@ public enum shaderUniformType : byte
   SAMPLER_CUBE = 20,
   SAMPLER_2D_ARRAY = 21,
 };
-

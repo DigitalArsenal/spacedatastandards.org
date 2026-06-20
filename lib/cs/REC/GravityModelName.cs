@@ -14,4 +14,3 @@ public enum GravityModelName : sbyte
   XGM2019E = 7,
   CUSTOM_MODEL = 8,
 };
-

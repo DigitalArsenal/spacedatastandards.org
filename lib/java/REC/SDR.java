@@ -74,4 +74,3 @@ public final class SDR extends com.google.flatbuffers.Table {
     public SDR get(SDR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

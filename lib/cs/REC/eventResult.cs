@@ -11,4 +11,3 @@ public enum eventResult : sbyte
   NOMINAL = 4,
   PENDING = 5,
 };
-

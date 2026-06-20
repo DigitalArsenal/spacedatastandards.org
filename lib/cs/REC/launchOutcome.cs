@@ -10,4 +10,3 @@ public enum launchOutcome : sbyte
   IN_PROGRESS = 3,
   UNKNOWN = 4,
 };
-

@@ -85,4 +85,3 @@ public final class CZMStripeMaterial extends com.google.flatbuffers.Table {
     public CZMStripeMaterial get(CZMStripeMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

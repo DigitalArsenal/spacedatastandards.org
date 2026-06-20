@@ -88,4 +88,3 @@ public final class StringDataEncoding extends com.google.flatbuffers.Table {
     public StringDataEncoding get(StringDataEncoding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

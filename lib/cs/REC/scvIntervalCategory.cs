@@ -10,4 +10,3 @@ public enum scvIntervalCategory : byte
   REVISIT = 3,
   OVERLAP = 4,
 };
-

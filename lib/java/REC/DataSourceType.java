@@ -31,4 +31,3 @@ public final class DataSourceType {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -127,4 +127,3 @@ public final class CHN extends com.google.flatbuffers.Table {
     public CHN get(CHN obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -60,4 +60,3 @@ public final class ACWBlackoutWindow extends com.google.flatbuffers.Table {
     public ACWBlackoutWindow get(ACWBlackoutWindow obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

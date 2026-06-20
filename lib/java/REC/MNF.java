@@ -209,4 +209,3 @@ public final class MNF extends com.google.flatbuffers.Table {
     public MNF get(MNF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

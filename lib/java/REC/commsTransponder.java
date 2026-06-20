@@ -160,4 +160,3 @@ public final class commsTransponder extends com.google.flatbuffers.Table {
     public commsTransponder get(commsTransponder obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

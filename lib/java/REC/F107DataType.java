@@ -12,4 +12,3 @@ public final class F107DataType {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -164,4 +164,3 @@ public final class ENC extends com.google.flatbuffers.Table {
     public ENC get(ENC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -108,4 +108,3 @@ public final class KMLLink extends com.google.flatbuffers.Table {
     public KMLLink get(KMLLink obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

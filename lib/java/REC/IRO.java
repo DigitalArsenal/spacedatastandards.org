@@ -291,4 +291,3 @@ public final class IRO extends com.google.flatbuffers.Table {
     public IRO get(IRO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

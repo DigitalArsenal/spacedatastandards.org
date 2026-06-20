@@ -16,4 +16,3 @@ public final class FuzeType {
 
   public static String name(int e) { return names[e]; }
 }
-

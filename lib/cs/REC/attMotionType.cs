@@ -10,4 +10,3 @@ public enum attMotionType : sbyte
   PRECESSING = 3,
   UNKNOWN = 4,
 };
-

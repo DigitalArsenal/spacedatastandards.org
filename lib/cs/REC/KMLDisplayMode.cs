@@ -7,4 +7,3 @@ public enum KMLDisplayMode : sbyte
   DEFAULT = 0,
   HIDE = 1,
 };
-

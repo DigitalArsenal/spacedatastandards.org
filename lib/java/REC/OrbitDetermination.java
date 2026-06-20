@@ -198,4 +198,3 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     public OrbitDetermination get(OrbitDetermination obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

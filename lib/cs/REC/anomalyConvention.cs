@@ -7,4 +7,3 @@ public enum anomalyConvention : sbyte
   TRUE_ANOMALY = 0,
   MEAN_ANOMALY = 1,
 };
-

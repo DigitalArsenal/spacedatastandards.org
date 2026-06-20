@@ -199,4 +199,3 @@ public final class CZMEllipsoid extends com.google.flatbuffers.Table {
     public CZMEllipsoid get(CZMEllipsoid obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

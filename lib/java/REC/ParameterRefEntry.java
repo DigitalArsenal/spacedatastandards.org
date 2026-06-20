@@ -88,4 +88,3 @@ public final class ParameterRefEntry extends com.google.flatbuffers.Table {
     public ParameterRefEntry get(ParameterRefEntry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

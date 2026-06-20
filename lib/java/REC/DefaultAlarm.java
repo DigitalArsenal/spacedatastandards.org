@@ -74,4 +74,3 @@ public final class DefaultAlarm extends com.google.flatbuffers.Table {
     public DefaultAlarm get(DefaultAlarm obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

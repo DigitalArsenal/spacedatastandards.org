@@ -85,4 +85,3 @@ public final class attCovariance extends com.google.flatbuffers.Table {
     public attCovariance get(attCovariance obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

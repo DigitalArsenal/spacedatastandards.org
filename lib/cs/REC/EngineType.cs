@@ -13,4 +13,3 @@ public enum EngineType : sbyte
   SCRAMJET = 6,
   ELECTRIC = 7,
 };
-

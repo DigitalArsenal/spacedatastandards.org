@@ -30,4 +30,3 @@ public enum ComparisonOperator : sbyte
   /// String does not contain
   NOT_CONTAINS = 11,
 };
-

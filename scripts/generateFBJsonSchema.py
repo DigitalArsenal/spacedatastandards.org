@@ -144,7 +144,7 @@ def parse_fbs_file(fbs_path):
         table_body = table_match.group("body")
         fields = []
         for field_match in re.finditer(
-            r"(?:///\s*(.*?)\s*\n\s*)?(\w+)\s*:\s*(\[?\w+\]?)\s*(?:\(([^)]*)\))?\s*(?:=\s*(\w+))?\s*;",
+            r"(?:///\s*(.*?)\s*\n\s*)?(\w+)\s*:\s*(\[?\w+\]?)\s*(?:\(([^)]*)\))?\s*(?:=\s*([^;\s]+))?\s*;",
             table_body
         ):
             desc = field_match.group(1) or ""
@@ -385,6 +385,8 @@ def augment_definition(defn, name, fbs_info):
                         prop["x-flatbuffer-enum-values"][val_name] = entry
             if field["required"]:
                 prop["x-flatbuffer-required"] = True
+            if field.get("default") is not None:
+                prop["x-flatbuffer-default"] = field["default"]
 
 
 def augment_schema(schema, fbs_info):

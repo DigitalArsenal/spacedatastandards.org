@@ -12,4 +12,3 @@ public enum ionoSource : sbyte
   RADIO_OCCULTATION = 5,
   MODEL = 6,
 };
-

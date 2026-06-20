@@ -18,4 +18,3 @@ public enum IntegerEncodingType : sbyte
   /// Packed BCD
   PACKED_BCD = 5,
 };
-

@@ -51,7 +51,8 @@
           "minimum": 0,
           "maximum": 255,
           "description": "Schema version for forward compatibility",
-          "x-flatbuffer-type": "ubyte"
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "1"
         },
         "KEY_EXCHANGE": {
           "$ref": "#/definitions/KeyExchange",
@@ -62,7 +63,8 @@
             "X25519": {
               "value": 0
             }
-          }
+          },
+          "x-flatbuffer-default": "X25519"
         },
         "SYMMETRIC": {
           "$ref": "#/definitions/SymmetricAlgo",
@@ -73,7 +75,8 @@
             "AES_256_CTR": {
               "value": 0
             }
-          }
+          },
+          "x-flatbuffer-default": "AES_256_CTR"
         },
         "KEY_DERIVATION": {
           "$ref": "#/definitions/KDF",
@@ -84,7 +87,8 @@
             "HKDF_SHA256": {
               "value": 0
             }
-          }
+          },
+          "x-flatbuffer-default": "HKDF_SHA256"
         },
         "EPHEMERAL_PUBLIC_KEY": {
           "type": "array",

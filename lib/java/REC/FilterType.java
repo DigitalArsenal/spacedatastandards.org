@@ -19,4 +19,3 @@ public final class FilterType {
 
   public static String name(int e) { return names[e]; }
 }
-

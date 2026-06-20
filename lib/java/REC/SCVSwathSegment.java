@@ -98,4 +98,3 @@ public final class SCVSwathSegment extends com.google.flatbuffers.Table {
     public SCVSwathSegment get(SCVSwathSegment obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

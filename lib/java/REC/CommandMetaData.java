@@ -102,4 +102,3 @@ public final class CommandMetaData extends com.google.flatbuffers.Table {
     public CommandMetaData get(CommandMetaData obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -136,4 +136,3 @@ public final class LMR extends com.google.flatbuffers.Table {
     public LMR get(LMR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

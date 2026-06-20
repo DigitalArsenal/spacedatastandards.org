@@ -67,4 +67,3 @@ public final class SCVTimeSeriesPoint extends com.google.flatbuffers.Table {
     public SCVTimeSeriesPoint get(SCVTimeSeriesPoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

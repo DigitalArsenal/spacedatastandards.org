@@ -233,4 +233,3 @@ public final class LND extends com.google.flatbuffers.Table {
     public LND get(LND obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

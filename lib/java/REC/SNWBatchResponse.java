@@ -83,4 +83,3 @@ public final class SNWBatchResponse extends com.google.flatbuffers.Table {
     public SNWBatchResponse get(SNWBatchResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

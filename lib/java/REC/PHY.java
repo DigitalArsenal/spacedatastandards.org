@@ -133,4 +133,3 @@ public final class PHY extends com.google.flatbuffers.Table {
     public PHY get(PHY obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-
