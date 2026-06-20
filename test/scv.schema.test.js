@@ -52,6 +52,8 @@ describe("SCV sensor coverage schema", () => {
       "LOCAL_Z_PLANE",
       "table SCVSensorShapeContract",
       "SHAPE_CONTRACT:SCVSensorShapeContract",
+      "SHAPE_KIND:scvSensorShapeKind",
+      "RANGE_BOUNDARY:scvSensorRangeBoundaryKind",
       "OUTER_HALF_ANGLE_DEG:double",
       "INNER_HALF_ANGLE_DEG:double",
       "MIN_CLOCK_ANGLE_DEG:double",
@@ -95,6 +97,29 @@ describe("SCV sensor coverage schema", () => {
     }
 
     assert.doesNotMatch(schemaSource, /\bSENSOR_MASK\b/);
+    const shapeContractMatch = schemaSource.match(
+      /table SCVSensorShapeContract \{\n([\s\S]*?)\n\}/,
+    );
+    assert.ok(shapeContractMatch, "schema should define SCVSensorShapeContract");
+    const shapeContractBody = shapeContractMatch[1];
+    assert.doesNotMatch(shapeContractBody, /^\s*SHAPE:scvSensorShapeKind;/m);
+    assert.doesNotMatch(
+      shapeContractBody,
+      /^\s*RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind;/m,
+    );
+
+    const axisConventionMatch = schemaSource.match(
+      /enum scvSensorAxisConvention : ubyte \{\n([\s\S]*?)\n\}/,
+    );
+    assert.ok(axisConventionMatch, "schema should define scvSensorAxisConvention");
+    assert.deepEqual(
+      axisConventionMatch[1]
+        .trim()
+        .split(/\s*,\s*/)
+        .filter(Boolean),
+      ["LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"],
+    );
+
     assert.match(schemaSource, /\bSURFACE\b/);
     assert.match(schemaSource, /\bSPACE\b/);
     assert.match(schemaSource, /\bMOON\b/);
@@ -108,18 +133,54 @@ describe("SCV sensor coverage schema", () => {
     const tsMainPath = path.join(repoRoot, "lib", "ts", "SCV", "main.ts");
     const jsShapeKindPath = path.join(repoRoot, "lib", "js", "SCV", "scvSensorShapeKind.js");
     const tsShapeKindPath = path.join(repoRoot, "lib", "ts", "SCV", "scvSensorShapeKind.ts");
+    const jsAxisConventionPath = path.join(
+      repoRoot,
+      "lib",
+      "js",
+      "SCV",
+      "scvSensorAxisConvention.js",
+    );
+    const tsAxisConventionPath = path.join(
+      repoRoot,
+      "lib",
+      "ts",
+      "SCV",
+      "scvSensorAxisConvention.ts",
+    );
+    const jsShapeContractPath = path.join(
+      repoRoot,
+      "lib",
+      "js",
+      "SCV",
+      "SCVSensorShapeContract.js",
+    );
+    const tsShapeContractPath = path.join(
+      repoRoot,
+      "lib",
+      "ts",
+      "SCV",
+      "SCVSensorShapeContract.ts",
+    );
     const cppHeaderPath = path.join(repoRoot, "lib", "cpp", "SCV", "main_generated.h");
     const [
       jsMainSource,
       tsMainSource,
       jsShapeKindSource,
       tsShapeKindSource,
+      jsAxisConventionSource,
+      tsAxisConventionSource,
+      jsShapeContractSource,
+      tsShapeContractSource,
       cppHeaderSource,
     ] = await Promise.all([
       fs.readFile(jsMainPath, "utf8"),
       fs.readFile(tsMainPath, "utf8"),
       fs.readFile(jsShapeKindPath, "utf8"),
       fs.readFile(tsShapeKindPath, "utf8"),
+      fs.readFile(jsAxisConventionPath, "utf8"),
+      fs.readFile(tsAxisConventionPath, "utf8"),
+      fs.readFile(jsShapeContractPath, "utf8"),
+      fs.readFile(tsShapeContractPath, "utf8"),
       fs.readFile(cppHeaderPath, "utf8"),
     ]);
 
@@ -133,8 +194,21 @@ describe("SCV sensor coverage schema", () => {
       assert.match(source, /SAR_ANNULAR_SECTOR/);
     }
 
+    for (const source of [jsAxisConventionSource, tsAxisConventionSource]) {
+      assert.match(source, /LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT/);
+      assert.doesNotMatch(source, /\bUNKNOWN\b/);
+    }
+
+    for (const source of [jsShapeContractSource, tsShapeContractSource]) {
+      assert.match(source, /SHAPE_KIND/);
+      assert.match(source, /RANGE_BOUNDARY/);
+      assert.doesNotMatch(source, /RANGE_BOUNDARY_KIND/);
+    }
+
     assert.match(cppHeaderSource, /struct SCVSensorShapeContract/);
     assert.match(cppHeaderSource, /scvSensorShapeKind_SAR_ANNULAR_SECTOR/);
+    assert.match(cppHeaderSource, /SHAPE_KIND\(\)/);
+    assert.match(cppHeaderSource, /RANGE_BOUNDARY\(\)/);
     assert.match(cppHeaderSource, /SHAPE_CONTRACT\(\)/);
   });
 

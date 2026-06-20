@@ -44,7 +44,6 @@ enum scvSensorShapeKind : ubyte {
 }
 
 enum scvSensorAxisConvention : ubyte {
-  UNKNOWN,
   LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
 }
 
@@ -121,9 +120,9 @@ table SCVTimeGrid {
 }
 
 table SCVSensorShapeContract {
-  SHAPE:scvSensorShapeKind;
+  SHAPE_KIND:scvSensorShapeKind;
   AXIS_CONVENTION:scvSensorAxisConvention;
-  RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind;
+  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;
   OUTER_HALF_ANGLE_DEG:double;
   INNER_HALF_ANGLE_DEG:double;
   MIN_CLOCK_ANGLE_DEG:double;

@@ -38,8 +38,7 @@ enum scvSensorShapeKind:
     scvSensorShapeKind_SAR_ANNULAR_SECTOR = 3
 
 enum scvSensorAxisConvention:
-    scvSensorAxisConvention_UNKNOWN = 0
-    scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1
+    scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0
 
 enum scvSensorRangeBoundaryKind:
     scvSensorRangeBoundaryKind_RADIAL_SPHERICAL = 0
@@ -247,11 +246,11 @@ struct SCVTimeGridBuilder:
         return b_.EndObject()
 
 class SCVSensorShapeContract : flatbuffers.handle
-    def SHAPE() -> scvSensorShapeKind:
+    def SHAPE_KIND() -> scvSensorShapeKind:
         return scvSensorShapeKind(flatbuffers.field_uint8(buf_, pos_, 4, 0))
     def AXIS_CONVENTION() -> scvSensorAxisConvention:
         return scvSensorAxisConvention(flatbuffers.field_uint8(buf_, pos_, 6, 0))
-    def RANGE_BOUNDARY_KIND() -> scvSensorRangeBoundaryKind:
+    def RANGE_BOUNDARY() -> scvSensorRangeBoundaryKind:
         return scvSensorRangeBoundaryKind(flatbuffers.field_uint8(buf_, pos_, 8, 0))
     def OUTER_HALF_ANGLE_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
@@ -289,14 +288,14 @@ struct SCVSensorShapeContractBuilder:
     def start():
         b_.StartObject(16)
         return this
-    def add_SHAPE(SHAPE:scvSensorShapeKind):
-        b_.PrependUint8Slot(0, SHAPE, 0)
+    def add_SHAPE_KIND(SHAPE_KIND:scvSensorShapeKind):
+        b_.PrependUint8Slot(0, SHAPE_KIND, 0)
         return this
     def add_AXIS_CONVENTION(AXIS_CONVENTION:scvSensorAxisConvention):
         b_.PrependUint8Slot(1, AXIS_CONVENTION, 0)
         return this
-    def add_RANGE_BOUNDARY_KIND(RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind):
-        b_.PrependUint8Slot(2, RANGE_BOUNDARY_KIND, 0)
+    def add_RANGE_BOUNDARY(RANGE_BOUNDARY:scvSensorRangeBoundaryKind):
+        b_.PrependUint8Slot(2, RANGE_BOUNDARY, 0)
         return this
     def add_OUTER_HALF_ANGLE_DEG(OUTER_HALF_ANGLE_DEG:float):
         b_.PrependFloat64Slot(3, OUTER_HALF_ANGLE_DEG, 0.0)

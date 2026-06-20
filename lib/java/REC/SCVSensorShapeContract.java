@@ -24,9 +24,9 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCVSensorShapeContract __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int SHAPE() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int SHAPE_KIND() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public int AXIS_CONVENTION() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int RANGE_BOUNDARY_KIND() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int RANGE_BOUNDARY() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public double OUTER_HALF_ANGLE_DEG() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double INNER_HALF_ANGLE_DEG() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   public double MIN_CLOCK_ANGLE_DEG() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
@@ -46,9 +46,9 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
   public int POLYGON_FRAME() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createSCVSensorShapeContract(FlatBufferBuilder builder,
-      int SHAPE,
+      int SHAPE_KIND,
       int AXIS_CONVENTION,
-      int RANGE_BOUNDARY_KIND,
+      int RANGE_BOUNDARY,
       double OUTER_HALF_ANGLE_DEG,
       double INNER_HALF_ANGLE_DEG,
       double MIN_CLOCK_ANGLE_DEG,
@@ -76,16 +76,16 @@ public final class SCVSensorShapeContract extends com.google.flatbuffers.Table {
     SCVSensorShapeContract.addOuterHalfAngleDeg(builder, OUTER_HALF_ANGLE_DEG);
     SCVSensorShapeContract.addPolygonVertices(builder, POLYGON_VERTICESOffset);
     SCVSensorShapeContract.addPolygonFrame(builder, POLYGON_FRAME);
-    SCVSensorShapeContract.addRangeBoundaryKind(builder, RANGE_BOUNDARY_KIND);
+    SCVSensorShapeContract.addRangeBoundary(builder, RANGE_BOUNDARY);
     SCVSensorShapeContract.addAxisConvention(builder, AXIS_CONVENTION);
-    SCVSensorShapeContract.addShape(builder, SHAPE);
+    SCVSensorShapeContract.addShapeKind(builder, SHAPE_KIND);
     return SCVSensorShapeContract.endSCVSensorShapeContract(builder);
   }
 
   public static void startSCVSensorShapeContract(FlatBufferBuilder builder) { builder.startTable(16); }
-  public static void addShape(FlatBufferBuilder builder, int SHAPE) { builder.addByte(0, (byte) SHAPE, (byte) 0); }
+  public static void addShapeKind(FlatBufferBuilder builder, int SHAPE_KIND) { builder.addByte(0, (byte) SHAPE_KIND, (byte) 0); }
   public static void addAxisConvention(FlatBufferBuilder builder, int AXIS_CONVENTION) { builder.addByte(1, (byte) AXIS_CONVENTION, (byte) 0); }
-  public static void addRangeBoundaryKind(FlatBufferBuilder builder, int RANGE_BOUNDARY_KIND) { builder.addByte(2, (byte) RANGE_BOUNDARY_KIND, (byte) 0); }
+  public static void addRangeBoundary(FlatBufferBuilder builder, int RANGE_BOUNDARY) { builder.addByte(2, (byte) RANGE_BOUNDARY, (byte) 0); }
   public static void addOuterHalfAngleDeg(FlatBufferBuilder builder, double OUTER_HALF_ANGLE_DEG) { builder.addDouble(3, OUTER_HALF_ANGLE_DEG, 0.0); }
   public static void addInnerHalfAngleDeg(FlatBufferBuilder builder, double INNER_HALF_ANGLE_DEG) { builder.addDouble(4, INNER_HALF_ANGLE_DEG, 0.0); }
   public static void addMinClockAngleDeg(FlatBufferBuilder builder, double MIN_CLOCK_ANGLE_DEG) { builder.addDouble(5, MIN_CLOCK_ANGLE_DEG, 0.0); }

@@ -481,11 +481,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorShapeKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_SENSOR_AXIS_CONVENTION: u8 = 1;
+pub const ENUM_MAX_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_SENSOR_AXIS_CONVENTION: [scvSensorAxisConvention; 2] = [
-  scvSensorAxisConvention::UNKNOWN,
+pub const ENUM_VALUES_SCV_SENSOR_AXIS_CONVENTION: [scvSensorAxisConvention; 1] = [
   scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
 ];
 
@@ -494,19 +493,16 @@ pub const ENUM_VALUES_SCV_SENSOR_AXIS_CONVENTION: [scvSensorAxisConvention; 2] =
 pub struct scvSensorAxisConvention(pub u8);
 #[allow(non_upper_case_globals)]
 impl scvSensorAxisConvention {
-  pub const UNKNOWN: Self = Self(0);
-  pub const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: Self = Self(1);
+  pub const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: Self = Self(0);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_MAX: u8 = 0;
   pub const ENUM_VALUES: &'static [Self] = &[
-    Self::UNKNOWN,
     Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
     match self {
-      Self::UNKNOWN => Some("UNKNOWN"),
       Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT => Some("LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"),
       _ => None,
     }
@@ -1832,9 +1828,9 @@ impl<'a> ::flatbuffers::Follow<'a> for SCVSensorShapeContract<'a> {
 }
 
 impl<'a> SCVSensorShapeContract<'a> {
-  pub const VT_SHAPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_SHAPE_KIND: ::flatbuffers::VOffsetT = 4;
   pub const VT_AXIS_CONVENTION: ::flatbuffers::VOffsetT = 6;
-  pub const VT_RANGE_BOUNDARY_KIND: ::flatbuffers::VOffsetT = 8;
+  pub const VT_RANGE_BOUNDARY: ::flatbuffers::VOffsetT = 8;
   pub const VT_OUTER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 10;
   pub const VT_INNER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 12;
   pub const VT_MIN_CLOCK_ANGLE_DEG: ::flatbuffers::VOffsetT = 14;
@@ -1872,16 +1868,16 @@ impl<'a> SCVSensorShapeContract<'a> {
     builder.add_OUTER_HALF_ANGLE_DEG(args.OUTER_HALF_ANGLE_DEG);
     if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
     builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
-    builder.add_RANGE_BOUNDARY_KIND(args.RANGE_BOUNDARY_KIND);
+    builder.add_RANGE_BOUNDARY(args.RANGE_BOUNDARY);
     builder.add_AXIS_CONVENTION(args.AXIS_CONVENTION);
-    builder.add_SHAPE(args.SHAPE);
+    builder.add_SHAPE_KIND(args.SHAPE_KIND);
     builder.finish()
   }
 
   pub fn unpack(&self) -> SCVSensorShapeContractT {
-    let SHAPE = self.SHAPE();
+    let SHAPE_KIND = self.SHAPE_KIND();
     let AXIS_CONVENTION = self.AXIS_CONVENTION();
-    let RANGE_BOUNDARY_KIND = self.RANGE_BOUNDARY_KIND();
+    let RANGE_BOUNDARY = self.RANGE_BOUNDARY();
     let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG();
     let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG();
     let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG();
@@ -1898,9 +1894,9 @@ impl<'a> SCVSensorShapeContract<'a> {
     });
     let POLYGON_FRAME = self.POLYGON_FRAME();
     SCVSensorShapeContractT {
-      SHAPE,
+      SHAPE_KIND,
       AXIS_CONVENTION,
-      RANGE_BOUNDARY_KIND,
+      RANGE_BOUNDARY,
       OUTER_HALF_ANGLE_DEG,
       INNER_HALF_ANGLE_DEG,
       MIN_CLOCK_ANGLE_DEG,
@@ -1918,25 +1914,25 @@ impl<'a> SCVSensorShapeContract<'a> {
   }
 
   #[inline]
-  pub fn SHAPE(&self) -> scvSensorShapeKind {
+  pub fn SHAPE_KIND(&self) -> scvSensorShapeKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE, Some(scvSensorShapeKind::CONIC)).unwrap()}
+    unsafe { self._tab.get::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE_KIND, Some(scvSensorShapeKind::CONIC)).unwrap()}
   }
   #[inline]
   pub fn AXIS_CONVENTION(&self) -> scvSensorAxisConvention {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, Some(scvSensorAxisConvention::UNKNOWN)).unwrap()}
+    unsafe { self._tab.get::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, Some(scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT)).unwrap()}
   }
   #[inline]
-  pub fn RANGE_BOUNDARY_KIND(&self) -> scvSensorRangeBoundaryKind {
+  pub fn RANGE_BOUNDARY(&self) -> scvSensorRangeBoundaryKind {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, Some(scvSensorRangeBoundaryKind::RADIAL_SPHERICAL)).unwrap()}
+    unsafe { self._tab.get::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY, Some(scvSensorRangeBoundaryKind::RADIAL_SPHERICAL)).unwrap()}
   }
   #[inline]
   pub fn OUTER_HALF_ANGLE_DEG(&self) -> f64 {
@@ -2037,9 +2033,9 @@ impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<scvSensorShapeKind>("SHAPE", Self::VT_SHAPE, false)?
+     .visit_field::<scvSensorShapeKind>("SHAPE_KIND", Self::VT_SHAPE_KIND, false)?
      .visit_field::<scvSensorAxisConvention>("AXIS_CONVENTION", Self::VT_AXIS_CONVENTION, false)?
-     .visit_field::<scvSensorRangeBoundaryKind>("RANGE_BOUNDARY_KIND", Self::VT_RANGE_BOUNDARY_KIND, false)?
+     .visit_field::<scvSensorRangeBoundaryKind>("RANGE_BOUNDARY", Self::VT_RANGE_BOUNDARY, false)?
      .visit_field::<f64>("OUTER_HALF_ANGLE_DEG", Self::VT_OUTER_HALF_ANGLE_DEG, false)?
      .visit_field::<f64>("INNER_HALF_ANGLE_DEG", Self::VT_INNER_HALF_ANGLE_DEG, false)?
      .visit_field::<f64>("MIN_CLOCK_ANGLE_DEG", Self::VT_MIN_CLOCK_ANGLE_DEG, false)?
@@ -2058,9 +2054,9 @@ impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
   }
 }
 pub struct SCVSensorShapeContractArgs<'a> {
-    pub SHAPE: scvSensorShapeKind,
+    pub SHAPE_KIND: scvSensorShapeKind,
     pub AXIS_CONVENTION: scvSensorAxisConvention,
-    pub RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind,
+    pub RANGE_BOUNDARY: scvSensorRangeBoundaryKind,
     pub OUTER_HALF_ANGLE_DEG: f64,
     pub INNER_HALF_ANGLE_DEG: f64,
     pub MIN_CLOCK_ANGLE_DEG: f64,
@@ -2079,9 +2075,9 @@ impl<'a> Default for SCVSensorShapeContractArgs<'a> {
   #[inline]
   fn default() -> Self {
     SCVSensorShapeContractArgs {
-      SHAPE: scvSensorShapeKind::CONIC,
-      AXIS_CONVENTION: scvSensorAxisConvention::UNKNOWN,
-      RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      SHAPE_KIND: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+      RANGE_BOUNDARY: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
       OUTER_HALF_ANGLE_DEG: 0.0,
       INNER_HALF_ANGLE_DEG: 0.0,
       MIN_CLOCK_ANGLE_DEG: 0.0,
@@ -2105,16 +2101,16 @@ pub struct SCVSensorShapeContractBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_SHAPE(&mut self, SHAPE: scvSensorShapeKind) {
-    self.fbb_.push_slot::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE, SHAPE, scvSensorShapeKind::CONIC);
+  pub fn add_SHAPE_KIND(&mut self, SHAPE_KIND: scvSensorShapeKind) {
+    self.fbb_.push_slot::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE_KIND, SHAPE_KIND, scvSensorShapeKind::CONIC);
   }
   #[inline]
   pub fn add_AXIS_CONVENTION(&mut self, AXIS_CONVENTION: scvSensorAxisConvention) {
-    self.fbb_.push_slot::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, AXIS_CONVENTION, scvSensorAxisConvention::UNKNOWN);
+    self.fbb_.push_slot::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, AXIS_CONVENTION, scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT);
   }
   #[inline]
-  pub fn add_RANGE_BOUNDARY_KIND(&mut self, RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind) {
-    self.fbb_.push_slot::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, RANGE_BOUNDARY_KIND, scvSensorRangeBoundaryKind::RADIAL_SPHERICAL);
+  pub fn add_RANGE_BOUNDARY(&mut self, RANGE_BOUNDARY: scvSensorRangeBoundaryKind) {
+    self.fbb_.push_slot::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY, RANGE_BOUNDARY, scvSensorRangeBoundaryKind::RADIAL_SPHERICAL);
   }
   #[inline]
   pub fn add_OUTER_HALF_ANGLE_DEG(&mut self, OUTER_HALF_ANGLE_DEG: f64) {
@@ -2186,9 +2182,9 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder
 impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCVSensorShapeContract");
-      ds.field("SHAPE", &self.SHAPE());
+      ds.field("SHAPE_KIND", &self.SHAPE_KIND());
       ds.field("AXIS_CONVENTION", &self.AXIS_CONVENTION());
-      ds.field("RANGE_BOUNDARY_KIND", &self.RANGE_BOUNDARY_KIND());
+      ds.field("RANGE_BOUNDARY", &self.RANGE_BOUNDARY());
       ds.field("OUTER_HALF_ANGLE_DEG", &self.OUTER_HALF_ANGLE_DEG());
       ds.field("INNER_HALF_ANGLE_DEG", &self.INNER_HALF_ANGLE_DEG());
       ds.field("MIN_CLOCK_ANGLE_DEG", &self.MIN_CLOCK_ANGLE_DEG());
@@ -2208,9 +2204,9 @@ impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCVSensorShapeContractT {
-  pub SHAPE: scvSensorShapeKind,
+  pub SHAPE_KIND: scvSensorShapeKind,
   pub AXIS_CONVENTION: scvSensorAxisConvention,
-  pub RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind,
+  pub RANGE_BOUNDARY: scvSensorRangeBoundaryKind,
   pub OUTER_HALF_ANGLE_DEG: f64,
   pub INNER_HALF_ANGLE_DEG: f64,
   pub MIN_CLOCK_ANGLE_DEG: f64,
@@ -2228,9 +2224,9 @@ pub struct SCVSensorShapeContractT {
 impl Default for SCVSensorShapeContractT {
   fn default() -> Self {
     Self {
-      SHAPE: scvSensorShapeKind::CONIC,
-      AXIS_CONVENTION: scvSensorAxisConvention::UNKNOWN,
-      RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      SHAPE_KIND: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+      RANGE_BOUNDARY: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
       OUTER_HALF_ANGLE_DEG: 0.0,
       INNER_HALF_ANGLE_DEG: 0.0,
       MIN_CLOCK_ANGLE_DEG: 0.0,
@@ -2252,9 +2248,9 @@ impl SCVSensorShapeContractT {
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'b>> {
-    let SHAPE = self.SHAPE;
+    let SHAPE_KIND = self.SHAPE_KIND;
     let AXIS_CONVENTION = self.AXIS_CONVENTION;
-    let RANGE_BOUNDARY_KIND = self.RANGE_BOUNDARY_KIND;
+    let RANGE_BOUNDARY = self.RANGE_BOUNDARY;
     let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG;
     let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG;
     let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG;
@@ -2271,9 +2267,9 @@ impl SCVSensorShapeContractT {
     });
     let POLYGON_FRAME = self.POLYGON_FRAME;
     SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
-      SHAPE,
+      SHAPE_KIND,
       AXIS_CONVENTION,
-      RANGE_BOUNDARY_KIND,
+      RANGE_BOUNDARY,
       OUTER_HALF_ANGLE_DEG,
       INNER_HALF_ANGLE_DEG,
       MIN_CLOCK_ANGLE_DEG,

@@ -29,17 +29,17 @@ static getSizePrefixedRootAsSCVSensorShapeContract(bb:flatbuffers.ByteBuffer, ob
   return (obj || new SCVSensorShapeContract()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-SHAPE():scvSensorShapeKind {
+SHAPE_KIND():scvSensorShapeKind {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvSensorShapeKind.CONIC;
 }
 
 AXIS_CONVENTION():scvSensorAxisConvention {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvSensorAxisConvention.UNKNOWN;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
 }
 
-RANGE_BOUNDARY_KIND():scvSensorRangeBoundaryKind {
+RANGE_BOUNDARY():scvSensorRangeBoundaryKind {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : scvSensorRangeBoundaryKind.RADIAL_SPHERICAL;
 }
@@ -118,16 +118,16 @@ static startSCVSensorShapeContract(builder:flatbuffers.Builder) {
   builder.startObject(16);
 }
 
-static addShape(builder:flatbuffers.Builder, SHAPE:scvSensorShapeKind) {
-  builder.addFieldInt8(0, SHAPE, scvSensorShapeKind.CONIC);
+static addShapeKind(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind) {
+  builder.addFieldInt8(0, SHAPE_KIND, scvSensorShapeKind.CONIC);
 }
 
 static addAxisConvention(builder:flatbuffers.Builder, AXIS_CONVENTION:scvSensorAxisConvention) {
-  builder.addFieldInt8(1, AXIS_CONVENTION, scvSensorAxisConvention.UNKNOWN);
+  builder.addFieldInt8(1, AXIS_CONVENTION, scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT);
 }
 
-static addRangeBoundaryKind(builder:flatbuffers.Builder, RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind) {
-  builder.addFieldInt8(2, RANGE_BOUNDARY_KIND, scvSensorRangeBoundaryKind.RADIAL_SPHERICAL);
+static addRangeBoundary(builder:flatbuffers.Builder, RANGE_BOUNDARY:scvSensorRangeBoundaryKind) {
+  builder.addFieldInt8(2, RANGE_BOUNDARY, scvSensorRangeBoundaryKind.RADIAL_SPHERICAL);
 }
 
 static addOuterHalfAngleDeg(builder:flatbuffers.Builder, OUTER_HALF_ANGLE_DEG:number) {
@@ -199,11 +199,11 @@ static endSCVSensorShapeContract(builder:flatbuffers.Builder):flatbuffers.Offset
   return offset;
 }
 
-static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE:scvSensorShapeKind, AXIS_CONVENTION:scvSensorAxisConvention, RANGE_BOUNDARY_KIND:scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG:number, INNER_HALF_ANGLE_DEG:number, MIN_CLOCK_ANGLE_DEG:number, MAX_CLOCK_ANGLE_DEG:number, X_HALF_ANGLE_DEG:number, Y_HALF_ANGLE_DEG:number, INNER_LOOK_ANGLE_DEG:number, OUTER_LOOK_ANGLE_DEG:number, SAR_SAMPLING_DENSITY:number, MIN_RANGE_M:number, MAX_RANGE_M:number, POLYGON_VERTICESOffset:flatbuffers.Offset, POLYGON_FRAME:scvCoordinateFrame):flatbuffers.Offset {
+static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE_KIND:scvSensorShapeKind, AXIS_CONVENTION:scvSensorAxisConvention, RANGE_BOUNDARY:scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG:number, INNER_HALF_ANGLE_DEG:number, MIN_CLOCK_ANGLE_DEG:number, MAX_CLOCK_ANGLE_DEG:number, X_HALF_ANGLE_DEG:number, Y_HALF_ANGLE_DEG:number, INNER_LOOK_ANGLE_DEG:number, OUTER_LOOK_ANGLE_DEG:number, SAR_SAMPLING_DENSITY:number, MIN_RANGE_M:number, MAX_RANGE_M:number, POLYGON_VERTICESOffset:flatbuffers.Offset, POLYGON_FRAME:scvCoordinateFrame):flatbuffers.Offset {
   SCVSensorShapeContract.startSCVSensorShapeContract(builder);
-  SCVSensorShapeContract.addShape(builder, SHAPE);
+  SCVSensorShapeContract.addShapeKind(builder, SHAPE_KIND);
   SCVSensorShapeContract.addAxisConvention(builder, AXIS_CONVENTION);
-  SCVSensorShapeContract.addRangeBoundaryKind(builder, RANGE_BOUNDARY_KIND);
+  SCVSensorShapeContract.addRangeBoundary(builder, RANGE_BOUNDARY);
   SCVSensorShapeContract.addOuterHalfAngleDeg(builder, OUTER_HALF_ANGLE_DEG);
   SCVSensorShapeContract.addInnerHalfAngleDeg(builder, INNER_HALF_ANGLE_DEG);
   SCVSensorShapeContract.addMinClockAngleDeg(builder, MIN_CLOCK_ANGLE_DEG);
@@ -222,9 +222,9 @@ static createSCVSensorShapeContract(builder:flatbuffers.Builder, SHAPE:scvSensor
 
 unpack(): SCVSensorShapeContractT {
   return new SCVSensorShapeContractT(
-    this.SHAPE(),
+    this.SHAPE_KIND(),
     this.AXIS_CONVENTION(),
-    this.RANGE_BOUNDARY_KIND(),
+    this.RANGE_BOUNDARY(),
     this.OUTER_HALF_ANGLE_DEG(),
     this.INNER_HALF_ANGLE_DEG(),
     this.MIN_CLOCK_ANGLE_DEG(),
@@ -243,9 +243,9 @@ unpack(): SCVSensorShapeContractT {
 
 
 unpackTo(_o: SCVSensorShapeContractT): void {
-  _o.SHAPE = this.SHAPE();
+  _o.SHAPE_KIND = this.SHAPE_KIND();
   _o.AXIS_CONVENTION = this.AXIS_CONVENTION();
-  _o.RANGE_BOUNDARY_KIND = this.RANGE_BOUNDARY_KIND();
+  _o.RANGE_BOUNDARY = this.RANGE_BOUNDARY();
   _o.OUTER_HALF_ANGLE_DEG = this.OUTER_HALF_ANGLE_DEG();
   _o.INNER_HALF_ANGLE_DEG = this.INNER_HALF_ANGLE_DEG();
   _o.MIN_CLOCK_ANGLE_DEG = this.MIN_CLOCK_ANGLE_DEG();
@@ -264,9 +264,9 @@ unpackTo(_o: SCVSensorShapeContractT): void {
 
 export class SCVSensorShapeContractT implements flatbuffers.IGeneratedObject {
 constructor(
-  public SHAPE: scvSensorShapeKind = scvSensorShapeKind.CONIC,
-  public AXIS_CONVENTION: scvSensorAxisConvention = scvSensorAxisConvention.UNKNOWN,
-  public RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL,
+  public SHAPE_KIND: scvSensorShapeKind = scvSensorShapeKind.CONIC,
+  public AXIS_CONVENTION: scvSensorAxisConvention = scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+  public RANGE_BOUNDARY: scvSensorRangeBoundaryKind = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL,
   public OUTER_HALF_ANGLE_DEG: number = 0.0,
   public INNER_HALF_ANGLE_DEG: number = 0.0,
   public MIN_CLOCK_ANGLE_DEG: number = 0.0,
@@ -287,9 +287,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POLYGON_VERTICES = SCVSensorShapeContract.createPolygonVerticesVector(builder, builder.createObjectOffsetList(this.POLYGON_VERTICES));
 
   return SCVSensorShapeContract.createSCVSensorShapeContract(builder,
-    this.SHAPE,
+    this.SHAPE_KIND,
     this.AXIS_CONVENTION,
-    this.RANGE_BOUNDARY_KIND,
+    this.RANGE_BOUNDARY,
     this.OUTER_HALF_ANGLE_DEG,
     this.INNER_HALF_ANGLE_DEG,
     this.MIN_CLOCK_ANGLE_DEG,

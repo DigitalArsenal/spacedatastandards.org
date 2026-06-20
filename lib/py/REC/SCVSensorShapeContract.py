@@ -29,7 +29,7 @@ class SCVSensorShapeContract(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # SCVSensorShapeContract
-    def SHAPE(self):
+    def SHAPE_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
@@ -43,7 +43,7 @@ class SCVSensorShapeContract(object):
         return 0
 
     # SCVSensorShapeContract
-    def RANGE_BOUNDARY_KIND(self):
+    def RANGE_BOUNDARY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
@@ -164,11 +164,11 @@ def SCVSensorShapeContractStart(builder):
 def Start(builder):
     SCVSensorShapeContractStart(builder)
 
-def SCVSensorShapeContractAddSHAPE(builder, SHAPE):
-    builder.PrependUint8Slot(0, SHAPE, 0)
+def SCVSensorShapeContractAddSHAPE_KIND(builder, SHAPE_KIND):
+    builder.PrependUint8Slot(0, SHAPE_KIND, 0)
 
-def AddSHAPE(builder, SHAPE):
-    SCVSensorShapeContractAddSHAPE(builder, SHAPE)
+def AddSHAPE_KIND(builder, SHAPE_KIND):
+    SCVSensorShapeContractAddSHAPE_KIND(builder, SHAPE_KIND)
 
 def SCVSensorShapeContractAddAXIS_CONVENTION(builder, AXIS_CONVENTION):
     builder.PrependUint8Slot(1, AXIS_CONVENTION, 0)
@@ -176,11 +176,11 @@ def SCVSensorShapeContractAddAXIS_CONVENTION(builder, AXIS_CONVENTION):
 def AddAXIS_CONVENTION(builder, AXIS_CONVENTION):
     SCVSensorShapeContractAddAXIS_CONVENTION(builder, AXIS_CONVENTION)
 
-def SCVSensorShapeContractAddRANGE_BOUNDARY_KIND(builder, RANGE_BOUNDARY_KIND):
-    builder.PrependUint8Slot(2, RANGE_BOUNDARY_KIND, 0)
+def SCVSensorShapeContractAddRANGE_BOUNDARY(builder, RANGE_BOUNDARY):
+    builder.PrependUint8Slot(2, RANGE_BOUNDARY, 0)
 
-def AddRANGE_BOUNDARY_KIND(builder, RANGE_BOUNDARY_KIND):
-    SCVSensorShapeContractAddRANGE_BOUNDARY_KIND(builder, RANGE_BOUNDARY_KIND)
+def AddRANGE_BOUNDARY(builder, RANGE_BOUNDARY):
+    SCVSensorShapeContractAddRANGE_BOUNDARY(builder, RANGE_BOUNDARY)
 
 def SCVSensorShapeContractAddOUTER_HALF_ANGLE_DEG(builder, OUTER_HALF_ANGLE_DEG):
     builder.PrependFloat64Slot(3, OUTER_HALF_ANGLE_DEG, 0.0)
@@ -289,9 +289,9 @@ class SCVSensorShapeContractT(object):
     # SCVSensorShapeContractT
     def __init__(
         self,
-        SHAPE = 0,
+        SHAPE_KIND = 0,
         AXIS_CONVENTION = 0,
-        RANGE_BOUNDARY_KIND = 0,
+        RANGE_BOUNDARY = 0,
         OUTER_HALF_ANGLE_DEG = 0.0,
         INNER_HALF_ANGLE_DEG = 0.0,
         MIN_CLOCK_ANGLE_DEG = 0.0,
@@ -306,9 +306,9 @@ class SCVSensorShapeContractT(object):
         POLYGON_VERTICES = None,
         POLYGON_FRAME = 0,
     ):
-        self.SHAPE = SHAPE  # type: int
+        self.SHAPE_KIND = SHAPE_KIND  # type: int
         self.AXIS_CONVENTION = AXIS_CONVENTION  # type: int
-        self.RANGE_BOUNDARY_KIND = RANGE_BOUNDARY_KIND  # type: int
+        self.RANGE_BOUNDARY = RANGE_BOUNDARY  # type: int
         self.OUTER_HALF_ANGLE_DEG = OUTER_HALF_ANGLE_DEG  # type: float
         self.INNER_HALF_ANGLE_DEG = INNER_HALF_ANGLE_DEG  # type: float
         self.MIN_CLOCK_ANGLE_DEG = MIN_CLOCK_ANGLE_DEG  # type: float
@@ -344,9 +344,9 @@ class SCVSensorShapeContractT(object):
     def _UnPack(self, SCVSensorShapeContract):
         if SCVSensorShapeContract is None:
             return
-        self.SHAPE = SCVSensorShapeContract.SHAPE()
+        self.SHAPE_KIND = SCVSensorShapeContract.SHAPE_KIND()
         self.AXIS_CONVENTION = SCVSensorShapeContract.AXIS_CONVENTION()
-        self.RANGE_BOUNDARY_KIND = SCVSensorShapeContract.RANGE_BOUNDARY_KIND()
+        self.RANGE_BOUNDARY = SCVSensorShapeContract.RANGE_BOUNDARY()
         self.OUTER_HALF_ANGLE_DEG = SCVSensorShapeContract.OUTER_HALF_ANGLE_DEG()
         self.INNER_HALF_ANGLE_DEG = SCVSensorShapeContract.INNER_HALF_ANGLE_DEG()
         self.MIN_CLOCK_ANGLE_DEG = SCVSensorShapeContract.MIN_CLOCK_ANGLE_DEG()
@@ -379,9 +379,9 @@ class SCVSensorShapeContractT(object):
                 builder.PrependUOffsetTRelative(POLYGON_VERTICESlist[i])
             POLYGON_VERTICES = builder.EndVector()
         SCVSensorShapeContractStart(builder)
-        SCVSensorShapeContractAddSHAPE(builder, self.SHAPE)
+        SCVSensorShapeContractAddSHAPE_KIND(builder, self.SHAPE_KIND)
         SCVSensorShapeContractAddAXIS_CONVENTION(builder, self.AXIS_CONVENTION)
-        SCVSensorShapeContractAddRANGE_BOUNDARY_KIND(builder, self.RANGE_BOUNDARY_KIND)
+        SCVSensorShapeContractAddRANGE_BOUNDARY(builder, self.RANGE_BOUNDARY)
         SCVSensorShapeContractAddOUTER_HALF_ANGLE_DEG(builder, self.OUTER_HALF_ANGLE_DEG)
         SCVSensorShapeContractAddINNER_HALF_ANGLE_DEG(builder, self.INNER_HALF_ANGLE_DEG)
         SCVSensorShapeContractAddMIN_CLOCK_ANGLE_DEG(builder, self.MIN_CLOCK_ANGLE_DEG)

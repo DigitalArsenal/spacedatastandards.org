@@ -3,7 +3,6 @@
 @Suppress("unused")
 class scvSensorAxisConvention private constructor() {
     companion object {
-        const val UNKNOWN: UByte = 0u
-        const val LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: UByte = 1u
+        const val LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: UByte = 0u
     }
 }

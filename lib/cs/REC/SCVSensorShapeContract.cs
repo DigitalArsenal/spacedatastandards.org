@@ -16,9 +16,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCVSensorShapeContract __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public scvSensorShapeKind SHAPE { get { int o = __p.__offset(4); return o != 0 ? (scvSensorShapeKind)__p.bb.Get(o + __p.bb_pos) : scvSensorShapeKind.CONIC; } }
-  public scvSensorAxisConvention AXIS_CONVENTION { get { int o = __p.__offset(6); return o != 0 ? (scvSensorAxisConvention)__p.bb.Get(o + __p.bb_pos) : scvSensorAxisConvention.UNKNOWN; } }
-  public scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND { get { int o = __p.__offset(8); return o != 0 ? (scvSensorRangeBoundaryKind)__p.bb.Get(o + __p.bb_pos) : scvSensorRangeBoundaryKind.RADIAL_SPHERICAL; } }
+  public scvSensorShapeKind SHAPE_KIND { get { int o = __p.__offset(4); return o != 0 ? (scvSensorShapeKind)__p.bb.Get(o + __p.bb_pos) : scvSensorShapeKind.CONIC; } }
+  public scvSensorAxisConvention AXIS_CONVENTION { get { int o = __p.__offset(6); return o != 0 ? (scvSensorAxisConvention)__p.bb.Get(o + __p.bb_pos) : scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT; } }
+  public scvSensorRangeBoundaryKind RANGE_BOUNDARY { get { int o = __p.__offset(8); return o != 0 ? (scvSensorRangeBoundaryKind)__p.bb.Get(o + __p.bb_pos) : scvSensorRangeBoundaryKind.RADIAL_SPHERICAL; } }
   public double OUTER_HALF_ANGLE_DEG { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double INNER_HALF_ANGLE_DEG { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double MIN_CLOCK_ANGLE_DEG { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -35,9 +35,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
   public scvCoordinateFrame POLYGON_FRAME { get { int o = __p.__offset(34); return o != 0 ? (scvCoordinateFrame)__p.bb.Get(o + __p.bb_pos) : scvCoordinateFrame.UNKNOWN; } }
 
   public static Offset<SCVSensorShapeContract> CreateSCVSensorShapeContract(FlatBufferBuilder builder,
-      scvSensorShapeKind SHAPE = scvSensorShapeKind.CONIC,
-      scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention.UNKNOWN,
-      scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL,
+      scvSensorShapeKind SHAPE_KIND = scvSensorShapeKind.CONIC,
+      scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+      scvSensorRangeBoundaryKind RANGE_BOUNDARY = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL,
       double OUTER_HALF_ANGLE_DEG = 0.0,
       double INNER_HALF_ANGLE_DEG = 0.0,
       double MIN_CLOCK_ANGLE_DEG = 0.0,
@@ -65,16 +65,16 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     SCVSensorShapeContract.AddOUTER_HALF_ANGLE_DEG(builder, OUTER_HALF_ANGLE_DEG);
     SCVSensorShapeContract.AddPOLYGON_VERTICES(builder, POLYGON_VERTICESOffset);
     SCVSensorShapeContract.AddPOLYGON_FRAME(builder, POLYGON_FRAME);
-    SCVSensorShapeContract.AddRANGE_BOUNDARY_KIND(builder, RANGE_BOUNDARY_KIND);
+    SCVSensorShapeContract.AddRANGE_BOUNDARY(builder, RANGE_BOUNDARY);
     SCVSensorShapeContract.AddAXIS_CONVENTION(builder, AXIS_CONVENTION);
-    SCVSensorShapeContract.AddSHAPE(builder, SHAPE);
+    SCVSensorShapeContract.AddSHAPE_KIND(builder, SHAPE_KIND);
     return SCVSensorShapeContract.EndSCVSensorShapeContract(builder);
   }
 
   public static void StartSCVSensorShapeContract(FlatBufferBuilder builder) { builder.StartTable(16); }
-  public static void AddSHAPE(FlatBufferBuilder builder, scvSensorShapeKind SHAPE) { builder.AddByte(0, (byte)SHAPE, 0); }
+  public static void AddSHAPE_KIND(FlatBufferBuilder builder, scvSensorShapeKind SHAPE_KIND) { builder.AddByte(0, (byte)SHAPE_KIND, 0); }
   public static void AddAXIS_CONVENTION(FlatBufferBuilder builder, scvSensorAxisConvention AXIS_CONVENTION) { builder.AddByte(1, (byte)AXIS_CONVENTION, 0); }
-  public static void AddRANGE_BOUNDARY_KIND(FlatBufferBuilder builder, scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND) { builder.AddByte(2, (byte)RANGE_BOUNDARY_KIND, 0); }
+  public static void AddRANGE_BOUNDARY(FlatBufferBuilder builder, scvSensorRangeBoundaryKind RANGE_BOUNDARY) { builder.AddByte(2, (byte)RANGE_BOUNDARY, 0); }
   public static void AddOUTER_HALF_ANGLE_DEG(FlatBufferBuilder builder, double OUTER_HALF_ANGLE_DEG) { builder.AddDouble(3, OUTER_HALF_ANGLE_DEG, 0.0); }
   public static void AddINNER_HALF_ANGLE_DEG(FlatBufferBuilder builder, double INNER_HALF_ANGLE_DEG) { builder.AddDouble(4, INNER_HALF_ANGLE_DEG, 0.0); }
   public static void AddMIN_CLOCK_ANGLE_DEG(FlatBufferBuilder builder, double MIN_CLOCK_ANGLE_DEG) { builder.AddDouble(5, MIN_CLOCK_ANGLE_DEG, 0.0); }
@@ -103,9 +103,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCVSensorShapeContractT _o) {
-    _o.SHAPE = this.SHAPE;
+    _o.SHAPE_KIND = this.SHAPE_KIND;
     _o.AXIS_CONVENTION = this.AXIS_CONVENTION;
-    _o.RANGE_BOUNDARY_KIND = this.RANGE_BOUNDARY_KIND;
+    _o.RANGE_BOUNDARY = this.RANGE_BOUNDARY;
     _o.OUTER_HALF_ANGLE_DEG = this.OUTER_HALF_ANGLE_DEG;
     _o.INNER_HALF_ANGLE_DEG = this.INNER_HALF_ANGLE_DEG;
     _o.MIN_CLOCK_ANGLE_DEG = this.MIN_CLOCK_ANGLE_DEG;
@@ -131,9 +131,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
     }
     return CreateSCVSensorShapeContract(
       builder,
-      _o.SHAPE,
+      _o.SHAPE_KIND,
       _o.AXIS_CONVENTION,
-      _o.RANGE_BOUNDARY_KIND,
+      _o.RANGE_BOUNDARY,
       _o.OUTER_HALF_ANGLE_DEG,
       _o.INNER_HALF_ANGLE_DEG,
       _o.MIN_CLOCK_ANGLE_DEG,
@@ -152,9 +152,9 @@ public struct SCVSensorShapeContract : IFlatbufferObject
 
 public class SCVSensorShapeContractT
 {
-  public scvSensorShapeKind SHAPE { get; set; }
+  public scvSensorShapeKind SHAPE_KIND { get; set; }
   public scvSensorAxisConvention AXIS_CONVENTION { get; set; }
-  public scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND { get; set; }
+  public scvSensorRangeBoundaryKind RANGE_BOUNDARY { get; set; }
   public double OUTER_HALF_ANGLE_DEG { get; set; }
   public double INNER_HALF_ANGLE_DEG { get; set; }
   public double MIN_CLOCK_ANGLE_DEG { get; set; }
@@ -170,9 +170,9 @@ public class SCVSensorShapeContractT
   public scvCoordinateFrame POLYGON_FRAME { get; set; }
 
   public SCVSensorShapeContractT() {
-    this.SHAPE = scvSensorShapeKind.CONIC;
-    this.AXIS_CONVENTION = scvSensorAxisConvention.UNKNOWN;
-    this.RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL;
+    this.SHAPE_KIND = scvSensorShapeKind.CONIC;
+    this.AXIS_CONVENTION = scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
+    this.RANGE_BOUNDARY = scvSensorRangeBoundaryKind.RADIAL_SPHERICAL;
     this.OUTER_HALF_ANGLE_DEG = 0.0;
     this.INNER_HALF_ANGLE_DEG = 0.0;
     this.MIN_CLOCK_ANGLE_DEG = 0.0;
@@ -195,9 +195,9 @@ static public class SCVSensorShapeContractVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*SHAPE*/, 1 /*scvSensorShapeKind*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*SHAPE_KIND*/, 1 /*scvSensorShapeKind*/, 1, false)
       && verifier.VerifyField(tablePos, 6 /*AXIS_CONVENTION*/, 1 /*scvSensorAxisConvention*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*RANGE_BOUNDARY_KIND*/, 1 /*scvSensorRangeBoundaryKind*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*RANGE_BOUNDARY*/, 1 /*scvSensorRangeBoundaryKind*/, 1, false)
       && verifier.VerifyField(tablePos, 10 /*OUTER_HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*INNER_HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*MIN_CLOCK_ANGLE_DEG*/, 8 /*double*/, 8, false)

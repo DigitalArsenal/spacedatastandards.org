@@ -206,16 +206,14 @@ class _scvSensorShapeKindReader extends fb.Reader<scvSensorShapeKind> {
 }
 
 enum scvSensorAxisConvention {
-  UNKNOWN(0),
-  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT(1);
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT(0);
 
   final int value;
   const scvSensorAxisConvention(this.value);
 
   factory scvSensorAxisConvention.fromValue(int value) {
     switch (value) {
-      case 0: return scvSensorAxisConvention.UNKNOWN;
-      case 1: return scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
+      case 0: return scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -224,7 +222,7 @@ enum scvSensorAxisConvention {
       value == null ? null : scvSensorAxisConvention.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
+  static const int maxValue = 0;
   static const fb.Reader<scvSensorAxisConvention> reader = _scvSensorAxisConventionReader();
 }
 
@@ -843,11 +841,12 @@ class SCVSensorShapeContract {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  scvSensorShapeKind get SHAPE => scvSensorShapeKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  scvSensorShapeKind get SHAPE_KIND => scvSensorShapeKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  scvSensorShapeKind get shapeKind => SHAPE_KIND;
   scvSensorAxisConvention get AXIS_CONVENTION => scvSensorAxisConvention.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   scvSensorAxisConvention get axisConvention => AXIS_CONVENTION;
-  scvSensorRangeBoundaryKind get RANGE_BOUNDARY_KIND => scvSensorRangeBoundaryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  scvSensorRangeBoundaryKind get rangeBoundaryKind => RANGE_BOUNDARY_KIND;
+  scvSensorRangeBoundaryKind get RANGE_BOUNDARY => scvSensorRangeBoundaryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  scvSensorRangeBoundaryKind get rangeBoundary => RANGE_BOUNDARY;
   double get OUTER_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get outerHalfAngleDeg => OUTER_HALF_ANGLE_DEG;
   double get INNER_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
@@ -877,7 +876,7 @@ class SCVSensorShapeContract {
 
   @override
   String toString() {
-    return 'SCVSensorShapeContract{SHAPE: ${SHAPE}, axisConvention: ${axisConvention}, rangeBoundaryKind: ${rangeBoundaryKind}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}}';
+    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}}';
   }
 }
 
@@ -898,16 +897,16 @@ class SCVSensorShapeContractBuilder {
     fbBuilder.startTable(16);
   }
 
-  int addShape(scvSensorShapeKind? SHAPE) {
-    fbBuilder.addUint8(0, SHAPE?.value);
+  int addShapeKind(scvSensorShapeKind? SHAPE_KIND) {
+    fbBuilder.addUint8(0, SHAPE_KIND?.value);
     return fbBuilder.offset;
   }
   int addAxisConvention(scvSensorAxisConvention? AXIS_CONVENTION) {
     fbBuilder.addUint8(1, AXIS_CONVENTION?.value);
     return fbBuilder.offset;
   }
-  int addRangeBoundaryKind(scvSensorRangeBoundaryKind? RANGE_BOUNDARY_KIND) {
-    fbBuilder.addUint8(2, RANGE_BOUNDARY_KIND?.value);
+  int addRangeBoundary(scvSensorRangeBoundaryKind? RANGE_BOUNDARY) {
+    fbBuilder.addUint8(2, RANGE_BOUNDARY?.value);
     return fbBuilder.offset;
   }
   int addOuterHalfAngleDeg(double? OUTER_HALF_ANGLE_DEG) {
@@ -969,9 +968,9 @@ class SCVSensorShapeContractBuilder {
 }
 
 class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
-  final scvSensorShapeKind? _SHAPE;
+  final scvSensorShapeKind? _SHAPE_KIND;
   final scvSensorAxisConvention? _AXIS_CONVENTION;
-  final scvSensorRangeBoundaryKind? _RANGE_BOUNDARY_KIND;
+  final scvSensorRangeBoundaryKind? _RANGE_BOUNDARY;
   final double? _OUTER_HALF_ANGLE_DEG;
   final double? _INNER_HALF_ANGLE_DEG;
   final double? _MIN_CLOCK_ANGLE_DEG;
@@ -987,11 +986,12 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
   final scvCoordinateFrame? _POLYGON_FRAME;
 
   SCVSensorShapeContractObjectBuilder({
-    scvSensorShapeKind? SHAPE,
+    scvSensorShapeKind? SHAPE_KIND,
+    scvSensorShapeKind? shapeKind,
     scvSensorAxisConvention? AXIS_CONVENTION,
     scvSensorAxisConvention? axisConvention,
-    scvSensorRangeBoundaryKind? RANGE_BOUNDARY_KIND,
-    scvSensorRangeBoundaryKind? rangeBoundaryKind,
+    scvSensorRangeBoundaryKind? RANGE_BOUNDARY,
+    scvSensorRangeBoundaryKind? rangeBoundary,
     double? OUTER_HALF_ANGLE_DEG,
     double? outerHalfAngleDeg,
     double? INNER_HALF_ANGLE_DEG,
@@ -1019,9 +1019,9 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     scvCoordinateFrame? POLYGON_FRAME,
     scvCoordinateFrame? polygonFrame,
   })
-      : _SHAPE = SHAPE,
+      : _SHAPE_KIND = shapeKind ?? SHAPE_KIND,
         _AXIS_CONVENTION = axisConvention ?? AXIS_CONVENTION,
-        _RANGE_BOUNDARY_KIND = rangeBoundaryKind ?? RANGE_BOUNDARY_KIND,
+        _RANGE_BOUNDARY = rangeBoundary ?? RANGE_BOUNDARY,
         _OUTER_HALF_ANGLE_DEG = outerHalfAngleDeg ?? OUTER_HALF_ANGLE_DEG,
         _INNER_HALF_ANGLE_DEG = innerHalfAngleDeg ?? INNER_HALF_ANGLE_DEG,
         _MIN_CLOCK_ANGLE_DEG = minClockAngleDeg ?? MIN_CLOCK_ANGLE_DEG,
@@ -1042,9 +1042,9 @@ class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
     final int? POLYGON_VERTICESOffset = _POLYGON_VERTICES == null ? null
         : fbBuilder.writeList(_POLYGON_VERTICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     fbBuilder.startTable(16);
-    fbBuilder.addUint8(0, _SHAPE?.value);
+    fbBuilder.addUint8(0, _SHAPE_KIND?.value);
     fbBuilder.addUint8(1, _AXIS_CONVENTION?.value);
-    fbBuilder.addUint8(2, _RANGE_BOUNDARY_KIND?.value);
+    fbBuilder.addUint8(2, _RANGE_BOUNDARY?.value);
     fbBuilder.addFloat64(3, _OUTER_HALF_ANGLE_DEG);
     fbBuilder.addFloat64(4, _INNER_HALF_ANGLE_DEG);
     fbBuilder.addFloat64(5, _MIN_CLOCK_ANGLE_DEG);

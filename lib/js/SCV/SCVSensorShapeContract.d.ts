@@ -10,9 +10,9 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     __init(i: number, bb: flatbuffers.ByteBuffer): SCVSensorShapeContract;
     static getRootAsSCVSensorShapeContract(bb: flatbuffers.ByteBuffer, obj?: SCVSensorShapeContract): SCVSensorShapeContract;
     static getSizePrefixedRootAsSCVSensorShapeContract(bb: flatbuffers.ByteBuffer, obj?: SCVSensorShapeContract): SCVSensorShapeContract;
-    SHAPE(): scvSensorShapeKind;
+    SHAPE_KIND(): scvSensorShapeKind;
     AXIS_CONVENTION(): scvSensorAxisConvention;
-    RANGE_BOUNDARY_KIND(): scvSensorRangeBoundaryKind;
+    RANGE_BOUNDARY(): scvSensorRangeBoundaryKind;
     OUTER_HALF_ANGLE_DEG(): number;
     INNER_HALF_ANGLE_DEG(): number;
     MIN_CLOCK_ANGLE_DEG(): number;
@@ -28,9 +28,9 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     polygonVerticesLength(): number;
     POLYGON_FRAME(): scvCoordinateFrame;
     static startSCVSensorShapeContract(builder: flatbuffers.Builder): void;
-    static addShape(builder: flatbuffers.Builder, SHAPE: scvSensorShapeKind): void;
+    static addShapeKind(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind): void;
     static addAxisConvention(builder: flatbuffers.Builder, AXIS_CONVENTION: scvSensorAxisConvention): void;
-    static addRangeBoundaryKind(builder: flatbuffers.Builder, RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind): void;
+    static addRangeBoundary(builder: flatbuffers.Builder, RANGE_BOUNDARY: scvSensorRangeBoundaryKind): void;
     static addOuterHalfAngleDeg(builder: flatbuffers.Builder, OUTER_HALF_ANGLE_DEG: number): void;
     static addInnerHalfAngleDeg(builder: flatbuffers.Builder, INNER_HALF_ANGLE_DEG: number): void;
     static addMinClockAngleDeg(builder: flatbuffers.Builder, MIN_CLOCK_ANGLE_DEG: number): void;
@@ -47,14 +47,14 @@ export declare class SCVSensorShapeContract implements flatbuffers.IUnpackableOb
     static startPolygonVerticesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addPolygonFrame(builder: flatbuffers.Builder, POLYGON_FRAME: scvCoordinateFrame): void;
     static endSCVSensorShapeContract(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createSCVSensorShapeContract(builder: flatbuffers.Builder, SHAPE: scvSensorShapeKind, AXIS_CONVENTION: scvSensorAxisConvention, RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG: number, INNER_HALF_ANGLE_DEG: number, MIN_CLOCK_ANGLE_DEG: number, MAX_CLOCK_ANGLE_DEG: number, X_HALF_ANGLE_DEG: number, Y_HALF_ANGLE_DEG: number, INNER_LOOK_ANGLE_DEG: number, OUTER_LOOK_ANGLE_DEG: number, SAR_SAMPLING_DENSITY: number, MIN_RANGE_M: number, MAX_RANGE_M: number, POLYGON_VERTICESOffset: flatbuffers.Offset, POLYGON_FRAME: scvCoordinateFrame): flatbuffers.Offset;
+    static createSCVSensorShapeContract(builder: flatbuffers.Builder, SHAPE_KIND: scvSensorShapeKind, AXIS_CONVENTION: scvSensorAxisConvention, RANGE_BOUNDARY: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG: number, INNER_HALF_ANGLE_DEG: number, MIN_CLOCK_ANGLE_DEG: number, MAX_CLOCK_ANGLE_DEG: number, X_HALF_ANGLE_DEG: number, Y_HALF_ANGLE_DEG: number, INNER_LOOK_ANGLE_DEG: number, OUTER_LOOK_ANGLE_DEG: number, SAR_SAMPLING_DENSITY: number, MIN_RANGE_M: number, MAX_RANGE_M: number, POLYGON_VERTICESOffset: flatbuffers.Offset, POLYGON_FRAME: scvCoordinateFrame): flatbuffers.Offset;
     unpack(): SCVSensorShapeContractT;
     unpackTo(_o: SCVSensorShapeContractT): void;
 }
 export declare class SCVSensorShapeContractT implements flatbuffers.IGeneratedObject {
-    SHAPE: scvSensorShapeKind;
+    SHAPE_KIND: scvSensorShapeKind;
     AXIS_CONVENTION: scvSensorAxisConvention;
-    RANGE_BOUNDARY_KIND: scvSensorRangeBoundaryKind;
+    RANGE_BOUNDARY: scvSensorRangeBoundaryKind;
     OUTER_HALF_ANGLE_DEG: number;
     INNER_HALF_ANGLE_DEG: number;
     MIN_CLOCK_ANGLE_DEG: number;
@@ -68,7 +68,7 @@ export declare class SCVSensorShapeContractT implements flatbuffers.IGeneratedOb
     MAX_RANGE_M: number;
     POLYGON_VERTICES: (SCVVec3T)[];
     POLYGON_FRAME: scvCoordinateFrame;
-    constructor(SHAPE?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY_KIND?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame);
+    constructor(SHAPE_KIND?: scvSensorShapeKind, AXIS_CONVENTION?: scvSensorAxisConvention, RANGE_BOUNDARY?: scvSensorRangeBoundaryKind, OUTER_HALF_ANGLE_DEG?: number, INNER_HALF_ANGLE_DEG?: number, MIN_CLOCK_ANGLE_DEG?: number, MAX_CLOCK_ANGLE_DEG?: number, X_HALF_ANGLE_DEG?: number, Y_HALF_ANGLE_DEG?: number, INNER_LOOK_ANGLE_DEG?: number, OUTER_LOOK_ANGLE_DEG?: number, SAR_SAMPLING_DENSITY?: number, MIN_RANGE_M?: number, MAX_RANGE_M?: number, POLYGON_VERTICES?: (SCVVec3T)[], POLYGON_FRAME?: scvCoordinateFrame);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVSensorShapeContract.d.ts.map

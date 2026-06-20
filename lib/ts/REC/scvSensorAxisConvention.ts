@@ -3,6 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export enum scvSensorAxisConvention {
-  UNKNOWN = 0,
-  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0
 }

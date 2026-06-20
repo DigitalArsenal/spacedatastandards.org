@@ -3,10 +3,9 @@
 @SuppressWarnings("unused")
 public final class scvSensorAxisConvention {
   private scvSensorAxisConvention() { }
-  public static final int UNKNOWN = 0;
-  public static final int LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1;
+  public static final int LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0;
 
-  public static final String[] names = { "UNKNOWN", "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT", };
+  public static final String[] names = { "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT", };
 
   public static String name(int e) { return names[e]; }
 }

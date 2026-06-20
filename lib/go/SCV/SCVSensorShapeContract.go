@@ -41,7 +41,7 @@ func (rcv *SCVSensorShapeContract) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *SCVSensorShapeContract) SHAPE() scvSensorShapeKind {
+func (rcv *SCVSensorShapeContract) SHAPE_KIND() scvSensorShapeKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return scvSensorShapeKind(rcv._tab.GetByte(o + rcv._tab.Pos))
@@ -49,16 +49,16 @@ func (rcv *SCVSensorShapeContract) SHAPE() scvSensorShapeKind {
 	return 0
 }
 
-func (rcv *SCVSensorShapeContract) Shape() scvSensorShapeKind {
-	return rcv.SHAPE()
+func (rcv *SCVSensorShapeContract) ShapeKind() scvSensorShapeKind {
+	return rcv.SHAPE_KIND()
 }
 
-func (rcv *SCVSensorShapeContract) MutateSHAPE(n scvSensorShapeKind) bool {
+func (rcv *SCVSensorShapeContract) MutateSHAPE_KIND(n scvSensorShapeKind) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
-func (rcv *SCVSensorShapeContract) MutateShape(n scvSensorShapeKind) bool {
-	return rcv.MutateSHAPE(n)
+func (rcv *SCVSensorShapeContract) MutateShapeKind(n scvSensorShapeKind) bool {
+	return rcv.MutateSHAPE_KIND(n)
 }
 
 func (rcv *SCVSensorShapeContract) AXIS_CONVENTION() scvSensorAxisConvention {
@@ -81,7 +81,7 @@ func (rcv *SCVSensorShapeContract) MutateAxisConvention(n scvSensorAxisConventio
 	return rcv.MutateAXIS_CONVENTION(n)
 }
 
-func (rcv *SCVSensorShapeContract) RANGE_BOUNDARY_KIND() scvSensorRangeBoundaryKind {
+func (rcv *SCVSensorShapeContract) RANGE_BOUNDARY() scvSensorRangeBoundaryKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return scvSensorRangeBoundaryKind(rcv._tab.GetByte(o + rcv._tab.Pos))
@@ -89,16 +89,16 @@ func (rcv *SCVSensorShapeContract) RANGE_BOUNDARY_KIND() scvSensorRangeBoundaryK
 	return 0
 }
 
-func (rcv *SCVSensorShapeContract) RangeBoundaryKind() scvSensorRangeBoundaryKind {
-	return rcv.RANGE_BOUNDARY_KIND()
+func (rcv *SCVSensorShapeContract) RangeBoundary() scvSensorRangeBoundaryKind {
+	return rcv.RANGE_BOUNDARY()
 }
 
-func (rcv *SCVSensorShapeContract) MutateRANGE_BOUNDARY_KIND(n scvSensorRangeBoundaryKind) bool {
+func (rcv *SCVSensorShapeContract) MutateRANGE_BOUNDARY(n scvSensorRangeBoundaryKind) bool {
 	return rcv._tab.MutateByteSlot(8, byte(n))
 }
 
-func (rcv *SCVSensorShapeContract) MutateRangeBoundaryKind(n scvSensorRangeBoundaryKind) bool {
-	return rcv.MutateRANGE_BOUNDARY_KIND(n)
+func (rcv *SCVSensorShapeContract) MutateRangeBoundary(n scvSensorRangeBoundaryKind) bool {
+	return rcv.MutateRANGE_BOUNDARY(n)
 }
 
 func (rcv *SCVSensorShapeContract) OUTER_HALF_ANGLE_DEG() float64 {
@@ -375,11 +375,11 @@ func (rcv *SCVSensorShapeContract) MutatePolygonFrame(n scvCoordinateFrame) bool
 func SCVSensorShapeContractStart(builder *flatbuffers.Builder) {
 	builder.StartObject(16)
 }
-func SCVSensorShapeContractAddSHAPE(builder *flatbuffers.Builder, SHAPE scvSensorShapeKind) {
-	builder.PrependByteSlot(0, byte(SHAPE), 0)
+func SCVSensorShapeContractAddSHAPE_KIND(builder *flatbuffers.Builder, SHAPE_KIND scvSensorShapeKind) {
+	builder.PrependByteSlot(0, byte(SHAPE_KIND), 0)
 }
-func SCVSensorShapeContractAddShape(builder *flatbuffers.Builder, SHAPE scvSensorShapeKind) {
-	SCVSensorShapeContractAddSHAPE(builder, SHAPE)
+func SCVSensorShapeContractAddShapeKind(builder *flatbuffers.Builder, SHAPE_KIND scvSensorShapeKind) {
+	SCVSensorShapeContractAddSHAPE_KIND(builder, SHAPE_KIND)
 }
 func SCVSensorShapeContractAddAXIS_CONVENTION(builder *flatbuffers.Builder, AXIS_CONVENTION scvSensorAxisConvention) {
 	builder.PrependByteSlot(1, byte(AXIS_CONVENTION), 0)
@@ -387,11 +387,11 @@ func SCVSensorShapeContractAddAXIS_CONVENTION(builder *flatbuffers.Builder, AXIS
 func SCVSensorShapeContractAddAxisConvention(builder *flatbuffers.Builder, AXIS_CONVENTION scvSensorAxisConvention) {
 	SCVSensorShapeContractAddAXIS_CONVENTION(builder, AXIS_CONVENTION)
 }
-func SCVSensorShapeContractAddRANGE_BOUNDARY_KIND(builder *flatbuffers.Builder, RANGE_BOUNDARY_KIND scvSensorRangeBoundaryKind) {
-	builder.PrependByteSlot(2, byte(RANGE_BOUNDARY_KIND), 0)
+func SCVSensorShapeContractAddRANGE_BOUNDARY(builder *flatbuffers.Builder, RANGE_BOUNDARY scvSensorRangeBoundaryKind) {
+	builder.PrependByteSlot(2, byte(RANGE_BOUNDARY), 0)
 }
-func SCVSensorShapeContractAddRangeBoundaryKind(builder *flatbuffers.Builder, RANGE_BOUNDARY_KIND scvSensorRangeBoundaryKind) {
-	SCVSensorShapeContractAddRANGE_BOUNDARY_KIND(builder, RANGE_BOUNDARY_KIND)
+func SCVSensorShapeContractAddRangeBoundary(builder *flatbuffers.Builder, RANGE_BOUNDARY scvSensorRangeBoundaryKind) {
+	SCVSensorShapeContractAddRANGE_BOUNDARY(builder, RANGE_BOUNDARY)
 }
 func SCVSensorShapeContractAddOUTER_HALF_ANGLE_DEG(builder *flatbuffers.Builder, OUTER_HALF_ANGLE_DEG float64) {
 	builder.PrependFloat64Slot(3, OUTER_HALF_ANGLE_DEG, 0.0)

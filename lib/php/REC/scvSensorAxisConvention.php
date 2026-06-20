@@ -3,11 +3,9 @@
 
 class scvSensorAxisConvention
 {
-    const UNKNOWN = 0;
-    const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1;
+    const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0;
 
     private static $names = array(
-        scvSensorAxisConvention::UNKNOWN=>"UNKNOWN",
         scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT=>"LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT",
     );
 

@@ -43,7 +43,7 @@ class SCVSensorShapeContract extends Table
     /**
      * @return byte
      */
-    public function getSHAPE()
+    public function getSHAPE_KIND()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSensorShapeKind::CONIC;
@@ -55,13 +55,13 @@ class SCVSensorShapeContract extends Table
     public function getAXIS_CONVENTION()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSensorAxisConvention::UNKNOWN;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
     }
 
     /**
      * @return byte
      */
-    public function getRANGE_BOUNDARY_KIND()
+    public function getRANGE_BOUNDARY()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSensorRangeBoundaryKind::RADIAL_SPHERICAL;
@@ -207,12 +207,12 @@ class SCVSensorShapeContract extends Table
      * @param FlatBufferBuilder $builder
      * @return SCVSensorShapeContract
      */
-    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE, $AXIS_CONVENTION, $RANGE_BOUNDARY_KIND, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME)
+    public static function createSCVSensorShapeContract(FlatBufferBuilder $builder, $SHAPE_KIND, $AXIS_CONVENTION, $RANGE_BOUNDARY, $OUTER_HALF_ANGLE_DEG, $INNER_HALF_ANGLE_DEG, $MIN_CLOCK_ANGLE_DEG, $MAX_CLOCK_ANGLE_DEG, $X_HALF_ANGLE_DEG, $Y_HALF_ANGLE_DEG, $INNER_LOOK_ANGLE_DEG, $OUTER_LOOK_ANGLE_DEG, $SAR_SAMPLING_DENSITY, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME)
     {
         $builder->startObject(16);
-        self::addSHAPE($builder, $SHAPE);
+        self::addSHAPE_KIND($builder, $SHAPE_KIND);
         self::addAXIS_CONVENTION($builder, $AXIS_CONVENTION);
-        self::addRANGE_BOUNDARY_KIND($builder, $RANGE_BOUNDARY_KIND);
+        self::addRANGE_BOUNDARY($builder, $RANGE_BOUNDARY);
         self::addOUTER_HALF_ANGLE_DEG($builder, $OUTER_HALF_ANGLE_DEG);
         self::addINNER_HALF_ANGLE_DEG($builder, $INNER_HALF_ANGLE_DEG);
         self::addMIN_CLOCK_ANGLE_DEG($builder, $MIN_CLOCK_ANGLE_DEG);
@@ -235,9 +235,9 @@ class SCVSensorShapeContract extends Table
      * @param byte
      * @return void
      */
-    public static function addSHAPE(FlatBufferBuilder $builder, $SHAPE)
+    public static function addSHAPE_KIND(FlatBufferBuilder $builder, $SHAPE_KIND)
     {
-        $builder->addByteX(0, $SHAPE, 0);
+        $builder->addByteX(0, $SHAPE_KIND, 0);
     }
 
     /**
@@ -255,9 +255,9 @@ class SCVSensorShapeContract extends Table
      * @param byte
      * @return void
      */
-    public static function addRANGE_BOUNDARY_KIND(FlatBufferBuilder $builder, $RANGE_BOUNDARY_KIND)
+    public static function addRANGE_BOUNDARY(FlatBufferBuilder $builder, $RANGE_BOUNDARY)
     {
-        $builder->addByteX(2, $RANGE_BOUNDARY_KIND, 0);
+        $builder->addByteX(2, $RANGE_BOUNDARY, 0);
     }
 
     /**

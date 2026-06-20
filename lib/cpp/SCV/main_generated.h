@@ -278,23 +278,20 @@ inline const char *EnumNamescvSensorShapeKind(scvSensorShapeKind e) {
 }
 
 enum scvSensorAxisConvention : uint8_t {
-  scvSensorAxisConvention_UNKNOWN = 0,
-  scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 1,
-  scvSensorAxisConvention_MIN = scvSensorAxisConvention_UNKNOWN,
+  scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT = 0,
+  scvSensorAxisConvention_MIN = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
   scvSensorAxisConvention_MAX = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
 };
 
-inline const scvSensorAxisConvention (&EnumValuesscvSensorAxisConvention())[2] {
+inline const scvSensorAxisConvention (&EnumValuesscvSensorAxisConvention())[1] {
   static const scvSensorAxisConvention values[] = {
-    scvSensorAxisConvention_UNKNOWN,
     scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvSensorAxisConvention() {
-  static const char * const names[3] = {
-    "UNKNOWN",
+  static const char * const names[2] = {
     "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT",
     nullptr
   };
@@ -302,7 +299,7 @@ inline const char * const *EnumNamesscvSensorAxisConvention() {
 }
 
 inline const char *EnumNamescvSensorAxisConvention(scvSensorAxisConvention e) {
-  if (::flatbuffers::IsOutRange(e, scvSensorAxisConvention_UNKNOWN, scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT)) return "";
+  if (::flatbuffers::IsOutRange(e, scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT, scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvSensorAxisConvention()[index];
 }
@@ -839,9 +836,9 @@ inline ::flatbuffers::Offset<SCVTimeGrid> CreateSCVTimeGridDirect(
 struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVSensorShapeContractBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SHAPE = 4,
+    VT_SHAPE_KIND = 4,
     VT_AXIS_CONVENTION = 6,
-    VT_RANGE_BOUNDARY_KIND = 8,
+    VT_RANGE_BOUNDARY = 8,
     VT_OUTER_HALF_ANGLE_DEG = 10,
     VT_INNER_HALF_ANGLE_DEG = 12,
     VT_MIN_CLOCK_ANGLE_DEG = 14,
@@ -856,14 +853,14 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
     VT_POLYGON_VERTICES = 32,
     VT_POLYGON_FRAME = 34
   };
-  scvSensorShapeKind SHAPE() const {
-    return static_cast<scvSensorShapeKind>(GetField<uint8_t>(VT_SHAPE, 0));
+  scvSensorShapeKind SHAPE_KIND() const {
+    return static_cast<scvSensorShapeKind>(GetField<uint8_t>(VT_SHAPE_KIND, 0));
   }
   scvSensorAxisConvention AXIS_CONVENTION() const {
     return static_cast<scvSensorAxisConvention>(GetField<uint8_t>(VT_AXIS_CONVENTION, 0));
   }
-  scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND() const {
-    return static_cast<scvSensorRangeBoundaryKind>(GetField<uint8_t>(VT_RANGE_BOUNDARY_KIND, 0));
+  scvSensorRangeBoundaryKind RANGE_BOUNDARY() const {
+    return static_cast<scvSensorRangeBoundaryKind>(GetField<uint8_t>(VT_RANGE_BOUNDARY, 0));
   }
   double OUTER_HALF_ANGLE_DEG() const {
     return GetField<double>(VT_OUTER_HALF_ANGLE_DEG, 0.0);
@@ -907,9 +904,9 @@ struct SCVSensorShapeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::T
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_SHAPE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SHAPE_KIND, 1) &&
            VerifyField<uint8_t>(verifier, VT_AXIS_CONVENTION, 1) &&
-           VerifyField<uint8_t>(verifier, VT_RANGE_BOUNDARY_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_RANGE_BOUNDARY, 1) &&
            VerifyField<double>(verifier, VT_OUTER_HALF_ANGLE_DEG, 8) &&
            VerifyField<double>(verifier, VT_INNER_HALF_ANGLE_DEG, 8) &&
            VerifyField<double>(verifier, VT_MIN_CLOCK_ANGLE_DEG, 8) &&
@@ -933,14 +930,14 @@ struct SCVSensorShapeContractBuilder {
   typedef SCVSensorShapeContract Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_SHAPE(scvSensorShapeKind SHAPE) {
-    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_SHAPE, static_cast<uint8_t>(SHAPE), 0);
+  void add_SHAPE_KIND(scvSensorShapeKind SHAPE_KIND) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_SHAPE_KIND, static_cast<uint8_t>(SHAPE_KIND), 0);
   }
   void add_AXIS_CONVENTION(scvSensorAxisConvention AXIS_CONVENTION) {
     fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_AXIS_CONVENTION, static_cast<uint8_t>(AXIS_CONVENTION), 0);
   }
-  void add_RANGE_BOUNDARY_KIND(scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND) {
-    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_RANGE_BOUNDARY_KIND, static_cast<uint8_t>(RANGE_BOUNDARY_KIND), 0);
+  void add_RANGE_BOUNDARY(scvSensorRangeBoundaryKind RANGE_BOUNDARY) {
+    fbb_.AddElement<uint8_t>(SCVSensorShapeContract::VT_RANGE_BOUNDARY, static_cast<uint8_t>(RANGE_BOUNDARY), 0);
   }
   void add_OUTER_HALF_ANGLE_DEG(double OUTER_HALF_ANGLE_DEG) {
     fbb_.AddElement<double>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, OUTER_HALF_ANGLE_DEG, 0.0);
@@ -994,9 +991,9 @@ struct SCVSensorShapeContractBuilder {
 
 inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContract(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    scvSensorShapeKind SHAPE = scvSensorShapeKind_CONIC,
-    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_UNKNOWN,
-    scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+    scvSensorShapeKind SHAPE_KIND = scvSensorShapeKind_CONIC,
+    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+    scvSensorRangeBoundaryKind RANGE_BOUNDARY = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
     double OUTER_HALF_ANGLE_DEG = 0.0,
     double INNER_HALF_ANGLE_DEG = 0.0,
     double MIN_CLOCK_ANGLE_DEG = 0.0,
@@ -1024,17 +1021,17 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
   builder_.add_OUTER_HALF_ANGLE_DEG(OUTER_HALF_ANGLE_DEG);
   builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
   builder_.add_POLYGON_FRAME(POLYGON_FRAME);
-  builder_.add_RANGE_BOUNDARY_KIND(RANGE_BOUNDARY_KIND);
+  builder_.add_RANGE_BOUNDARY(RANGE_BOUNDARY);
   builder_.add_AXIS_CONVENTION(AXIS_CONVENTION);
-  builder_.add_SHAPE(SHAPE);
+  builder_.add_SHAPE_KIND(SHAPE_KIND);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContractDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    scvSensorShapeKind SHAPE = scvSensorShapeKind_CONIC,
-    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_UNKNOWN,
-    scvSensorRangeBoundaryKind RANGE_BOUNDARY_KIND = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
+    scvSensorShapeKind SHAPE_KIND = scvSensorShapeKind_CONIC,
+    scvSensorAxisConvention AXIS_CONVENTION = scvSensorAxisConvention_LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+    scvSensorRangeBoundaryKind RANGE_BOUNDARY = scvSensorRangeBoundaryKind_RADIAL_SPHERICAL,
     double OUTER_HALF_ANGLE_DEG = 0.0,
     double INNER_HALF_ANGLE_DEG = 0.0,
     double MIN_CLOCK_ANGLE_DEG = 0.0,
@@ -1051,9 +1048,9 @@ inline ::flatbuffers::Offset<SCVSensorShapeContract> CreateSCVSensorShapeContrac
   auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
   return CreateSCVSensorShapeContract(
       _fbb,
-      SHAPE,
+      SHAPE_KIND,
       AXIS_CONVENTION,
-      RANGE_BOUNDARY_KIND,
+      RANGE_BOUNDARY,
       OUTER_HALF_ANGLE_DEG,
       INNER_HALF_ANGLE_DEG,
       MIN_CLOCK_ANGLE_DEG,

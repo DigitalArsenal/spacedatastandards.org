@@ -26,7 +26,7 @@ class SCVSensorShapeContract : Table() {
         __init(_i, _bb)
         return this
     }
-    val shape : UByte
+    val shapeKind : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -36,7 +36,7 @@ class SCVSensorShapeContract : Table() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val rangeBoundaryKind : UByte
+    val rangeBoundary : UByte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -121,7 +121,7 @@ class SCVSensorShapeContract : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shape: UByte, axisConvention: UByte, rangeBoundaryKind: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte) : Int {
+        fun createSCVSensorShapeContract(builder: FlatBufferBuilder, shapeKind: UByte, axisConvention: UByte, rangeBoundary: UByte, outerHalfAngleDeg: Double, innerHalfAngleDeg: Double, minClockAngleDeg: Double, maxClockAngleDeg: Double, xHalfAngleDeg: Double, yHalfAngleDeg: Double, innerLookAngleDeg: Double, outerLookAngleDeg: Double, sarSamplingDensity: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte) : Int {
             builder.startTable(16)
             addMAXRANGEM(builder, maxRangeM)
             addMINRANGEM(builder, minRangeM)
@@ -136,15 +136,15 @@ class SCVSensorShapeContract : Table() {
             addOUTERHALFANGLEDEG(builder, outerHalfAngleDeg)
             addPOLYGONVERTICES(builder, polygonVerticesOffset)
             addPOLYGONFRAME(builder, polygonFrame)
-            addRANGEBOUNDARYKIND(builder, rangeBoundaryKind)
+            addRANGEBOUNDARY(builder, rangeBoundary)
             addAXISCONVENTION(builder, axisConvention)
-            addSHAPE(builder, shape)
+            addSHAPEKIND(builder, shapeKind)
             return endSCVSensorShapeContract(builder)
         }
         fun startSCVSensorShapeContract(builder: FlatBufferBuilder) = builder.startTable(16)
-        fun addSHAPE(builder: FlatBufferBuilder, shape: UByte) = builder.addByte(0, shape.toByte(), 0)
+        fun addSHAPEKIND(builder: FlatBufferBuilder, shapeKind: UByte) = builder.addByte(0, shapeKind.toByte(), 0)
         fun addAXISCONVENTION(builder: FlatBufferBuilder, axisConvention: UByte) = builder.addByte(1, axisConvention.toByte(), 0)
-        fun addRANGEBOUNDARYKIND(builder: FlatBufferBuilder, rangeBoundaryKind: UByte) = builder.addByte(2, rangeBoundaryKind.toByte(), 0)
+        fun addRANGEBOUNDARY(builder: FlatBufferBuilder, rangeBoundary: UByte) = builder.addByte(2, rangeBoundary.toByte(), 0)
         fun addOUTERHALFANGLEDEG(builder: FlatBufferBuilder, outerHalfAngleDeg: Double) = builder.addDouble(3, outerHalfAngleDeg, 0.0)
         fun addINNERHALFANGLEDEG(builder: FlatBufferBuilder, innerHalfAngleDeg: Double) = builder.addDouble(4, innerHalfAngleDeg, 0.0)
         fun addMINCLOCKANGLEDEG(builder: FlatBufferBuilder, minClockAngleDeg: Double) = builder.addDouble(5, minClockAngleDeg, 0.0)

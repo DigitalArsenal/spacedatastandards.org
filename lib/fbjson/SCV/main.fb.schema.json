@@ -141,17 +141,13 @@
     "scvSensorAxisConvention": {
       "type": "string",
       "enum": [
-        "UNKNOWN",
         "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
       "x-flatbuffer-enum-values": {
-        "UNKNOWN": {
-          "value": 0
-        },
         "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
-          "value": 1
+          "value": 0
         }
       }
     },
@@ -450,7 +446,7 @@
     "SCVSensorShapeContract": {
       "type": "object",
       "properties": {
-        "SHAPE": {
+        "SHAPE_KIND": {
           "$ref": "#/definitions/scvSensorShapeKind",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -474,15 +470,12 @@
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            "UNKNOWN": {
-              "value": 0
-            },
             "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
-              "value": 1
+              "value": 0
             }
           }
         },
-        "RANGE_BOUNDARY_KIND": {
+        "RANGE_BOUNDARY": {
           "$ref": "#/definitions/scvSensorRangeBoundaryKind",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",

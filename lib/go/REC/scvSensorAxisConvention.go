@@ -7,17 +7,14 @@ import "strconv"
 type scvSensorAxisConvention byte
 
 const (
-	scvSensorAxisConventionUNKNOWN                        scvSensorAxisConvention = 0
-	scvSensorAxisConventionLOCAL_X_RIGHT_Y_UP_Z_BORESIGHT scvSensorAxisConvention = 1
+	scvSensorAxisConventionLOCAL_X_RIGHT_Y_UP_Z_BORESIGHT scvSensorAxisConvention = 0
 )
 
 var EnumNamesscvSensorAxisConvention = map[scvSensorAxisConvention]string{
-	scvSensorAxisConventionUNKNOWN:                        "UNKNOWN",
 	scvSensorAxisConventionLOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT",
 }
 
 var EnumValuesscvSensorAxisConvention = map[string]scvSensorAxisConvention{
-	"UNKNOWN":                        scvSensorAxisConventionUNKNOWN,
 	"LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": scvSensorAxisConventionLOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
 }
 

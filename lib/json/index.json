@@ -31808,7 +31808,6 @@
                 "scvSensorAxisConvention": {
                     "type": "string",
                     "enum": [
-                        "UNKNOWN",
                         "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
                     ]
                 },
@@ -31944,13 +31943,13 @@
                 "SCVSensorShapeContract": {
                     "type": "object",
                     "properties": {
-                        "SHAPE": {
+                        "SHAPE_KIND": {
                             "$ref": "#/definitions/scvSensorShapeKind"
                         },
                         "AXIS_CONVENTION": {
                             "$ref": "#/definitions/scvSensorAxisConvention"
                         },
-                        "RANGE_BOUNDARY_KIND": {
+                        "RANGE_BOUNDARY": {
                             "$ref": "#/definitions/scvSensorRangeBoundaryKind"
                         },
                         "OUTER_HALF_ANGLE_DEG": {
