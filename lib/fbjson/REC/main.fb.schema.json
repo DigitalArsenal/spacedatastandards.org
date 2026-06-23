@@ -13843,7 +13843,8 @@
         2,
         3,
         4,
-        5
+        5,
+        6
       ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
@@ -13863,6 +13864,9 @@
         },
         "CUSTOM": {
           "value": 5
+        },
+        "SENSOR_LOCAL": {
+          "value": 6
         }
       }
     },
@@ -48369,6 +48373,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -48528,6 +48535,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -48590,6 +48600,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -48658,6 +48671,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -48725,6 +48741,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -48768,6 +48787,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -48843,6 +48865,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -48900,6 +48925,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -49551,6 +49579,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -49697,6 +49728,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -49832,6 +49866,72 @@
         }
       }
     },
+    "SCVAggregateStatistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TOTAL_CELLS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACCESSED_CELLS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MULTI_ACCESS_CELLS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACTIVE_SENSOR_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SWATH_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOWS": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_INTERVAL_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_REVISIT_COUNT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_ACCESS_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERCENT_COVERAGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      }
+    },
     "SCVResult": {
       "type": "object",
       "additionalProperties": false,
@@ -49935,6 +50035,10 @@
         "MESSAGE": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        },
+        "AGGREGATE_STATISTICS": {
+          "$ref": "#/definitions/SCVAggregateStatistics",
+          "x-flatbuffer-type": "SCVAggregateStatistics"
         }
       }
     },

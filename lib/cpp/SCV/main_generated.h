@@ -79,6 +79,9 @@ struct SCVMemoryRegionBuilder;
 struct SCVPackedGeometryChunk;
 struct SCVPackedGeometryChunkBuilder;
 
+struct SCVAggregateStatistics;
+struct SCVAggregateStatisticsBuilder;
+
 struct SCVResult;
 struct SCVResultBuilder;
 
@@ -170,37 +173,40 @@ enum scvCoordinateFrame : uint8_t {
   scvCoordinateFrame_ECEF = 3,
   scvCoordinateFrame_ECI = 4,
   scvCoordinateFrame_CUSTOM = 5,
+  scvCoordinateFrame_SENSOR_LOCAL = 6,
   scvCoordinateFrame_MIN = scvCoordinateFrame_UNKNOWN,
-  scvCoordinateFrame_MAX = scvCoordinateFrame_CUSTOM
+  scvCoordinateFrame_MAX = scvCoordinateFrame_SENSOR_LOCAL
 };
 
-inline const scvCoordinateFrame (&EnumValuesscvCoordinateFrame())[6] {
+inline const scvCoordinateFrame (&EnumValuesscvCoordinateFrame())[7] {
   static const scvCoordinateFrame values[] = {
     scvCoordinateFrame_UNKNOWN,
     scvCoordinateFrame_BODY_FIXED,
     scvCoordinateFrame_INERTIAL,
     scvCoordinateFrame_ECEF,
     scvCoordinateFrame_ECI,
-    scvCoordinateFrame_CUSTOM
+    scvCoordinateFrame_CUSTOM,
+    scvCoordinateFrame_SENSOR_LOCAL
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvCoordinateFrame() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "UNKNOWN",
     "BODY_FIXED",
     "INERTIAL",
     "ECEF",
     "ECI",
     "CUSTOM",
+    "SENSOR_LOCAL",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescvCoordinateFrame(scvCoordinateFrame e) {
-  if (::flatbuffers::IsOutRange(e, scvCoordinateFrame_UNKNOWN, scvCoordinateFrame_CUSTOM)) return "";
+  if (::flatbuffers::IsOutRange(e, scvCoordinateFrame_UNKNOWN, scvCoordinateFrame_SENSOR_LOCAL)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvCoordinateFrame()[index];
 }
@@ -3873,6 +3879,188 @@ inline ::flatbuffers::Offset<SCVPackedGeometryChunk> CreateSCVPackedGeometryChun
       SEGMENTS__);
 }
 
+struct SCVAggregateStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCVAggregateStatisticsBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TOTAL_CELLS = 4,
+    VT_ACCESSED_CELLS = 6,
+    VT_MULTI_ACCESS_CELLS = 8,
+    VT_ACTIVE_SENSOR_COUNT = 10,
+    VT_SWATH_COUNT = 12,
+    VT_TOTAL_WINDOWS = 14,
+    VT_TOTAL_INTERVAL_COUNT = 16,
+    VT_TOTAL_REVISIT_COUNT = 18,
+    VT_TOTAL_ACCESS_DURATION_SEC = 20,
+    VT_TOTAL_GAP_DURATION_SEC = 22,
+    VT_MAX_GAP_DURATION_SEC = 24,
+    VT_MEAN_REVISIT_TIME_SEC = 26,
+    VT_MAX_RESPONSE_TIME_SEC = 28,
+    VT_MEAN_RESPONSE_TIME_SEC = 30,
+    VT_PERCENT_COVERAGE = 32
+  };
+  uint32_t TOTAL_CELLS() const {
+    return GetField<uint32_t>(VT_TOTAL_CELLS, 0);
+  }
+  uint32_t ACCESSED_CELLS() const {
+    return GetField<uint32_t>(VT_ACCESSED_CELLS, 0);
+  }
+  uint32_t MULTI_ACCESS_CELLS() const {
+    return GetField<uint32_t>(VT_MULTI_ACCESS_CELLS, 0);
+  }
+  uint32_t ACTIVE_SENSOR_COUNT() const {
+    return GetField<uint32_t>(VT_ACTIVE_SENSOR_COUNT, 0);
+  }
+  uint32_t SWATH_COUNT() const {
+    return GetField<uint32_t>(VT_SWATH_COUNT, 0);
+  }
+  uint32_t TOTAL_WINDOWS() const {
+    return GetField<uint32_t>(VT_TOTAL_WINDOWS, 0);
+  }
+  uint32_t TOTAL_INTERVAL_COUNT() const {
+    return GetField<uint32_t>(VT_TOTAL_INTERVAL_COUNT, 0);
+  }
+  uint32_t TOTAL_REVISIT_COUNT() const {
+    return GetField<uint32_t>(VT_TOTAL_REVISIT_COUNT, 0);
+  }
+  double TOTAL_ACCESS_DURATION_SEC() const {
+    return GetField<double>(VT_TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  double TOTAL_GAP_DURATION_SEC() const {
+    return GetField<double>(VT_TOTAL_GAP_DURATION_SEC, 0.0);
+  }
+  double MAX_GAP_DURATION_SEC() const {
+    return GetField<double>(VT_MAX_GAP_DURATION_SEC, 0.0);
+  }
+  double MEAN_REVISIT_TIME_SEC() const {
+    return GetField<double>(VT_MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  double MAX_RESPONSE_TIME_SEC() const {
+    return GetField<double>(VT_MAX_RESPONSE_TIME_SEC, 0.0);
+  }
+  double MEAN_RESPONSE_TIME_SEC() const {
+    return GetField<double>(VT_MEAN_RESPONSE_TIME_SEC, 0.0);
+  }
+  double PERCENT_COVERAGE() const {
+    return GetField<double>(VT_PERCENT_COVERAGE, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_TOTAL_CELLS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_ACCESSED_CELLS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_MULTI_ACCESS_CELLS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_ACTIVE_SENSOR_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SWATH_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_TOTAL_WINDOWS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_TOTAL_INTERVAL_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_TOTAL_REVISIT_COUNT, 4) &&
+           VerifyField<double>(verifier, VT_TOTAL_ACCESS_DURATION_SEC, 8) &&
+           VerifyField<double>(verifier, VT_TOTAL_GAP_DURATION_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MAX_GAP_DURATION_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_REVISIT_TIME_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MAX_RESPONSE_TIME_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_RESPONSE_TIME_SEC, 8) &&
+           VerifyField<double>(verifier, VT_PERCENT_COVERAGE, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCVAggregateStatisticsBuilder {
+  typedef SCVAggregateStatistics Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TOTAL_CELLS(uint32_t TOTAL_CELLS) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_TOTAL_CELLS, TOTAL_CELLS, 0);
+  }
+  void add_ACCESSED_CELLS(uint32_t ACCESSED_CELLS) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_ACCESSED_CELLS, ACCESSED_CELLS, 0);
+  }
+  void add_MULTI_ACCESS_CELLS(uint32_t MULTI_ACCESS_CELLS) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_MULTI_ACCESS_CELLS, MULTI_ACCESS_CELLS, 0);
+  }
+  void add_ACTIVE_SENSOR_COUNT(uint32_t ACTIVE_SENSOR_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_ACTIVE_SENSOR_COUNT, ACTIVE_SENSOR_COUNT, 0);
+  }
+  void add_SWATH_COUNT(uint32_t SWATH_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_SWATH_COUNT, SWATH_COUNT, 0);
+  }
+  void add_TOTAL_WINDOWS(uint32_t TOTAL_WINDOWS) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_TOTAL_WINDOWS, TOTAL_WINDOWS, 0);
+  }
+  void add_TOTAL_INTERVAL_COUNT(uint32_t TOTAL_INTERVAL_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_TOTAL_INTERVAL_COUNT, TOTAL_INTERVAL_COUNT, 0);
+  }
+  void add_TOTAL_REVISIT_COUNT(uint32_t TOTAL_REVISIT_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVAggregateStatistics::VT_TOTAL_REVISIT_COUNT, TOTAL_REVISIT_COUNT, 0);
+  }
+  void add_TOTAL_ACCESS_DURATION_SEC(double TOTAL_ACCESS_DURATION_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_TOTAL_ACCESS_DURATION_SEC, TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  void add_TOTAL_GAP_DURATION_SEC(double TOTAL_GAP_DURATION_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_TOTAL_GAP_DURATION_SEC, TOTAL_GAP_DURATION_SEC, 0.0);
+  }
+  void add_MAX_GAP_DURATION_SEC(double MAX_GAP_DURATION_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_MAX_GAP_DURATION_SEC, MAX_GAP_DURATION_SEC, 0.0);
+  }
+  void add_MEAN_REVISIT_TIME_SEC(double MEAN_REVISIT_TIME_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_MEAN_REVISIT_TIME_SEC, MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  void add_MAX_RESPONSE_TIME_SEC(double MAX_RESPONSE_TIME_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_MAX_RESPONSE_TIME_SEC, MAX_RESPONSE_TIME_SEC, 0.0);
+  }
+  void add_MEAN_RESPONSE_TIME_SEC(double MEAN_RESPONSE_TIME_SEC) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_MEAN_RESPONSE_TIME_SEC, MEAN_RESPONSE_TIME_SEC, 0.0);
+  }
+  void add_PERCENT_COVERAGE(double PERCENT_COVERAGE) {
+    fbb_.AddElement<double>(SCVAggregateStatistics::VT_PERCENT_COVERAGE, PERCENT_COVERAGE, 0.0);
+  }
+  explicit SCVAggregateStatisticsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCVAggregateStatistics> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCVAggregateStatistics>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCVAggregateStatistics> CreateSCVAggregateStatistics(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t TOTAL_CELLS = 0,
+    uint32_t ACCESSED_CELLS = 0,
+    uint32_t MULTI_ACCESS_CELLS = 0,
+    uint32_t ACTIVE_SENSOR_COUNT = 0,
+    uint32_t SWATH_COUNT = 0,
+    uint32_t TOTAL_WINDOWS = 0,
+    uint32_t TOTAL_INTERVAL_COUNT = 0,
+    uint32_t TOTAL_REVISIT_COUNT = 0,
+    double TOTAL_ACCESS_DURATION_SEC = 0.0,
+    double TOTAL_GAP_DURATION_SEC = 0.0,
+    double MAX_GAP_DURATION_SEC = 0.0,
+    double MEAN_REVISIT_TIME_SEC = 0.0,
+    double MAX_RESPONSE_TIME_SEC = 0.0,
+    double MEAN_RESPONSE_TIME_SEC = 0.0,
+    double PERCENT_COVERAGE = 0.0) {
+  SCVAggregateStatisticsBuilder builder_(_fbb);
+  builder_.add_PERCENT_COVERAGE(PERCENT_COVERAGE);
+  builder_.add_MEAN_RESPONSE_TIME_SEC(MEAN_RESPONSE_TIME_SEC);
+  builder_.add_MAX_RESPONSE_TIME_SEC(MAX_RESPONSE_TIME_SEC);
+  builder_.add_MEAN_REVISIT_TIME_SEC(MEAN_REVISIT_TIME_SEC);
+  builder_.add_MAX_GAP_DURATION_SEC(MAX_GAP_DURATION_SEC);
+  builder_.add_TOTAL_GAP_DURATION_SEC(TOTAL_GAP_DURATION_SEC);
+  builder_.add_TOTAL_ACCESS_DURATION_SEC(TOTAL_ACCESS_DURATION_SEC);
+  builder_.add_TOTAL_REVISIT_COUNT(TOTAL_REVISIT_COUNT);
+  builder_.add_TOTAL_INTERVAL_COUNT(TOTAL_INTERVAL_COUNT);
+  builder_.add_TOTAL_WINDOWS(TOTAL_WINDOWS);
+  builder_.add_SWATH_COUNT(SWATH_COUNT);
+  builder_.add_ACTIVE_SENSOR_COUNT(ACTIVE_SENSOR_COUNT);
+  builder_.add_MULTI_ACCESS_CELLS(MULTI_ACCESS_CELLS);
+  builder_.add_ACCESSED_CELLS(ACCESSED_CELLS);
+  builder_.add_TOTAL_CELLS(TOTAL_CELLS);
+  return builder_.Finish();
+}
+
 struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVResultBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -3891,7 +4079,8 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HEATMAP = 28,
     VT_CONTRIBUTIONS = 30,
     VT_GEOMETRY = 32,
-    VT_MESSAGE = 34
+    VT_MESSAGE = 34,
+    VT_AGGREGATE_STATISTICS = 36
   };
   const ::flatbuffers::String *JOB_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_JOB_ID);
@@ -3941,6 +4130,9 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *MESSAGE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE);
   }
+  const SCVAggregateStatistics *AGGREGATE_STATISTICS() const {
+    return GetPointer<const SCVAggregateStatistics *>(VT_AGGREGATE_STATISTICS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3979,6 +4171,8 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(GEOMETRY()) &&
            VerifyOffset(verifier, VT_MESSAGE) &&
            verifier.VerifyString(MESSAGE()) &&
+           VerifyOffset(verifier, VT_AGGREGATE_STATISTICS) &&
+           verifier.VerifyTable(AGGREGATE_STATISTICS()) &&
            verifier.EndTable();
   }
 };
@@ -4035,6 +4229,9 @@ struct SCVResultBuilder {
   void add_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> MESSAGE) {
     fbb_.AddOffset(SCVResult::VT_MESSAGE, MESSAGE);
   }
+  void add_AGGREGATE_STATISTICS(::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS) {
+    fbb_.AddOffset(SCVResult::VT_AGGREGATE_STATISTICS, AGGREGATE_STATISTICS);
+  }
   explicit SCVResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -4063,9 +4260,11 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResult(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVHeatmapCell>>> HEATMAP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVSensorContribution>>> CONTRIBUTIONS = 0,
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0,
+    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
   SCVResultBuilder builder_(_fbb);
   builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS);
   builder_.add_MESSAGE(MESSAGE);
   builder_.add_GEOMETRY(GEOMETRY);
   builder_.add_CONTRIBUTIONS(CONTRIBUTIONS);
@@ -4101,7 +4300,8 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
     const std::vector<::flatbuffers::Offset<SCVHeatmapCell>> *HEATMAP = nullptr,
     const std::vector<::flatbuffers::Offset<SCVSensorContribution>> *CONTRIBUTIONS = nullptr,
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
-    const char *MESSAGE = nullptr) {
+    const char *MESSAGE = nullptr,
+    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
   auto JOB_ID__ = JOB_ID ? _fbb.CreateString(JOB_ID) : 0;
   auto CELL_STATS__ = CELL_STATS ? _fbb.CreateVector<::flatbuffers::Offset<SCVCellStat>>(*CELL_STATS) : 0;
   auto INTERVALS__ = INTERVALS ? _fbb.CreateVector<::flatbuffers::Offset<SCVInterval>>(*INTERVALS) : 0;
@@ -4128,7 +4328,8 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
       HEATMAP__,
       CONTRIBUTIONS__,
       GEOMETRY,
-      MESSAGE__);
+      MESSAGE__,
+      AGGREGATE_STATISTICS);
 }
 
 struct SCV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

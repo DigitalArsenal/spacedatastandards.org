@@ -685,6 +685,7 @@ export * from './Score.js';
 export * from './ScoreType.js';
 export * from './screeningVolumeShape.js';
 export * from './SCV.js';
+export * from './SCVAggregateStatistics.js';
 export * from './scvAnalysisMode.js';
 export * from './scvBodyKind.js';
 export * from './SCVCancel.js';

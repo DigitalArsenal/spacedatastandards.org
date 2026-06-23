@@ -1,5 +1,5 @@
-// Hash: 7c55a1d69ae8f0e026e2650748fd325457fb1ce05a6648161564540817b284fa
-// Version: 1.101.3
+// Hash: d1459e5e93c4a6b3b16a13ba33eb0e2a5a7e05a5e29843bc25914af12073aa39
+// Version: 1.101.6
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -26,7 +26,8 @@ enum scvCoordinateFrame : ubyte {
   INERTIAL,
   ECEF,
   ECI,
-  CUSTOM
+  CUSTOM,
+  SENSOR_LOCAL
 }
 
 enum scvBodyKind : ubyte {
@@ -375,6 +376,24 @@ table SCVPackedGeometryChunk {
   SEGMENTS:[SCVSwathSegment];
 }
 
+table SCVAggregateStatistics {
+  TOTAL_CELLS:uint32;
+  ACCESSED_CELLS:uint32;
+  MULTI_ACCESS_CELLS:uint32;
+  ACTIVE_SENSOR_COUNT:uint32;
+  SWATH_COUNT:uint32;
+  TOTAL_WINDOWS:uint32;
+  TOTAL_INTERVAL_COUNT:uint32;
+  TOTAL_REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  TOTAL_GAP_DURATION_SEC:double;
+  MAX_GAP_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_RESPONSE_TIME_SEC:double;
+  MEAN_RESPONSE_TIME_SEC:double;
+  PERCENT_COVERAGE:double;
+}
+
 table SCVResult {
   JOB_ID:string;
   TRACE_ID:uint64;
@@ -392,6 +411,7 @@ table SCVResult {
   CONTRIBUTIONS:[SCVSensorContribution];
   GEOMETRY:SCVPackedGeometryChunk;
   MESSAGE:string;
+  AGGREGATE_STATISTICS:SCVAggregateStatistics;
 }
 
 table SCV {

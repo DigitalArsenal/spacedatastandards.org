@@ -50,8 +50,9 @@ public enum scvCoordinateFrame: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case ecef = 3
   case eci = 4
   case custom = 5
+  case sensorLocal = 6
 
-  public static var max: scvCoordinateFrame { return .custom }
+  public static var max: scvCoordinateFrame { return .sensorLocal }
   public static var min: scvCoordinateFrame { return .unknown }
 }
 
@@ -2139,6 +2140,125 @@ public struct SCVPackedGeometryChunk: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
+public struct SCVAggregateStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVAggregateStatistics.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TOTAL_CELLS: VOffset = 4
+    static let ACCESSED_CELLS: VOffset = 6
+    static let MULTI_ACCESS_CELLS: VOffset = 8
+    static let ACTIVE_SENSOR_COUNT: VOffset = 10
+    static let SWATH_COUNT: VOffset = 12
+    static let TOTAL_WINDOWS: VOffset = 14
+    static let TOTAL_INTERVAL_COUNT: VOffset = 16
+    static let TOTAL_REVISIT_COUNT: VOffset = 18
+    static let TOTAL_ACCESS_DURATION_SEC: VOffset = 20
+    static let TOTAL_GAP_DURATION_SEC: VOffset = 22
+    static let MAX_GAP_DURATION_SEC: VOffset = 24
+    static let MEAN_REVISIT_TIME_SEC: VOffset = 26
+    static let MAX_RESPONSE_TIME_SEC: VOffset = 28
+    static let MEAN_RESPONSE_TIME_SEC: VOffset = 30
+    static let PERCENT_COVERAGE: VOffset = 32
+  }
+
+  public var TOTAL_CELLS: UInt32 { let o = _accessor.offset(VT.TOTAL_CELLS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ACCESSED_CELLS: UInt32 { let o = _accessor.offset(VT.ACCESSED_CELLS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MULTI_ACCESS_CELLS: UInt32 { let o = _accessor.offset(VT.MULTI_ACCESS_CELLS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ACTIVE_SENSOR_COUNT: UInt32 { let o = _accessor.offset(VT.ACTIVE_SENSOR_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var SWATH_COUNT: UInt32 { let o = _accessor.offset(VT.SWATH_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TOTAL_WINDOWS: UInt32 { let o = _accessor.offset(VT.TOTAL_WINDOWS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TOTAL_INTERVAL_COUNT: UInt32 { let o = _accessor.offset(VT.TOTAL_INTERVAL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TOTAL_REVISIT_COUNT: UInt32 { let o = _accessor.offset(VT.TOTAL_REVISIT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TOTAL_ACCESS_DURATION_SEC: Double { let o = _accessor.offset(VT.TOTAL_ACCESS_DURATION_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TOTAL_GAP_DURATION_SEC: Double { let o = _accessor.offset(VT.TOTAL_GAP_DURATION_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_GAP_DURATION_SEC: Double { let o = _accessor.offset(VT.MAX_GAP_DURATION_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_REVISIT_TIME_SEC: Double { let o = _accessor.offset(VT.MEAN_REVISIT_TIME_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_RESPONSE_TIME_SEC: Double { let o = _accessor.offset(VT.MAX_RESPONSE_TIME_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_RESPONSE_TIME_SEC: Double { let o = _accessor.offset(VT.MEAN_RESPONSE_TIME_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PERCENT_COVERAGE: Double { let o = _accessor.offset(VT.PERCENT_COVERAGE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSCVAggregateStatistics(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(TOTAL_CELLS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_CELLS, def: 0, at: VT.TOTAL_CELLS) }
+  public static func add(ACCESSED_CELLS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCESSED_CELLS, def: 0, at: VT.ACCESSED_CELLS) }
+  public static func add(MULTI_ACCESS_CELLS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULTI_ACCESS_CELLS, def: 0, at: VT.MULTI_ACCESS_CELLS) }
+  public static func add(ACTIVE_SENSOR_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE_SENSOR_COUNT, def: 0, at: VT.ACTIVE_SENSOR_COUNT) }
+  public static func add(SWATH_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SWATH_COUNT, def: 0, at: VT.SWATH_COUNT) }
+  public static func add(TOTAL_WINDOWS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_WINDOWS, def: 0, at: VT.TOTAL_WINDOWS) }
+  public static func add(TOTAL_INTERVAL_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_INTERVAL_COUNT, def: 0, at: VT.TOTAL_INTERVAL_COUNT) }
+  public static func add(TOTAL_REVISIT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_REVISIT_COUNT, def: 0, at: VT.TOTAL_REVISIT_COUNT) }
+  public static func add(TOTAL_ACCESS_DURATION_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_ACCESS_DURATION_SEC, def: 0.0, at: VT.TOTAL_ACCESS_DURATION_SEC) }
+  public static func add(TOTAL_GAP_DURATION_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_GAP_DURATION_SEC, def: 0.0, at: VT.TOTAL_GAP_DURATION_SEC) }
+  public static func add(MAX_GAP_DURATION_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_GAP_DURATION_SEC, def: 0.0, at: VT.MAX_GAP_DURATION_SEC) }
+  public static func add(MEAN_REVISIT_TIME_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_REVISIT_TIME_SEC, def: 0.0, at: VT.MEAN_REVISIT_TIME_SEC) }
+  public static func add(MAX_RESPONSE_TIME_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RESPONSE_TIME_SEC, def: 0.0, at: VT.MAX_RESPONSE_TIME_SEC) }
+  public static func add(MEAN_RESPONSE_TIME_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_RESPONSE_TIME_SEC, def: 0.0, at: VT.MEAN_RESPONSE_TIME_SEC) }
+  public static func add(PERCENT_COVERAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERCENT_COVERAGE, def: 0.0, at: VT.PERCENT_COVERAGE) }
+  public static func endSCVAggregateStatistics(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVAggregateStatistics(
+    _ fbb: inout FlatBufferBuilder,
+    TOTAL_CELLS: UInt32 = 0,
+    ACCESSED_CELLS: UInt32 = 0,
+    MULTI_ACCESS_CELLS: UInt32 = 0,
+    ACTIVE_SENSOR_COUNT: UInt32 = 0,
+    SWATH_COUNT: UInt32 = 0,
+    TOTAL_WINDOWS: UInt32 = 0,
+    TOTAL_INTERVAL_COUNT: UInt32 = 0,
+    TOTAL_REVISIT_COUNT: UInt32 = 0,
+    TOTAL_ACCESS_DURATION_SEC: Double = 0.0,
+    TOTAL_GAP_DURATION_SEC: Double = 0.0,
+    MAX_GAP_DURATION_SEC: Double = 0.0,
+    MEAN_REVISIT_TIME_SEC: Double = 0.0,
+    MAX_RESPONSE_TIME_SEC: Double = 0.0,
+    MEAN_RESPONSE_TIME_SEC: Double = 0.0,
+    PERCENT_COVERAGE: Double = 0.0
+  ) -> Offset {
+    let __start = SCVAggregateStatistics.startSCVAggregateStatistics(&fbb)
+    SCVAggregateStatistics.add(TOTAL_CELLS: TOTAL_CELLS, &fbb)
+    SCVAggregateStatistics.add(ACCESSED_CELLS: ACCESSED_CELLS, &fbb)
+    SCVAggregateStatistics.add(MULTI_ACCESS_CELLS: MULTI_ACCESS_CELLS, &fbb)
+    SCVAggregateStatistics.add(ACTIVE_SENSOR_COUNT: ACTIVE_SENSOR_COUNT, &fbb)
+    SCVAggregateStatistics.add(SWATH_COUNT: SWATH_COUNT, &fbb)
+    SCVAggregateStatistics.add(TOTAL_WINDOWS: TOTAL_WINDOWS, &fbb)
+    SCVAggregateStatistics.add(TOTAL_INTERVAL_COUNT: TOTAL_INTERVAL_COUNT, &fbb)
+    SCVAggregateStatistics.add(TOTAL_REVISIT_COUNT: TOTAL_REVISIT_COUNT, &fbb)
+    SCVAggregateStatistics.add(TOTAL_ACCESS_DURATION_SEC: TOTAL_ACCESS_DURATION_SEC, &fbb)
+    SCVAggregateStatistics.add(TOTAL_GAP_DURATION_SEC: TOTAL_GAP_DURATION_SEC, &fbb)
+    SCVAggregateStatistics.add(MAX_GAP_DURATION_SEC: MAX_GAP_DURATION_SEC, &fbb)
+    SCVAggregateStatistics.add(MEAN_REVISIT_TIME_SEC: MEAN_REVISIT_TIME_SEC, &fbb)
+    SCVAggregateStatistics.add(MAX_RESPONSE_TIME_SEC: MAX_RESPONSE_TIME_SEC, &fbb)
+    SCVAggregateStatistics.add(MEAN_RESPONSE_TIME_SEC: MEAN_RESPONSE_TIME_SEC, &fbb)
+    SCVAggregateStatistics.add(PERCENT_COVERAGE: PERCENT_COVERAGE, &fbb)
+    return SCVAggregateStatistics.endSCVAggregateStatistics(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TOTAL_CELLS, fieldName: "TOTAL_CELLS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ACCESSED_CELLS, fieldName: "ACCESSED_CELLS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MULTI_ACCESS_CELLS, fieldName: "MULTI_ACCESS_CELLS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ACTIVE_SENSOR_COUNT, fieldName: "ACTIVE_SENSOR_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SWATH_COUNT, fieldName: "SWATH_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOTAL_WINDOWS, fieldName: "TOTAL_WINDOWS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOTAL_INTERVAL_COUNT, fieldName: "TOTAL_INTERVAL_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOTAL_REVISIT_COUNT, fieldName: "TOTAL_REVISIT_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOTAL_ACCESS_DURATION_SEC, fieldName: "TOTAL_ACCESS_DURATION_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.TOTAL_GAP_DURATION_SEC, fieldName: "TOTAL_GAP_DURATION_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_GAP_DURATION_SEC, fieldName: "MAX_GAP_DURATION_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_REVISIT_TIME_SEC, fieldName: "MEAN_REVISIT_TIME_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_RESPONSE_TIME_SEC, fieldName: "MAX_RESPONSE_TIME_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_RESPONSE_TIME_SEC, fieldName: "MEAN_RESPONSE_TIME_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.PERCENT_COVERAGE, fieldName: "PERCENT_COVERAGE", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
 public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -2167,6 +2287,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let CONTRIBUTIONS: VOffset = 30
     static let GEOMETRY: VOffset = 32
     static let MESSAGE: VOffset = 34
+    static let AGGREGATE_STATISTICS: VOffset = 36
   }
 
   public var JOB_ID: String? { let o = _accessor.offset(VT.JOB_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -2187,7 +2308,8 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var GEOMETRY: SCVPackedGeometryChunk? { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? nil : SCVPackedGeometryChunk(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
-  public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public var AGGREGATE_STATISTICS: SCVAggregateStatistics? { let o = _accessor.offset(VT.AGGREGATE_STATISTICS); return o == 0 ? nil : SCVAggregateStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(JOB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_ID, at: VT.JOB_ID) }
   public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
   public static func add(STATUS: scvResultState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
@@ -2204,6 +2326,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func addVectorOf(CONTRIBUTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTIONS, at: VT.CONTRIBUTIONS) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
   public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
+  public static func add(AGGREGATE_STATISTICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_STATISTICS, at: VT.AGGREGATE_STATISTICS) }
   public static func endSCVResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVResult(
     _ fbb: inout FlatBufferBuilder,
@@ -2222,7 +2345,8 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     HEATMAPVectorOffset HEATMAP: Offset = Offset(),
     CONTRIBUTIONSVectorOffset CONTRIBUTIONS: Offset = Offset(),
     GEOMETRYOffset GEOMETRY: Offset = Offset(),
-    MESSAGEOffset MESSAGE: Offset = Offset()
+    MESSAGEOffset MESSAGE: Offset = Offset(),
+    AGGREGATE_STATISTICSOffset AGGREGATE_STATISTICS: Offset = Offset()
   ) -> Offset {
     let __start = SCVResult.startSCVResult(&fbb)
     SCVResult.add(JOB_ID: JOB_ID, &fbb)
@@ -2241,6 +2365,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     SCVResult.addVectorOf(CONTRIBUTIONS: CONTRIBUTIONS, &fbb)
     SCVResult.add(GEOMETRY: GEOMETRY, &fbb)
     SCVResult.add(MESSAGE: MESSAGE, &fbb)
+    SCVResult.add(AGGREGATE_STATISTICS: AGGREGATE_STATISTICS, &fbb)
     return SCVResult.endSCVResult(&fbb, start: __start)
   }
 
@@ -2262,6 +2387,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.CONTRIBUTIONS, fieldName: "CONTRIBUTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVSensorContribution>, SCVSensorContribution>>.self)
     try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: ForwardOffset<SCVPackedGeometryChunk>.self)
     try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AGGREGATE_STATISTICS, fieldName: "AGGREGATE_STATISTICS", required: false, type: ForwardOffset<SCVAggregateStatistics>.self)
     _v.finish()
   }
 }

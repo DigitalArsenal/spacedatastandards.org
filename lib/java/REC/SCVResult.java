@@ -75,6 +75,8 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public String MESSAGE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MESSAGEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public SCVAggregateStatistics AGGREGATE_STATISTICS() { return AGGREGATE_STATISTICS(new SCVAggregateStatistics()); }
+  public SCVAggregateStatistics AGGREGATE_STATISTICS(SCVAggregateStatistics obj) { int o = __offset(36); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCVResult(FlatBufferBuilder builder,
       int JOB_IDOffset,
@@ -92,9 +94,11 @@ public final class SCVResult extends com.google.flatbuffers.Table {
       int HEATMAPOffset,
       int CONTRIBUTIONSOffset,
       int GEOMETRYOffset,
-      int MESSAGEOffset) {
-    builder.startTable(16);
+      int MESSAGEOffset,
+      int AGGREGATE_STATISTICSOffset) {
+    builder.startTable(17);
     SCVResult.addTraceId(builder, TRACE_ID);
+    SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.addMessage(builder, MESSAGEOffset);
     SCVResult.addGeometry(builder, GEOMETRYOffset);
     SCVResult.addContributions(builder, CONTRIBUTIONSOffset);
@@ -113,7 +117,7 @@ public final class SCVResult extends com.google.flatbuffers.Table {
     return SCVResult.endSCVResult(builder);
   }
 
-  public static void startSCVResult(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSCVResult(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addJobId(FlatBufferBuilder builder, int JOB_IDOffset) { builder.addOffset(0, JOB_IDOffset, 0); }
   public static void addTraceId(FlatBufferBuilder builder, long TRACE_ID) { builder.addLong(1, TRACE_ID, 0L); }
   public static void addStatus(FlatBufferBuilder builder, int STATUS) { builder.addByte(2, (byte) STATUS, (byte) 0); }
@@ -144,6 +148,7 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public static void startContributionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(14, GEOMETRYOffset, 0); }
   public static void addMessage(FlatBufferBuilder builder, int MESSAGEOffset) { builder.addOffset(15, MESSAGEOffset, 0); }
+  public static void addAggregateStatistics(FlatBufferBuilder builder, int AGGREGATE_STATISTICSOffset) { builder.addOffset(16, AGGREGATE_STATISTICSOffset, 0); }
   public static int endSCVResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

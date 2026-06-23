@@ -278,8 +278,19 @@ class SCVResult(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # SCVResult
+    def AGGREGATE_STATISTICS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVAggregateStatistics import SCVAggregateStatistics
+            obj = SCVAggregateStatistics()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCVResultStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(17)
 
 def Start(builder):
     SCVResultStart(builder)
@@ -464,12 +475,19 @@ def SCVResultAddMESSAGE(builder, MESSAGE):
 def AddMESSAGE(builder, MESSAGE):
     SCVResultAddMESSAGE(builder, MESSAGE)
 
+def SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_STATISTICS), 0)
+
+def AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
+    SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
+
 def SCVResultEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return SCVResultEnd(builder)
 
+import SCVAggregateStatistics
 import SCVCellStat
 import SCVEllipsoid
 import SCVHeatmapCell
@@ -506,6 +524,7 @@ class SCVResultT(object):
         CONTRIBUTIONS = None,
         GEOMETRY = None,
         MESSAGE = None,
+        AGGREGATE_STATISTICS = None,
     ):
         self.JOB_ID = JOB_ID  # type: Optional[str]
         self.TRACE_ID = TRACE_ID  # type: int
@@ -523,6 +542,7 @@ class SCVResultT(object):
         self.CONTRIBUTIONS = CONTRIBUTIONS  # type: Optional[List[SCVSensorContribution.SCVSensorContributionT]]
         self.GEOMETRY = GEOMETRY  # type: Optional[SCVPackedGeometryChunk.SCVPackedGeometryChunkT]
         self.MESSAGE = MESSAGE  # type: Optional[str]
+        self.AGGREGATE_STATISTICS = AGGREGATE_STATISTICS  # type: Optional[SCVAggregateStatistics.SCVAggregateStatisticsT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -613,6 +633,8 @@ class SCVResultT(object):
         if SCVResult.GEOMETRY() is not None:
             self.GEOMETRY = SCVPackedGeometryChunk.SCVPackedGeometryChunkT.InitFromObj(SCVResult.GEOMETRY())
         self.MESSAGE = SCVResult.MESSAGE()
+        if SCVResult.AGGREGATE_STATISTICS() is not None:
+            self.AGGREGATE_STATISTICS = SCVAggregateStatistics.SCVAggregateStatisticsT.InitFromObj(SCVResult.AGGREGATE_STATISTICS())
 
     # SCVResultT
     def Pack(self, builder):
@@ -682,6 +704,8 @@ class SCVResultT(object):
             GEOMETRY = self.GEOMETRY.Pack(builder)
         if self.MESSAGE is not None:
             MESSAGE = builder.CreateString(self.MESSAGE)
+        if self.AGGREGATE_STATISTICS is not None:
+            AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.Pack(builder)
         SCVResultStart(builder)
         if self.JOB_ID is not None:
             SCVResultAddJOB_ID(builder, JOB_ID)
@@ -711,5 +735,7 @@ class SCVResultT(object):
             SCVResultAddGEOMETRY(builder, GEOMETRY)
         if self.MESSAGE is not None:
             SCVResultAddMESSAGE(builder, MESSAGE)
+        if self.AGGREGATE_STATISTICS is not None:
+            SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
         SCVResult = SCVResultEnd(builder)
         return SCVResult

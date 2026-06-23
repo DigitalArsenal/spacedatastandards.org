@@ -242,22 +242,29 @@ class SCVResult extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    public function getAGGREGATE_STATISTICS()
+    {
+        $obj = new SCVAggregateStatistics();
+        $o = $this->__offset(36);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVResult
      */
-    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $CELL_STATS, $INTERVALS, $LATITUDE_BANDS, $TIME_SERIES, $HISTOGRAMS, $HEATMAP, $CONTRIBUTIONS, $GEOMETRY, $MESSAGE)
+    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $CELL_STATS, $INTERVALS, $LATITUDE_BANDS, $TIME_SERIES, $HISTOGRAMS, $HEATMAP, $CONTRIBUTIONS, $GEOMETRY, $MESSAGE, $AGGREGATE_STATISTICS)
     {
-        $builder->startObject(16);
+        $builder->startObject(17);
         self::addJOB_ID($builder, $JOB_ID);
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addSTATUS($builder, $STATUS);
@@ -274,6 +281,7 @@ class SCVResult extends Table
         self::addCONTRIBUTIONS($builder, $CONTRIBUTIONS);
         self::addGEOMETRY($builder, $GEOMETRY);
         self::addMESSAGE($builder, $MESSAGE);
+        self::addAGGREGATE_STATISTICS($builder, $AGGREGATE_STATISTICS);
         $o = $builder->endObject();
         return $o;
     }
@@ -604,6 +612,16 @@ class SCVResult extends Table
     public static function addMESSAGE(FlatBufferBuilder $builder, $MESSAGE)
     {
         $builder->addOffsetX(15, $MESSAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addAGGREGATE_STATISTICS(FlatBufferBuilder $builder, $AGGREGATE_STATISTICS)
+    {
+        $builder->addOffsetX(16, $AGGREGATE_STATISTICS, 0);
     }
 
     /**

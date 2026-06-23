@@ -93,7 +93,8 @@ enum scvCoordinateFrame {
   INERTIAL(2),
   ECEF(3),
   ECI(4),
-  CUSTOM(5);
+  CUSTOM(5),
+  SENSOR_LOCAL(6);
 
   final int value;
   const scvCoordinateFrame(this.value);
@@ -106,6 +107,7 @@ enum scvCoordinateFrame {
       case 3: return scvCoordinateFrame.ECEF;
       case 4: return scvCoordinateFrame.ECI;
       case 5: return scvCoordinateFrame.CUSTOM;
+      case 6: return scvCoordinateFrame.SENSOR_LOCAL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -114,7 +116,7 @@ enum scvCoordinateFrame {
       value == null ? null : scvCoordinateFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<scvCoordinateFrame> reader = _scvCoordinateFrameReader();
 }
 
@@ -4208,6 +4210,233 @@ class SCVPackedGeometryChunkObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class SCVAggregateStatistics {
+  SCVAggregateStatistics._(this._bc, this._bcOffset);
+  factory SCVAggregateStatistics(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVAggregateStatistics> reader = _SCVAggregateStatisticsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get TOTAL_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get totalCells => TOTAL_CELLS;
+  int get ACCESSED_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get accessedCells => ACCESSED_CELLS;
+  int get MULTI_ACCESS_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get multiAccessCells => MULTI_ACCESS_CELLS;
+  int get ACTIVE_SENSOR_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get activeSensorCount => ACTIVE_SENSOR_COUNT;
+  int get SWATH_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get swathCount => SWATH_COUNT;
+  int get TOTAL_WINDOWS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get totalWindows => TOTAL_WINDOWS;
+  int get TOTAL_INTERVAL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get totalIntervalCount => TOTAL_INTERVAL_COUNT;
+  int get TOTAL_REVISIT_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get totalRevisitCount => TOTAL_REVISIT_COUNT;
+  double get TOTAL_ACCESS_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get totalAccessDurationSec => TOTAL_ACCESS_DURATION_SEC;
+  double get TOTAL_GAP_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get totalGapDurationSec => TOTAL_GAP_DURATION_SEC;
+  double get MAX_GAP_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get maxGapDurationSec => MAX_GAP_DURATION_SEC;
+  double get MEAN_REVISIT_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get meanRevisitTimeSec => MEAN_REVISIT_TIME_SEC;
+  double get MAX_RESPONSE_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get maxResponseTimeSec => MAX_RESPONSE_TIME_SEC;
+  double get MEAN_RESPONSE_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get meanResponseTimeSec => MEAN_RESPONSE_TIME_SEC;
+  double get PERCENT_COVERAGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get percentCoverage => PERCENT_COVERAGE;
+
+  @override
+  String toString() {
+    return 'SCVAggregateStatistics{totalCells: ${totalCells}, accessedCells: ${accessedCells}, multiAccessCells: ${multiAccessCells}, activeSensorCount: ${activeSensorCount}, swathCount: ${swathCount}, totalWindows: ${totalWindows}, totalIntervalCount: ${totalIntervalCount}, totalRevisitCount: ${totalRevisitCount}, totalAccessDurationSec: ${totalAccessDurationSec}, totalGapDurationSec: ${totalGapDurationSec}, maxGapDurationSec: ${maxGapDurationSec}, meanRevisitTimeSec: ${meanRevisitTimeSec}, maxResponseTimeSec: ${maxResponseTimeSec}, meanResponseTimeSec: ${meanResponseTimeSec}, percentCoverage: ${percentCoverage}}';
+  }
+}
+
+class _SCVAggregateStatisticsReader extends fb.TableReader<SCVAggregateStatistics> {
+  const _SCVAggregateStatisticsReader();
+
+  @override
+  SCVAggregateStatistics createObject(fb.BufferContext bc, int offset) =>
+    SCVAggregateStatistics._(bc, offset);
+}
+
+class SCVAggregateStatisticsBuilder {
+  SCVAggregateStatisticsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addTotalCells(int? TOTAL_CELLS) {
+    fbBuilder.addUint32(0, TOTAL_CELLS);
+    return fbBuilder.offset;
+  }
+  int addAccessedCells(int? ACCESSED_CELLS) {
+    fbBuilder.addUint32(1, ACCESSED_CELLS);
+    return fbBuilder.offset;
+  }
+  int addMultiAccessCells(int? MULTI_ACCESS_CELLS) {
+    fbBuilder.addUint32(2, MULTI_ACCESS_CELLS);
+    return fbBuilder.offset;
+  }
+  int addActiveSensorCount(int? ACTIVE_SENSOR_COUNT) {
+    fbBuilder.addUint32(3, ACTIVE_SENSOR_COUNT);
+    return fbBuilder.offset;
+  }
+  int addSwathCount(int? SWATH_COUNT) {
+    fbBuilder.addUint32(4, SWATH_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalWindows(int? TOTAL_WINDOWS) {
+    fbBuilder.addUint32(5, TOTAL_WINDOWS);
+    return fbBuilder.offset;
+  }
+  int addTotalIntervalCount(int? TOTAL_INTERVAL_COUNT) {
+    fbBuilder.addUint32(6, TOTAL_INTERVAL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalRevisitCount(int? TOTAL_REVISIT_COUNT) {
+    fbBuilder.addUint32(7, TOTAL_REVISIT_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalAccessDurationSec(double? TOTAL_ACCESS_DURATION_SEC) {
+    fbBuilder.addFloat64(8, TOTAL_ACCESS_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addTotalGapDurationSec(double? TOTAL_GAP_DURATION_SEC) {
+    fbBuilder.addFloat64(9, TOTAL_GAP_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addMaxGapDurationSec(double? MAX_GAP_DURATION_SEC) {
+    fbBuilder.addFloat64(10, MAX_GAP_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addMeanRevisitTimeSec(double? MEAN_REVISIT_TIME_SEC) {
+    fbBuilder.addFloat64(11, MEAN_REVISIT_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addMaxResponseTimeSec(double? MAX_RESPONSE_TIME_SEC) {
+    fbBuilder.addFloat64(12, MAX_RESPONSE_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addMeanResponseTimeSec(double? MEAN_RESPONSE_TIME_SEC) {
+    fbBuilder.addFloat64(13, MEAN_RESPONSE_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addPercentCoverage(double? PERCENT_COVERAGE) {
+    fbBuilder.addFloat64(14, PERCENT_COVERAGE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVAggregateStatisticsObjectBuilder extends fb.ObjectBuilder {
+  final int? _TOTAL_CELLS;
+  final int? _ACCESSED_CELLS;
+  final int? _MULTI_ACCESS_CELLS;
+  final int? _ACTIVE_SENSOR_COUNT;
+  final int? _SWATH_COUNT;
+  final int? _TOTAL_WINDOWS;
+  final int? _TOTAL_INTERVAL_COUNT;
+  final int? _TOTAL_REVISIT_COUNT;
+  final double? _TOTAL_ACCESS_DURATION_SEC;
+  final double? _TOTAL_GAP_DURATION_SEC;
+  final double? _MAX_GAP_DURATION_SEC;
+  final double? _MEAN_REVISIT_TIME_SEC;
+  final double? _MAX_RESPONSE_TIME_SEC;
+  final double? _MEAN_RESPONSE_TIME_SEC;
+  final double? _PERCENT_COVERAGE;
+
+  SCVAggregateStatisticsObjectBuilder({
+    int? TOTAL_CELLS,
+    int? totalCells,
+    int? ACCESSED_CELLS,
+    int? accessedCells,
+    int? MULTI_ACCESS_CELLS,
+    int? multiAccessCells,
+    int? ACTIVE_SENSOR_COUNT,
+    int? activeSensorCount,
+    int? SWATH_COUNT,
+    int? swathCount,
+    int? TOTAL_WINDOWS,
+    int? totalWindows,
+    int? TOTAL_INTERVAL_COUNT,
+    int? totalIntervalCount,
+    int? TOTAL_REVISIT_COUNT,
+    int? totalRevisitCount,
+    double? TOTAL_ACCESS_DURATION_SEC,
+    double? totalAccessDurationSec,
+    double? TOTAL_GAP_DURATION_SEC,
+    double? totalGapDurationSec,
+    double? MAX_GAP_DURATION_SEC,
+    double? maxGapDurationSec,
+    double? MEAN_REVISIT_TIME_SEC,
+    double? meanRevisitTimeSec,
+    double? MAX_RESPONSE_TIME_SEC,
+    double? maxResponseTimeSec,
+    double? MEAN_RESPONSE_TIME_SEC,
+    double? meanResponseTimeSec,
+    double? PERCENT_COVERAGE,
+    double? percentCoverage,
+  })
+      : _TOTAL_CELLS = totalCells ?? TOTAL_CELLS,
+        _ACCESSED_CELLS = accessedCells ?? ACCESSED_CELLS,
+        _MULTI_ACCESS_CELLS = multiAccessCells ?? MULTI_ACCESS_CELLS,
+        _ACTIVE_SENSOR_COUNT = activeSensorCount ?? ACTIVE_SENSOR_COUNT,
+        _SWATH_COUNT = swathCount ?? SWATH_COUNT,
+        _TOTAL_WINDOWS = totalWindows ?? TOTAL_WINDOWS,
+        _TOTAL_INTERVAL_COUNT = totalIntervalCount ?? TOTAL_INTERVAL_COUNT,
+        _TOTAL_REVISIT_COUNT = totalRevisitCount ?? TOTAL_REVISIT_COUNT,
+        _TOTAL_ACCESS_DURATION_SEC = totalAccessDurationSec ?? TOTAL_ACCESS_DURATION_SEC,
+        _TOTAL_GAP_DURATION_SEC = totalGapDurationSec ?? TOTAL_GAP_DURATION_SEC,
+        _MAX_GAP_DURATION_SEC = maxGapDurationSec ?? MAX_GAP_DURATION_SEC,
+        _MEAN_REVISIT_TIME_SEC = meanRevisitTimeSec ?? MEAN_REVISIT_TIME_SEC,
+        _MAX_RESPONSE_TIME_SEC = maxResponseTimeSec ?? MAX_RESPONSE_TIME_SEC,
+        _MEAN_RESPONSE_TIME_SEC = meanResponseTimeSec ?? MEAN_RESPONSE_TIME_SEC,
+        _PERCENT_COVERAGE = percentCoverage ?? PERCENT_COVERAGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(15);
+    fbBuilder.addUint32(0, _TOTAL_CELLS);
+    fbBuilder.addUint32(1, _ACCESSED_CELLS);
+    fbBuilder.addUint32(2, _MULTI_ACCESS_CELLS);
+    fbBuilder.addUint32(3, _ACTIVE_SENSOR_COUNT);
+    fbBuilder.addUint32(4, _SWATH_COUNT);
+    fbBuilder.addUint32(5, _TOTAL_WINDOWS);
+    fbBuilder.addUint32(6, _TOTAL_INTERVAL_COUNT);
+    fbBuilder.addUint32(7, _TOTAL_REVISIT_COUNT);
+    fbBuilder.addFloat64(8, _TOTAL_ACCESS_DURATION_SEC);
+    fbBuilder.addFloat64(9, _TOTAL_GAP_DURATION_SEC);
+    fbBuilder.addFloat64(10, _MAX_GAP_DURATION_SEC);
+    fbBuilder.addFloat64(11, _MEAN_REVISIT_TIME_SEC);
+    fbBuilder.addFloat64(12, _MAX_RESPONSE_TIME_SEC);
+    fbBuilder.addFloat64(13, _MEAN_RESPONSE_TIME_SEC);
+    fbBuilder.addFloat64(14, _PERCENT_COVERAGE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class SCVResult {
   SCVResult._(this._bc, this._bcOffset);
   factory SCVResult(List<int> bytes) {
@@ -4245,10 +4474,12 @@ class SCVResult {
   List<SCVSensorContribution>? get CONTRIBUTIONS => const fb.ListReader<SCVSensorContribution>(SCVSensorContribution.reader).vTableGetNullable(_bc, _bcOffset, 30);
   SCVPackedGeometryChunk? get GEOMETRY => SCVPackedGeometryChunk.reader.vTableGetNullable(_bc, _bcOffset, 32);
   String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  SCVAggregateStatistics? get AGGREGATE_STATISTICS => SCVAggregateStatistics.reader.vTableGetNullable(_bc, _bcOffset, 36);
+  SCVAggregateStatistics? get aggregateStatistics => AGGREGATE_STATISTICS;
 
   @override
   String toString() {
-    return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, cellStats: ${cellStats}, INTERVALS: ${INTERVALS}, latitudeBands: ${latitudeBands}, timeSeries: ${timeSeries}, HISTOGRAMS: ${HISTOGRAMS}, HEATMAP: ${HEATMAP}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, MESSAGE: ${MESSAGE}}';
+    return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, cellStats: ${cellStats}, INTERVALS: ${INTERVALS}, latitudeBands: ${latitudeBands}, timeSeries: ${timeSeries}, HISTOGRAMS: ${HISTOGRAMS}, HEATMAP: ${HEATMAP}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, MESSAGE: ${MESSAGE}, aggregateStatistics: ${aggregateStatistics}}';
   }
 }
 
@@ -4266,7 +4497,7 @@ class SCVResultBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(17);
   }
 
   int addJobIdOffset(int? offset) {
@@ -4333,6 +4564,10 @@ class SCVResultBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addAggregateStatisticsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -4356,6 +4591,7 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
   final List<SCVSensorContributionObjectBuilder>? _CONTRIBUTIONS;
   final SCVPackedGeometryChunkObjectBuilder? _GEOMETRY;
   final String? _MESSAGE;
+  final SCVAggregateStatisticsObjectBuilder? _AGGREGATE_STATISTICS;
 
   SCVResultObjectBuilder({
     String? JOB_ID,
@@ -4383,6 +4619,8 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     List<SCVSensorContributionObjectBuilder>? CONTRIBUTIONS,
     SCVPackedGeometryChunkObjectBuilder? GEOMETRY,
     String? MESSAGE,
+    SCVAggregateStatisticsObjectBuilder? AGGREGATE_STATISTICS,
+    SCVAggregateStatisticsObjectBuilder? aggregateStatistics,
   })
       : _JOB_ID = jobId ?? JOB_ID,
         _TRACE_ID = traceId ?? TRACE_ID,
@@ -4399,7 +4637,8 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
         _HEATMAP = HEATMAP,
         _CONTRIBUTIONS = CONTRIBUTIONS,
         _GEOMETRY = GEOMETRY,
-        _MESSAGE = MESSAGE;
+        _MESSAGE = MESSAGE,
+        _AGGREGATE_STATISTICS = aggregateStatistics ?? AGGREGATE_STATISTICS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4425,7 +4664,8 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
     final int? MESSAGEOffset = _MESSAGE == null ? null
         : fbBuilder.writeString(_MESSAGE!);
-    fbBuilder.startTable(16);
+    final int? AGGREGATE_STATISTICSOffset = _AGGREGATE_STATISTICS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, JOB_IDOffset);
     fbBuilder.addUint64(1, _TRACE_ID);
     fbBuilder.addUint8(2, _STATUS?.value);
@@ -4442,6 +4682,7 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(13, CONTRIBUTIONSOffset);
     fbBuilder.addOffset(14, GEOMETRYOffset);
     fbBuilder.addOffset(15, MESSAGEOffset);
+    fbBuilder.addOffset(16, AGGREGATE_STATISTICSOffset);
     return fbBuilder.endTable();
   }
 

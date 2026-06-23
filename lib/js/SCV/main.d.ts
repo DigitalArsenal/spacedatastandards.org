@@ -1,4 +1,5 @@
 export * from './SCV.js';
+export * from './SCVAggregateStatistics.js';
 export * from './scvAnalysisMode.js';
 export * from './scvBodyKind.js';
 export * from './SCVCancel.js';

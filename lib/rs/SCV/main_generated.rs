@@ -197,16 +197,17 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvAnalysisMode {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_COORDINATE_FRAME: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_COORDINATE_FRAME: u8 = 5;
+pub const ENUM_MAX_SCV_COORDINATE_FRAME: u8 = 6;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_COORDINATE_FRAME: [scvCoordinateFrame; 6] = [
+pub const ENUM_VALUES_SCV_COORDINATE_FRAME: [scvCoordinateFrame; 7] = [
   scvCoordinateFrame::UNKNOWN,
   scvCoordinateFrame::BODY_FIXED,
   scvCoordinateFrame::INERTIAL,
   scvCoordinateFrame::ECEF,
   scvCoordinateFrame::ECI,
   scvCoordinateFrame::CUSTOM,
+  scvCoordinateFrame::SENSOR_LOCAL,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -220,9 +221,10 @@ impl scvCoordinateFrame {
   pub const ECEF: Self = Self(3);
   pub const ECI: Self = Self(4);
   pub const CUSTOM: Self = Self(5);
+  pub const SENSOR_LOCAL: Self = Self(6);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 5;
+  pub const ENUM_MAX: u8 = 6;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::UNKNOWN,
     Self::BODY_FIXED,
@@ -230,6 +232,7 @@ impl scvCoordinateFrame {
     Self::ECEF,
     Self::ECI,
     Self::CUSTOM,
+    Self::SENSOR_LOCAL,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -240,6 +243,7 @@ impl scvCoordinateFrame {
       Self::ECEF => Some("ECEF"),
       Self::ECI => Some("ECI"),
       Self::CUSTOM => Some("CUSTOM"),
+      Self::SENSOR_LOCAL => Some("SENSOR_LOCAL"),
       _ => None,
     }
   }
@@ -8507,6 +8511,453 @@ impl SCVPackedGeometryChunkT {
     })
   }
 }
+pub enum SCVAggregateStatisticsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVAggregateStatistics<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVAggregateStatistics<'a> {
+  type Inner = SCVAggregateStatistics<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVAggregateStatistics<'a> {
+  pub const VT_TOTAL_CELLS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ACCESSED_CELLS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MULTI_ACCESS_CELLS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ACTIVE_SENSOR_COUNT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SWATH_COUNT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TOTAL_WINDOWS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TOTAL_INTERVAL_COUNT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TOTAL_REVISIT_COUNT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_TOTAL_ACCESS_DURATION_SEC: ::flatbuffers::VOffsetT = 20;
+  pub const VT_TOTAL_GAP_DURATION_SEC: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MAX_GAP_DURATION_SEC: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MEAN_REVISIT_TIME_SEC: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MAX_RESPONSE_TIME_SEC: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MEAN_RESPONSE_TIME_SEC: ::flatbuffers::VOffsetT = 30;
+  pub const VT_PERCENT_COVERAGE: ::flatbuffers::VOffsetT = 32;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVAggregateStatistics { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVAggregateStatisticsArgs
+  ) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'bldr>> {
+    let mut builder = SCVAggregateStatisticsBuilder::new(_fbb);
+    builder.add_PERCENT_COVERAGE(args.PERCENT_COVERAGE);
+    builder.add_MEAN_RESPONSE_TIME_SEC(args.MEAN_RESPONSE_TIME_SEC);
+    builder.add_MAX_RESPONSE_TIME_SEC(args.MAX_RESPONSE_TIME_SEC);
+    builder.add_MEAN_REVISIT_TIME_SEC(args.MEAN_REVISIT_TIME_SEC);
+    builder.add_MAX_GAP_DURATION_SEC(args.MAX_GAP_DURATION_SEC);
+    builder.add_TOTAL_GAP_DURATION_SEC(args.TOTAL_GAP_DURATION_SEC);
+    builder.add_TOTAL_ACCESS_DURATION_SEC(args.TOTAL_ACCESS_DURATION_SEC);
+    builder.add_TOTAL_REVISIT_COUNT(args.TOTAL_REVISIT_COUNT);
+    builder.add_TOTAL_INTERVAL_COUNT(args.TOTAL_INTERVAL_COUNT);
+    builder.add_TOTAL_WINDOWS(args.TOTAL_WINDOWS);
+    builder.add_SWATH_COUNT(args.SWATH_COUNT);
+    builder.add_ACTIVE_SENSOR_COUNT(args.ACTIVE_SENSOR_COUNT);
+    builder.add_MULTI_ACCESS_CELLS(args.MULTI_ACCESS_CELLS);
+    builder.add_ACCESSED_CELLS(args.ACCESSED_CELLS);
+    builder.add_TOTAL_CELLS(args.TOTAL_CELLS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVAggregateStatisticsT {
+    let TOTAL_CELLS = self.TOTAL_CELLS();
+    let ACCESSED_CELLS = self.ACCESSED_CELLS();
+    let MULTI_ACCESS_CELLS = self.MULTI_ACCESS_CELLS();
+    let ACTIVE_SENSOR_COUNT = self.ACTIVE_SENSOR_COUNT();
+    let SWATH_COUNT = self.SWATH_COUNT();
+    let TOTAL_WINDOWS = self.TOTAL_WINDOWS();
+    let TOTAL_INTERVAL_COUNT = self.TOTAL_INTERVAL_COUNT();
+    let TOTAL_REVISIT_COUNT = self.TOTAL_REVISIT_COUNT();
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC();
+    let TOTAL_GAP_DURATION_SEC = self.TOTAL_GAP_DURATION_SEC();
+    let MAX_GAP_DURATION_SEC = self.MAX_GAP_DURATION_SEC();
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC();
+    let MAX_RESPONSE_TIME_SEC = self.MAX_RESPONSE_TIME_SEC();
+    let MEAN_RESPONSE_TIME_SEC = self.MEAN_RESPONSE_TIME_SEC();
+    let PERCENT_COVERAGE = self.PERCENT_COVERAGE();
+    SCVAggregateStatisticsT {
+      TOTAL_CELLS,
+      ACCESSED_CELLS,
+      MULTI_ACCESS_CELLS,
+      ACTIVE_SENSOR_COUNT,
+      SWATH_COUNT,
+      TOTAL_WINDOWS,
+      TOTAL_INTERVAL_COUNT,
+      TOTAL_REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      TOTAL_GAP_DURATION_SEC,
+      MAX_GAP_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_RESPONSE_TIME_SEC,
+      MEAN_RESPONSE_TIME_SEC,
+      PERCENT_COVERAGE,
+    }
+  }
+
+  #[inline]
+  pub fn TOTAL_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn ACCESSED_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_ACCESSED_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn MULTI_ACCESS_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_MULTI_ACCESS_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn ACTIVE_SENSOR_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_ACTIVE_SENSOR_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn SWATH_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_SWATH_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_WINDOWS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_WINDOWS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_INTERVAL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_INTERVAL_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_REVISIT_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_REVISIT_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_ACCESS_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_TOTAL_ACCESS_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_GAP_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_TOTAL_GAP_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_GAP_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MAX_GAP_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_REVISIT_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MEAN_REVISIT_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RESPONSE_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MAX_RESPONSE_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_RESPONSE_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MEAN_RESPONSE_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn PERCENT_COVERAGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_PERCENT_COVERAGE, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVAggregateStatistics<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<u32>("TOTAL_CELLS", Self::VT_TOTAL_CELLS, false)?
+     .visit_field::<u32>("ACCESSED_CELLS", Self::VT_ACCESSED_CELLS, false)?
+     .visit_field::<u32>("MULTI_ACCESS_CELLS", Self::VT_MULTI_ACCESS_CELLS, false)?
+     .visit_field::<u32>("ACTIVE_SENSOR_COUNT", Self::VT_ACTIVE_SENSOR_COUNT, false)?
+     .visit_field::<u32>("SWATH_COUNT", Self::VT_SWATH_COUNT, false)?
+     .visit_field::<u32>("TOTAL_WINDOWS", Self::VT_TOTAL_WINDOWS, false)?
+     .visit_field::<u32>("TOTAL_INTERVAL_COUNT", Self::VT_TOTAL_INTERVAL_COUNT, false)?
+     .visit_field::<u32>("TOTAL_REVISIT_COUNT", Self::VT_TOTAL_REVISIT_COUNT, false)?
+     .visit_field::<f64>("TOTAL_ACCESS_DURATION_SEC", Self::VT_TOTAL_ACCESS_DURATION_SEC, false)?
+     .visit_field::<f64>("TOTAL_GAP_DURATION_SEC", Self::VT_TOTAL_GAP_DURATION_SEC, false)?
+     .visit_field::<f64>("MAX_GAP_DURATION_SEC", Self::VT_MAX_GAP_DURATION_SEC, false)?
+     .visit_field::<f64>("MEAN_REVISIT_TIME_SEC", Self::VT_MEAN_REVISIT_TIME_SEC, false)?
+     .visit_field::<f64>("MAX_RESPONSE_TIME_SEC", Self::VT_MAX_RESPONSE_TIME_SEC, false)?
+     .visit_field::<f64>("MEAN_RESPONSE_TIME_SEC", Self::VT_MEAN_RESPONSE_TIME_SEC, false)?
+     .visit_field::<f64>("PERCENT_COVERAGE", Self::VT_PERCENT_COVERAGE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVAggregateStatisticsArgs {
+    pub TOTAL_CELLS: u32,
+    pub ACCESSED_CELLS: u32,
+    pub MULTI_ACCESS_CELLS: u32,
+    pub ACTIVE_SENSOR_COUNT: u32,
+    pub SWATH_COUNT: u32,
+    pub TOTAL_WINDOWS: u32,
+    pub TOTAL_INTERVAL_COUNT: u32,
+    pub TOTAL_REVISIT_COUNT: u32,
+    pub TOTAL_ACCESS_DURATION_SEC: f64,
+    pub TOTAL_GAP_DURATION_SEC: f64,
+    pub MAX_GAP_DURATION_SEC: f64,
+    pub MEAN_REVISIT_TIME_SEC: f64,
+    pub MAX_RESPONSE_TIME_SEC: f64,
+    pub MEAN_RESPONSE_TIME_SEC: f64,
+    pub PERCENT_COVERAGE: f64,
+}
+impl<'a> Default for SCVAggregateStatisticsArgs {
+  #[inline]
+  fn default() -> Self {
+    SCVAggregateStatisticsArgs {
+      TOTAL_CELLS: 0,
+      ACCESSED_CELLS: 0,
+      MULTI_ACCESS_CELLS: 0,
+      ACTIVE_SENSOR_COUNT: 0,
+      SWATH_COUNT: 0,
+      TOTAL_WINDOWS: 0,
+      TOTAL_INTERVAL_COUNT: 0,
+      TOTAL_REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      TOTAL_GAP_DURATION_SEC: 0.0,
+      MAX_GAP_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_RESPONSE_TIME_SEC: 0.0,
+      MEAN_RESPONSE_TIME_SEC: 0.0,
+      PERCENT_COVERAGE: 0.0,
+    }
+  }
+}
+
+pub struct SCVAggregateStatisticsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVAggregateStatisticsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TOTAL_CELLS(&mut self, TOTAL_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_CELLS, TOTAL_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_ACCESSED_CELLS(&mut self, ACCESSED_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_ACCESSED_CELLS, ACCESSED_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_MULTI_ACCESS_CELLS(&mut self, MULTI_ACCESS_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_MULTI_ACCESS_CELLS, MULTI_ACCESS_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_ACTIVE_SENSOR_COUNT(&mut self, ACTIVE_SENSOR_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_ACTIVE_SENSOR_COUNT, ACTIVE_SENSOR_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_SWATH_COUNT(&mut self, SWATH_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_SWATH_COUNT, SWATH_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_WINDOWS(&mut self, TOTAL_WINDOWS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_WINDOWS, TOTAL_WINDOWS, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_INTERVAL_COUNT(&mut self, TOTAL_INTERVAL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_INTERVAL_COUNT, TOTAL_INTERVAL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_REVISIT_COUNT(&mut self, TOTAL_REVISIT_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_REVISIT_COUNT, TOTAL_REVISIT_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_ACCESS_DURATION_SEC(&mut self, TOTAL_ACCESS_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_TOTAL_ACCESS_DURATION_SEC, TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_TOTAL_GAP_DURATION_SEC(&mut self, TOTAL_GAP_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_TOTAL_GAP_DURATION_SEC, TOTAL_GAP_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_GAP_DURATION_SEC(&mut self, MAX_GAP_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MAX_GAP_DURATION_SEC, MAX_GAP_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_REVISIT_TIME_SEC(&mut self, MEAN_REVISIT_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MEAN_REVISIT_TIME_SEC, MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RESPONSE_TIME_SEC(&mut self, MAX_RESPONSE_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MAX_RESPONSE_TIME_SEC, MAX_RESPONSE_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_RESPONSE_TIME_SEC(&mut self, MEAN_RESPONSE_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MEAN_RESPONSE_TIME_SEC, MEAN_RESPONSE_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_PERCENT_COVERAGE(&mut self, PERCENT_COVERAGE: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_PERCENT_COVERAGE, PERCENT_COVERAGE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVAggregateStatisticsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVAggregateStatisticsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVAggregateStatistics<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVAggregateStatistics");
+      ds.field("TOTAL_CELLS", &self.TOTAL_CELLS());
+      ds.field("ACCESSED_CELLS", &self.ACCESSED_CELLS());
+      ds.field("MULTI_ACCESS_CELLS", &self.MULTI_ACCESS_CELLS());
+      ds.field("ACTIVE_SENSOR_COUNT", &self.ACTIVE_SENSOR_COUNT());
+      ds.field("SWATH_COUNT", &self.SWATH_COUNT());
+      ds.field("TOTAL_WINDOWS", &self.TOTAL_WINDOWS());
+      ds.field("TOTAL_INTERVAL_COUNT", &self.TOTAL_INTERVAL_COUNT());
+      ds.field("TOTAL_REVISIT_COUNT", &self.TOTAL_REVISIT_COUNT());
+      ds.field("TOTAL_ACCESS_DURATION_SEC", &self.TOTAL_ACCESS_DURATION_SEC());
+      ds.field("TOTAL_GAP_DURATION_SEC", &self.TOTAL_GAP_DURATION_SEC());
+      ds.field("MAX_GAP_DURATION_SEC", &self.MAX_GAP_DURATION_SEC());
+      ds.field("MEAN_REVISIT_TIME_SEC", &self.MEAN_REVISIT_TIME_SEC());
+      ds.field("MAX_RESPONSE_TIME_SEC", &self.MAX_RESPONSE_TIME_SEC());
+      ds.field("MEAN_RESPONSE_TIME_SEC", &self.MEAN_RESPONSE_TIME_SEC());
+      ds.field("PERCENT_COVERAGE", &self.PERCENT_COVERAGE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVAggregateStatisticsT {
+  pub TOTAL_CELLS: u32,
+  pub ACCESSED_CELLS: u32,
+  pub MULTI_ACCESS_CELLS: u32,
+  pub ACTIVE_SENSOR_COUNT: u32,
+  pub SWATH_COUNT: u32,
+  pub TOTAL_WINDOWS: u32,
+  pub TOTAL_INTERVAL_COUNT: u32,
+  pub TOTAL_REVISIT_COUNT: u32,
+  pub TOTAL_ACCESS_DURATION_SEC: f64,
+  pub TOTAL_GAP_DURATION_SEC: f64,
+  pub MAX_GAP_DURATION_SEC: f64,
+  pub MEAN_REVISIT_TIME_SEC: f64,
+  pub MAX_RESPONSE_TIME_SEC: f64,
+  pub MEAN_RESPONSE_TIME_SEC: f64,
+  pub PERCENT_COVERAGE: f64,
+}
+impl Default for SCVAggregateStatisticsT {
+  fn default() -> Self {
+    Self {
+      TOTAL_CELLS: 0,
+      ACCESSED_CELLS: 0,
+      MULTI_ACCESS_CELLS: 0,
+      ACTIVE_SENSOR_COUNT: 0,
+      SWATH_COUNT: 0,
+      TOTAL_WINDOWS: 0,
+      TOTAL_INTERVAL_COUNT: 0,
+      TOTAL_REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      TOTAL_GAP_DURATION_SEC: 0.0,
+      MAX_GAP_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_RESPONSE_TIME_SEC: 0.0,
+      MEAN_RESPONSE_TIME_SEC: 0.0,
+      PERCENT_COVERAGE: 0.0,
+    }
+  }
+}
+impl SCVAggregateStatisticsT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'b>> {
+    let TOTAL_CELLS = self.TOTAL_CELLS;
+    let ACCESSED_CELLS = self.ACCESSED_CELLS;
+    let MULTI_ACCESS_CELLS = self.MULTI_ACCESS_CELLS;
+    let ACTIVE_SENSOR_COUNT = self.ACTIVE_SENSOR_COUNT;
+    let SWATH_COUNT = self.SWATH_COUNT;
+    let TOTAL_WINDOWS = self.TOTAL_WINDOWS;
+    let TOTAL_INTERVAL_COUNT = self.TOTAL_INTERVAL_COUNT;
+    let TOTAL_REVISIT_COUNT = self.TOTAL_REVISIT_COUNT;
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC;
+    let TOTAL_GAP_DURATION_SEC = self.TOTAL_GAP_DURATION_SEC;
+    let MAX_GAP_DURATION_SEC = self.MAX_GAP_DURATION_SEC;
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC;
+    let MAX_RESPONSE_TIME_SEC = self.MAX_RESPONSE_TIME_SEC;
+    let MEAN_RESPONSE_TIME_SEC = self.MEAN_RESPONSE_TIME_SEC;
+    let PERCENT_COVERAGE = self.PERCENT_COVERAGE;
+    SCVAggregateStatistics::create(_fbb, &SCVAggregateStatisticsArgs{
+      TOTAL_CELLS,
+      ACCESSED_CELLS,
+      MULTI_ACCESS_CELLS,
+      ACTIVE_SENSOR_COUNT,
+      SWATH_COUNT,
+      TOTAL_WINDOWS,
+      TOTAL_INTERVAL_COUNT,
+      TOTAL_REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      TOTAL_GAP_DURATION_SEC,
+      MAX_GAP_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_RESPONSE_TIME_SEC,
+      MEAN_RESPONSE_TIME_SEC,
+      PERCENT_COVERAGE,
+    })
+  }
+}
 pub enum SCVResultOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -8539,6 +8990,7 @@ impl<'a> SCVResult<'a> {
   pub const VT_CONTRIBUTIONS: ::flatbuffers::VOffsetT = 30;
   pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 32;
   pub const VT_MESSAGE: ::flatbuffers::VOffsetT = 34;
+  pub const VT_AGGREGATE_STATISTICS: ::flatbuffers::VOffsetT = 36;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -8551,6 +9003,7 @@ impl<'a> SCVResult<'a> {
   ) -> ::flatbuffers::WIPOffset<SCVResult<'bldr>> {
     let mut builder = SCVResultBuilder::new(_fbb);
     builder.add_TRACE_ID(args.TRACE_ID);
+    if let Some(x) = args.AGGREGATE_STATISTICS { builder.add_AGGREGATE_STATISTICS(x); }
     if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
     if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
     if let Some(x) = args.CONTRIBUTIONS { builder.add_CONTRIBUTIONS(x); }
@@ -8610,6 +9063,9 @@ impl<'a> SCVResult<'a> {
     let MESSAGE = self.MESSAGE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     SCVResultT {
       JOB_ID,
       TRACE_ID,
@@ -8627,6 +9083,7 @@ impl<'a> SCVResult<'a> {
       CONTRIBUTIONS,
       GEOMETRY,
       MESSAGE,
+      AGGREGATE_STATISTICS,
     }
   }
 
@@ -8742,6 +9199,13 @@ impl<'a> SCVResult<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCVResult::VT_MESSAGE, None)}
   }
+  #[inline]
+  pub fn AGGREGATE_STATISTICS(&self) -> Option<SCVAggregateStatistics<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCVResult<'_> {
@@ -8766,6 +9230,7 @@ impl ::flatbuffers::Verifiable for SCVResult<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVSensorContribution>>>>("CONTRIBUTIONS", Self::VT_CONTRIBUTIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedGeometryChunk>>("GEOMETRY", Self::VT_GEOMETRY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE", Self::VT_MESSAGE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>("AGGREGATE_STATISTICS", Self::VT_AGGREGATE_STATISTICS, false)?
      .finish();
     Ok(())
   }
@@ -8787,6 +9252,7 @@ pub struct SCVResultArgs<'a> {
     pub CONTRIBUTIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVSensorContribution<'a>>>>>,
     pub GEOMETRY: Option<::flatbuffers::WIPOffset<SCVPackedGeometryChunk<'a>>>,
     pub MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AGGREGATE_STATISTICS: Option<::flatbuffers::WIPOffset<SCVAggregateStatistics<'a>>>,
 }
 impl<'a> Default for SCVResultArgs<'a> {
   #[inline]
@@ -8808,6 +9274,7 @@ impl<'a> Default for SCVResultArgs<'a> {
       CONTRIBUTIONS: None,
       GEOMETRY: None,
       MESSAGE: None,
+      AGGREGATE_STATISTICS: None,
     }
   }
 }
@@ -8882,6 +9349,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVResultBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_MESSAGE, MESSAGE);
   }
   #[inline]
+  pub fn add_AGGREGATE_STATISTICS(&mut self, AGGREGATE_STATISTICS: ::flatbuffers::WIPOffset<SCVAggregateStatistics<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, AGGREGATE_STATISTICS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVResultBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCVResultBuilder {
@@ -8915,6 +9386,7 @@ impl ::core::fmt::Debug for SCVResult<'_> {
       ds.field("CONTRIBUTIONS", &self.CONTRIBUTIONS());
       ds.field("GEOMETRY", &self.GEOMETRY());
       ds.field("MESSAGE", &self.MESSAGE());
+      ds.field("AGGREGATE_STATISTICS", &self.AGGREGATE_STATISTICS());
       ds.finish()
   }
 }
@@ -8937,6 +9409,7 @@ pub struct SCVResultT {
   pub CONTRIBUTIONS: Option<alloc::vec::Vec<SCVSensorContributionT>>,
   pub GEOMETRY: Option<alloc::boxed::Box<SCVPackedGeometryChunkT>>,
   pub MESSAGE: Option<alloc::string::String>,
+  pub AGGREGATE_STATISTICS: Option<alloc::boxed::Box<SCVAggregateStatisticsT>>,
 }
 impl Default for SCVResultT {
   fn default() -> Self {
@@ -8957,6 +9430,7 @@ impl Default for SCVResultT {
       CONTRIBUTIONS: None,
       GEOMETRY: None,
       MESSAGE: None,
+      AGGREGATE_STATISTICS: None,
     }
   }
 }
@@ -9005,6 +9479,9 @@ impl SCVResultT {
     let MESSAGE = self.MESSAGE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     SCVResult::create(_fbb, &SCVResultArgs{
       JOB_ID,
       TRACE_ID,
@@ -9022,6 +9499,7 @@ impl SCVResultT {
       CONTRIBUTIONS,
       GEOMETRY,
       MESSAGE,
+      AGGREGATE_STATISTICS,
     })
   }
 }

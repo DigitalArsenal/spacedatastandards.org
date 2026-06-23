@@ -31784,7 +31784,8 @@
                         "INERTIAL",
                         "ECEF",
                         "ECI",
-                        "CUSTOM"
+                        "CUSTOM",
+                        "SENSOR_LOCAL"
                     ]
                 },
                 "scvBodyKind": {
@@ -32844,6 +32845,73 @@
                     },
                     "additionalProperties": false
                 },
+                "SCVAggregateStatistics": {
+                    "type": "object",
+                    "properties": {
+                        "TOTAL_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ACCESSED_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "MULTI_ACCESS_CELLS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "ACTIVE_SENSOR_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "SWATH_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_WINDOWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_INTERVAL_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_REVISIT_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TOTAL_ACCESS_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "TOTAL_GAP_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_GAP_DURATION_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_REVISIT_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MAX_RESPONSE_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "MEAN_RESPONSE_TIME_SEC": {
+                            "type": "number"
+                        },
+                        "PERCENT_COVERAGE": {
+                            "type": "number"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SCVResult": {
                     "type": "object",
                     "properties": {
@@ -32921,6 +32989,9 @@
                         },
                         "MESSAGE": {
                             "type": "string"
+                        },
+                        "AGGREGATE_STATISTICS": {
+                            "$ref": "#/definitions/SCVAggregateStatistics"
                         }
                     },
                     "additionalProperties": false

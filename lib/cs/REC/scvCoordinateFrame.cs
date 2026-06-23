@@ -10,4 +10,5 @@ public enum scvCoordinateFrame : byte
   ECEF = 3,
   ECI = 4,
   CUSTOM = 5,
+  SENSOR_LOCAL = 6,
 };

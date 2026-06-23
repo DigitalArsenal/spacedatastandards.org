@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './SCV.js';
+export * from './SCVAggregateStatistics.js';
 export * from './scvAnalysisMode.js';
 export * from './scvBodyKind.js';
 export * from './SCVCancel.js';

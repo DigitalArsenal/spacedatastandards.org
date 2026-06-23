@@ -413,8 +413,25 @@ func (rcv *SCVResult) Message() []byte {
 	return rcv.MESSAGE()
 }
 
+func (rcv *SCVResult) AGGREGATE_STATISTICS(obj *SCVAggregateStatistics) *SCVAggregateStatistics {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVAggregateStatistics)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVResult) AggregateStatistics(obj *SCVAggregateStatistics) *SCVAggregateStatistics {
+	return rcv.AGGREGATE_STATISTICS(obj)
+}
+
 func SCVResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(17)
 }
 func SCVResultAddJOB_ID(builder *flatbuffers.Builder, JOB_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(JOB_ID), 0)
@@ -553,6 +570,12 @@ func SCVResultAddMESSAGE(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffs
 }
 func SCVResultAddMessage(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
 	SCVResultAddMESSAGE(builder, MESSAGE)
+}
+func SCVResultAddAGGREGATE_STATISTICS(builder *flatbuffers.Builder, AGGREGATE_STATISTICS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(AGGREGATE_STATISTICS), 0)
+}
+func SCVResultAddAggregateStatistics(builder *flatbuffers.Builder, AGGREGATE_STATISTICS flatbuffers.UOffsetT) {
+	SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
 }
 func SCVResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

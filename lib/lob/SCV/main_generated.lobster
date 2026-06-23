@@ -24,6 +24,7 @@ enum scvCoordinateFrame:
     scvCoordinateFrame_ECEF = 3
     scvCoordinateFrame_ECI = 4
     scvCoordinateFrame_CUSTOM = 5
+    scvCoordinateFrame_SENSOR_LOCAL = 6
 
 enum scvBodyKind:
     scvBodyKind_EARTH = 0
@@ -124,6 +125,8 @@ class SCVSwathSegment
 class SCVMemoryRegion
 
 class SCVPackedGeometryChunk
+
+class SCVAggregateStatistics
 
 class SCVResult
 
@@ -1653,6 +1656,93 @@ def SCVPackedGeometryChunkCreateSEGMENTSVector(b_:flatbuffers.builder, v_:[flatb
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+class SCVAggregateStatistics : flatbuffers.handle
+    def TOTAL_CELLS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    def ACCESSED_CELLS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    def MULTI_ACCESS_CELLS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    def ACTIVE_SENSOR_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    def SWATH_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    def TOTAL_WINDOWS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 14, 0)
+    def TOTAL_INTERVAL_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    def TOTAL_REVISIT_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    def TOTAL_ACCESS_DURATION_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    def TOTAL_GAP_DURATION_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    def MAX_GAP_DURATION_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    def MEAN_REVISIT_TIME_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    def MAX_RESPONSE_TIME_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+    def MEAN_RESPONSE_TIME_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    def PERCENT_COVERAGE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+
+def GetRootAsSCVAggregateStatistics(buf:string): return SCVAggregateStatistics { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVAggregateStatisticsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(15)
+        return this
+    def add_TOTAL_CELLS(TOTAL_CELLS:int):
+        b_.PrependUint32Slot(0, TOTAL_CELLS, 0)
+        return this
+    def add_ACCESSED_CELLS(ACCESSED_CELLS:int):
+        b_.PrependUint32Slot(1, ACCESSED_CELLS, 0)
+        return this
+    def add_MULTI_ACCESS_CELLS(MULTI_ACCESS_CELLS:int):
+        b_.PrependUint32Slot(2, MULTI_ACCESS_CELLS, 0)
+        return this
+    def add_ACTIVE_SENSOR_COUNT(ACTIVE_SENSOR_COUNT:int):
+        b_.PrependUint32Slot(3, ACTIVE_SENSOR_COUNT, 0)
+        return this
+    def add_SWATH_COUNT(SWATH_COUNT:int):
+        b_.PrependUint32Slot(4, SWATH_COUNT, 0)
+        return this
+    def add_TOTAL_WINDOWS(TOTAL_WINDOWS:int):
+        b_.PrependUint32Slot(5, TOTAL_WINDOWS, 0)
+        return this
+    def add_TOTAL_INTERVAL_COUNT(TOTAL_INTERVAL_COUNT:int):
+        b_.PrependUint32Slot(6, TOTAL_INTERVAL_COUNT, 0)
+        return this
+    def add_TOTAL_REVISIT_COUNT(TOTAL_REVISIT_COUNT:int):
+        b_.PrependUint32Slot(7, TOTAL_REVISIT_COUNT, 0)
+        return this
+    def add_TOTAL_ACCESS_DURATION_SEC(TOTAL_ACCESS_DURATION_SEC:float):
+        b_.PrependFloat64Slot(8, TOTAL_ACCESS_DURATION_SEC, 0.0)
+        return this
+    def add_TOTAL_GAP_DURATION_SEC(TOTAL_GAP_DURATION_SEC:float):
+        b_.PrependFloat64Slot(9, TOTAL_GAP_DURATION_SEC, 0.0)
+        return this
+    def add_MAX_GAP_DURATION_SEC(MAX_GAP_DURATION_SEC:float):
+        b_.PrependFloat64Slot(10, MAX_GAP_DURATION_SEC, 0.0)
+        return this
+    def add_MEAN_REVISIT_TIME_SEC(MEAN_REVISIT_TIME_SEC:float):
+        b_.PrependFloat64Slot(11, MEAN_REVISIT_TIME_SEC, 0.0)
+        return this
+    def add_MAX_RESPONSE_TIME_SEC(MAX_RESPONSE_TIME_SEC:float):
+        b_.PrependFloat64Slot(12, MAX_RESPONSE_TIME_SEC, 0.0)
+        return this
+    def add_MEAN_RESPONSE_TIME_SEC(MEAN_RESPONSE_TIME_SEC:float):
+        b_.PrependFloat64Slot(13, MEAN_RESPONSE_TIME_SEC, 0.0)
+        return this
+    def add_PERCENT_COVERAGE(PERCENT_COVERAGE:float):
+        b_.PrependFloat64Slot(14, PERCENT_COVERAGE, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
 class SCVResult : flatbuffers.handle
     def JOB_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
@@ -1703,13 +1793,16 @@ class SCVResult : flatbuffers.handle
         return if o: SCVPackedGeometryChunk { buf_, o } else: nil
     def MESSAGE() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
+    def AGGREGATE_STATISTICS() -> SCVAggregateStatistics?:
+        let o = flatbuffers.field_table(buf_, pos_, 36)
+        return if o: SCVAggregateStatistics { buf_, o } else: nil
 
 def GetRootAsSCVResult(buf:string): return SCVResult { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVResultBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(17)
         return this
     def add_JOB_ID(JOB_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, JOB_ID)
@@ -1758,6 +1851,9 @@ struct SCVResultBuilder:
         return this
     def add_MESSAGE(MESSAGE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, MESSAGE)
+        return this
+    def add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, AGGREGATE_STATISTICS)
         return this
     def end():
         return b_.EndObject()

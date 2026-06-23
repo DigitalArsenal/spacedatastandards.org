@@ -63,7 +63,8 @@
         "INERTIAL",
         "ECEF",
         "ECI",
-        "CUSTOM"
+        "CUSTOM",
+        "SENSOR_LOCAL"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -85,6 +86,9 @@
         },
         "CUSTOM": {
           "value": 5
+        },
+        "SENSOR_LOCAL": {
+          "value": 6
         }
       }
     },
@@ -399,6 +403,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -562,6 +569,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -626,6 +636,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -694,6 +707,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -763,6 +779,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -808,6 +827,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -885,6 +907,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -942,6 +967,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -1665,6 +1693,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -1841,6 +1872,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -2003,6 +2037,88 @@
       },
       "additionalProperties": false
     },
+    "SCVAggregateStatistics": {
+      "type": "object",
+      "properties": {
+        "TOTAL_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACCESSED_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MULTI_ACCESS_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACTIVE_SENSOR_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SWATH_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_INTERVAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_REVISIT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_ACCESS_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERCENT_COVERAGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "SCVResult": {
       "type": "object",
       "properties": {
@@ -2111,6 +2227,10 @@
         "MESSAGE": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        },
+        "AGGREGATE_STATISTICS": {
+          "$ref": "#/definitions/SCVAggregateStatistics",
+          "x-flatbuffer-type": "SCVAggregateStatistics"
         }
       },
       "additionalProperties": false

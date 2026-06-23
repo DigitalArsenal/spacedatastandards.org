@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { SCVAggregateStatistics, SCVAggregateStatisticsT } from './SCVAggregateStatistics.js';
 import { SCVCellStat, SCVCellStatT } from './SCVCellStat.js';
 import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
 import { SCVHeatmapCell, SCVHeatmapCellT } from './SCVHeatmapCell.js';
@@ -154,8 +155,13 @@ MESSAGE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+AGGREGATE_STATISTICS(obj?:SCVAggregateStatistics):SCVAggregateStatistics|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? (obj || new SCVAggregateStatistics()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCVResult(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(17);
 }
 
 static addJobId(builder:flatbuffers.Builder, JOB_IDOffset:flatbuffers.Offset) {
@@ -306,6 +312,10 @@ static addMessage(builder:flatbuffers.Builder, MESSAGEOffset:flatbuffers.Offset)
   builder.addFieldOffset(15, MESSAGEOffset, 0);
 }
 
+static addAggregateStatistics(builder:flatbuffers.Builder, AGGREGATE_STATISTICSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, AGGREGATE_STATISTICSOffset, 0);
+}
+
 static endSCVResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -329,7 +339,8 @@ unpack(): SCVResultT {
     this.bb!.createObjList<SCVHeatmapCell, SCVHeatmapCellT>(this.HEATMAP.bind(this), this.heatmapLength()),
     this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength()),
     (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
-    this.MESSAGE()
+    this.MESSAGE(),
+    (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null)
   );
 }
 
@@ -351,6 +362,7 @@ unpackTo(_o: SCVResultT): void {
   _o.CONTRIBUTIONS = this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength());
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
   _o.MESSAGE = this.MESSAGE();
+  _o.AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null);
 }
 }
 
@@ -371,7 +383,8 @@ constructor(
   public HEATMAP: (SCVHeatmapCellT)[] = [],
   public CONTRIBUTIONS: (SCVSensorContributionT)[] = [],
   public GEOMETRY: SCVPackedGeometryChunkT|null = null,
-  public MESSAGE: string|Uint8Array|null = null
+  public MESSAGE: string|Uint8Array|null = null,
+  public AGGREGATE_STATISTICS: SCVAggregateStatisticsT|null = null
 ){}
 
 
@@ -388,6 +401,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONTRIBUTIONS = SCVResult.createContributionsVector(builder, builder.createObjectOffsetList(this.CONTRIBUTIONS));
   const GEOMETRY = (this.GEOMETRY !== null ? this.GEOMETRY!.pack(builder) : 0);
   const MESSAGE = (this.MESSAGE !== null ? builder.createString(this.MESSAGE!) : 0);
+  const AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS !== null ? this.AGGREGATE_STATISTICS!.pack(builder) : 0);
 
   SCVResult.startSCVResult(builder);
   SCVResult.addJobId(builder, JOB_ID);
@@ -406,6 +420,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVResult.addContributions(builder, CONTRIBUTIONS);
   SCVResult.addGeometry(builder, GEOMETRY);
   SCVResult.addMessage(builder, MESSAGE);
+  SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICS);
 
   return SCVResult.endSCVResult(builder);
 }

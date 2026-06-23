@@ -186,6 +186,15 @@ class SCVResult : Table() {
         }
     val messageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun messageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    val aggregateStatistics : SCVAggregateStatistics? get() = aggregateStatistics(SCVAggregateStatistics())
+    fun aggregateStatistics(obj: SCVAggregateStatistics) : SCVAggregateStatistics? {
+        val o = __offset(36)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVResult(_bb: ByteBuffer): SCVResult = getRootAsSCVResult(_bb, SCVResult())
@@ -193,9 +202,10 @@ class SCVResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, cellStatsOffset: Int, intervalsOffset: Int, latitudeBandsOffset: Int, timeSeriesOffset: Int, histogramsOffset: Int, heatmapOffset: Int, contributionsOffset: Int, geometryOffset: Int, messageOffset: Int) : Int {
-            builder.startTable(16)
+        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, cellStatsOffset: Int, intervalsOffset: Int, latitudeBandsOffset: Int, timeSeriesOffset: Int, histogramsOffset: Int, heatmapOffset: Int, contributionsOffset: Int, geometryOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
+            builder.startTable(17)
             addTRACEID(builder, traceId)
+            addAGGREGATESTATISTICS(builder, aggregateStatisticsOffset)
             addMESSAGE(builder, messageOffset)
             addGEOMETRY(builder, geometryOffset)
             addCONTRIBUTIONS(builder, contributionsOffset)
@@ -213,7 +223,7 @@ class SCVResult : Table() {
             addSTATUS(builder, status)
             return endSCVResult(builder)
         }
-        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addJOBID(builder: FlatBufferBuilder, jobId: Int) = builder.addOffset(0, jobId, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: ULong) = builder.addLong(1, traceId.toLong(), 0)
         fun addSTATUS(builder: FlatBufferBuilder, status: UByte) = builder.addByte(2, status.toByte(), 0)
@@ -286,6 +296,7 @@ class SCVResult : Table() {
         fun startContributionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(14, geometry, 0)
         fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(15, message, 0)
+        fun addAGGREGATESTATISTICS(builder: FlatBufferBuilder, aggregateStatistics: Int) = builder.addOffset(16, aggregateStatistics, 0)
         fun endSCVResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

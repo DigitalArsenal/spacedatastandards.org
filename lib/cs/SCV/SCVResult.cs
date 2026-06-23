@@ -51,6 +51,7 @@ public struct SCVResult : IFlatbufferObject
   public ArraySegment<byte>? GetMESSAGEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetMESSAGEArray() { return __p.__vector_as_array<byte>(34); }
+  public SCVAggregateStatistics? AGGREGATE_STATISTICS { get { int o = __p.__offset(36); return o != 0 ? (SCVAggregateStatistics?)(new SCVAggregateStatistics()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCVResult> CreateSCVResult(FlatBufferBuilder builder,
       StringOffset JOB_IDOffset = default(StringOffset),
@@ -68,9 +69,11 @@ public struct SCVResult : IFlatbufferObject
       VectorOffset HEATMAPOffset = default(VectorOffset),
       VectorOffset CONTRIBUTIONSOffset = default(VectorOffset),
       Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>),
-      StringOffset MESSAGEOffset = default(StringOffset)) {
-    builder.StartTable(16);
+      StringOffset MESSAGEOffset = default(StringOffset),
+      Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>)) {
+    builder.StartTable(17);
     SCVResult.AddTRACE_ID(builder, TRACE_ID);
+    SCVResult.AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.AddMESSAGE(builder, MESSAGEOffset);
     SCVResult.AddGEOMETRY(builder, GEOMETRYOffset);
     SCVResult.AddCONTRIBUTIONS(builder, CONTRIBUTIONSOffset);
@@ -89,7 +92,7 @@ public struct SCVResult : IFlatbufferObject
     return SCVResult.EndSCVResult(builder);
   }
 
-  public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddJOB_ID(FlatBufferBuilder builder, StringOffset JOB_IDOffset) { builder.AddOffset(0, JOB_IDOffset.Value, 0); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, ulong TRACE_ID) { builder.AddUlong(1, TRACE_ID, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, scvResultState STATUS) { builder.AddByte(2, (byte)STATUS, 0); }
@@ -141,6 +144,7 @@ public struct SCVResult : IFlatbufferObject
   public static void StartCONTRIBUTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<SCVPackedGeometryChunk> GEOMETRYOffset) { builder.AddOffset(14, GEOMETRYOffset.Value, 0); }
   public static void AddMESSAGE(FlatBufferBuilder builder, StringOffset MESSAGEOffset) { builder.AddOffset(15, MESSAGEOffset.Value, 0); }
+  public static void AddAGGREGATE_STATISTICS(FlatBufferBuilder builder, Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset) { builder.AddOffset(16, AGGREGATE_STATISTICSOffset.Value, 0); }
   public static Offset<SCVResult> EndSCVResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVResult>(o);
@@ -174,6 +178,7 @@ public struct SCVResult : IFlatbufferObject
     for (var _j = 0; _j < this.CONTRIBUTIONSLength; ++_j) {_o.CONTRIBUTIONS.Add(this.CONTRIBUTIONS(_j).HasValue ? this.CONTRIBUTIONS(_j).Value.UnPack() : null);}
     _o.GEOMETRY = this.GEOMETRY.HasValue ? this.GEOMETRY.Value.UnPack() : null;
     _o.MESSAGE = this.MESSAGE;
+    _o.AGGREGATE_STATISTICS = this.AGGREGATE_STATISTICS.HasValue ? this.AGGREGATE_STATISTICS.Value.UnPack() : null;
   }
   public static Offset<SCVResult> Pack(FlatBufferBuilder builder, SCVResultT _o) {
     if (_o == null) return default(Offset<SCVResult>);
@@ -224,6 +229,7 @@ public struct SCVResult : IFlatbufferObject
     }
     var _GEOMETRY = _o.GEOMETRY == null ? default(Offset<SCVPackedGeometryChunk>) : SCVPackedGeometryChunk.Pack(builder, _o.GEOMETRY);
     var _MESSAGE = _o.MESSAGE == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE);
+    var _AGGREGATE_STATISTICS = _o.AGGREGATE_STATISTICS == null ? default(Offset<SCVAggregateStatistics>) : SCVAggregateStatistics.Pack(builder, _o.AGGREGATE_STATISTICS);
     return CreateSCVResult(
       builder,
       _JOB_ID,
@@ -241,7 +247,8 @@ public struct SCVResult : IFlatbufferObject
       _HEATMAP,
       _CONTRIBUTIONS,
       _GEOMETRY,
-      _MESSAGE);
+      _MESSAGE,
+      _AGGREGATE_STATISTICS);
   }
 }
 
@@ -263,6 +270,7 @@ public class SCVResultT
   public List<SCVSensorContributionT> CONTRIBUTIONS { get; set; }
   public SCVPackedGeometryChunkT GEOMETRY { get; set; }
   public string MESSAGE { get; set; }
+  public SCVAggregateStatisticsT AGGREGATE_STATISTICS { get; set; }
 
   public SCVResultT() {
     this.JOB_ID = null;
@@ -281,6 +289,7 @@ public class SCVResultT
     this.CONTRIBUTIONS = null;
     this.GEOMETRY = null;
     this.MESSAGE = null;
+    this.AGGREGATE_STATISTICS = null;
   }
 }
 
@@ -306,6 +315,7 @@ static public class SCVResultVerify
       && verifier.VerifyVectorOfTables(tablePos, 30 /*CONTRIBUTIONS*/, SCVSensorContributionVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 32 /*GEOMETRY*/, SCVPackedGeometryChunkVerify.Verify, false)
       && verifier.VerifyString(tablePos, 34 /*MESSAGE*/, false)
+      && verifier.VerifyTable(tablePos, 36 /*AGGREGATE_STATISTICS*/, SCVAggregateStatisticsVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

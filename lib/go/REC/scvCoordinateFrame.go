@@ -7,30 +7,33 @@ import "strconv"
 type scvCoordinateFrame byte
 
 const (
-	scvCoordinateFrameUNKNOWN    scvCoordinateFrame = 0
-	scvCoordinateFrameBODY_FIXED scvCoordinateFrame = 1
-	scvCoordinateFrameINERTIAL   scvCoordinateFrame = 2
-	scvCoordinateFrameECEF       scvCoordinateFrame = 3
-	scvCoordinateFrameECI        scvCoordinateFrame = 4
-	scvCoordinateFrameCUSTOM     scvCoordinateFrame = 5
+	scvCoordinateFrameUNKNOWN      scvCoordinateFrame = 0
+	scvCoordinateFrameBODY_FIXED   scvCoordinateFrame = 1
+	scvCoordinateFrameINERTIAL     scvCoordinateFrame = 2
+	scvCoordinateFrameECEF         scvCoordinateFrame = 3
+	scvCoordinateFrameECI          scvCoordinateFrame = 4
+	scvCoordinateFrameCUSTOM       scvCoordinateFrame = 5
+	scvCoordinateFrameSENSOR_LOCAL scvCoordinateFrame = 6
 )
 
 var EnumNamesscvCoordinateFrame = map[scvCoordinateFrame]string{
-	scvCoordinateFrameUNKNOWN:    "UNKNOWN",
-	scvCoordinateFrameBODY_FIXED: "BODY_FIXED",
-	scvCoordinateFrameINERTIAL:   "INERTIAL",
-	scvCoordinateFrameECEF:       "ECEF",
-	scvCoordinateFrameECI:        "ECI",
-	scvCoordinateFrameCUSTOM:     "CUSTOM",
+	scvCoordinateFrameUNKNOWN:      "UNKNOWN",
+	scvCoordinateFrameBODY_FIXED:   "BODY_FIXED",
+	scvCoordinateFrameINERTIAL:     "INERTIAL",
+	scvCoordinateFrameECEF:         "ECEF",
+	scvCoordinateFrameECI:          "ECI",
+	scvCoordinateFrameCUSTOM:       "CUSTOM",
+	scvCoordinateFrameSENSOR_LOCAL: "SENSOR_LOCAL",
 }
 
 var EnumValuesscvCoordinateFrame = map[string]scvCoordinateFrame{
-	"UNKNOWN":    scvCoordinateFrameUNKNOWN,
-	"BODY_FIXED": scvCoordinateFrameBODY_FIXED,
-	"INERTIAL":   scvCoordinateFrameINERTIAL,
-	"ECEF":       scvCoordinateFrameECEF,
-	"ECI":        scvCoordinateFrameECI,
-	"CUSTOM":     scvCoordinateFrameCUSTOM,
+	"UNKNOWN":      scvCoordinateFrameUNKNOWN,
+	"BODY_FIXED":   scvCoordinateFrameBODY_FIXED,
+	"INERTIAL":     scvCoordinateFrameINERTIAL,
+	"ECEF":         scvCoordinateFrameECEF,
+	"ECI":          scvCoordinateFrameECI,
+	"CUSTOM":       scvCoordinateFrameCUSTOM,
+	"SENSOR_LOCAL": scvCoordinateFrameSENSOR_LOCAL,
 }
 
 func (v scvCoordinateFrame) String() string {
