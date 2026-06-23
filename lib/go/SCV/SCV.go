@@ -158,8 +158,25 @@ func (rcv *SCV) Geometry(obj *SCVPackedGeometryChunk) *SCVPackedGeometryChunk {
 	return rcv.GEOMETRY(obj)
 }
 
+func (rcv *SCV) RASTER_PRODUCTS(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVPackedRasterProducts)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCV) RasterProducts(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	return rcv.RASTER_PRODUCTS(obj)
+}
+
 func SCVStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(7)
 }
 func SCVAddENVELOPE_KIND(builder *flatbuffers.Builder, ENVELOPE_KIND scvEnvelopeKind) {
 	builder.PrependByteSlot(0, byte(ENVELOPE_KIND), 0)
@@ -196,6 +213,12 @@ func SCVAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT)
 }
 func SCVAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	SCVAddGEOMETRY(builder, GEOMETRY)
+}
+func SCVAddRASTER_PRODUCTS(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(RASTER_PRODUCTS), 0)
+}
+func SCVAddRasterProducts(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	SCVAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
 }
 func SCVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

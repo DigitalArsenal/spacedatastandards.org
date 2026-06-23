@@ -322,39 +322,8 @@ func (rcv *SCVResult) HistogramsLength() int {
 	return rcv.HISTOGRAMSLength()
 }
 
-func (rcv *SCVResult) HEATMAP(obj *SCVHeatmapCell, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVHeatmapCell)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) Heatmap(obj *SCVHeatmapCell, j int) bool {
-	return rcv.HEATMAP(obj, j)
-}
-
-func (rcv *SCVResult) HEATMAPLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) HeatmapLength() int {
-	return rcv.HEATMAPLength()
-}
-
 func (rcv *SCVResult) CONTRIBUTIONS(obj *SCVSensorContribution, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -373,7 +342,7 @@ func (rcv *SCVResult) Contributions(obj *SCVSensorContribution, j int) bool {
 }
 
 func (rcv *SCVResult) CONTRIBUTIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -385,7 +354,7 @@ func (rcv *SCVResult) ContributionsLength() int {
 }
 
 func (rcv *SCVResult) GEOMETRY(obj *SCVPackedGeometryChunk) *SCVPackedGeometryChunk {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -399,6 +368,23 @@ func (rcv *SCVResult) GEOMETRY(obj *SCVPackedGeometryChunk) *SCVPackedGeometryCh
 
 func (rcv *SCVResult) Geometry(obj *SCVPackedGeometryChunk) *SCVPackedGeometryChunk {
 	return rcv.GEOMETRY(obj)
+}
+
+func (rcv *SCVResult) RASTER_PRODUCTS(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVPackedRasterProducts)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVResult) RasterProducts(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	return rcv.RASTER_PRODUCTS(obj)
 }
 
 func (rcv *SCVResult) MESSAGE() []byte {
@@ -535,20 +521,8 @@ func SCVResultStartHISTOGRAMSVector(builder *flatbuffers.Builder, numElems int) 
 func SCVResultStartHistogramsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCVResultStartHISTOGRAMSVector(builder, numElems)
 }
-func SCVResultAddHEATMAP(builder *flatbuffers.Builder, HEATMAP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(HEATMAP), 0)
-}
-func SCVResultAddHeatmap(builder *flatbuffers.Builder, HEATMAP flatbuffers.UOffsetT) {
-	SCVResultAddHEATMAP(builder, HEATMAP)
-}
-func SCVResultStartHEATMAPVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartHeatmapVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartHEATMAPVector(builder, numElems)
-}
 func SCVResultAddCONTRIBUTIONS(builder *flatbuffers.Builder, CONTRIBUTIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(CONTRIBUTIONS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(CONTRIBUTIONS), 0)
 }
 func SCVResultAddContributions(builder *flatbuffers.Builder, CONTRIBUTIONS flatbuffers.UOffsetT) {
 	SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
@@ -560,10 +534,16 @@ func SCVResultStartContributionsVector(builder *flatbuffers.Builder, numElems in
 	return SCVResultStartCONTRIBUTIONSVector(builder, numElems)
 }
 func SCVResultAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(GEOMETRY), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(GEOMETRY), 0)
 }
 func SCVResultAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	SCVResultAddGEOMETRY(builder, GEOMETRY)
+}
+func SCVResultAddRASTER_PRODUCTS(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(RASTER_PRODUCTS), 0)
+}
+func SCVResultAddRasterProducts(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
 }
 func SCVResultAddMESSAGE(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MESSAGE), 0)

@@ -60,18 +60,15 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public int HISTOGRAMSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public SCVHistogramBin.Vector histogramsVector() { return histogramsVector(new SCVHistogramBin.Vector()); }
   public SCVHistogramBin.Vector histogramsVector(SCVHistogramBin.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public SCVHeatmapCell HEATMAP(int j) { return HEATMAP(new SCVHeatmapCell(), j); }
-  public SCVHeatmapCell HEATMAP(SCVHeatmapCell obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int HEATMAPLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
-  public SCVHeatmapCell.Vector heatmapVector() { return heatmapVector(new SCVHeatmapCell.Vector()); }
-  public SCVHeatmapCell.Vector heatmapVector(SCVHeatmapCell.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public SCVSensorContribution CONTRIBUTIONS(int j) { return CONTRIBUTIONS(new SCVSensorContribution(), j); }
-  public SCVSensorContribution CONTRIBUTIONS(SCVSensorContribution obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int CONTRIBUTIONSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public SCVSensorContribution CONTRIBUTIONS(SCVSensorContribution obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int CONTRIBUTIONSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public SCVSensorContribution.Vector contributionsVector() { return contributionsVector(new SCVSensorContribution.Vector()); }
-  public SCVSensorContribution.Vector contributionsVector(SCVSensorContribution.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public SCVSensorContribution.Vector contributionsVector(SCVSensorContribution.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   public SCVPackedGeometryChunk GEOMETRY() { return GEOMETRY(new SCVPackedGeometryChunk()); }
-  public SCVPackedGeometryChunk GEOMETRY(SCVPackedGeometryChunk obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVPackedGeometryChunk GEOMETRY(SCVPackedGeometryChunk obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVPackedRasterProducts RASTER_PRODUCTS() { return RASTER_PRODUCTS(new SCVPackedRasterProducts()); }
+  public SCVPackedRasterProducts RASTER_PRODUCTS(SCVPackedRasterProducts obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public String MESSAGE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MESSAGEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
@@ -91,18 +88,18 @@ public final class SCVResult extends com.google.flatbuffers.Table {
       int LATITUDE_BANDSOffset,
       int TIME_SERIESOffset,
       int HISTOGRAMSOffset,
-      int HEATMAPOffset,
       int CONTRIBUTIONSOffset,
       int GEOMETRYOffset,
+      int RASTER_PRODUCTSOffset,
       int MESSAGEOffset,
       int AGGREGATE_STATISTICSOffset) {
     builder.startTable(17);
     SCVResult.addTraceId(builder, TRACE_ID);
     SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.addMessage(builder, MESSAGEOffset);
+    SCVResult.addRasterProducts(builder, RASTER_PRODUCTSOffset);
     SCVResult.addGeometry(builder, GEOMETRYOffset);
     SCVResult.addContributions(builder, CONTRIBUTIONSOffset);
-    SCVResult.addHeatmap(builder, HEATMAPOffset);
     SCVResult.addHistograms(builder, HISTOGRAMSOffset);
     SCVResult.addTimeSeries(builder, TIME_SERIESOffset);
     SCVResult.addLatitudeBands(builder, LATITUDE_BANDSOffset);
@@ -140,13 +137,11 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public static void addHistograms(FlatBufferBuilder builder, int HISTOGRAMSOffset) { builder.addOffset(11, HISTOGRAMSOffset, 0); }
   public static int createHistogramsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startHistogramsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addHeatmap(FlatBufferBuilder builder, int HEATMAPOffset) { builder.addOffset(12, HEATMAPOffset, 0); }
-  public static int createHeatmapVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startHeatmapVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addContributions(FlatBufferBuilder builder, int CONTRIBUTIONSOffset) { builder.addOffset(13, CONTRIBUTIONSOffset, 0); }
+  public static void addContributions(FlatBufferBuilder builder, int CONTRIBUTIONSOffset) { builder.addOffset(12, CONTRIBUTIONSOffset, 0); }
   public static int createContributionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startContributionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(14, GEOMETRYOffset, 0); }
+  public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(13, GEOMETRYOffset, 0); }
+  public static void addRasterProducts(FlatBufferBuilder builder, int RASTER_PRODUCTSOffset) { builder.addOffset(14, RASTER_PRODUCTSOffset, 0); }
   public static void addMessage(FlatBufferBuilder builder, int MESSAGEOffset) { builder.addOffset(15, MESSAGEOffset, 0); }
   public static void addAggregateStatistics(FlatBufferBuilder builder, int AGGREGATE_STATISTICSOffset) { builder.addOffset(16, AGGREGATE_STATISTICSOffset, 0); }
   public static int endSCVResult(FlatBufferBuilder builder) {

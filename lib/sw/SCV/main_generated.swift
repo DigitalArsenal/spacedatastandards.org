@@ -185,6 +185,42 @@ public enum scvGeometryEncoding: UInt8, FlatbuffersVectorInitializable, Enum, Ve
 }
 
 
+public enum scvRasterProductKind: UInt16, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt16
+  public static var byteSize: Int { return MemoryLayout<UInt16>.size }
+  public var value: UInt16 { return self.rawValue }
+  case cellBoundsDeg = 0
+  case cellCentersDeg = 1
+  case percentCoverage = 2
+  case passCount = 3
+  case contactDurationSeconds = 4
+  case revisitSeconds = 5
+  case gapSeconds = 6
+  case redundancy = 7
+  case currentAccessBitset = 8
+  case bucketStartSeconds = 9
+  case bucketStopSeconds = 10
+  case bucketActiveCellCount = 11
+
+  public static var max: scvRasterProductKind { return .bucketActiveCellCount }
+  public static var min: scvRasterProductKind { return .cellBoundsDeg }
+}
+
+
+public enum scvRasterProductEncoding: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case float32 = 0
+  case float64 = 1
+  case uint32 = 2
+  case bitsetUint32 = 3
+
+  public static var max: scvRasterProductEncoding { return .bitsetUint32 }
+  public static var min: scvRasterProductEncoding { return .float32 }
+}
+
+
 public struct SCVVec3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -1682,65 +1718,6 @@ public struct SCVHistogramBin: FlatBufferTable, FlatbuffersVectorInitializable, 
   }
 }
 
-public struct SCVHeatmapCell: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$SCV" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVHeatmapCell.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let METRIC_KIND: VOffset = 4
-    static let X_INDEX: VOffset = 6
-    static let Y_INDEX: VOffset = 8
-    static let VALUE: VOffset = 10
-    static let SENSOR_COUNT: VOffset = 12
-  }
-
-  public var METRIC_KIND: scvMetricSeriesKind { let o = _accessor.offset(VT.METRIC_KIND); return o == 0 ? .percentCovered : scvMetricSeriesKind(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .percentCovered }
-  public var X_INDEX: UInt32 { let o = _accessor.offset(VT.X_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var Y_INDEX: UInt32 { let o = _accessor.offset(VT.Y_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var SENSOR_COUNT: UInt32 { let o = _accessor.offset(VT.SENSOR_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startSCVHeatmapCell(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
-  public static func add(METRIC_KIND: scvMetricSeriesKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METRIC_KIND.rawValue, def: 0, at: VT.METRIC_KIND) }
-  public static func add(X_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_INDEX, def: 0, at: VT.X_INDEX) }
-  public static func add(Y_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_INDEX, def: 0, at: VT.Y_INDEX) }
-  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
-  public static func add(SENSOR_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENSOR_COUNT, def: 0, at: VT.SENSOR_COUNT) }
-  public static func endSCVHeatmapCell(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createSCVHeatmapCell(
-    _ fbb: inout FlatBufferBuilder,
-    METRIC_KIND: scvMetricSeriesKind = .percentCovered,
-    X_INDEX: UInt32 = 0,
-    Y_INDEX: UInt32 = 0,
-    VALUE: Double = 0.0,
-    SENSOR_COUNT: UInt32 = 0
-  ) -> Offset {
-    let __start = SCVHeatmapCell.startSCVHeatmapCell(&fbb)
-    SCVHeatmapCell.add(METRIC_KIND: METRIC_KIND, &fbb)
-    SCVHeatmapCell.add(X_INDEX: X_INDEX, &fbb)
-    SCVHeatmapCell.add(Y_INDEX: Y_INDEX, &fbb)
-    SCVHeatmapCell.add(VALUE: VALUE, &fbb)
-    SCVHeatmapCell.add(SENSOR_COUNT: SENSOR_COUNT, &fbb)
-    return SCVHeatmapCell.endSCVHeatmapCell(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.METRIC_KIND, fieldName: "METRIC_KIND", required: false, type: scvMetricSeriesKind.self)
-    try _v.visit(field: VT.X_INDEX, fieldName: "X_INDEX", required: false, type: UInt32.self)
-    try _v.visit(field: VT.Y_INDEX, fieldName: "Y_INDEX", required: false, type: UInt32.self)
-    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
-    try _v.visit(field: VT.SENSOR_COUNT, fieldName: "SENSOR_COUNT", required: false, type: UInt32.self)
-    _v.finish()
-  }
-}
-
 public struct SCVSwathSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -2140,6 +2117,206 @@ public struct SCVPackedGeometryChunk: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
+public struct SCVPackedRasterBand: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVPackedRasterBand.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PRODUCT_KIND: VOffset = 4
+    static let METRIC_KIND: VOffset = 6
+    static let ENCODING: VOffset = 8
+    static let COMPONENTS_PER_CELL: VOffset = 10
+    static let CELL_COUNT: VOffset = 12
+    static let BUCKET_COUNT: VOffset = 14
+    static let WORDS_PER_BUCKET: VOffset = 16
+    static let MEMORY_REGION_ID: VOffset = 18
+    static let MEMORY_RECORD_INDEX: VOffset = 20
+    static let FLOAT32_VALUES: VOffset = 22
+    static let FLOAT64_VALUES: VOffset = 24
+    static let UINT32_VALUES: VOffset = 26
+  }
+
+  public var PRODUCT_KIND: scvRasterProductKind { let o = _accessor.offset(VT.PRODUCT_KIND); return o == 0 ? .cellBoundsDeg : scvRasterProductKind(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .cellBoundsDeg }
+  public var METRIC_KIND: scvMetricSeriesKind { let o = _accessor.offset(VT.METRIC_KIND); return o == 0 ? .percentCovered : scvMetricSeriesKind(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .percentCovered }
+  public var ENCODING: scvRasterProductEncoding { let o = _accessor.offset(VT.ENCODING); return o == 0 ? .float32 : scvRasterProductEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .float32 }
+  public var COMPONENTS_PER_CELL: UInt32 { let o = _accessor.offset(VT.COMPONENTS_PER_CELL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CELL_COUNT: UInt32 { let o = _accessor.offset(VT.CELL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var BUCKET_COUNT: UInt32 { let o = _accessor.offset(VT.BUCKET_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var WORDS_PER_BUCKET: UInt32 { let o = _accessor.offset(VT.WORDS_PER_BUCKET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MEMORY_REGION_ID: UInt32 { let o = _accessor.offset(VT.MEMORY_REGION_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MEMORY_RECORD_INDEX: UInt32 { let o = _accessor.offset(VT.MEMORY_RECORD_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var FLOAT32_VALUES: FlatbufferVector<Float32> { return _accessor.vector(at: VT.FLOAT32_VALUES, byteSize: 4) }
+  public func withUnsafePointerToFloat32Values<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FLOAT32_VALUES, body: body) }
+  public var FLOAT64_VALUES: FlatbufferVector<Double> { return _accessor.vector(at: VT.FLOAT64_VALUES, byteSize: 8) }
+  public func withUnsafePointerToFloat64Values<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.FLOAT64_VALUES, body: body) }
+  public var UINT32_VALUES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.UINT32_VALUES, byteSize: 4) }
+  public func withUnsafePointerToUint32Values<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.UINT32_VALUES, body: body) }
+  public static func startSCVPackedRasterBand(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(PRODUCT_KIND: scvRasterProductKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRODUCT_KIND.rawValue, def: 0, at: VT.PRODUCT_KIND) }
+  public static func add(METRIC_KIND: scvMetricSeriesKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METRIC_KIND.rawValue, def: 0, at: VT.METRIC_KIND) }
+  public static func add(ENCODING: scvRasterProductEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCODING.rawValue, def: 0, at: VT.ENCODING) }
+  public static func add(COMPONENTS_PER_CELL: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COMPONENTS_PER_CELL, def: 0, at: VT.COMPONENTS_PER_CELL) }
+  public static func add(CELL_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CELL_COUNT, def: 0, at: VT.CELL_COUNT) }
+  public static func add(BUCKET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BUCKET_COUNT, def: 0, at: VT.BUCKET_COUNT) }
+  public static func add(WORDS_PER_BUCKET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WORDS_PER_BUCKET, def: 0, at: VT.WORDS_PER_BUCKET) }
+  public static func add(MEMORY_REGION_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEMORY_REGION_ID, def: 0, at: VT.MEMORY_REGION_ID) }
+  public static func add(MEMORY_RECORD_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEMORY_RECORD_INDEX, def: 0, at: VT.MEMORY_RECORD_INDEX) }
+  public static func addVectorOf(FLOAT32_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT32_VALUES, at: VT.FLOAT32_VALUES) }
+  public static func addVectorOf(FLOAT64_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FLOAT64_VALUES, at: VT.FLOAT64_VALUES) }
+  public static func addVectorOf(UINT32_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UINT32_VALUES, at: VT.UINT32_VALUES) }
+  public static func endSCVPackedRasterBand(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVPackedRasterBand(
+    _ fbb: inout FlatBufferBuilder,
+    PRODUCT_KIND: scvRasterProductKind = .cellBoundsDeg,
+    METRIC_KIND: scvMetricSeriesKind = .percentCovered,
+    ENCODING: scvRasterProductEncoding = .float32,
+    COMPONENTS_PER_CELL: UInt32 = 0,
+    CELL_COUNT: UInt32 = 0,
+    BUCKET_COUNT: UInt32 = 0,
+    WORDS_PER_BUCKET: UInt32 = 0,
+    MEMORY_REGION_ID: UInt32 = 0,
+    MEMORY_RECORD_INDEX: UInt32 = 0,
+    FLOAT32_VALUESVectorOffset FLOAT32_VALUES: Offset = Offset(),
+    FLOAT64_VALUESVectorOffset FLOAT64_VALUES: Offset = Offset(),
+    UINT32_VALUESVectorOffset UINT32_VALUES: Offset = Offset()
+  ) -> Offset {
+    let __start = SCVPackedRasterBand.startSCVPackedRasterBand(&fbb)
+    SCVPackedRasterBand.add(PRODUCT_KIND: PRODUCT_KIND, &fbb)
+    SCVPackedRasterBand.add(METRIC_KIND: METRIC_KIND, &fbb)
+    SCVPackedRasterBand.add(ENCODING: ENCODING, &fbb)
+    SCVPackedRasterBand.add(COMPONENTS_PER_CELL: COMPONENTS_PER_CELL, &fbb)
+    SCVPackedRasterBand.add(CELL_COUNT: CELL_COUNT, &fbb)
+    SCVPackedRasterBand.add(BUCKET_COUNT: BUCKET_COUNT, &fbb)
+    SCVPackedRasterBand.add(WORDS_PER_BUCKET: WORDS_PER_BUCKET, &fbb)
+    SCVPackedRasterBand.add(MEMORY_REGION_ID: MEMORY_REGION_ID, &fbb)
+    SCVPackedRasterBand.add(MEMORY_RECORD_INDEX: MEMORY_RECORD_INDEX, &fbb)
+    SCVPackedRasterBand.addVectorOf(FLOAT32_VALUES: FLOAT32_VALUES, &fbb)
+    SCVPackedRasterBand.addVectorOf(FLOAT64_VALUES: FLOAT64_VALUES, &fbb)
+    SCVPackedRasterBand.addVectorOf(UINT32_VALUES: UINT32_VALUES, &fbb)
+    return SCVPackedRasterBand.endSCVPackedRasterBand(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PRODUCT_KIND, fieldName: "PRODUCT_KIND", required: false, type: scvRasterProductKind.self)
+    try _v.visit(field: VT.METRIC_KIND, fieldName: "METRIC_KIND", required: false, type: scvMetricSeriesKind.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: scvRasterProductEncoding.self)
+    try _v.visit(field: VT.COMPONENTS_PER_CELL, fieldName: "COMPONENTS_PER_CELL", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CELL_COUNT, fieldName: "CELL_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.BUCKET_COUNT, fieldName: "BUCKET_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.WORDS_PER_BUCKET, fieldName: "WORDS_PER_BUCKET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MEMORY_REGION_ID, fieldName: "MEMORY_REGION_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MEMORY_RECORD_INDEX, fieldName: "MEMORY_RECORD_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.FLOAT32_VALUES, fieldName: "FLOAT32_VALUES", required: false, type: ForwardOffset<Vector<Float32, Float32>>.self)
+    try _v.visit(field: VT.FLOAT64_VALUES, fieldName: "FLOAT64_VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.UINT32_VALUES, fieldName: "UINT32_VALUES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    _v.finish()
+  }
+}
+
+public struct SCVPackedRasterProducts: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVPackedRasterProducts.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let JOB_ID: VOffset = 4
+    static let TRACE_ID: VOffset = 6
+    static let GRID: VOffset = 8
+    static let TIME_GRID: VOffset = 10
+    static let ROWS: VOffset = 12
+    static let COLUMNS: VOffset = 14
+    static let CELL_COUNT: VOffset = 16
+    static let BUCKET_COUNT: VOffset = 18
+    static let WORDS_PER_BUCKET: VOffset = 20
+    static let MEMORY_REGIONS: VOffset = 22
+    static let BANDS: VOffset = 24
+  }
+
+  public var JOB_ID: String? { let o = _accessor.offset(VT.JOB_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var JOB_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.JOB_ID) }
+  public var TRACE_ID: UInt64 { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var GRID: SCVCoverageGrid? { let o = _accessor.offset(VT.GRID); return o == 0 ? nil : SCVCoverageGrid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var TIME_GRID: SCVTimeGrid? { let o = _accessor.offset(VT.TIME_GRID); return o == 0 ? nil : SCVTimeGrid(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ROWS: UInt32 { let o = _accessor.offset(VT.ROWS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var COLUMNS: UInt32 { let o = _accessor.offset(VT.COLUMNS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var CELL_COUNT: UInt32 { let o = _accessor.offset(VT.CELL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var BUCKET_COUNT: UInt32 { let o = _accessor.offset(VT.BUCKET_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var WORDS_PER_BUCKET: UInt32 { let o = _accessor.offset(VT.WORDS_PER_BUCKET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var MEMORY_REGIONS: FlatbufferVector<SCVMemoryRegion> { return _accessor.vector(at: VT.MEMORY_REGIONS, byteSize: 4) }
+  public var BANDS: FlatbufferVector<SCVPackedRasterBand> { return _accessor.vector(at: VT.BANDS, byteSize: 4) }
+  public static func startSCVPackedRasterProducts(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(JOB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_ID, at: VT.JOB_ID) }
+  public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
+  public static func add(GRID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRID, at: VT.GRID) }
+  public static func add(TIME_GRID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_GRID, at: VT.TIME_GRID) }
+  public static func add(ROWS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROWS, def: 0, at: VT.ROWS) }
+  public static func add(COLUMNS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLUMNS, def: 0, at: VT.COLUMNS) }
+  public static func add(CELL_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CELL_COUNT, def: 0, at: VT.CELL_COUNT) }
+  public static func add(BUCKET_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BUCKET_COUNT, def: 0, at: VT.BUCKET_COUNT) }
+  public static func add(WORDS_PER_BUCKET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WORDS_PER_BUCKET, def: 0, at: VT.WORDS_PER_BUCKET) }
+  public static func addVectorOf(MEMORY_REGIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEMORY_REGIONS, at: VT.MEMORY_REGIONS) }
+  public static func addVectorOf(BANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BANDS, at: VT.BANDS) }
+  public static func endSCVPackedRasterProducts(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVPackedRasterProducts(
+    _ fbb: inout FlatBufferBuilder,
+    JOB_IDOffset JOB_ID: Offset = Offset(),
+    TRACE_ID: UInt64 = 0,
+    GRIDOffset GRID: Offset = Offset(),
+    TIME_GRIDOffset TIME_GRID: Offset = Offset(),
+    ROWS: UInt32 = 0,
+    COLUMNS: UInt32 = 0,
+    CELL_COUNT: UInt32 = 0,
+    BUCKET_COUNT: UInt32 = 0,
+    WORDS_PER_BUCKET: UInt32 = 0,
+    MEMORY_REGIONSVectorOffset MEMORY_REGIONS: Offset = Offset(),
+    BANDSVectorOffset BANDS: Offset = Offset()
+  ) -> Offset {
+    let __start = SCVPackedRasterProducts.startSCVPackedRasterProducts(&fbb)
+    SCVPackedRasterProducts.add(JOB_ID: JOB_ID, &fbb)
+    SCVPackedRasterProducts.add(TRACE_ID: TRACE_ID, &fbb)
+    SCVPackedRasterProducts.add(GRID: GRID, &fbb)
+    SCVPackedRasterProducts.add(TIME_GRID: TIME_GRID, &fbb)
+    SCVPackedRasterProducts.add(ROWS: ROWS, &fbb)
+    SCVPackedRasterProducts.add(COLUMNS: COLUMNS, &fbb)
+    SCVPackedRasterProducts.add(CELL_COUNT: CELL_COUNT, &fbb)
+    SCVPackedRasterProducts.add(BUCKET_COUNT: BUCKET_COUNT, &fbb)
+    SCVPackedRasterProducts.add(WORDS_PER_BUCKET: WORDS_PER_BUCKET, &fbb)
+    SCVPackedRasterProducts.addVectorOf(MEMORY_REGIONS: MEMORY_REGIONS, &fbb)
+    SCVPackedRasterProducts.addVectorOf(BANDS: BANDS, &fbb)
+    return SCVPackedRasterProducts.endSCVPackedRasterProducts(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.JOB_ID, fieldName: "JOB_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.GRID, fieldName: "GRID", required: false, type: ForwardOffset<SCVCoverageGrid>.self)
+    try _v.visit(field: VT.TIME_GRID, fieldName: "TIME_GRID", required: false, type: ForwardOffset<SCVTimeGrid>.self)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.COLUMNS, fieldName: "COLUMNS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CELL_COUNT, fieldName: "CELL_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.BUCKET_COUNT, fieldName: "BUCKET_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.WORDS_PER_BUCKET, fieldName: "WORDS_PER_BUCKET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MEMORY_REGIONS, fieldName: "MEMORY_REGIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVMemoryRegion>, SCVMemoryRegion>>.self)
+    try _v.visit(field: VT.BANDS, fieldName: "BANDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVPackedRasterBand>, SCVPackedRasterBand>>.self)
+    _v.finish()
+  }
+}
+
 public struct SCVAggregateStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -2283,9 +2460,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let LATITUDE_BANDS: VOffset = 22
     static let TIME_SERIES: VOffset = 24
     static let HISTOGRAMS: VOffset = 26
-    static let HEATMAP: VOffset = 28
-    static let CONTRIBUTIONS: VOffset = 30
-    static let GEOMETRY: VOffset = 32
+    static let CONTRIBUTIONS: VOffset = 28
+    static let GEOMETRY: VOffset = 30
+    static let RASTER_PRODUCTS: VOffset = 32
     static let MESSAGE: VOffset = 34
     static let AGGREGATE_STATISTICS: VOffset = 36
   }
@@ -2303,9 +2480,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var LATITUDE_BANDS: FlatbufferVector<SCVLatitudeBandStat> { return _accessor.vector(at: VT.LATITUDE_BANDS, byteSize: 4) }
   public var TIME_SERIES: FlatbufferVector<SCVTimeSeriesPoint> { return _accessor.vector(at: VT.TIME_SERIES, byteSize: 4) }
   public var HISTOGRAMS: FlatbufferVector<SCVHistogramBin> { return _accessor.vector(at: VT.HISTOGRAMS, byteSize: 4) }
-  public var HEATMAP: FlatbufferVector<SCVHeatmapCell> { return _accessor.vector(at: VT.HEATMAP, byteSize: 4) }
   public var CONTRIBUTIONS: FlatbufferVector<SCVSensorContribution> { return _accessor.vector(at: VT.CONTRIBUTIONS, byteSize: 4) }
   public var GEOMETRY: SCVPackedGeometryChunk? { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? nil : SCVPackedGeometryChunk(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RASTER_PRODUCTS: SCVPackedRasterProducts? { let o = _accessor.offset(VT.RASTER_PRODUCTS); return o == 0 ? nil : SCVPackedRasterProducts(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
   public var AGGREGATE_STATISTICS: SCVAggregateStatistics? { let o = _accessor.offset(VT.AGGREGATE_STATISTICS); return o == 0 ? nil : SCVAggregateStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -2322,9 +2499,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func addVectorOf(LATITUDE_BANDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LATITUDE_BANDS, at: VT.LATITUDE_BANDS) }
   public static func addVectorOf(TIME_SERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SERIES, at: VT.TIME_SERIES) }
   public static func addVectorOf(HISTOGRAMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HISTOGRAMS, at: VT.HISTOGRAMS) }
-  public static func addVectorOf(HEATMAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HEATMAP, at: VT.HEATMAP) }
   public static func addVectorOf(CONTRIBUTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTRIBUTIONS, at: VT.CONTRIBUTIONS) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
+  public static func add(RASTER_PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RASTER_PRODUCTS, at: VT.RASTER_PRODUCTS) }
   public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
   public static func add(AGGREGATE_STATISTICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_STATISTICS, at: VT.AGGREGATE_STATISTICS) }
   public static func endSCVResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -2342,9 +2519,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     LATITUDE_BANDSVectorOffset LATITUDE_BANDS: Offset = Offset(),
     TIME_SERIESVectorOffset TIME_SERIES: Offset = Offset(),
     HISTOGRAMSVectorOffset HISTOGRAMS: Offset = Offset(),
-    HEATMAPVectorOffset HEATMAP: Offset = Offset(),
     CONTRIBUTIONSVectorOffset CONTRIBUTIONS: Offset = Offset(),
     GEOMETRYOffset GEOMETRY: Offset = Offset(),
+    RASTER_PRODUCTSOffset RASTER_PRODUCTS: Offset = Offset(),
     MESSAGEOffset MESSAGE: Offset = Offset(),
     AGGREGATE_STATISTICSOffset AGGREGATE_STATISTICS: Offset = Offset()
   ) -> Offset {
@@ -2361,9 +2538,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     SCVResult.addVectorOf(LATITUDE_BANDS: LATITUDE_BANDS, &fbb)
     SCVResult.addVectorOf(TIME_SERIES: TIME_SERIES, &fbb)
     SCVResult.addVectorOf(HISTOGRAMS: HISTOGRAMS, &fbb)
-    SCVResult.addVectorOf(HEATMAP: HEATMAP, &fbb)
     SCVResult.addVectorOf(CONTRIBUTIONS: CONTRIBUTIONS, &fbb)
     SCVResult.add(GEOMETRY: GEOMETRY, &fbb)
+    SCVResult.add(RASTER_PRODUCTS: RASTER_PRODUCTS, &fbb)
     SCVResult.add(MESSAGE: MESSAGE, &fbb)
     SCVResult.add(AGGREGATE_STATISTICS: AGGREGATE_STATISTICS, &fbb)
     return SCVResult.endSCVResult(&fbb, start: __start)
@@ -2383,9 +2560,9 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.LATITUDE_BANDS, fieldName: "LATITUDE_BANDS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVLatitudeBandStat>, SCVLatitudeBandStat>>.self)
     try _v.visit(field: VT.TIME_SERIES, fieldName: "TIME_SERIES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVTimeSeriesPoint>, SCVTimeSeriesPoint>>.self)
     try _v.visit(field: VT.HISTOGRAMS, fieldName: "HISTOGRAMS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVHistogramBin>, SCVHistogramBin>>.self)
-    try _v.visit(field: VT.HEATMAP, fieldName: "HEATMAP", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVHeatmapCell>, SCVHeatmapCell>>.self)
     try _v.visit(field: VT.CONTRIBUTIONS, fieldName: "CONTRIBUTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVSensorContribution>, SCVSensorContribution>>.self)
     try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: ForwardOffset<SCVPackedGeometryChunk>.self)
+    try _v.visit(field: VT.RASTER_PRODUCTS, fieldName: "RASTER_PRODUCTS", required: false, type: ForwardOffset<SCVPackedRasterProducts>.self)
     try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.AGGREGATE_STATISTICS, fieldName: "AGGREGATE_STATISTICS", required: false, type: ForwardOffset<SCVAggregateStatistics>.self)
     _v.finish()
@@ -2410,6 +2587,7 @@ public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let CANCEL: VOffset = 10
     static let RESULT: VOffset = 12
     static let GEOMETRY: VOffset = 14
+    static let RASTER_PRODUCTS: VOffset = 16
   }
 
   public var ENVELOPE_KIND: scvEnvelopeKind { let o = _accessor.offset(VT.ENVELOPE_KIND); return o == 0 ? .request : scvEnvelopeKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .request }
@@ -2418,13 +2596,15 @@ public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var CANCEL: SCVCancel? { let o = _accessor.offset(VT.CANCEL); return o == 0 ? nil : SCVCancel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var RESULT: SCVResult? { let o = _accessor.offset(VT.RESULT); return o == 0 ? nil : SCVResult(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var GEOMETRY: SCVPackedGeometryChunk? { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? nil : SCVPackedGeometryChunk(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSCV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public var RASTER_PRODUCTS: SCVPackedRasterProducts? { let o = _accessor.offset(VT.RASTER_PRODUCTS); return o == 0 ? nil : SCVPackedRasterProducts(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSCV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
   public static func add(ENVELOPE_KIND: scvEnvelopeKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVELOPE_KIND.rawValue, def: 0, at: VT.ENVELOPE_KIND) }
   public static func add(REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST, at: VT.REQUEST) }
   public static func add(PROGRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROGRESS, at: VT.PROGRESS) }
   public static func add(CANCEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANCEL, at: VT.CANCEL) }
   public static func add(RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESULT, at: VT.RESULT) }
   public static func add(GEOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEOMETRY, at: VT.GEOMETRY) }
+  public static func add(RASTER_PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RASTER_PRODUCTS, at: VT.RASTER_PRODUCTS) }
   public static func endSCV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCV(
     _ fbb: inout FlatBufferBuilder,
@@ -2433,7 +2613,8 @@ public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PROGRESSOffset PROGRESS: Offset = Offset(),
     CANCELOffset CANCEL: Offset = Offset(),
     RESULTOffset RESULT: Offset = Offset(),
-    GEOMETRYOffset GEOMETRY: Offset = Offset()
+    GEOMETRYOffset GEOMETRY: Offset = Offset(),
+    RASTER_PRODUCTSOffset RASTER_PRODUCTS: Offset = Offset()
   ) -> Offset {
     let __start = SCV.startSCV(&fbb)
     SCV.add(ENVELOPE_KIND: ENVELOPE_KIND, &fbb)
@@ -2442,6 +2623,7 @@ public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SCV.add(CANCEL: CANCEL, &fbb)
     SCV.add(RESULT: RESULT, &fbb)
     SCV.add(GEOMETRY: GEOMETRY, &fbb)
+    SCV.add(RASTER_PRODUCTS: RASTER_PRODUCTS, &fbb)
     return SCV.endSCV(&fbb, start: __start)
   }
 
@@ -2453,6 +2635,7 @@ public struct SCV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.CANCEL, fieldName: "CANCEL", required: false, type: ForwardOffset<SCVCancel>.self)
     try _v.visit(field: VT.RESULT, fieldName: "RESULT", required: false, type: ForwardOffset<SCVResult>.self)
     try _v.visit(field: VT.GEOMETRY, fieldName: "GEOMETRY", required: false, type: ForwardOffset<SCVPackedGeometryChunk>.self)
+    try _v.visit(field: VT.RASTER_PRODUCTS, fieldName: "RASTER_PRODUCTS", required: false, type: ForwardOffset<SCVPackedRasterProducts>.self)
     _v.finish()
   }
 }

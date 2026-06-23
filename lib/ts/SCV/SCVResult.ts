@@ -7,11 +7,11 @@ import * as flatbuffers from 'flatbuffers';
 import { SCVAggregateStatistics, SCVAggregateStatisticsT } from './SCVAggregateStatistics.js';
 import { SCVCellStat, SCVCellStatT } from './SCVCellStat.js';
 import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
-import { SCVHeatmapCell, SCVHeatmapCellT } from './SCVHeatmapCell.js';
 import { SCVHistogramBin, SCVHistogramBinT } from './SCVHistogramBin.js';
 import { SCVInterval, SCVIntervalT } from './SCVInterval.js';
 import { SCVLatitudeBandStat, SCVLatitudeBandStatT } from './SCVLatitudeBandStat.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
+import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVSensorContribution, SCVSensorContributionT } from './SCVSensorContribution.js';
 import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
 import { SCVTimeSeriesPoint, SCVTimeSeriesPointT } from './SCVTimeSeriesPoint.js';
@@ -123,29 +123,24 @@ histogramsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-HEATMAP(index: number, obj?:SCVHeatmapCell):SCVHeatmapCell|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? (obj || new SCVHeatmapCell()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-heatmapLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 CONTRIBUTIONS(index: number, obj?:SCVSensorContribution):SCVSensorContribution|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new SCVSensorContribution()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 contributionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 GEOMETRY(obj?:SCVPackedGeometryChunk):SCVPackedGeometryChunk|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new SCVPackedGeometryChunk()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+RASTER_PRODUCTS(obj?:SCVPackedRasterProducts):SCVPackedRasterProducts|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? (obj || new SCVPackedRasterProducts()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 MESSAGE():string|null
@@ -272,24 +267,8 @@ static startHistogramsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addHeatmap(builder:flatbuffers.Builder, HEATMAPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, HEATMAPOffset, 0);
-}
-
-static createHeatmapVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startHeatmapVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addContributions(builder:flatbuffers.Builder, CONTRIBUTIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, CONTRIBUTIONSOffset, 0);
+  builder.addFieldOffset(12, CONTRIBUTIONSOffset, 0);
 }
 
 static createContributionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -305,7 +284,11 @@ static startContributionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addGeometry(builder:flatbuffers.Builder, GEOMETRYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, GEOMETRYOffset, 0);
+  builder.addFieldOffset(13, GEOMETRYOffset, 0);
+}
+
+static addRasterProducts(builder:flatbuffers.Builder, RASTER_PRODUCTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, RASTER_PRODUCTSOffset, 0);
 }
 
 static addMessage(builder:flatbuffers.Builder, MESSAGEOffset:flatbuffers.Offset) {
@@ -336,9 +319,9 @@ unpack(): SCVResultT {
     this.bb!.createObjList<SCVLatitudeBandStat, SCVLatitudeBandStatT>(this.LATITUDE_BANDS.bind(this), this.latitudeBandsLength()),
     this.bb!.createObjList<SCVTimeSeriesPoint, SCVTimeSeriesPointT>(this.TIME_SERIES.bind(this), this.timeSeriesLength()),
     this.bb!.createObjList<SCVHistogramBin, SCVHistogramBinT>(this.HISTOGRAMS.bind(this), this.histogramsLength()),
-    this.bb!.createObjList<SCVHeatmapCell, SCVHeatmapCellT>(this.HEATMAP.bind(this), this.heatmapLength()),
     this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength()),
     (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
+    (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null),
     this.MESSAGE(),
     (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null)
   );
@@ -358,9 +341,9 @@ unpackTo(_o: SCVResultT): void {
   _o.LATITUDE_BANDS = this.bb!.createObjList<SCVLatitudeBandStat, SCVLatitudeBandStatT>(this.LATITUDE_BANDS.bind(this), this.latitudeBandsLength());
   _o.TIME_SERIES = this.bb!.createObjList<SCVTimeSeriesPoint, SCVTimeSeriesPointT>(this.TIME_SERIES.bind(this), this.timeSeriesLength());
   _o.HISTOGRAMS = this.bb!.createObjList<SCVHistogramBin, SCVHistogramBinT>(this.HISTOGRAMS.bind(this), this.histogramsLength());
-  _o.HEATMAP = this.bb!.createObjList<SCVHeatmapCell, SCVHeatmapCellT>(this.HEATMAP.bind(this), this.heatmapLength());
   _o.CONTRIBUTIONS = this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength());
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
+  _o.RASTER_PRODUCTS = (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null);
   _o.MESSAGE = this.MESSAGE();
   _o.AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null);
 }
@@ -380,9 +363,9 @@ constructor(
   public LATITUDE_BANDS: (SCVLatitudeBandStatT)[] = [],
   public TIME_SERIES: (SCVTimeSeriesPointT)[] = [],
   public HISTOGRAMS: (SCVHistogramBinT)[] = [],
-  public HEATMAP: (SCVHeatmapCellT)[] = [],
   public CONTRIBUTIONS: (SCVSensorContributionT)[] = [],
   public GEOMETRY: SCVPackedGeometryChunkT|null = null,
+  public RASTER_PRODUCTS: SCVPackedRasterProductsT|null = null,
   public MESSAGE: string|Uint8Array|null = null,
   public AGGREGATE_STATISTICS: SCVAggregateStatisticsT|null = null
 ){}
@@ -397,9 +380,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LATITUDE_BANDS = SCVResult.createLatitudeBandsVector(builder, builder.createObjectOffsetList(this.LATITUDE_BANDS));
   const TIME_SERIES = SCVResult.createTimeSeriesVector(builder, builder.createObjectOffsetList(this.TIME_SERIES));
   const HISTOGRAMS = SCVResult.createHistogramsVector(builder, builder.createObjectOffsetList(this.HISTOGRAMS));
-  const HEATMAP = SCVResult.createHeatmapVector(builder, builder.createObjectOffsetList(this.HEATMAP));
   const CONTRIBUTIONS = SCVResult.createContributionsVector(builder, builder.createObjectOffsetList(this.CONTRIBUTIONS));
   const GEOMETRY = (this.GEOMETRY !== null ? this.GEOMETRY!.pack(builder) : 0);
+  const RASTER_PRODUCTS = (this.RASTER_PRODUCTS !== null ? this.RASTER_PRODUCTS!.pack(builder) : 0);
   const MESSAGE = (this.MESSAGE !== null ? builder.createString(this.MESSAGE!) : 0);
   const AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS !== null ? this.AGGREGATE_STATISTICS!.pack(builder) : 0);
 
@@ -416,9 +399,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVResult.addLatitudeBands(builder, LATITUDE_BANDS);
   SCVResult.addTimeSeries(builder, TIME_SERIES);
   SCVResult.addHistograms(builder, HISTOGRAMS);
-  SCVResult.addHeatmap(builder, HEATMAP);
   SCVResult.addContributions(builder, CONTRIBUTIONS);
   SCVResult.addGeometry(builder, GEOMETRY);
+  SCVResult.addRasterProducts(builder, RASTER_PRODUCTS);
   SCVResult.addMessage(builder, MESSAGE);
   SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICS);
 

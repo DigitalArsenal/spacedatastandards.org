@@ -39,11 +39,10 @@ public struct SCVResult : IFlatbufferObject
   public int TIME_SERIESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   public SCVHistogramBin? HISTOGRAMS(int j) { int o = __p.__offset(26); return o != 0 ? (SCVHistogramBin?)(new SCVHistogramBin()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int HISTOGRAMSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public SCVHeatmapCell? HEATMAP(int j) { int o = __p.__offset(28); return o != 0 ? (SCVHeatmapCell?)(new SCVHeatmapCell()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int HEATMAPLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public SCVSensorContribution? CONTRIBUTIONS(int j) { int o = __p.__offset(30); return o != 0 ? (SCVSensorContribution?)(new SCVSensorContribution()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int CONTRIBUTIONSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public SCVPackedGeometryChunk? GEOMETRY { get { int o = __p.__offset(32); return o != 0 ? (SCVPackedGeometryChunk?)(new SCVPackedGeometryChunk()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVSensorContribution? CONTRIBUTIONS(int j) { int o = __p.__offset(28); return o != 0 ? (SCVSensorContribution?)(new SCVSensorContribution()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int CONTRIBUTIONSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public SCVPackedGeometryChunk? GEOMETRY { get { int o = __p.__offset(30); return o != 0 ? (SCVPackedGeometryChunk?)(new SCVPackedGeometryChunk()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVPackedRasterProducts? RASTER_PRODUCTS { get { int o = __p.__offset(32); return o != 0 ? (SCVPackedRasterProducts?)(new SCVPackedRasterProducts()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public string MESSAGE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMESSAGEBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -66,18 +65,18 @@ public struct SCVResult : IFlatbufferObject
       VectorOffset LATITUDE_BANDSOffset = default(VectorOffset),
       VectorOffset TIME_SERIESOffset = default(VectorOffset),
       VectorOffset HISTOGRAMSOffset = default(VectorOffset),
-      VectorOffset HEATMAPOffset = default(VectorOffset),
       VectorOffset CONTRIBUTIONSOffset = default(VectorOffset),
       Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>),
+      Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset = default(Offset<SCVPackedRasterProducts>),
       StringOffset MESSAGEOffset = default(StringOffset),
       Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>)) {
     builder.StartTable(17);
     SCVResult.AddTRACE_ID(builder, TRACE_ID);
     SCVResult.AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.AddMESSAGE(builder, MESSAGEOffset);
+    SCVResult.AddRASTER_PRODUCTS(builder, RASTER_PRODUCTSOffset);
     SCVResult.AddGEOMETRY(builder, GEOMETRYOffset);
     SCVResult.AddCONTRIBUTIONS(builder, CONTRIBUTIONSOffset);
-    SCVResult.AddHEATMAP(builder, HEATMAPOffset);
     SCVResult.AddHISTOGRAMS(builder, HISTOGRAMSOffset);
     SCVResult.AddTIME_SERIES(builder, TIME_SERIESOffset);
     SCVResult.AddLATITUDE_BANDS(builder, LATITUDE_BANDSOffset);
@@ -130,19 +129,14 @@ public struct SCVResult : IFlatbufferObject
   public static VectorOffset CreateHISTOGRAMSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVHistogramBin>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateHISTOGRAMSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVHistogramBin>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartHISTOGRAMSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddHEATMAP(FlatBufferBuilder builder, VectorOffset HEATMAPOffset) { builder.AddOffset(12, HEATMAPOffset.Value, 0); }
-  public static VectorOffset CreateHEATMAPVector(FlatBufferBuilder builder, Offset<SCVHeatmapCell>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateHEATMAPVectorBlock(FlatBufferBuilder builder, Offset<SCVHeatmapCell>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateHEATMAPVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVHeatmapCell>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateHEATMAPVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVHeatmapCell>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartHEATMAPVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCONTRIBUTIONS(FlatBufferBuilder builder, VectorOffset CONTRIBUTIONSOffset) { builder.AddOffset(13, CONTRIBUTIONSOffset.Value, 0); }
+  public static void AddCONTRIBUTIONS(FlatBufferBuilder builder, VectorOffset CONTRIBUTIONSOffset) { builder.AddOffset(12, CONTRIBUTIONSOffset.Value, 0); }
   public static VectorOffset CreateCONTRIBUTIONSVector(FlatBufferBuilder builder, Offset<SCVSensorContribution>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCONTRIBUTIONSVectorBlock(FlatBufferBuilder builder, Offset<SCVSensorContribution>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCONTRIBUTIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVSensorContribution>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCONTRIBUTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVSensorContribution>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCONTRIBUTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<SCVPackedGeometryChunk> GEOMETRYOffset) { builder.AddOffset(14, GEOMETRYOffset.Value, 0); }
+  public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<SCVPackedGeometryChunk> GEOMETRYOffset) { builder.AddOffset(13, GEOMETRYOffset.Value, 0); }
+  public static void AddRASTER_PRODUCTS(FlatBufferBuilder builder, Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset) { builder.AddOffset(14, RASTER_PRODUCTSOffset.Value, 0); }
   public static void AddMESSAGE(FlatBufferBuilder builder, StringOffset MESSAGEOffset) { builder.AddOffset(15, MESSAGEOffset.Value, 0); }
   public static void AddAGGREGATE_STATISTICS(FlatBufferBuilder builder, Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset) { builder.AddOffset(16, AGGREGATE_STATISTICSOffset.Value, 0); }
   public static Offset<SCVResult> EndSCVResult(FlatBufferBuilder builder) {
@@ -172,11 +166,10 @@ public struct SCVResult : IFlatbufferObject
     for (var _j = 0; _j < this.TIME_SERIESLength; ++_j) {_o.TIME_SERIES.Add(this.TIME_SERIES(_j).HasValue ? this.TIME_SERIES(_j).Value.UnPack() : null);}
     _o.HISTOGRAMS = new List<SCVHistogramBinT>();
     for (var _j = 0; _j < this.HISTOGRAMSLength; ++_j) {_o.HISTOGRAMS.Add(this.HISTOGRAMS(_j).HasValue ? this.HISTOGRAMS(_j).Value.UnPack() : null);}
-    _o.HEATMAP = new List<SCVHeatmapCellT>();
-    for (var _j = 0; _j < this.HEATMAPLength; ++_j) {_o.HEATMAP.Add(this.HEATMAP(_j).HasValue ? this.HEATMAP(_j).Value.UnPack() : null);}
     _o.CONTRIBUTIONS = new List<SCVSensorContributionT>();
     for (var _j = 0; _j < this.CONTRIBUTIONSLength; ++_j) {_o.CONTRIBUTIONS.Add(this.CONTRIBUTIONS(_j).HasValue ? this.CONTRIBUTIONS(_j).Value.UnPack() : null);}
     _o.GEOMETRY = this.GEOMETRY.HasValue ? this.GEOMETRY.Value.UnPack() : null;
+    _o.RASTER_PRODUCTS = this.RASTER_PRODUCTS.HasValue ? this.RASTER_PRODUCTS.Value.UnPack() : null;
     _o.MESSAGE = this.MESSAGE;
     _o.AGGREGATE_STATISTICS = this.AGGREGATE_STATISTICS.HasValue ? this.AGGREGATE_STATISTICS.Value.UnPack() : null;
   }
@@ -215,12 +208,6 @@ public struct SCVResult : IFlatbufferObject
       for (var _j = 0; _j < __HISTOGRAMS.Length; ++_j) { __HISTOGRAMS[_j] = SCVHistogramBin.Pack(builder, _o.HISTOGRAMS[_j]); }
       _HISTOGRAMS = CreateHISTOGRAMSVector(builder, __HISTOGRAMS);
     }
-    var _HEATMAP = default(VectorOffset);
-    if (_o.HEATMAP != null) {
-      var __HEATMAP = new Offset<SCVHeatmapCell>[_o.HEATMAP.Count];
-      for (var _j = 0; _j < __HEATMAP.Length; ++_j) { __HEATMAP[_j] = SCVHeatmapCell.Pack(builder, _o.HEATMAP[_j]); }
-      _HEATMAP = CreateHEATMAPVector(builder, __HEATMAP);
-    }
     var _CONTRIBUTIONS = default(VectorOffset);
     if (_o.CONTRIBUTIONS != null) {
       var __CONTRIBUTIONS = new Offset<SCVSensorContribution>[_o.CONTRIBUTIONS.Count];
@@ -228,6 +215,7 @@ public struct SCVResult : IFlatbufferObject
       _CONTRIBUTIONS = CreateCONTRIBUTIONSVector(builder, __CONTRIBUTIONS);
     }
     var _GEOMETRY = _o.GEOMETRY == null ? default(Offset<SCVPackedGeometryChunk>) : SCVPackedGeometryChunk.Pack(builder, _o.GEOMETRY);
+    var _RASTER_PRODUCTS = _o.RASTER_PRODUCTS == null ? default(Offset<SCVPackedRasterProducts>) : SCVPackedRasterProducts.Pack(builder, _o.RASTER_PRODUCTS);
     var _MESSAGE = _o.MESSAGE == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE);
     var _AGGREGATE_STATISTICS = _o.AGGREGATE_STATISTICS == null ? default(Offset<SCVAggregateStatistics>) : SCVAggregateStatistics.Pack(builder, _o.AGGREGATE_STATISTICS);
     return CreateSCVResult(
@@ -244,9 +232,9 @@ public struct SCVResult : IFlatbufferObject
       _LATITUDE_BANDS,
       _TIME_SERIES,
       _HISTOGRAMS,
-      _HEATMAP,
       _CONTRIBUTIONS,
       _GEOMETRY,
+      _RASTER_PRODUCTS,
       _MESSAGE,
       _AGGREGATE_STATISTICS);
   }
@@ -266,9 +254,9 @@ public class SCVResultT
   public List<SCVLatitudeBandStatT> LATITUDE_BANDS { get; set; }
   public List<SCVTimeSeriesPointT> TIME_SERIES { get; set; }
   public List<SCVHistogramBinT> HISTOGRAMS { get; set; }
-  public List<SCVHeatmapCellT> HEATMAP { get; set; }
   public List<SCVSensorContributionT> CONTRIBUTIONS { get; set; }
   public SCVPackedGeometryChunkT GEOMETRY { get; set; }
+  public SCVPackedRasterProductsT RASTER_PRODUCTS { get; set; }
   public string MESSAGE { get; set; }
   public SCVAggregateStatisticsT AGGREGATE_STATISTICS { get; set; }
 
@@ -285,9 +273,9 @@ public class SCVResultT
     this.LATITUDE_BANDS = null;
     this.TIME_SERIES = null;
     this.HISTOGRAMS = null;
-    this.HEATMAP = null;
     this.CONTRIBUTIONS = null;
     this.GEOMETRY = null;
+    this.RASTER_PRODUCTS = null;
     this.MESSAGE = null;
     this.AGGREGATE_STATISTICS = null;
   }
@@ -311,9 +299,9 @@ static public class SCVResultVerify
       && verifier.VerifyVectorOfTables(tablePos, 22 /*LATITUDE_BANDS*/, SCVLatitudeBandStatVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 24 /*TIME_SERIES*/, SCVTimeSeriesPointVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 26 /*HISTOGRAMS*/, SCVHistogramBinVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 28 /*HEATMAP*/, SCVHeatmapCellVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 30 /*CONTRIBUTIONS*/, SCVSensorContributionVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 32 /*GEOMETRY*/, SCVPackedGeometryChunkVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 28 /*CONTRIBUTIONS*/, SCVSensorContributionVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*GEOMETRY*/, SCVPackedGeometryChunkVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 32 /*RASTER_PRODUCTS*/, SCVPackedRasterProductsVerify.Verify, false)
       && verifier.VerifyString(tablePos, 34 /*MESSAGE*/, false)
       && verifier.VerifyTable(tablePos, 36 /*AGGREGATE_STATISTICS*/, SCVAggregateStatisticsVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);

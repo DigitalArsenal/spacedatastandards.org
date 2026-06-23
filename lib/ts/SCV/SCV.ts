@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { SCVCancel, SCVCancelT } from './SCVCancel.js';
 import { SCVCoverageRequest, SCVCoverageRequestT } from './SCVCoverageRequest.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
+import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVProgress, SCVProgressT } from './SCVProgress.js';
 import { SCVResult, SCVResultT } from './SCVResult.js';
 import { scvEnvelopeKind } from './scvEnvelopeKind.js';
@@ -64,8 +65,13 @@ GEOMETRY(obj?:SCVPackedGeometryChunk):SCVPackedGeometryChunk|null {
   return offset ? (obj || new SCVPackedGeometryChunk()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+RASTER_PRODUCTS(obj?:SCVPackedRasterProducts):SCVPackedRasterProducts|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new SCVPackedRasterProducts()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCV(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 }
 
 static addEnvelopeKind(builder:flatbuffers.Builder, ENVELOPE_KIND:scvEnvelopeKind) {
@@ -92,6 +98,10 @@ static addGeometry(builder:flatbuffers.Builder, GEOMETRYOffset:flatbuffers.Offse
   builder.addFieldOffset(5, GEOMETRYOffset, 0);
 }
 
+static addRasterProducts(builder:flatbuffers.Builder, RASTER_PRODUCTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, RASTER_PRODUCTSOffset, 0);
+}
+
 static endSCV(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -113,7 +123,8 @@ unpack(): SCVT {
     (this.PROGRESS() !== null ? this.PROGRESS()!.unpack() : null),
     (this.CANCEL() !== null ? this.CANCEL()!.unpack() : null),
     (this.RESULT() !== null ? this.RESULT()!.unpack() : null),
-    (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null)
+    (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
+    (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null)
   );
 }
 
@@ -125,6 +136,7 @@ unpackTo(_o: SCVT): void {
   _o.CANCEL = (this.CANCEL() !== null ? this.CANCEL()!.unpack() : null);
   _o.RESULT = (this.RESULT() !== null ? this.RESULT()!.unpack() : null);
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
+  _o.RASTER_PRODUCTS = (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null);
 }
 }
 
@@ -135,7 +147,8 @@ constructor(
   public PROGRESS: SCVProgressT|null = null,
   public CANCEL: SCVCancelT|null = null,
   public RESULT: SCVResultT|null = null,
-  public GEOMETRY: SCVPackedGeometryChunkT|null = null
+  public GEOMETRY: SCVPackedGeometryChunkT|null = null,
+  public RASTER_PRODUCTS: SCVPackedRasterProductsT|null = null
 ){}
 
 
@@ -145,6 +158,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CANCEL = (this.CANCEL !== null ? this.CANCEL!.pack(builder) : 0);
   const RESULT = (this.RESULT !== null ? this.RESULT!.pack(builder) : 0);
   const GEOMETRY = (this.GEOMETRY !== null ? this.GEOMETRY!.pack(builder) : 0);
+  const RASTER_PRODUCTS = (this.RASTER_PRODUCTS !== null ? this.RASTER_PRODUCTS!.pack(builder) : 0);
 
   SCV.startSCV(builder);
   SCV.addEnvelopeKind(builder, this.ENVELOPE_KIND);
@@ -153,6 +167,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCV.addCancel(builder, CANCEL);
   SCV.addResult(builder, RESULT);
   SCV.addGeometry(builder, GEOMETRY);
+  SCV.addRasterProducts(builder, RASTER_PRODUCTS);
 
   return SCV.endSCV(builder);
 }

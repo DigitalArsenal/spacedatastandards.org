@@ -76,6 +76,15 @@ class SCV : Table() {
             null
         }
     }
+    val rasterProducts : SCVPackedRasterProducts? get() = rasterProducts(SCVPackedRasterProducts())
+    fun rasterProducts(obj: SCVPackedRasterProducts) : SCVPackedRasterProducts? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCV(_bb: ByteBuffer): SCV = getRootAsSCV(_bb, SCV())
@@ -84,8 +93,9 @@ class SCV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCV")
-        fun createSCV(builder: FlatBufferBuilder, envelopeKind: UByte, requestOffset: Int, progressOffset: Int, cancelOffset: Int, resultOffset: Int, geometryOffset: Int) : Int {
-            builder.startTable(6)
+        fun createSCV(builder: FlatBufferBuilder, envelopeKind: UByte, requestOffset: Int, progressOffset: Int, cancelOffset: Int, resultOffset: Int, geometryOffset: Int, rasterProductsOffset: Int) : Int {
+            builder.startTable(7)
+            addRASTERPRODUCTS(builder, rasterProductsOffset)
             addGEOMETRY(builder, geometryOffset)
             addRESULT(builder, resultOffset)
             addCANCEL(builder, cancelOffset)
@@ -94,13 +104,14 @@ class SCV : Table() {
             addENVELOPEKIND(builder, envelopeKind)
             return endSCV(builder)
         }
-        fun startSCV(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startSCV(builder: FlatBufferBuilder) = builder.startTable(7)
         fun addENVELOPEKIND(builder: FlatBufferBuilder, envelopeKind: UByte) = builder.addByte(0, envelopeKind.toByte(), 0)
         fun addREQUEST(builder: FlatBufferBuilder, request: Int) = builder.addOffset(1, request, 0)
         fun addPROGRESS(builder: FlatBufferBuilder, progress: Int) = builder.addOffset(2, progress, 0)
         fun addCANCEL(builder: FlatBufferBuilder, cancel: Int) = builder.addOffset(3, cancel, 0)
         fun addRESULT(builder: FlatBufferBuilder, result: Int) = builder.addOffset(4, result, 0)
         fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(5, geometry, 0)
+        fun addRASTERPRODUCTS(builder: FlatBufferBuilder, rasterProducts: Int) = builder.addOffset(6, rasterProducts, 0)
         fun endSCV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

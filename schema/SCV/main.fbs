@@ -1,5 +1,5 @@
-// Hash: d1459e5e93c4a6b3b16a13ba33eb0e2a5a7e05a5e29843bc25914af12073aa39
-// Version: 1.101.6
+// Hash: 34eab17aa883949c0190b81504bf36842154d4d77ea6917213655da19d98392a
+// Version: 1.101.9
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -93,6 +93,28 @@ enum scvGeometryEncoding : ubyte {
   INTERLEAVED_FLOAT32,
   QUANTIZED_UINT16,
   SHARED_MEMORY_OFFSET
+}
+
+enum scvRasterProductKind : ushort {
+  CELL_BOUNDS_DEG,
+  CELL_CENTERS_DEG,
+  PERCENT_COVERAGE,
+  PASS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  CURRENT_ACCESS_BITSET,
+  BUCKET_START_SECONDS,
+  BUCKET_STOP_SECONDS,
+  BUCKET_ACTIVE_CELL_COUNT
+}
+
+enum scvRasterProductEncoding : ubyte {
+  FLOAT32,
+  FLOAT64,
+  UINT32,
+  BITSET_UINT32
 }
 
 table SCVVec3 {
@@ -309,14 +331,6 @@ table SCVHistogramBin {
   WEIGHT:double;
 }
 
-table SCVHeatmapCell {
-  METRIC_KIND:scvMetricSeriesKind;
-  X_INDEX:uint32;
-  Y_INDEX:uint32;
-  VALUE:double;
-  SENSOR_COUNT:uint32;
-}
-
 table SCVSwathSegment {
   SEGMENT_ID:uint32;
   SENSOR_ID:uint32;
@@ -376,6 +390,35 @@ table SCVPackedGeometryChunk {
   SEGMENTS:[SCVSwathSegment];
 }
 
+table SCVPackedRasterBand {
+  PRODUCT_KIND:scvRasterProductKind;
+  METRIC_KIND:scvMetricSeriesKind;
+  ENCODING:scvRasterProductEncoding;
+  COMPONENTS_PER_CELL:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGION_ID:uint32;
+  MEMORY_RECORD_INDEX:uint32;
+  FLOAT32_VALUES:[float];
+  FLOAT64_VALUES:[double];
+  UINT32_VALUES:[uint32];
+}
+
+table SCVPackedRasterProducts {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  GRID:SCVCoverageGrid;
+  TIME_GRID:SCVTimeGrid;
+  ROWS:uint32;
+  COLUMNS:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  BANDS:[SCVPackedRasterBand];
+}
+
 table SCVAggregateStatistics {
   TOTAL_CELLS:uint32;
   ACCESSED_CELLS:uint32;
@@ -407,9 +450,9 @@ table SCVResult {
   LATITUDE_BANDS:[SCVLatitudeBandStat];
   TIME_SERIES:[SCVTimeSeriesPoint];
   HISTOGRAMS:[SCVHistogramBin];
-  HEATMAP:[SCVHeatmapCell];
   CONTRIBUTIONS:[SCVSensorContribution];
   GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
   MESSAGE:string;
   AGGREGATE_STATISTICS:SCVAggregateStatistics;
 }
@@ -421,6 +464,7 @@ table SCV {
   CANCEL:SCVCancel;
   RESULT:SCVResult;
   GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
 }
 
 root_type SCV;

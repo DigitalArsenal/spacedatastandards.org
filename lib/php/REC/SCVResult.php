@@ -194,28 +194,9 @@ class SCVResult extends Table
     /**
      * @returnVectorOffset
      */
-    public function getHEATMAP($j)
-    {
-        $o = $this->__offset(28);
-        $obj = new SCVHeatmapCell();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHEATMAPLength()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
     public function getCONTRIBUTIONS($j)
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(28);
         $obj = new SCVSensorContribution();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -225,13 +206,20 @@ class SCVResult extends Table
      */
     public function getCONTRIBUTIONSLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     public function getGEOMETRY()
     {
         $obj = new SCVPackedGeometryChunk();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getRASTER_PRODUCTS()
+    {
+        $obj = new SCVPackedRasterProducts();
         $o = $this->__offset(32);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
@@ -262,7 +250,7 @@ class SCVResult extends Table
      * @param FlatBufferBuilder $builder
      * @return SCVResult
      */
-    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $CELL_STATS, $INTERVALS, $LATITUDE_BANDS, $TIME_SERIES, $HISTOGRAMS, $HEATMAP, $CONTRIBUTIONS, $GEOMETRY, $MESSAGE, $AGGREGATE_STATISTICS)
+    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $CELL_STATS, $INTERVALS, $LATITUDE_BANDS, $TIME_SERIES, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS)
     {
         $builder->startObject(17);
         self::addJOB_ID($builder, $JOB_ID);
@@ -277,9 +265,9 @@ class SCVResult extends Table
         self::addLATITUDE_BANDS($builder, $LATITUDE_BANDS);
         self::addTIME_SERIES($builder, $TIME_SERIES);
         self::addHISTOGRAMS($builder, $HISTOGRAMS);
-        self::addHEATMAP($builder, $HEATMAP);
         self::addCONTRIBUTIONS($builder, $CONTRIBUTIONS);
         self::addGEOMETRY($builder, $GEOMETRY);
+        self::addRASTER_PRODUCTS($builder, $RASTER_PRODUCTS);
         self::addMESSAGE($builder, $MESSAGE);
         self::addAGGREGATE_STATISTICS($builder, $AGGREGATE_STATISTICS);
         $o = $builder->endObject();
@@ -531,43 +519,9 @@ class SCVResult extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addHEATMAP(FlatBufferBuilder $builder, $HEATMAP)
-    {
-        $builder->addOffsetX(12, $HEATMAP, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createHEATMAPVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startHEATMAPVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addCONTRIBUTIONS(FlatBufferBuilder $builder, $CONTRIBUTIONS)
     {
-        $builder->addOffsetX(13, $CONTRIBUTIONS, 0);
+        $builder->addOffsetX(12, $CONTRIBUTIONS, 0);
     }
 
     /**
@@ -601,7 +555,17 @@ class SCVResult extends Table
      */
     public static function addGEOMETRY(FlatBufferBuilder $builder, $GEOMETRY)
     {
-        $builder->addOffsetX(14, $GEOMETRY, 0);
+        $builder->addOffsetX(13, $GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRASTER_PRODUCTS(FlatBufferBuilder $builder, $RASTER_PRODUCTS)
+    {
+        $builder->addOffsetX(14, $RASTER_PRODUCTS, 0);
     }
 
     /**

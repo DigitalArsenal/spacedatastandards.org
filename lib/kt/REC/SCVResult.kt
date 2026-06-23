@@ -140,22 +140,9 @@ class SCVResult : Table() {
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    fun heatmap(j: Int) : SCVHeatmapCell? = heatmap(SCVHeatmapCell(), j)
-    fun heatmap(obj: SCVHeatmapCell, j: Int) : SCVHeatmapCell? {
-        val o = __offset(28)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val heatmapLength : Int
-        get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
-        }
     fun contributions(j: Int) : SCVSensorContribution? = contributions(SCVSensorContribution(), j)
     fun contributions(obj: SCVSensorContribution, j: Int) : SCVSensorContribution? {
-        val o = __offset(30)
+        val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -164,10 +151,19 @@ class SCVResult : Table() {
     }
     val contributionsLength : Int
         get() {
-            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
     val geometry : SCVPackedGeometryChunk? get() = geometry(SCVPackedGeometryChunk())
     fun geometry(obj: SCVPackedGeometryChunk) : SCVPackedGeometryChunk? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val rasterProducts : SCVPackedRasterProducts? get() = rasterProducts(SCVPackedRasterProducts())
+    fun rasterProducts(obj: SCVPackedRasterProducts) : SCVPackedRasterProducts? {
         val o = __offset(32)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -202,14 +198,14 @@ class SCVResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, cellStatsOffset: Int, intervalsOffset: Int, latitudeBandsOffset: Int, timeSeriesOffset: Int, histogramsOffset: Int, heatmapOffset: Int, contributionsOffset: Int, geometryOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
+        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, cellStatsOffset: Int, intervalsOffset: Int, latitudeBandsOffset: Int, timeSeriesOffset: Int, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
             builder.startTable(17)
             addTRACEID(builder, traceId)
             addAGGREGATESTATISTICS(builder, aggregateStatisticsOffset)
             addMESSAGE(builder, messageOffset)
+            addRASTERPRODUCTS(builder, rasterProductsOffset)
             addGEOMETRY(builder, geometryOffset)
             addCONTRIBUTIONS(builder, contributionsOffset)
-            addHEATMAP(builder, heatmapOffset)
             addHISTOGRAMS(builder, histogramsOffset)
             addTIMESERIES(builder, timeSeriesOffset)
             addLATITUDEBANDS(builder, latitudeBandsOffset)
@@ -276,16 +272,7 @@ class SCVResult : Table() {
             return builder.endVector()
         }
         fun startHistogramsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addHEATMAP(builder: FlatBufferBuilder, heatmap: Int) = builder.addOffset(12, heatmap, 0)
-        fun createHeatmapVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startHeatmapVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCONTRIBUTIONS(builder: FlatBufferBuilder, contributions: Int) = builder.addOffset(13, contributions, 0)
+        fun addCONTRIBUTIONS(builder: FlatBufferBuilder, contributions: Int) = builder.addOffset(12, contributions, 0)
         fun createContributionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -294,7 +281,8 @@ class SCVResult : Table() {
             return builder.endVector()
         }
         fun startContributionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(14, geometry, 0)
+        fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(13, geometry, 0)
+        fun addRASTERPRODUCTS(builder: FlatBufferBuilder, rasterProducts: Int) = builder.addOffset(14, rasterProducts, 0)
         fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(15, message, 0)
         fun addAGGREGATESTATISTICS(builder: FlatBufferBuilder, aggregateStatistics: Int) = builder.addOffset(16, aggregateStatistics, 0)
         fun endSCVResult(builder: FlatBufferBuilder) : Int {

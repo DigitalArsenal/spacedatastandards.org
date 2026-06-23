@@ -82,6 +82,26 @@ enum scvGeometryEncoding:
     scvGeometryEncoding_QUANTIZED_UINT16 = 2
     scvGeometryEncoding_SHARED_MEMORY_OFFSET = 3
 
+enum scvRasterProductKind:
+    scvRasterProductKind_CELL_BOUNDS_DEG = 0
+    scvRasterProductKind_CELL_CENTERS_DEG = 1
+    scvRasterProductKind_PERCENT_COVERAGE = 2
+    scvRasterProductKind_PASS_COUNT = 3
+    scvRasterProductKind_CONTACT_DURATION_SECONDS = 4
+    scvRasterProductKind_REVISIT_SECONDS = 5
+    scvRasterProductKind_GAP_SECONDS = 6
+    scvRasterProductKind_REDUNDANCY = 7
+    scvRasterProductKind_CURRENT_ACCESS_BITSET = 8
+    scvRasterProductKind_BUCKET_START_SECONDS = 9
+    scvRasterProductKind_BUCKET_STOP_SECONDS = 10
+    scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT = 11
+
+enum scvRasterProductEncoding:
+    scvRasterProductEncoding_FLOAT32 = 0
+    scvRasterProductEncoding_FLOAT64 = 1
+    scvRasterProductEncoding_UINT32 = 2
+    scvRasterProductEncoding_BITSET_UINT32 = 3
+
 class SCVVec3
 
 class SCVEllipsoid
@@ -118,13 +138,15 @@ class SCVTimeSeriesPoint
 
 class SCVHistogramBin
 
-class SCVHeatmapCell
-
 class SCVSwathSegment
 
 class SCVMemoryRegion
 
 class SCVPackedGeometryChunk
+
+class SCVPackedRasterBand
+
+class SCVPackedRasterProducts
 
 class SCVAggregateStatistics
 
@@ -1243,43 +1265,6 @@ struct SCVHistogramBinBuilder:
     def end():
         return b_.EndObject()
 
-class SCVHeatmapCell : flatbuffers.handle
-    def METRIC_KIND() -> scvMetricSeriesKind:
-        return scvMetricSeriesKind(flatbuffers.field_uint16(buf_, pos_, 4, 0))
-    def X_INDEX() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
-    def Y_INDEX() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
-    def VALUE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    def SENSOR_COUNT() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
-
-def GetRootAsSCVHeatmapCell(buf:string): return SCVHeatmapCell { buf, flatbuffers.indirect(buf, 0) }
-
-struct SCVHeatmapCellBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(5)
-        return this
-    def add_METRIC_KIND(METRIC_KIND:scvMetricSeriesKind):
-        b_.PrependUint16Slot(0, METRIC_KIND, 0)
-        return this
-    def add_X_INDEX(X_INDEX:int):
-        b_.PrependUint32Slot(1, X_INDEX, 0)
-        return this
-    def add_Y_INDEX(Y_INDEX:int):
-        b_.PrependUint32Slot(2, Y_INDEX, 0)
-        return this
-    def add_VALUE(VALUE:float):
-        b_.PrependFloat64Slot(3, VALUE, 0.0)
-        return this
-    def add_SENSOR_COUNT(SENSOR_COUNT:int):
-        b_.PrependUint32Slot(4, SENSOR_COUNT, 0)
-        return this
-    def end():
-        return b_.EndObject()
-
 class SCVSwathSegment : flatbuffers.handle
     def SEGMENT_ID() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 4, 0)
@@ -1656,6 +1641,192 @@ def SCVPackedGeometryChunkCreateSEGMENTSVector(b_:flatbuffers.builder, v_:[flatb
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+class SCVPackedRasterBand : flatbuffers.handle
+    def PRODUCT_KIND() -> scvRasterProductKind:
+        return scvRasterProductKind(flatbuffers.field_uint16(buf_, pos_, 4, 0))
+    def METRIC_KIND() -> scvMetricSeriesKind:
+        return scvMetricSeriesKind(flatbuffers.field_uint16(buf_, pos_, 6, 0))
+    def ENCODING() -> scvRasterProductEncoding:
+        return scvRasterProductEncoding(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    def COMPONENTS_PER_CELL() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    def CELL_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    def BUCKET_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 14, 0)
+    def WORDS_PER_BUCKET() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    def MEMORY_REGION_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    def MEMORY_RECORD_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 20, 0)
+    def FLOAT32_VALUES(i:int) -> float:
+        return read_float32_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 4)
+    def FLOAT32_VALUES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    def FLOAT64_VALUES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def FLOAT64_VALUES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    def UINT32_VALUES(i:int) -> int:
+        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
+    def UINT32_VALUES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+
+def GetRootAsSCVPackedRasterBand(buf:string): return SCVPackedRasterBand { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVPackedRasterBandBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(12)
+        return this
+    def add_PRODUCT_KIND(PRODUCT_KIND:scvRasterProductKind):
+        b_.PrependUint16Slot(0, PRODUCT_KIND, 0)
+        return this
+    def add_METRIC_KIND(METRIC_KIND:scvMetricSeriesKind):
+        b_.PrependUint16Slot(1, METRIC_KIND, 0)
+        return this
+    def add_ENCODING(ENCODING:scvRasterProductEncoding):
+        b_.PrependUint8Slot(2, ENCODING, 0)
+        return this
+    def add_COMPONENTS_PER_CELL(COMPONENTS_PER_CELL:int):
+        b_.PrependUint32Slot(3, COMPONENTS_PER_CELL, 0)
+        return this
+    def add_CELL_COUNT(CELL_COUNT:int):
+        b_.PrependUint32Slot(4, CELL_COUNT, 0)
+        return this
+    def add_BUCKET_COUNT(BUCKET_COUNT:int):
+        b_.PrependUint32Slot(5, BUCKET_COUNT, 0)
+        return this
+    def add_WORDS_PER_BUCKET(WORDS_PER_BUCKET:int):
+        b_.PrependUint32Slot(6, WORDS_PER_BUCKET, 0)
+        return this
+    def add_MEMORY_REGION_ID(MEMORY_REGION_ID:int):
+        b_.PrependUint32Slot(7, MEMORY_REGION_ID, 0)
+        return this
+    def add_MEMORY_RECORD_INDEX(MEMORY_RECORD_INDEX:int):
+        b_.PrependUint32Slot(8, MEMORY_RECORD_INDEX, 0)
+        return this
+    def add_FLOAT32_VALUES(FLOAT32_VALUES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, FLOAT32_VALUES)
+        return this
+    def add_FLOAT64_VALUES(FLOAT64_VALUES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, FLOAT64_VALUES)
+        return this
+    def add_UINT32_VALUES(UINT32_VALUES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, UINT32_VALUES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCVPackedRasterBandStartFLOAT32VALUESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVPackedRasterBandCreateFLOAT32VALUESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependFloat32(e_)
+    return b_.EndVector(v_.length)
+
+def SCVPackedRasterBandStartFLOAT64VALUESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def SCVPackedRasterBandCreateFLOAT64VALUESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def SCVPackedRasterBandStartUINT32VALUESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVPackedRasterBandCreateUINT32VALUESVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUint32(e_)
+    return b_.EndVector(v_.length)
+
+class SCVPackedRasterProducts : flatbuffers.handle
+    def JOB_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def TRACE_ID() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 6, 0)
+    def GRID() -> SCVCoverageGrid?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: SCVCoverageGrid { buf_, o } else: nil
+    def TIME_GRID() -> SCVTimeGrid?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: SCVTimeGrid { buf_, o } else: nil
+    def ROWS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    def COLUMNS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 14, 0)
+    def CELL_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    def BUCKET_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+    def WORDS_PER_BUCKET() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 20, 0)
+    def MEMORY_REGIONS(i:int) -> SCVMemoryRegion:
+        return SCVMemoryRegion { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+    def MEMORY_REGIONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    def BANDS(i:int) -> SCVPackedRasterBand:
+        return SCVPackedRasterBand { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def BANDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+
+def GetRootAsSCVPackedRasterProducts(buf:string): return SCVPackedRasterProducts { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVPackedRasterProductsBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_JOB_ID(JOB_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, JOB_ID)
+        return this
+    def add_TRACE_ID(TRACE_ID:int):
+        b_.PrependUint64Slot(1, TRACE_ID, 0)
+        return this
+    def add_GRID(GRID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, GRID)
+        return this
+    def add_TIME_GRID(TIME_GRID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, TIME_GRID)
+        return this
+    def add_ROWS(ROWS:int):
+        b_.PrependUint32Slot(4, ROWS, 0)
+        return this
+    def add_COLUMNS(COLUMNS:int):
+        b_.PrependUint32Slot(5, COLUMNS, 0)
+        return this
+    def add_CELL_COUNT(CELL_COUNT:int):
+        b_.PrependUint32Slot(6, CELL_COUNT, 0)
+        return this
+    def add_BUCKET_COUNT(BUCKET_COUNT:int):
+        b_.PrependUint32Slot(7, BUCKET_COUNT, 0)
+        return this
+    def add_WORDS_PER_BUCKET(WORDS_PER_BUCKET:int):
+        b_.PrependUint32Slot(8, WORDS_PER_BUCKET, 0)
+        return this
+    def add_MEMORY_REGIONS(MEMORY_REGIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, MEMORY_REGIONS)
+        return this
+    def add_BANDS(BANDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, BANDS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCVPackedRasterProductsStartMEMORYREGIONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVPackedRasterProductsCreateMEMORYREGIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCVPackedRasterProductsStartBANDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVPackedRasterProductsCreateBANDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 class SCVAggregateStatistics : flatbuffers.handle
     def TOTAL_CELLS() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 4, 0)
@@ -1780,17 +1951,16 @@ class SCVResult : flatbuffers.handle
         return SCVHistogramBin { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 26) + i * 4) }
     def HISTOGRAMS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 26)
-    def HEATMAP(i:int) -> SCVHeatmapCell:
-        return SCVHeatmapCell { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
-    def HEATMAP_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 28)
     def CONTRIBUTIONS(i:int) -> SCVSensorContribution:
-        return SCVSensorContribution { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+        return SCVSensorContribution { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 28) + i * 4) }
     def CONTRIBUTIONS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 30)
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
     def GEOMETRY() -> SCVPackedGeometryChunk?:
-        let o = flatbuffers.field_table(buf_, pos_, 32)
+        let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: SCVPackedGeometryChunk { buf_, o } else: nil
+    def RASTER_PRODUCTS() -> SCVPackedRasterProducts?:
+        let o = flatbuffers.field_table(buf_, pos_, 32)
+        return if o: SCVPackedRasterProducts { buf_, o } else: nil
     def MESSAGE() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
     def AGGREGATE_STATISTICS() -> SCVAggregateStatistics?:
@@ -1840,14 +2010,14 @@ struct SCVResultBuilder:
     def add_HISTOGRAMS(HISTOGRAMS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(11, HISTOGRAMS)
         return this
-    def add_HEATMAP(HEATMAP:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, HEATMAP)
-        return this
     def add_CONTRIBUTIONS(CONTRIBUTIONS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, CONTRIBUTIONS)
+        b_.PrependUOffsetTRelativeSlot(12, CONTRIBUTIONS)
         return this
     def add_GEOMETRY(GEOMETRY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(14, GEOMETRY)
+        b_.PrependUOffsetTRelativeSlot(13, GEOMETRY)
+        return this
+    def add_RASTER_PRODUCTS(RASTER_PRODUCTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, RASTER_PRODUCTS)
         return this
     def add_MESSAGE(MESSAGE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, MESSAGE)
@@ -1893,13 +2063,6 @@ def SCVResultCreateHISTOGRAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-def SCVResultStartHEATMAPVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def SCVResultCreateHEATMAPVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
-    return b_.EndVector(v_.length)
-
 def SCVResultStartCONTRIBUTIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def SCVResultCreateCONTRIBUTIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
@@ -1925,13 +2088,16 @@ class SCV : flatbuffers.handle
     def GEOMETRY() -> SCVPackedGeometryChunk?:
         let o = flatbuffers.field_table(buf_, pos_, 14)
         return if o: SCVPackedGeometryChunk { buf_, o } else: nil
+    def RASTER_PRODUCTS() -> SCVPackedRasterProducts?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: SCVPackedRasterProducts { buf_, o } else: nil
 
 def GetRootAsSCV(buf:string): return SCV { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(7)
         return this
     def add_ENVELOPE_KIND(ENVELOPE_KIND:scvEnvelopeKind):
         b_.PrependUint8Slot(0, ENVELOPE_KIND, 0)
@@ -1950,6 +2116,9 @@ struct SCVBuilder:
         return this
     def add_GEOMETRY(GEOMETRY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, GEOMETRY)
+        return this
+    def add_RASTER_PRODUCTS(RASTER_PRODUCTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, RASTER_PRODUCTS)
         return this
     def end():
         return b_.EndObject()

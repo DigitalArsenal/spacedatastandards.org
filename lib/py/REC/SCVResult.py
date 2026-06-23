@@ -211,33 +211,8 @@ class SCVResult(object):
         return o == 0
 
     # SCVResult
-    def HEATMAP(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVHeatmapCell import SCVHeatmapCell
-            obj = SCVHeatmapCell()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def HEATMAPLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def HEATMAPIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        return o == 0
-
-    # SCVResult
     def CONTRIBUTIONS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -250,23 +225,34 @@ class SCVResult(object):
 
     # SCVResult
     def CONTRIBUTIONSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCVResult
     def CONTRIBUTIONSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
     # SCVResult
     def GEOMETRY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVPackedGeometryChunk import SCVPackedGeometryChunk
             obj = SCVPackedGeometryChunk()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SCVResult
+    def RASTER_PRODUCTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVPackedRasterProducts import SCVPackedRasterProducts
+            obj = SCVPackedRasterProducts()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -427,26 +413,8 @@ def SCVResultCreateHISTOGRAMSVector(builder, data):
 def CreateHISTOGRAMSVector(builder, data):
     SCVResultCreateHISTOGRAMSVector(builder, data)
 
-def SCVResultAddHEATMAP(builder, HEATMAP):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(HEATMAP), 0)
-
-def AddHEATMAP(builder, HEATMAP):
-    SCVResultAddHEATMAP(builder, HEATMAP)
-
-def SCVResultStartHEATMAPVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartHEATMAPVector(builder, numElems):
-    return SCVResultStartHEATMAPVector(builder, numElems)
-
-def SCVResultCreateHEATMAPVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateHEATMAPVector(builder, data):
-    SCVResultCreateHEATMAPVector(builder, data)
-
 def SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
 
 def AddCONTRIBUTIONS(builder, CONTRIBUTIONS):
     SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
@@ -464,10 +432,16 @@ def CreateCONTRIBUTIONSVector(builder, data):
     SCVResultCreateCONTRIBUTIONSVector(builder, data)
 
 def SCVResultAddGEOMETRY(builder, GEOMETRY):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
 
 def AddGEOMETRY(builder, GEOMETRY):
     SCVResultAddGEOMETRY(builder, GEOMETRY)
+
+def SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RASTER_PRODUCTS), 0)
+
+def AddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
 
 def SCVResultAddMESSAGE(builder, MESSAGE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE), 0)
@@ -490,11 +464,11 @@ def End(builder):
 import SCVAggregateStatistics
 import SCVCellStat
 import SCVEllipsoid
-import SCVHeatmapCell
 import SCVHistogramBin
 import SCVInterval
 import SCVLatitudeBandStat
 import SCVPackedGeometryChunk
+import SCVPackedRasterProducts
 import SCVSensorContribution
 import SCVTimeGrid
 import SCVTimeSeriesPoint
@@ -520,9 +494,9 @@ class SCVResultT(object):
         LATITUDE_BANDS = None,
         TIME_SERIES = None,
         HISTOGRAMS = None,
-        HEATMAP = None,
         CONTRIBUTIONS = None,
         GEOMETRY = None,
+        RASTER_PRODUCTS = None,
         MESSAGE = None,
         AGGREGATE_STATISTICS = None,
     ):
@@ -538,9 +512,9 @@ class SCVResultT(object):
         self.LATITUDE_BANDS = LATITUDE_BANDS  # type: Optional[List[SCVLatitudeBandStat.SCVLatitudeBandStatT]]
         self.TIME_SERIES = TIME_SERIES  # type: Optional[List[SCVTimeSeriesPoint.SCVTimeSeriesPointT]]
         self.HISTOGRAMS = HISTOGRAMS  # type: Optional[List[SCVHistogramBin.SCVHistogramBinT]]
-        self.HEATMAP = HEATMAP  # type: Optional[List[SCVHeatmapCell.SCVHeatmapCellT]]
         self.CONTRIBUTIONS = CONTRIBUTIONS  # type: Optional[List[SCVSensorContribution.SCVSensorContributionT]]
         self.GEOMETRY = GEOMETRY  # type: Optional[SCVPackedGeometryChunk.SCVPackedGeometryChunkT]
+        self.RASTER_PRODUCTS = RASTER_PRODUCTS  # type: Optional[SCVPackedRasterProducts.SCVPackedRasterProductsT]
         self.MESSAGE = MESSAGE  # type: Optional[str]
         self.AGGREGATE_STATISTICS = AGGREGATE_STATISTICS  # type: Optional[SCVAggregateStatistics.SCVAggregateStatisticsT]
 
@@ -614,14 +588,6 @@ class SCVResultT(object):
                 else:
                     sCVHistogramBin_ = SCVHistogramBin.SCVHistogramBinT.InitFromObj(SCVResult.HISTOGRAMS(i))
                     self.HISTOGRAMS.append(sCVHistogramBin_)
-        if not SCVResult.HEATMAPIsNone():
-            self.HEATMAP = []
-            for i in range(SCVResult.HEATMAPLength()):
-                if SCVResult.HEATMAP(i) is None:
-                    self.HEATMAP.append(None)
-                else:
-                    sCVHeatmapCell_ = SCVHeatmapCell.SCVHeatmapCellT.InitFromObj(SCVResult.HEATMAP(i))
-                    self.HEATMAP.append(sCVHeatmapCell_)
         if not SCVResult.CONTRIBUTIONSIsNone():
             self.CONTRIBUTIONS = []
             for i in range(SCVResult.CONTRIBUTIONSLength()):
@@ -632,6 +598,8 @@ class SCVResultT(object):
                     self.CONTRIBUTIONS.append(sCVSensorContribution_)
         if SCVResult.GEOMETRY() is not None:
             self.GEOMETRY = SCVPackedGeometryChunk.SCVPackedGeometryChunkT.InitFromObj(SCVResult.GEOMETRY())
+        if SCVResult.RASTER_PRODUCTS() is not None:
+            self.RASTER_PRODUCTS = SCVPackedRasterProducts.SCVPackedRasterProductsT.InitFromObj(SCVResult.RASTER_PRODUCTS())
         self.MESSAGE = SCVResult.MESSAGE()
         if SCVResult.AGGREGATE_STATISTICS() is not None:
             self.AGGREGATE_STATISTICS = SCVAggregateStatistics.SCVAggregateStatisticsT.InitFromObj(SCVResult.AGGREGATE_STATISTICS())
@@ -684,14 +652,6 @@ class SCVResultT(object):
             for i in reversed(range(len(self.HISTOGRAMS))):
                 builder.PrependUOffsetTRelative(HISTOGRAMSlist[i])
             HISTOGRAMS = builder.EndVector()
-        if self.HEATMAP is not None:
-            HEATMAPlist = []
-            for i in range(len(self.HEATMAP)):
-                HEATMAPlist.append(self.HEATMAP[i].Pack(builder))
-            SCVResultStartHEATMAPVector(builder, len(self.HEATMAP))
-            for i in reversed(range(len(self.HEATMAP))):
-                builder.PrependUOffsetTRelative(HEATMAPlist[i])
-            HEATMAP = builder.EndVector()
         if self.CONTRIBUTIONS is not None:
             CONTRIBUTIONSlist = []
             for i in range(len(self.CONTRIBUTIONS)):
@@ -702,6 +662,8 @@ class SCVResultT(object):
             CONTRIBUTIONS = builder.EndVector()
         if self.GEOMETRY is not None:
             GEOMETRY = self.GEOMETRY.Pack(builder)
+        if self.RASTER_PRODUCTS is not None:
+            RASTER_PRODUCTS = self.RASTER_PRODUCTS.Pack(builder)
         if self.MESSAGE is not None:
             MESSAGE = builder.CreateString(self.MESSAGE)
         if self.AGGREGATE_STATISTICS is not None:
@@ -727,12 +689,12 @@ class SCVResultT(object):
             SCVResultAddTIME_SERIES(builder, TIME_SERIES)
         if self.HISTOGRAMS is not None:
             SCVResultAddHISTOGRAMS(builder, HISTOGRAMS)
-        if self.HEATMAP is not None:
-            SCVResultAddHEATMAP(builder, HEATMAP)
         if self.CONTRIBUTIONS is not None:
             SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
         if self.GEOMETRY is not None:
             SCVResultAddGEOMETRY(builder, GEOMETRY)
+        if self.RASTER_PRODUCTS is not None:
+            SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
         if self.MESSAGE is not None:
             SCVResultAddMESSAGE(builder, MESSAGE)
         if self.AGGREGATE_STATISTICS is not None:

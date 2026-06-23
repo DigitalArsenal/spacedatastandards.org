@@ -67,9 +67,6 @@ struct SCVTimeSeriesPointBuilder;
 struct SCVHistogramBin;
 struct SCVHistogramBinBuilder;
 
-struct SCVHeatmapCell;
-struct SCVHeatmapCellBuilder;
-
 struct SCVSwathSegment;
 struct SCVSwathSegmentBuilder;
 
@@ -78,6 +75,12 @@ struct SCVMemoryRegionBuilder;
 
 struct SCVPackedGeometryChunk;
 struct SCVPackedGeometryChunkBuilder;
+
+struct SCVPackedRasterBand;
+struct SCVPackedRasterBandBuilder;
+
+struct SCVPackedRasterProducts;
+struct SCVPackedRasterProductsBuilder;
 
 struct SCVAggregateStatistics;
 struct SCVAggregateStatisticsBuilder;
@@ -539,6 +542,102 @@ inline const char *EnumNamescvGeometryEncoding(scvGeometryEncoding e) {
   if (::flatbuffers::IsOutRange(e, scvGeometryEncoding_FLAT_FLOAT32, scvGeometryEncoding_SHARED_MEMORY_OFFSET)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvGeometryEncoding()[index];
+}
+
+enum scvRasterProductKind : uint16_t {
+  scvRasterProductKind_CELL_BOUNDS_DEG = 0,
+  scvRasterProductKind_CELL_CENTERS_DEG = 1,
+  scvRasterProductKind_PERCENT_COVERAGE = 2,
+  scvRasterProductKind_PASS_COUNT = 3,
+  scvRasterProductKind_CONTACT_DURATION_SECONDS = 4,
+  scvRasterProductKind_REVISIT_SECONDS = 5,
+  scvRasterProductKind_GAP_SECONDS = 6,
+  scvRasterProductKind_REDUNDANCY = 7,
+  scvRasterProductKind_CURRENT_ACCESS_BITSET = 8,
+  scvRasterProductKind_BUCKET_START_SECONDS = 9,
+  scvRasterProductKind_BUCKET_STOP_SECONDS = 10,
+  scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT = 11,
+  scvRasterProductKind_MIN = scvRasterProductKind_CELL_BOUNDS_DEG,
+  scvRasterProductKind_MAX = scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT
+};
+
+inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[12] {
+  static const scvRasterProductKind values[] = {
+    scvRasterProductKind_CELL_BOUNDS_DEG,
+    scvRasterProductKind_CELL_CENTERS_DEG,
+    scvRasterProductKind_PERCENT_COVERAGE,
+    scvRasterProductKind_PASS_COUNT,
+    scvRasterProductKind_CONTACT_DURATION_SECONDS,
+    scvRasterProductKind_REVISIT_SECONDS,
+    scvRasterProductKind_GAP_SECONDS,
+    scvRasterProductKind_REDUNDANCY,
+    scvRasterProductKind_CURRENT_ACCESS_BITSET,
+    scvRasterProductKind_BUCKET_START_SECONDS,
+    scvRasterProductKind_BUCKET_STOP_SECONDS,
+    scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvRasterProductKind() {
+  static const char * const names[13] = {
+    "CELL_BOUNDS_DEG",
+    "CELL_CENTERS_DEG",
+    "PERCENT_COVERAGE",
+    "PASS_COUNT",
+    "CONTACT_DURATION_SECONDS",
+    "REVISIT_SECONDS",
+    "GAP_SECONDS",
+    "REDUNDANCY",
+    "CURRENT_ACCESS_BITSET",
+    "BUCKET_START_SECONDS",
+    "BUCKET_STOP_SECONDS",
+    "BUCKET_ACTIVE_CELL_COUNT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvRasterProductKind(scvRasterProductKind e) {
+  if (::flatbuffers::IsOutRange(e, scvRasterProductKind_CELL_BOUNDS_DEG, scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvRasterProductKind()[index];
+}
+
+enum scvRasterProductEncoding : uint8_t {
+  scvRasterProductEncoding_FLOAT32 = 0,
+  scvRasterProductEncoding_FLOAT64 = 1,
+  scvRasterProductEncoding_UINT32 = 2,
+  scvRasterProductEncoding_BITSET_UINT32 = 3,
+  scvRasterProductEncoding_MIN = scvRasterProductEncoding_FLOAT32,
+  scvRasterProductEncoding_MAX = scvRasterProductEncoding_BITSET_UINT32
+};
+
+inline const scvRasterProductEncoding (&EnumValuesscvRasterProductEncoding())[4] {
+  static const scvRasterProductEncoding values[] = {
+    scvRasterProductEncoding_FLOAT32,
+    scvRasterProductEncoding_FLOAT64,
+    scvRasterProductEncoding_UINT32,
+    scvRasterProductEncoding_BITSET_UINT32
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvRasterProductEncoding() {
+  static const char * const names[5] = {
+    "FLOAT32",
+    "FLOAT64",
+    "UINT32",
+    "BITSET_UINT32",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvRasterProductEncoding(scvRasterProductEncoding e) {
+  if (::flatbuffers::IsOutRange(e, scvRasterProductEncoding_FLOAT32, scvRasterProductEncoding_BITSET_UINT32)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvRasterProductEncoding()[index];
 }
 
 struct SCVVec3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -3057,88 +3156,6 @@ inline ::flatbuffers::Offset<SCVHistogramBin> CreateSCVHistogramBin(
   return builder_.Finish();
 }
 
-struct SCVHeatmapCell FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef SCVHeatmapCellBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_METRIC_KIND = 4,
-    VT_X_INDEX = 6,
-    VT_Y_INDEX = 8,
-    VT_VALUE = 10,
-    VT_SENSOR_COUNT = 12
-  };
-  scvMetricSeriesKind METRIC_KIND() const {
-    return static_cast<scvMetricSeriesKind>(GetField<uint16_t>(VT_METRIC_KIND, 0));
-  }
-  uint32_t X_INDEX() const {
-    return GetField<uint32_t>(VT_X_INDEX, 0);
-  }
-  uint32_t Y_INDEX() const {
-    return GetField<uint32_t>(VT_Y_INDEX, 0);
-  }
-  double VALUE() const {
-    return GetField<double>(VT_VALUE, 0.0);
-  }
-  uint32_t SENSOR_COUNT() const {
-    return GetField<uint32_t>(VT_SENSOR_COUNT, 0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint16_t>(verifier, VT_METRIC_KIND, 2) &&
-           VerifyField<uint32_t>(verifier, VT_X_INDEX, 4) &&
-           VerifyField<uint32_t>(verifier, VT_Y_INDEX, 4) &&
-           VerifyField<double>(verifier, VT_VALUE, 8) &&
-           VerifyField<uint32_t>(verifier, VT_SENSOR_COUNT, 4) &&
-           verifier.EndTable();
-  }
-};
-
-struct SCVHeatmapCellBuilder {
-  typedef SCVHeatmapCell Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_METRIC_KIND(scvMetricSeriesKind METRIC_KIND) {
-    fbb_.AddElement<uint16_t>(SCVHeatmapCell::VT_METRIC_KIND, static_cast<uint16_t>(METRIC_KIND), 0);
-  }
-  void add_X_INDEX(uint32_t X_INDEX) {
-    fbb_.AddElement<uint32_t>(SCVHeatmapCell::VT_X_INDEX, X_INDEX, 0);
-  }
-  void add_Y_INDEX(uint32_t Y_INDEX) {
-    fbb_.AddElement<uint32_t>(SCVHeatmapCell::VT_Y_INDEX, Y_INDEX, 0);
-  }
-  void add_VALUE(double VALUE) {
-    fbb_.AddElement<double>(SCVHeatmapCell::VT_VALUE, VALUE, 0.0);
-  }
-  void add_SENSOR_COUNT(uint32_t SENSOR_COUNT) {
-    fbb_.AddElement<uint32_t>(SCVHeatmapCell::VT_SENSOR_COUNT, SENSOR_COUNT, 0);
-  }
-  explicit SCVHeatmapCellBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<SCVHeatmapCell> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<SCVHeatmapCell>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<SCVHeatmapCell> CreateSCVHeatmapCell(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    scvMetricSeriesKind METRIC_KIND = scvMetricSeriesKind_PERCENT_COVERED,
-    uint32_t X_INDEX = 0,
-    uint32_t Y_INDEX = 0,
-    double VALUE = 0.0,
-    uint32_t SENSOR_COUNT = 0) {
-  SCVHeatmapCellBuilder builder_(_fbb);
-  builder_.add_VALUE(VALUE);
-  builder_.add_SENSOR_COUNT(SENSOR_COUNT);
-  builder_.add_Y_INDEX(Y_INDEX);
-  builder_.add_X_INDEX(X_INDEX);
-  builder_.add_METRIC_KIND(METRIC_KIND);
-  return builder_.Finish();
-}
-
 struct SCVSwathSegment FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVSwathSegmentBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -3879,6 +3896,374 @@ inline ::flatbuffers::Offset<SCVPackedGeometryChunk> CreateSCVPackedGeometryChun
       SEGMENTS__);
 }
 
+struct SCVPackedRasterBand FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCVPackedRasterBandBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PRODUCT_KIND = 4,
+    VT_METRIC_KIND = 6,
+    VT_ENCODING = 8,
+    VT_COMPONENTS_PER_CELL = 10,
+    VT_CELL_COUNT = 12,
+    VT_BUCKET_COUNT = 14,
+    VT_WORDS_PER_BUCKET = 16,
+    VT_MEMORY_REGION_ID = 18,
+    VT_MEMORY_RECORD_INDEX = 20,
+    VT_FLOAT32_VALUES = 22,
+    VT_FLOAT64_VALUES = 24,
+    VT_UINT32_VALUES = 26
+  };
+  scvRasterProductKind PRODUCT_KIND() const {
+    return static_cast<scvRasterProductKind>(GetField<uint16_t>(VT_PRODUCT_KIND, 0));
+  }
+  scvMetricSeriesKind METRIC_KIND() const {
+    return static_cast<scvMetricSeriesKind>(GetField<uint16_t>(VT_METRIC_KIND, 0));
+  }
+  scvRasterProductEncoding ENCODING() const {
+    return static_cast<scvRasterProductEncoding>(GetField<uint8_t>(VT_ENCODING, 0));
+  }
+  uint32_t COMPONENTS_PER_CELL() const {
+    return GetField<uint32_t>(VT_COMPONENTS_PER_CELL, 0);
+  }
+  uint32_t CELL_COUNT() const {
+    return GetField<uint32_t>(VT_CELL_COUNT, 0);
+  }
+  uint32_t BUCKET_COUNT() const {
+    return GetField<uint32_t>(VT_BUCKET_COUNT, 0);
+  }
+  uint32_t WORDS_PER_BUCKET() const {
+    return GetField<uint32_t>(VT_WORDS_PER_BUCKET, 0);
+  }
+  uint32_t MEMORY_REGION_ID() const {
+    return GetField<uint32_t>(VT_MEMORY_REGION_ID, 0);
+  }
+  uint32_t MEMORY_RECORD_INDEX() const {
+    return GetField<uint32_t>(VT_MEMORY_RECORD_INDEX, 0);
+  }
+  const ::flatbuffers::Vector<float> *FLOAT32_VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<float> *>(VT_FLOAT32_VALUES);
+  }
+  const ::flatbuffers::Vector<double> *FLOAT64_VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_FLOAT64_VALUES);
+  }
+  const ::flatbuffers::Vector<uint32_t> *UINT32_VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_UINT32_VALUES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint16_t>(verifier, VT_PRODUCT_KIND, 2) &&
+           VerifyField<uint16_t>(verifier, VT_METRIC_KIND, 2) &&
+           VerifyField<uint8_t>(verifier, VT_ENCODING, 1) &&
+           VerifyField<uint32_t>(verifier, VT_COMPONENTS_PER_CELL, 4) &&
+           VerifyField<uint32_t>(verifier, VT_CELL_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_BUCKET_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_WORDS_PER_BUCKET, 4) &&
+           VerifyField<uint32_t>(verifier, VT_MEMORY_REGION_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_MEMORY_RECORD_INDEX, 4) &&
+           VerifyOffset(verifier, VT_FLOAT32_VALUES) &&
+           verifier.VerifyVector(FLOAT32_VALUES()) &&
+           VerifyOffset(verifier, VT_FLOAT64_VALUES) &&
+           verifier.VerifyVector(FLOAT64_VALUES()) &&
+           VerifyOffset(verifier, VT_UINT32_VALUES) &&
+           verifier.VerifyVector(UINT32_VALUES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCVPackedRasterBandBuilder {
+  typedef SCVPackedRasterBand Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_PRODUCT_KIND(scvRasterProductKind PRODUCT_KIND) {
+    fbb_.AddElement<uint16_t>(SCVPackedRasterBand::VT_PRODUCT_KIND, static_cast<uint16_t>(PRODUCT_KIND), 0);
+  }
+  void add_METRIC_KIND(scvMetricSeriesKind METRIC_KIND) {
+    fbb_.AddElement<uint16_t>(SCVPackedRasterBand::VT_METRIC_KIND, static_cast<uint16_t>(METRIC_KIND), 0);
+  }
+  void add_ENCODING(scvRasterProductEncoding ENCODING) {
+    fbb_.AddElement<uint8_t>(SCVPackedRasterBand::VT_ENCODING, static_cast<uint8_t>(ENCODING), 0);
+  }
+  void add_COMPONENTS_PER_CELL(uint32_t COMPONENTS_PER_CELL) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_COMPONENTS_PER_CELL, COMPONENTS_PER_CELL, 0);
+  }
+  void add_CELL_COUNT(uint32_t CELL_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_CELL_COUNT, CELL_COUNT, 0);
+  }
+  void add_BUCKET_COUNT(uint32_t BUCKET_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_BUCKET_COUNT, BUCKET_COUNT, 0);
+  }
+  void add_WORDS_PER_BUCKET(uint32_t WORDS_PER_BUCKET) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_WORDS_PER_BUCKET, WORDS_PER_BUCKET, 0);
+  }
+  void add_MEMORY_REGION_ID(uint32_t MEMORY_REGION_ID) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_MEMORY_REGION_ID, MEMORY_REGION_ID, 0);
+  }
+  void add_MEMORY_RECORD_INDEX(uint32_t MEMORY_RECORD_INDEX) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterBand::VT_MEMORY_RECORD_INDEX, MEMORY_RECORD_INDEX, 0);
+  }
+  void add_FLOAT32_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<float>> FLOAT32_VALUES) {
+    fbb_.AddOffset(SCVPackedRasterBand::VT_FLOAT32_VALUES, FLOAT32_VALUES);
+  }
+  void add_FLOAT64_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<double>> FLOAT64_VALUES) {
+    fbb_.AddOffset(SCVPackedRasterBand::VT_FLOAT64_VALUES, FLOAT64_VALUES);
+  }
+  void add_UINT32_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> UINT32_VALUES) {
+    fbb_.AddOffset(SCVPackedRasterBand::VT_UINT32_VALUES, UINT32_VALUES);
+  }
+  explicit SCVPackedRasterBandBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCVPackedRasterBand> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCVPackedRasterBand>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCVPackedRasterBand> CreateSCVPackedRasterBand(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    scvRasterProductKind PRODUCT_KIND = scvRasterProductKind_CELL_BOUNDS_DEG,
+    scvMetricSeriesKind METRIC_KIND = scvMetricSeriesKind_PERCENT_COVERED,
+    scvRasterProductEncoding ENCODING = scvRasterProductEncoding_FLOAT32,
+    uint32_t COMPONENTS_PER_CELL = 0,
+    uint32_t CELL_COUNT = 0,
+    uint32_t BUCKET_COUNT = 0,
+    uint32_t WORDS_PER_BUCKET = 0,
+    uint32_t MEMORY_REGION_ID = 0,
+    uint32_t MEMORY_RECORD_INDEX = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<float>> FLOAT32_VALUES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> FLOAT64_VALUES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> UINT32_VALUES = 0) {
+  SCVPackedRasterBandBuilder builder_(_fbb);
+  builder_.add_UINT32_VALUES(UINT32_VALUES);
+  builder_.add_FLOAT64_VALUES(FLOAT64_VALUES);
+  builder_.add_FLOAT32_VALUES(FLOAT32_VALUES);
+  builder_.add_MEMORY_RECORD_INDEX(MEMORY_RECORD_INDEX);
+  builder_.add_MEMORY_REGION_ID(MEMORY_REGION_ID);
+  builder_.add_WORDS_PER_BUCKET(WORDS_PER_BUCKET);
+  builder_.add_BUCKET_COUNT(BUCKET_COUNT);
+  builder_.add_CELL_COUNT(CELL_COUNT);
+  builder_.add_COMPONENTS_PER_CELL(COMPONENTS_PER_CELL);
+  builder_.add_METRIC_KIND(METRIC_KIND);
+  builder_.add_PRODUCT_KIND(PRODUCT_KIND);
+  builder_.add_ENCODING(ENCODING);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCVPackedRasterBand> CreateSCVPackedRasterBandDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    scvRasterProductKind PRODUCT_KIND = scvRasterProductKind_CELL_BOUNDS_DEG,
+    scvMetricSeriesKind METRIC_KIND = scvMetricSeriesKind_PERCENT_COVERED,
+    scvRasterProductEncoding ENCODING = scvRasterProductEncoding_FLOAT32,
+    uint32_t COMPONENTS_PER_CELL = 0,
+    uint32_t CELL_COUNT = 0,
+    uint32_t BUCKET_COUNT = 0,
+    uint32_t WORDS_PER_BUCKET = 0,
+    uint32_t MEMORY_REGION_ID = 0,
+    uint32_t MEMORY_RECORD_INDEX = 0,
+    const std::vector<float> *FLOAT32_VALUES = nullptr,
+    const std::vector<double> *FLOAT64_VALUES = nullptr,
+    const std::vector<uint32_t> *UINT32_VALUES = nullptr) {
+  auto FLOAT32_VALUES__ = FLOAT32_VALUES ? _fbb.CreateVector<float>(*FLOAT32_VALUES) : 0;
+  auto FLOAT64_VALUES__ = FLOAT64_VALUES ? _fbb.CreateVector<double>(*FLOAT64_VALUES) : 0;
+  auto UINT32_VALUES__ = UINT32_VALUES ? _fbb.CreateVector<uint32_t>(*UINT32_VALUES) : 0;
+  return CreateSCVPackedRasterBand(
+      _fbb,
+      PRODUCT_KIND,
+      METRIC_KIND,
+      ENCODING,
+      COMPONENTS_PER_CELL,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGION_ID,
+      MEMORY_RECORD_INDEX,
+      FLOAT32_VALUES__,
+      FLOAT64_VALUES__,
+      UINT32_VALUES__);
+}
+
+struct SCVPackedRasterProducts FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCVPackedRasterProductsBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_JOB_ID = 4,
+    VT_TRACE_ID = 6,
+    VT_GRID = 8,
+    VT_TIME_GRID = 10,
+    VT_ROWS = 12,
+    VT_COLUMNS = 14,
+    VT_CELL_COUNT = 16,
+    VT_BUCKET_COUNT = 18,
+    VT_WORDS_PER_BUCKET = 20,
+    VT_MEMORY_REGIONS = 22,
+    VT_BANDS = 24
+  };
+  const ::flatbuffers::String *JOB_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_JOB_ID);
+  }
+  uint64_t TRACE_ID() const {
+    return GetField<uint64_t>(VT_TRACE_ID, 0);
+  }
+  const SCVCoverageGrid *GRID() const {
+    return GetPointer<const SCVCoverageGrid *>(VT_GRID);
+  }
+  const SCVTimeGrid *TIME_GRID() const {
+    return GetPointer<const SCVTimeGrid *>(VT_TIME_GRID);
+  }
+  uint32_t ROWS() const {
+    return GetField<uint32_t>(VT_ROWS, 0);
+  }
+  uint32_t COLUMNS() const {
+    return GetField<uint32_t>(VT_COLUMNS, 0);
+  }
+  uint32_t CELL_COUNT() const {
+    return GetField<uint32_t>(VT_CELL_COUNT, 0);
+  }
+  uint32_t BUCKET_COUNT() const {
+    return GetField<uint32_t>(VT_BUCKET_COUNT, 0);
+  }
+  uint32_t WORDS_PER_BUCKET() const {
+    return GetField<uint32_t>(VT_WORDS_PER_BUCKET, 0);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVMemoryRegion>> *MEMORY_REGIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVMemoryRegion>> *>(VT_MEMORY_REGIONS);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVPackedRasterBand>> *BANDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVPackedRasterBand>> *>(VT_BANDS);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_JOB_ID) &&
+           verifier.VerifyString(JOB_ID()) &&
+           VerifyField<uint64_t>(verifier, VT_TRACE_ID, 8) &&
+           VerifyOffset(verifier, VT_GRID) &&
+           verifier.VerifyTable(GRID()) &&
+           VerifyOffset(verifier, VT_TIME_GRID) &&
+           verifier.VerifyTable(TIME_GRID()) &&
+           VerifyField<uint32_t>(verifier, VT_ROWS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_COLUMNS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_CELL_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_BUCKET_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_WORDS_PER_BUCKET, 4) &&
+           VerifyOffset(verifier, VT_MEMORY_REGIONS) &&
+           verifier.VerifyVector(MEMORY_REGIONS()) &&
+           verifier.VerifyVectorOfTables(MEMORY_REGIONS()) &&
+           VerifyOffset(verifier, VT_BANDS) &&
+           verifier.VerifyVector(BANDS()) &&
+           verifier.VerifyVectorOfTables(BANDS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCVPackedRasterProductsBuilder {
+  typedef SCVPackedRasterProducts Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_JOB_ID(::flatbuffers::Offset<::flatbuffers::String> JOB_ID) {
+    fbb_.AddOffset(SCVPackedRasterProducts::VT_JOB_ID, JOB_ID);
+  }
+  void add_TRACE_ID(uint64_t TRACE_ID) {
+    fbb_.AddElement<uint64_t>(SCVPackedRasterProducts::VT_TRACE_ID, TRACE_ID, 0);
+  }
+  void add_GRID(::flatbuffers::Offset<SCVCoverageGrid> GRID) {
+    fbb_.AddOffset(SCVPackedRasterProducts::VT_GRID, GRID);
+  }
+  void add_TIME_GRID(::flatbuffers::Offset<SCVTimeGrid> TIME_GRID) {
+    fbb_.AddOffset(SCVPackedRasterProducts::VT_TIME_GRID, TIME_GRID);
+  }
+  void add_ROWS(uint32_t ROWS) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterProducts::VT_ROWS, ROWS, 0);
+  }
+  void add_COLUMNS(uint32_t COLUMNS) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterProducts::VT_COLUMNS, COLUMNS, 0);
+  }
+  void add_CELL_COUNT(uint32_t CELL_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterProducts::VT_CELL_COUNT, CELL_COUNT, 0);
+  }
+  void add_BUCKET_COUNT(uint32_t BUCKET_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterProducts::VT_BUCKET_COUNT, BUCKET_COUNT, 0);
+  }
+  void add_WORDS_PER_BUCKET(uint32_t WORDS_PER_BUCKET) {
+    fbb_.AddElement<uint32_t>(SCVPackedRasterProducts::VT_WORDS_PER_BUCKET, WORDS_PER_BUCKET, 0);
+  }
+  void add_MEMORY_REGIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVMemoryRegion>>> MEMORY_REGIONS) {
+    fbb_.AddOffset(SCVPackedRasterProducts::VT_MEMORY_REGIONS, MEMORY_REGIONS);
+  }
+  void add_BANDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVPackedRasterBand>>> BANDS) {
+    fbb_.AddOffset(SCVPackedRasterProducts::VT_BANDS, BANDS);
+  }
+  explicit SCVPackedRasterProductsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCVPackedRasterProducts> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCVPackedRasterProducts>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCVPackedRasterProducts> CreateSCVPackedRasterProducts(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> JOB_ID = 0,
+    uint64_t TRACE_ID = 0,
+    ::flatbuffers::Offset<SCVCoverageGrid> GRID = 0,
+    ::flatbuffers::Offset<SCVTimeGrid> TIME_GRID = 0,
+    uint32_t ROWS = 0,
+    uint32_t COLUMNS = 0,
+    uint32_t CELL_COUNT = 0,
+    uint32_t BUCKET_COUNT = 0,
+    uint32_t WORDS_PER_BUCKET = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVMemoryRegion>>> MEMORY_REGIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVPackedRasterBand>>> BANDS = 0) {
+  SCVPackedRasterProductsBuilder builder_(_fbb);
+  builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_BANDS(BANDS);
+  builder_.add_MEMORY_REGIONS(MEMORY_REGIONS);
+  builder_.add_WORDS_PER_BUCKET(WORDS_PER_BUCKET);
+  builder_.add_BUCKET_COUNT(BUCKET_COUNT);
+  builder_.add_CELL_COUNT(CELL_COUNT);
+  builder_.add_COLUMNS(COLUMNS);
+  builder_.add_ROWS(ROWS);
+  builder_.add_TIME_GRID(TIME_GRID);
+  builder_.add_GRID(GRID);
+  builder_.add_JOB_ID(JOB_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCVPackedRasterProducts> CreateSCVPackedRasterProductsDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *JOB_ID = nullptr,
+    uint64_t TRACE_ID = 0,
+    ::flatbuffers::Offset<SCVCoverageGrid> GRID = 0,
+    ::flatbuffers::Offset<SCVTimeGrid> TIME_GRID = 0,
+    uint32_t ROWS = 0,
+    uint32_t COLUMNS = 0,
+    uint32_t CELL_COUNT = 0,
+    uint32_t BUCKET_COUNT = 0,
+    uint32_t WORDS_PER_BUCKET = 0,
+    const std::vector<::flatbuffers::Offset<SCVMemoryRegion>> *MEMORY_REGIONS = nullptr,
+    const std::vector<::flatbuffers::Offset<SCVPackedRasterBand>> *BANDS = nullptr) {
+  auto JOB_ID__ = JOB_ID ? _fbb.CreateString(JOB_ID) : 0;
+  auto MEMORY_REGIONS__ = MEMORY_REGIONS ? _fbb.CreateVector<::flatbuffers::Offset<SCVMemoryRegion>>(*MEMORY_REGIONS) : 0;
+  auto BANDS__ = BANDS ? _fbb.CreateVector<::flatbuffers::Offset<SCVPackedRasterBand>>(*BANDS) : 0;
+  return CreateSCVPackedRasterProducts(
+      _fbb,
+      JOB_ID__,
+      TRACE_ID,
+      GRID,
+      TIME_GRID,
+      ROWS,
+      COLUMNS,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGIONS__,
+      BANDS__);
+}
+
 struct SCVAggregateStatistics FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVAggregateStatisticsBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -4076,9 +4461,9 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LATITUDE_BANDS = 22,
     VT_TIME_SERIES = 24,
     VT_HISTOGRAMS = 26,
-    VT_HEATMAP = 28,
-    VT_CONTRIBUTIONS = 30,
-    VT_GEOMETRY = 32,
+    VT_CONTRIBUTIONS = 28,
+    VT_GEOMETRY = 30,
+    VT_RASTER_PRODUCTS = 32,
     VT_MESSAGE = 34,
     VT_AGGREGATE_STATISTICS = 36
   };
@@ -4118,14 +4503,14 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCVHistogramBin>> *HISTOGRAMS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVHistogramBin>> *>(VT_HISTOGRAMS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVHeatmapCell>> *HEATMAP() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVHeatmapCell>> *>(VT_HEATMAP);
-  }
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCVSensorContribution>> *CONTRIBUTIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVSensorContribution>> *>(VT_CONTRIBUTIONS);
   }
   const SCVPackedGeometryChunk *GEOMETRY() const {
     return GetPointer<const SCVPackedGeometryChunk *>(VT_GEOMETRY);
+  }
+  const SCVPackedRasterProducts *RASTER_PRODUCTS() const {
+    return GetPointer<const SCVPackedRasterProducts *>(VT_RASTER_PRODUCTS);
   }
   const ::flatbuffers::String *MESSAGE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE);
@@ -4161,14 +4546,13 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_HISTOGRAMS) &&
            verifier.VerifyVector(HISTOGRAMS()) &&
            verifier.VerifyVectorOfTables(HISTOGRAMS()) &&
-           VerifyOffset(verifier, VT_HEATMAP) &&
-           verifier.VerifyVector(HEATMAP()) &&
-           verifier.VerifyVectorOfTables(HEATMAP()) &&
            VerifyOffset(verifier, VT_CONTRIBUTIONS) &&
            verifier.VerifyVector(CONTRIBUTIONS()) &&
            verifier.VerifyVectorOfTables(CONTRIBUTIONS()) &&
            VerifyOffset(verifier, VT_GEOMETRY) &&
            verifier.VerifyTable(GEOMETRY()) &&
+           VerifyOffset(verifier, VT_RASTER_PRODUCTS) &&
+           verifier.VerifyTable(RASTER_PRODUCTS()) &&
            VerifyOffset(verifier, VT_MESSAGE) &&
            verifier.VerifyString(MESSAGE()) &&
            VerifyOffset(verifier, VT_AGGREGATE_STATISTICS) &&
@@ -4217,14 +4601,14 @@ struct SCVResultBuilder {
   void add_HISTOGRAMS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVHistogramBin>>> HISTOGRAMS) {
     fbb_.AddOffset(SCVResult::VT_HISTOGRAMS, HISTOGRAMS);
   }
-  void add_HEATMAP(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVHeatmapCell>>> HEATMAP) {
-    fbb_.AddOffset(SCVResult::VT_HEATMAP, HEATMAP);
-  }
   void add_CONTRIBUTIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVSensorContribution>>> CONTRIBUTIONS) {
     fbb_.AddOffset(SCVResult::VT_CONTRIBUTIONS, CONTRIBUTIONS);
   }
   void add_GEOMETRY(::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY) {
     fbb_.AddOffset(SCVResult::VT_GEOMETRY, GEOMETRY);
+  }
+  void add_RASTER_PRODUCTS(::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS) {
+    fbb_.AddOffset(SCVResult::VT_RASTER_PRODUCTS, RASTER_PRODUCTS);
   }
   void add_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> MESSAGE) {
     fbb_.AddOffset(SCVResult::VT_MESSAGE, MESSAGE);
@@ -4257,18 +4641,18 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResult(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVLatitudeBandStat>>> LATITUDE_BANDS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVTimeSeriesPoint>>> TIME_SERIES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVHistogramBin>>> HISTOGRAMS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVHeatmapCell>>> HEATMAP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVSensorContribution>>> CONTRIBUTIONS = 0,
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
+    ::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0,
     ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
   SCVResultBuilder builder_(_fbb);
   builder_.add_TRACE_ID(TRACE_ID);
   builder_.add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS);
   builder_.add_MESSAGE(MESSAGE);
+  builder_.add_RASTER_PRODUCTS(RASTER_PRODUCTS);
   builder_.add_GEOMETRY(GEOMETRY);
   builder_.add_CONTRIBUTIONS(CONTRIBUTIONS);
-  builder_.add_HEATMAP(HEATMAP);
   builder_.add_HISTOGRAMS(HISTOGRAMS);
   builder_.add_TIME_SERIES(TIME_SERIES);
   builder_.add_LATITUDE_BANDS(LATITUDE_BANDS);
@@ -4297,9 +4681,9 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
     const std::vector<::flatbuffers::Offset<SCVLatitudeBandStat>> *LATITUDE_BANDS = nullptr,
     const std::vector<::flatbuffers::Offset<SCVTimeSeriesPoint>> *TIME_SERIES = nullptr,
     const std::vector<::flatbuffers::Offset<SCVHistogramBin>> *HISTOGRAMS = nullptr,
-    const std::vector<::flatbuffers::Offset<SCVHeatmapCell>> *HEATMAP = nullptr,
     const std::vector<::flatbuffers::Offset<SCVSensorContribution>> *CONTRIBUTIONS = nullptr,
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
+    ::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS = 0,
     const char *MESSAGE = nullptr,
     ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
   auto JOB_ID__ = JOB_ID ? _fbb.CreateString(JOB_ID) : 0;
@@ -4308,7 +4692,6 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
   auto LATITUDE_BANDS__ = LATITUDE_BANDS ? _fbb.CreateVector<::flatbuffers::Offset<SCVLatitudeBandStat>>(*LATITUDE_BANDS) : 0;
   auto TIME_SERIES__ = TIME_SERIES ? _fbb.CreateVector<::flatbuffers::Offset<SCVTimeSeriesPoint>>(*TIME_SERIES) : 0;
   auto HISTOGRAMS__ = HISTOGRAMS ? _fbb.CreateVector<::flatbuffers::Offset<SCVHistogramBin>>(*HISTOGRAMS) : 0;
-  auto HEATMAP__ = HEATMAP ? _fbb.CreateVector<::flatbuffers::Offset<SCVHeatmapCell>>(*HEATMAP) : 0;
   auto CONTRIBUTIONS__ = CONTRIBUTIONS ? _fbb.CreateVector<::flatbuffers::Offset<SCVSensorContribution>>(*CONTRIBUTIONS) : 0;
   auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
   return CreateSCVResult(
@@ -4325,9 +4708,9 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
       LATITUDE_BANDS__,
       TIME_SERIES__,
       HISTOGRAMS__,
-      HEATMAP__,
       CONTRIBUTIONS__,
       GEOMETRY,
+      RASTER_PRODUCTS,
       MESSAGE__,
       AGGREGATE_STATISTICS);
 }
@@ -4340,7 +4723,8 @@ struct SCV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_PROGRESS = 8,
     VT_CANCEL = 10,
     VT_RESULT = 12,
-    VT_GEOMETRY = 14
+    VT_GEOMETRY = 14,
+    VT_RASTER_PRODUCTS = 16
   };
   scvEnvelopeKind ENVELOPE_KIND() const {
     return static_cast<scvEnvelopeKind>(GetField<uint8_t>(VT_ENVELOPE_KIND, 0));
@@ -4360,6 +4744,9 @@ struct SCV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const SCVPackedGeometryChunk *GEOMETRY() const {
     return GetPointer<const SCVPackedGeometryChunk *>(VT_GEOMETRY);
   }
+  const SCVPackedRasterProducts *RASTER_PRODUCTS() const {
+    return GetPointer<const SCVPackedRasterProducts *>(VT_RASTER_PRODUCTS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -4374,6 +4761,8 @@ struct SCV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(RESULT()) &&
            VerifyOffset(verifier, VT_GEOMETRY) &&
            verifier.VerifyTable(GEOMETRY()) &&
+           VerifyOffset(verifier, VT_RASTER_PRODUCTS) &&
+           verifier.VerifyTable(RASTER_PRODUCTS()) &&
            verifier.EndTable();
   }
 };
@@ -4400,6 +4789,9 @@ struct SCVBuilder {
   void add_GEOMETRY(::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY) {
     fbb_.AddOffset(SCV::VT_GEOMETRY, GEOMETRY);
   }
+  void add_RASTER_PRODUCTS(::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS) {
+    fbb_.AddOffset(SCV::VT_RASTER_PRODUCTS, RASTER_PRODUCTS);
+  }
   explicit SCVBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -4418,8 +4810,10 @@ inline ::flatbuffers::Offset<SCV> CreateSCV(
     ::flatbuffers::Offset<SCVProgress> PROGRESS = 0,
     ::flatbuffers::Offset<SCVCancel> CANCEL = 0,
     ::flatbuffers::Offset<SCVResult> RESULT = 0,
-    ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0) {
+    ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
+    ::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS = 0) {
   SCVBuilder builder_(_fbb);
+  builder_.add_RASTER_PRODUCTS(RASTER_PRODUCTS);
   builder_.add_GEOMETRY(GEOMETRY);
   builder_.add_RESULT(RESULT);
   builder_.add_CANCEL(CANCEL);

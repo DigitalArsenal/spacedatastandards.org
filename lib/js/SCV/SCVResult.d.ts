@@ -2,11 +2,11 @@ import * as flatbuffers from 'flatbuffers';
 import { SCVAggregateStatistics, SCVAggregateStatisticsT } from './SCVAggregateStatistics.js';
 import { SCVCellStat, SCVCellStatT } from './SCVCellStat.js';
 import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
-import { SCVHeatmapCell, SCVHeatmapCellT } from './SCVHeatmapCell.js';
 import { SCVHistogramBin, SCVHistogramBinT } from './SCVHistogramBin.js';
 import { SCVInterval, SCVIntervalT } from './SCVInterval.js';
 import { SCVLatitudeBandStat, SCVLatitudeBandStatT } from './SCVLatitudeBandStat.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
+import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVSensorContribution, SCVSensorContributionT } from './SCVSensorContribution.js';
 import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
 import { SCVTimeSeriesPoint, SCVTimeSeriesPointT } from './SCVTimeSeriesPoint.js';
@@ -35,11 +35,10 @@ export declare class SCVResult implements flatbuffers.IUnpackableObject<SCVResul
     timeSeriesLength(): number;
     HISTOGRAMS(index: number, obj?: SCVHistogramBin): SCVHistogramBin | null;
     histogramsLength(): number;
-    HEATMAP(index: number, obj?: SCVHeatmapCell): SCVHeatmapCell | null;
-    heatmapLength(): number;
     CONTRIBUTIONS(index: number, obj?: SCVSensorContribution): SCVSensorContribution | null;
     contributionsLength(): number;
     GEOMETRY(obj?: SCVPackedGeometryChunk): SCVPackedGeometryChunk | null;
+    RASTER_PRODUCTS(obj?: SCVPackedRasterProducts): SCVPackedRasterProducts | null;
     MESSAGE(): string | null;
     MESSAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     AGGREGATE_STATISTICS(obj?: SCVAggregateStatistics): SCVAggregateStatistics | null;
@@ -66,13 +65,11 @@ export declare class SCVResult implements flatbuffers.IUnpackableObject<SCVResul
     static addHistograms(builder: flatbuffers.Builder, HISTOGRAMSOffset: flatbuffers.Offset): void;
     static createHistogramsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startHistogramsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addHeatmap(builder: flatbuffers.Builder, HEATMAPOffset: flatbuffers.Offset): void;
-    static createHeatmapVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startHeatmapVector(builder: flatbuffers.Builder, numElems: number): void;
     static addContributions(builder: flatbuffers.Builder, CONTRIBUTIONSOffset: flatbuffers.Offset): void;
     static createContributionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startContributionsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addGeometry(builder: flatbuffers.Builder, GEOMETRYOffset: flatbuffers.Offset): void;
+    static addRasterProducts(builder: flatbuffers.Builder, RASTER_PRODUCTSOffset: flatbuffers.Offset): void;
     static addMessage(builder: flatbuffers.Builder, MESSAGEOffset: flatbuffers.Offset): void;
     static addAggregateStatistics(builder: flatbuffers.Builder, AGGREGATE_STATISTICSOffset: flatbuffers.Offset): void;
     static endSCVResult(builder: flatbuffers.Builder): flatbuffers.Offset;
@@ -92,12 +89,12 @@ export declare class SCVResultT implements flatbuffers.IGeneratedObject {
     LATITUDE_BANDS: (SCVLatitudeBandStatT)[];
     TIME_SERIES: (SCVTimeSeriesPointT)[];
     HISTOGRAMS: (SCVHistogramBinT)[];
-    HEATMAP: (SCVHeatmapCellT)[];
     CONTRIBUTIONS: (SCVSensorContributionT)[];
     GEOMETRY: SCVPackedGeometryChunkT | null;
+    RASTER_PRODUCTS: SCVPackedRasterProductsT | null;
     MESSAGE: string | Uint8Array | null;
     AGGREGATE_STATISTICS: SCVAggregateStatisticsT | null;
-    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, CELL_STATS?: (SCVCellStatT)[], INTERVALS?: (SCVIntervalT)[], LATITUDE_BANDS?: (SCVLatitudeBandStatT)[], TIME_SERIES?: (SCVTimeSeriesPointT)[], HISTOGRAMS?: (SCVHistogramBinT)[], HEATMAP?: (SCVHeatmapCellT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null);
+    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, CELL_STATS?: (SCVCellStatT)[], INTERVALS?: (SCVIntervalT)[], LATITUDE_BANDS?: (SCVLatitudeBandStatT)[], TIME_SERIES?: (SCVTimeSeriesPointT)[], HISTOGRAMS?: (SCVHistogramBinT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVResult.d.ts.map

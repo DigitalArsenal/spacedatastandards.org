@@ -1,0 +1,15 @@
+export declare enum scvRasterProductKind {
+    CELL_BOUNDS_DEG = 0,
+    CELL_CENTERS_DEG = 1,
+    PERCENT_COVERAGE = 2,
+    PASS_COUNT = 3,
+    CONTACT_DURATION_SECONDS = 4,
+    REVISIT_SECONDS = 5,
+    GAP_SECONDS = 6,
+    REDUNDANCY = 7,
+    CURRENT_ACCESS_BITSET = 8,
+    BUCKET_START_SECONDS = 9,
+    BUCKET_STOP_SECONDS = 10,
+    BUCKET_ACTIVE_CELL_COUNT = 11
+}
+//# sourceMappingURL=scvRasterProductKind.d.ts.map

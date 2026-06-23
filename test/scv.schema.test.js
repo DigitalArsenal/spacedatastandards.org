@@ -108,7 +108,17 @@ describe("SCV sensor coverage schema", () => {
       "table SCVLatitudeBandStat",
       "table SCVTimeSeriesPoint",
       "table SCVHistogramBin",
-      "table SCVHeatmapCell",
+      "enum scvRasterProductKind",
+      "enum scvRasterProductEncoding",
+      "table SCVPackedRasterBand",
+      "table SCVPackedRasterProducts",
+      "RASTER_PRODUCTS:SCVPackedRasterProducts",
+      "ROWS:uint32",
+      "COLUMNS:uint32",
+      "CELL_BOUNDS_DEG",
+      "CELL_CENTERS_DEG",
+      "CURRENT_ACCESS_BITSET",
+      "BUCKET_ACTIVE_CELL_COUNT",
       "SAR_ANNULAR_SECTOR",
       "enum scvSensorAxisConvention",
       "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT",
@@ -191,6 +201,49 @@ describe("SCV sensor coverage schema", () => {
     assert.match(schemaSource, /\bMARS\b/);
     assert.match(tsMainSource, /\bSCV\b/);
     assert.match(jsMainSource, /\bSCV\b/);
+  });
+
+  it("generates packed raster product bindings for module-authored coverage surfaces", async () => {
+    const files = [
+      "lib/js/SCV/SCVPackedRasterProducts.js",
+      "lib/ts/SCV/SCVPackedRasterProducts.ts",
+      "lib/js/SCV/SCVPackedRasterBand.js",
+      "lib/ts/SCV/SCVPackedRasterBand.ts",
+      "lib/js/SCV/scvRasterProductKind.js",
+      "lib/ts/SCV/scvRasterProductKind.ts",
+      "lib/cpp/SCV/main_generated.h",
+      "lib/js/REC/SCVPackedRasterProducts.js",
+      "lib/ts/REC/SCVPackedRasterProducts.ts",
+      "lib/cpp/REC/main_generated.h",
+    ];
+    const sources = await Promise.all(
+      files.map((relativePath) => fs.readFile(path.join(repoRoot, relativePath), "utf8")),
+    );
+    const combined = sources.join("\n");
+
+    for (const token of [
+      "SCVPackedRasterProducts",
+      "SCVPackedRasterBand",
+      "scvRasterProductKind",
+      "scvRasterProductEncoding",
+      "CELL_BOUNDS_DEG",
+      "CELL_CENTERS_DEG",
+      "PERCENT_COVERAGE",
+      "PASS_COUNT",
+      "CURRENT_ACCESS_BITSET",
+      "BUCKET_START_SECONDS",
+      "BUCKET_STOP_SECONDS",
+      "BUCKET_ACTIVE_CELL_COUNT",
+      "FLOAT32_VALUES",
+      "FLOAT64_VALUES",
+      "UINT32_VALUES",
+      "RASTER_PRODUCTS",
+    ]) {
+      assert.match(
+        combined,
+        new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+      );
+    }
   });
 
   it("records the generated schema hash in the SCV header and manifest", async () => {
