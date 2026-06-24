@@ -14,4 +14,3 @@ public enum dpmTransportKind : sbyte
   /// Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL.
   OTHER = 2,
 };
-

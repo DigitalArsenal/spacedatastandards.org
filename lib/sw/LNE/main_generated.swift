@@ -225,4 +225,3 @@ public struct LNE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

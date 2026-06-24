@@ -16,4 +16,3 @@ public enum PropagatorMethod : sbyte
   KOZAI = 9,
   DSST = 10,
 };
-

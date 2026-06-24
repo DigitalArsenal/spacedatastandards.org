@@ -215,4 +215,3 @@ public final class SWR extends com.google.flatbuffers.Table {
     public SWR get(SWR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

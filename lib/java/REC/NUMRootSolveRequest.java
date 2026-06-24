@@ -76,4 +76,3 @@ public final class NUMRootSolveRequest extends com.google.flatbuffers.Table {
     public NUMRootSolveRequest get(NUMRootSolveRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

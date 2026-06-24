@@ -414,4 +414,3 @@ public struct SEN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

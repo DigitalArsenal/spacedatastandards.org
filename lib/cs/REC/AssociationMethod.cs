@@ -12,4 +12,3 @@ public enum AssociationMethod : sbyte
   HUNGARIAN = 5,
   MUNKRES = 6,
 };
-

@@ -77,4 +77,3 @@ public final class PRWTleLines extends com.google.flatbuffers.Table {
     public PRWTleLines get(PRWTleLines obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -16,4 +16,3 @@ public final class CollisionShape {
 
   public static String name(int e) { return names[e]; }
 }
-

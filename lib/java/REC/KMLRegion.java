@@ -62,4 +62,3 @@ public final class KMLRegion extends com.google.flatbuffers.Table {
     public KMLRegion get(KMLRegion obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

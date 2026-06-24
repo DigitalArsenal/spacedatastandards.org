@@ -13,4 +13,3 @@ public enum CollisionShape : sbyte
   MESH = 6,
   COMPOUND = 7,
 };
-

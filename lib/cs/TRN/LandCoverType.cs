@@ -22,4 +22,3 @@ public enum LandCoverType : sbyte
   RUNWAY = 15,
   BUILDING = 16,
 };
-

@@ -163,4 +163,3 @@ public final class ACR extends com.google.flatbuffers.Table {
     public ACR get(ACR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

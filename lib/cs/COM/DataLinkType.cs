@@ -20,4 +20,3 @@ public enum DataLinkType : sbyte
   SINCGARS = 13,
   CUSTOM = 14,
 };
-

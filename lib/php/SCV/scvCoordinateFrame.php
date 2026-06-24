@@ -9,6 +9,7 @@ class scvCoordinateFrame
     const ECEF = 3;
     const ECI = 4;
     const CUSTOM = 5;
+    const SENSOR_LOCAL = 6;
 
     private static $names = array(
         scvCoordinateFrame::UNKNOWN=>"UNKNOWN",
@@ -17,6 +18,7 @@ class scvCoordinateFrame
         scvCoordinateFrame::ECEF=>"ECEF",
         scvCoordinateFrame::ECI=>"ECI",
         scvCoordinateFrame::CUSTOM=>"CUSTOM",
+        scvCoordinateFrame::SENSOR_LOCAL=>"SENSOR_LOCAL",
     );
 
     public static function Name($e)

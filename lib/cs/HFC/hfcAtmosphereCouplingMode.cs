@@ -11,4 +11,3 @@ public enum hfcAtmosphereCouplingMode : sbyte
   STEP_QUERY = 3,
   EXTERNAL_PROVIDER = 4,
 };
-

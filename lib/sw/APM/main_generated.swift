@@ -103,4 +103,3 @@ public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

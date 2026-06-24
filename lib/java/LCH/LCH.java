@@ -212,4 +212,3 @@ public final class LCH extends com.google.flatbuffers.Table {
     public LCH get(LCH obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

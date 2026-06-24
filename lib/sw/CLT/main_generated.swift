@@ -110,4 +110,3 @@ public struct CLT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

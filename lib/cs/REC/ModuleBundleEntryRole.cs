@@ -16,4 +16,3 @@ public enum ModuleBundleEntryRole : byte
   ATTESTATION = 4,
   AUXILIARY = 5,
 };
-

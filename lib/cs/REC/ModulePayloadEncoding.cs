@@ -10,4 +10,3 @@ public enum ModulePayloadEncoding : byte
   JSON_UTF8 = 2,
   CBOR = 3,
 };
-

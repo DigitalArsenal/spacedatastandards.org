@@ -8,4 +8,3 @@ public enum CZMHorizontalOrigin : sbyte
   CENTER = 1,
   RIGHT = 2,
 };
-

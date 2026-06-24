@@ -100,4 +100,3 @@ public final class Address extends com.google.flatbuffers.Table {
     public Address get(Address obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

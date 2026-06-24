@@ -79,4 +79,3 @@ public final class FixedValueEntry extends com.google.flatbuffers.Table {
     public FixedValueEntry get(FixedValueEntry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

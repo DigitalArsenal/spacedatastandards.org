@@ -59,4 +59,3 @@ public final class CAQ extends com.google.flatbuffers.Table {
     public CAQ get(CAQ obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -86,4 +86,3 @@ public final class StaticAlarmRanges extends com.google.flatbuffers.Table {
     public StaticAlarmRanges get(StaticAlarmRanges obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -14,4 +14,3 @@ public enum CentralBody : sbyte
   MERCURY = 7,
   CUSTOM_BODY = 8,
 };
-

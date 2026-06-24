@@ -20,4 +20,3 @@ public enum StringEncodingType : sbyte
   /// UTF-16 Little Endian
   UTF_16LE = 6,
 };
-

@@ -13,4 +13,3 @@ public enum imageFormat : sbyte
   GEOTIFF = 6,
   OTHER = 7,
 };
-

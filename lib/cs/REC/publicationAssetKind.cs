@@ -11,4 +11,3 @@ public enum publicationAssetKind : sbyte
   MANIFEST = 2,
   OTHER = 3,
 };
-

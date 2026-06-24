@@ -69,4 +69,3 @@ public final class KMLLabelStyle extends com.google.flatbuffers.Table {
     public KMLLabelStyle get(KMLLabelStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

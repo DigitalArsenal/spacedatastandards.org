@@ -557,4 +557,3 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -73,4 +73,3 @@ public final class CustomStream extends com.google.flatbuffers.Table {
     public CustomStream get(CustomStream obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

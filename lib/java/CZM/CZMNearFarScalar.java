@@ -74,4 +74,3 @@ public final class CZMNearFarScalar extends com.google.flatbuffers.Table {
     public CZMNearFarScalar get(CZMNearFarScalar obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

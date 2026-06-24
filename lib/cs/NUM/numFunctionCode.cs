@@ -8,4 +8,3 @@ public enum numFunctionCode : sbyte
   /// f(x) = x * x - TARGET_VALUE, with derivative f'(x) = 2 * x.
   QUADRATIC_MINUS_CONSTANT = 1,
 };
-

@@ -347,4 +347,3 @@ public struct OOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

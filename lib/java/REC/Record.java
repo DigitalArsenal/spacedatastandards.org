@@ -66,4 +66,3 @@ public final class Record extends com.google.flatbuffers.Table {
     public Record get(Record obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -171,4 +171,3 @@ public final class RFB extends com.google.flatbuffers.Table {
     public RFB get(RFB obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

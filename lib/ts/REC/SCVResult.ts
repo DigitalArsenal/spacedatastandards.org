@@ -4,16 +4,13 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { SCVCellStat, SCVCellStatT } from './SCVCellStat.js';
+import { SCVAggregateStatistics, SCVAggregateStatisticsT } from './SCVAggregateStatistics.js';
 import { SCVEllipsoid, SCVEllipsoidT } from './SCVEllipsoid.js';
-import { SCVHeatmapCell, SCVHeatmapCellT } from './SCVHeatmapCell.js';
 import { SCVHistogramBin, SCVHistogramBinT } from './SCVHistogramBin.js';
-import { SCVInterval, SCVIntervalT } from './SCVInterval.js';
-import { SCVLatitudeBandStat, SCVLatitudeBandStatT } from './SCVLatitudeBandStat.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
+import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVSensorContribution, SCVSensorContributionT } from './SCVSensorContribution.js';
 import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
-import { SCVTimeSeriesPoint, SCVTimeSeriesPointT } from './SCVTimeSeriesPoint.js';
 import { scvResultState } from './scvResultState.js';
 
 
@@ -72,90 +69,50 @@ TOTAL_WINDOWS():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-CELL_STATS(index: number, obj?:SCVCellStat):SCVCellStat|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? (obj || new SCVCellStat()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-cellStatsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-INTERVALS(index: number, obj?:SCVInterval):SCVInterval|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? (obj || new SCVInterval()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-intervalsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-LATITUDE_BANDS(index: number, obj?:SCVLatitudeBandStat):SCVLatitudeBandStat|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? (obj || new SCVLatitudeBandStat()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-latitudeBandsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-TIME_SERIES(index: number, obj?:SCVTimeSeriesPoint):SCVTimeSeriesPoint|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? (obj || new SCVTimeSeriesPoint()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-timeSeriesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
 HISTOGRAMS(index: number, obj?:SCVHistogramBin):SCVHistogramBin|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new SCVHistogramBin()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 histogramsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-HEATMAP(index: number, obj?:SCVHeatmapCell):SCVHeatmapCell|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? (obj || new SCVHeatmapCell()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-heatmapLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 CONTRIBUTIONS(index: number, obj?:SCVSensorContribution):SCVSensorContribution|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new SCVSensorContribution()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 contributionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 GEOMETRY(obj?:SCVPackedGeometryChunk):SCVPackedGeometryChunk|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new SCVPackedGeometryChunk()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+RASTER_PRODUCTS(obj?:SCVPackedRasterProducts):SCVPackedRasterProducts|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new SCVPackedRasterProducts()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 MESSAGE():string|null
 MESSAGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MESSAGE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+AGGREGATE_STATISTICS(obj?:SCVAggregateStatistics):SCVAggregateStatistics|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new SCVAggregateStatistics()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSCVResult(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(13);
 }
 
 static addJobId(builder:flatbuffers.Builder, JOB_IDOffset:flatbuffers.Offset) {
@@ -186,72 +143,8 @@ static addTotalWindows(builder:flatbuffers.Builder, TOTAL_WINDOWS:number) {
   builder.addFieldInt32(6, TOTAL_WINDOWS, 0);
 }
 
-static addCellStats(builder:flatbuffers.Builder, CELL_STATSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, CELL_STATSOffset, 0);
-}
-
-static createCellStatsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startCellStatsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addIntervals(builder:flatbuffers.Builder, INTERVALSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, INTERVALSOffset, 0);
-}
-
-static createIntervalsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startIntervalsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addLatitudeBands(builder:flatbuffers.Builder, LATITUDE_BANDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, LATITUDE_BANDSOffset, 0);
-}
-
-static createLatitudeBandsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startLatitudeBandsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addTimeSeries(builder:flatbuffers.Builder, TIME_SERIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, TIME_SERIESOffset, 0);
-}
-
-static createTimeSeriesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startTimeSeriesVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addHistograms(builder:flatbuffers.Builder, HISTOGRAMSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, HISTOGRAMSOffset, 0);
+  builder.addFieldOffset(7, HISTOGRAMSOffset, 0);
 }
 
 static createHistogramsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -266,24 +159,8 @@ static startHistogramsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addHeatmap(builder:flatbuffers.Builder, HEATMAPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, HEATMAPOffset, 0);
-}
-
-static createHeatmapVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startHeatmapVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addContributions(builder:flatbuffers.Builder, CONTRIBUTIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, CONTRIBUTIONSOffset, 0);
+  builder.addFieldOffset(8, CONTRIBUTIONSOffset, 0);
 }
 
 static createContributionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -299,11 +176,19 @@ static startContributionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addGeometry(builder:flatbuffers.Builder, GEOMETRYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, GEOMETRYOffset, 0);
+  builder.addFieldOffset(9, GEOMETRYOffset, 0);
+}
+
+static addRasterProducts(builder:flatbuffers.Builder, RASTER_PRODUCTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, RASTER_PRODUCTSOffset, 0);
 }
 
 static addMessage(builder:flatbuffers.Builder, MESSAGEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, MESSAGEOffset, 0);
+  builder.addFieldOffset(11, MESSAGEOffset, 0);
+}
+
+static addAggregateStatistics(builder:flatbuffers.Builder, AGGREGATE_STATISTICSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, AGGREGATE_STATISTICSOffset, 0);
 }
 
 static endSCVResult(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -321,15 +206,12 @@ unpack(): SCVResultT {
     (this.TARGET_BODY() !== null ? this.TARGET_BODY()!.unpack() : null),
     this.TOTAL_SENSORS(),
     this.TOTAL_WINDOWS(),
-    this.bb!.createObjList<SCVCellStat, SCVCellStatT>(this.CELL_STATS.bind(this), this.cellStatsLength()),
-    this.bb!.createObjList<SCVInterval, SCVIntervalT>(this.INTERVALS.bind(this), this.intervalsLength()),
-    this.bb!.createObjList<SCVLatitudeBandStat, SCVLatitudeBandStatT>(this.LATITUDE_BANDS.bind(this), this.latitudeBandsLength()),
-    this.bb!.createObjList<SCVTimeSeriesPoint, SCVTimeSeriesPointT>(this.TIME_SERIES.bind(this), this.timeSeriesLength()),
     this.bb!.createObjList<SCVHistogramBin, SCVHistogramBinT>(this.HISTOGRAMS.bind(this), this.histogramsLength()),
-    this.bb!.createObjList<SCVHeatmapCell, SCVHeatmapCellT>(this.HEATMAP.bind(this), this.heatmapLength()),
     this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength()),
     (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null),
-    this.MESSAGE()
+    (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null),
+    this.MESSAGE(),
+    (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null)
   );
 }
 
@@ -342,15 +224,12 @@ unpackTo(_o: SCVResultT): void {
   _o.TARGET_BODY = (this.TARGET_BODY() !== null ? this.TARGET_BODY()!.unpack() : null);
   _o.TOTAL_SENSORS = this.TOTAL_SENSORS();
   _o.TOTAL_WINDOWS = this.TOTAL_WINDOWS();
-  _o.CELL_STATS = this.bb!.createObjList<SCVCellStat, SCVCellStatT>(this.CELL_STATS.bind(this), this.cellStatsLength());
-  _o.INTERVALS = this.bb!.createObjList<SCVInterval, SCVIntervalT>(this.INTERVALS.bind(this), this.intervalsLength());
-  _o.LATITUDE_BANDS = this.bb!.createObjList<SCVLatitudeBandStat, SCVLatitudeBandStatT>(this.LATITUDE_BANDS.bind(this), this.latitudeBandsLength());
-  _o.TIME_SERIES = this.bb!.createObjList<SCVTimeSeriesPoint, SCVTimeSeriesPointT>(this.TIME_SERIES.bind(this), this.timeSeriesLength());
   _o.HISTOGRAMS = this.bb!.createObjList<SCVHistogramBin, SCVHistogramBinT>(this.HISTOGRAMS.bind(this), this.histogramsLength());
-  _o.HEATMAP = this.bb!.createObjList<SCVHeatmapCell, SCVHeatmapCellT>(this.HEATMAP.bind(this), this.heatmapLength());
   _o.CONTRIBUTIONS = this.bb!.createObjList<SCVSensorContribution, SCVSensorContributionT>(this.CONTRIBUTIONS.bind(this), this.contributionsLength());
   _o.GEOMETRY = (this.GEOMETRY() !== null ? this.GEOMETRY()!.unpack() : null);
+  _o.RASTER_PRODUCTS = (this.RASTER_PRODUCTS() !== null ? this.RASTER_PRODUCTS()!.unpack() : null);
   _o.MESSAGE = this.MESSAGE();
+  _o.AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS() !== null ? this.AGGREGATE_STATISTICS()!.unpack() : null);
 }
 }
 
@@ -363,15 +242,12 @@ constructor(
   public TARGET_BODY: SCVEllipsoidT|null = null,
   public TOTAL_SENSORS: number = 0,
   public TOTAL_WINDOWS: number = 0,
-  public CELL_STATS: (SCVCellStatT)[] = [],
-  public INTERVALS: (SCVIntervalT)[] = [],
-  public LATITUDE_BANDS: (SCVLatitudeBandStatT)[] = [],
-  public TIME_SERIES: (SCVTimeSeriesPointT)[] = [],
   public HISTOGRAMS: (SCVHistogramBinT)[] = [],
-  public HEATMAP: (SCVHeatmapCellT)[] = [],
   public CONTRIBUTIONS: (SCVSensorContributionT)[] = [],
   public GEOMETRY: SCVPackedGeometryChunkT|null = null,
-  public MESSAGE: string|Uint8Array|null = null
+  public RASTER_PRODUCTS: SCVPackedRasterProductsT|null = null,
+  public MESSAGE: string|Uint8Array|null = null,
+  public AGGREGATE_STATISTICS: SCVAggregateStatisticsT|null = null
 ){}
 
 
@@ -379,15 +255,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const JOB_ID = (this.JOB_ID !== null ? builder.createString(this.JOB_ID!) : 0);
   const TIME_GRID = (this.TIME_GRID !== null ? this.TIME_GRID!.pack(builder) : 0);
   const TARGET_BODY = (this.TARGET_BODY !== null ? this.TARGET_BODY!.pack(builder) : 0);
-  const CELL_STATS = SCVResult.createCellStatsVector(builder, builder.createObjectOffsetList(this.CELL_STATS));
-  const INTERVALS = SCVResult.createIntervalsVector(builder, builder.createObjectOffsetList(this.INTERVALS));
-  const LATITUDE_BANDS = SCVResult.createLatitudeBandsVector(builder, builder.createObjectOffsetList(this.LATITUDE_BANDS));
-  const TIME_SERIES = SCVResult.createTimeSeriesVector(builder, builder.createObjectOffsetList(this.TIME_SERIES));
   const HISTOGRAMS = SCVResult.createHistogramsVector(builder, builder.createObjectOffsetList(this.HISTOGRAMS));
-  const HEATMAP = SCVResult.createHeatmapVector(builder, builder.createObjectOffsetList(this.HEATMAP));
   const CONTRIBUTIONS = SCVResult.createContributionsVector(builder, builder.createObjectOffsetList(this.CONTRIBUTIONS));
   const GEOMETRY = (this.GEOMETRY !== null ? this.GEOMETRY!.pack(builder) : 0);
+  const RASTER_PRODUCTS = (this.RASTER_PRODUCTS !== null ? this.RASTER_PRODUCTS!.pack(builder) : 0);
   const MESSAGE = (this.MESSAGE !== null ? builder.createString(this.MESSAGE!) : 0);
+  const AGGREGATE_STATISTICS = (this.AGGREGATE_STATISTICS !== null ? this.AGGREGATE_STATISTICS!.pack(builder) : 0);
 
   SCVResult.startSCVResult(builder);
   SCVResult.addJobId(builder, JOB_ID);
@@ -397,15 +270,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCVResult.addTargetBody(builder, TARGET_BODY);
   SCVResult.addTotalSensors(builder, this.TOTAL_SENSORS);
   SCVResult.addTotalWindows(builder, this.TOTAL_WINDOWS);
-  SCVResult.addCellStats(builder, CELL_STATS);
-  SCVResult.addIntervals(builder, INTERVALS);
-  SCVResult.addLatitudeBands(builder, LATITUDE_BANDS);
-  SCVResult.addTimeSeries(builder, TIME_SERIES);
   SCVResult.addHistograms(builder, HISTOGRAMS);
-  SCVResult.addHeatmap(builder, HEATMAP);
   SCVResult.addContributions(builder, CONTRIBUTIONS);
   SCVResult.addGeometry(builder, GEOMETRY);
+  SCVResult.addRasterProducts(builder, RASTER_PRODUCTS);
   SCVResult.addMessage(builder, MESSAGE);
+  SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICS);
 
   return SCVResult.endSCVResult(builder);
 }

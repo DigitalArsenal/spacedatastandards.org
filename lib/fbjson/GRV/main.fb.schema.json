@@ -151,7 +151,8 @@
             "CUSTOM": {
               "value": 5
             }
-          }
+          },
+          "x-flatbuffer-default": "J2_J4"
         },
         "MODEL_NAME": {
           "$ref": "#/definitions/GravityModelName",
@@ -185,7 +186,8 @@
             "CUSTOM_MODEL": {
               "value": 8
             }
-          }
+          },
+          "x-flatbuffer-default": "EGM2008"
         },
         "CENTRAL_BODY": {
           "$ref": "#/definitions/CentralBody",
@@ -219,43 +221,52 @@
             "CUSTOM_BODY": {
               "value": 8
             }
-          }
+          },
+          "x-flatbuffer-default": "EARTH"
         },
         "MAX_DEGREE": {
           "type": "integer",
           "minimum": 0,
           "maximum": 65535,
-          "x-flatbuffer-type": "uint16"
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "70"
         },
         "MAX_ORDER": {
           "type": "integer",
           "minimum": 0,
           "maximum": 65535,
-          "x-flatbuffer-type": "uint16"
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "70"
         },
         "INCLUDE_SUN": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         },
         "INCLUDE_MOON": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         },
         "INCLUDE_PLANETS": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         },
         "SOLID_TIDES": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         },
         "OCEAN_TIDES": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         },
         "POLE_TIDES": {
           "type": "boolean",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         },
         "EQUATORIAL_RADIUS": {
           "type": "number",

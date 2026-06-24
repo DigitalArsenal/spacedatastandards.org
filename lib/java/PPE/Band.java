@@ -63,4 +63,3 @@ public final class Band extends com.google.flatbuffers.Table {
     public Band get(Band obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

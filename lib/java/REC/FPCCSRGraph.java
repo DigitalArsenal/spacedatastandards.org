@@ -95,4 +95,3 @@ public final class FPCCSRGraph extends com.google.flatbuffers.Table {
     public FPCCSRGraph get(FPCCSRGraph obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

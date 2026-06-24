@@ -71,4 +71,3 @@ public final class SDFComposition extends com.google.flatbuffers.Table {
     public SDFComposition get(SDFComposition obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

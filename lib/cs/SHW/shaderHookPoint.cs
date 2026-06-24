@@ -15,4 +15,3 @@ public enum shaderHookPoint : byte
   FRAGMENT_FINAL_COLOR = 5,
   POSTPROCESS = 6,
 };
-

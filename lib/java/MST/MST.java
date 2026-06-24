@@ -496,4 +496,3 @@ public final class MST extends com.google.flatbuffers.Table {
     public MST get(MST obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

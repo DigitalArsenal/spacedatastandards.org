@@ -397,7 +397,8 @@
           "minimum": 0,
           "maximum": 255,
           "description": "Number of components per point (default 3 for X, Y, Z)",
-          "x-flatbuffer-type": "uint8"
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "3"
         },
         "ECEF_POS": {
           "type": "array",

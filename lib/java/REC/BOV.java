@@ -83,4 +83,3 @@ public final class BOV extends com.google.flatbuffers.Table {
     public BOV get(BOV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

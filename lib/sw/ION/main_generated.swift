@@ -386,4 +386,3 @@ public struct ION: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

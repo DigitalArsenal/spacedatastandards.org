@@ -128,4 +128,3 @@ public final class DPMSourceBatch extends com.google.flatbuffers.Table {
     public DPMSourceBatch get(DPMSourceBatch obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

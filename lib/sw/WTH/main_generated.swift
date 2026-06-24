@@ -277,4 +277,3 @@ public struct WTH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

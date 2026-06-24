@@ -39,4 +39,3 @@ public final class trajectoryType {
 
   public static String name(int e) { return names[e]; }
 }
-

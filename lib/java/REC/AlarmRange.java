@@ -74,4 +74,3 @@ public final class AlarmRange extends com.google.flatbuffers.Table {
     public AlarmRange get(AlarmRange obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

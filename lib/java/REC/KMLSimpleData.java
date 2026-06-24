@@ -64,4 +64,3 @@ public final class KMLSimpleData extends com.google.flatbuffers.Table {
     public KMLSimpleData get(KMLSimpleData obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

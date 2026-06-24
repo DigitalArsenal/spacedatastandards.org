@@ -311,4 +311,3 @@ public struct DOA: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

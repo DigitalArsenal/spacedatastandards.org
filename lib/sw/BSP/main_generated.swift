@@ -362,4 +362,3 @@ public struct BSP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

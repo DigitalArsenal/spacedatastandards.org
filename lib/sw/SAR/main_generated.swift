@@ -501,4 +501,3 @@ public struct SAR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -960,4 +960,3 @@ public struct NUM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

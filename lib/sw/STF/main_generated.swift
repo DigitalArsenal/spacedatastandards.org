@@ -431,4 +431,3 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

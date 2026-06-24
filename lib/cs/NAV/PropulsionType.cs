@@ -14,4 +14,3 @@ public enum PropulsionType : sbyte
   CODLAG = 7,
   AIP = 8,
 };
-

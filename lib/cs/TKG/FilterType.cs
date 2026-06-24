@@ -16,4 +16,3 @@ public enum FilterType : sbyte
   GNN = 9,
   NNKF = 10,
 };
-

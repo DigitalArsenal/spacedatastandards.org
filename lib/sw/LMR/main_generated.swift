@@ -123,4 +123,3 @@ public struct LMR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

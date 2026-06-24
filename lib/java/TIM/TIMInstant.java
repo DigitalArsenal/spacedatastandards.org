@@ -130,4 +130,3 @@ public final class TIMInstant extends com.google.flatbuffers.Table {
     public TIMInstant get(TIMInstant obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

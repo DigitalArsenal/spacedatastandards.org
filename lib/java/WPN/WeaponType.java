@@ -22,4 +22,3 @@ public final class WeaponType {
 
   public static String name(int e) { return names[e]; }
 }
-

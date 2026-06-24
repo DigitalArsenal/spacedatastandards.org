@@ -53,4 +53,3 @@ public final class MET extends com.google.flatbuffers.Table {
     public MET get(MET obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

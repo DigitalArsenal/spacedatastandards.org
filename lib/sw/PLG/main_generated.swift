@@ -262,4 +262,3 @@ public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

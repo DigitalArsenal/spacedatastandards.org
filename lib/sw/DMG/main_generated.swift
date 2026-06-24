@@ -243,4 +243,3 @@ public struct DMG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

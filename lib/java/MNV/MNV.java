@@ -434,4 +434,3 @@ public final class MNV extends com.google.flatbuffers.Table {
     public MNV get(MNV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

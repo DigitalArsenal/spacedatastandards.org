@@ -8,4 +8,3 @@ public enum KMLRefreshMode : sbyte
   ON_INTERVAL = 1,
   ON_EXPIRE = 2,
 };
-

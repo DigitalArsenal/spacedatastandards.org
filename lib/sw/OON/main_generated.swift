@@ -162,4 +162,3 @@ public struct OON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

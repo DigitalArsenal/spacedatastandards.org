@@ -24,6 +24,7 @@ public struct SCV : IFlatbufferObject
   public SCVCancel? CANCEL { get { int o = __p.__offset(10); return o != 0 ? (SCVCancel?)(new SCVCancel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public SCVResult? RESULT { get { int o = __p.__offset(12); return o != 0 ? (SCVResult?)(new SCVResult()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public SCVPackedGeometryChunk? GEOMETRY { get { int o = __p.__offset(14); return o != 0 ? (SCVPackedGeometryChunk?)(new SCVPackedGeometryChunk()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVPackedRasterProducts? RASTER_PRODUCTS { get { int o = __p.__offset(16); return o != 0 ? (SCVPackedRasterProducts?)(new SCVPackedRasterProducts()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCV> CreateSCV(FlatBufferBuilder builder,
       scvEnvelopeKind ENVELOPE_KIND = scvEnvelopeKind.REQUEST,
@@ -31,8 +32,10 @@ public struct SCV : IFlatbufferObject
       Offset<SCVProgress> PROGRESSOffset = default(Offset<SCVProgress>),
       Offset<SCVCancel> CANCELOffset = default(Offset<SCVCancel>),
       Offset<SCVResult> RESULTOffset = default(Offset<SCVResult>),
-      Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>)) {
-    builder.StartTable(6);
+      Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>),
+      Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset = default(Offset<SCVPackedRasterProducts>)) {
+    builder.StartTable(7);
+    SCV.AddRASTER_PRODUCTS(builder, RASTER_PRODUCTSOffset);
     SCV.AddGEOMETRY(builder, GEOMETRYOffset);
     SCV.AddRESULT(builder, RESULTOffset);
     SCV.AddCANCEL(builder, CANCELOffset);
@@ -42,13 +45,14 @@ public struct SCV : IFlatbufferObject
     return SCV.EndSCV(builder);
   }
 
-  public static void StartSCV(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartSCV(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddENVELOPE_KIND(FlatBufferBuilder builder, scvEnvelopeKind ENVELOPE_KIND) { builder.AddByte(0, (byte)ENVELOPE_KIND, 0); }
   public static void AddREQUEST(FlatBufferBuilder builder, Offset<SCVCoverageRequest> REQUESTOffset) { builder.AddOffset(1, REQUESTOffset.Value, 0); }
   public static void AddPROGRESS(FlatBufferBuilder builder, Offset<SCVProgress> PROGRESSOffset) { builder.AddOffset(2, PROGRESSOffset.Value, 0); }
   public static void AddCANCEL(FlatBufferBuilder builder, Offset<SCVCancel> CANCELOffset) { builder.AddOffset(3, CANCELOffset.Value, 0); }
   public static void AddRESULT(FlatBufferBuilder builder, Offset<SCVResult> RESULTOffset) { builder.AddOffset(4, RESULTOffset.Value, 0); }
   public static void AddGEOMETRY(FlatBufferBuilder builder, Offset<SCVPackedGeometryChunk> GEOMETRYOffset) { builder.AddOffset(5, GEOMETRYOffset.Value, 0); }
+  public static void AddRASTER_PRODUCTS(FlatBufferBuilder builder, Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset) { builder.AddOffset(6, RASTER_PRODUCTSOffset.Value, 0); }
   public static Offset<SCV> EndSCV(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCV>(o);
@@ -67,6 +71,7 @@ public struct SCV : IFlatbufferObject
     _o.CANCEL = this.CANCEL.HasValue ? this.CANCEL.Value.UnPack() : null;
     _o.RESULT = this.RESULT.HasValue ? this.RESULT.Value.UnPack() : null;
     _o.GEOMETRY = this.GEOMETRY.HasValue ? this.GEOMETRY.Value.UnPack() : null;
+    _o.RASTER_PRODUCTS = this.RASTER_PRODUCTS.HasValue ? this.RASTER_PRODUCTS.Value.UnPack() : null;
   }
   public static Offset<SCV> Pack(FlatBufferBuilder builder, SCVT _o) {
     if (_o == null) return default(Offset<SCV>);
@@ -75,6 +80,7 @@ public struct SCV : IFlatbufferObject
     var _CANCEL = _o.CANCEL == null ? default(Offset<SCVCancel>) : SCVCancel.Pack(builder, _o.CANCEL);
     var _RESULT = _o.RESULT == null ? default(Offset<SCVResult>) : SCVResult.Pack(builder, _o.RESULT);
     var _GEOMETRY = _o.GEOMETRY == null ? default(Offset<SCVPackedGeometryChunk>) : SCVPackedGeometryChunk.Pack(builder, _o.GEOMETRY);
+    var _RASTER_PRODUCTS = _o.RASTER_PRODUCTS == null ? default(Offset<SCVPackedRasterProducts>) : SCVPackedRasterProducts.Pack(builder, _o.RASTER_PRODUCTS);
     return CreateSCV(
       builder,
       _o.ENVELOPE_KIND,
@@ -82,7 +88,8 @@ public struct SCV : IFlatbufferObject
       _PROGRESS,
       _CANCEL,
       _RESULT,
-      _GEOMETRY);
+      _GEOMETRY,
+      _RASTER_PRODUCTS);
   }
 }
 
@@ -94,6 +101,7 @@ public class SCVT
   public SCVCancelT CANCEL { get; set; }
   public SCVResultT RESULT { get; set; }
   public SCVPackedGeometryChunkT GEOMETRY { get; set; }
+  public SCVPackedRasterProductsT RASTER_PRODUCTS { get; set; }
 
   public SCVT() {
     this.ENVELOPE_KIND = scvEnvelopeKind.REQUEST;
@@ -102,6 +110,7 @@ public class SCVT
     this.CANCEL = null;
     this.RESULT = null;
     this.GEOMETRY = null;
+    this.RASTER_PRODUCTS = null;
   }
   public static SCVT DeserializeFromBinary(byte[] fbBuffer) {
     return SCV.GetRootAsSCV(new ByteBuffer(fbBuffer)).UnPack();
@@ -125,6 +134,7 @@ static public class SCVVerify
       && verifier.VerifyTable(tablePos, 10 /*CANCEL*/, SCVCancelVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 12 /*RESULT*/, SCVResultVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 14 /*GEOMETRY*/, SCVPackedGeometryChunkVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*RASTER_PRODUCTS*/, SCVPackedRasterProductsVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

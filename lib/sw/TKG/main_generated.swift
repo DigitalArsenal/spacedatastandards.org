@@ -217,4 +217,3 @@ public struct TKG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

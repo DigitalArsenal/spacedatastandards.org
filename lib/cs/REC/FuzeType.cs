@@ -13,4 +13,3 @@ public enum FuzeType : sbyte
   PRESSURE = 6,
   SEISMIC = 7,
 };
-

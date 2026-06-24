@@ -89,4 +89,3 @@ public final class STAGE extends com.google.flatbuffers.Table {
     public STAGE get(STAGE obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -95,4 +95,3 @@ public final class FPCShortestPathResult extends com.google.flatbuffers.Table {
     public FPCShortestPathResult get(FPCShortestPathResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

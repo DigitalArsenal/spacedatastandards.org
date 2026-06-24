@@ -136,4 +136,3 @@ public final class MBL extends com.google.flatbuffers.Table {
     public MBL get(MBL obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

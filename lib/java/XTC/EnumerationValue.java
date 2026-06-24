@@ -78,4 +78,3 @@ public final class EnumerationValue extends com.google.flatbuffers.Table {
     public EnumerationValue get(EnumerationValue obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

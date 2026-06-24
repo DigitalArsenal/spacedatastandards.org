@@ -17,4 +17,3 @@ public enum AntennaPattern : sbyte
   SECTOR = 10,
   CUSTOM_PATTERN = 11,
 };
-

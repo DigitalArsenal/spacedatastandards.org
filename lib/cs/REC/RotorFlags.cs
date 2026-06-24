@@ -12,4 +12,3 @@ public enum RotorFlags : sbyte
   OVERSPEED = 5,
   UNDERSPEED = 6,
 };
-

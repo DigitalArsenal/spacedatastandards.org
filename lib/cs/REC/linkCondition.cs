@@ -11,4 +11,3 @@ public enum linkCondition : sbyte
   TERMINATED = 4,
   UNKNOWN = 5,
 };
-

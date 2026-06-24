@@ -155,4 +155,3 @@ public final class rfEmitterDetail extends com.google.flatbuffers.Table {
     public rfEmitterDetail get(rfEmitterDetail obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

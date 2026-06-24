@@ -8,4 +8,3 @@ public enum CZMCornerType : sbyte
   MITERED = 1,
   BEVELED = 2,
 };
-

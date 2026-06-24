@@ -215,4 +215,3 @@ public struct PHY: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

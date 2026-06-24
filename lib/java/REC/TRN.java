@@ -77,4 +77,3 @@ public final class TRN extends com.google.flatbuffers.Table {
     public TRN get(TRN obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

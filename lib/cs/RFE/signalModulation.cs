@@ -18,4 +18,3 @@ public enum signalModulation : sbyte
   AGILE = 11,
   UNKNOWN = 12,
 };
-

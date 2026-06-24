@@ -18,4 +18,3 @@ public enum rbkEulerSequenceCode : sbyte
   EULER_321 = 11,
   EULER_323 = 12,
 };
-

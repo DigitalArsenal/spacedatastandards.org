@@ -645,4 +645,3 @@ public final class LAM extends com.google.flatbuffers.Table {
     public LAM get(LAM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

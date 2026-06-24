@@ -69,4 +69,3 @@ public final class CZMPolylineOutlineMaterial extends com.google.flatbuffers.Tab
     public CZMPolylineOutlineMaterial get(CZMPolylineOutlineMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

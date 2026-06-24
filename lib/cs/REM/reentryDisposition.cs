@@ -8,4 +8,3 @@ public enum reentryDisposition : sbyte
   UNCONTROLLED = 1,
   SEMI_CONTROLLED = 2,
 };
-

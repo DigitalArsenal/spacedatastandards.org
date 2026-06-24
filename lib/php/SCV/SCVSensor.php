@@ -64,120 +64,45 @@ class SCVSensor extends Table
     /**
      * @return byte
      */
-    public function getSHAPE()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvSensorShapeKind::CONIC;
-    }
-
-    /**
-     * @return byte
-     */
     public function getFRAME()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvCoordinateFrame::UNKNOWN;
     }
 
     public function getPOSITION_M()
     {
         $obj = new SCVVec3();
-        $o = $this->__offset(14);
+        $o = $this->__offset(12);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     public function getVELOCITY_MPS()
     {
         $obj = new SCVVec3();
-        $o = $this->__offset(16);
+        $o = $this->__offset(14);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     public function getBORESIGHT_UNIT()
     {
         $obj = new SCVVec3();
-        $o = $this->__offset(18);
+        $o = $this->__offset(16);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     public function getUP_UNIT()
     {
         $obj = new SCVVec3();
-        $o = $this->__offset(20);
+        $o = $this->__offset(18);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /**
-     * @return double
-     */
-    public function getHALF_ANGLE_DEG()
+    public function getSHAPE_CONTRACT()
     {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getCROSS_TRACK_HALF_ANGLE_DEG()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getALONG_TRACK_HALF_ANGLE_DEG()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMIN_RANGE_M()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMAX_RANGE_M()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
-    public function getPOLYGON_VERTICES($j)
-    {
-        $o = $this->__offset(32);
-        $obj = new SCVVec3();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPOLYGON_VERTICESLength()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @return byte
-     */
-    public function getPOLYGON_FRAME()
-    {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvCoordinateFrame::UNKNOWN;
+        $obj = new SCVSensorShapeContract();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -186,32 +111,25 @@ class SCVSensor extends Table
      */
     public static function startSCVSensor(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVSensor
      */
-    public static function createSCVSensor(FlatBufferBuilder $builder, $SENSOR_ID, $OBJECT_ID, $NAME, $SHAPE, $FRAME, $POSITION_M, $VELOCITY_MPS, $BORESIGHT_UNIT, $UP_UNIT, $HALF_ANGLE_DEG, $CROSS_TRACK_HALF_ANGLE_DEG, $ALONG_TRACK_HALF_ANGLE_DEG, $MIN_RANGE_M, $MAX_RANGE_M, $POLYGON_VERTICES, $POLYGON_FRAME)
+    public static function createSCVSensor(FlatBufferBuilder $builder, $SENSOR_ID, $OBJECT_ID, $NAME, $FRAME, $POSITION_M, $VELOCITY_MPS, $BORESIGHT_UNIT, $UP_UNIT, $SHAPE_CONTRACT)
     {
-        $builder->startObject(16);
+        $builder->startObject(9);
         self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNAME($builder, $NAME);
-        self::addSHAPE($builder, $SHAPE);
         self::addFRAME($builder, $FRAME);
         self::addPOSITION_M($builder, $POSITION_M);
         self::addVELOCITY_MPS($builder, $VELOCITY_MPS);
         self::addBORESIGHT_UNIT($builder, $BORESIGHT_UNIT);
         self::addUP_UNIT($builder, $UP_UNIT);
-        self::addHALF_ANGLE_DEG($builder, $HALF_ANGLE_DEG);
-        self::addCROSS_TRACK_HALF_ANGLE_DEG($builder, $CROSS_TRACK_HALF_ANGLE_DEG);
-        self::addALONG_TRACK_HALF_ANGLE_DEG($builder, $ALONG_TRACK_HALF_ANGLE_DEG);
-        self::addMIN_RANGE_M($builder, $MIN_RANGE_M);
-        self::addMAX_RANGE_M($builder, $MAX_RANGE_M);
-        self::addPOLYGON_VERTICES($builder, $POLYGON_VERTICES);
-        self::addPOLYGON_FRAME($builder, $POLYGON_FRAME);
+        self::addSHAPE_CONTRACT($builder, $SHAPE_CONTRACT);
         $o = $builder->endObject();
         return $o;
     }
@@ -251,19 +169,9 @@ class SCVSensor extends Table
      * @param byte
      * @return void
      */
-    public static function addSHAPE(FlatBufferBuilder $builder, $SHAPE)
-    {
-        $builder->addByteX(3, $SHAPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param byte
-     * @return void
-     */
     public static function addFRAME(FlatBufferBuilder $builder, $FRAME)
     {
-        $builder->addByteX(4, $FRAME, 0);
+        $builder->addByteX(3, $FRAME, 0);
     }
 
     /**
@@ -273,7 +181,7 @@ class SCVSensor extends Table
      */
     public static function addPOSITION_M(FlatBufferBuilder $builder, $POSITION_M)
     {
-        $builder->addOffsetX(5, $POSITION_M, 0);
+        $builder->addOffsetX(4, $POSITION_M, 0);
     }
 
     /**
@@ -283,7 +191,7 @@ class SCVSensor extends Table
      */
     public static function addVELOCITY_MPS(FlatBufferBuilder $builder, $VELOCITY_MPS)
     {
-        $builder->addOffsetX(6, $VELOCITY_MPS, 0);
+        $builder->addOffsetX(5, $VELOCITY_MPS, 0);
     }
 
     /**
@@ -293,7 +201,7 @@ class SCVSensor extends Table
      */
     public static function addBORESIGHT_UNIT(FlatBufferBuilder $builder, $BORESIGHT_UNIT)
     {
-        $builder->addOffsetX(7, $BORESIGHT_UNIT, 0);
+        $builder->addOffsetX(6, $BORESIGHT_UNIT, 0);
     }
 
     /**
@@ -303,57 +211,7 @@ class SCVSensor extends Table
      */
     public static function addUP_UNIT(FlatBufferBuilder $builder, $UP_UNIT)
     {
-        $builder->addOffsetX(8, $UP_UNIT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addHALF_ANGLE_DEG(FlatBufferBuilder $builder, $HALF_ANGLE_DEG)
-    {
-        $builder->addDoubleX(9, $HALF_ANGLE_DEG, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCROSS_TRACK_HALF_ANGLE_DEG(FlatBufferBuilder $builder, $CROSS_TRACK_HALF_ANGLE_DEG)
-    {
-        $builder->addDoubleX(10, $CROSS_TRACK_HALF_ANGLE_DEG, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addALONG_TRACK_HALF_ANGLE_DEG(FlatBufferBuilder $builder, $ALONG_TRACK_HALF_ANGLE_DEG)
-    {
-        $builder->addDoubleX(11, $ALONG_TRACK_HALF_ANGLE_DEG, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMIN_RANGE_M(FlatBufferBuilder $builder, $MIN_RANGE_M)
-    {
-        $builder->addDoubleX(12, $MIN_RANGE_M, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMAX_RANGE_M(FlatBufferBuilder $builder, $MAX_RANGE_M)
-    {
-        $builder->addDoubleX(13, $MAX_RANGE_M, 0.0);
+        $builder->addOffsetX(7, $UP_UNIT, 0);
     }
 
     /**
@@ -361,43 +219,9 @@ class SCVSensor extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addPOLYGON_VERTICES(FlatBufferBuilder $builder, $POLYGON_VERTICES)
+    public static function addSHAPE_CONTRACT(FlatBufferBuilder $builder, $SHAPE_CONTRACT)
     {
-        $builder->addOffsetX(14, $POLYGON_VERTICES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createPOLYGON_VERTICESVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startPOLYGON_VERTICESVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param byte
-     * @return void
-     */
-    public static function addPOLYGON_FRAME(FlatBufferBuilder $builder, $POLYGON_FRAME)
-    {
-        $builder->addByteX(15, $POLYGON_FRAME, 0);
+        $builder->addOffsetX(8, $SHAPE_CONTRACT, 0);
     }
 
     /**

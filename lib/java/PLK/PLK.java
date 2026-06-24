@@ -222,4 +222,3 @@ public final class PLK extends com.google.flatbuffers.Table {
     public PLK get(PLK obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

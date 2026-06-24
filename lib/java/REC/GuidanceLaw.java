@@ -19,4 +19,3 @@ public final class GuidanceLaw {
 
   public static String name(int e) { return names[e]; }
 }
-

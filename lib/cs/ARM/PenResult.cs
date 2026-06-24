@@ -11,4 +11,3 @@ public enum PenResult : sbyte
   SHATTERED = 4,
   OVER_MATCH = 5,
 };
-

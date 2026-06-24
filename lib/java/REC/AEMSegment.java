@@ -130,4 +130,3 @@ public final class AEMSegment extends com.google.flatbuffers.Table {
     public AEMSegment get(AEMSegment obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -9,4 +9,3 @@ public enum aouCategory : sbyte
   RECTANGULAR = 2,
   NONE = 3,
 };
-

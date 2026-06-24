@@ -39,4 +39,3 @@ public enum ModuleType : sbyte
   BRIDGE = 32,
   MAGAZINE = 33,
 };
-

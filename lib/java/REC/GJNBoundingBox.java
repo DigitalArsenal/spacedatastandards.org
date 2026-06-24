@@ -95,4 +95,3 @@ public final class GJNBoundingBox extends com.google.flatbuffers.Table {
     public GJNBoundingBox get(GJNBoundingBox obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

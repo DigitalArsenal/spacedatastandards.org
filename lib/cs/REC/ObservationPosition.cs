@@ -10,4 +10,3 @@ public enum ObservationPosition : sbyte
   LAST = 3,
   SINGLE = 4,
 };
-

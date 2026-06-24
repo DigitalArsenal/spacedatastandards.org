@@ -814,4 +814,3 @@ struct NUMBuilder:
         return this
     def end():
         return b_.EndObject()
-

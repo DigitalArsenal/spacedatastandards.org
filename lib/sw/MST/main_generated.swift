@@ -487,4 +487,3 @@ public struct MST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

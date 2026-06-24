@@ -73,4 +73,3 @@ public final class KMLData extends com.google.flatbuffers.Table {
     public KMLData get(KMLData obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

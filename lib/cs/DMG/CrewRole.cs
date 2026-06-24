@@ -14,4 +14,3 @@ public enum CrewRole : sbyte
   ENGINEER = 7,
   HELMSMAN = 8,
 };
-

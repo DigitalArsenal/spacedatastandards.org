@@ -185,4 +185,3 @@ public struct ARM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

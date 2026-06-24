@@ -60,4 +60,3 @@ public final class SNW extends com.google.flatbuffers.Table {
     public SNW get(SNW obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

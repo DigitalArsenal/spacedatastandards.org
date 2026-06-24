@@ -197,4 +197,3 @@ public struct WPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

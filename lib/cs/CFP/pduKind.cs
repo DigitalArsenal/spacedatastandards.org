@@ -7,4 +7,3 @@ public enum pduKind : sbyte
   FILE_DIRECTIVE = 0,
   FILE_DATA = 1,
 };
-

@@ -93,4 +93,3 @@ public final class PLGMethodManifest extends com.google.flatbuffers.Table {
     public PLGMethodManifest get(PLGMethodManifest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

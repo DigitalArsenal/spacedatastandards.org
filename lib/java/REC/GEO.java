@@ -210,4 +210,3 @@ public final class GEO extends com.google.flatbuffers.Table {
     public GEO get(GEO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

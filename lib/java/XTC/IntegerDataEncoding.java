@@ -89,4 +89,3 @@ public final class IntegerDataEncoding extends com.google.flatbuffers.Table {
     public IntegerDataEncoding get(IntegerDataEncoding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

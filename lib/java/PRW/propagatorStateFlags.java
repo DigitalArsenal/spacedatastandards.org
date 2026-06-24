@@ -52,4 +52,3 @@ public final class propagatorStateFlags {
    */
   public static final long RESERVED_7 = 128L;
 }
-

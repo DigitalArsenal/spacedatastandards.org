@@ -11,7 +11,7 @@
     },
     "scvCoordinateFrame" : {
       "type" : "string",
-      "enum": ["UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM"]
+      "enum": ["UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM", "SENSOR_LOCAL"]
     },
     "scvBodyKind" : {
       "type" : "string",
@@ -19,7 +19,15 @@
     },
     "scvSensorShapeKind" : {
       "type" : "string",
-      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON"]
+      "enum": ["CONIC", "RECTANGULAR", "CUSTOM_POLYGON", "SAR_ANNULAR_SECTOR"]
+    },
+    "scvSensorAxisConvention" : {
+      "type" : "string",
+      "enum": ["LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"]
+    },
+    "scvSensorRangeBoundaryKind" : {
+      "type" : "string",
+      "enum": ["RADIAL_SPHERICAL", "LOCAL_Z_PLANE"]
     },
     "scvGeometryDomain" : {
       "type" : "string",
@@ -29,10 +37,6 @@
       "type" : "string",
       "enum": ["OK", "PARTIAL", "CANCELLED", "FAILED"]
     },
-    "scvIntervalCategory" : {
-      "type" : "string",
-      "enum": ["ACCESS", "COVERAGE", "GAP", "REVISIT", "OVERLAP"]
-    },
     "scvMetricSeriesKind" : {
       "type" : "string",
       "enum": ["PERCENT_COVERED", "COVERED_CELL_COUNT", "ACCESS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "OVERLAP_COUNT", "LATITUDE_BAND_COVERAGE"]
@@ -40,6 +44,14 @@
     "scvGeometryEncoding" : {
       "type" : "string",
       "enum": ["FLAT_FLOAT32", "INTERLEAVED_FLOAT32", "QUANTIZED_UINT16", "SHARED_MEMORY_OFFSET"]
+    },
+    "scvRasterProductKind" : {
+      "type" : "string",
+      "enum": ["CELL_BOUNDS_DEG", "CELL_CENTERS_DEG", "PERCENT_COVERAGE", "PASS_COUNT", "CONTACT_DURATION_SECONDS", "REVISIT_SECONDS", "GAP_SECONDS", "REDUNDANCY", "CURRENT_ACCESS_BITSET", "BUCKET_START_SECONDS", "BUCKET_STOP_SECONDS", "BUCKET_ACTIVE_CELL_COUNT", "PASS_COUNT_RGBA", "CURRENT_ACCESS_RGBA", "LATITUDE_BAND_COVERAGE"]
+    },
+    "scvRasterProductEncoding" : {
+      "type" : "string",
+      "enum": ["FLOAT32", "FLOAT64", "UINT32", "BITSET_UINT32", "UINT8"]
     },
     "SCVVec3" : {
       "type" : "object",
@@ -107,6 +119,60 @@
       },
       "additionalProperties" : false
     },
+    "SCVSensorShapeContract" : {
+      "type" : "object",
+      "properties" : {
+        "SHAPE_KIND" : {
+                "$ref" : "#/definitions/scvSensorShapeKind"
+              },
+        "AXIS_CONVENTION" : {
+                "$ref" : "#/definitions/scvSensorAxisConvention"
+              },
+        "RANGE_BOUNDARY" : {
+                "$ref" : "#/definitions/scvSensorRangeBoundaryKind"
+              },
+        "OUTER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MIN_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "MAX_CLOCK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "X_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "Y_HALF_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "INNER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "OUTER_LOOK_ANGLE_DEG" : {
+                "type" : "number"
+              },
+        "SAR_SAMPLING_DENSITY" : {
+                "type" : "number"
+              },
+        "MIN_RANGE_M" : {
+                "type" : "number"
+              },
+        "MAX_RANGE_M" : {
+                "type" : "number"
+              },
+        "POLYGON_VERTICES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
+              },
+        "POLYGON_FRAME" : {
+                "$ref" : "#/definitions/scvCoordinateFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCVSensor" : {
       "type" : "object",
       "properties" : {
@@ -118,9 +184,6 @@
               },
         "NAME" : {
                 "type" : "string"
-              },
-        "SHAPE" : {
-                "$ref" : "#/definitions/scvSensorShapeKind"
               },
         "FRAME" : {
                 "$ref" : "#/definitions/scvCoordinateFrame"
@@ -137,26 +200,8 @@
         "UP_UNIT" : {
                 "$ref" : "#/definitions/SCVVec3"
               },
-        "HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "CROSS_TRACK_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "ALONG_TRACK_HALF_ANGLE_DEG" : {
-                "type" : "number"
-              },
-        "MIN_RANGE_M" : {
-                "type" : "number"
-              },
-        "MAX_RANGE_M" : {
-                "type" : "number"
-              },
-        "POLYGON_VERTICES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVVec3"}
-              },
-        "POLYGON_FRAME" : {
-                "$ref" : "#/definitions/scvCoordinateFrame"
+        "SHAPE_CONTRACT" : {
+                "$ref" : "#/definitions/SCVSensorShapeContract"
               }
       },
       "additionalProperties" : false
@@ -425,132 +470,6 @@
       },
       "additionalProperties" : false
     },
-    "SCVCellStat" : {
-      "type" : "object",
-      "properties" : {
-        "CELL_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "LATITUDE_DEG" : {
-                "type" : "number"
-              },
-        "LONGITUDE_DEG" : {
-                "type" : "number"
-              },
-        "ALTITUDE_M" : {
-                "type" : "number"
-              },
-        "COVERED_WINDOW_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TOTAL_WINDOW_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "COVERAGE_FRACTION" : {
-                "type" : "number"
-              },
-        "MEAN_REVISIT_SEC" : {
-                "type" : "number"
-              },
-        "MAX_GAP_SEC" : {
-                "type" : "number"
-              },
-        "MEAN_GAP_SEC" : {
-                "type" : "number"
-              },
-        "REDUNDANCY" : {
-                "type" : "number"
-              },
-        "SENSOR_IDS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
-              },
-        "SENSOR_BITSET_WORDS" : {
-                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615}
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVInterval" : {
-      "type" : "object",
-      "properties" : {
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "TARGET_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "INTERVAL_KIND" : {
-                "$ref" : "#/definitions/scvIntervalCategory"
-              },
-        "START_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "STOP_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "DURATION_SEC" : {
-                "type" : "number"
-              },
-        "MIN_RANGE_M" : {
-                "type" : "number"
-              },
-        "MAX_ELEVATION_DEG" : {
-                "type" : "number"
-              },
-        "CELL_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVLatitudeBandStat" : {
-      "type" : "object",
-      "properties" : {
-        "MIN_LAT_DEG" : {
-                "type" : "number"
-              },
-        "MAX_LAT_DEG" : {
-                "type" : "number"
-              },
-        "COVERAGE_FRACTION" : {
-                "type" : "number"
-              },
-        "MEAN_REVISIT_SEC" : {
-                "type" : "number"
-              },
-        "MAX_GAP_SEC" : {
-                "type" : "number"
-              },
-        "MEAN_REDUNDANCY" : {
-                "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVTimeSeriesPoint" : {
-      "type" : "object",
-      "properties" : {
-        "METRIC_KIND" : {
-                "$ref" : "#/definitions/scvMetricSeriesKind"
-              },
-        "TIME_OFFSET_SEC" : {
-                "type" : "number"
-              },
-        "WINDOW_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "VALUE" : {
-                "type" : "number"
-              },
-        "SENSOR_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "CELL_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              }
-      },
-      "additionalProperties" : false
-    },
     "SCVHistogramBin" : {
       "type" : "object",
       "properties" : {
@@ -568,27 +487,6 @@
               },
         "WEIGHT" : {
                 "type" : "number"
-              }
-      },
-      "additionalProperties" : false
-    },
-    "SCVHeatmapCell" : {
-      "type" : "object",
-      "properties" : {
-        "METRIC_KIND" : {
-                "$ref" : "#/definitions/scvMetricSeriesKind"
-              },
-        "X_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "Y_INDEX" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
-              },
-        "VALUE" : {
-                "type" : "number"
-              },
-        "SENSOR_COUNT" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
               }
       },
       "additionalProperties" : false
@@ -761,6 +659,138 @@
       },
       "additionalProperties" : false
     },
+    "SCVPackedRasterBand" : {
+      "type" : "object",
+      "properties" : {
+        "PRODUCT_KIND" : {
+                "$ref" : "#/definitions/scvRasterProductKind"
+              },
+        "METRIC_KIND" : {
+                "$ref" : "#/definitions/scvMetricSeriesKind"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/scvRasterProductEncoding"
+              },
+        "COMPONENTS_PER_CELL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BUCKET_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WORDS_PER_BUCKET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_REGION_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_RECORD_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FLOAT32_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "FLOAT64_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "UINT32_VALUES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVPackedRasterProducts" : {
+      "type" : "object",
+      "properties" : {
+        "JOB_ID" : {
+                "type" : "string"
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "GRID" : {
+                "$ref" : "#/definitions/SCVCoverageGrid"
+              },
+        "TIME_GRID" : {
+                "$ref" : "#/definitions/SCVTimeGrid"
+              },
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "COLUMNS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CELL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BUCKET_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "WORDS_PER_BUCKET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEMORY_REGIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVMemoryRegion"}
+              },
+        "BANDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCVPackedRasterBand"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCVAggregateStatistics" : {
+      "type" : "object",
+      "properties" : {
+        "TOTAL_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ACCESSED_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MULTI_ACCESS_CELLS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ACTIVE_SENSOR_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SWATH_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_WINDOWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_INTERVAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_REVISIT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TOTAL_ACCESS_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "TOTAL_GAP_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "MAX_GAP_DURATION_SEC" : {
+                "type" : "number"
+              },
+        "MEAN_REVISIT_TIME_SEC" : {
+                "type" : "number"
+              },
+        "MAX_RESPONSE_TIME_SEC" : {
+                "type" : "number"
+              },
+        "MEAN_RESPONSE_TIME_SEC" : {
+                "type" : "number"
+              },
+        "PERCENT_COVERAGE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
     "SCVResult" : {
       "type" : "object",
       "properties" : {
@@ -785,23 +815,8 @@
         "TOTAL_WINDOWS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295
               },
-        "CELL_STATS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVCellStat"}
-              },
-        "INTERVALS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVInterval"}
-              },
-        "LATITUDE_BANDS" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVLatitudeBandStat"}
-              },
-        "TIME_SERIES" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVTimeSeriesPoint"}
-              },
         "HISTOGRAMS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCVHistogramBin"}
-              },
-        "HEATMAP" : {
-                "type" : "array", "items" : {"$ref" : "#/definitions/SCVHeatmapCell"}
               },
         "CONTRIBUTIONS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SCVSensorContribution"}
@@ -809,8 +824,14 @@
         "GEOMETRY" : {
                 "$ref" : "#/definitions/SCVPackedGeometryChunk"
               },
+        "RASTER_PRODUCTS" : {
+                "$ref" : "#/definitions/SCVPackedRasterProducts"
+              },
         "MESSAGE" : {
                 "type" : "string"
+              },
+        "AGGREGATE_STATISTICS" : {
+                "$ref" : "#/definitions/SCVAggregateStatistics"
               }
       },
       "additionalProperties" : false
@@ -835,6 +856,9 @@
               },
         "GEOMETRY" : {
                 "$ref" : "#/definitions/SCVPackedGeometryChunk"
+              },
+        "RASTER_PRODUCTS" : {
+                "$ref" : "#/definitions/SCVPackedRasterProducts"
               }
       },
       "additionalProperties" : false

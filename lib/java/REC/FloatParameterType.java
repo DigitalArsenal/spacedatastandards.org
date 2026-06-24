@@ -143,4 +143,3 @@ public final class FloatParameterType extends com.google.flatbuffers.Table {
     public FloatParameterType get(FloatParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

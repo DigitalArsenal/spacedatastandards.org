@@ -15,4 +15,3 @@ public enum FlightPhase : sbyte
   GO_AROUND = 8,
   EMERGENCY = 9,
 };
-

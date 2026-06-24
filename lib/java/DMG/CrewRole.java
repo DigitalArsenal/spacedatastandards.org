@@ -17,4 +17,3 @@ public final class CrewRole {
 
   public static String name(int e) { return names[e]; }
 }
-

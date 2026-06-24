@@ -184,4 +184,3 @@ public struct HYP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

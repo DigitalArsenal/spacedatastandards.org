@@ -26,4 +26,3 @@ public final class snwErrorCode {
 
   public static String name(int e) { return names[e]; }
 }
-

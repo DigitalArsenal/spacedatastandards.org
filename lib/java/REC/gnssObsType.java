@@ -13,4 +13,3 @@ public final class gnssObsType {
 
   public static String name(int e) { return names[e]; }
 }
-

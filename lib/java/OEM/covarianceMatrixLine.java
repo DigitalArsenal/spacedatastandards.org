@@ -202,4 +202,3 @@ public final class covarianceMatrixLine extends com.google.flatbuffers.Table {
     public covarianceMatrixLine get(covarianceMatrixLine obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

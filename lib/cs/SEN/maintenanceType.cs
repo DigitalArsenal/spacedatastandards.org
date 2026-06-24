@@ -12,4 +12,3 @@ public enum maintenanceType : sbyte
   UPGRADE = 5,
   INSPECTION = 6,
 };
-

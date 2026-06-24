@@ -71,4 +71,3 @@ public final class FRMFrameTransformRequest extends com.google.flatbuffers.Table
     public FRMFrameTransformRequest get(FRMFrameTransformRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

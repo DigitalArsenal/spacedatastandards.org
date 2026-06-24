@@ -55,4 +55,3 @@ public final class KMLTourControl extends com.google.flatbuffers.Table {
     public KMLTourControl get(KMLTourControl obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

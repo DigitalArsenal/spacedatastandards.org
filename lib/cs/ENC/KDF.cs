@@ -7,4 +7,3 @@ public enum KDF : sbyte
 {
   HKDF_SHA256 = 0,
 };
-

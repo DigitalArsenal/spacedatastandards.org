@@ -125,11 +125,15 @@
         },
         "PRESSURE_PA": {
           "type": "number",
-          "description": "Local pressure in pascals."
+          "description": "Local pressure in pascals.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "101000.0"
         },
         "TEMPERATURE_K": {
           "type": "number",
-          "description": "Local temperature in kelvin."
+          "description": "Local temperature in kelvin.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "283.0"
         }
       },
       "additionalProperties": false

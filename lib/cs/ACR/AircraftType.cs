@@ -17,4 +17,3 @@ public enum AircraftType : sbyte
   PROP_MULTI = 10,
   SEAPLANE = 11,
 };
-

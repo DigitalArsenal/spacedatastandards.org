@@ -155,4 +155,3 @@ public struct MFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

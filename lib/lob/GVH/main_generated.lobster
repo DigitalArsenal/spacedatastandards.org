@@ -188,4 +188,3 @@ struct GVHBuilder:
         return this
     def end():
         return b_.EndObject()
-

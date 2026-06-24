@@ -147,4 +147,3 @@ public final class SCVCoverageRequest extends com.google.flatbuffers.Table {
     public SCVCoverageRequest get(SCVCoverageRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

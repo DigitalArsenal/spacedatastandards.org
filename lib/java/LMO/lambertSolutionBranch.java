@@ -68,4 +68,3 @@ public final class lambertSolutionBranch extends com.google.flatbuffers.Table {
     public lambertSolutionBranch get(lambertSolutionBranch obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

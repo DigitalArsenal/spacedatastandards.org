@@ -93,7 +93,8 @@ enum scvCoordinateFrame {
   INERTIAL(2),
   ECEF(3),
   ECI(4),
-  CUSTOM(5);
+  CUSTOM(5),
+  SENSOR_LOCAL(6);
 
   final int value;
   const scvCoordinateFrame(this.value);
@@ -106,6 +107,7 @@ enum scvCoordinateFrame {
       case 3: return scvCoordinateFrame.ECEF;
       case 4: return scvCoordinateFrame.ECI;
       case 5: return scvCoordinateFrame.CUSTOM;
+      case 6: return scvCoordinateFrame.SENSOR_LOCAL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -114,7 +116,7 @@ enum scvCoordinateFrame {
       value == null ? null : scvCoordinateFrame.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<scvCoordinateFrame> reader = _scvCoordinateFrameReader();
 }
 
@@ -170,7 +172,8 @@ class _scvBodyKindReader extends fb.Reader<scvBodyKind> {
 enum scvSensorShapeKind {
   CONIC(0),
   RECTANGULAR(1),
-  CUSTOM_POLYGON(2);
+  CUSTOM_POLYGON(2),
+  SAR_ANNULAR_SECTOR(3);
 
   final int value;
   const scvSensorShapeKind(this.value);
@@ -180,6 +183,7 @@ enum scvSensorShapeKind {
       case 0: return scvSensorShapeKind.CONIC;
       case 1: return scvSensorShapeKind.RECTANGULAR;
       case 2: return scvSensorShapeKind.CUSTOM_POLYGON;
+      case 3: return scvSensorShapeKind.SAR_ANNULAR_SECTOR;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -188,7 +192,7 @@ enum scvSensorShapeKind {
       value == null ? null : scvSensorShapeKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static const fb.Reader<scvSensorShapeKind> reader = _scvSensorShapeKindReader();
 }
 
@@ -201,6 +205,72 @@ class _scvSensorShapeKindReader extends fb.Reader<scvSensorShapeKind> {
   @override
   scvSensorShapeKind read(fb.BufferContext bc, int offset) =>
       scvSensorShapeKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum scvSensorAxisConvention {
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT(0);
+
+  final int value;
+  const scvSensorAxisConvention(this.value);
+
+  factory scvSensorAxisConvention.fromValue(int value) {
+    switch (value) {
+      case 0: return scvSensorAxisConvention.LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scvSensorAxisConvention? _createOrNull(int? value) =>
+      value == null ? null : scvSensorAxisConvention.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 0;
+  static const fb.Reader<scvSensorAxisConvention> reader = _scvSensorAxisConventionReader();
+}
+
+class _scvSensorAxisConventionReader extends fb.Reader<scvSensorAxisConvention> {
+  const _scvSensorAxisConventionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scvSensorAxisConvention read(fb.BufferContext bc, int offset) =>
+      scvSensorAxisConvention.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum scvSensorRangeBoundaryKind {
+  RADIAL_SPHERICAL(0),
+  LOCAL_Z_PLANE(1);
+
+  final int value;
+  const scvSensorRangeBoundaryKind(this.value);
+
+  factory scvSensorRangeBoundaryKind.fromValue(int value) {
+    switch (value) {
+      case 0: return scvSensorRangeBoundaryKind.RADIAL_SPHERICAL;
+      case 1: return scvSensorRangeBoundaryKind.LOCAL_Z_PLANE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scvSensorRangeBoundaryKind? _createOrNull(int? value) =>
+      value == null ? null : scvSensorRangeBoundaryKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<scvSensorRangeBoundaryKind> reader = _scvSensorRangeBoundaryKindReader();
+}
+
+class _scvSensorRangeBoundaryKindReader extends fb.Reader<scvSensorRangeBoundaryKind> {
+  const _scvSensorRangeBoundaryKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scvSensorRangeBoundaryKind read(fb.BufferContext bc, int offset) =>
+      scvSensorRangeBoundaryKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 enum scvGeometryDomain {
@@ -279,46 +349,6 @@ class _scvResultStateReader extends fb.Reader<scvResultState> {
   @override
   scvResultState read(fb.BufferContext bc, int offset) =>
       scvResultState.fromValue(const fb.Uint8Reader().read(bc, offset));
-}
-
-enum scvIntervalCategory {
-  ACCESS(0),
-  COVERAGE(1),
-  GAP(2),
-  REVISIT(3),
-  OVERLAP(4);
-
-  final int value;
-  const scvIntervalCategory(this.value);
-
-  factory scvIntervalCategory.fromValue(int value) {
-    switch (value) {
-      case 0: return scvIntervalCategory.ACCESS;
-      case 1: return scvIntervalCategory.COVERAGE;
-      case 2: return scvIntervalCategory.GAP;
-      case 3: return scvIntervalCategory.REVISIT;
-      case 4: return scvIntervalCategory.OVERLAP;
-      default: throw StateError('Invalid value $value for bit flag enum');
-    }
-  }
-
-  static scvIntervalCategory? _createOrNull(int? value) =>
-      value == null ? null : scvIntervalCategory.fromValue(value);
-
-  static const int minValue = 0;
-  static const int maxValue = 4;
-  static const fb.Reader<scvIntervalCategory> reader = _scvIntervalCategoryReader();
-}
-
-class _scvIntervalCategoryReader extends fb.Reader<scvIntervalCategory> {
-  const _scvIntervalCategoryReader();
-
-  @override
-  int get size => 1;
-
-  @override
-  scvIntervalCategory read(fb.BufferContext bc, int offset) =>
-      scvIntervalCategory.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 enum scvMetricSeriesKind {
@@ -405,6 +435,106 @@ class _scvGeometryEncodingReader extends fb.Reader<scvGeometryEncoding> {
   @override
   scvGeometryEncoding read(fb.BufferContext bc, int offset) =>
       scvGeometryEncoding.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum scvRasterProductKind {
+  CELL_BOUNDS_DEG(0),
+  CELL_CENTERS_DEG(1),
+  PERCENT_COVERAGE(2),
+  PASS_COUNT(3),
+  CONTACT_DURATION_SECONDS(4),
+  REVISIT_SECONDS(5),
+  GAP_SECONDS(6),
+  REDUNDANCY(7),
+  CURRENT_ACCESS_BITSET(8),
+  BUCKET_START_SECONDS(9),
+  BUCKET_STOP_SECONDS(10),
+  BUCKET_ACTIVE_CELL_COUNT(11),
+  PASS_COUNT_RGBA(12),
+  CURRENT_ACCESS_RGBA(13),
+  LATITUDE_BAND_COVERAGE(14);
+
+  final int value;
+  const scvRasterProductKind(this.value);
+
+  factory scvRasterProductKind.fromValue(int value) {
+    switch (value) {
+      case 0: return scvRasterProductKind.CELL_BOUNDS_DEG;
+      case 1: return scvRasterProductKind.CELL_CENTERS_DEG;
+      case 2: return scvRasterProductKind.PERCENT_COVERAGE;
+      case 3: return scvRasterProductKind.PASS_COUNT;
+      case 4: return scvRasterProductKind.CONTACT_DURATION_SECONDS;
+      case 5: return scvRasterProductKind.REVISIT_SECONDS;
+      case 6: return scvRasterProductKind.GAP_SECONDS;
+      case 7: return scvRasterProductKind.REDUNDANCY;
+      case 8: return scvRasterProductKind.CURRENT_ACCESS_BITSET;
+      case 9: return scvRasterProductKind.BUCKET_START_SECONDS;
+      case 10: return scvRasterProductKind.BUCKET_STOP_SECONDS;
+      case 11: return scvRasterProductKind.BUCKET_ACTIVE_CELL_COUNT;
+      case 12: return scvRasterProductKind.PASS_COUNT_RGBA;
+      case 13: return scvRasterProductKind.CURRENT_ACCESS_RGBA;
+      case 14: return scvRasterProductKind.LATITUDE_BAND_COVERAGE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scvRasterProductKind? _createOrNull(int? value) =>
+      value == null ? null : scvRasterProductKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 14;
+  static const fb.Reader<scvRasterProductKind> reader = _scvRasterProductKindReader();
+}
+
+class _scvRasterProductKindReader extends fb.Reader<scvRasterProductKind> {
+  const _scvRasterProductKindReader();
+
+  @override
+  int get size => 2;
+
+  @override
+  scvRasterProductKind read(fb.BufferContext bc, int offset) =>
+      scvRasterProductKind.fromValue(const fb.Uint16Reader().read(bc, offset));
+}
+
+enum scvRasterProductEncoding {
+  FLOAT32(0),
+  FLOAT64(1),
+  UINT32(2),
+  BITSET_UINT32(3),
+  UINT8(4);
+
+  final int value;
+  const scvRasterProductEncoding(this.value);
+
+  factory scvRasterProductEncoding.fromValue(int value) {
+    switch (value) {
+      case 0: return scvRasterProductEncoding.FLOAT32;
+      case 1: return scvRasterProductEncoding.FLOAT64;
+      case 2: return scvRasterProductEncoding.UINT32;
+      case 3: return scvRasterProductEncoding.BITSET_UINT32;
+      case 4: return scvRasterProductEncoding.UINT8;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static scvRasterProductEncoding? _createOrNull(int? value) =>
+      value == null ? null : scvRasterProductEncoding.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<scvRasterProductEncoding> reader = _scvRasterProductEncodingReader();
+}
+
+class _scvRasterProductEncodingReader extends fb.Reader<scvRasterProductEncoding> {
+  const _scvRasterProductEncodingReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  scvRasterProductEncoding read(fb.BufferContext bc, int offset) =>
+      scvRasterProductEncoding.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 class SCVVec3 {
@@ -761,39 +891,42 @@ class SCVTimeGridObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class SCVSensor {
-  SCVSensor._(this._bc, this._bcOffset);
-  factory SCVSensor(List<int> bytes) {
+class SCVSensorShapeContract {
+  SCVSensorShapeContract._(this._bc, this._bcOffset);
+  factory SCVSensorShapeContract(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<SCVSensor> reader = _SCVSensorReader();
+  static const fb.Reader<SCVSensorShapeContract> reader = _SCVSensorShapeContractReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  int get SENSOR_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get sensorId => SENSOR_ID;
-  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get objectId => OBJECT_ID;
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  scvSensorShapeKind get SHAPE => scvSensorShapeKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  scvCoordinateFrame get FRAME => scvCoordinateFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
-  SCVVec3? get POSITION_M => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  SCVVec3? get positionM => POSITION_M;
-  SCVVec3? get VELOCITY_MPS => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  SCVVec3? get velocityMps => VELOCITY_MPS;
-  SCVVec3? get BORESIGHT_UNIT => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  SCVVec3? get boresightUnit => BORESIGHT_UNIT;
-  SCVVec3? get UP_UNIT => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 20);
-  SCVVec3? get upUnit => UP_UNIT;
-  double get HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get halfAngleDeg => HALF_ANGLE_DEG;
-  double get CROSS_TRACK_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get crossTrackHalfAngleDeg => CROSS_TRACK_HALF_ANGLE_DEG;
-  double get ALONG_TRACK_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get alongTrackHalfAngleDeg => ALONG_TRACK_HALF_ANGLE_DEG;
+  scvSensorShapeKind get SHAPE_KIND => scvSensorShapeKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  scvSensorShapeKind get shapeKind => SHAPE_KIND;
+  scvSensorAxisConvention get AXIS_CONVENTION => scvSensorAxisConvention.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  scvSensorAxisConvention get axisConvention => AXIS_CONVENTION;
+  scvSensorRangeBoundaryKind get RANGE_BOUNDARY => scvSensorRangeBoundaryKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  scvSensorRangeBoundaryKind get rangeBoundary => RANGE_BOUNDARY;
+  double get OUTER_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get outerHalfAngleDeg => OUTER_HALF_ANGLE_DEG;
+  double get INNER_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get innerHalfAngleDeg => INNER_HALF_ANGLE_DEG;
+  double get MIN_CLOCK_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get minClockAngleDeg => MIN_CLOCK_ANGLE_DEG;
+  double get MAX_CLOCK_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 360.0);
+  double get maxClockAngleDeg => MAX_CLOCK_ANGLE_DEG;
+  double get X_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get xHalfAngleDeg => X_HALF_ANGLE_DEG;
+  double get Y_HALF_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get yHalfAngleDeg => Y_HALF_ANGLE_DEG;
+  double get INNER_LOOK_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get innerLookAngleDeg => INNER_LOOK_ANGLE_DEG;
+  double get OUTER_LOOK_ANGLE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get outerLookAngleDeg => OUTER_LOOK_ANGLE_DEG;
+  double get SAR_SAMPLING_DENSITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get sarSamplingDensity => SAR_SAMPLING_DENSITY;
   double get MIN_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
   double get minRangeM => MIN_RANGE_M;
   double get MAX_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
@@ -805,20 +938,20 @@ class SCVSensor {
 
   @override
   String toString() {
-    return 'SCVSensor{sensorId: ${sensorId}, objectId: ${objectId}, NAME: ${NAME}, SHAPE: ${SHAPE}, FRAME: ${FRAME}, positionM: ${positionM}, velocityMps: ${velocityMps}, boresightUnit: ${boresightUnit}, upUnit: ${upUnit}, halfAngleDeg: ${halfAngleDeg}, crossTrackHalfAngleDeg: ${crossTrackHalfAngleDeg}, alongTrackHalfAngleDeg: ${alongTrackHalfAngleDeg}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}}';
+    return 'SCVSensorShapeContract{shapeKind: ${shapeKind}, axisConvention: ${axisConvention}, rangeBoundary: ${rangeBoundary}, outerHalfAngleDeg: ${outerHalfAngleDeg}, innerHalfAngleDeg: ${innerHalfAngleDeg}, minClockAngleDeg: ${minClockAngleDeg}, maxClockAngleDeg: ${maxClockAngleDeg}, xHalfAngleDeg: ${xHalfAngleDeg}, yHalfAngleDeg: ${yHalfAngleDeg}, innerLookAngleDeg: ${innerLookAngleDeg}, outerLookAngleDeg: ${outerLookAngleDeg}, sarSamplingDensity: ${sarSamplingDensity}, minRangeM: ${minRangeM}, maxRangeM: ${maxRangeM}, polygonVertices: ${polygonVertices}, polygonFrame: ${polygonFrame}}';
   }
 }
 
-class _SCVSensorReader extends fb.TableReader<SCVSensor> {
-  const _SCVSensorReader();
+class _SCVSensorShapeContractReader extends fb.TableReader<SCVSensorShapeContract> {
+  const _SCVSensorShapeContractReader();
 
   @override
-  SCVSensor createObject(fb.BufferContext bc, int offset) =>
-    SCVSensor._(bc, offset);
+  SCVSensorShapeContract createObject(fb.BufferContext bc, int offset) =>
+    SCVSensorShapeContract._(bc, offset);
 }
 
-class SCVSensorBuilder {
-  SCVSensorBuilder(this.fbBuilder);
+class SCVSensorShapeContractBuilder {
+  SCVSensorShapeContractBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
@@ -826,52 +959,52 @@ class SCVSensorBuilder {
     fbBuilder.startTable(16);
   }
 
-  int addSensorId(int? SENSOR_ID) {
-    fbBuilder.addUint32(0, SENSOR_ID);
+  int addShapeKind(scvSensorShapeKind? SHAPE_KIND) {
+    fbBuilder.addUint8(0, SHAPE_KIND?.value);
     return fbBuilder.offset;
   }
-  int addObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addAxisConvention(scvSensorAxisConvention? AXIS_CONVENTION) {
+    fbBuilder.addUint8(1, AXIS_CONVENTION?.value);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addRangeBoundary(scvSensorRangeBoundaryKind? RANGE_BOUNDARY) {
+    fbBuilder.addUint8(2, RANGE_BOUNDARY?.value);
     return fbBuilder.offset;
   }
-  int addShape(scvSensorShapeKind? SHAPE) {
-    fbBuilder.addUint8(3, SHAPE?.value);
+  int addOuterHalfAngleDeg(double? OUTER_HALF_ANGLE_DEG) {
+    fbBuilder.addFloat64(3, OUTER_HALF_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addFrame(scvCoordinateFrame? FRAME) {
-    fbBuilder.addUint8(4, FRAME?.value);
+  int addInnerHalfAngleDeg(double? INNER_HALF_ANGLE_DEG) {
+    fbBuilder.addFloat64(4, INNER_HALF_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addPositionMOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addMinClockAngleDeg(double? MIN_CLOCK_ANGLE_DEG) {
+    fbBuilder.addFloat64(5, MIN_CLOCK_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addVelocityMpsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addMaxClockAngleDeg(double? MAX_CLOCK_ANGLE_DEG) {
+    fbBuilder.addFloat64(6, MAX_CLOCK_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addBoresightUnitOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addXHalfAngleDeg(double? X_HALF_ANGLE_DEG) {
+    fbBuilder.addFloat64(7, X_HALF_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addUpUnitOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addYHalfAngleDeg(double? Y_HALF_ANGLE_DEG) {
+    fbBuilder.addFloat64(8, Y_HALF_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addHalfAngleDeg(double? HALF_ANGLE_DEG) {
-    fbBuilder.addFloat64(9, HALF_ANGLE_DEG);
+  int addInnerLookAngleDeg(double? INNER_LOOK_ANGLE_DEG) {
+    fbBuilder.addFloat64(9, INNER_LOOK_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addCrossTrackHalfAngleDeg(double? CROSS_TRACK_HALF_ANGLE_DEG) {
-    fbBuilder.addFloat64(10, CROSS_TRACK_HALF_ANGLE_DEG);
+  int addOuterLookAngleDeg(double? OUTER_LOOK_ANGLE_DEG) {
+    fbBuilder.addFloat64(10, OUTER_LOOK_ANGLE_DEG);
     return fbBuilder.offset;
   }
-  int addAlongTrackHalfAngleDeg(double? ALONG_TRACK_HALF_ANGLE_DEG) {
-    fbBuilder.addFloat64(11, ALONG_TRACK_HALF_ANGLE_DEG);
+  int addSarSamplingDensity(double? SAR_SAMPLING_DENSITY) {
+    fbBuilder.addFloat64(11, SAR_SAMPLING_DENSITY);
     return fbBuilder.offset;
   }
   int addMinRangeM(double? MIN_RANGE_M) {
@@ -896,46 +1029,49 @@ class SCVSensorBuilder {
   }
 }
 
-class SCVSensorObjectBuilder extends fb.ObjectBuilder {
-  final int? _SENSOR_ID;
-  final String? _OBJECT_ID;
-  final String? _NAME;
-  final scvSensorShapeKind? _SHAPE;
-  final scvCoordinateFrame? _FRAME;
-  final SCVVec3ObjectBuilder? _POSITION_M;
-  final SCVVec3ObjectBuilder? _VELOCITY_MPS;
-  final SCVVec3ObjectBuilder? _BORESIGHT_UNIT;
-  final SCVVec3ObjectBuilder? _UP_UNIT;
-  final double? _HALF_ANGLE_DEG;
-  final double? _CROSS_TRACK_HALF_ANGLE_DEG;
-  final double? _ALONG_TRACK_HALF_ANGLE_DEG;
+class SCVSensorShapeContractObjectBuilder extends fb.ObjectBuilder {
+  final scvSensorShapeKind? _SHAPE_KIND;
+  final scvSensorAxisConvention? _AXIS_CONVENTION;
+  final scvSensorRangeBoundaryKind? _RANGE_BOUNDARY;
+  final double? _OUTER_HALF_ANGLE_DEG;
+  final double? _INNER_HALF_ANGLE_DEG;
+  final double? _MIN_CLOCK_ANGLE_DEG;
+  final double? _MAX_CLOCK_ANGLE_DEG;
+  final double? _X_HALF_ANGLE_DEG;
+  final double? _Y_HALF_ANGLE_DEG;
+  final double? _INNER_LOOK_ANGLE_DEG;
+  final double? _OUTER_LOOK_ANGLE_DEG;
+  final double? _SAR_SAMPLING_DENSITY;
   final double? _MIN_RANGE_M;
   final double? _MAX_RANGE_M;
   final List<SCVVec3ObjectBuilder>? _POLYGON_VERTICES;
   final scvCoordinateFrame? _POLYGON_FRAME;
 
-  SCVSensorObjectBuilder({
-    int? SENSOR_ID,
-    int? sensorId,
-    String? OBJECT_ID,
-    String? objectId,
-    String? NAME,
-    scvSensorShapeKind? SHAPE,
-    scvCoordinateFrame? FRAME,
-    SCVVec3ObjectBuilder? POSITION_M,
-    SCVVec3ObjectBuilder? positionM,
-    SCVVec3ObjectBuilder? VELOCITY_MPS,
-    SCVVec3ObjectBuilder? velocityMps,
-    SCVVec3ObjectBuilder? BORESIGHT_UNIT,
-    SCVVec3ObjectBuilder? boresightUnit,
-    SCVVec3ObjectBuilder? UP_UNIT,
-    SCVVec3ObjectBuilder? upUnit,
-    double? HALF_ANGLE_DEG,
-    double? halfAngleDeg,
-    double? CROSS_TRACK_HALF_ANGLE_DEG,
-    double? crossTrackHalfAngleDeg,
-    double? ALONG_TRACK_HALF_ANGLE_DEG,
-    double? alongTrackHalfAngleDeg,
+  SCVSensorShapeContractObjectBuilder({
+    scvSensorShapeKind? SHAPE_KIND,
+    scvSensorShapeKind? shapeKind,
+    scvSensorAxisConvention? AXIS_CONVENTION,
+    scvSensorAxisConvention? axisConvention,
+    scvSensorRangeBoundaryKind? RANGE_BOUNDARY,
+    scvSensorRangeBoundaryKind? rangeBoundary,
+    double? OUTER_HALF_ANGLE_DEG,
+    double? outerHalfAngleDeg,
+    double? INNER_HALF_ANGLE_DEG,
+    double? innerHalfAngleDeg,
+    double? MIN_CLOCK_ANGLE_DEG,
+    double? minClockAngleDeg,
+    double? MAX_CLOCK_ANGLE_DEG,
+    double? maxClockAngleDeg,
+    double? X_HALF_ANGLE_DEG,
+    double? xHalfAngleDeg,
+    double? Y_HALF_ANGLE_DEG,
+    double? yHalfAngleDeg,
+    double? INNER_LOOK_ANGLE_DEG,
+    double? innerLookAngleDeg,
+    double? OUTER_LOOK_ANGLE_DEG,
+    double? outerLookAngleDeg,
+    double? SAR_SAMPLING_DENSITY,
+    double? sarSamplingDensity,
     double? MIN_RANGE_M,
     double? minRangeM,
     double? MAX_RANGE_M,
@@ -945,22 +1081,188 @@ class SCVSensorObjectBuilder extends fb.ObjectBuilder {
     scvCoordinateFrame? POLYGON_FRAME,
     scvCoordinateFrame? polygonFrame,
   })
+      : _SHAPE_KIND = shapeKind ?? SHAPE_KIND,
+        _AXIS_CONVENTION = axisConvention ?? AXIS_CONVENTION,
+        _RANGE_BOUNDARY = rangeBoundary ?? RANGE_BOUNDARY,
+        _OUTER_HALF_ANGLE_DEG = outerHalfAngleDeg ?? OUTER_HALF_ANGLE_DEG,
+        _INNER_HALF_ANGLE_DEG = innerHalfAngleDeg ?? INNER_HALF_ANGLE_DEG,
+        _MIN_CLOCK_ANGLE_DEG = minClockAngleDeg ?? MIN_CLOCK_ANGLE_DEG,
+        _MAX_CLOCK_ANGLE_DEG = maxClockAngleDeg ?? MAX_CLOCK_ANGLE_DEG,
+        _X_HALF_ANGLE_DEG = xHalfAngleDeg ?? X_HALF_ANGLE_DEG,
+        _Y_HALF_ANGLE_DEG = yHalfAngleDeg ?? Y_HALF_ANGLE_DEG,
+        _INNER_LOOK_ANGLE_DEG = innerLookAngleDeg ?? INNER_LOOK_ANGLE_DEG,
+        _OUTER_LOOK_ANGLE_DEG = outerLookAngleDeg ?? OUTER_LOOK_ANGLE_DEG,
+        _SAR_SAMPLING_DENSITY = sarSamplingDensity ?? SAR_SAMPLING_DENSITY,
+        _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
+        _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
+        _POLYGON_VERTICES = polygonVertices ?? POLYGON_VERTICES,
+        _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POLYGON_VERTICESOffset = _POLYGON_VERTICES == null ? null
+        : fbBuilder.writeList(_POLYGON_VERTICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(16);
+    fbBuilder.addUint8(0, _SHAPE_KIND?.value);
+    fbBuilder.addUint8(1, _AXIS_CONVENTION?.value);
+    fbBuilder.addUint8(2, _RANGE_BOUNDARY?.value);
+    fbBuilder.addFloat64(3, _OUTER_HALF_ANGLE_DEG);
+    fbBuilder.addFloat64(4, _INNER_HALF_ANGLE_DEG);
+    fbBuilder.addFloat64(5, _MIN_CLOCK_ANGLE_DEG);
+    fbBuilder.addFloat64(6, _MAX_CLOCK_ANGLE_DEG);
+    fbBuilder.addFloat64(7, _X_HALF_ANGLE_DEG);
+    fbBuilder.addFloat64(8, _Y_HALF_ANGLE_DEG);
+    fbBuilder.addFloat64(9, _INNER_LOOK_ANGLE_DEG);
+    fbBuilder.addFloat64(10, _OUTER_LOOK_ANGLE_DEG);
+    fbBuilder.addFloat64(11, _SAR_SAMPLING_DENSITY);
+    fbBuilder.addFloat64(12, _MIN_RANGE_M);
+    fbBuilder.addFloat64(13, _MAX_RANGE_M);
+    fbBuilder.addOffset(14, POLYGON_VERTICESOffset);
+    fbBuilder.addUint8(15, _POLYGON_FRAME?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SCVSensor {
+  SCVSensor._(this._bc, this._bcOffset);
+  factory SCVSensor(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVSensor> reader = _SCVSensorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get SENSOR_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get sensorId => SENSOR_ID;
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get objectId => OBJECT_ID;
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  scvCoordinateFrame get FRAME => scvCoordinateFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  SCVVec3? get POSITION_M => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  SCVVec3? get positionM => POSITION_M;
+  SCVVec3? get VELOCITY_MPS => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  SCVVec3? get velocityMps => VELOCITY_MPS;
+  SCVVec3? get BORESIGHT_UNIT => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  SCVVec3? get boresightUnit => BORESIGHT_UNIT;
+  SCVVec3? get UP_UNIT => SCVVec3.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  SCVVec3? get upUnit => UP_UNIT;
+  SCVSensorShapeContract? get SHAPE_CONTRACT => SCVSensorShapeContract.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  SCVSensorShapeContract? get shapeContract => SHAPE_CONTRACT;
+
+  @override
+  String toString() {
+    return 'SCVSensor{sensorId: ${sensorId}, objectId: ${objectId}, NAME: ${NAME}, FRAME: ${FRAME}, positionM: ${positionM}, velocityMps: ${velocityMps}, boresightUnit: ${boresightUnit}, upUnit: ${upUnit}, shapeContract: ${shapeContract}}';
+  }
+}
+
+class _SCVSensorReader extends fb.TableReader<SCVSensor> {
+  const _SCVSensorReader();
+
+  @override
+  SCVSensor createObject(fb.BufferContext bc, int offset) =>
+    SCVSensor._(bc, offset);
+}
+
+class SCVSensorBuilder {
+  SCVSensorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addSensorId(int? SENSOR_ID) {
+    fbBuilder.addUint32(0, SENSOR_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addFrame(scvCoordinateFrame? FRAME) {
+    fbBuilder.addUint8(3, FRAME?.value);
+    return fbBuilder.offset;
+  }
+  int addPositionMOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addVelocityMpsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addBoresightUnitOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addUpUnitOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addShapeContractOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVSensorObjectBuilder extends fb.ObjectBuilder {
+  final int? _SENSOR_ID;
+  final String? _OBJECT_ID;
+  final String? _NAME;
+  final scvCoordinateFrame? _FRAME;
+  final SCVVec3ObjectBuilder? _POSITION_M;
+  final SCVVec3ObjectBuilder? _VELOCITY_MPS;
+  final SCVVec3ObjectBuilder? _BORESIGHT_UNIT;
+  final SCVVec3ObjectBuilder? _UP_UNIT;
+  final SCVSensorShapeContractObjectBuilder? _SHAPE_CONTRACT;
+
+  SCVSensorObjectBuilder({
+    int? SENSOR_ID,
+    int? sensorId,
+    String? OBJECT_ID,
+    String? objectId,
+    String? NAME,
+    scvCoordinateFrame? FRAME,
+    SCVVec3ObjectBuilder? POSITION_M,
+    SCVVec3ObjectBuilder? positionM,
+    SCVVec3ObjectBuilder? VELOCITY_MPS,
+    SCVVec3ObjectBuilder? velocityMps,
+    SCVVec3ObjectBuilder? BORESIGHT_UNIT,
+    SCVVec3ObjectBuilder? boresightUnit,
+    SCVVec3ObjectBuilder? UP_UNIT,
+    SCVVec3ObjectBuilder? upUnit,
+    SCVSensorShapeContractObjectBuilder? SHAPE_CONTRACT,
+    SCVSensorShapeContractObjectBuilder? shapeContract,
+  })
       : _SENSOR_ID = sensorId ?? SENSOR_ID,
         _OBJECT_ID = objectId ?? OBJECT_ID,
         _NAME = NAME,
-        _SHAPE = SHAPE,
         _FRAME = FRAME,
         _POSITION_M = positionM ?? POSITION_M,
         _VELOCITY_MPS = velocityMps ?? VELOCITY_MPS,
         _BORESIGHT_UNIT = boresightUnit ?? BORESIGHT_UNIT,
         _UP_UNIT = upUnit ?? UP_UNIT,
-        _HALF_ANGLE_DEG = halfAngleDeg ?? HALF_ANGLE_DEG,
-        _CROSS_TRACK_HALF_ANGLE_DEG = crossTrackHalfAngleDeg ?? CROSS_TRACK_HALF_ANGLE_DEG,
-        _ALONG_TRACK_HALF_ANGLE_DEG = alongTrackHalfAngleDeg ?? ALONG_TRACK_HALF_ANGLE_DEG,
-        _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
-        _MAX_RANGE_M = maxRangeM ?? MAX_RANGE_M,
-        _POLYGON_VERTICES = polygonVertices ?? POLYGON_VERTICES,
-        _POLYGON_FRAME = polygonFrame ?? POLYGON_FRAME;
+        _SHAPE_CONTRACT = shapeContract ?? SHAPE_CONTRACT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -973,25 +1275,17 @@ class SCVSensorObjectBuilder extends fb.ObjectBuilder {
     final int? VELOCITY_MPSOffset = _VELOCITY_MPS?.getOrCreateOffset(fbBuilder);
     final int? BORESIGHT_UNITOffset = _BORESIGHT_UNIT?.getOrCreateOffset(fbBuilder);
     final int? UP_UNITOffset = _UP_UNIT?.getOrCreateOffset(fbBuilder);
-    final int? POLYGON_VERTICESOffset = _POLYGON_VERTICES == null ? null
-        : fbBuilder.writeList(_POLYGON_VERTICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(16);
+    final int? SHAPE_CONTRACTOffset = _SHAPE_CONTRACT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
     fbBuilder.addUint32(0, _SENSOR_ID);
     fbBuilder.addOffset(1, OBJECT_IDOffset);
     fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addUint8(3, _SHAPE?.value);
-    fbBuilder.addUint8(4, _FRAME?.value);
-    fbBuilder.addOffset(5, POSITION_MOffset);
-    fbBuilder.addOffset(6, VELOCITY_MPSOffset);
-    fbBuilder.addOffset(7, BORESIGHT_UNITOffset);
-    fbBuilder.addOffset(8, UP_UNITOffset);
-    fbBuilder.addFloat64(9, _HALF_ANGLE_DEG);
-    fbBuilder.addFloat64(10, _CROSS_TRACK_HALF_ANGLE_DEG);
-    fbBuilder.addFloat64(11, _ALONG_TRACK_HALF_ANGLE_DEG);
-    fbBuilder.addFloat64(12, _MIN_RANGE_M);
-    fbBuilder.addFloat64(13, _MAX_RANGE_M);
-    fbBuilder.addOffset(14, POLYGON_VERTICESOffset);
-    fbBuilder.addUint8(15, _POLYGON_FRAME?.value);
+    fbBuilder.addUint8(3, _FRAME?.value);
+    fbBuilder.addOffset(4, POSITION_MOffset);
+    fbBuilder.addOffset(5, VELOCITY_MPSOffset);
+    fbBuilder.addOffset(6, BORESIGHT_UNITOffset);
+    fbBuilder.addOffset(7, UP_UNITOffset);
+    fbBuilder.addOffset(8, SHAPE_CONTRACTOffset);
     return fbBuilder.endTable();
   }
 
@@ -2304,628 +2598,6 @@ class SCVSensorContributionObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-class SCVCellStat {
-  SCVCellStat._(this._bc, this._bcOffset);
-  factory SCVCellStat(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCVCellStat> reader = _SCVCellStatReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  int get CELL_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get cellId => CELL_ID;
-  double get LATITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get latitudeDeg => LATITUDE_DEG;
-  double get LONGITUDE_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get longitudeDeg => LONGITUDE_DEG;
-  double get ALTITUDE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get altitudeM => ALTITUDE_M;
-  int get COVERED_WINDOW_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get coveredWindowCount => COVERED_WINDOW_COUNT;
-  int get TOTAL_WINDOW_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get totalWindowCount => TOTAL_WINDOW_COUNT;
-  double get COVERAGE_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get coverageFraction => COVERAGE_FRACTION;
-  double get MEAN_REVISIT_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get meanRevisitSec => MEAN_REVISIT_SEC;
-  double get MAX_GAP_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get maxGapSec => MAX_GAP_SEC;
-  double get MEAN_GAP_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get meanGapSec => MEAN_GAP_SEC;
-  double get REDUNDANCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  List<int>? get SENSOR_IDS => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 26);
-  List<int>? get sensorIds => SENSOR_IDS;
-  List<int>? get SENSOR_BITSET_WORDS => const fb.ListReader<int>(fb.Uint64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
-  List<int>? get sensorBitsetWords => SENSOR_BITSET_WORDS;
-
-  @override
-  String toString() {
-    return 'SCVCellStat{cellId: ${cellId}, latitudeDeg: ${latitudeDeg}, longitudeDeg: ${longitudeDeg}, altitudeM: ${altitudeM}, coveredWindowCount: ${coveredWindowCount}, totalWindowCount: ${totalWindowCount}, coverageFraction: ${coverageFraction}, meanRevisitSec: ${meanRevisitSec}, maxGapSec: ${maxGapSec}, meanGapSec: ${meanGapSec}, REDUNDANCY: ${REDUNDANCY}, sensorIds: ${sensorIds}, sensorBitsetWords: ${sensorBitsetWords}}';
-  }
-}
-
-class _SCVCellStatReader extends fb.TableReader<SCVCellStat> {
-  const _SCVCellStatReader();
-
-  @override
-  SCVCellStat createObject(fb.BufferContext bc, int offset) =>
-    SCVCellStat._(bc, offset);
-}
-
-class SCVCellStatBuilder {
-  SCVCellStatBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(13);
-  }
-
-  int addCellId(int? CELL_ID) {
-    fbBuilder.addUint32(0, CELL_ID);
-    return fbBuilder.offset;
-  }
-  int addLatitudeDeg(double? LATITUDE_DEG) {
-    fbBuilder.addFloat64(1, LATITUDE_DEG);
-    return fbBuilder.offset;
-  }
-  int addLongitudeDeg(double? LONGITUDE_DEG) {
-    fbBuilder.addFloat64(2, LONGITUDE_DEG);
-    return fbBuilder.offset;
-  }
-  int addAltitudeM(double? ALTITUDE_M) {
-    fbBuilder.addFloat64(3, ALTITUDE_M);
-    return fbBuilder.offset;
-  }
-  int addCoveredWindowCount(int? COVERED_WINDOW_COUNT) {
-    fbBuilder.addUint32(4, COVERED_WINDOW_COUNT);
-    return fbBuilder.offset;
-  }
-  int addTotalWindowCount(int? TOTAL_WINDOW_COUNT) {
-    fbBuilder.addUint32(5, TOTAL_WINDOW_COUNT);
-    return fbBuilder.offset;
-  }
-  int addCoverageFraction(double? COVERAGE_FRACTION) {
-    fbBuilder.addFloat64(6, COVERAGE_FRACTION);
-    return fbBuilder.offset;
-  }
-  int addMeanRevisitSec(double? MEAN_REVISIT_SEC) {
-    fbBuilder.addFloat64(7, MEAN_REVISIT_SEC);
-    return fbBuilder.offset;
-  }
-  int addMaxGapSec(double? MAX_GAP_SEC) {
-    fbBuilder.addFloat64(8, MAX_GAP_SEC);
-    return fbBuilder.offset;
-  }
-  int addMeanGapSec(double? MEAN_GAP_SEC) {
-    fbBuilder.addFloat64(9, MEAN_GAP_SEC);
-    return fbBuilder.offset;
-  }
-  int addRedundancy(double? REDUNDANCY) {
-    fbBuilder.addFloat64(10, REDUNDANCY);
-    return fbBuilder.offset;
-  }
-  int addSensorIdsOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addSensorBitsetWordsOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SCVCellStatObjectBuilder extends fb.ObjectBuilder {
-  final int? _CELL_ID;
-  final double? _LATITUDE_DEG;
-  final double? _LONGITUDE_DEG;
-  final double? _ALTITUDE_M;
-  final int? _COVERED_WINDOW_COUNT;
-  final int? _TOTAL_WINDOW_COUNT;
-  final double? _COVERAGE_FRACTION;
-  final double? _MEAN_REVISIT_SEC;
-  final double? _MAX_GAP_SEC;
-  final double? _MEAN_GAP_SEC;
-  final double? _REDUNDANCY;
-  final List<int>? _SENSOR_IDS;
-  final List<int>? _SENSOR_BITSET_WORDS;
-
-  SCVCellStatObjectBuilder({
-    int? CELL_ID,
-    int? cellId,
-    double? LATITUDE_DEG,
-    double? latitudeDeg,
-    double? LONGITUDE_DEG,
-    double? longitudeDeg,
-    double? ALTITUDE_M,
-    double? altitudeM,
-    int? COVERED_WINDOW_COUNT,
-    int? coveredWindowCount,
-    int? TOTAL_WINDOW_COUNT,
-    int? totalWindowCount,
-    double? COVERAGE_FRACTION,
-    double? coverageFraction,
-    double? MEAN_REVISIT_SEC,
-    double? meanRevisitSec,
-    double? MAX_GAP_SEC,
-    double? maxGapSec,
-    double? MEAN_GAP_SEC,
-    double? meanGapSec,
-    double? REDUNDANCY,
-    List<int>? SENSOR_IDS,
-    List<int>? sensorIds,
-    List<int>? SENSOR_BITSET_WORDS,
-    List<int>? sensorBitsetWords,
-  })
-      : _CELL_ID = cellId ?? CELL_ID,
-        _LATITUDE_DEG = latitudeDeg ?? LATITUDE_DEG,
-        _LONGITUDE_DEG = longitudeDeg ?? LONGITUDE_DEG,
-        _ALTITUDE_M = altitudeM ?? ALTITUDE_M,
-        _COVERED_WINDOW_COUNT = coveredWindowCount ?? COVERED_WINDOW_COUNT,
-        _TOTAL_WINDOW_COUNT = totalWindowCount ?? TOTAL_WINDOW_COUNT,
-        _COVERAGE_FRACTION = coverageFraction ?? COVERAGE_FRACTION,
-        _MEAN_REVISIT_SEC = meanRevisitSec ?? MEAN_REVISIT_SEC,
-        _MAX_GAP_SEC = maxGapSec ?? MAX_GAP_SEC,
-        _MEAN_GAP_SEC = meanGapSec ?? MEAN_GAP_SEC,
-        _REDUNDANCY = REDUNDANCY,
-        _SENSOR_IDS = sensorIds ?? SENSOR_IDS,
-        _SENSOR_BITSET_WORDS = sensorBitsetWords ?? SENSOR_BITSET_WORDS;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? SENSOR_IDSOffset = _SENSOR_IDS == null ? null
-        : fbBuilder.writeListUint32(_SENSOR_IDS!);
-    final int? SENSOR_BITSET_WORDSOffset = _SENSOR_BITSET_WORDS == null ? null
-        : fbBuilder.writeListUint64(_SENSOR_BITSET_WORDS!);
-    fbBuilder.startTable(13);
-    fbBuilder.addUint32(0, _CELL_ID);
-    fbBuilder.addFloat64(1, _LATITUDE_DEG);
-    fbBuilder.addFloat64(2, _LONGITUDE_DEG);
-    fbBuilder.addFloat64(3, _ALTITUDE_M);
-    fbBuilder.addUint32(4, _COVERED_WINDOW_COUNT);
-    fbBuilder.addUint32(5, _TOTAL_WINDOW_COUNT);
-    fbBuilder.addFloat64(6, _COVERAGE_FRACTION);
-    fbBuilder.addFloat64(7, _MEAN_REVISIT_SEC);
-    fbBuilder.addFloat64(8, _MAX_GAP_SEC);
-    fbBuilder.addFloat64(9, _MEAN_GAP_SEC);
-    fbBuilder.addFloat64(10, _REDUNDANCY);
-    fbBuilder.addOffset(11, SENSOR_IDSOffset);
-    fbBuilder.addOffset(12, SENSOR_BITSET_WORDSOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SCVInterval {
-  SCVInterval._(this._bc, this._bcOffset);
-  factory SCVInterval(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCVInterval> reader = _SCVIntervalReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  int get SENSOR_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
-  int get sensorId => SENSOR_ID;
-  int get TARGET_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get targetId => TARGET_ID;
-  scvIntervalCategory get INTERVAL_KIND => scvIntervalCategory.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
-  scvIntervalCategory get intervalKind => INTERVAL_KIND;
-  double get START_OFFSET_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get startOffsetSec => START_OFFSET_SEC;
-  double get STOP_OFFSET_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get stopOffsetSec => STOP_OFFSET_SEC;
-  double get DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get durationSec => DURATION_SEC;
-  double get MIN_RANGE_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get minRangeM => MIN_RANGE_M;
-  double get MAX_ELEVATION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get maxElevationDeg => MAX_ELEVATION_DEG;
-  int get CELL_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get cellId => CELL_ID;
-
-  @override
-  String toString() {
-    return 'SCVInterval{sensorId: ${sensorId}, targetId: ${targetId}, intervalKind: ${intervalKind}, startOffsetSec: ${startOffsetSec}, stopOffsetSec: ${stopOffsetSec}, durationSec: ${durationSec}, minRangeM: ${minRangeM}, maxElevationDeg: ${maxElevationDeg}, cellId: ${cellId}}';
-  }
-}
-
-class _SCVIntervalReader extends fb.TableReader<SCVInterval> {
-  const _SCVIntervalReader();
-
-  @override
-  SCVInterval createObject(fb.BufferContext bc, int offset) =>
-    SCVInterval._(bc, offset);
-}
-
-class SCVIntervalBuilder {
-  SCVIntervalBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(9);
-  }
-
-  int addSensorId(int? SENSOR_ID) {
-    fbBuilder.addUint32(0, SENSOR_ID);
-    return fbBuilder.offset;
-  }
-  int addTargetId(int? TARGET_ID) {
-    fbBuilder.addUint32(1, TARGET_ID);
-    return fbBuilder.offset;
-  }
-  int addIntervalKind(scvIntervalCategory? INTERVAL_KIND) {
-    fbBuilder.addUint8(2, INTERVAL_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addStartOffsetSec(double? START_OFFSET_SEC) {
-    fbBuilder.addFloat64(3, START_OFFSET_SEC);
-    return fbBuilder.offset;
-  }
-  int addStopOffsetSec(double? STOP_OFFSET_SEC) {
-    fbBuilder.addFloat64(4, STOP_OFFSET_SEC);
-    return fbBuilder.offset;
-  }
-  int addDurationSec(double? DURATION_SEC) {
-    fbBuilder.addFloat64(5, DURATION_SEC);
-    return fbBuilder.offset;
-  }
-  int addMinRangeM(double? MIN_RANGE_M) {
-    fbBuilder.addFloat64(6, MIN_RANGE_M);
-    return fbBuilder.offset;
-  }
-  int addMaxElevationDeg(double? MAX_ELEVATION_DEG) {
-    fbBuilder.addFloat64(7, MAX_ELEVATION_DEG);
-    return fbBuilder.offset;
-  }
-  int addCellId(int? CELL_ID) {
-    fbBuilder.addUint32(8, CELL_ID);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SCVIntervalObjectBuilder extends fb.ObjectBuilder {
-  final int? _SENSOR_ID;
-  final int? _TARGET_ID;
-  final scvIntervalCategory? _INTERVAL_KIND;
-  final double? _START_OFFSET_SEC;
-  final double? _STOP_OFFSET_SEC;
-  final double? _DURATION_SEC;
-  final double? _MIN_RANGE_M;
-  final double? _MAX_ELEVATION_DEG;
-  final int? _CELL_ID;
-
-  SCVIntervalObjectBuilder({
-    int? SENSOR_ID,
-    int? sensorId,
-    int? TARGET_ID,
-    int? targetId,
-    scvIntervalCategory? INTERVAL_KIND,
-    scvIntervalCategory? intervalKind,
-    double? START_OFFSET_SEC,
-    double? startOffsetSec,
-    double? STOP_OFFSET_SEC,
-    double? stopOffsetSec,
-    double? DURATION_SEC,
-    double? durationSec,
-    double? MIN_RANGE_M,
-    double? minRangeM,
-    double? MAX_ELEVATION_DEG,
-    double? maxElevationDeg,
-    int? CELL_ID,
-    int? cellId,
-  })
-      : _SENSOR_ID = sensorId ?? SENSOR_ID,
-        _TARGET_ID = targetId ?? TARGET_ID,
-        _INTERVAL_KIND = intervalKind ?? INTERVAL_KIND,
-        _START_OFFSET_SEC = startOffsetSec ?? START_OFFSET_SEC,
-        _STOP_OFFSET_SEC = stopOffsetSec ?? STOP_OFFSET_SEC,
-        _DURATION_SEC = durationSec ?? DURATION_SEC,
-        _MIN_RANGE_M = minRangeM ?? MIN_RANGE_M,
-        _MAX_ELEVATION_DEG = maxElevationDeg ?? MAX_ELEVATION_DEG,
-        _CELL_ID = cellId ?? CELL_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(9);
-    fbBuilder.addUint32(0, _SENSOR_ID);
-    fbBuilder.addUint32(1, _TARGET_ID);
-    fbBuilder.addUint8(2, _INTERVAL_KIND?.value);
-    fbBuilder.addFloat64(3, _START_OFFSET_SEC);
-    fbBuilder.addFloat64(4, _STOP_OFFSET_SEC);
-    fbBuilder.addFloat64(5, _DURATION_SEC);
-    fbBuilder.addFloat64(6, _MIN_RANGE_M);
-    fbBuilder.addFloat64(7, _MAX_ELEVATION_DEG);
-    fbBuilder.addUint32(8, _CELL_ID);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SCVLatitudeBandStat {
-  SCVLatitudeBandStat._(this._bc, this._bcOffset);
-  factory SCVLatitudeBandStat(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCVLatitudeBandStat> reader = _SCVLatitudeBandStatReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  double get MIN_LAT_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get minLatDeg => MIN_LAT_DEG;
-  double get MAX_LAT_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get maxLatDeg => MAX_LAT_DEG;
-  double get COVERAGE_FRACTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get coverageFraction => COVERAGE_FRACTION;
-  double get MEAN_REVISIT_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get meanRevisitSec => MEAN_REVISIT_SEC;
-  double get MAX_GAP_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get maxGapSec => MAX_GAP_SEC;
-  double get MEAN_REDUNDANCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get meanRedundancy => MEAN_REDUNDANCY;
-
-  @override
-  String toString() {
-    return 'SCVLatitudeBandStat{minLatDeg: ${minLatDeg}, maxLatDeg: ${maxLatDeg}, coverageFraction: ${coverageFraction}, meanRevisitSec: ${meanRevisitSec}, maxGapSec: ${maxGapSec}, meanRedundancy: ${meanRedundancy}}';
-  }
-}
-
-class _SCVLatitudeBandStatReader extends fb.TableReader<SCVLatitudeBandStat> {
-  const _SCVLatitudeBandStatReader();
-
-  @override
-  SCVLatitudeBandStat createObject(fb.BufferContext bc, int offset) =>
-    SCVLatitudeBandStat._(bc, offset);
-}
-
-class SCVLatitudeBandStatBuilder {
-  SCVLatitudeBandStatBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addMinLatDeg(double? MIN_LAT_DEG) {
-    fbBuilder.addFloat64(0, MIN_LAT_DEG);
-    return fbBuilder.offset;
-  }
-  int addMaxLatDeg(double? MAX_LAT_DEG) {
-    fbBuilder.addFloat64(1, MAX_LAT_DEG);
-    return fbBuilder.offset;
-  }
-  int addCoverageFraction(double? COVERAGE_FRACTION) {
-    fbBuilder.addFloat64(2, COVERAGE_FRACTION);
-    return fbBuilder.offset;
-  }
-  int addMeanRevisitSec(double? MEAN_REVISIT_SEC) {
-    fbBuilder.addFloat64(3, MEAN_REVISIT_SEC);
-    return fbBuilder.offset;
-  }
-  int addMaxGapSec(double? MAX_GAP_SEC) {
-    fbBuilder.addFloat64(4, MAX_GAP_SEC);
-    return fbBuilder.offset;
-  }
-  int addMeanRedundancy(double? MEAN_REDUNDANCY) {
-    fbBuilder.addFloat64(5, MEAN_REDUNDANCY);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SCVLatitudeBandStatObjectBuilder extends fb.ObjectBuilder {
-  final double? _MIN_LAT_DEG;
-  final double? _MAX_LAT_DEG;
-  final double? _COVERAGE_FRACTION;
-  final double? _MEAN_REVISIT_SEC;
-  final double? _MAX_GAP_SEC;
-  final double? _MEAN_REDUNDANCY;
-
-  SCVLatitudeBandStatObjectBuilder({
-    double? MIN_LAT_DEG,
-    double? minLatDeg,
-    double? MAX_LAT_DEG,
-    double? maxLatDeg,
-    double? COVERAGE_FRACTION,
-    double? coverageFraction,
-    double? MEAN_REVISIT_SEC,
-    double? meanRevisitSec,
-    double? MAX_GAP_SEC,
-    double? maxGapSec,
-    double? MEAN_REDUNDANCY,
-    double? meanRedundancy,
-  })
-      : _MIN_LAT_DEG = minLatDeg ?? MIN_LAT_DEG,
-        _MAX_LAT_DEG = maxLatDeg ?? MAX_LAT_DEG,
-        _COVERAGE_FRACTION = coverageFraction ?? COVERAGE_FRACTION,
-        _MEAN_REVISIT_SEC = meanRevisitSec ?? MEAN_REVISIT_SEC,
-        _MAX_GAP_SEC = maxGapSec ?? MAX_GAP_SEC,
-        _MEAN_REDUNDANCY = meanRedundancy ?? MEAN_REDUNDANCY;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(6);
-    fbBuilder.addFloat64(0, _MIN_LAT_DEG);
-    fbBuilder.addFloat64(1, _MAX_LAT_DEG);
-    fbBuilder.addFloat64(2, _COVERAGE_FRACTION);
-    fbBuilder.addFloat64(3, _MEAN_REVISIT_SEC);
-    fbBuilder.addFloat64(4, _MAX_GAP_SEC);
-    fbBuilder.addFloat64(5, _MEAN_REDUNDANCY);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SCVTimeSeriesPoint {
-  SCVTimeSeriesPoint._(this._bc, this._bcOffset);
-  factory SCVTimeSeriesPoint(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCVTimeSeriesPoint> reader = _SCVTimeSeriesPointReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  scvMetricSeriesKind get METRIC_KIND => scvMetricSeriesKind.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  scvMetricSeriesKind get metricKind => METRIC_KIND;
-  double get TIME_OFFSET_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get timeOffsetSec => TIME_OFFSET_SEC;
-  int get WINDOW_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get windowIndex => WINDOW_INDEX;
-  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  int get SENSOR_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get sensorId => SENSOR_ID;
-  int get CELL_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get cellId => CELL_ID;
-
-  @override
-  String toString() {
-    return 'SCVTimeSeriesPoint{metricKind: ${metricKind}, timeOffsetSec: ${timeOffsetSec}, windowIndex: ${windowIndex}, VALUE: ${VALUE}, sensorId: ${sensorId}, cellId: ${cellId}}';
-  }
-}
-
-class _SCVTimeSeriesPointReader extends fb.TableReader<SCVTimeSeriesPoint> {
-  const _SCVTimeSeriesPointReader();
-
-  @override
-  SCVTimeSeriesPoint createObject(fb.BufferContext bc, int offset) =>
-    SCVTimeSeriesPoint._(bc, offset);
-}
-
-class SCVTimeSeriesPointBuilder {
-  SCVTimeSeriesPointBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(6);
-  }
-
-  int addMetricKind(scvMetricSeriesKind? METRIC_KIND) {
-    fbBuilder.addUint16(0, METRIC_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addTimeOffsetSec(double? TIME_OFFSET_SEC) {
-    fbBuilder.addFloat64(1, TIME_OFFSET_SEC);
-    return fbBuilder.offset;
-  }
-  int addWindowIndex(int? WINDOW_INDEX) {
-    fbBuilder.addUint32(2, WINDOW_INDEX);
-    return fbBuilder.offset;
-  }
-  int addValue(double? VALUE) {
-    fbBuilder.addFloat64(3, VALUE);
-    return fbBuilder.offset;
-  }
-  int addSensorId(int? SENSOR_ID) {
-    fbBuilder.addUint32(4, SENSOR_ID);
-    return fbBuilder.offset;
-  }
-  int addCellId(int? CELL_ID) {
-    fbBuilder.addUint32(5, CELL_ID);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SCVTimeSeriesPointObjectBuilder extends fb.ObjectBuilder {
-  final scvMetricSeriesKind? _METRIC_KIND;
-  final double? _TIME_OFFSET_SEC;
-  final int? _WINDOW_INDEX;
-  final double? _VALUE;
-  final int? _SENSOR_ID;
-  final int? _CELL_ID;
-
-  SCVTimeSeriesPointObjectBuilder({
-    scvMetricSeriesKind? METRIC_KIND,
-    scvMetricSeriesKind? metricKind,
-    double? TIME_OFFSET_SEC,
-    double? timeOffsetSec,
-    int? WINDOW_INDEX,
-    int? windowIndex,
-    double? VALUE,
-    int? SENSOR_ID,
-    int? sensorId,
-    int? CELL_ID,
-    int? cellId,
-  })
-      : _METRIC_KIND = metricKind ?? METRIC_KIND,
-        _TIME_OFFSET_SEC = timeOffsetSec ?? TIME_OFFSET_SEC,
-        _WINDOW_INDEX = windowIndex ?? WINDOW_INDEX,
-        _VALUE = VALUE,
-        _SENSOR_ID = sensorId ?? SENSOR_ID,
-        _CELL_ID = cellId ?? CELL_ID;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(6);
-    fbBuilder.addUint16(0, _METRIC_KIND?.value);
-    fbBuilder.addFloat64(1, _TIME_OFFSET_SEC);
-    fbBuilder.addUint32(2, _WINDOW_INDEX);
-    fbBuilder.addFloat64(3, _VALUE);
-    fbBuilder.addUint32(4, _SENSOR_ID);
-    fbBuilder.addUint32(5, _CELL_ID);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
 class SCVHistogramBin {
   SCVHistogramBin._(this._bc, this._bcOffset);
   factory SCVHistogramBin(List<int> bytes) {
@@ -3028,121 +2700,6 @@ class SCVHistogramBinObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(2, _MAX_VALUE);
     fbBuilder.addUint32(3, _COUNT);
     fbBuilder.addFloat64(4, _WEIGHT);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-class SCVHeatmapCell {
-  SCVHeatmapCell._(this._bc, this._bcOffset);
-  factory SCVHeatmapCell(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<SCVHeatmapCell> reader = _SCVHeatmapCellReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  scvMetricSeriesKind get METRIC_KIND => scvMetricSeriesKind.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  scvMetricSeriesKind get metricKind => METRIC_KIND;
-  int get X_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get xIndex => X_INDEX;
-  int get Y_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  int get yIndex => Y_INDEX;
-  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  int get SENSOR_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get sensorCount => SENSOR_COUNT;
-
-  @override
-  String toString() {
-    return 'SCVHeatmapCell{metricKind: ${metricKind}, xIndex: ${xIndex}, yIndex: ${yIndex}, VALUE: ${VALUE}, sensorCount: ${sensorCount}}';
-  }
-}
-
-class _SCVHeatmapCellReader extends fb.TableReader<SCVHeatmapCell> {
-  const _SCVHeatmapCellReader();
-
-  @override
-  SCVHeatmapCell createObject(fb.BufferContext bc, int offset) =>
-    SCVHeatmapCell._(bc, offset);
-}
-
-class SCVHeatmapCellBuilder {
-  SCVHeatmapCellBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(5);
-  }
-
-  int addMetricKind(scvMetricSeriesKind? METRIC_KIND) {
-    fbBuilder.addUint16(0, METRIC_KIND?.value);
-    return fbBuilder.offset;
-  }
-  int addXIndex(int? X_INDEX) {
-    fbBuilder.addUint32(1, X_INDEX);
-    return fbBuilder.offset;
-  }
-  int addYIndex(int? Y_INDEX) {
-    fbBuilder.addUint32(2, Y_INDEX);
-    return fbBuilder.offset;
-  }
-  int addValue(double? VALUE) {
-    fbBuilder.addFloat64(3, VALUE);
-    return fbBuilder.offset;
-  }
-  int addSensorCount(int? SENSOR_COUNT) {
-    fbBuilder.addUint32(4, SENSOR_COUNT);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class SCVHeatmapCellObjectBuilder extends fb.ObjectBuilder {
-  final scvMetricSeriesKind? _METRIC_KIND;
-  final int? _X_INDEX;
-  final int? _Y_INDEX;
-  final double? _VALUE;
-  final int? _SENSOR_COUNT;
-
-  SCVHeatmapCellObjectBuilder({
-    scvMetricSeriesKind? METRIC_KIND,
-    scvMetricSeriesKind? metricKind,
-    int? X_INDEX,
-    int? xIndex,
-    int? Y_INDEX,
-    int? yIndex,
-    double? VALUE,
-    int? SENSOR_COUNT,
-    int? sensorCount,
-  })
-      : _METRIC_KIND = metricKind ?? METRIC_KIND,
-        _X_INDEX = xIndex ?? X_INDEX,
-        _Y_INDEX = yIndex ?? Y_INDEX,
-        _VALUE = VALUE,
-        _SENSOR_COUNT = sensorCount ?? SENSOR_COUNT;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(5);
-    fbBuilder.addUint16(0, _METRIC_KIND?.value);
-    fbBuilder.addUint32(1, _X_INDEX);
-    fbBuilder.addUint32(2, _Y_INDEX);
-    fbBuilder.addFloat64(3, _VALUE);
-    fbBuilder.addUint32(4, _SENSOR_COUNT);
     return fbBuilder.endTable();
   }
 
@@ -3888,6 +3445,614 @@ class SCVPackedGeometryChunkObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+class SCVPackedRasterBand {
+  SCVPackedRasterBand._(this._bc, this._bcOffset);
+  factory SCVPackedRasterBand(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVPackedRasterBand> reader = _SCVPackedRasterBandReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  scvRasterProductKind get PRODUCT_KIND => scvRasterProductKind.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  scvRasterProductKind get productKind => PRODUCT_KIND;
+  scvMetricSeriesKind get METRIC_KIND => scvMetricSeriesKind.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  scvMetricSeriesKind get metricKind => METRIC_KIND;
+  scvRasterProductEncoding get ENCODING => scvRasterProductEncoding.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  int get COMPONENTS_PER_CELL => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get componentsPerCell => COMPONENTS_PER_CELL;
+  int get CELL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get cellCount => CELL_COUNT;
+  int get BUCKET_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get bucketCount => BUCKET_COUNT;
+  int get WORDS_PER_BUCKET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get wordsPerBucket => WORDS_PER_BUCKET;
+  int get MEMORY_REGION_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get memoryRegionId => MEMORY_REGION_ID;
+  int get MEMORY_RECORD_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get memoryRecordIndex => MEMORY_RECORD_INDEX;
+  List<double>? get FLOAT32_VALUES => const fb.ListReader<double>(fb.Float32Reader()).vTableGetNullable(_bc, _bcOffset, 22);
+  List<double>? get float32Values => FLOAT32_VALUES;
+  List<double>? get FLOAT64_VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  List<double>? get float64Values => FLOAT64_VALUES;
+  List<int>? get UINT32_VALUES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  List<int>? get uint32Values => UINT32_VALUES;
+
+  @override
+  String toString() {
+    return 'SCVPackedRasterBand{productKind: ${productKind}, metricKind: ${metricKind}, ENCODING: ${ENCODING}, componentsPerCell: ${componentsPerCell}, cellCount: ${cellCount}, bucketCount: ${bucketCount}, wordsPerBucket: ${wordsPerBucket}, memoryRegionId: ${memoryRegionId}, memoryRecordIndex: ${memoryRecordIndex}, float32Values: ${float32Values}, float64Values: ${float64Values}, uint32Values: ${uint32Values}}';
+  }
+}
+
+class _SCVPackedRasterBandReader extends fb.TableReader<SCVPackedRasterBand> {
+  const _SCVPackedRasterBandReader();
+
+  @override
+  SCVPackedRasterBand createObject(fb.BufferContext bc, int offset) =>
+    SCVPackedRasterBand._(bc, offset);
+}
+
+class SCVPackedRasterBandBuilder {
+  SCVPackedRasterBandBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addProductKind(scvRasterProductKind? PRODUCT_KIND) {
+    fbBuilder.addUint16(0, PRODUCT_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addMetricKind(scvMetricSeriesKind? METRIC_KIND) {
+    fbBuilder.addUint16(1, METRIC_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addEncoding(scvRasterProductEncoding? ENCODING) {
+    fbBuilder.addUint8(2, ENCODING?.value);
+    return fbBuilder.offset;
+  }
+  int addComponentsPerCell(int? COMPONENTS_PER_CELL) {
+    fbBuilder.addUint32(3, COMPONENTS_PER_CELL);
+    return fbBuilder.offset;
+  }
+  int addCellCount(int? CELL_COUNT) {
+    fbBuilder.addUint32(4, CELL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addBucketCount(int? BUCKET_COUNT) {
+    fbBuilder.addUint32(5, BUCKET_COUNT);
+    return fbBuilder.offset;
+  }
+  int addWordsPerBucket(int? WORDS_PER_BUCKET) {
+    fbBuilder.addUint32(6, WORDS_PER_BUCKET);
+    return fbBuilder.offset;
+  }
+  int addMemoryRegionId(int? MEMORY_REGION_ID) {
+    fbBuilder.addUint32(7, MEMORY_REGION_ID);
+    return fbBuilder.offset;
+  }
+  int addMemoryRecordIndex(int? MEMORY_RECORD_INDEX) {
+    fbBuilder.addUint32(8, MEMORY_RECORD_INDEX);
+    return fbBuilder.offset;
+  }
+  int addFloat32ValuesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addFloat64ValuesOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addUint32ValuesOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVPackedRasterBandObjectBuilder extends fb.ObjectBuilder {
+  final scvRasterProductKind? _PRODUCT_KIND;
+  final scvMetricSeriesKind? _METRIC_KIND;
+  final scvRasterProductEncoding? _ENCODING;
+  final int? _COMPONENTS_PER_CELL;
+  final int? _CELL_COUNT;
+  final int? _BUCKET_COUNT;
+  final int? _WORDS_PER_BUCKET;
+  final int? _MEMORY_REGION_ID;
+  final int? _MEMORY_RECORD_INDEX;
+  final List<double>? _FLOAT32_VALUES;
+  final List<double>? _FLOAT64_VALUES;
+  final List<int>? _UINT32_VALUES;
+
+  SCVPackedRasterBandObjectBuilder({
+    scvRasterProductKind? PRODUCT_KIND,
+    scvRasterProductKind? productKind,
+    scvMetricSeriesKind? METRIC_KIND,
+    scvMetricSeriesKind? metricKind,
+    scvRasterProductEncoding? ENCODING,
+    int? COMPONENTS_PER_CELL,
+    int? componentsPerCell,
+    int? CELL_COUNT,
+    int? cellCount,
+    int? BUCKET_COUNT,
+    int? bucketCount,
+    int? WORDS_PER_BUCKET,
+    int? wordsPerBucket,
+    int? MEMORY_REGION_ID,
+    int? memoryRegionId,
+    int? MEMORY_RECORD_INDEX,
+    int? memoryRecordIndex,
+    List<double>? FLOAT32_VALUES,
+    List<double>? float32Values,
+    List<double>? FLOAT64_VALUES,
+    List<double>? float64Values,
+    List<int>? UINT32_VALUES,
+    List<int>? uint32Values,
+  })
+      : _PRODUCT_KIND = productKind ?? PRODUCT_KIND,
+        _METRIC_KIND = metricKind ?? METRIC_KIND,
+        _ENCODING = ENCODING,
+        _COMPONENTS_PER_CELL = componentsPerCell ?? COMPONENTS_PER_CELL,
+        _CELL_COUNT = cellCount ?? CELL_COUNT,
+        _BUCKET_COUNT = bucketCount ?? BUCKET_COUNT,
+        _WORDS_PER_BUCKET = wordsPerBucket ?? WORDS_PER_BUCKET,
+        _MEMORY_REGION_ID = memoryRegionId ?? MEMORY_REGION_ID,
+        _MEMORY_RECORD_INDEX = memoryRecordIndex ?? MEMORY_RECORD_INDEX,
+        _FLOAT32_VALUES = float32Values ?? FLOAT32_VALUES,
+        _FLOAT64_VALUES = float64Values ?? FLOAT64_VALUES,
+        _UINT32_VALUES = uint32Values ?? UINT32_VALUES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FLOAT32_VALUESOffset = _FLOAT32_VALUES == null ? null
+        : fbBuilder.writeListFloat32(_FLOAT32_VALUES!);
+    final int? FLOAT64_VALUESOffset = _FLOAT64_VALUES == null ? null
+        : fbBuilder.writeListFloat64(_FLOAT64_VALUES!);
+    final int? UINT32_VALUESOffset = _UINT32_VALUES == null ? null
+        : fbBuilder.writeListUint32(_UINT32_VALUES!);
+    fbBuilder.startTable(12);
+    fbBuilder.addUint16(0, _PRODUCT_KIND?.value);
+    fbBuilder.addUint16(1, _METRIC_KIND?.value);
+    fbBuilder.addUint8(2, _ENCODING?.value);
+    fbBuilder.addUint32(3, _COMPONENTS_PER_CELL);
+    fbBuilder.addUint32(4, _CELL_COUNT);
+    fbBuilder.addUint32(5, _BUCKET_COUNT);
+    fbBuilder.addUint32(6, _WORDS_PER_BUCKET);
+    fbBuilder.addUint32(7, _MEMORY_REGION_ID);
+    fbBuilder.addUint32(8, _MEMORY_RECORD_INDEX);
+    fbBuilder.addOffset(9, FLOAT32_VALUESOffset);
+    fbBuilder.addOffset(10, FLOAT64_VALUESOffset);
+    fbBuilder.addOffset(11, UINT32_VALUESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SCVPackedRasterProducts {
+  SCVPackedRasterProducts._(this._bc, this._bcOffset);
+  factory SCVPackedRasterProducts(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVPackedRasterProducts> reader = _SCVPackedRasterProductsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get JOB_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get jobId => JOB_ID;
+  int get TRACE_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get traceId => TRACE_ID;
+  SCVCoverageGrid? get GRID => SCVCoverageGrid.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  SCVTimeGrid? get TIME_GRID => SCVTimeGrid.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  SCVTimeGrid? get timeGrid => TIME_GRID;
+  int get ROWS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get COLUMNS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get CELL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get cellCount => CELL_COUNT;
+  int get BUCKET_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get bucketCount => BUCKET_COUNT;
+  int get WORDS_PER_BUCKET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get wordsPerBucket => WORDS_PER_BUCKET;
+  List<SCVMemoryRegion>? get MEMORY_REGIONS => const fb.ListReader<SCVMemoryRegion>(SCVMemoryRegion.reader).vTableGetNullable(_bc, _bcOffset, 22);
+  List<SCVMemoryRegion>? get memoryRegions => MEMORY_REGIONS;
+  List<SCVPackedRasterBand>? get BANDS => const fb.ListReader<SCVPackedRasterBand>(SCVPackedRasterBand.reader).vTableGetNullable(_bc, _bcOffset, 24);
+
+  @override
+  String toString() {
+    return 'SCVPackedRasterProducts{jobId: ${jobId}, traceId: ${traceId}, GRID: ${GRID}, timeGrid: ${timeGrid}, ROWS: ${ROWS}, COLUMNS: ${COLUMNS}, cellCount: ${cellCount}, bucketCount: ${bucketCount}, wordsPerBucket: ${wordsPerBucket}, memoryRegions: ${memoryRegions}, BANDS: ${BANDS}}';
+  }
+}
+
+class _SCVPackedRasterProductsReader extends fb.TableReader<SCVPackedRasterProducts> {
+  const _SCVPackedRasterProductsReader();
+
+  @override
+  SCVPackedRasterProducts createObject(fb.BufferContext bc, int offset) =>
+    SCVPackedRasterProducts._(bc, offset);
+}
+
+class SCVPackedRasterProductsBuilder {
+  SCVPackedRasterProductsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addJobIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addTraceId(int? TRACE_ID) {
+    fbBuilder.addUint64(1, TRACE_ID);
+    return fbBuilder.offset;
+  }
+  int addGridOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeGridOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRows(int? ROWS) {
+    fbBuilder.addUint32(4, ROWS);
+    return fbBuilder.offset;
+  }
+  int addColumns(int? COLUMNS) {
+    fbBuilder.addUint32(5, COLUMNS);
+    return fbBuilder.offset;
+  }
+  int addCellCount(int? CELL_COUNT) {
+    fbBuilder.addUint32(6, CELL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addBucketCount(int? BUCKET_COUNT) {
+    fbBuilder.addUint32(7, BUCKET_COUNT);
+    return fbBuilder.offset;
+  }
+  int addWordsPerBucket(int? WORDS_PER_BUCKET) {
+    fbBuilder.addUint32(8, WORDS_PER_BUCKET);
+    return fbBuilder.offset;
+  }
+  int addMemoryRegionsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addBandsOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVPackedRasterProductsObjectBuilder extends fb.ObjectBuilder {
+  final String? _JOB_ID;
+  final int? _TRACE_ID;
+  final SCVCoverageGridObjectBuilder? _GRID;
+  final SCVTimeGridObjectBuilder? _TIME_GRID;
+  final int? _ROWS;
+  final int? _COLUMNS;
+  final int? _CELL_COUNT;
+  final int? _BUCKET_COUNT;
+  final int? _WORDS_PER_BUCKET;
+  final List<SCVMemoryRegionObjectBuilder>? _MEMORY_REGIONS;
+  final List<SCVPackedRasterBandObjectBuilder>? _BANDS;
+
+  SCVPackedRasterProductsObjectBuilder({
+    String? JOB_ID,
+    String? jobId,
+    int? TRACE_ID,
+    int? traceId,
+    SCVCoverageGridObjectBuilder? GRID,
+    SCVTimeGridObjectBuilder? TIME_GRID,
+    SCVTimeGridObjectBuilder? timeGrid,
+    int? ROWS,
+    int? COLUMNS,
+    int? CELL_COUNT,
+    int? cellCount,
+    int? BUCKET_COUNT,
+    int? bucketCount,
+    int? WORDS_PER_BUCKET,
+    int? wordsPerBucket,
+    List<SCVMemoryRegionObjectBuilder>? MEMORY_REGIONS,
+    List<SCVMemoryRegionObjectBuilder>? memoryRegions,
+    List<SCVPackedRasterBandObjectBuilder>? BANDS,
+  })
+      : _JOB_ID = jobId ?? JOB_ID,
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _GRID = GRID,
+        _TIME_GRID = timeGrid ?? TIME_GRID,
+        _ROWS = ROWS,
+        _COLUMNS = COLUMNS,
+        _CELL_COUNT = cellCount ?? CELL_COUNT,
+        _BUCKET_COUNT = bucketCount ?? BUCKET_COUNT,
+        _WORDS_PER_BUCKET = wordsPerBucket ?? WORDS_PER_BUCKET,
+        _MEMORY_REGIONS = memoryRegions ?? MEMORY_REGIONS,
+        _BANDS = BANDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? JOB_IDOffset = _JOB_ID == null ? null
+        : fbBuilder.writeString(_JOB_ID!);
+    final int? GRIDOffset = _GRID?.getOrCreateOffset(fbBuilder);
+    final int? TIME_GRIDOffset = _TIME_GRID?.getOrCreateOffset(fbBuilder);
+    final int? MEMORY_REGIONSOffset = _MEMORY_REGIONS == null ? null
+        : fbBuilder.writeList(_MEMORY_REGIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? BANDSOffset = _BANDS == null ? null
+        : fbBuilder.writeList(_BANDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, JOB_IDOffset);
+    fbBuilder.addUint64(1, _TRACE_ID);
+    fbBuilder.addOffset(2, GRIDOffset);
+    fbBuilder.addOffset(3, TIME_GRIDOffset);
+    fbBuilder.addUint32(4, _ROWS);
+    fbBuilder.addUint32(5, _COLUMNS);
+    fbBuilder.addUint32(6, _CELL_COUNT);
+    fbBuilder.addUint32(7, _BUCKET_COUNT);
+    fbBuilder.addUint32(8, _WORDS_PER_BUCKET);
+    fbBuilder.addOffset(9, MEMORY_REGIONSOffset);
+    fbBuilder.addOffset(10, BANDSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+class SCVAggregateStatistics {
+  SCVAggregateStatistics._(this._bc, this._bcOffset);
+  factory SCVAggregateStatistics(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SCVAggregateStatistics> reader = _SCVAggregateStatisticsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get TOTAL_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get totalCells => TOTAL_CELLS;
+  int get ACCESSED_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get accessedCells => ACCESSED_CELLS;
+  int get MULTI_ACCESS_CELLS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get multiAccessCells => MULTI_ACCESS_CELLS;
+  int get ACTIVE_SENSOR_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get activeSensorCount => ACTIVE_SENSOR_COUNT;
+  int get SWATH_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get swathCount => SWATH_COUNT;
+  int get TOTAL_WINDOWS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get totalWindows => TOTAL_WINDOWS;
+  int get TOTAL_INTERVAL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get totalIntervalCount => TOTAL_INTERVAL_COUNT;
+  int get TOTAL_REVISIT_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get totalRevisitCount => TOTAL_REVISIT_COUNT;
+  double get TOTAL_ACCESS_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get totalAccessDurationSec => TOTAL_ACCESS_DURATION_SEC;
+  double get TOTAL_GAP_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get totalGapDurationSec => TOTAL_GAP_DURATION_SEC;
+  double get MAX_GAP_DURATION_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get maxGapDurationSec => MAX_GAP_DURATION_SEC;
+  double get MEAN_REVISIT_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  double get meanRevisitTimeSec => MEAN_REVISIT_TIME_SEC;
+  double get MAX_RESPONSE_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  double get maxResponseTimeSec => MAX_RESPONSE_TIME_SEC;
+  double get MEAN_RESPONSE_TIME_SEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  double get meanResponseTimeSec => MEAN_RESPONSE_TIME_SEC;
+  double get PERCENT_COVERAGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get percentCoverage => PERCENT_COVERAGE;
+
+  @override
+  String toString() {
+    return 'SCVAggregateStatistics{totalCells: ${totalCells}, accessedCells: ${accessedCells}, multiAccessCells: ${multiAccessCells}, activeSensorCount: ${activeSensorCount}, swathCount: ${swathCount}, totalWindows: ${totalWindows}, totalIntervalCount: ${totalIntervalCount}, totalRevisitCount: ${totalRevisitCount}, totalAccessDurationSec: ${totalAccessDurationSec}, totalGapDurationSec: ${totalGapDurationSec}, maxGapDurationSec: ${maxGapDurationSec}, meanRevisitTimeSec: ${meanRevisitTimeSec}, maxResponseTimeSec: ${maxResponseTimeSec}, meanResponseTimeSec: ${meanResponseTimeSec}, percentCoverage: ${percentCoverage}}';
+  }
+}
+
+class _SCVAggregateStatisticsReader extends fb.TableReader<SCVAggregateStatistics> {
+  const _SCVAggregateStatisticsReader();
+
+  @override
+  SCVAggregateStatistics createObject(fb.BufferContext bc, int offset) =>
+    SCVAggregateStatistics._(bc, offset);
+}
+
+class SCVAggregateStatisticsBuilder {
+  SCVAggregateStatisticsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addTotalCells(int? TOTAL_CELLS) {
+    fbBuilder.addUint32(0, TOTAL_CELLS);
+    return fbBuilder.offset;
+  }
+  int addAccessedCells(int? ACCESSED_CELLS) {
+    fbBuilder.addUint32(1, ACCESSED_CELLS);
+    return fbBuilder.offset;
+  }
+  int addMultiAccessCells(int? MULTI_ACCESS_CELLS) {
+    fbBuilder.addUint32(2, MULTI_ACCESS_CELLS);
+    return fbBuilder.offset;
+  }
+  int addActiveSensorCount(int? ACTIVE_SENSOR_COUNT) {
+    fbBuilder.addUint32(3, ACTIVE_SENSOR_COUNT);
+    return fbBuilder.offset;
+  }
+  int addSwathCount(int? SWATH_COUNT) {
+    fbBuilder.addUint32(4, SWATH_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalWindows(int? TOTAL_WINDOWS) {
+    fbBuilder.addUint32(5, TOTAL_WINDOWS);
+    return fbBuilder.offset;
+  }
+  int addTotalIntervalCount(int? TOTAL_INTERVAL_COUNT) {
+    fbBuilder.addUint32(6, TOTAL_INTERVAL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalRevisitCount(int? TOTAL_REVISIT_COUNT) {
+    fbBuilder.addUint32(7, TOTAL_REVISIT_COUNT);
+    return fbBuilder.offset;
+  }
+  int addTotalAccessDurationSec(double? TOTAL_ACCESS_DURATION_SEC) {
+    fbBuilder.addFloat64(8, TOTAL_ACCESS_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addTotalGapDurationSec(double? TOTAL_GAP_DURATION_SEC) {
+    fbBuilder.addFloat64(9, TOTAL_GAP_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addMaxGapDurationSec(double? MAX_GAP_DURATION_SEC) {
+    fbBuilder.addFloat64(10, MAX_GAP_DURATION_SEC);
+    return fbBuilder.offset;
+  }
+  int addMeanRevisitTimeSec(double? MEAN_REVISIT_TIME_SEC) {
+    fbBuilder.addFloat64(11, MEAN_REVISIT_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addMaxResponseTimeSec(double? MAX_RESPONSE_TIME_SEC) {
+    fbBuilder.addFloat64(12, MAX_RESPONSE_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addMeanResponseTimeSec(double? MEAN_RESPONSE_TIME_SEC) {
+    fbBuilder.addFloat64(13, MEAN_RESPONSE_TIME_SEC);
+    return fbBuilder.offset;
+  }
+  int addPercentCoverage(double? PERCENT_COVERAGE) {
+    fbBuilder.addFloat64(14, PERCENT_COVERAGE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SCVAggregateStatisticsObjectBuilder extends fb.ObjectBuilder {
+  final int? _TOTAL_CELLS;
+  final int? _ACCESSED_CELLS;
+  final int? _MULTI_ACCESS_CELLS;
+  final int? _ACTIVE_SENSOR_COUNT;
+  final int? _SWATH_COUNT;
+  final int? _TOTAL_WINDOWS;
+  final int? _TOTAL_INTERVAL_COUNT;
+  final int? _TOTAL_REVISIT_COUNT;
+  final double? _TOTAL_ACCESS_DURATION_SEC;
+  final double? _TOTAL_GAP_DURATION_SEC;
+  final double? _MAX_GAP_DURATION_SEC;
+  final double? _MEAN_REVISIT_TIME_SEC;
+  final double? _MAX_RESPONSE_TIME_SEC;
+  final double? _MEAN_RESPONSE_TIME_SEC;
+  final double? _PERCENT_COVERAGE;
+
+  SCVAggregateStatisticsObjectBuilder({
+    int? TOTAL_CELLS,
+    int? totalCells,
+    int? ACCESSED_CELLS,
+    int? accessedCells,
+    int? MULTI_ACCESS_CELLS,
+    int? multiAccessCells,
+    int? ACTIVE_SENSOR_COUNT,
+    int? activeSensorCount,
+    int? SWATH_COUNT,
+    int? swathCount,
+    int? TOTAL_WINDOWS,
+    int? totalWindows,
+    int? TOTAL_INTERVAL_COUNT,
+    int? totalIntervalCount,
+    int? TOTAL_REVISIT_COUNT,
+    int? totalRevisitCount,
+    double? TOTAL_ACCESS_DURATION_SEC,
+    double? totalAccessDurationSec,
+    double? TOTAL_GAP_DURATION_SEC,
+    double? totalGapDurationSec,
+    double? MAX_GAP_DURATION_SEC,
+    double? maxGapDurationSec,
+    double? MEAN_REVISIT_TIME_SEC,
+    double? meanRevisitTimeSec,
+    double? MAX_RESPONSE_TIME_SEC,
+    double? maxResponseTimeSec,
+    double? MEAN_RESPONSE_TIME_SEC,
+    double? meanResponseTimeSec,
+    double? PERCENT_COVERAGE,
+    double? percentCoverage,
+  })
+      : _TOTAL_CELLS = totalCells ?? TOTAL_CELLS,
+        _ACCESSED_CELLS = accessedCells ?? ACCESSED_CELLS,
+        _MULTI_ACCESS_CELLS = multiAccessCells ?? MULTI_ACCESS_CELLS,
+        _ACTIVE_SENSOR_COUNT = activeSensorCount ?? ACTIVE_SENSOR_COUNT,
+        _SWATH_COUNT = swathCount ?? SWATH_COUNT,
+        _TOTAL_WINDOWS = totalWindows ?? TOTAL_WINDOWS,
+        _TOTAL_INTERVAL_COUNT = totalIntervalCount ?? TOTAL_INTERVAL_COUNT,
+        _TOTAL_REVISIT_COUNT = totalRevisitCount ?? TOTAL_REVISIT_COUNT,
+        _TOTAL_ACCESS_DURATION_SEC = totalAccessDurationSec ?? TOTAL_ACCESS_DURATION_SEC,
+        _TOTAL_GAP_DURATION_SEC = totalGapDurationSec ?? TOTAL_GAP_DURATION_SEC,
+        _MAX_GAP_DURATION_SEC = maxGapDurationSec ?? MAX_GAP_DURATION_SEC,
+        _MEAN_REVISIT_TIME_SEC = meanRevisitTimeSec ?? MEAN_REVISIT_TIME_SEC,
+        _MAX_RESPONSE_TIME_SEC = maxResponseTimeSec ?? MAX_RESPONSE_TIME_SEC,
+        _MEAN_RESPONSE_TIME_SEC = meanResponseTimeSec ?? MEAN_RESPONSE_TIME_SEC,
+        _PERCENT_COVERAGE = percentCoverage ?? PERCENT_COVERAGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(15);
+    fbBuilder.addUint32(0, _TOTAL_CELLS);
+    fbBuilder.addUint32(1, _ACCESSED_CELLS);
+    fbBuilder.addUint32(2, _MULTI_ACCESS_CELLS);
+    fbBuilder.addUint32(3, _ACTIVE_SENSOR_COUNT);
+    fbBuilder.addUint32(4, _SWATH_COUNT);
+    fbBuilder.addUint32(5, _TOTAL_WINDOWS);
+    fbBuilder.addUint32(6, _TOTAL_INTERVAL_COUNT);
+    fbBuilder.addUint32(7, _TOTAL_REVISIT_COUNT);
+    fbBuilder.addFloat64(8, _TOTAL_ACCESS_DURATION_SEC);
+    fbBuilder.addFloat64(9, _TOTAL_GAP_DURATION_SEC);
+    fbBuilder.addFloat64(10, _MAX_GAP_DURATION_SEC);
+    fbBuilder.addFloat64(11, _MEAN_REVISIT_TIME_SEC);
+    fbBuilder.addFloat64(12, _MAX_RESPONSE_TIME_SEC);
+    fbBuilder.addFloat64(13, _MEAN_RESPONSE_TIME_SEC);
+    fbBuilder.addFloat64(14, _PERCENT_COVERAGE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 class SCVResult {
   SCVResult._(this._bc, this._bcOffset);
   factory SCVResult(List<int> bytes) {
@@ -3913,22 +4078,18 @@ class SCVResult {
   int get totalSensors => TOTAL_SENSORS;
   int get TOTAL_WINDOWS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
   int get totalWindows => TOTAL_WINDOWS;
-  List<SCVCellStat>? get CELL_STATS => const fb.ListReader<SCVCellStat>(SCVCellStat.reader).vTableGetNullable(_bc, _bcOffset, 18);
-  List<SCVCellStat>? get cellStats => CELL_STATS;
-  List<SCVInterval>? get INTERVALS => const fb.ListReader<SCVInterval>(SCVInterval.reader).vTableGetNullable(_bc, _bcOffset, 20);
-  List<SCVLatitudeBandStat>? get LATITUDE_BANDS => const fb.ListReader<SCVLatitudeBandStat>(SCVLatitudeBandStat.reader).vTableGetNullable(_bc, _bcOffset, 22);
-  List<SCVLatitudeBandStat>? get latitudeBands => LATITUDE_BANDS;
-  List<SCVTimeSeriesPoint>? get TIME_SERIES => const fb.ListReader<SCVTimeSeriesPoint>(SCVTimeSeriesPoint.reader).vTableGetNullable(_bc, _bcOffset, 24);
-  List<SCVTimeSeriesPoint>? get timeSeries => TIME_SERIES;
-  List<SCVHistogramBin>? get HISTOGRAMS => const fb.ListReader<SCVHistogramBin>(SCVHistogramBin.reader).vTableGetNullable(_bc, _bcOffset, 26);
-  List<SCVHeatmapCell>? get HEATMAP => const fb.ListReader<SCVHeatmapCell>(SCVHeatmapCell.reader).vTableGetNullable(_bc, _bcOffset, 28);
-  List<SCVSensorContribution>? get CONTRIBUTIONS => const fb.ListReader<SCVSensorContribution>(SCVSensorContribution.reader).vTableGetNullable(_bc, _bcOffset, 30);
-  SCVPackedGeometryChunk? get GEOMETRY => SCVPackedGeometryChunk.reader.vTableGetNullable(_bc, _bcOffset, 32);
-  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  List<SCVHistogramBin>? get HISTOGRAMS => const fb.ListReader<SCVHistogramBin>(SCVHistogramBin.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  List<SCVSensorContribution>? get CONTRIBUTIONS => const fb.ListReader<SCVSensorContribution>(SCVSensorContribution.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  SCVPackedGeometryChunk? get GEOMETRY => SCVPackedGeometryChunk.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  SCVPackedRasterProducts? get RASTER_PRODUCTS => SCVPackedRasterProducts.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  SCVPackedRasterProducts? get rasterProducts => RASTER_PRODUCTS;
+  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  SCVAggregateStatistics? get AGGREGATE_STATISTICS => SCVAggregateStatistics.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  SCVAggregateStatistics? get aggregateStatistics => AGGREGATE_STATISTICS;
 
   @override
   String toString() {
-    return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, cellStats: ${cellStats}, INTERVALS: ${INTERVALS}, latitudeBands: ${latitudeBands}, timeSeries: ${timeSeries}, HISTOGRAMS: ${HISTOGRAMS}, HEATMAP: ${HEATMAP}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, MESSAGE: ${MESSAGE}}';
+    return 'SCVResult{jobId: ${jobId}, traceId: ${traceId}, STATUS: ${STATUS}, timeGrid: ${timeGrid}, targetBody: ${targetBody}, totalSensors: ${totalSensors}, totalWindows: ${totalWindows}, HISTOGRAMS: ${HISTOGRAMS}, CONTRIBUTIONS: ${CONTRIBUTIONS}, GEOMETRY: ${GEOMETRY}, rasterProducts: ${rasterProducts}, MESSAGE: ${MESSAGE}, aggregateStatistics: ${aggregateStatistics}}';
   }
 }
 
@@ -3946,7 +4107,7 @@ class SCVResultBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(13);
   }
 
   int addJobIdOffset(int? offset) {
@@ -3977,40 +4138,28 @@ class SCVResultBuilder {
     fbBuilder.addUint32(6, TOTAL_WINDOWS);
     return fbBuilder.offset;
   }
-  int addCellStatsOffset(int? offset) {
+  int addHistogramsOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addIntervalsOffset(int? offset) {
+  int addContributionsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addLatitudeBandsOffset(int? offset) {
+  int addGeometryOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addTimeSeriesOffset(int? offset) {
+  int addRasterProductsOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addHistogramsOffset(int? offset) {
+  int addMessageOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addHeatmapOffset(int? offset) {
+  int addAggregateStatisticsOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addContributionsOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addGeometryOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addMessageOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
 
@@ -4027,15 +4176,12 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
   final SCVEllipsoidObjectBuilder? _TARGET_BODY;
   final int? _TOTAL_SENSORS;
   final int? _TOTAL_WINDOWS;
-  final List<SCVCellStatObjectBuilder>? _CELL_STATS;
-  final List<SCVIntervalObjectBuilder>? _INTERVALS;
-  final List<SCVLatitudeBandStatObjectBuilder>? _LATITUDE_BANDS;
-  final List<SCVTimeSeriesPointObjectBuilder>? _TIME_SERIES;
   final List<SCVHistogramBinObjectBuilder>? _HISTOGRAMS;
-  final List<SCVHeatmapCellObjectBuilder>? _HEATMAP;
   final List<SCVSensorContributionObjectBuilder>? _CONTRIBUTIONS;
   final SCVPackedGeometryChunkObjectBuilder? _GEOMETRY;
+  final SCVPackedRasterProductsObjectBuilder? _RASTER_PRODUCTS;
   final String? _MESSAGE;
+  final SCVAggregateStatisticsObjectBuilder? _AGGREGATE_STATISTICS;
 
   SCVResultObjectBuilder({
     String? JOB_ID,
@@ -4051,18 +4197,14 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     int? totalSensors,
     int? TOTAL_WINDOWS,
     int? totalWindows,
-    List<SCVCellStatObjectBuilder>? CELL_STATS,
-    List<SCVCellStatObjectBuilder>? cellStats,
-    List<SCVIntervalObjectBuilder>? INTERVALS,
-    List<SCVLatitudeBandStatObjectBuilder>? LATITUDE_BANDS,
-    List<SCVLatitudeBandStatObjectBuilder>? latitudeBands,
-    List<SCVTimeSeriesPointObjectBuilder>? TIME_SERIES,
-    List<SCVTimeSeriesPointObjectBuilder>? timeSeries,
     List<SCVHistogramBinObjectBuilder>? HISTOGRAMS,
-    List<SCVHeatmapCellObjectBuilder>? HEATMAP,
     List<SCVSensorContributionObjectBuilder>? CONTRIBUTIONS,
     SCVPackedGeometryChunkObjectBuilder? GEOMETRY,
+    SCVPackedRasterProductsObjectBuilder? RASTER_PRODUCTS,
+    SCVPackedRasterProductsObjectBuilder? rasterProducts,
     String? MESSAGE,
+    SCVAggregateStatisticsObjectBuilder? AGGREGATE_STATISTICS,
+    SCVAggregateStatisticsObjectBuilder? aggregateStatistics,
   })
       : _JOB_ID = jobId ?? JOB_ID,
         _TRACE_ID = traceId ?? TRACE_ID,
@@ -4071,15 +4213,12 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
         _TARGET_BODY = targetBody ?? TARGET_BODY,
         _TOTAL_SENSORS = totalSensors ?? TOTAL_SENSORS,
         _TOTAL_WINDOWS = totalWindows ?? TOTAL_WINDOWS,
-        _CELL_STATS = cellStats ?? CELL_STATS,
-        _INTERVALS = INTERVALS,
-        _LATITUDE_BANDS = latitudeBands ?? LATITUDE_BANDS,
-        _TIME_SERIES = timeSeries ?? TIME_SERIES,
         _HISTOGRAMS = HISTOGRAMS,
-        _HEATMAP = HEATMAP,
         _CONTRIBUTIONS = CONTRIBUTIONS,
         _GEOMETRY = GEOMETRY,
-        _MESSAGE = MESSAGE;
+        _RASTER_PRODUCTS = rasterProducts ?? RASTER_PRODUCTS,
+        _MESSAGE = MESSAGE,
+        _AGGREGATE_STATISTICS = aggregateStatistics ?? AGGREGATE_STATISTICS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4088,24 +4227,16 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_JOB_ID!);
     final int? TIME_GRIDOffset = _TIME_GRID?.getOrCreateOffset(fbBuilder);
     final int? TARGET_BODYOffset = _TARGET_BODY?.getOrCreateOffset(fbBuilder);
-    final int? CELL_STATSOffset = _CELL_STATS == null ? null
-        : fbBuilder.writeList(_CELL_STATS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? INTERVALSOffset = _INTERVALS == null ? null
-        : fbBuilder.writeList(_INTERVALS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? LATITUDE_BANDSOffset = _LATITUDE_BANDS == null ? null
-        : fbBuilder.writeList(_LATITUDE_BANDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? TIME_SERIESOffset = _TIME_SERIES == null ? null
-        : fbBuilder.writeList(_TIME_SERIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? HISTOGRAMSOffset = _HISTOGRAMS == null ? null
         : fbBuilder.writeList(_HISTOGRAMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? HEATMAPOffset = _HEATMAP == null ? null
-        : fbBuilder.writeList(_HEATMAP!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? CONTRIBUTIONSOffset = _CONTRIBUTIONS == null ? null
         : fbBuilder.writeList(_CONTRIBUTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
+    final int? RASTER_PRODUCTSOffset = _RASTER_PRODUCTS?.getOrCreateOffset(fbBuilder);
     final int? MESSAGEOffset = _MESSAGE == null ? null
         : fbBuilder.writeString(_MESSAGE!);
-    fbBuilder.startTable(16);
+    final int? AGGREGATE_STATISTICSOffset = _AGGREGATE_STATISTICS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(13);
     fbBuilder.addOffset(0, JOB_IDOffset);
     fbBuilder.addUint64(1, _TRACE_ID);
     fbBuilder.addUint8(2, _STATUS?.value);
@@ -4113,15 +4244,12 @@ class SCVResultObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, TARGET_BODYOffset);
     fbBuilder.addUint32(5, _TOTAL_SENSORS);
     fbBuilder.addUint32(6, _TOTAL_WINDOWS);
-    fbBuilder.addOffset(7, CELL_STATSOffset);
-    fbBuilder.addOffset(8, INTERVALSOffset);
-    fbBuilder.addOffset(9, LATITUDE_BANDSOffset);
-    fbBuilder.addOffset(10, TIME_SERIESOffset);
-    fbBuilder.addOffset(11, HISTOGRAMSOffset);
-    fbBuilder.addOffset(12, HEATMAPOffset);
-    fbBuilder.addOffset(13, CONTRIBUTIONSOffset);
-    fbBuilder.addOffset(14, GEOMETRYOffset);
-    fbBuilder.addOffset(15, MESSAGEOffset);
+    fbBuilder.addOffset(7, HISTOGRAMSOffset);
+    fbBuilder.addOffset(8, CONTRIBUTIONSOffset);
+    fbBuilder.addOffset(9, GEOMETRYOffset);
+    fbBuilder.addOffset(10, RASTER_PRODUCTSOffset);
+    fbBuilder.addOffset(11, MESSAGEOffset);
+    fbBuilder.addOffset(12, AGGREGATE_STATISTICSOffset);
     return fbBuilder.endTable();
   }
 
@@ -4152,10 +4280,12 @@ class SCV {
   SCVCancel? get CANCEL => SCVCancel.reader.vTableGetNullable(_bc, _bcOffset, 10);
   SCVResult? get RESULT => SCVResult.reader.vTableGetNullable(_bc, _bcOffset, 12);
   SCVPackedGeometryChunk? get GEOMETRY => SCVPackedGeometryChunk.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  SCVPackedRasterProducts? get RASTER_PRODUCTS => SCVPackedRasterProducts.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  SCVPackedRasterProducts? get rasterProducts => RASTER_PRODUCTS;
 
   @override
   String toString() {
-    return 'SCV{envelopeKind: ${envelopeKind}, REQUEST: ${REQUEST}, PROGRESS: ${PROGRESS}, CANCEL: ${CANCEL}, RESULT: ${RESULT}, GEOMETRY: ${GEOMETRY}}';
+    return 'SCV{envelopeKind: ${envelopeKind}, REQUEST: ${REQUEST}, PROGRESS: ${PROGRESS}, CANCEL: ${CANCEL}, RESULT: ${RESULT}, GEOMETRY: ${GEOMETRY}, rasterProducts: ${rasterProducts}}';
   }
 }
 
@@ -4173,7 +4303,7 @@ class SCVBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(7);
   }
 
   int addEnvelopeKind(scvEnvelopeKind? ENVELOPE_KIND) {
@@ -4200,6 +4330,10 @@ class SCVBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addRasterProductsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -4213,6 +4347,7 @@ class SCVObjectBuilder extends fb.ObjectBuilder {
   final SCVCancelObjectBuilder? _CANCEL;
   final SCVResultObjectBuilder? _RESULT;
   final SCVPackedGeometryChunkObjectBuilder? _GEOMETRY;
+  final SCVPackedRasterProductsObjectBuilder? _RASTER_PRODUCTS;
 
   SCVObjectBuilder({
     scvEnvelopeKind? ENVELOPE_KIND,
@@ -4222,13 +4357,16 @@ class SCVObjectBuilder extends fb.ObjectBuilder {
     SCVCancelObjectBuilder? CANCEL,
     SCVResultObjectBuilder? RESULT,
     SCVPackedGeometryChunkObjectBuilder? GEOMETRY,
+    SCVPackedRasterProductsObjectBuilder? RASTER_PRODUCTS,
+    SCVPackedRasterProductsObjectBuilder? rasterProducts,
   })
       : _ENVELOPE_KIND = envelopeKind ?? ENVELOPE_KIND,
         _REQUEST = REQUEST,
         _PROGRESS = PROGRESS,
         _CANCEL = CANCEL,
         _RESULT = RESULT,
-        _GEOMETRY = GEOMETRY;
+        _GEOMETRY = GEOMETRY,
+        _RASTER_PRODUCTS = rasterProducts ?? RASTER_PRODUCTS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4238,13 +4376,15 @@ class SCVObjectBuilder extends fb.ObjectBuilder {
     final int? CANCELOffset = _CANCEL?.getOrCreateOffset(fbBuilder);
     final int? RESULTOffset = _RESULT?.getOrCreateOffset(fbBuilder);
     final int? GEOMETRYOffset = _GEOMETRY?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(6);
+    final int? RASTER_PRODUCTSOffset = _RASTER_PRODUCTS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(7);
     fbBuilder.addUint8(0, _ENVELOPE_KIND?.value);
     fbBuilder.addOffset(1, REQUESTOffset);
     fbBuilder.addOffset(2, PROGRESSOffset);
     fbBuilder.addOffset(3, CANCELOffset);
     fbBuilder.addOffset(4, RESULTOffset);
     fbBuilder.addOffset(5, GEOMETRYOffset);
+    fbBuilder.addOffset(6, RASTER_PRODUCTSOffset);
     return fbBuilder.endTable();
   }
 

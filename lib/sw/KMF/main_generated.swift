@@ -280,4 +280,3 @@ public class FlatbuffersEncryption {
     return String(bytes: decrypted, encoding: .utf8)
   }
 }
-

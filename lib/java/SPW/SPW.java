@@ -268,4 +268,3 @@ public final class SPW extends com.google.flatbuffers.Table {
     public SPW get(SPW obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

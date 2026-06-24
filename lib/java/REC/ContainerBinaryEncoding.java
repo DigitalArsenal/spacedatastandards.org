@@ -69,4 +69,3 @@ public final class ContainerBinaryEncoding extends com.google.flatbuffers.Table 
     public ContainerBinaryEncoding get(ContainerBinaryEncoding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

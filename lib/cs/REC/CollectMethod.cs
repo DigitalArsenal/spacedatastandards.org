@@ -10,4 +10,3 @@ public enum CollectMethod : sbyte
   FIXED_STARE = 2,
   OTHER = 3,
 };
-

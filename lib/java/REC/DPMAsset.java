@@ -177,4 +177,3 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
     public DPMAsset get(DPMAsset obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

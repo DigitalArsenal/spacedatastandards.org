@@ -223,4 +223,3 @@ public struct DFH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

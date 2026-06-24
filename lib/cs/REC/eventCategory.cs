@@ -14,4 +14,3 @@ public enum eventCategory : sbyte
   REPOSITIONING = 7,
   UNKNOWN = 8,
 };
-

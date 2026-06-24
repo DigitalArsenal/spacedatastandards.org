@@ -13,4 +13,3 @@ public enum gnssConstellation : sbyte
   SBAS = 6,
   MIXED = 7,
 };
-

@@ -548,4 +548,3 @@ public struct SOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

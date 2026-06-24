@@ -237,4 +237,3 @@ public final class GNO extends com.google.flatbuffers.Table {
     public GNO get(GNO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

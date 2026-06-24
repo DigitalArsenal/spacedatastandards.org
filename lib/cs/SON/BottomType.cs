@@ -14,4 +14,3 @@ public enum BottomType : sbyte
   CORAL = 7,
   MIXED = 8,
 };
-

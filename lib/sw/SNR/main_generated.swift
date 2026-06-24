@@ -194,4 +194,3 @@ public struct SNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

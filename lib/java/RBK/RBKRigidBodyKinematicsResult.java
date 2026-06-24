@@ -77,4 +77,3 @@ public final class RBKRigidBodyKinematicsResult extends com.google.flatbuffers.T
     public RBKRigidBodyKinematicsResult get(RBKRigidBodyKinematicsResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

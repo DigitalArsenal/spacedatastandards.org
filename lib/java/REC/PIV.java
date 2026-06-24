@@ -60,4 +60,3 @@ public final class PIV extends com.google.flatbuffers.Table {
     public PIV get(PIV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

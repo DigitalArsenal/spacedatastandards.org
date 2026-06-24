@@ -85,4 +85,3 @@ public final class CZMDynamicProperty extends com.google.flatbuffers.Table {
     public CZMDynamicProperty get(CZMDynamicProperty obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

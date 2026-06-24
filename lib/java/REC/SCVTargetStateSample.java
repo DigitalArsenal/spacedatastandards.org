@@ -81,4 +81,3 @@ public final class SCVTargetStateSample extends com.google.flatbuffers.Table {
     public SCVTargetStateSample get(SCVTargetStateSample obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

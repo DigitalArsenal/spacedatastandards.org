@@ -17,4 +17,3 @@ public enum timConversionStatus : sbyte
   /// Requested instant is outside the supported conversion range.
   OUT_OF_RANGE = 5,
 };
-

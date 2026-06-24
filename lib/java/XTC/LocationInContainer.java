@@ -60,4 +60,3 @@ public final class LocationInContainer extends com.google.flatbuffers.Table {
     public LocationInContainer get(LocationInContainer obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

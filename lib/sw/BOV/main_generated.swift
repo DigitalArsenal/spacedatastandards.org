@@ -86,4 +86,3 @@ public struct BOV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

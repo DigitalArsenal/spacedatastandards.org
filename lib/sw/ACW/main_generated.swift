@@ -582,4 +582,3 @@ public struct ACW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -85,4 +85,3 @@ public final class FPC extends com.google.flatbuffers.Table {
     public FPC get(FPC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -242,4 +242,3 @@ public struct COM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

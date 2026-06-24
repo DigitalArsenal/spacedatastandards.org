@@ -101,4 +101,3 @@ public struct CTR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

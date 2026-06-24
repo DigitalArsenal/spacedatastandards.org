@@ -241,4 +241,3 @@ public final class LNE extends com.google.flatbuffers.Table {
     public LNE get(LNE obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

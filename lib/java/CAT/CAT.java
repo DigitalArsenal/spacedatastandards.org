@@ -230,4 +230,3 @@ public final class CAT extends com.google.flatbuffers.Table {
     public CAT get(CAT obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

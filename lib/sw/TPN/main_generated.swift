@@ -110,4 +110,3 @@ public struct TPN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

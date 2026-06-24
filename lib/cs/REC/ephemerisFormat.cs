@@ -15,4 +15,3 @@ public enum ephemerisFormat : sbyte
   /// Simplified Deep Space Perturbation Model 8
   SDP8 = 4,
 };
-

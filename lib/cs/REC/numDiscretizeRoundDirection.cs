@@ -11,4 +11,3 @@ public enum numDiscretizeRoundDirection : sbyte
   /// Round magnitude to the nearest least-significant-bit multiple before restoring sign.
   NEAR = 2,
 };
-

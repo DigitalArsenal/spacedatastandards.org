@@ -82,4 +82,3 @@ public final class RBKMatrix3 extends com.google.flatbuffers.Table {
     public RBKMatrix3 get(RBKMatrix3 obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

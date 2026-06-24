@@ -357,4 +357,3 @@ public struct SKI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

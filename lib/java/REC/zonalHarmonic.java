@@ -23,4 +23,3 @@ public final class zonalHarmonic {
 
   public static String name(int e) { return names[e]; }
 }
-

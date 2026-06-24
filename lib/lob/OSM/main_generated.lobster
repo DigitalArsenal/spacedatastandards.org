@@ -51,4 +51,3 @@ struct OSMBuilder:
         return this
     def end():
         return b_.EndObject()
-

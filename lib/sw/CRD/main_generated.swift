@@ -131,4 +131,3 @@ public struct CRD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

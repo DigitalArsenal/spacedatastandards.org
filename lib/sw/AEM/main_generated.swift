@@ -183,4 +183,3 @@ public struct AEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

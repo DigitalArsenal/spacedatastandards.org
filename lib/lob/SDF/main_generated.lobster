@@ -554,4 +554,3 @@ def SDFStartRESULTSVector(b_:flatbuffers.builder, n_:int):
 
 def SDFStartTIMERANGERESULTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(40, n_, 8)
-

@@ -106,4 +106,3 @@ struct PNMBuilder:
         return this
     def end():
         return b_.EndObject()
-

@@ -90,4 +90,3 @@ public final class BinaryParameterType extends com.google.flatbuffers.Table {
     public BinaryParameterType get(BinaryParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

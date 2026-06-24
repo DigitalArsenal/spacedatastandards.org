@@ -21,4 +21,3 @@ public final class thrusterType {
 
   public static String name(int e) { return names[e]; }
 }
-

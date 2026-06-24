@@ -11,4 +11,3 @@ public enum lamConstraintStatus : sbyte
   VIOLATED = 3,
   WAIVED = 4,
 };
-

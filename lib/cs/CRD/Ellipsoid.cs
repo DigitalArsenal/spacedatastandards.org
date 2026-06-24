@@ -11,4 +11,3 @@ public enum Ellipsoid : sbyte
   MOON = 4,
   MARS = 5,
 };
-

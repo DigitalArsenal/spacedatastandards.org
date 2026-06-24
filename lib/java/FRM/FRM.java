@@ -56,4 +56,3 @@ public final class FRM extends com.google.flatbuffers.Table {
     public FRM get(FRM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

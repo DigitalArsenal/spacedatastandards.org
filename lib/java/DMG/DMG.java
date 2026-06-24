@@ -121,4 +121,3 @@ public final class DMG extends com.google.flatbuffers.Table {
     public DMG get(DMG obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

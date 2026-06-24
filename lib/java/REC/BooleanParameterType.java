@@ -106,4 +106,3 @@ public final class BooleanParameterType extends com.google.flatbuffers.Table {
     public BooleanParameterType get(BooleanParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

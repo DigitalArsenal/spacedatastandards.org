@@ -92,4 +92,3 @@ public final class PRG extends com.google.flatbuffers.Table {
     public PRG get(PRG obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

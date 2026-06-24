@@ -171,4 +171,3 @@ public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

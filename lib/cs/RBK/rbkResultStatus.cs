@@ -11,4 +11,3 @@ public enum rbkResultStatus : sbyte
   /// Operation is unknown or not supported by the module implementation.
   UNSUPPORTED_OPERATION = 2,
 };
-

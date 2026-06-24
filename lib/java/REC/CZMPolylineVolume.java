@@ -157,4 +157,3 @@ public final class CZMPolylineVolume extends com.google.flatbuffers.Table {
     public CZMPolylineVolume get(CZMPolylineVolume obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -276,4 +276,3 @@ public struct DSS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

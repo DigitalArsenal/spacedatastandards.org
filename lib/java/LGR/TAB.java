@@ -118,4 +118,3 @@ public final class TAB extends com.google.flatbuffers.Table {
     public TAB get(TAB obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

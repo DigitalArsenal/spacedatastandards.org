@@ -69,4 +69,3 @@ public final class CZMTileset extends com.google.flatbuffers.Table {
     public CZMTileset get(CZMTileset obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -53,4 +53,3 @@ public final class SPWCOLLECTION extends com.google.flatbuffers.Table {
     public SPWCOLLECTION get(SPWCOLLECTION obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

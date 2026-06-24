@@ -249,4 +249,3 @@ public final class rbkOperationCode {
 
   public static String name(int e) { return names[e]; }
 }
-

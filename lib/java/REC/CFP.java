@@ -166,4 +166,3 @@ public final class CFP extends com.google.flatbuffers.Table {
     public CFP get(CFP obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -106,4 +106,3 @@ public final class reentryStateVector extends com.google.flatbuffers.Table {
     public reentryStateVector get(reentryStateVector obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

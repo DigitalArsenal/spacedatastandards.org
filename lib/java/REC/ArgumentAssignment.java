@@ -64,4 +64,3 @@ public final class ArgumentAssignment extends com.google.flatbuffers.Table {
     public ArgumentAssignment get(ArgumentAssignment obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

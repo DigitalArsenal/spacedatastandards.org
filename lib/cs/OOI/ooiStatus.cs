@@ -11,4 +11,3 @@ public enum ooiStatus : sbyte
   URGENT = 4,
   ARCHIVED = 5,
 };
-

@@ -288,4 +288,3 @@ public struct IRO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

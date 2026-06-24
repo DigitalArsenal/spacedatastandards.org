@@ -176,4 +176,3 @@ public final class PUR extends com.google.flatbuffers.Table {
     public PUR get(PUR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -272,4 +272,3 @@ public struct SNW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

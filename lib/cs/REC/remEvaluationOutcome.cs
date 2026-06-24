@@ -12,4 +12,3 @@ public enum remEvaluationOutcome : sbyte
   SURVIVAL_EXPECTED = 4,
   BLOCKED = 5,
 };
-

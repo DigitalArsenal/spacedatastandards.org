@@ -123,4 +123,3 @@ public final class SDRRadarConfig extends com.google.flatbuffers.Table {
     public SDRRadarConfig get(SDRRadarConfig obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

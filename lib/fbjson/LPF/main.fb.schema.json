@@ -41,7 +41,8 @@
             "ProofRejected": {
               "value": 2
             }
-          }
+          },
+          "x-flatbuffer-default": "ProofRequest"
         },
         "REQUEST_ID": {
           "type": "string",

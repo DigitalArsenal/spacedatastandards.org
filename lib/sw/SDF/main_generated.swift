@@ -824,4 +824,3 @@ public struct SDF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -14,4 +14,3 @@ public final class soiCalibrationType {
 
   public static String name(int e) { return names[e]; }
 }
-

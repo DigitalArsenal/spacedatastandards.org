@@ -160,4 +160,3 @@ public final class EME extends com.google.flatbuffers.Table {
     public EME get(EME obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

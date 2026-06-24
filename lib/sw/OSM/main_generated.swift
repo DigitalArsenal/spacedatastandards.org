@@ -83,4 +83,3 @@ public struct OSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

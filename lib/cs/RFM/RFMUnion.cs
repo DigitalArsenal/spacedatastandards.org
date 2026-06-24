@@ -68,4 +68,3 @@ static public class RFMUnionVerify
     return result;
   }
 }
-

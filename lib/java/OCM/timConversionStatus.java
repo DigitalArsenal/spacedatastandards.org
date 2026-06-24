@@ -32,4 +32,3 @@ public final class timConversionStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

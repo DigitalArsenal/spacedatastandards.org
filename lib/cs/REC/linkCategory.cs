@@ -11,4 +11,3 @@ public enum linkCategory : sbyte
   GROUND_TO_GROUND = 4,
   RELAY = 5,
 };
-

@@ -9,4 +9,3 @@ public enum attCovType : sbyte
   ANGLE_ANGVEL = 2,
   QUATERNION_COV = 3,
 };
-

@@ -12,4 +12,3 @@ public enum publicationState : sbyte
   /// No longer offered for new installs or purchases
   Retired = 2,
 };
-

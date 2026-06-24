@@ -18,4 +18,3 @@ public enum rfBandDesignation : sbyte
   EHF = 11,
   OTHER = 12,
 };
-

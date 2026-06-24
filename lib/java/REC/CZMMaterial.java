@@ -86,4 +86,3 @@ public final class CZMMaterial extends com.google.flatbuffers.Table {
     public CZMMaterial get(CZMMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -214,4 +214,3 @@ public struct ANI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

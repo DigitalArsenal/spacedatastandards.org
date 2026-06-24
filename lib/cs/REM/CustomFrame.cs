@@ -42,4 +42,3 @@ public enum CustomFrame : sbyte
   /// Radial-UTF: Radial, Along-track, Cross-track variant.
   UVW = 17,
 };
-

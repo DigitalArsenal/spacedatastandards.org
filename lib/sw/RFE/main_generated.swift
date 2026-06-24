@@ -369,4 +369,3 @@ public struct RFE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

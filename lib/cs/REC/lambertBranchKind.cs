@@ -9,4 +9,3 @@ public enum lambertBranchKind : sbyte
   MULTI_LONG_PERIOD = 1,
   MULTI_SHORT_PERIOD = 2,
 };
-

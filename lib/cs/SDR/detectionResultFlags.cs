@@ -14,4 +14,3 @@ public enum detectionResultFlags : uint
   SIDELOBE = 32,
   MERGED = 64,
 };
-

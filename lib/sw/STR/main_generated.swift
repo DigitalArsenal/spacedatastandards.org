@@ -319,4 +319,3 @@ public struct STR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

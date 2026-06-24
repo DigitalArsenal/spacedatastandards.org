@@ -63,4 +63,3 @@ public final class SCVCancel extends com.google.flatbuffers.Table {
     public SCVCancel get(SCVCancel obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

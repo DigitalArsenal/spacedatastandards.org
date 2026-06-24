@@ -27,4 +27,3 @@ public final class DataMode {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -11,4 +11,3 @@ public enum TrackQuality : sbyte
   COASTING = 4,
   LOST = 5,
 };
-

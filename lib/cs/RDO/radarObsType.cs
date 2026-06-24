@@ -11,4 +11,3 @@ public enum radarObsType : sbyte
   SEARCH_FENCE = 4,
   UNKNOWN = 5,
 };
-

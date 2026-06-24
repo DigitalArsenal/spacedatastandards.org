@@ -8,4 +8,3 @@ public enum CZMHeightReference : sbyte
   CLAMP_TO_GROUND = 1,
   RELATIVE_TO_GROUND = 2,
 };
-

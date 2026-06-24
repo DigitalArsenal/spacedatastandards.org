@@ -99,4 +99,3 @@ public final class StringArgumentType extends com.google.flatbuffers.Table {
     public StringArgumentType get(StringArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

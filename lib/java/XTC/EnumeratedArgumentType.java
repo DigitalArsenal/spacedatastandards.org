@@ -103,4 +103,3 @@ public final class EnumeratedArgumentType extends com.google.flatbuffers.Table {
     public EnumeratedArgumentType get(EnumeratedArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

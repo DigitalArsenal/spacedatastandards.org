@@ -81,4 +81,3 @@ public final class CAQRequest extends com.google.flatbuffers.Table {
     public CAQRequest get(CAQRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

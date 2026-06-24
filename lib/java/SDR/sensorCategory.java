@@ -18,4 +18,3 @@ public final class sensorCategory {
   public static final int LIDAR = 5;
   public static final int CUSTOM = 255;
 }
-

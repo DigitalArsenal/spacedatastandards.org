@@ -64,4 +64,3 @@ public struct OOL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -93,4 +93,3 @@ public final class NUMVectorDiscretizeResult extends com.google.flatbuffers.Tabl
     public NUMVectorDiscretizeResult get(NUMVectorDiscretizeResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

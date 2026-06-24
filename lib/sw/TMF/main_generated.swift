@@ -141,4 +141,3 @@ public struct TMF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

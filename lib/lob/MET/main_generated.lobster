@@ -30,4 +30,3 @@ struct METBuilder:
         return this
     def end():
         return b_.EndObject()
-

@@ -95,4 +95,3 @@ public final class MathAlgorithm extends com.google.flatbuffers.Table {
     public MathAlgorithm get(MathAlgorithm obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

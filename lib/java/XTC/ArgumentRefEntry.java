@@ -72,4 +72,3 @@ public final class ArgumentRefEntry extends com.google.flatbuffers.Table {
     public ArgumentRefEntry get(ArgumentRefEntry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

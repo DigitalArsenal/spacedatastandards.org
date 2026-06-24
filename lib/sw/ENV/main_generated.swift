@@ -175,4 +175,3 @@ public struct ENV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -120,4 +120,3 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

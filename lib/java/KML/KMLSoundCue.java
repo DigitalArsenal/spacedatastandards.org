@@ -62,4 +62,3 @@ public final class KMLSoundCue extends com.google.flatbuffers.Table {
     public KMLSoundCue get(KMLSoundCue obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

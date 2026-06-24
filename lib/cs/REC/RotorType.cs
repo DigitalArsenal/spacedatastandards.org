@@ -11,4 +11,3 @@ public enum RotorType : sbyte
   COAXIAL_UPPER = 4,
   COAXIAL_LOWER = 5,
 };
-

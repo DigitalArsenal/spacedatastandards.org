@@ -15,4 +15,3 @@ public enum SeaState : sbyte
   SS8 = 8,
   SS9 = 9,
 };
-

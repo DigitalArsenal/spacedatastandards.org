@@ -14,4 +14,3 @@ public enum MotionModel : sbyte
   SURFACE_VEHICLE = 7,
   CURVILINEAR = 8,
 };
-

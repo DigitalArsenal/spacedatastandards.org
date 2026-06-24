@@ -74,4 +74,3 @@ public final class CZMPolygonHole extends com.google.flatbuffers.Table {
     public CZMPolygonHole get(CZMPolygonHole obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -20,4 +20,3 @@ public enum ThreatCategory : sbyte
   FRIENDLY = 13,
   IFF = 14,
 };
-

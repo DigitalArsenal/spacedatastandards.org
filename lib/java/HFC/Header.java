@@ -100,4 +100,3 @@ public final class Header extends com.google.flatbuffers.Table {
     public Header get(Header obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

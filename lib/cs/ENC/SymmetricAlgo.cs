@@ -7,4 +7,3 @@ public enum SymmetricAlgo : sbyte
 {
   AES_256_CTR = 0,
 };
-

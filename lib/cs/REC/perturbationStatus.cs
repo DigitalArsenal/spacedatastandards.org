@@ -8,4 +8,3 @@ public enum perturbationStatus : sbyte
   OFF = 0,
   ON = 1,
 };
-

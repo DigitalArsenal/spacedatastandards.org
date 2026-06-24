@@ -220,4 +220,3 @@ public final class GPXWaypoint extends com.google.flatbuffers.Table {
     public GPXWaypoint get(GPXWaypoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

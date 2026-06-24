@@ -14,4 +14,3 @@ public enum analyticProfile : sbyte
   CLASSIFICATION = 7,
   FUSION = 8,
 };
-

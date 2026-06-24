@@ -104,7 +104,8 @@
             "OTHER": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "OTHER"
         },
         "TRANSPORT_KIND": {
           "$ref": "#/definitions/dpmTransportKind",
@@ -124,7 +125,8 @@
               "value": 2,
               "description": "Asset bytes are resolved by another protocol named in TRANSPORT_PROTOCOL."
             }
-          }
+          },
+          "x-flatbuffer-default": "CONTENT_ADDRESS"
         },
         "CID": {
           "type": "string",

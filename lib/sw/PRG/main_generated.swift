@@ -109,4 +109,3 @@ public struct USR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -373,4 +373,3 @@ public final class OBD extends com.google.flatbuffers.Table {
     public OBD get(OBD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

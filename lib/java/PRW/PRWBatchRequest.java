@@ -93,4 +93,3 @@ public final class PRWBatchRequest extends com.google.flatbuffers.Table {
     public PRWBatchRequest get(PRWBatchRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

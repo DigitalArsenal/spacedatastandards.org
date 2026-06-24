@@ -186,4 +186,3 @@ public struct HEL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -89,4 +89,3 @@ public final class FloatDataEncoding extends com.google.flatbuffers.Table {
     public FloatDataEncoding get(FloatDataEncoding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -328,4 +328,3 @@ public final class STR extends com.google.flatbuffers.Table {
     public STR get(STR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

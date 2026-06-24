@@ -47,4 +47,3 @@ public final class SpacecraftFrameWrapper extends com.google.flatbuffers.Table {
     public SpacecraftFrameWrapper get(SpacecraftFrameWrapper obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

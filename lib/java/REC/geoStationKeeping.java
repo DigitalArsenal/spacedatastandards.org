@@ -14,4 +14,3 @@ public final class geoStationKeeping {
 
   public static String name(int e) { return names[e]; }
 }
-

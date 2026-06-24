@@ -47,4 +47,3 @@ public final class CustomFrameWrapper extends com.google.flatbuffers.Table {
     public CustomFrameWrapper get(CustomFrameWrapper obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

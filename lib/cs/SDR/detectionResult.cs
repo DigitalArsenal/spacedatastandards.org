@@ -95,4 +95,3 @@ public class detectionResultT
     this.RESERVED = 0;
   }
 }
-

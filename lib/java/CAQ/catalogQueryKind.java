@@ -29,4 +29,3 @@ public final class catalogQueryKind {
 
   public static String name(int e) { return names[e]; }
 }
-

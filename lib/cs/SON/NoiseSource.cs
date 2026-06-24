@@ -15,4 +15,3 @@ public enum NoiseSource : sbyte
   FLOW = 8,
   SELF_NOISE = 9,
 };
-

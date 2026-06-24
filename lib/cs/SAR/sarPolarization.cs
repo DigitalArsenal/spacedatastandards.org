@@ -14,4 +14,3 @@ public enum sarPolarization : sbyte
   QUAD = 7,
   COMPACT = 8,
 };
-

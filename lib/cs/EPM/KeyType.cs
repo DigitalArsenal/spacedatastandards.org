@@ -7,4 +7,3 @@ public enum KeyType : sbyte
   Signing = 0,
   Encryption = 1,
 };
-

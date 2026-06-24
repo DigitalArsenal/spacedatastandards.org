@@ -298,4 +298,3 @@ struct OOEBuilder:
         return this
     def end():
         return b_.EndObject()
-

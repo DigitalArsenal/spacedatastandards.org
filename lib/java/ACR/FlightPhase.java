@@ -18,4 +18,3 @@ public final class FlightPhase {
 
   public static String name(int e) { return names[e]; }
 }
-

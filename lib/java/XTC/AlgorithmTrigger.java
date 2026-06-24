@@ -71,4 +71,3 @@ public final class AlgorithmTrigger extends com.google.flatbuffers.Table {
     public AlgorithmTrigger get(AlgorithmTrigger obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

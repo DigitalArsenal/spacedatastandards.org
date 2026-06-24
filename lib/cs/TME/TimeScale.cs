@@ -19,4 +19,3 @@ public enum TimeScale : sbyte
   LOCAL_APPARENT_SOLAR = 12,
   SIDEREAL = 13,
 };
-

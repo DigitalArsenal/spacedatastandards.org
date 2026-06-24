@@ -16,4 +16,3 @@ public enum rcfPduType : sbyte
   STATUS_REPORT = 9,
   PEER_ABORT = 10,
 };
-

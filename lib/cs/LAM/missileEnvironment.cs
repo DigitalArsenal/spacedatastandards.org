@@ -10,4 +10,3 @@ public enum missileEnvironment : sbyte
   TRANSITIONAL = 3,
   UNKNOWN = 4,
 };
-

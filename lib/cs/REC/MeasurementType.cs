@@ -18,4 +18,3 @@ public enum MeasurementType : sbyte
   ADSB = 11,
   SONAR = 12,
 };
-

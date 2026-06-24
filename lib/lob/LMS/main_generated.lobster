@@ -104,4 +104,3 @@ struct LMSBuilder:
         return this
     def end():
         return b_.EndObject()
-

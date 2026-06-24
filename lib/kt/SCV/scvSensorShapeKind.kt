@@ -6,5 +6,6 @@ class scvSensorShapeKind private constructor() {
         const val CONIC: UByte = 0u
         const val RECTANGULAR: UByte = 1u
         const val CUSTOM_POLYGON: UByte = 2u
+        const val SAR_ANNULAR_SECTOR: UByte = 3u
     }
 }

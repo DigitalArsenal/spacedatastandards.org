@@ -54,4 +54,3 @@ public final class SDFCylindrical extends com.google.flatbuffers.Table {
     public SDFCylindrical get(SDFCylindrical obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

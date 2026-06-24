@@ -154,4 +154,3 @@ public struct FCS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

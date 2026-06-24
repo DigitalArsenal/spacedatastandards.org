@@ -141,4 +141,3 @@ public struct OOB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

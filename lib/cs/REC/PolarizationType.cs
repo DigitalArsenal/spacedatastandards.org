@@ -10,4 +10,3 @@ public enum PolarizationType : sbyte
   elliptical = 2,
   unpolarized = 3,
 };
-

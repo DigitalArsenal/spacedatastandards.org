@@ -570,4 +570,3 @@ public struct RBK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

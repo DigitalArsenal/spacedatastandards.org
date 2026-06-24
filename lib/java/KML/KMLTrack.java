@@ -113,4 +113,3 @@ public final class KMLTrack extends com.google.flatbuffers.Table {
     public KMLTrack get(KMLTrack obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

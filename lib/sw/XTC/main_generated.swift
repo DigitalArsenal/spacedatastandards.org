@@ -5609,4 +5609,3 @@ public struct XTC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

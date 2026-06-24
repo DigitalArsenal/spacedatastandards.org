@@ -124,4 +124,3 @@ public final class EnumeratedParameterType extends com.google.flatbuffers.Table 
     public EnumeratedParameterType get(EnumeratedParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

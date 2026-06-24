@@ -73,4 +73,3 @@ public final class PluginDependency extends com.google.flatbuffers.Table {
     public PluginDependency get(PluginDependency obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -14,4 +14,3 @@ public final class radarObsType {
 
   public static String name(int e) { return names[e]; }
 }
-

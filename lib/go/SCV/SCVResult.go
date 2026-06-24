@@ -167,132 +167,8 @@ func (rcv *SCVResult) MutateTotalWindows(n uint32) bool {
 	return rcv.MutateTOTAL_WINDOWS(n)
 }
 
-func (rcv *SCVResult) CELL_STATS(obj *SCVCellStat, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVCellStat)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) CellStats(obj *SCVCellStat, j int) bool {
-	return rcv.CELL_STATS(obj, j)
-}
-
-func (rcv *SCVResult) CELL_STATSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) CellStatsLength() int {
-	return rcv.CELL_STATSLength()
-}
-
-func (rcv *SCVResult) INTERVALS(obj *SCVInterval, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVInterval)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) Intervals(obj *SCVInterval, j int) bool {
-	return rcv.INTERVALS(obj, j)
-}
-
-func (rcv *SCVResult) INTERVALSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) IntervalsLength() int {
-	return rcv.INTERVALSLength()
-}
-
-func (rcv *SCVResult) LATITUDE_BANDS(obj *SCVLatitudeBandStat, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVLatitudeBandStat)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) LatitudeBands(obj *SCVLatitudeBandStat, j int) bool {
-	return rcv.LATITUDE_BANDS(obj, j)
-}
-
-func (rcv *SCVResult) LATITUDE_BANDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) LatitudeBandsLength() int {
-	return rcv.LATITUDE_BANDSLength()
-}
-
-func (rcv *SCVResult) TIME_SERIES(obj *SCVTimeSeriesPoint, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVTimeSeriesPoint)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) TimeSeries(obj *SCVTimeSeriesPoint, j int) bool {
-	return rcv.TIME_SERIES(obj, j)
-}
-
-func (rcv *SCVResult) TIME_SERIESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) TimeSeriesLength() int {
-	return rcv.TIME_SERIESLength()
-}
-
 func (rcv *SCVResult) HISTOGRAMS(obj *SCVHistogramBin, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -311,7 +187,7 @@ func (rcv *SCVResult) Histograms(obj *SCVHistogramBin, j int) bool {
 }
 
 func (rcv *SCVResult) HISTOGRAMSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -322,39 +198,8 @@ func (rcv *SCVResult) HistogramsLength() int {
 	return rcv.HISTOGRAMSLength()
 }
 
-func (rcv *SCVResult) HEATMAP(obj *SCVHeatmapCell, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCVHeatmapCell)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCVResult) Heatmap(obj *SCVHeatmapCell, j int) bool {
-	return rcv.HEATMAP(obj, j)
-}
-
-func (rcv *SCVResult) HEATMAPLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVResult) HeatmapLength() int {
-	return rcv.HEATMAPLength()
-}
-
 func (rcv *SCVResult) CONTRIBUTIONS(obj *SCVSensorContribution, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -373,7 +218,7 @@ func (rcv *SCVResult) Contributions(obj *SCVSensorContribution, j int) bool {
 }
 
 func (rcv *SCVResult) CONTRIBUTIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -385,7 +230,7 @@ func (rcv *SCVResult) ContributionsLength() int {
 }
 
 func (rcv *SCVResult) GEOMETRY(obj *SCVPackedGeometryChunk) *SCVPackedGeometryChunk {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -401,8 +246,25 @@ func (rcv *SCVResult) Geometry(obj *SCVPackedGeometryChunk) *SCVPackedGeometryCh
 	return rcv.GEOMETRY(obj)
 }
 
+func (rcv *SCVResult) RASTER_PRODUCTS(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVPackedRasterProducts)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVResult) RasterProducts(obj *SCVPackedRasterProducts) *SCVPackedRasterProducts {
+	return rcv.RASTER_PRODUCTS(obj)
+}
+
 func (rcv *SCVResult) MESSAGE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -413,8 +275,25 @@ func (rcv *SCVResult) Message() []byte {
 	return rcv.MESSAGE()
 }
 
+func (rcv *SCVResult) AGGREGATE_STATISTICS(obj *SCVAggregateStatistics) *SCVAggregateStatistics {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(SCVAggregateStatistics)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SCVResult) AggregateStatistics(obj *SCVAggregateStatistics) *SCVAggregateStatistics {
+	return rcv.AGGREGATE_STATISTICS(obj)
+}
+
 func SCVResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(13)
 }
 func SCVResultAddJOB_ID(builder *flatbuffers.Builder, JOB_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(JOB_ID), 0)
@@ -458,56 +337,8 @@ func SCVResultAddTOTAL_WINDOWS(builder *flatbuffers.Builder, TOTAL_WINDOWS uint3
 func SCVResultAddTotalWindows(builder *flatbuffers.Builder, TOTAL_WINDOWS uint32) {
 	SCVResultAddTOTAL_WINDOWS(builder, TOTAL_WINDOWS)
 }
-func SCVResultAddCELL_STATS(builder *flatbuffers.Builder, CELL_STATS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CELL_STATS), 0)
-}
-func SCVResultAddCellStats(builder *flatbuffers.Builder, CELL_STATS flatbuffers.UOffsetT) {
-	SCVResultAddCELL_STATS(builder, CELL_STATS)
-}
-func SCVResultStartCELL_STATSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartCellStatsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartCELL_STATSVector(builder, numElems)
-}
-func SCVResultAddINTERVALS(builder *flatbuffers.Builder, INTERVALS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(INTERVALS), 0)
-}
-func SCVResultAddIntervals(builder *flatbuffers.Builder, INTERVALS flatbuffers.UOffsetT) {
-	SCVResultAddINTERVALS(builder, INTERVALS)
-}
-func SCVResultStartINTERVALSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartIntervalsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartINTERVALSVector(builder, numElems)
-}
-func SCVResultAddLATITUDE_BANDS(builder *flatbuffers.Builder, LATITUDE_BANDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LATITUDE_BANDS), 0)
-}
-func SCVResultAddLatitudeBands(builder *flatbuffers.Builder, LATITUDE_BANDS flatbuffers.UOffsetT) {
-	SCVResultAddLATITUDE_BANDS(builder, LATITUDE_BANDS)
-}
-func SCVResultStartLATITUDE_BANDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartLatitudeBandsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartLATITUDE_BANDSVector(builder, numElems)
-}
-func SCVResultAddTIME_SERIES(builder *flatbuffers.Builder, TIME_SERIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TIME_SERIES), 0)
-}
-func SCVResultAddTimeSeries(builder *flatbuffers.Builder, TIME_SERIES flatbuffers.UOffsetT) {
-	SCVResultAddTIME_SERIES(builder, TIME_SERIES)
-}
-func SCVResultStartTIME_SERIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartTimeSeriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartTIME_SERIESVector(builder, numElems)
-}
 func SCVResultAddHISTOGRAMS(builder *flatbuffers.Builder, HISTOGRAMS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(HISTOGRAMS), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(HISTOGRAMS), 0)
 }
 func SCVResultAddHistograms(builder *flatbuffers.Builder, HISTOGRAMS flatbuffers.UOffsetT) {
 	SCVResultAddHISTOGRAMS(builder, HISTOGRAMS)
@@ -518,20 +349,8 @@ func SCVResultStartHISTOGRAMSVector(builder *flatbuffers.Builder, numElems int) 
 func SCVResultStartHistogramsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCVResultStartHISTOGRAMSVector(builder, numElems)
 }
-func SCVResultAddHEATMAP(builder *flatbuffers.Builder, HEATMAP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(HEATMAP), 0)
-}
-func SCVResultAddHeatmap(builder *flatbuffers.Builder, HEATMAP flatbuffers.UOffsetT) {
-	SCVResultAddHEATMAP(builder, HEATMAP)
-}
-func SCVResultStartHEATMAPVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVResultStartHeatmapVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVResultStartHEATMAPVector(builder, numElems)
-}
 func SCVResultAddCONTRIBUTIONS(builder *flatbuffers.Builder, CONTRIBUTIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(CONTRIBUTIONS), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(CONTRIBUTIONS), 0)
 }
 func SCVResultAddContributions(builder *flatbuffers.Builder, CONTRIBUTIONS flatbuffers.UOffsetT) {
 	SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
@@ -543,16 +362,28 @@ func SCVResultStartContributionsVector(builder *flatbuffers.Builder, numElems in
 	return SCVResultStartCONTRIBUTIONSVector(builder, numElems)
 }
 func SCVResultAddGEOMETRY(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(GEOMETRY), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(GEOMETRY), 0)
 }
 func SCVResultAddGeometry(builder *flatbuffers.Builder, GEOMETRY flatbuffers.UOffsetT) {
 	SCVResultAddGEOMETRY(builder, GEOMETRY)
 }
+func SCVResultAddRASTER_PRODUCTS(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(RASTER_PRODUCTS), 0)
+}
+func SCVResultAddRasterProducts(builder *flatbuffers.Builder, RASTER_PRODUCTS flatbuffers.UOffsetT) {
+	SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
+}
 func SCVResultAddMESSAGE(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(MESSAGE), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MESSAGE), 0)
 }
 func SCVResultAddMessage(builder *flatbuffers.Builder, MESSAGE flatbuffers.UOffsetT) {
 	SCVResultAddMESSAGE(builder, MESSAGE)
+}
+func SCVResultAddAGGREGATE_STATISTICS(builder *flatbuffers.Builder, AGGREGATE_STATISTICS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(AGGREGATE_STATISTICS), 0)
+}
+func SCVResultAddAggregateStatistics(builder *flatbuffers.Builder, AGGREGATE_STATISTICS flatbuffers.UOffsetT) {
+	SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
 }
 func SCVResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

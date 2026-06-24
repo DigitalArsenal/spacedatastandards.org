@@ -14,4 +14,3 @@ public enum ErrorDetectionType : sbyte
   /// Parity
   PARITY = 3,
 };
-

@@ -18,4 +18,3 @@ public enum propagatorErrorCode : int
   /// Propagator not initialized.
   NOT_INITIALIZED = 5,
 };
-

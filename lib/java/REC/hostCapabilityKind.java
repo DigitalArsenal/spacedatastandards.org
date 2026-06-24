@@ -49,4 +49,3 @@ public final class hostCapabilityKind {
 
   public static String name(int e) { return names[e]; }
 }
-

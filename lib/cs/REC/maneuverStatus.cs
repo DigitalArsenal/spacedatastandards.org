@@ -12,4 +12,3 @@ public enum maneuverStatus : sbyte
   CANCELLED = 5,
   UNKNOWN = 6,
 };
-

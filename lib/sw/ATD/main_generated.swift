@@ -289,4 +289,3 @@ public struct ATD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

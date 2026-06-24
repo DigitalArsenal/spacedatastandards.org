@@ -323,4 +323,3 @@ public final class DOA extends com.google.flatbuffers.Table {
     public DOA get(DOA obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -108,4 +108,3 @@ public final class PLGPortManifest extends com.google.flatbuffers.Table {
     public PLGPortManifest get(PLGPortManifest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

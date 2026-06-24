@@ -10,4 +10,3 @@ public enum rfDetectionStatus : sbyte
   LOST = 3,
   INTERFERENCE_ONLY = 4,
 };
-

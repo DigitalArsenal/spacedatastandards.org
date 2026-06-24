@@ -14,4 +14,3 @@ public final class lambertBranchKind {
 
   public static String name(int e) { return names[e]; }
 }
-

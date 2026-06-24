@@ -14,4 +14,3 @@ public final class BusStabilizationType {
 
   public static String name(int e) { return names[e]; }
 }
-

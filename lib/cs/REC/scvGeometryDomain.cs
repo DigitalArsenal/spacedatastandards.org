@@ -10,4 +10,3 @@ public enum scvGeometryDomain : byte
   PLANE = 3,
   CUSTOM_MESH = 4,
 };
-

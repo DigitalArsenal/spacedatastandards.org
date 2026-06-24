@@ -133,4 +133,3 @@ public final class MFE extends com.google.flatbuffers.Table {
     public MFE get(MFE obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

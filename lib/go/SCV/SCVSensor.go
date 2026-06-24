@@ -85,28 +85,8 @@ func (rcv *SCVSensor) Name() []byte {
 	return rcv.NAME()
 }
 
-func (rcv *SCVSensor) SHAPE() scvSensorShapeKind {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return scvSensorShapeKind(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *SCVSensor) Shape() scvSensorShapeKind {
-	return rcv.SHAPE()
-}
-
-func (rcv *SCVSensor) MutateSHAPE(n scvSensorShapeKind) bool {
-	return rcv._tab.MutateByteSlot(10, byte(n))
-}
-
-func (rcv *SCVSensor) MutateShape(n scvSensorShapeKind) bool {
-	return rcv.MutateSHAPE(n)
-}
-
 func (rcv *SCVSensor) FRAME() scvCoordinateFrame {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return scvCoordinateFrame(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
@@ -118,7 +98,7 @@ func (rcv *SCVSensor) Frame() scvCoordinateFrame {
 }
 
 func (rcv *SCVSensor) MutateFRAME(n scvCoordinateFrame) bool {
-	return rcv._tab.MutateByteSlot(12, byte(n))
+	return rcv._tab.MutateByteSlot(10, byte(n))
 }
 
 func (rcv *SCVSensor) MutateFrame(n scvCoordinateFrame) bool {
@@ -126,7 +106,7 @@ func (rcv *SCVSensor) MutateFrame(n scvCoordinateFrame) bool {
 }
 
 func (rcv *SCVSensor) POSITION_M(obj *SCVVec3) *SCVVec3 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -143,7 +123,7 @@ func (rcv *SCVSensor) PositionM(obj *SCVVec3) *SCVVec3 {
 }
 
 func (rcv *SCVSensor) VELOCITY_MPS(obj *SCVVec3) *SCVVec3 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -160,7 +140,7 @@ func (rcv *SCVSensor) VelocityMps(obj *SCVVec3) *SCVVec3 {
 }
 
 func (rcv *SCVSensor) BORESIGHT_UNIT(obj *SCVVec3) *SCVVec3 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -177,7 +157,7 @@ func (rcv *SCVSensor) BoresightUnit(obj *SCVVec3) *SCVVec3 {
 }
 
 func (rcv *SCVSensor) UP_UNIT(obj *SCVVec3) *SCVVec3 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -193,159 +173,25 @@ func (rcv *SCVSensor) UpUnit(obj *SCVVec3) *SCVVec3 {
 	return rcv.UP_UNIT(obj)
 }
 
-func (rcv *SCVSensor) HALF_ANGLE_DEG() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+func (rcv *SCVSensor) SHAPE_CONTRACT(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCVSensor) HalfAngleDeg() float64 {
-	return rcv.HALF_ANGLE_DEG()
-}
-
-func (rcv *SCVSensor) MutateHALF_ANGLE_DEG(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(22, n)
-}
-
-func (rcv *SCVSensor) MutateHalfAngleDeg(n float64) bool {
-	return rcv.MutateHALF_ANGLE_DEG(n)
-}
-
-func (rcv *SCVSensor) CROSS_TRACK_HALF_ANGLE_DEG() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCVSensor) CrossTrackHalfAngleDeg() float64 {
-	return rcv.CROSS_TRACK_HALF_ANGLE_DEG()
-}
-
-func (rcv *SCVSensor) MutateCROSS_TRACK_HALF_ANGLE_DEG(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
-}
-
-func (rcv *SCVSensor) MutateCrossTrackHalfAngleDeg(n float64) bool {
-	return rcv.MutateCROSS_TRACK_HALF_ANGLE_DEG(n)
-}
-
-func (rcv *SCVSensor) ALONG_TRACK_HALF_ANGLE_DEG() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCVSensor) AlongTrackHalfAngleDeg() float64 {
-	return rcv.ALONG_TRACK_HALF_ANGLE_DEG()
-}
-
-func (rcv *SCVSensor) MutateALONG_TRACK_HALF_ANGLE_DEG(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(26, n)
-}
-
-func (rcv *SCVSensor) MutateAlongTrackHalfAngleDeg(n float64) bool {
-	return rcv.MutateALONG_TRACK_HALF_ANGLE_DEG(n)
-}
-
-func (rcv *SCVSensor) MIN_RANGE_M() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCVSensor) MinRangeM() float64 {
-	return rcv.MIN_RANGE_M()
-}
-
-func (rcv *SCVSensor) MutateMIN_RANGE_M(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
-}
-
-func (rcv *SCVSensor) MutateMinRangeM(n float64) bool {
-	return rcv.MutateMIN_RANGE_M(n)
-}
-
-func (rcv *SCVSensor) MAX_RANGE_M() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCVSensor) MaxRangeM() float64 {
-	return rcv.MAX_RANGE_M()
-}
-
-func (rcv *SCVSensor) MutateMAX_RANGE_M(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
-}
-
-func (rcv *SCVSensor) MutateMaxRangeM(n float64) bool {
-	return rcv.MutateMAX_RANGE_M(n)
-}
-
-func (rcv *SCVSensor) POLYGON_VERTICES(obj *SCVVec3, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(SCVVec3)
+			obj = new(SCVSensorShapeContract)
 		}
 		obj.Init(rcv._tab.Bytes, x)
-		return true
+		return obj
 	}
-	return false
+	return nil
 }
 
-func (rcv *SCVSensor) PolygonVertices(obj *SCVVec3, j int) bool {
-	return rcv.POLYGON_VERTICES(obj, j)
-}
-
-func (rcv *SCVSensor) POLYGON_VERTICESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCVSensor) PolygonVerticesLength() int {
-	return rcv.POLYGON_VERTICESLength()
-}
-
-func (rcv *SCVSensor) POLYGON_FRAME() scvCoordinateFrame {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		return scvCoordinateFrame(rcv._tab.GetByte(o + rcv._tab.Pos))
-	}
-	return 0
-}
-
-func (rcv *SCVSensor) PolygonFrame() scvCoordinateFrame {
-	return rcv.POLYGON_FRAME()
-}
-
-func (rcv *SCVSensor) MutatePOLYGON_FRAME(n scvCoordinateFrame) bool {
-	return rcv._tab.MutateByteSlot(34, byte(n))
-}
-
-func (rcv *SCVSensor) MutatePolygonFrame(n scvCoordinateFrame) bool {
-	return rcv.MutatePOLYGON_FRAME(n)
+func (rcv *SCVSensor) ShapeContract(obj *SCVSensorShapeContract) *SCVSensorShapeContract {
+	return rcv.SHAPE_CONTRACT(obj)
 }
 
 func SCVSensorStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(9)
 }
 func SCVSensorAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID uint32) {
 	builder.PrependUint32Slot(0, SENSOR_ID, 0)
@@ -365,89 +211,41 @@ func SCVSensorAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 func SCVSensorAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	SCVSensorAddNAME(builder, NAME)
 }
-func SCVSensorAddSHAPE(builder *flatbuffers.Builder, SHAPE scvSensorShapeKind) {
-	builder.PrependByteSlot(3, byte(SHAPE), 0)
-}
-func SCVSensorAddShape(builder *flatbuffers.Builder, SHAPE scvSensorShapeKind) {
-	SCVSensorAddSHAPE(builder, SHAPE)
-}
 func SCVSensorAddFRAME(builder *flatbuffers.Builder, FRAME scvCoordinateFrame) {
-	builder.PrependByteSlot(4, byte(FRAME), 0)
+	builder.PrependByteSlot(3, byte(FRAME), 0)
 }
 func SCVSensorAddFrame(builder *flatbuffers.Builder, FRAME scvCoordinateFrame) {
 	SCVSensorAddFRAME(builder, FRAME)
 }
 func SCVSensorAddPOSITION_M(builder *flatbuffers.Builder, POSITION_M flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(POSITION_M), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(POSITION_M), 0)
 }
 func SCVSensorAddPositionM(builder *flatbuffers.Builder, POSITION_M flatbuffers.UOffsetT) {
 	SCVSensorAddPOSITION_M(builder, POSITION_M)
 }
 func SCVSensorAddVELOCITY_MPS(builder *flatbuffers.Builder, VELOCITY_MPS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(VELOCITY_MPS), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(VELOCITY_MPS), 0)
 }
 func SCVSensorAddVelocityMps(builder *flatbuffers.Builder, VELOCITY_MPS flatbuffers.UOffsetT) {
 	SCVSensorAddVELOCITY_MPS(builder, VELOCITY_MPS)
 }
 func SCVSensorAddBORESIGHT_UNIT(builder *flatbuffers.Builder, BORESIGHT_UNIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(BORESIGHT_UNIT), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(BORESIGHT_UNIT), 0)
 }
 func SCVSensorAddBoresightUnit(builder *flatbuffers.Builder, BORESIGHT_UNIT flatbuffers.UOffsetT) {
 	SCVSensorAddBORESIGHT_UNIT(builder, BORESIGHT_UNIT)
 }
 func SCVSensorAddUP_UNIT(builder *flatbuffers.Builder, UP_UNIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(UP_UNIT), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(UP_UNIT), 0)
 }
 func SCVSensorAddUpUnit(builder *flatbuffers.Builder, UP_UNIT flatbuffers.UOffsetT) {
 	SCVSensorAddUP_UNIT(builder, UP_UNIT)
 }
-func SCVSensorAddHALF_ANGLE_DEG(builder *flatbuffers.Builder, HALF_ANGLE_DEG float64) {
-	builder.PrependFloat64Slot(9, HALF_ANGLE_DEG, 0.0)
+func SCVSensorAddSHAPE_CONTRACT(builder *flatbuffers.Builder, SHAPE_CONTRACT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SHAPE_CONTRACT), 0)
 }
-func SCVSensorAddHalfAngleDeg(builder *flatbuffers.Builder, HALF_ANGLE_DEG float64) {
-	SCVSensorAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG)
-}
-func SCVSensorAddCROSS_TRACK_HALF_ANGLE_DEG(builder *flatbuffers.Builder, CROSS_TRACK_HALF_ANGLE_DEG float64) {
-	builder.PrependFloat64Slot(10, CROSS_TRACK_HALF_ANGLE_DEG, 0.0)
-}
-func SCVSensorAddCrossTrackHalfAngleDeg(builder *flatbuffers.Builder, CROSS_TRACK_HALF_ANGLE_DEG float64) {
-	SCVSensorAddCROSS_TRACK_HALF_ANGLE_DEG(builder, CROSS_TRACK_HALF_ANGLE_DEG)
-}
-func SCVSensorAddALONG_TRACK_HALF_ANGLE_DEG(builder *flatbuffers.Builder, ALONG_TRACK_HALF_ANGLE_DEG float64) {
-	builder.PrependFloat64Slot(11, ALONG_TRACK_HALF_ANGLE_DEG, 0.0)
-}
-func SCVSensorAddAlongTrackHalfAngleDeg(builder *flatbuffers.Builder, ALONG_TRACK_HALF_ANGLE_DEG float64) {
-	SCVSensorAddALONG_TRACK_HALF_ANGLE_DEG(builder, ALONG_TRACK_HALF_ANGLE_DEG)
-}
-func SCVSensorAddMIN_RANGE_M(builder *flatbuffers.Builder, MIN_RANGE_M float64) {
-	builder.PrependFloat64Slot(12, MIN_RANGE_M, 0.0)
-}
-func SCVSensorAddMinRangeM(builder *flatbuffers.Builder, MIN_RANGE_M float64) {
-	SCVSensorAddMIN_RANGE_M(builder, MIN_RANGE_M)
-}
-func SCVSensorAddMAX_RANGE_M(builder *flatbuffers.Builder, MAX_RANGE_M float64) {
-	builder.PrependFloat64Slot(13, MAX_RANGE_M, 0.0)
-}
-func SCVSensorAddMaxRangeM(builder *flatbuffers.Builder, MAX_RANGE_M float64) {
-	SCVSensorAddMAX_RANGE_M(builder, MAX_RANGE_M)
-}
-func SCVSensorAddPOLYGON_VERTICES(builder *flatbuffers.Builder, POLYGON_VERTICES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(POLYGON_VERTICES), 0)
-}
-func SCVSensorAddPolygonVertices(builder *flatbuffers.Builder, POLYGON_VERTICES flatbuffers.UOffsetT) {
-	SCVSensorAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
-}
-func SCVSensorStartPOLYGON_VERTICESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCVSensorStartPolygonVerticesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCVSensorStartPOLYGON_VERTICESVector(builder, numElems)
-}
-func SCVSensorAddPOLYGON_FRAME(builder *flatbuffers.Builder, POLYGON_FRAME scvCoordinateFrame) {
-	builder.PrependByteSlot(15, byte(POLYGON_FRAME), 0)
-}
-func SCVSensorAddPolygonFrame(builder *flatbuffers.Builder, POLYGON_FRAME scvCoordinateFrame) {
-	SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME)
+func SCVSensorAddShapeContract(builder *flatbuffers.Builder, SHAPE_CONTRACT flatbuffers.UOffsetT) {
+	SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
 }
 func SCVSensorEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

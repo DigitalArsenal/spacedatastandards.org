@@ -257,4 +257,3 @@ public enum legacyCountryCode : sbyte
   /// Republic of Zimbabwe
   ZWE = 125,
 };
-

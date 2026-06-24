@@ -12,4 +12,3 @@ public enum geopotentialSource : sbyte
   GEMT3 = 4,
   EGM96_J5 = 5,
 };
-

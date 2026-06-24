@@ -12,4 +12,3 @@ public final class IntegratorType {
   public static final int BS = 6;
   public static final int ANALYTICAL = 255;
 }
-

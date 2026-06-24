@@ -319,4 +319,3 @@ public struct SPWCOLLECTION: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     _v.finish()
   }
 }
-

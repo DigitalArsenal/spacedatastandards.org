@@ -146,4 +146,3 @@ public struct PNM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

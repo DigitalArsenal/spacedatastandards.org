@@ -277,4 +277,3 @@ public final class CDM extends com.google.flatbuffers.Table {
     public CDM get(CDM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

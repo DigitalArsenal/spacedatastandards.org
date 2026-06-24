@@ -842,4 +842,3 @@ public struct SDR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

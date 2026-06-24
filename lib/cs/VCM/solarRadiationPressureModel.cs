@@ -9,4 +9,3 @@ public enum solarRadiationPressureModel : sbyte
   SPHERICAL_MODEL = 1,
   FLAT_PLATE_MODEL = 2,
 };
-

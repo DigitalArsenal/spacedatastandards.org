@@ -7,4 +7,3 @@ public enum licensingConfigMessageType : sbyte
   Configure = 0,
   Status = 1,
 };
-

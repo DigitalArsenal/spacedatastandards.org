@@ -7,4 +7,3 @@ public enum massCategory : sbyte
   DRY = 0,
   WET = 1,
 };
-

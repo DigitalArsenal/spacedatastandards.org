@@ -21,4 +21,3 @@ public enum snwErrorCode : int
   OUTPUT_BUFFER_OVERFLOW = 4,
   NOT_INITIALIZED = 5,
 };
-

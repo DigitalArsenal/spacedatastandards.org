@@ -209,4 +209,3 @@ public struct EWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

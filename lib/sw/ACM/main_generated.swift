@@ -646,4 +646,3 @@ public struct ACM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -13,4 +13,3 @@ public enum encryptionType : sbyte
   TYPE_2 = 6,
   CUSTOM = 7,
 };
-

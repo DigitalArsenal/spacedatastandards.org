@@ -137,4 +137,3 @@ public final class KMLNetworkLink extends com.google.flatbuffers.Table {
     public KMLNetworkLink get(KMLNetworkLink obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

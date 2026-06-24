@@ -12,4 +12,3 @@ public enum keyReferenceAlgorithm : sbyte
   Aes256Gcm = 5,
   Opaque = 6,
 };
-

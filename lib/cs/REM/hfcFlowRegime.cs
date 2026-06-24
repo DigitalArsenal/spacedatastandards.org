@@ -12,4 +12,3 @@ public enum hfcFlowRegime : sbyte
   TRANSITIONAL = 4,
   CONTINUUM = 5,
 };
-

@@ -526,4 +526,3 @@ public struct TIM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

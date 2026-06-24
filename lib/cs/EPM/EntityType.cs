@@ -7,4 +7,3 @@ public enum EntityType : sbyte
   User = 0,
   Node = 1,
 };
-

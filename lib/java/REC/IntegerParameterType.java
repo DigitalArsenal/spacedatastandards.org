@@ -150,4 +150,3 @@ public final class IntegerParameterType extends com.google.flatbuffers.Table {
     public IntegerParameterType get(IntegerParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

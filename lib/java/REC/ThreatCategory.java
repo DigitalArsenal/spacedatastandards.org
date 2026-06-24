@@ -23,4 +23,3 @@ public final class ThreatCategory {
 
   public static String name(int e) { return names[e]; }
 }
-

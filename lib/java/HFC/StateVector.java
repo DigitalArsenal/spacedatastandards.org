@@ -115,4 +115,3 @@ public final class StateVector extends com.google.flatbuffers.Table {
     public StateVector get(StateVector obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

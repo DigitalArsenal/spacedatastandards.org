@@ -53,4 +53,3 @@ public final class LCC extends com.google.flatbuffers.Table {
     public LCC get(LCC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

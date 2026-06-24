@@ -13,4 +13,3 @@ public enum sarMission : sbyte
   MARITIME = 6,
   UNKNOWN = 7,
 };
-

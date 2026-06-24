@@ -129,4 +129,3 @@ struct SONBuilder:
         return this
     def end():
         return b_.EndObject()
-

@@ -483,4 +483,3 @@ struct CRMBuilder:
         return this
     def end():
         return b_.EndObject()
-

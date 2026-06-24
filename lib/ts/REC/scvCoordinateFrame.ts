@@ -8,5 +8,6 @@ export enum scvCoordinateFrame {
   INERTIAL = 2,
   ECEF = 3,
   ECI = 4,
-  CUSTOM = 5
+  CUSTOM = 5,
+  SENSOR_LOCAL = 6
 }

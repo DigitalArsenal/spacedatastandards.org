@@ -19,4 +19,3 @@ public enum propagatorFamily : sbyte
   SGP8 = 11,
   SDP8 = 12,
 };
-

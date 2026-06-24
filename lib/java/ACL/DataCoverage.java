@@ -62,4 +62,3 @@ public final class DataCoverage extends com.google.flatbuffers.Table {
     public DataCoverage get(DataCoverage obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

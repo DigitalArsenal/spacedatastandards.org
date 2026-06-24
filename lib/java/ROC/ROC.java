@@ -102,4 +102,3 @@ public final class ROC extends com.google.flatbuffers.Table {
     public ROC get(ROC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

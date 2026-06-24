@@ -78,4 +78,3 @@ public final class VCMAtmosphericModelData extends com.google.flatbuffers.Table 
     public VCMAtmosphericModelData get(VCMAtmosphericModelData obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

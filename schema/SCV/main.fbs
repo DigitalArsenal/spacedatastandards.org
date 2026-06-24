@@ -1,5 +1,5 @@
-// Hash: 7208b0519d74fa98108376f679174b26f172b017b7f3fd19192d0ca040f72706
-// Version: 1.101.2
+// Hash: 3350c182409b2285bf99d97c89f8b9530719c1b4f7a93568f90c5144ac2c50c1
+// Version: 1.101.3
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -26,7 +26,8 @@ enum scvCoordinateFrame : ubyte {
   INERTIAL,
   ECEF,
   ECI,
-  CUSTOM
+  CUSTOM,
+  SENSOR_LOCAL
 }
 
 enum scvBodyKind : ubyte {
@@ -39,7 +40,17 @@ enum scvBodyKind : ubyte {
 enum scvSensorShapeKind : ubyte {
   CONIC,
   RECTANGULAR,
-  CUSTOM_POLYGON
+  CUSTOM_POLYGON,
+  SAR_ANNULAR_SECTOR
+}
+
+enum scvSensorAxisConvention : ubyte {
+  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT
+}
+
+enum scvSensorRangeBoundaryKind : ubyte {
+  RADIAL_SPHERICAL,
+  LOCAL_Z_PLANE
 }
 
 enum scvGeometryDomain : ubyte {
@@ -55,14 +66,6 @@ enum scvResultState : ubyte {
   PARTIAL,
   CANCELLED,
   FAILED
-}
-
-enum scvIntervalCategory : ubyte {
-  ACCESS,
-  COVERAGE,
-  GAP,
-  REVISIT,
-  OVERLAP
 }
 
 enum scvMetricSeriesKind : ushort {
@@ -82,6 +85,32 @@ enum scvGeometryEncoding : ubyte {
   INTERLEAVED_FLOAT32,
   QUANTIZED_UINT16,
   SHARED_MEMORY_OFFSET
+}
+
+enum scvRasterProductKind : ushort {
+  CELL_BOUNDS_DEG,
+  CELL_CENTERS_DEG,
+  PERCENT_COVERAGE,
+  PASS_COUNT,
+  CONTACT_DURATION_SECONDS,
+  REVISIT_SECONDS,
+  GAP_SECONDS,
+  REDUNDANCY,
+  CURRENT_ACCESS_BITSET,
+  BUCKET_START_SECONDS,
+  BUCKET_STOP_SECONDS,
+  BUCKET_ACTIVE_CELL_COUNT,
+  PASS_COUNT_RGBA,
+  CURRENT_ACCESS_RGBA,
+  LATITUDE_BAND_COVERAGE
+}
+
+enum scvRasterProductEncoding : ubyte {
+  FLOAT32,
+  FLOAT64,
+  UINT32,
+  BITSET_UINT32,
+  UINT8
 }
 
 table SCVVec3 {
@@ -109,23 +138,35 @@ table SCVTimeGrid {
   GRID_INDEX_COUNT:uint32;
 }
 
+table SCVSensorShapeContract {
+  SHAPE_KIND:scvSensorShapeKind;
+  AXIS_CONVENTION:scvSensorAxisConvention;
+  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;
+  OUTER_HALF_ANGLE_DEG:double;
+  INNER_HALF_ANGLE_DEG:double;
+  MIN_CLOCK_ANGLE_DEG:double;
+  MAX_CLOCK_ANGLE_DEG:double = 360.0;
+  X_HALF_ANGLE_DEG:double;
+  Y_HALF_ANGLE_DEG:double;
+  INNER_LOOK_ANGLE_DEG:double;
+  OUTER_LOOK_ANGLE_DEG:double;
+  SAR_SAMPLING_DENSITY:double;
+  MIN_RANGE_M:double;
+  MAX_RANGE_M:double;
+  POLYGON_VERTICES:[SCVVec3];
+  POLYGON_FRAME:scvCoordinateFrame;
+}
+
 table SCVSensor {
   SENSOR_ID:uint32;
   OBJECT_ID:string;
   NAME:string;
-  SHAPE:scvSensorShapeKind;
   FRAME:scvCoordinateFrame;
   POSITION_M:SCVVec3;
   VELOCITY_MPS:SCVVec3;
   BORESIGHT_UNIT:SCVVec3;
   UP_UNIT:SCVVec3;
-  HALF_ANGLE_DEG:double;
-  CROSS_TRACK_HALF_ANGLE_DEG:double;
-  ALONG_TRACK_HALF_ANGLE_DEG:double;
-  MIN_RANGE_M:double;
-  MAX_RANGE_M:double;
-  POLYGON_VERTICES:[SCVVec3];
-  POLYGON_FRAME:scvCoordinateFrame;
+  SHAPE_CONTRACT:SCVSensorShapeContract;
 }
 
 table SCVStateSample {
@@ -224,66 +265,12 @@ table SCVSensorContribution {
   CONTRIBUTION_COUNT:uint32;
 }
 
-table SCVCellStat {
-  CELL_ID:uint32;
-  LATITUDE_DEG:double;
-  LONGITUDE_DEG:double;
-  ALTITUDE_M:double;
-  COVERED_WINDOW_COUNT:uint32;
-  TOTAL_WINDOW_COUNT:uint32;
-  COVERAGE_FRACTION:double;
-  MEAN_REVISIT_SEC:double;
-  MAX_GAP_SEC:double;
-  MEAN_GAP_SEC:double;
-  REDUNDANCY:double;
-  SENSOR_IDS:[uint32];
-  SENSOR_BITSET_WORDS:[uint64];
-}
-
-table SCVInterval {
-  SENSOR_ID:uint32;
-  TARGET_ID:uint32;
-  INTERVAL_KIND:scvIntervalCategory;
-  START_OFFSET_SEC:double;
-  STOP_OFFSET_SEC:double;
-  DURATION_SEC:double;
-  MIN_RANGE_M:double;
-  MAX_ELEVATION_DEG:double;
-  CELL_ID:uint32;
-}
-
-table SCVLatitudeBandStat {
-  MIN_LAT_DEG:double;
-  MAX_LAT_DEG:double;
-  COVERAGE_FRACTION:double;
-  MEAN_REVISIT_SEC:double;
-  MAX_GAP_SEC:double;
-  MEAN_REDUNDANCY:double;
-}
-
-table SCVTimeSeriesPoint {
-  METRIC_KIND:scvMetricSeriesKind;
-  TIME_OFFSET_SEC:double;
-  WINDOW_INDEX:uint32;
-  VALUE:double;
-  SENSOR_ID:uint32;
-  CELL_ID:uint32;
-}
-
 table SCVHistogramBin {
   METRIC_KIND:scvMetricSeriesKind;
   MIN_VALUE:double;
   MAX_VALUE:double;
   COUNT:uint32;
   WEIGHT:double;
-}
-
-table SCVHeatmapCell {
-  METRIC_KIND:scvMetricSeriesKind;
-  X_INDEX:uint32;
-  Y_INDEX:uint32;
-  VALUE:double;
-  SENSOR_COUNT:uint32;
 }
 
 table SCVSwathSegment {
@@ -345,6 +332,53 @@ table SCVPackedGeometryChunk {
   SEGMENTS:[SCVSwathSegment];
 }
 
+table SCVPackedRasterBand {
+  PRODUCT_KIND:scvRasterProductKind;
+  METRIC_KIND:scvMetricSeriesKind;
+  ENCODING:scvRasterProductEncoding;
+  COMPONENTS_PER_CELL:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGION_ID:uint32;
+  MEMORY_RECORD_INDEX:uint32;
+  FLOAT32_VALUES:[float];
+  FLOAT64_VALUES:[double];
+  UINT32_VALUES:[uint32];
+}
+
+table SCVPackedRasterProducts {
+  JOB_ID:string;
+  TRACE_ID:uint64;
+  GRID:SCVCoverageGrid;
+  TIME_GRID:SCVTimeGrid;
+  ROWS:uint32;
+  COLUMNS:uint32;
+  CELL_COUNT:uint32;
+  BUCKET_COUNT:uint32;
+  WORDS_PER_BUCKET:uint32;
+  MEMORY_REGIONS:[SCVMemoryRegion];
+  BANDS:[SCVPackedRasterBand];
+}
+
+table SCVAggregateStatistics {
+  TOTAL_CELLS:uint32;
+  ACCESSED_CELLS:uint32;
+  MULTI_ACCESS_CELLS:uint32;
+  ACTIVE_SENSOR_COUNT:uint32;
+  SWATH_COUNT:uint32;
+  TOTAL_WINDOWS:uint32;
+  TOTAL_INTERVAL_COUNT:uint32;
+  TOTAL_REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  TOTAL_GAP_DURATION_SEC:double;
+  MAX_GAP_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_RESPONSE_TIME_SEC:double;
+  MEAN_RESPONSE_TIME_SEC:double;
+  PERCENT_COVERAGE:double;
+}
+
 table SCVResult {
   JOB_ID:string;
   TRACE_ID:uint64;
@@ -353,15 +387,12 @@ table SCVResult {
   TARGET_BODY:SCVEllipsoid;
   TOTAL_SENSORS:uint32;
   TOTAL_WINDOWS:uint32;
-  CELL_STATS:[SCVCellStat];
-  INTERVALS:[SCVInterval];
-  LATITUDE_BANDS:[SCVLatitudeBandStat];
-  TIME_SERIES:[SCVTimeSeriesPoint];
   HISTOGRAMS:[SCVHistogramBin];
-  HEATMAP:[SCVHeatmapCell];
   CONTRIBUTIONS:[SCVSensorContribution];
   GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
   MESSAGE:string;
+  AGGREGATE_STATISTICS:SCVAggregateStatistics;
 }
 
 table SCV {
@@ -371,6 +402,7 @@ table SCV {
   CANCEL:SCVCancel;
   RESULT:SCVResult;
   GEOMETRY:SCVPackedGeometryChunk;
+  RASTER_PRODUCTS:SCVPackedRasterProducts;
 }
 
 root_type SCV;

@@ -68,7 +68,8 @@
           "minimum": 0,
           "maximum": 65535,
           "description": "Schema version for the canonicalization contract.",
-          "x-flatbuffer-type": "uint16"
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "1"
         },
         "stripped_custom_section_prefix": {
           "type": "string",
@@ -122,7 +123,8 @@
             "AUXILIARY": {
               "value": 5
             }
-          }
+          },
+          "x-flatbuffer-default": "AUXILIARY"
         },
         "section_name": {
           "type": "string",
@@ -152,7 +154,8 @@
             "CBOR": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "RAW_BYTES"
         },
         "media_type": {
           "type": "string",
@@ -164,7 +167,8 @@
           "minimum": 0,
           "maximum": 4294967295,
           "description": "Implementation-defined bit flags for signed/encrypted/compressed state.",
-          "x-flatbuffer-type": "uint32"
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "0"
         },
         "sha256": {
           "type": "array",
@@ -206,7 +210,8 @@
           "minimum": 0,
           "maximum": 65535,
           "description": "Bundle schema version.",
-          "x-flatbuffer-type": "uint16"
+          "x-flatbuffer-type": "uint16",
+          "x-flatbuffer-default": "1"
         },
         "module_format": {
           "type": "string",

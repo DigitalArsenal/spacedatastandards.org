@@ -305,4 +305,3 @@ public struct LCC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

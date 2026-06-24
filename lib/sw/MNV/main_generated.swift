@@ -611,4 +611,3 @@ public struct MNV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

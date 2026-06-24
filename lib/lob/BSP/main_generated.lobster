@@ -368,4 +368,3 @@ struct BSPBuilder:
         return this
     def end():
         return b_.EndObject()
-

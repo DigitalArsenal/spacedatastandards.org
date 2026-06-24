@@ -14,4 +14,3 @@ public enum MissilePhase : sbyte
   MISS = 7,
   SELF_DESTRUCT = 8,
 };
-

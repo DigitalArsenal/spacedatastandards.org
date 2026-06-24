@@ -17,4 +17,3 @@ public final class scvMetricSeriesKind {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -297,4 +297,3 @@ public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

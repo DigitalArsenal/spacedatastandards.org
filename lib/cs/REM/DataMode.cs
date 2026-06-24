@@ -14,4 +14,3 @@ public enum DataMode : sbyte
   /// Data collected for testing purposes.
   TEST = 3,
 };
-

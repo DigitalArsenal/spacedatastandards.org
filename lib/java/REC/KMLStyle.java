@@ -103,4 +103,3 @@ public final class KMLStyle extends com.google.flatbuffers.Table {
     public KMLStyle get(KMLStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

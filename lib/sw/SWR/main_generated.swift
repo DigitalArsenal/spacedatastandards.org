@@ -173,4 +173,3 @@ public struct SWR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

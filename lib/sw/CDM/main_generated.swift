@@ -496,4 +496,3 @@ public struct RFM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

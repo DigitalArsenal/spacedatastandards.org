@@ -9,4 +9,3 @@ public enum mtiStandard : sbyte
   CUSTOM = 2,
   UNKNOWN = 3,
 };
-

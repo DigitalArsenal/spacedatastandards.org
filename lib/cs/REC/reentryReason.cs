@@ -11,4 +11,3 @@ public enum reentryReason : sbyte
   FRAGMENTATION = 4,
   UNKNOWN = 5,
 };
-

@@ -82,4 +82,3 @@ public final class KMLUpdate extends com.google.flatbuffers.Table {
     public KMLUpdate get(KMLUpdate obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

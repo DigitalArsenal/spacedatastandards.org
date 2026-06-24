@@ -14,4 +14,3 @@ public enum busSize : sbyte
   LARGE = 7,
   HEAVY = 8,
 };
-

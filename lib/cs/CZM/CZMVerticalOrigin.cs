@@ -9,4 +9,3 @@ public enum CZMVerticalOrigin : sbyte
   CENTER = 2,
   TOP = 3,
 };
-

@@ -13,4 +13,3 @@ public final class sensorOperationalFlags {
   public static final long SLEWING = 16L;
   public static final long CALIBRATING = 32L;
 }
-

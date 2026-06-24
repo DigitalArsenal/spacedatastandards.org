@@ -69,4 +69,3 @@ public final class SUSTAINER extends com.google.flatbuffers.Table {
     public SUSTAINER get(SUSTAINER obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

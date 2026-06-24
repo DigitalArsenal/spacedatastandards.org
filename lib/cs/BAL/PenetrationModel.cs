@@ -10,4 +10,3 @@ public enum PenetrationModel : sbyte
   ANDERSON = 3,
   BRL = 4,
 };
-

@@ -10,4 +10,3 @@ public enum FluxQualifier : sbyte
   NO_OBSERVATION = 3,
   CELESTRAK_INTERPOLATED = 4,
 };
-

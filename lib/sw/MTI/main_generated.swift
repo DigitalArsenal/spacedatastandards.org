@@ -161,4 +161,3 @@ public struct MTI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

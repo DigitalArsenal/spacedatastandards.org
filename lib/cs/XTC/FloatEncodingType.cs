@@ -16,4 +16,3 @@ public enum FloatEncodingType : sbyte
   /// Texas Instruments TI format
   TI = 4,
 };
-

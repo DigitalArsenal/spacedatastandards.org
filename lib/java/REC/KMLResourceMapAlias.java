@@ -64,4 +64,3 @@ public final class KMLResourceMapAlias extends com.google.flatbuffers.Table {
     public KMLResourceMapAlias get(KMLResourceMapAlias obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

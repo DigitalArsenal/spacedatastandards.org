@@ -7,4 +7,3 @@ public enum transmissionClass : sbyte
   ACKNOWLEDGED = 0,
   UNACKNOWLEDGED = 1,
 };
-

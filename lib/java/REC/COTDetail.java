@@ -244,4 +244,3 @@ public final class COTDetail extends com.google.flatbuffers.Table {
     public COTDetail get(COTDetail obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

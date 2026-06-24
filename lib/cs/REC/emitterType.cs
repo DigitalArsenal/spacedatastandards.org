@@ -15,4 +15,3 @@ public enum emitterType : sbyte
   EW = 8,
   UNKNOWN = 9,
 };
-

@@ -78,4 +78,3 @@ public final class ContextCalibrator extends com.google.flatbuffers.Table {
     public ContextCalibrator get(ContextCalibrator obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -83,4 +83,3 @@ public final class ionoDensityProfile extends com.google.flatbuffers.Table {
     public ionoDensityProfile get(ionoDensityProfile obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

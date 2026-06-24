@@ -10,4 +10,3 @@ public enum ooiPriority : sbyte
   LOW = 3,
   ROUTINE = 4,
 };
-

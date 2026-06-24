@@ -11,4 +11,3 @@ public final class frmResultStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

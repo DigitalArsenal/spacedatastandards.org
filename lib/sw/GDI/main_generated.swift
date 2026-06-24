@@ -209,4 +209,3 @@ public struct GDI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

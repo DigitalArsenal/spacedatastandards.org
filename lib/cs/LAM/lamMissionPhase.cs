@@ -16,4 +16,3 @@ public enum lamMissionPhase : sbyte
   ABORT = 8,
   COMPLETE = 9,
 };
-

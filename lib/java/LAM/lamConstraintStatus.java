@@ -16,4 +16,3 @@ public final class lamConstraintStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

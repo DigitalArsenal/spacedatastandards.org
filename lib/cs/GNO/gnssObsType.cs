@@ -10,4 +10,3 @@ public enum gnssObsType : sbyte
   SNR = 3,
   RAW_IF = 4,
 };
-

@@ -195,4 +195,3 @@ public final class CZMEllipse extends com.google.flatbuffers.Table {
     public CZMEllipse get(CZMEllipse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

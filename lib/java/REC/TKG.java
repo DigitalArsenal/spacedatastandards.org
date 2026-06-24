@@ -112,4 +112,3 @@ public final class TKG extends com.google.flatbuffers.Table {
     public TKG get(TKG obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

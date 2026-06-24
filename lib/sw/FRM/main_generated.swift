@@ -327,4 +327,3 @@ public struct FRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

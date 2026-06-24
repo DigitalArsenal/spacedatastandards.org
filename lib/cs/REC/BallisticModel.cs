@@ -9,4 +9,3 @@ public enum BallisticModel : sbyte
   MODIFIED_POINT_MASS = 2,
   SIX_DOF = 3,
 };
-

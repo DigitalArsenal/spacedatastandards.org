@@ -7,4 +7,3 @@ public enum licensingConfigRole : sbyte
   Provider = 0,
   Requester = 1,
 };
-

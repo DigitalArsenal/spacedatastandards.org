@@ -160,4 +160,3 @@ public final class manifoldElset extends com.google.flatbuffers.Table {
     public manifoldElset get(manifoldElset obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

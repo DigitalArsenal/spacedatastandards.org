@@ -9,4 +9,3 @@ public enum KMLViewRefreshMode : sbyte
   ON_REQUEST = 2,
   ON_REGION = 3,
 };
-

@@ -79,4 +79,3 @@ public final class BooleanExpression extends com.google.flatbuffers.Table {
     public BooleanExpression get(BooleanExpression obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

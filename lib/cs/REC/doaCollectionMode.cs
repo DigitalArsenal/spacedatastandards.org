@@ -11,4 +11,3 @@ public enum doaCollectionMode : sbyte
   COMBINED = 4,
   UNKNOWN = 5,
 };
-

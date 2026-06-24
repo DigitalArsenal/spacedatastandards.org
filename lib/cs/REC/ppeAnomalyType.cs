@@ -12,4 +12,3 @@ public enum ppeAnomalyType : sbyte
   /// Eccentric anomaly (auxiliary angle in the Kepler equation).
   ECCENTRIC_ANOMALY = 2,
 };
-

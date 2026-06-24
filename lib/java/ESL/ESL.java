@@ -139,4 +139,3 @@ public final class ESL extends com.google.flatbuffers.Table {
     public ESL get(ESL obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

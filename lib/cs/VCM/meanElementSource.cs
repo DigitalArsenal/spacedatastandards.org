@@ -13,4 +13,3 @@ public enum meanElementSource : sbyte
   /// Universal Semianalytical Method
   USM = 3,
 };
-

@@ -516,4 +516,3 @@ public struct TRK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

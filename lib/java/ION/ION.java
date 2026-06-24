@@ -241,4 +241,3 @@ public final class ION extends com.google.flatbuffers.Table {
     public ION get(ION obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

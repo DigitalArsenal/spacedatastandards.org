@@ -35,4 +35,3 @@ public final class paymentMethod {
 
   public static String name(int e) { return names[e]; }
 }
-

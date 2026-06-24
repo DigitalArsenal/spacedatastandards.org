@@ -7,4 +7,3 @@ public enum KMLGridOrigin : sbyte
   LOWER_LEFT = 0,
   UPPER_LEFT = 1,
 };
-

@@ -11,4 +11,3 @@ public enum resonanceSource : sbyte
   LUNAR_RESONANCE = 3,
   SOLAR_RESONANCE = 4,
 };
-

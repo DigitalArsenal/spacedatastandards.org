@@ -15,4 +15,3 @@ public final class DateFormat {
 
   public static String name(int e) { return names[e]; }
 }
-

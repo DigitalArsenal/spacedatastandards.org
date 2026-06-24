@@ -60,4 +60,3 @@ public final class PolynomialCalibrator extends com.google.flatbuffers.Table {
     public PolynomialCalibrator get(PolynomialCalibrator obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

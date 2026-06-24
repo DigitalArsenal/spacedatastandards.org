@@ -20,4 +20,3 @@ public enum CmsModulationType : sbyte
   DVB_S2 = 13,
   DVB_S2X = 14,
 };
-

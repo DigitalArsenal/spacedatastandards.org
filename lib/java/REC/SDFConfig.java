@@ -93,4 +93,3 @@ public final class SDFConfig extends com.google.flatbuffers.Table {
     public SDFConfig get(SDFConfig obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

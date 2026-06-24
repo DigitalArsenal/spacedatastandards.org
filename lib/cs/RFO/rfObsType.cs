@@ -11,4 +11,3 @@ public enum rfObsType : sbyte
   TELEMETRY = 4,
   UNKNOWN = 5,
 };
-

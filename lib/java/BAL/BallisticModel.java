@@ -12,4 +12,3 @@ public final class BallisticModel {
 
   public static String name(int e) { return names[e]; }
 }
-

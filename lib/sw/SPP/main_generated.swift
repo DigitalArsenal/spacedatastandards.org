@@ -107,4 +107,3 @@ public struct SPP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

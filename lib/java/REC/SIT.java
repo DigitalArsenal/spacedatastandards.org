@@ -263,4 +263,3 @@ public final class SIT extends com.google.flatbuffers.Table {
     public SIT get(SIT obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

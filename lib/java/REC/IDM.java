@@ -272,4 +272,3 @@ public final class IDM extends com.google.flatbuffers.Table {
     public IDM get(IDM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

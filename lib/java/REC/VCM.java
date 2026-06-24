@@ -231,4 +231,3 @@ public final class VCM extends com.google.flatbuffers.Table {
     public VCM get(VCM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

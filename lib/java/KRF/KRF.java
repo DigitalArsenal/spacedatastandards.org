@@ -117,4 +117,3 @@ public final class KRF extends com.google.flatbuffers.Table {
     public KRF get(KRF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

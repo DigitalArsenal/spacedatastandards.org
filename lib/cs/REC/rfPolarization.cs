@@ -12,4 +12,3 @@ public enum rfPolarization : sbyte
   CROSS = 5,
   UNKNOWN = 6,
 };
-

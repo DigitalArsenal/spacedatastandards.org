@@ -13,4 +13,3 @@ public enum seoDataType : sbyte
   CHARGING = 6,
   UNKNOWN = 7,
 };
-

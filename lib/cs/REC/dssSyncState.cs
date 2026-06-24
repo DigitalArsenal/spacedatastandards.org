@@ -15,4 +15,3 @@ public enum dssSyncState : sbyte
   CAPPED = 3,
   ERROR = 4,
 };
-

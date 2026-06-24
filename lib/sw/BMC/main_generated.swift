@@ -110,4 +110,3 @@ public struct BMC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

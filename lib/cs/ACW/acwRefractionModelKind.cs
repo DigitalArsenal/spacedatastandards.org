@@ -8,4 +8,3 @@ public enum acwRefractionModelKind : sbyte
   /// Orekit-compatible EarthStandardAtmosphereRefraction correction.
   EARTH_STANDARD_ATMOSPHERE = 1,
 };
-

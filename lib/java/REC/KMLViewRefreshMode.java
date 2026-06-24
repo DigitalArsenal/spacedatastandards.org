@@ -12,4 +12,3 @@ public final class KMLViewRefreshMode {
 
   public static String name(int e) { return names[e]; }
 }
-

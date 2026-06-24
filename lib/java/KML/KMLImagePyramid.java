@@ -74,4 +74,3 @@ public final class KMLImagePyramid extends com.google.flatbuffers.Table {
     public KMLImagePyramid get(KMLImagePyramid obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

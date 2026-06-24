@@ -36,6 +36,8 @@ public final class SCV extends com.google.flatbuffers.Table {
   public SCVResult RESULT(SCVResult obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public SCVPackedGeometryChunk GEOMETRY() { return GEOMETRY(new SCVPackedGeometryChunk()); }
   public SCVPackedGeometryChunk GEOMETRY(SCVPackedGeometryChunk obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVPackedRasterProducts RASTER_PRODUCTS() { return RASTER_PRODUCTS(new SCVPackedRasterProducts()); }
+  public SCVPackedRasterProducts RASTER_PRODUCTS(SCVPackedRasterProducts obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCV(FlatBufferBuilder builder,
       int ENVELOPE_KIND,
@@ -43,8 +45,10 @@ public final class SCV extends com.google.flatbuffers.Table {
       int PROGRESSOffset,
       int CANCELOffset,
       int RESULTOffset,
-      int GEOMETRYOffset) {
-    builder.startTable(6);
+      int GEOMETRYOffset,
+      int RASTER_PRODUCTSOffset) {
+    builder.startTable(7);
+    SCV.addRasterProducts(builder, RASTER_PRODUCTSOffset);
     SCV.addGeometry(builder, GEOMETRYOffset);
     SCV.addResult(builder, RESULTOffset);
     SCV.addCancel(builder, CANCELOffset);
@@ -54,13 +58,14 @@ public final class SCV extends com.google.flatbuffers.Table {
     return SCV.endSCV(builder);
   }
 
-  public static void startSCV(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startSCV(FlatBufferBuilder builder) { builder.startTable(7); }
   public static void addEnvelopeKind(FlatBufferBuilder builder, int ENVELOPE_KIND) { builder.addByte(0, (byte) ENVELOPE_KIND, (byte) 0); }
   public static void addRequest(FlatBufferBuilder builder, int REQUESTOffset) { builder.addOffset(1, REQUESTOffset, 0); }
   public static void addProgress(FlatBufferBuilder builder, int PROGRESSOffset) { builder.addOffset(2, PROGRESSOffset, 0); }
   public static void addCancel(FlatBufferBuilder builder, int CANCELOffset) { builder.addOffset(3, CANCELOffset, 0); }
   public static void addResult(FlatBufferBuilder builder, int RESULTOffset) { builder.addOffset(4, RESULTOffset, 0); }
   public static void addGeometry(FlatBufferBuilder builder, int GEOMETRYOffset) { builder.addOffset(5, GEOMETRYOffset, 0); }
+  public static void addRasterProducts(FlatBufferBuilder builder, int RASTER_PRODUCTSOffset) { builder.addOffset(6, RASTER_PRODUCTSOffset, 0); }
   public static int endSCV(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
@@ -75,4 +80,3 @@ public final class SCV extends com.google.flatbuffers.Table {
     public SCV get(SCV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

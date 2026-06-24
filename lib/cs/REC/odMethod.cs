@@ -13,4 +13,3 @@ public enum odMethod : sbyte
   DIFFERENTIAL_CORRECTION = 6,
   UNKNOWN = 7,
 };
-

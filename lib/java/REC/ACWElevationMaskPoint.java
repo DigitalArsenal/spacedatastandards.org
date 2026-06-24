@@ -60,4 +60,3 @@ public final class ACWElevationMaskPoint extends com.google.flatbuffers.Table {
     public ACWElevationMaskPoint get(ACWElevationMaskPoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -182,4 +182,3 @@ public final class CZMRectangle extends com.google.flatbuffers.Table {
     public CZMRectangle get(CZMRectangle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

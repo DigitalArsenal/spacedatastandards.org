@@ -18,4 +18,3 @@ public enum paymentMethod : sbyte
   /// Free/open data
   Free = 5,
 };
-

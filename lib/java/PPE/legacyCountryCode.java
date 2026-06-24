@@ -512,4 +512,3 @@ public final class legacyCountryCode {
 
   public static String name(int e) { return names[e]; }
 }
-

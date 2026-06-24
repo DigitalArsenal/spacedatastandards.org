@@ -233,4 +233,3 @@ public final class ANI extends com.google.flatbuffers.Table {
     public ANI get(ANI obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

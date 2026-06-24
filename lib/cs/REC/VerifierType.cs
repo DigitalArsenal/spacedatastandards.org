@@ -14,4 +14,3 @@ public enum VerifierType : sbyte
   /// Command failed
   FAILED = 3,
 };
-

@@ -11,4 +11,3 @@ public enum acwResultStatus : sbyte
   /// The requested operation is not supported by the module.
   UNSUPPORTED_OPERATION = 2,
 };
-

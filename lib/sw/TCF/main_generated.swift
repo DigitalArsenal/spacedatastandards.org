@@ -103,4 +103,3 @@ public struct TCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

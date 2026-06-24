@@ -91,4 +91,3 @@ public final class PLD extends com.google.flatbuffers.Table {
     public PLD get(PLD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

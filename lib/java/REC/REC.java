@@ -71,4 +71,3 @@ public final class REC extends com.google.flatbuffers.Table {
     public REC get(REC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -68,4 +68,3 @@ public final class KMLPoint extends com.google.flatbuffers.Table {
     public KMLPoint get(KMLPoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

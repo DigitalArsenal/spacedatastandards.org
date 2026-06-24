@@ -242,4 +242,3 @@ public final class ephemerisDataBlock extends com.google.flatbuffers.Table {
     public ephemerisDataBlock get(ephemerisDataBlock obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

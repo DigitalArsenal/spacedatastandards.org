@@ -444,4 +444,3 @@ public final class RDO extends com.google.flatbuffers.Table {
     public RDO get(RDO obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

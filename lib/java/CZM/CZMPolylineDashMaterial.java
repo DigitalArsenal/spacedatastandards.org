@@ -76,4 +76,3 @@ public final class CZMPolylineDashMaterial extends com.google.flatbuffers.Table 
     public CZMPolylineDashMaterial get(CZMPolylineDashMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

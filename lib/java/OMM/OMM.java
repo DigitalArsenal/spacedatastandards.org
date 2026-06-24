@@ -369,4 +369,3 @@ public final class OMM extends com.google.flatbuffers.Table {
     public OMM get(OMM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

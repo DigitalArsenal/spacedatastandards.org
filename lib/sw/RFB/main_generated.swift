@@ -194,4 +194,3 @@ public struct RFB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

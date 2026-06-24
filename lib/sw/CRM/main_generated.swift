@@ -615,4 +615,3 @@ public struct CRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

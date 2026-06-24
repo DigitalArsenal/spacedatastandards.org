@@ -21,4 +21,3 @@ public enum SensorType : sbyte
   SONAR_PASSIVE = 14,
   ACOUSTIC = 15,
 };
-

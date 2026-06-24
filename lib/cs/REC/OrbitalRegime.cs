@@ -16,4 +16,3 @@ public enum OrbitalRegime : sbyte
   HYPERBOLIC = 9,
   PARABOLIC = 10,
 };
-

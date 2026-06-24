@@ -13,4 +13,3 @@ public enum FCSMode : sbyte
   CCRP = 6,
   MANUAL = 7,
 };
-

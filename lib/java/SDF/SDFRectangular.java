@@ -62,4 +62,3 @@ public final class SDFRectangular extends com.google.flatbuffers.Table {
     public SDFRectangular get(SDFRectangular obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

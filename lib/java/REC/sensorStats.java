@@ -113,4 +113,3 @@ public final class sensorStats extends com.google.flatbuffers.Table {
     public sensorStats get(sensorStats obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

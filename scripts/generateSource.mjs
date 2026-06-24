@@ -103,8 +103,11 @@ function runCodeGeneration(flatc, schemaInput, datatype) {
 async function writeOutputs(baseDir, outputs) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
+    const normalizedSource = source
+      .replace(/[ \t]+$/gm, "")
+      .replace(/\n+$/u, "\n");
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    await fs.writeFile(outputPath, source.replace(/[ \t]+$/gm, ""), "utf8");
+    await fs.writeFile(outputPath, normalizedSource, "utf8");
   }
 }
 

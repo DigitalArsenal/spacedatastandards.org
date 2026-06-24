@@ -12,4 +12,3 @@ public enum ionoLayer : sbyte
   F2 = 5,
   TOPSIDE = 6,
 };
-

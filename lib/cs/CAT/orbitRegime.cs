@@ -15,4 +15,3 @@ public enum orbitRegime : sbyte
   /// 4
   ROUNDTRIP = 4,
 };
-

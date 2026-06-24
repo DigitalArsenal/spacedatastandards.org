@@ -10,4 +10,3 @@ public enum KeyExchange : sbyte
   Secp256k1 = 1,
   P256 = 2,
 };
-

@@ -15,4 +15,3 @@ public final class maintenanceType {
 
   public static String name(int e) { return names[e]; }
 }
-

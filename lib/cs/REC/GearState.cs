@@ -10,4 +10,3 @@ public enum GearState : sbyte
   TRANSIT_UP = 3,
   DAMAGED = 4,
 };
-

@@ -312,4 +312,3 @@ public struct NAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

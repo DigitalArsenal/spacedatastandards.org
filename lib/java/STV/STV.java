@@ -97,4 +97,3 @@ public final class STV extends com.google.flatbuffers.Table {
     public STV get(STV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -192,4 +192,3 @@ public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -92,4 +92,3 @@ public final class attManeuver extends com.google.flatbuffers.Table {
     public attManeuver get(attManeuver obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

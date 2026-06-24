@@ -12,4 +12,3 @@ public enum ENGINE_TYPE : sbyte
   NUCLEAR_THERMAL = 4,
   OTHER = 5,
 };
-

@@ -128,4 +128,3 @@ public final class PIVResponse extends com.google.flatbuffers.Table {
     public PIVResponse get(PIVResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

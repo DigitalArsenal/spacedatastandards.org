@@ -11,4 +11,3 @@ public enum TrkTrackStatus : sbyte
   COASTED = 4,
   DEAD = 5,
 };
-

@@ -500,4 +500,3 @@ public struct RDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

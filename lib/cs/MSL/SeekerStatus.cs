@@ -12,4 +12,3 @@ public enum SeekerStatus : sbyte
   MEMORY = 5,
   JAMMED = 6,
 };
-

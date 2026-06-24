@@ -8,4 +8,3 @@ public enum frmResultStatus : sbyte
   INVALID_INPUT = 1,
   UNSUPPORTED_OPERATION = 2,
 };
-

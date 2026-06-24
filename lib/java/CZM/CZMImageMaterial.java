@@ -84,4 +84,3 @@ public final class CZMImageMaterial extends com.google.flatbuffers.Table {
     public CZMImageMaterial get(CZMImageMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

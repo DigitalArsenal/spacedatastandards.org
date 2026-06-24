@@ -57,4 +57,3 @@ public class weightedEdgeT
     this.WEIGHT = 0.0;
   }
 }
-

@@ -97,4 +97,3 @@ public final class NUMVectorSaturateRequest extends com.google.flatbuffers.Table
     public NUMVectorSaturateRequest get(NUMVectorSaturateRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

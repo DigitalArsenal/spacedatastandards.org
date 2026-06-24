@@ -151,4 +151,3 @@ public struct LWK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

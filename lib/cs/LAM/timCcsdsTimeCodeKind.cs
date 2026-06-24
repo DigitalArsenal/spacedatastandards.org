@@ -13,4 +13,3 @@ public enum timCcsdsTimeCodeKind : sbyte
   /// CCSDS Calendar Segmented Time Code (CCS).
   CALENDAR_SEGMENTED = 3,
 };
-

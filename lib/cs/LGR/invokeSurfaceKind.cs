@@ -11,4 +11,3 @@ public enum invokeSurfaceKind : byte
   /// Command surface — envelope is queued by a runtime host.
   COMMAND = 1,
 };
-

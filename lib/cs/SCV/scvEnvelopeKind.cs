@@ -13,4 +13,3 @@ public enum scvEnvelopeKind : byte
   CANCEL = 3,
   GEOMETRY = 4,
 };
-

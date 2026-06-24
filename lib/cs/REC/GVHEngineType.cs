@@ -11,4 +11,3 @@ public enum GVHEngineType : sbyte
   HYBRID = 4,
   ELECTRIC = 5,
 };
-

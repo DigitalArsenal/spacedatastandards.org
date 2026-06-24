@@ -27,4 +27,3 @@ public final class VerifierType {
 
   public static String name(int e) { return names[e]; }
 }
-

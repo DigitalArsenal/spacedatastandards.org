@@ -70,4 +70,3 @@ public final class equinoctialElements extends com.google.flatbuffers.Table {
     public equinoctialElements get(equinoctialElements obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

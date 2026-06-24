@@ -195,4 +195,3 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

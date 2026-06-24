@@ -67,4 +67,3 @@ public final class CZMCartographicDegrees extends com.google.flatbuffers.Table {
     public CZMCartographicDegrees get(CZMCartographicDegrees obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

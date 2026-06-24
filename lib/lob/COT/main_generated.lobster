@@ -310,4 +310,3 @@ struct COTBuilder:
         return this
     def end():
         return b_.EndObject()
-

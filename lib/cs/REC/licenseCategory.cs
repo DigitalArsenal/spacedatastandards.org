@@ -18,4 +18,3 @@ public enum licenseCategory : sbyte
   /// Internal OrbPro default plugins
   Internal = 5,
 };
-

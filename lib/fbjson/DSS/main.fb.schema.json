@@ -53,7 +53,8 @@
             "ERROR": {
               "value": 4
             }
-          }
+          },
+          "x-flatbuffer-default": "IDLE"
         },
         "SYNCED_ROWS": {
           "type": "integer",

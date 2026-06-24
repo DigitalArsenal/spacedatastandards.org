@@ -75,61 +75,9 @@ class SCVResult : Table() {
             val o = __offset(16)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    fun cellStats(j: Int) : SCVCellStat? = cellStats(SCVCellStat(), j)
-    fun cellStats(obj: SCVCellStat, j: Int) : SCVCellStat? {
-        val o = __offset(18)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val cellStatsLength : Int
-        get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
-        }
-    fun intervals(j: Int) : SCVInterval? = intervals(SCVInterval(), j)
-    fun intervals(obj: SCVInterval, j: Int) : SCVInterval? {
-        val o = __offset(20)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val intervalsLength : Int
-        get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
-        }
-    fun latitudeBands(j: Int) : SCVLatitudeBandStat? = latitudeBands(SCVLatitudeBandStat(), j)
-    fun latitudeBands(obj: SCVLatitudeBandStat, j: Int) : SCVLatitudeBandStat? {
-        val o = __offset(22)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val latitudeBandsLength : Int
-        get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
-        }
-    fun timeSeries(j: Int) : SCVTimeSeriesPoint? = timeSeries(SCVTimeSeriesPoint(), j)
-    fun timeSeries(obj: SCVTimeSeriesPoint, j: Int) : SCVTimeSeriesPoint? {
-        val o = __offset(24)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val timeSeriesLength : Int
-        get() {
-            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
-        }
     fun histograms(j: Int) : SCVHistogramBin? = histograms(SCVHistogramBin(), j)
     fun histograms(obj: SCVHistogramBin, j: Int) : SCVHistogramBin? {
-        val o = __offset(26)
+        val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -138,24 +86,11 @@ class SCVResult : Table() {
     }
     val histogramsLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
-        }
-    fun heatmap(j: Int) : SCVHeatmapCell? = heatmap(SCVHeatmapCell(), j)
-    fun heatmap(obj: SCVHeatmapCell, j: Int) : SCVHeatmapCell? {
-        val o = __offset(28)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val heatmapLength : Int
-        get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
     fun contributions(j: Int) : SCVSensorContribution? = contributions(SCVSensorContribution(), j)
     fun contributions(obj: SCVSensorContribution, j: Int) : SCVSensorContribution? {
-        val o = __offset(30)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -164,11 +99,20 @@ class SCVResult : Table() {
     }
     val contributionsLength : Int
         get() {
-            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     val geometry : SCVPackedGeometryChunk? get() = geometry(SCVPackedGeometryChunk())
     fun geometry(obj: SCVPackedGeometryChunk) : SCVPackedGeometryChunk? {
-        val o = __offset(32)
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val rasterProducts : SCVPackedRasterProducts? get() = rasterProducts(SCVPackedRasterProducts())
+    fun rasterProducts(obj: SCVPackedRasterProducts) : SCVPackedRasterProducts? {
+        val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -177,15 +121,24 @@ class SCVResult : Table() {
     }
     val message : String?
         get() {
-            val o = __offset(34)
+            val o = __offset(26)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val messageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
-    fun messageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    val messageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun messageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    val aggregateStatistics : SCVAggregateStatistics? get() = aggregateStatistics(SCVAggregateStatistics())
+    fun aggregateStatistics(obj: SCVAggregateStatistics) : SCVAggregateStatistics? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVResult(_bb: ByteBuffer): SCVResult = getRootAsSCVResult(_bb, SCVResult())
@@ -193,18 +146,15 @@ class SCVResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, cellStatsOffset: Int, intervalsOffset: Int, latitudeBandsOffset: Int, timeSeriesOffset: Int, histogramsOffset: Int, heatmapOffset: Int, contributionsOffset: Int, geometryOffset: Int, messageOffset: Int) : Int {
-            builder.startTable(16)
+        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
+            builder.startTable(13)
             addTRACEID(builder, traceId)
+            addAGGREGATESTATISTICS(builder, aggregateStatisticsOffset)
             addMESSAGE(builder, messageOffset)
+            addRASTERPRODUCTS(builder, rasterProductsOffset)
             addGEOMETRY(builder, geometryOffset)
             addCONTRIBUTIONS(builder, contributionsOffset)
-            addHEATMAP(builder, heatmapOffset)
             addHISTOGRAMS(builder, histogramsOffset)
-            addTIMESERIES(builder, timeSeriesOffset)
-            addLATITUDEBANDS(builder, latitudeBandsOffset)
-            addINTERVALS(builder, intervalsOffset)
-            addCELLSTATS(builder, cellStatsOffset)
             addTOTALWINDOWS(builder, totalWindows)
             addTOTALSENSORS(builder, totalSensors)
             addTARGETBODY(builder, targetBodyOffset)
@@ -213,7 +163,7 @@ class SCVResult : Table() {
             addSTATUS(builder, status)
             return endSCVResult(builder)
         }
-        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(13)
         fun addJOBID(builder: FlatBufferBuilder, jobId: Int) = builder.addOffset(0, jobId, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: ULong) = builder.addLong(1, traceId.toLong(), 0)
         fun addSTATUS(builder: FlatBufferBuilder, status: UByte) = builder.addByte(2, status.toByte(), 0)
@@ -221,43 +171,7 @@ class SCVResult : Table() {
         fun addTARGETBODY(builder: FlatBufferBuilder, targetBody: Int) = builder.addOffset(4, targetBody, 0)
         fun addTOTALSENSORS(builder: FlatBufferBuilder, totalSensors: UInt) = builder.addInt(5, totalSensors.toInt(), 0)
         fun addTOTALWINDOWS(builder: FlatBufferBuilder, totalWindows: UInt) = builder.addInt(6, totalWindows.toInt(), 0)
-        fun addCELLSTATS(builder: FlatBufferBuilder, cellStats: Int) = builder.addOffset(7, cellStats, 0)
-        fun createCellStatsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startCellStatsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addINTERVALS(builder: FlatBufferBuilder, intervals: Int) = builder.addOffset(8, intervals, 0)
-        fun createIntervalsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startIntervalsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addLATITUDEBANDS(builder: FlatBufferBuilder, latitudeBands: Int) = builder.addOffset(9, latitudeBands, 0)
-        fun createLatitudeBandsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startLatitudeBandsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTIMESERIES(builder: FlatBufferBuilder, timeSeries: Int) = builder.addOffset(10, timeSeries, 0)
-        fun createTimeSeriesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startTimeSeriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addHISTOGRAMS(builder: FlatBufferBuilder, histograms: Int) = builder.addOffset(11, histograms, 0)
+        fun addHISTOGRAMS(builder: FlatBufferBuilder, histograms: Int) = builder.addOffset(7, histograms, 0)
         fun createHistogramsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -266,16 +180,7 @@ class SCVResult : Table() {
             return builder.endVector()
         }
         fun startHistogramsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addHEATMAP(builder: FlatBufferBuilder, heatmap: Int) = builder.addOffset(12, heatmap, 0)
-        fun createHeatmapVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startHeatmapVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCONTRIBUTIONS(builder: FlatBufferBuilder, contributions: Int) = builder.addOffset(13, contributions, 0)
+        fun addCONTRIBUTIONS(builder: FlatBufferBuilder, contributions: Int) = builder.addOffset(8, contributions, 0)
         fun createContributionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -284,8 +189,10 @@ class SCVResult : Table() {
             return builder.endVector()
         }
         fun startContributionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(14, geometry, 0)
-        fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(15, message, 0)
+        fun addGEOMETRY(builder: FlatBufferBuilder, geometry: Int) = builder.addOffset(9, geometry, 0)
+        fun addRASTERPRODUCTS(builder: FlatBufferBuilder, rasterProducts: Int) = builder.addOffset(10, rasterProducts, 0)
+        fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(11, message, 0)
+        fun addAGGREGATESTATISTICS(builder: FlatBufferBuilder, aggregateStatistics: Int) = builder.addOffset(12, aggregateStatistics, 0)
         fun endSCVResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

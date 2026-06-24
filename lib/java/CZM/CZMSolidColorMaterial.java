@@ -54,4 +54,3 @@ public final class CZMSolidColorMaterial extends com.google.flatbuffers.Table {
     public CZMSolidColorMaterial get(CZMSolidColorMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

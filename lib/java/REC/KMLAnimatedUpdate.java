@@ -68,4 +68,3 @@ public final class KMLAnimatedUpdate extends com.google.flatbuffers.Table {
     public KMLAnimatedUpdate get(KMLAnimatedUpdate obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

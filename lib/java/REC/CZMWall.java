@@ -162,4 +162,3 @@ public final class CZMWall extends com.google.flatbuffers.Table {
     public CZMWall get(CZMWall obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

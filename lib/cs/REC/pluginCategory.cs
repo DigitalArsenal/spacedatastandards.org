@@ -24,4 +24,3 @@ public enum pluginCategory : sbyte
   /// GLSL shader plugins for custom visualization
   Shader = 8,
 };
-

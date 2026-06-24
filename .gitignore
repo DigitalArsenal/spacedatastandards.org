@@ -21,6 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 test-go/
+__pycache__/
+*.pyc
 
 # Emscripten SDK (auto-downloaded by CMake)
 packages/emsdk/

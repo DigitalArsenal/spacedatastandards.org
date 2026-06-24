@@ -12,4 +12,3 @@ public enum bufferMutability : byte
   /// Buffer is append-only (rings / logs).
   APPEND_ONLY = 2,
 };
-

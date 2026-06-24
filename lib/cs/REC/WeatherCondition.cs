@@ -21,4 +21,3 @@ public enum WeatherCondition : sbyte
   THUNDERSTORM = 14,
   SANDSTORM = 15,
 };
-

@@ -134,4 +134,3 @@ public final class KMLPhotoOverlay extends com.google.flatbuffers.Table {
     public KMLPhotoOverlay get(KMLPhotoOverlay obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

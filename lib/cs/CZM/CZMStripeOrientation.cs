@@ -7,4 +7,3 @@ public enum CZMStripeOrientation : sbyte
   HORIZONTAL = 0,
   VERTICAL = 1,
 };
-

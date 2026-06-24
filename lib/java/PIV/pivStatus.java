@@ -31,4 +31,3 @@ public final class pivStatus {
 
   public static String name(int e) { return names[e]; }
 }
-

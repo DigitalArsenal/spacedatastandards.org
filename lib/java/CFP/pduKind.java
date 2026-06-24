@@ -10,4 +10,3 @@ public final class pduKind {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -21,4 +21,3 @@ public enum VesselType : sbyte
   FAST_ATTACK = 14,
   TORPEDO_BOAT = 15,
 };
-

@@ -609,4 +609,3 @@ public struct RFO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

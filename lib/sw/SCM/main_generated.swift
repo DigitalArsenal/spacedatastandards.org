@@ -105,4 +105,3 @@ public struct SCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -173,4 +173,3 @@ public final class GVH extends com.google.flatbuffers.Table {
     public GVH get(GVH obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

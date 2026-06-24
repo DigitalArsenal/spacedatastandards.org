@@ -14,4 +14,3 @@ public enum accessCategory : sbyte
   /// Query-based access
   Query = 3,
 };
-

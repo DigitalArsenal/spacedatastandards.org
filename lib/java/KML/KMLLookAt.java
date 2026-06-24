@@ -95,4 +95,3 @@ public final class KMLLookAt extends com.google.flatbuffers.Table {
     public KMLLookAt get(KMLLookAt obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

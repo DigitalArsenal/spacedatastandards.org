@@ -161,4 +161,3 @@ public final class BSPInterpolationRequest extends com.google.flatbuffers.Table 
     public BSPInterpolationRequest get(BSPInterpolationRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

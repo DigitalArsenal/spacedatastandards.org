@@ -113,4 +113,3 @@ public final class KMLIconStyle extends com.google.flatbuffers.Table {
     public KMLIconStyle get(KMLIconStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -81,4 +81,3 @@ public class sdfTimeRangeResultT
     this.DWELL_TIME = 0.0;
   }
 }
-

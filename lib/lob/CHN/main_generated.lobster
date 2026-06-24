@@ -80,4 +80,3 @@ struct CHNBuilder:
         return this
     def end():
         return b_.EndObject()
-

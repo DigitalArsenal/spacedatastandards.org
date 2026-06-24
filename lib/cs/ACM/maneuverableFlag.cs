@@ -8,4 +8,3 @@ public enum maneuverableFlag : sbyte
   NO = 1,
   UNKNOWN = 2,
 };
-

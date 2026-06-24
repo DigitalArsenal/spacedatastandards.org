@@ -80,4 +80,3 @@ public final class KMLLinearRing extends com.google.flatbuffers.Table {
     public KMLLinearRing get(KMLLinearRing obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

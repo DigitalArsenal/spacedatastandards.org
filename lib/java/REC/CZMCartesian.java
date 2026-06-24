@@ -67,4 +67,3 @@ public final class CZMCartesian extends com.google.flatbuffers.Table {
     public CZMCartesian get(CZMCartesian obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

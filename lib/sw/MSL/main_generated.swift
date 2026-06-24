@@ -338,4 +338,3 @@ public struct MSL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

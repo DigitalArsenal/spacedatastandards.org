@@ -16,4 +16,3 @@ public enum GuidanceLaw : sbyte
   LOFT = 9,
   TERRAIN_FOLLOW = 10,
 };
-

@@ -69,4 +69,3 @@ public final class Geometry extends com.google.flatbuffers.Table {
     public Geometry get(Geometry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

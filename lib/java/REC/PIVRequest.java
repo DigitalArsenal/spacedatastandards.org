@@ -104,4 +104,3 @@ public final class PIVRequest extends com.google.flatbuffers.Table {
     public PIVRequest get(PIVRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

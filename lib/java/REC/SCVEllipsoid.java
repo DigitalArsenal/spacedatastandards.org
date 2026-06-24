@@ -69,4 +69,3 @@ public final class SCVEllipsoid extends com.google.flatbuffers.Table {
     public SCVEllipsoid get(SCVEllipsoid obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

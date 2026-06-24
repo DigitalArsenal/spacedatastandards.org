@@ -40,4 +40,3 @@ public final class timEpochRepresentation {
 
   public static String name(int e) { return names[e]; }
 }
-

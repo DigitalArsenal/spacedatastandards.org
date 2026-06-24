@@ -58,4 +58,3 @@ public final class RBKVector3 extends com.google.flatbuffers.Table {
     public RBKVector3 get(RBKVector3 obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

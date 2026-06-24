@@ -59,4 +59,3 @@ public final class SCVSensorContribution extends com.google.flatbuffers.Table {
     public SCVSensorContribution get(SCVSensorContribution obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

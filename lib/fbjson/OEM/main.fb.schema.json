@@ -3861,7 +3861,8 @@
               "value": 3,
               "description": "3"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OPS_STATUS_CODE": {
           "$ref": "#/definitions/operationalState",
@@ -3901,7 +3902,8 @@
               "value": 7,
               "description": "?"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -4544,7 +4546,8 @@
             "WET": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "DRY"
         },
         "PAYLOADS": {
           "type": "array",
@@ -4605,7 +4608,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "POS_COEFF_X": {
           "type": "array",
@@ -4718,7 +4722,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "SIZE_SHAPE_TYPE": {
           "$ref": "#/definitions/sizeShapeProfile",
@@ -4734,7 +4739,8 @@
               "value": 1,
               "description": "Radius of periapsis (km). Preferred for hyperbolic orbits."
             }
-          }
+          },
+          "x-flatbuffer-default": "SMA"
         },
         "ANOMALY_TYPE": {
           "$ref": "#/definitions/ppeAnomalyType",
@@ -4754,7 +4760,8 @@
               "value": 2,
               "description": "Eccentric anomaly (auxiliary angle in the Kepler equation)."
             }
-          }
+          },
+          "x-flatbuffer-default": "TRUE_ANOMALY"
         },
         "COEFF_SIZE_SHAPE": {
           "type": "array",
@@ -4975,7 +4982,8 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "POSITION_RECORDS": {
           "type": "array",

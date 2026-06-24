@@ -59,4 +59,3 @@ public final class GJNPolygonRings extends com.google.flatbuffers.Table {
     public GJNPolygonRings get(GJNPolygonRings obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

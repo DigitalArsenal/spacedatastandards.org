@@ -13,4 +13,3 @@ public enum SensorMode : sbyte
   DESIGNATE = 6,
   JAMMED = 7,
 };
-

@@ -90,4 +90,3 @@ public final class BinaryArgumentType extends com.google.flatbuffers.Table {
     public BinaryArgumentType get(BinaryArgumentType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -55,4 +55,3 @@ public final class CZMInterval extends com.google.flatbuffers.Table {
     public CZMInterval get(CZMInterval obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

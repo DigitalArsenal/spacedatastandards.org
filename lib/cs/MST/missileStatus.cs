@@ -13,4 +13,3 @@ public enum missileStatus : sbyte
   LOST = 6,
   UNKNOWN = 7,
 };
-

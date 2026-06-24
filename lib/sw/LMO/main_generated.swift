@@ -238,4 +238,3 @@ public struct LMO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

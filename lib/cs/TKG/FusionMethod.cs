@@ -11,4 +11,3 @@ public enum FusionMethod : sbyte
   FEDERATED = 4,
   SEQUENTIAL = 5,
 };
-

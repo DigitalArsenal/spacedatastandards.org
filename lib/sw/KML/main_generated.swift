@@ -4052,4 +4052,3 @@ public struct KML: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -585,4 +585,3 @@ public final class PLG extends com.google.flatbuffers.Table {
     public PLG get(PLG obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -431,4 +431,3 @@ public struct RDO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

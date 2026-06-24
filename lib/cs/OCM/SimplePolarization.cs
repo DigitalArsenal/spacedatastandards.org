@@ -10,4 +10,3 @@ public enum SimplePolarization : sbyte
   leftHandCircular = 2,
   rightHandCircular = 3,
 };
-

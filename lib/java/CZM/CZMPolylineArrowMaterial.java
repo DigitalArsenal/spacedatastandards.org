@@ -54,4 +54,3 @@ public final class CZMPolylineArrowMaterial extends com.google.flatbuffers.Table
     public CZMPolylineArrowMaterial get(CZMPolylineArrowMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

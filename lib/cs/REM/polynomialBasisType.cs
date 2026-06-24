@@ -21,4 +21,3 @@ public enum polynomialBasisType : sbyte
   /// Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ...
   POWER_SERIES = 4,
 };
-

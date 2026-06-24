@@ -13,4 +13,3 @@ public enum TerrainDataSource : sbyte
   LIDAR = 6,
   CUSTOM = 7,
 };
-

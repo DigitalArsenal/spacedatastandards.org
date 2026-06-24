@@ -133,4 +133,3 @@ public final class XTC extends com.google.flatbuffers.Table {
     public XTC get(XTC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

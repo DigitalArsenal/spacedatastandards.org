@@ -54,7 +54,8 @@
             "X25519_HKDF_SHA256_AES_256_GCM": {
               "value": 0
             }
-          }
+          },
+          "x-flatbuffer-default": "X25519_HKDF_SHA256_AES_256_GCM"
         },
         "REQUESTER_EPHEMERAL_PUBKEY": {
           "type": "array",

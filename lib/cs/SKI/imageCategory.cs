@@ -11,4 +11,3 @@ public enum imageCategory : sbyte
   UV = 4,
   BROADBAND = 5,
 };
-

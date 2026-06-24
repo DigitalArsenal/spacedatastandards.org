@@ -183,4 +183,3 @@ public struct LPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -180,4 +180,3 @@ public struct BAL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

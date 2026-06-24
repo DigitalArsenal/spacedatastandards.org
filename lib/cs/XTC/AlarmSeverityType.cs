@@ -18,4 +18,3 @@ public enum AlarmSeverityType : sbyte
   /// Severe level - system failure
   SEVERE = 5,
 };
-

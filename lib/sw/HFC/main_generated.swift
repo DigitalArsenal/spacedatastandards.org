@@ -1452,4 +1452,3 @@ public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

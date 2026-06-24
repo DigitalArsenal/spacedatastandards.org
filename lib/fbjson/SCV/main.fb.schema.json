@@ -63,7 +63,8 @@
         "INERTIAL",
         "ECEF",
         "ECI",
-        "CUSTOM"
+        "CUSTOM",
+        "SENSOR_LOCAL"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -85,6 +86,9 @@
         },
         "CUSTOM": {
           "value": 5
+        },
+        "SENSOR_LOCAL": {
+          "value": 6
         }
       }
     },
@@ -118,7 +122,8 @@
       "enum": [
         "CONIC",
         "RECTANGULAR",
-        "CUSTOM_POLYGON"
+        "CUSTOM_POLYGON",
+        "SAR_ANNULAR_SECTOR"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -131,6 +136,39 @@
         },
         "CUSTOM_POLYGON": {
           "value": 2
+        },
+        "SAR_ANNULAR_SECTOR": {
+          "value": 3
+        }
+      }
+    },
+    "scvSensorAxisConvention": {
+      "type": "string",
+      "enum": [
+        "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
+          "value": 0
+        }
+      }
+    },
+    "scvSensorRangeBoundaryKind": {
+      "type": "string",
+      "enum": [
+        "RADIAL_SPHERICAL",
+        "LOCAL_Z_PLANE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "RADIAL_SPHERICAL": {
+          "value": 0
+        },
+        "LOCAL_Z_PLANE": {
+          "value": 1
         }
       }
     },
@@ -185,35 +223,6 @@
         },
         "FAILED": {
           "value": 3
-        }
-      }
-    },
-    "scvIntervalCategory": {
-      "type": "string",
-      "enum": [
-        "ACCESS",
-        "COVERAGE",
-        "GAP",
-        "REVISIT",
-        "OVERLAP"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "ACCESS": {
-          "value": 0
-        },
-        "COVERAGE": {
-          "value": 1
-        },
-        "GAP": {
-          "value": 2
-        },
-        "REVISIT": {
-          "value": 3
-        },
-        "OVERLAP": {
-          "value": 4
         }
       }
     },
@@ -284,6 +293,104 @@
         },
         "SHARED_MEMORY_OFFSET": {
           "value": 3
+        }
+      }
+    },
+    "scvRasterProductKind": {
+      "type": "string",
+      "enum": [
+        "CELL_BOUNDS_DEG",
+        "CELL_CENTERS_DEG",
+        "PERCENT_COVERAGE",
+        "PASS_COUNT",
+        "CONTACT_DURATION_SECONDS",
+        "REVISIT_SECONDS",
+        "GAP_SECONDS",
+        "REDUNDANCY",
+        "CURRENT_ACCESS_BITSET",
+        "BUCKET_START_SECONDS",
+        "BUCKET_STOP_SECONDS",
+        "BUCKET_ACTIVE_CELL_COUNT",
+        "PASS_COUNT_RGBA",
+        "CURRENT_ACCESS_RGBA",
+        "LATITUDE_BAND_COVERAGE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ushort",
+      "x-flatbuffer-enum-values": {
+        "CELL_BOUNDS_DEG": {
+          "value": 0
+        },
+        "CELL_CENTERS_DEG": {
+          "value": 1
+        },
+        "PERCENT_COVERAGE": {
+          "value": 2
+        },
+        "PASS_COUNT": {
+          "value": 3
+        },
+        "CONTACT_DURATION_SECONDS": {
+          "value": 4
+        },
+        "REVISIT_SECONDS": {
+          "value": 5
+        },
+        "GAP_SECONDS": {
+          "value": 6
+        },
+        "REDUNDANCY": {
+          "value": 7
+        },
+        "CURRENT_ACCESS_BITSET": {
+          "value": 8
+        },
+        "BUCKET_START_SECONDS": {
+          "value": 9
+        },
+        "BUCKET_STOP_SECONDS": {
+          "value": 10
+        },
+        "BUCKET_ACTIVE_CELL_COUNT": {
+          "value": 11
+        },
+        "PASS_COUNT_RGBA": {
+          "value": 12
+        },
+        "CURRENT_ACCESS_RGBA": {
+          "value": 13
+        },
+        "LATITUDE_BAND_COVERAGE": {
+          "value": 14
+        }
+      }
+    },
+    "scvRasterProductEncoding": {
+      "type": "string",
+      "enum": [
+        "FLOAT32",
+        "FLOAT64",
+        "UINT32",
+        "BITSET_UINT32",
+        "UINT8"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "FLOAT32": {
+          "value": 0
+        },
+        "FLOAT64": {
+          "value": 1
+        },
+        "UINT32": {
+          "value": 2
+        },
+        "BITSET_UINT32": {
+          "value": 3
+        },
+        "UINT8": {
+          "value": 4
         }
       }
     },
@@ -365,6 +472,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -409,24 +519,10 @@
       },
       "additionalProperties": false
     },
-    "SCVSensor": {
+    "SCVSensorShapeContract": {
       "type": "object",
       "properties": {
-        "SENSOR_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "OBJECT_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SHAPE": {
+        "SHAPE_KIND": {
           "$ref": "#/definitions/scvSensorShapeKind",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -439,59 +535,69 @@
             },
             "CUSTOM_POLYGON": {
               "value": 2
+            },
+            "SAR_ANNULAR_SECTOR": {
+              "value": 3
             }
           }
         },
-        "FRAME": {
-          "$ref": "#/definitions/scvCoordinateFrame",
+        "AXIS_CONVENTION": {
+          "$ref": "#/definitions/scvSensorAxisConvention",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
-            "UNKNOWN": {
+            "LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT": {
               "value": 0
-            },
-            "BODY_FIXED": {
-              "value": 1
-            },
-            "INERTIAL": {
-              "value": 2
-            },
-            "ECEF": {
-              "value": 3
-            },
-            "ECI": {
-              "value": 4
-            },
-            "CUSTOM": {
-              "value": 5
             }
           }
         },
-        "POSITION_M": {
-          "$ref": "#/definitions/SCVVec3",
-          "x-flatbuffer-type": "SCVVec3"
+        "RANGE_BOUNDARY": {
+          "$ref": "#/definitions/scvSensorRangeBoundaryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "RADIAL_SPHERICAL": {
+              "value": 0
+            },
+            "LOCAL_Z_PLANE": {
+              "value": 1
+            }
+          }
         },
-        "VELOCITY_MPS": {
-          "$ref": "#/definitions/SCVVec3",
-          "x-flatbuffer-type": "SCVVec3"
-        },
-        "BORESIGHT_UNIT": {
-          "$ref": "#/definitions/SCVVec3",
-          "x-flatbuffer-type": "SCVVec3"
-        },
-        "UP_UNIT": {
-          "$ref": "#/definitions/SCVVec3",
-          "x-flatbuffer-type": "SCVVec3"
-        },
-        "HALF_ANGLE_DEG": {
+        "OUTER_HALF_ANGLE_DEG": {
           "type": "number",
           "x-flatbuffer-type": "double"
         },
-        "CROSS_TRACK_HALF_ANGLE_DEG": {
+        "INNER_HALF_ANGLE_DEG": {
           "type": "number",
           "x-flatbuffer-type": "double"
         },
-        "ALONG_TRACK_HALF_ANGLE_DEG": {
+        "MIN_CLOCK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_CLOCK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "360.0"
+        },
+        "X_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INNER_LOOK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OUTER_LOOK_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SAR_SAMPLING_DENSITY": {
           "type": "number",
           "x-flatbuffer-type": "double"
         },
@@ -532,8 +638,79 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCVSensor": {
+      "type": "object",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAME": {
+          "$ref": "#/definitions/scvCoordinateFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "BODY_FIXED": {
+              "value": 1
+            },
+            "INERTIAL": {
+              "value": 2
+            },
+            "ECEF": {
+              "value": 3
+            },
+            "ECI": {
+              "value": 4
+            },
+            "CUSTOM": {
+              "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
+            }
+          }
+        },
+        "POSITION_M": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "VELOCITY_MPS": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "BORESIGHT_UNIT": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "UP_UNIT": {
+          "$ref": "#/definitions/SCVVec3",
+          "x-flatbuffer-type": "SCVVec3"
+        },
+        "SHAPE_CONTRACT": {
+          "$ref": "#/definitions/SCVSensorShapeContract",
+          "x-flatbuffer-type": "SCVSensorShapeContract"
         }
       },
       "additionalProperties": false
@@ -597,6 +774,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -642,6 +822,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -719,6 +902,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         }
@@ -776,6 +962,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -1078,242 +1267,6 @@
       },
       "additionalProperties": false
     },
-    "SCVCellStat": {
-      "type": "object",
-      "properties": {
-        "CELL_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "LATITUDE_DEG": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE_DEG": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "ALTITUDE_M": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "COVERED_WINDOW_COUNT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "TOTAL_WINDOW_COUNT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "COVERAGE_FRACTION": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MEAN_REVISIT_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_GAP_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MEAN_GAP_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "REDUNDANCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SENSOR_IDS": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 4294967295
-          },
-          "x-flatbuffer-type": "[uint32]"
-        },
-        "SENSOR_BITSET_WORDS": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 18446744073709551615
-          },
-          "x-flatbuffer-type": "[uint64]"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SCVInterval": {
-      "type": "object",
-      "properties": {
-        "SENSOR_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "TARGET_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "INTERVAL_KIND": {
-          "$ref": "#/definitions/scvIntervalCategory",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "ACCESS": {
-              "value": 0
-            },
-            "COVERAGE": {
-              "value": 1
-            },
-            "GAP": {
-              "value": 2
-            },
-            "REVISIT": {
-              "value": 3
-            },
-            "OVERLAP": {
-              "value": 4
-            }
-          }
-        },
-        "START_OFFSET_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "STOP_OFFSET_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DURATION_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MIN_RANGE_M": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_ELEVATION_DEG": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CELL_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SCVLatitudeBandStat": {
-      "type": "object",
-      "properties": {
-        "MIN_LAT_DEG": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_LAT_DEG": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "COVERAGE_FRACTION": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MEAN_REVISIT_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_GAP_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MEAN_REDUNDANCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SCVTimeSeriesPoint": {
-      "type": "object",
-      "properties": {
-        "METRIC_KIND": {
-          "$ref": "#/definitions/scvMetricSeriesKind",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ushort",
-          "x-flatbuffer-enum-values": {
-            "PERCENT_COVERED": {
-              "value": 0
-            },
-            "COVERED_CELL_COUNT": {
-              "value": 1
-            },
-            "ACCESS_COUNT": {
-              "value": 2
-            },
-            "CONTACT_DURATION_SECONDS": {
-              "value": 3
-            },
-            "REVISIT_SECONDS": {
-              "value": 4
-            },
-            "GAP_SECONDS": {
-              "value": 5
-            },
-            "REDUNDANCY": {
-              "value": 6
-            },
-            "OVERLAP_COUNT": {
-              "value": 7
-            },
-            "LATITUDE_BAND_COVERAGE": {
-              "value": 8
-            }
-          }
-        },
-        "TIME_OFFSET_SEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "WINDOW_INDEX": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "VALUE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SENSOR_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "CELL_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        }
-      },
-      "additionalProperties": false
-    },
     "SCVHistogramBin": {
       "type": "object",
       "properties": {
@@ -1368,68 +1321,6 @@
         "WEIGHT": {
           "type": "number",
           "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "SCVHeatmapCell": {
-      "type": "object",
-      "properties": {
-        "METRIC_KIND": {
-          "$ref": "#/definitions/scvMetricSeriesKind",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ushort",
-          "x-flatbuffer-enum-values": {
-            "PERCENT_COVERED": {
-              "value": 0
-            },
-            "COVERED_CELL_COUNT": {
-              "value": 1
-            },
-            "ACCESS_COUNT": {
-              "value": 2
-            },
-            "CONTACT_DURATION_SECONDS": {
-              "value": 3
-            },
-            "REVISIT_SECONDS": {
-              "value": 4
-            },
-            "GAP_SECONDS": {
-              "value": 5
-            },
-            "REDUNDANCY": {
-              "value": 6
-            },
-            "OVERLAP_COUNT": {
-              "value": 7
-            },
-            "LATITUDE_BAND_COVERAGE": {
-              "value": 8
-            }
-          }
-        },
-        "X_INDEX": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "Y_INDEX": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
-        },
-        "VALUE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SENSOR_COUNT": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint32"
         }
       },
       "additionalProperties": false
@@ -1499,6 +1390,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -1675,6 +1569,9 @@
             },
             "CUSTOM": {
               "value": 5
+            },
+            "SENSOR_LOCAL": {
+              "value": 6
             }
           }
         },
@@ -1837,6 +1734,329 @@
       },
       "additionalProperties": false
     },
+    "SCVPackedRasterBand": {
+      "type": "object",
+      "properties": {
+        "PRODUCT_KIND": {
+          "$ref": "#/definitions/scvRasterProductKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "CELL_BOUNDS_DEG": {
+              "value": 0
+            },
+            "CELL_CENTERS_DEG": {
+              "value": 1
+            },
+            "PERCENT_COVERAGE": {
+              "value": 2
+            },
+            "PASS_COUNT": {
+              "value": 3
+            },
+            "CONTACT_DURATION_SECONDS": {
+              "value": 4
+            },
+            "REVISIT_SECONDS": {
+              "value": 5
+            },
+            "GAP_SECONDS": {
+              "value": 6
+            },
+            "REDUNDANCY": {
+              "value": 7
+            },
+            "CURRENT_ACCESS_BITSET": {
+              "value": 8
+            },
+            "BUCKET_START_SECONDS": {
+              "value": 9
+            },
+            "BUCKET_STOP_SECONDS": {
+              "value": 10
+            },
+            "BUCKET_ACTIVE_CELL_COUNT": {
+              "value": 11
+            },
+            "PASS_COUNT_RGBA": {
+              "value": 12
+            },
+            "CURRENT_ACCESS_RGBA": {
+              "value": 13
+            },
+            "LATITUDE_BAND_COVERAGE": {
+              "value": 14
+            }
+          }
+        },
+        "METRIC_KIND": {
+          "$ref": "#/definitions/scvMetricSeriesKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "PERCENT_COVERED": {
+              "value": 0
+            },
+            "COVERED_CELL_COUNT": {
+              "value": 1
+            },
+            "ACCESS_COUNT": {
+              "value": 2
+            },
+            "CONTACT_DURATION_SECONDS": {
+              "value": 3
+            },
+            "REVISIT_SECONDS": {
+              "value": 4
+            },
+            "GAP_SECONDS": {
+              "value": 5
+            },
+            "REDUNDANCY": {
+              "value": 6
+            },
+            "OVERLAP_COUNT": {
+              "value": 7
+            },
+            "LATITUDE_BAND_COVERAGE": {
+              "value": 8
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/scvRasterProductEncoding",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FLOAT32": {
+              "value": 0
+            },
+            "FLOAT64": {
+              "value": 1
+            },
+            "UINT32": {
+              "value": 2
+            },
+            "BITSET_UINT32": {
+              "value": 3
+            },
+            "UINT8": {
+              "value": 4
+            }
+          }
+        },
+        "COMPONENTS_PER_CELL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CELL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "BUCKET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "WORDS_PER_BUCKET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MEMORY_REGION_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MEMORY_RECORD_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FLOAT32_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[float]"
+        },
+        "FLOAT64_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "UINT32_VALUES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint32]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCVPackedRasterProducts": {
+      "type": "object",
+      "properties": {
+        "JOB_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "GRID": {
+          "$ref": "#/definitions/SCVCoverageGrid",
+          "x-flatbuffer-type": "SCVCoverageGrid"
+        },
+        "TIME_GRID": {
+          "$ref": "#/definitions/SCVTimeGrid",
+          "x-flatbuffer-type": "SCVTimeGrid"
+        },
+        "ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "COLUMNS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CELL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "BUCKET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "WORDS_PER_BUCKET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MEMORY_REGIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVMemoryRegion"
+          },
+          "x-flatbuffer-type": "[SCVMemoryRegion]"
+        },
+        "BANDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVPackedRasterBand"
+          },
+          "x-flatbuffer-type": "[SCVPackedRasterBand]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCVAggregateStatistics": {
+      "type": "object",
+      "properties": {
+        "TOTAL_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACCESSED_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MULTI_ACCESS_CELLS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ACTIVE_SENSOR_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SWATH_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_WINDOWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_INTERVAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_REVISIT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_ACCESS_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_RESPONSE_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERCENT_COVERAGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "SCVResult": {
       "type": "object",
       "properties": {
@@ -1889,47 +2109,12 @@
           "maximum": 4294967295,
           "x-flatbuffer-type": "uint32"
         },
-        "CELL_STATS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCVCellStat"
-          },
-          "x-flatbuffer-type": "[SCVCellStat]"
-        },
-        "INTERVALS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCVInterval"
-          },
-          "x-flatbuffer-type": "[SCVInterval]"
-        },
-        "LATITUDE_BANDS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCVLatitudeBandStat"
-          },
-          "x-flatbuffer-type": "[SCVLatitudeBandStat]"
-        },
-        "TIME_SERIES": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCVTimeSeriesPoint"
-          },
-          "x-flatbuffer-type": "[SCVTimeSeriesPoint]"
-        },
         "HISTOGRAMS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/SCVHistogramBin"
           },
           "x-flatbuffer-type": "[SCVHistogramBin]"
-        },
-        "HEATMAP": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCVHeatmapCell"
-          },
-          "x-flatbuffer-type": "[SCVHeatmapCell]"
         },
         "CONTRIBUTIONS": {
           "type": "array",
@@ -1942,9 +2127,17 @@
           "$ref": "#/definitions/SCVPackedGeometryChunk",
           "x-flatbuffer-type": "SCVPackedGeometryChunk"
         },
+        "RASTER_PRODUCTS": {
+          "$ref": "#/definitions/SCVPackedRasterProducts",
+          "x-flatbuffer-type": "SCVPackedRasterProducts"
+        },
         "MESSAGE": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        },
+        "AGGREGATE_STATISTICS": {
+          "$ref": "#/definitions/SCVAggregateStatistics",
+          "x-flatbuffer-type": "SCVAggregateStatistics"
         }
       },
       "additionalProperties": false
@@ -1993,6 +2186,10 @@
         "GEOMETRY": {
           "$ref": "#/definitions/SCVPackedGeometryChunk",
           "x-flatbuffer-type": "SCVPackedGeometryChunk"
+        },
+        "RASTER_PRODUCTS": {
+          "$ref": "#/definitions/SCVPackedRasterProducts",
+          "x-flatbuffer-type": "SCVPackedRasterProducts"
         }
       },
       "additionalProperties": false

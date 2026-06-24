@@ -268,4 +268,3 @@ public struct GVH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -17,4 +17,3 @@ public enum glslStage : byte
   TESS_CONTROL = 4,
   TESS_EVALUATION = 5,
 };
-

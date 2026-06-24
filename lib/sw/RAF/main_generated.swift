@@ -117,4 +117,3 @@ public struct RAF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

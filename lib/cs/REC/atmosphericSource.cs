@@ -13,4 +13,3 @@ public enum atmosphericSource : sbyte
   HWM14 = 5,
   HASDM = 6,
 };
-

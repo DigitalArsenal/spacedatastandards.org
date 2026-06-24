@@ -9,4 +9,3 @@ public enum aouReportType : sbyte
   RECTANGULAR = 2,
   NONE = 3,
 };
-

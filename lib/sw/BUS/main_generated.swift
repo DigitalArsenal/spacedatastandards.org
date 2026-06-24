@@ -251,4 +251,3 @@ public struct BUS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

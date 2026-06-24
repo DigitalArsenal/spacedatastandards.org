@@ -159,4 +159,3 @@ public struct ENC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

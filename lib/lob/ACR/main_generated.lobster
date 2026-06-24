@@ -193,4 +193,3 @@ struct ACRBuilder:
         return this
     def end():
         return b_.EndObject()
-

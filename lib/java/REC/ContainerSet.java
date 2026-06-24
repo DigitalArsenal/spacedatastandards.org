@@ -59,4 +59,3 @@ public final class ContainerSet extends com.google.flatbuffers.Table {
     public ContainerSet get(ContainerSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

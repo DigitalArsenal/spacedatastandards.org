@@ -414,4 +414,3 @@ public struct OBD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -43,4 +43,3 @@ public final class weightedEdge extends Struct {
     public weightedEdge get(weightedEdge obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

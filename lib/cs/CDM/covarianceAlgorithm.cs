@@ -7,4 +7,3 @@ public enum covarianceAlgorithm : sbyte
   CALCULATED = 0,
   DEFAULT = 1,
 };
-

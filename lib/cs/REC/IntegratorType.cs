@@ -13,4 +13,3 @@ public enum IntegratorType : byte
   BS = 6,
   ANALYTICAL = 255,
 };
-

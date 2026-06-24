@@ -91,4 +91,3 @@ public struct SEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

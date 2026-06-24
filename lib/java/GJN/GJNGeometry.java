@@ -121,4 +121,3 @@ public final class GJNGeometry extends com.google.flatbuffers.Table {
     public GJNGeometry get(GJNGeometry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

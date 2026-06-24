@@ -10,4 +10,3 @@ public enum TimeWindowRefType : sbyte
   /// Relative to last verifier passed
   TIME_LAST_VERIFIER_PASSED = 1,
 };
-

@@ -8,4 +8,3 @@ public enum CZMLabelStyle : sbyte
   OUTLINE = 1,
   FILL_AND_OUTLINE = 2,
 };
-

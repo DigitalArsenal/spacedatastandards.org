@@ -10,4 +10,3 @@ public final class packetKind {
 
   public static String name(int e) { return names[e]; }
 }
-

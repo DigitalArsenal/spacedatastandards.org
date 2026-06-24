@@ -99,85 +99,9 @@ class SCVResult extends Table
     /**
      * @returnVectorOffset
      */
-    public function getCELL_STATS($j)
-    {
-        $o = $this->__offset(18);
-        $obj = new SCVCellStat();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCELL_STATSLength()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
-    public function getINTERVALS($j)
-    {
-        $o = $this->__offset(20);
-        $obj = new SCVInterval();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getINTERVALSLength()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
-    public function getLATITUDE_BANDS($j)
-    {
-        $o = $this->__offset(22);
-        $obj = new SCVLatitudeBandStat();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLATITUDE_BANDSLength()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
-    public function getTIME_SERIES($j)
-    {
-        $o = $this->__offset(24);
-        $obj = new SCVTimeSeriesPoint();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTIME_SERIESLength()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
     public function getHISTOGRAMS($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(18);
         $obj = new SCVHistogramBin();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -187,26 +111,7 @@ class SCVResult extends Table
      */
     public function getHISTOGRAMSLength()
     {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @returnVectorOffset
-     */
-    public function getHEATMAP($j)
-    {
-        $o = $this->__offset(28);
-        $obj = new SCVHeatmapCell();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getHEATMAPLength()
-    {
-        $o = $this->__offset(28);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -215,7 +120,7 @@ class SCVResult extends Table
      */
     public function getCONTRIBUTIONS($j)
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(20);
         $obj = new SCVSensorContribution();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -225,21 +130,35 @@ class SCVResult extends Table
      */
     public function getCONTRIBUTIONSLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     public function getGEOMETRY()
     {
         $obj = new SCVPackedGeometryChunk();
-        $o = $this->__offset(32);
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getRASTER_PRODUCTS()
+    {
+        $obj = new SCVPackedRasterProducts();
+        $o = $this->__offset(24);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     public function getMESSAGE()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getAGGREGATE_STATISTICS()
+    {
+        $obj = new SCVAggregateStatistics();
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -248,16 +167,16 @@ class SCVResult extends Table
      */
     public static function startSCVResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVResult
      */
-    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $CELL_STATS, $INTERVALS, $LATITUDE_BANDS, $TIME_SERIES, $HISTOGRAMS, $HEATMAP, $CONTRIBUTIONS, $GEOMETRY, $MESSAGE)
+    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS)
     {
-        $builder->startObject(16);
+        $builder->startObject(13);
         self::addJOB_ID($builder, $JOB_ID);
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addSTATUS($builder, $STATUS);
@@ -265,15 +184,12 @@ class SCVResult extends Table
         self::addTARGET_BODY($builder, $TARGET_BODY);
         self::addTOTAL_SENSORS($builder, $TOTAL_SENSORS);
         self::addTOTAL_WINDOWS($builder, $TOTAL_WINDOWS);
-        self::addCELL_STATS($builder, $CELL_STATS);
-        self::addINTERVALS($builder, $INTERVALS);
-        self::addLATITUDE_BANDS($builder, $LATITUDE_BANDS);
-        self::addTIME_SERIES($builder, $TIME_SERIES);
         self::addHISTOGRAMS($builder, $HISTOGRAMS);
-        self::addHEATMAP($builder, $HEATMAP);
         self::addCONTRIBUTIONS($builder, $CONTRIBUTIONS);
         self::addGEOMETRY($builder, $GEOMETRY);
+        self::addRASTER_PRODUCTS($builder, $RASTER_PRODUCTS);
         self::addMESSAGE($builder, $MESSAGE);
+        self::addAGGREGATE_STATISTICS($builder, $AGGREGATE_STATISTICS);
         $o = $builder->endObject();
         return $o;
     }
@@ -353,145 +269,9 @@ class SCVResult extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addCELL_STATS(FlatBufferBuilder $builder, $CELL_STATS)
-    {
-        $builder->addOffsetX(7, $CELL_STATS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createCELL_STATSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startCELL_STATSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addINTERVALS(FlatBufferBuilder $builder, $INTERVALS)
-    {
-        $builder->addOffsetX(8, $INTERVALS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createINTERVALSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startINTERVALSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLATITUDE_BANDS(FlatBufferBuilder $builder, $LATITUDE_BANDS)
-    {
-        $builder->addOffsetX(9, $LATITUDE_BANDS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createLATITUDE_BANDSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startLATITUDE_BANDSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addTIME_SERIES(FlatBufferBuilder $builder, $TIME_SERIES)
-    {
-        $builder->addOffsetX(10, $TIME_SERIES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createTIME_SERIESVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startTIME_SERIESVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addHISTOGRAMS(FlatBufferBuilder $builder, $HISTOGRAMS)
     {
-        $builder->addOffsetX(11, $HISTOGRAMS, 0);
+        $builder->addOffsetX(7, $HISTOGRAMS, 0);
     }
 
     /**
@@ -523,43 +303,9 @@ class SCVResult extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addHEATMAP(FlatBufferBuilder $builder, $HEATMAP)
-    {
-        $builder->addOffsetX(12, $HEATMAP, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createHEATMAPVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startHEATMAPVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addCONTRIBUTIONS(FlatBufferBuilder $builder, $CONTRIBUTIONS)
     {
-        $builder->addOffsetX(13, $CONTRIBUTIONS, 0);
+        $builder->addOffsetX(8, $CONTRIBUTIONS, 0);
     }
 
     /**
@@ -593,7 +339,17 @@ class SCVResult extends Table
      */
     public static function addGEOMETRY(FlatBufferBuilder $builder, $GEOMETRY)
     {
-        $builder->addOffsetX(14, $GEOMETRY, 0);
+        $builder->addOffsetX(9, $GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRASTER_PRODUCTS(FlatBufferBuilder $builder, $RASTER_PRODUCTS)
+    {
+        $builder->addOffsetX(10, $RASTER_PRODUCTS, 0);
     }
 
     /**
@@ -603,7 +359,17 @@ class SCVResult extends Table
      */
     public static function addMESSAGE(FlatBufferBuilder $builder, $MESSAGE)
     {
-        $builder->addOffsetX(15, $MESSAGE, 0);
+        $builder->addOffsetX(11, $MESSAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addAGGREGATE_STATISTICS(FlatBufferBuilder $builder, $AGGREGATE_STATISTICS)
+    {
+        $builder->addOffsetX(12, $AGGREGATE_STATISTICS, 0);
     }
 
     /**

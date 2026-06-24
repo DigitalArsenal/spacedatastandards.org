@@ -11,4 +11,3 @@ public enum soiCollectionMode : sbyte
   SURVEY = 4,
   TASKED = 5,
 };
-

@@ -10,4 +10,3 @@ public enum irBand : sbyte
   VLWIR = 3,
   BROADBAND = 4,
 };
-

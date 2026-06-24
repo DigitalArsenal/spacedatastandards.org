@@ -8,4 +8,3 @@ public enum licensingChallengeRole : sbyte
   Requester = 0,
   Provider = 1,
 };
-

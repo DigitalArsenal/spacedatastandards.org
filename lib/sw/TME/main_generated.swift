@@ -164,4 +164,3 @@ public struct TME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -94,4 +94,3 @@ public final class TIMConversionResult extends com.google.flatbuffers.Table {
     public TIMConversionResult get(TIMConversionResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

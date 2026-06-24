@@ -131,4 +131,3 @@ public struct ATM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

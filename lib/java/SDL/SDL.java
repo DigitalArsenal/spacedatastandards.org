@@ -122,4 +122,3 @@ public final class SDL extends com.google.flatbuffers.Table {
     public SDL get(SDL obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

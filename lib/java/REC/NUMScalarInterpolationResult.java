@@ -72,4 +72,3 @@ public final class NUMScalarInterpolationResult extends com.google.flatbuffers.T
     public NUMScalarInterpolationResult get(NUMScalarInterpolationResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

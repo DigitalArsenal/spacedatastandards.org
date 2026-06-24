@@ -543,4 +543,3 @@ public struct GJN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

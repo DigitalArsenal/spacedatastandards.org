@@ -47,4 +47,3 @@ public final class pluginCategory {
 
   public static String name(int e) { return names[e]; }
 }
-

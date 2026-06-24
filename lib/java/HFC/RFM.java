@@ -67,4 +67,3 @@ public final class RFM extends com.google.flatbuffers.Table {
     public RFM get(RFM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

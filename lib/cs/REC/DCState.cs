@@ -12,4 +12,3 @@ public enum DCState : sbyte
   SINKING = 5,
   ABANDONED = 6,
 };
-

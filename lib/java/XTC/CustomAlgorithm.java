@@ -139,4 +139,3 @@ public final class CustomAlgorithm extends com.google.flatbuffers.Table {
     public CustomAlgorithm get(CustomAlgorithm obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

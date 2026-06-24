@@ -7,4 +7,3 @@ public enum licensingWrappedKeyAlgorithm : sbyte
 {
   X25519_HKDF_SHA256_AES_256_GCM = 0,
 };
-

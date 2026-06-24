@@ -146,4 +146,3 @@ public final class NUMScalarInterpolationRequest extends com.google.flatbuffers.
     public NUMScalarInterpolationRequest get(NUMScalarInterpolationRequest obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

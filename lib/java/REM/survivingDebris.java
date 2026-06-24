@@ -85,4 +85,3 @@ public final class survivingDebris extends com.google.flatbuffers.Table {
     public survivingDebris get(survivingDebris obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

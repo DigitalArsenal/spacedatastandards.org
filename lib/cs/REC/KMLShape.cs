@@ -8,4 +8,3 @@ public enum KMLShape : sbyte
   CYLINDER = 1,
   SPHERE = 2,
 };
-

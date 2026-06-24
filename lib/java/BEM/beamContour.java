@@ -75,4 +75,3 @@ public final class beamContour extends com.google.flatbuffers.Table {
     public beamContour get(beamContour obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

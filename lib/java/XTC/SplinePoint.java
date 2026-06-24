@@ -60,4 +60,3 @@ public final class SplinePoint extends com.google.flatbuffers.Table {
     public SplinePoint get(SplinePoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

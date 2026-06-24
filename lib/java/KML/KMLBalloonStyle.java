@@ -80,4 +80,3 @@ public final class KMLBalloonStyle extends com.google.flatbuffers.Table {
     public KMLBalloonStyle get(KMLBalloonStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

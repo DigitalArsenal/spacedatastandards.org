@@ -127,4 +127,3 @@ public final class CZMPoint extends com.google.flatbuffers.Table {
     public CZMPoint get(CZMPoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

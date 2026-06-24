@@ -18,4 +18,3 @@ public enum SeekerType : sbyte
   ACOUSTIC = 11,
   WIRE = 12,
 };
-

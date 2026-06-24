@@ -120,4 +120,3 @@ public final class ephemerisDataLine extends com.google.flatbuffers.Table {
     public ephemerisDataLine get(ephemerisDataLine obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

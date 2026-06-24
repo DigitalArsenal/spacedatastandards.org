@@ -237,4 +237,3 @@ public final class OOD extends com.google.flatbuffers.Table {
     public OOD get(OOD obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

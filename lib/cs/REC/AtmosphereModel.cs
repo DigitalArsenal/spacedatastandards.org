@@ -10,4 +10,3 @@ public enum AtmosphereModel : sbyte
   SIMPLE = 3,
   CUSTOM = 4,
 };
-

@@ -236,4 +236,3 @@ public final class GPX extends com.google.flatbuffers.Table {
     public GPX get(GPX obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

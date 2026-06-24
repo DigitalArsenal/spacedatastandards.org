@@ -390,4 +390,3 @@ public final class SKI extends com.google.flatbuffers.Table {
     public SKI get(SKI obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

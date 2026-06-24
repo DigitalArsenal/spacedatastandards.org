@@ -83,4 +83,3 @@ public final class gnssObsData extends com.google.flatbuffers.Table {
     public gnssObsData get(gnssObsData obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

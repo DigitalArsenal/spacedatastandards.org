@@ -67,4 +67,3 @@ public final class KMLCoordinate extends com.google.flatbuffers.Table {
     public KMLCoordinate get(KMLCoordinate obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

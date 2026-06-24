@@ -4,6 +4,7 @@ import shutil
 import flatbuffers
 import json
 import sys
+import re
 
 # Set the path for the FlatBuffers schema files
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +16,7 @@ from SCM import SCMT
 from SCHEMA_STANDARD import SCHEMA_STANDARDT
 
 
-PRESERVED_DIST_FILES = {"sds_parsers.js", "sds_parsers.wasm"}
+PRESERVED_DIST_FILES = {"schema-embeddings.json", "sds_parsers.js", "sds_parsers.wasm"}
 
 
 def read_manifest_flatbuffer(file_path):
@@ -84,10 +85,35 @@ def write_json(file_path, data):
         json.dump(data, f, indent=4)
 
 
-def create_tar_gz_of_directory(directory, output_dir):
-    """Create a tar.gz file from a directory."""
+def collect_schema_dependencies(schema_name, schema_dir, visited=None):
+    """Return transitive schema include names for a standard."""
+    if visited is None:
+        visited = set()
+    if schema_name in visited:
+        return []
+    visited.add(schema_name)
+
+    schema_path = os.path.join(schema_dir, schema_name, "main.fbs")
+    if not os.path.exists(schema_path):
+        return []
+
+    dependencies = []
+    with open(schema_path, "r") as schema_file:
+        source = schema_file.read()
+    for match in re.finditer(r'include\s+"(?:\.\./)?([^"/]+)/main\.fbs"\s*;', source):
+        dependency_name = match.group(1)
+        if dependency_name in visited:
+            continue
+        dependencies.append(dependency_name)
+        dependencies.extend(collect_schema_dependencies(dependency_name, schema_dir, visited))
+    return dependencies
+
+
+def create_tar_gz_of_directories(directories, output_dir):
+    """Create a tar.gz file from one or more generated standard directories."""
     with tarfile.open(output_dir, "w:gz") as tar:
-        tar.add(directory, arcname=os.path.basename(directory))
+        for directory in directories:
+            tar.add(directory, arcname=os.path.basename(directory))
 
 
 def main():
@@ -127,7 +153,12 @@ def main():
 
                     archive_name = f"{child}.{subdir}.tar.gz"
                     output_file = os.path.join(child_dist_dir, archive_name)
-                    create_tar_gz_of_directory(child_path, output_file)
+                    archive_dirs = [child_path]
+                    for dependency in collect_schema_dependencies(child, schema_dir):
+                        dependency_path = os.path.join(subdir_path, dependency)
+                        if os.path.isdir(dependency_path):
+                            archive_dirs.append(dependency_path)
+                    create_tar_gz_of_directories(archive_dirs, output_file)
 
                     # Initialize or append to 'files' in the manifest
                     if child not in standards:

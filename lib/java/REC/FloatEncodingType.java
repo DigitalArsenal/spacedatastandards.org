@@ -31,4 +31,3 @@ public final class FloatEncodingType {
 
   public static String name(int e) { return names[e]; }
 }
-

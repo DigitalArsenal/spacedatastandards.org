@@ -271,4 +271,3 @@ public final class RDM extends com.google.flatbuffers.Table {
     public RDM get(RDM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

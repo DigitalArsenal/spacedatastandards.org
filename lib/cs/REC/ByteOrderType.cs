@@ -10,4 +10,3 @@ public enum ByteOrderType : sbyte
   /// Least significant byte first
   LITTLE_ENDIAN = 1,
 };
-

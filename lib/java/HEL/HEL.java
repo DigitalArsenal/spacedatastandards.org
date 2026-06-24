@@ -129,4 +129,3 @@ public final class HEL extends com.google.flatbuffers.Table {
     public HEL get(HEL obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

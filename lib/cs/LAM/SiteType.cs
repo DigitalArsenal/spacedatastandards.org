@@ -24,4 +24,3 @@ public enum SiteType : sbyte
   HISTORICAL_SITE = 16,
   OTHER = 17,
 };
-

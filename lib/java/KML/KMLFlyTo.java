@@ -76,4 +76,3 @@ public final class KMLFlyTo extends com.google.flatbuffers.Table {
     public KMLFlyTo get(KMLFlyTo obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

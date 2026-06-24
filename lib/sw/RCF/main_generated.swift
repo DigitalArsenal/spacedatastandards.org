@@ -124,4 +124,3 @@ public struct RCF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { SCVCancel, SCVCancelT } from './SCVCancel.js';
 import { SCVCoverageRequest, SCVCoverageRequestT } from './SCVCoverageRequest.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
+import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVProgress, SCVProgressT } from './SCVProgress.js';
 import { SCVResult, SCVResultT } from './SCVResult.js';
 import { scvEnvelopeKind } from './scvEnvelopeKind.js';
@@ -18,6 +19,7 @@ export declare class SCV implements flatbuffers.IUnpackableObject<SCVT> {
     CANCEL(obj?: SCVCancel): SCVCancel | null;
     RESULT(obj?: SCVResult): SCVResult | null;
     GEOMETRY(obj?: SCVPackedGeometryChunk): SCVPackedGeometryChunk | null;
+    RASTER_PRODUCTS(obj?: SCVPackedRasterProducts): SCVPackedRasterProducts | null;
     static startSCV(builder: flatbuffers.Builder): void;
     static addEnvelopeKind(builder: flatbuffers.Builder, ENVELOPE_KIND: scvEnvelopeKind): void;
     static addRequest(builder: flatbuffers.Builder, REQUESTOffset: flatbuffers.Offset): void;
@@ -25,6 +27,7 @@ export declare class SCV implements flatbuffers.IUnpackableObject<SCVT> {
     static addCancel(builder: flatbuffers.Builder, CANCELOffset: flatbuffers.Offset): void;
     static addResult(builder: flatbuffers.Builder, RESULTOffset: flatbuffers.Offset): void;
     static addGeometry(builder: flatbuffers.Builder, GEOMETRYOffset: flatbuffers.Offset): void;
+    static addRasterProducts(builder: flatbuffers.Builder, RASTER_PRODUCTSOffset: flatbuffers.Offset): void;
     static endSCV(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSCVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSCVBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -38,7 +41,8 @@ export declare class SCVT implements flatbuffers.IGeneratedObject {
     CANCEL: SCVCancelT | null;
     RESULT: SCVResultT | null;
     GEOMETRY: SCVPackedGeometryChunkT | null;
-    constructor(ENVELOPE_KIND?: scvEnvelopeKind, REQUEST?: SCVCoverageRequestT | null, PROGRESS?: SCVProgressT | null, CANCEL?: SCVCancelT | null, RESULT?: SCVResultT | null, GEOMETRY?: SCVPackedGeometryChunkT | null);
+    RASTER_PRODUCTS: SCVPackedRasterProductsT | null;
+    constructor(ENVELOPE_KIND?: scvEnvelopeKind, REQUEST?: SCVCoverageRequestT | null, PROGRESS?: SCVProgressT | null, CANCEL?: SCVCancelT | null, RESULT?: SCVResultT | null, GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCV.d.ts.map

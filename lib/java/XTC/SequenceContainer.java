@@ -126,4 +126,3 @@ public final class SequenceContainer extends com.google.flatbuffers.Table {
     public SequenceContainer get(SequenceContainer obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

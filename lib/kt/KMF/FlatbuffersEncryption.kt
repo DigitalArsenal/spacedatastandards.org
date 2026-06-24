@@ -124,4 +124,3 @@ object FlatbuffersEncryption {
         return String(decrypted, Charsets.UTF_8)
     }
 }
-

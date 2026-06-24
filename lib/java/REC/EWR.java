@@ -110,4 +110,3 @@ public final class EWR extends com.google.flatbuffers.Table {
     public EWR get(EWR obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -73,4 +73,3 @@ public final class KMLSimpleField extends com.google.flatbuffers.Table {
     public KMLSimpleField get(KMLSimpleField obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

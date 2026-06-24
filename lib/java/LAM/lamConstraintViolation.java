@@ -119,4 +119,3 @@ public final class lamConstraintViolation extends com.google.flatbuffers.Table {
     public lamConstraintViolation get(lamConstraintViolation obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

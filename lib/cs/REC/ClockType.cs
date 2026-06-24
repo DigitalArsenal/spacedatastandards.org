@@ -11,4 +11,3 @@ public enum ClockType : sbyte
   HYDROGEN_MASER = 4,
   GPS_DISCIPLINED = 5,
 };
-

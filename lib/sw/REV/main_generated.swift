@@ -107,4 +107,3 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

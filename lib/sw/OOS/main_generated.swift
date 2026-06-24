@@ -157,4 +157,3 @@ public struct OOS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

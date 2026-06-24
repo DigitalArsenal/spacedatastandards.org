@@ -428,4 +428,3 @@ public struct CMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

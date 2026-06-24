@@ -59,4 +59,3 @@ public final class GPXTrackSegment extends com.google.flatbuffers.Table {
     public GPXTrackSegment get(GPXTrackSegment obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

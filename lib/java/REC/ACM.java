@@ -184,4 +184,3 @@ public final class ACM extends com.google.flatbuffers.Table {
     public ACM get(ACM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

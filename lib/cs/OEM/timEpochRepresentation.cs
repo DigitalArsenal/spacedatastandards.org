@@ -21,4 +21,3 @@ public enum timEpochRepresentation : sbyte
   /// Seconds from an application-defined mission epoch.
   MISSION_ELAPSED_SECONDS = 7,
 };
-

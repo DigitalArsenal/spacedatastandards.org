@@ -82,4 +82,3 @@ public final class CanonicalizationRule extends com.google.flatbuffers.Table {
     public CanonicalizationRule get(CanonicalizationRule obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

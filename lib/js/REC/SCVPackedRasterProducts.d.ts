@@ -1,0 +1,61 @@
+import * as flatbuffers from 'flatbuffers';
+import { SCVCoverageGrid, SCVCoverageGridT } from './SCVCoverageGrid.js';
+import { SCVMemoryRegion, SCVMemoryRegionT } from './SCVMemoryRegion.js';
+import { SCVPackedRasterBand, SCVPackedRasterBandT } from './SCVPackedRasterBand.js';
+import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
+export declare class SCVPackedRasterProducts implements flatbuffers.IUnpackableObject<SCVPackedRasterProductsT> {
+    bb: flatbuffers.ByteBuffer | null;
+    bb_pos: number;
+    __init(i: number, bb: flatbuffers.ByteBuffer): SCVPackedRasterProducts;
+    static getRootAsSCVPackedRasterProducts(bb: flatbuffers.ByteBuffer, obj?: SCVPackedRasterProducts): SCVPackedRasterProducts;
+    static getSizePrefixedRootAsSCVPackedRasterProducts(bb: flatbuffers.ByteBuffer, obj?: SCVPackedRasterProducts): SCVPackedRasterProducts;
+    JOB_ID(): string | null;
+    JOB_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    TRACE_ID(): bigint;
+    GRID(obj?: SCVCoverageGrid): SCVCoverageGrid | null;
+    TIME_GRID(obj?: SCVTimeGrid): SCVTimeGrid | null;
+    ROWS(): number;
+    COLUMNS(): number;
+    CELL_COUNT(): number;
+    BUCKET_COUNT(): number;
+    WORDS_PER_BUCKET(): number;
+    MEMORY_REGIONS(index: number, obj?: SCVMemoryRegion): SCVMemoryRegion | null;
+    memoryRegionsLength(): number;
+    BANDS(index: number, obj?: SCVPackedRasterBand): SCVPackedRasterBand | null;
+    bandsLength(): number;
+    static startSCVPackedRasterProducts(builder: flatbuffers.Builder): void;
+    static addJobId(builder: flatbuffers.Builder, JOB_IDOffset: flatbuffers.Offset): void;
+    static addTraceId(builder: flatbuffers.Builder, TRACE_ID: bigint): void;
+    static addGrid(builder: flatbuffers.Builder, GRIDOffset: flatbuffers.Offset): void;
+    static addTimeGrid(builder: flatbuffers.Builder, TIME_GRIDOffset: flatbuffers.Offset): void;
+    static addRows(builder: flatbuffers.Builder, ROWS: number): void;
+    static addColumns(builder: flatbuffers.Builder, COLUMNS: number): void;
+    static addCellCount(builder: flatbuffers.Builder, CELL_COUNT: number): void;
+    static addBucketCount(builder: flatbuffers.Builder, BUCKET_COUNT: number): void;
+    static addWordsPerBucket(builder: flatbuffers.Builder, WORDS_PER_BUCKET: number): void;
+    static addMemoryRegions(builder: flatbuffers.Builder, MEMORY_REGIONSOffset: flatbuffers.Offset): void;
+    static createMemoryRegionsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startMemoryRegionsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addBands(builder: flatbuffers.Builder, BANDSOffset: flatbuffers.Offset): void;
+    static createBandsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startBandsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static endSCVPackedRasterProducts(builder: flatbuffers.Builder): flatbuffers.Offset;
+    unpack(): SCVPackedRasterProductsT;
+    unpackTo(_o: SCVPackedRasterProductsT): void;
+}
+export declare class SCVPackedRasterProductsT implements flatbuffers.IGeneratedObject {
+    JOB_ID: string | Uint8Array | null;
+    TRACE_ID: bigint;
+    GRID: SCVCoverageGridT | null;
+    TIME_GRID: SCVTimeGridT | null;
+    ROWS: number;
+    COLUMNS: number;
+    CELL_COUNT: number;
+    BUCKET_COUNT: number;
+    WORDS_PER_BUCKET: number;
+    MEMORY_REGIONS: (SCVMemoryRegionT)[];
+    BANDS: (SCVPackedRasterBandT)[];
+    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, GRID?: SCVCoverageGridT | null, TIME_GRID?: SCVTimeGridT | null, ROWS?: number, COLUMNS?: number, CELL_COUNT?: number, BUCKET_COUNT?: number, WORDS_PER_BUCKET?: number, MEMORY_REGIONS?: (SCVMemoryRegionT)[], BANDS?: (SCVPackedRasterBandT)[]);
+    pack(builder: flatbuffers.Builder): flatbuffers.Offset;
+}
+//# sourceMappingURL=SCVPackedRasterProducts.d.ts.map

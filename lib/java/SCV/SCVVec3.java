@@ -55,4 +55,3 @@ public final class SCVVec3 extends com.google.flatbuffers.Table {
     public SCVVec3 get(SCVVec3 obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

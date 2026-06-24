@@ -55,4 +55,3 @@ public enum OrbitFrame : sbyte
   /// Velocity-normal co-normal rotating frame.
   VNC_ROTATING = 15,
 };
-

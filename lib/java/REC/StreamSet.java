@@ -85,4 +85,3 @@ public final class StreamSet extends com.google.flatbuffers.Table {
     public StreamSet get(StreamSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

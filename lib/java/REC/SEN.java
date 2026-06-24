@@ -170,4 +170,3 @@ public final class SEN extends com.google.flatbuffers.Table {
     public SEN get(SEN obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

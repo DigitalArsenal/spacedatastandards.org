@@ -125,4 +125,3 @@ public struct EME: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

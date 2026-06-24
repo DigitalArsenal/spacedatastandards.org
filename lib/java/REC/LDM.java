@@ -326,4 +326,3 @@ public final class LDM extends com.google.flatbuffers.Table {
     public LDM get(LDM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

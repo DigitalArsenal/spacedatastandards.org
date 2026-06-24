@@ -16,4 +16,3 @@ public enum catalogQueryKind : byte
   /// Return a single catalog row by entity index.
   CATALOG_ROW = 3,
 };
-

@@ -16,4 +16,3 @@ public enum cltuPduType : sbyte
   TRANSFER_DATA_RETURN = 9,
   PEER_ABORT = 10,
 };
-

@@ -17,4 +17,3 @@ public final class sarPolarization {
 
   public static String name(int e) { return names[e]; }
 }
-

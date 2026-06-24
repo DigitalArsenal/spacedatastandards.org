@@ -74,4 +74,3 @@ public final class ACWStateSample extends com.google.flatbuffers.Table {
     public ACWStateSample get(ACWStateSample obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

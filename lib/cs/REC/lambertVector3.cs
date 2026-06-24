@@ -57,4 +57,3 @@ public class lambertVector3T
     this.Z = 0.0;
   }
 }
-

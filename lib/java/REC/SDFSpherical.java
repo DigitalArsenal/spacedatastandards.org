@@ -57,4 +57,3 @@ public final class SDFSpherical extends com.google.flatbuffers.Table {
     public SDFSpherical get(SDFSpherical obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -145,4 +145,3 @@ public final class remFragmentEvaluation extends com.google.flatbuffers.Table {
     public remFragmentEvaluation get(remFragmentEvaluation obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -234,4 +234,3 @@ public struct AST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

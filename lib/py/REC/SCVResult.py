@@ -86,108 +86,8 @@ class SCVResult(object):
         return 0
 
     # SCVResult
-    def CELL_STATS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVCellStat import SCVCellStat
-            obj = SCVCellStat()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def CELL_STATSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def CELL_STATSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        return o == 0
-
-    # SCVResult
-    def INTERVALS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVInterval import SCVInterval
-            obj = SCVInterval()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def INTERVALSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def INTERVALSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        return o == 0
-
-    # SCVResult
-    def LATITUDE_BANDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVLatitudeBandStat import SCVLatitudeBandStat
-            obj = SCVLatitudeBandStat()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def LATITUDE_BANDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def LATITUDE_BANDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        return o == 0
-
-    # SCVResult
-    def TIME_SERIES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVTimeSeriesPoint import SCVTimeSeriesPoint
-            obj = SCVTimeSeriesPoint()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def TIME_SERIESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def TIME_SERIESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        return o == 0
-
-    # SCVResult
     def HISTOGRAMS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -200,44 +100,19 @@ class SCVResult(object):
 
     # SCVResult
     def HISTOGRAMSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCVResult
     def HISTOGRAMSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        return o == 0
-
-    # SCVResult
-    def HEATMAP(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVHeatmapCell import SCVHeatmapCell
-            obj = SCVHeatmapCell()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCVResult
-    def HEATMAPLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVResult
-    def HEATMAPIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
     # SCVResult
     def CONTRIBUTIONS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -250,19 +125,19 @@ class SCVResult(object):
 
     # SCVResult
     def CONTRIBUTIONSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCVResult
     def CONTRIBUTIONSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
     # SCVResult
     def GEOMETRY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVPackedGeometryChunk import SCVPackedGeometryChunk
@@ -272,14 +147,36 @@ class SCVResult(object):
         return None
 
     # SCVResult
+    def RASTER_PRODUCTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVPackedRasterProducts import SCVPackedRasterProducts
+            obj = SCVPackedRasterProducts()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SCVResult
     def MESSAGE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # SCVResult
+    def AGGREGATE_STATISTICS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVAggregateStatistics import SCVAggregateStatistics
+            obj = SCVAggregateStatistics()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCVResultStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(13)
 
 def Start(builder):
     SCVResultStart(builder)
@@ -326,80 +223,8 @@ def SCVResultAddTOTAL_WINDOWS(builder, TOTAL_WINDOWS):
 def AddTOTAL_WINDOWS(builder, TOTAL_WINDOWS):
     SCVResultAddTOTAL_WINDOWS(builder, TOTAL_WINDOWS)
 
-def SCVResultAddCELL_STATS(builder, CELL_STATS):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CELL_STATS), 0)
-
-def AddCELL_STATS(builder, CELL_STATS):
-    SCVResultAddCELL_STATS(builder, CELL_STATS)
-
-def SCVResultStartCELL_STATSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartCELL_STATSVector(builder, numElems):
-    return SCVResultStartCELL_STATSVector(builder, numElems)
-
-def SCVResultCreateCELL_STATSVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateCELL_STATSVector(builder, data):
-    SCVResultCreateCELL_STATSVector(builder, data)
-
-def SCVResultAddINTERVALS(builder, INTERVALS):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(INTERVALS), 0)
-
-def AddINTERVALS(builder, INTERVALS):
-    SCVResultAddINTERVALS(builder, INTERVALS)
-
-def SCVResultStartINTERVALSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartINTERVALSVector(builder, numElems):
-    return SCVResultStartINTERVALSVector(builder, numElems)
-
-def SCVResultCreateINTERVALSVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateINTERVALSVector(builder, data):
-    SCVResultCreateINTERVALSVector(builder, data)
-
-def SCVResultAddLATITUDE_BANDS(builder, LATITUDE_BANDS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LATITUDE_BANDS), 0)
-
-def AddLATITUDE_BANDS(builder, LATITUDE_BANDS):
-    SCVResultAddLATITUDE_BANDS(builder, LATITUDE_BANDS)
-
-def SCVResultStartLATITUDE_BANDSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartLATITUDE_BANDSVector(builder, numElems):
-    return SCVResultStartLATITUDE_BANDSVector(builder, numElems)
-
-def SCVResultCreateLATITUDE_BANDSVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateLATITUDE_BANDSVector(builder, data):
-    SCVResultCreateLATITUDE_BANDSVector(builder, data)
-
-def SCVResultAddTIME_SERIES(builder, TIME_SERIES):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SERIES), 0)
-
-def AddTIME_SERIES(builder, TIME_SERIES):
-    SCVResultAddTIME_SERIES(builder, TIME_SERIES)
-
-def SCVResultStartTIME_SERIESVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartTIME_SERIESVector(builder, numElems):
-    return SCVResultStartTIME_SERIESVector(builder, numElems)
-
-def SCVResultCreateTIME_SERIESVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateTIME_SERIESVector(builder, data):
-    SCVResultCreateTIME_SERIESVector(builder, data)
-
 def SCVResultAddHISTOGRAMS(builder, HISTOGRAMS):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(HISTOGRAMS), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(HISTOGRAMS), 0)
 
 def AddHISTOGRAMS(builder, HISTOGRAMS):
     SCVResultAddHISTOGRAMS(builder, HISTOGRAMS)
@@ -416,26 +241,8 @@ def SCVResultCreateHISTOGRAMSVector(builder, data):
 def CreateHISTOGRAMSVector(builder, data):
     SCVResultCreateHISTOGRAMSVector(builder, data)
 
-def SCVResultAddHEATMAP(builder, HEATMAP):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(HEATMAP), 0)
-
-def AddHEATMAP(builder, HEATMAP):
-    SCVResultAddHEATMAP(builder, HEATMAP)
-
-def SCVResultStartHEATMAPVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartHEATMAPVector(builder, numElems):
-    return SCVResultStartHEATMAPVector(builder, numElems)
-
-def SCVResultCreateHEATMAPVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateHEATMAPVector(builder, data):
-    SCVResultCreateHEATMAPVector(builder, data)
-
 def SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTIONS), 0)
 
 def AddCONTRIBUTIONS(builder, CONTRIBUTIONS):
     SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
@@ -453,16 +260,28 @@ def CreateCONTRIBUTIONSVector(builder, data):
     SCVResultCreateCONTRIBUTIONSVector(builder, data)
 
 def SCVResultAddGEOMETRY(builder, GEOMETRY):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
 
 def AddGEOMETRY(builder, GEOMETRY):
     SCVResultAddGEOMETRY(builder, GEOMETRY)
 
+def SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RASTER_PRODUCTS), 0)
+
+def AddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
+
 def SCVResultAddMESSAGE(builder, MESSAGE):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE), 0)
 
 def AddMESSAGE(builder, MESSAGE):
     SCVResultAddMESSAGE(builder, MESSAGE)
+
+def SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_STATISTICS), 0)
+
+def AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS):
+    SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
 
 def SCVResultEnd(builder):
     return builder.EndObject()
@@ -470,16 +289,13 @@ def SCVResultEnd(builder):
 def End(builder):
     return SCVResultEnd(builder)
 
-import SCVCellStat
+import SCVAggregateStatistics
 import SCVEllipsoid
-import SCVHeatmapCell
 import SCVHistogramBin
-import SCVInterval
-import SCVLatitudeBandStat
 import SCVPackedGeometryChunk
+import SCVPackedRasterProducts
 import SCVSensorContribution
 import SCVTimeGrid
-import SCVTimeSeriesPoint
 try:
     from typing import List, Optional
 except:
@@ -497,15 +313,12 @@ class SCVResultT(object):
         TARGET_BODY = None,
         TOTAL_SENSORS = 0,
         TOTAL_WINDOWS = 0,
-        CELL_STATS = None,
-        INTERVALS = None,
-        LATITUDE_BANDS = None,
-        TIME_SERIES = None,
         HISTOGRAMS = None,
-        HEATMAP = None,
         CONTRIBUTIONS = None,
         GEOMETRY = None,
+        RASTER_PRODUCTS = None,
         MESSAGE = None,
+        AGGREGATE_STATISTICS = None,
     ):
         self.JOB_ID = JOB_ID  # type: Optional[str]
         self.TRACE_ID = TRACE_ID  # type: int
@@ -514,15 +327,12 @@ class SCVResultT(object):
         self.TARGET_BODY = TARGET_BODY  # type: Optional[SCVEllipsoid.SCVEllipsoidT]
         self.TOTAL_SENSORS = TOTAL_SENSORS  # type: int
         self.TOTAL_WINDOWS = TOTAL_WINDOWS  # type: int
-        self.CELL_STATS = CELL_STATS  # type: Optional[List[SCVCellStat.SCVCellStatT]]
-        self.INTERVALS = INTERVALS  # type: Optional[List[SCVInterval.SCVIntervalT]]
-        self.LATITUDE_BANDS = LATITUDE_BANDS  # type: Optional[List[SCVLatitudeBandStat.SCVLatitudeBandStatT]]
-        self.TIME_SERIES = TIME_SERIES  # type: Optional[List[SCVTimeSeriesPoint.SCVTimeSeriesPointT]]
         self.HISTOGRAMS = HISTOGRAMS  # type: Optional[List[SCVHistogramBin.SCVHistogramBinT]]
-        self.HEATMAP = HEATMAP  # type: Optional[List[SCVHeatmapCell.SCVHeatmapCellT]]
         self.CONTRIBUTIONS = CONTRIBUTIONS  # type: Optional[List[SCVSensorContribution.SCVSensorContributionT]]
         self.GEOMETRY = GEOMETRY  # type: Optional[SCVPackedGeometryChunk.SCVPackedGeometryChunkT]
+        self.RASTER_PRODUCTS = RASTER_PRODUCTS  # type: Optional[SCVPackedRasterProducts.SCVPackedRasterProductsT]
         self.MESSAGE = MESSAGE  # type: Optional[str]
+        self.AGGREGATE_STATISTICS = AGGREGATE_STATISTICS  # type: Optional[SCVAggregateStatistics.SCVAggregateStatisticsT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -554,38 +364,6 @@ class SCVResultT(object):
             self.TARGET_BODY = SCVEllipsoid.SCVEllipsoidT.InitFromObj(SCVResult.TARGET_BODY())
         self.TOTAL_SENSORS = SCVResult.TOTAL_SENSORS()
         self.TOTAL_WINDOWS = SCVResult.TOTAL_WINDOWS()
-        if not SCVResult.CELL_STATSIsNone():
-            self.CELL_STATS = []
-            for i in range(SCVResult.CELL_STATSLength()):
-                if SCVResult.CELL_STATS(i) is None:
-                    self.CELL_STATS.append(None)
-                else:
-                    sCVCellStat_ = SCVCellStat.SCVCellStatT.InitFromObj(SCVResult.CELL_STATS(i))
-                    self.CELL_STATS.append(sCVCellStat_)
-        if not SCVResult.INTERVALSIsNone():
-            self.INTERVALS = []
-            for i in range(SCVResult.INTERVALSLength()):
-                if SCVResult.INTERVALS(i) is None:
-                    self.INTERVALS.append(None)
-                else:
-                    sCVInterval_ = SCVInterval.SCVIntervalT.InitFromObj(SCVResult.INTERVALS(i))
-                    self.INTERVALS.append(sCVInterval_)
-        if not SCVResult.LATITUDE_BANDSIsNone():
-            self.LATITUDE_BANDS = []
-            for i in range(SCVResult.LATITUDE_BANDSLength()):
-                if SCVResult.LATITUDE_BANDS(i) is None:
-                    self.LATITUDE_BANDS.append(None)
-                else:
-                    sCVLatitudeBandStat_ = SCVLatitudeBandStat.SCVLatitudeBandStatT.InitFromObj(SCVResult.LATITUDE_BANDS(i))
-                    self.LATITUDE_BANDS.append(sCVLatitudeBandStat_)
-        if not SCVResult.TIME_SERIESIsNone():
-            self.TIME_SERIES = []
-            for i in range(SCVResult.TIME_SERIESLength()):
-                if SCVResult.TIME_SERIES(i) is None:
-                    self.TIME_SERIES.append(None)
-                else:
-                    sCVTimeSeriesPoint_ = SCVTimeSeriesPoint.SCVTimeSeriesPointT.InitFromObj(SCVResult.TIME_SERIES(i))
-                    self.TIME_SERIES.append(sCVTimeSeriesPoint_)
         if not SCVResult.HISTOGRAMSIsNone():
             self.HISTOGRAMS = []
             for i in range(SCVResult.HISTOGRAMSLength()):
@@ -594,14 +372,6 @@ class SCVResultT(object):
                 else:
                     sCVHistogramBin_ = SCVHistogramBin.SCVHistogramBinT.InitFromObj(SCVResult.HISTOGRAMS(i))
                     self.HISTOGRAMS.append(sCVHistogramBin_)
-        if not SCVResult.HEATMAPIsNone():
-            self.HEATMAP = []
-            for i in range(SCVResult.HEATMAPLength()):
-                if SCVResult.HEATMAP(i) is None:
-                    self.HEATMAP.append(None)
-                else:
-                    sCVHeatmapCell_ = SCVHeatmapCell.SCVHeatmapCellT.InitFromObj(SCVResult.HEATMAP(i))
-                    self.HEATMAP.append(sCVHeatmapCell_)
         if not SCVResult.CONTRIBUTIONSIsNone():
             self.CONTRIBUTIONS = []
             for i in range(SCVResult.CONTRIBUTIONSLength()):
@@ -612,7 +382,11 @@ class SCVResultT(object):
                     self.CONTRIBUTIONS.append(sCVSensorContribution_)
         if SCVResult.GEOMETRY() is not None:
             self.GEOMETRY = SCVPackedGeometryChunk.SCVPackedGeometryChunkT.InitFromObj(SCVResult.GEOMETRY())
+        if SCVResult.RASTER_PRODUCTS() is not None:
+            self.RASTER_PRODUCTS = SCVPackedRasterProducts.SCVPackedRasterProductsT.InitFromObj(SCVResult.RASTER_PRODUCTS())
         self.MESSAGE = SCVResult.MESSAGE()
+        if SCVResult.AGGREGATE_STATISTICS() is not None:
+            self.AGGREGATE_STATISTICS = SCVAggregateStatistics.SCVAggregateStatisticsT.InitFromObj(SCVResult.AGGREGATE_STATISTICS())
 
     # SCVResultT
     def Pack(self, builder):
@@ -622,38 +396,6 @@ class SCVResultT(object):
             TIME_GRID = self.TIME_GRID.Pack(builder)
         if self.TARGET_BODY is not None:
             TARGET_BODY = self.TARGET_BODY.Pack(builder)
-        if self.CELL_STATS is not None:
-            CELL_STATSlist = []
-            for i in range(len(self.CELL_STATS)):
-                CELL_STATSlist.append(self.CELL_STATS[i].Pack(builder))
-            SCVResultStartCELL_STATSVector(builder, len(self.CELL_STATS))
-            for i in reversed(range(len(self.CELL_STATS))):
-                builder.PrependUOffsetTRelative(CELL_STATSlist[i])
-            CELL_STATS = builder.EndVector()
-        if self.INTERVALS is not None:
-            INTERVALSlist = []
-            for i in range(len(self.INTERVALS)):
-                INTERVALSlist.append(self.INTERVALS[i].Pack(builder))
-            SCVResultStartINTERVALSVector(builder, len(self.INTERVALS))
-            for i in reversed(range(len(self.INTERVALS))):
-                builder.PrependUOffsetTRelative(INTERVALSlist[i])
-            INTERVALS = builder.EndVector()
-        if self.LATITUDE_BANDS is not None:
-            LATITUDE_BANDSlist = []
-            for i in range(len(self.LATITUDE_BANDS)):
-                LATITUDE_BANDSlist.append(self.LATITUDE_BANDS[i].Pack(builder))
-            SCVResultStartLATITUDE_BANDSVector(builder, len(self.LATITUDE_BANDS))
-            for i in reversed(range(len(self.LATITUDE_BANDS))):
-                builder.PrependUOffsetTRelative(LATITUDE_BANDSlist[i])
-            LATITUDE_BANDS = builder.EndVector()
-        if self.TIME_SERIES is not None:
-            TIME_SERIESlist = []
-            for i in range(len(self.TIME_SERIES)):
-                TIME_SERIESlist.append(self.TIME_SERIES[i].Pack(builder))
-            SCVResultStartTIME_SERIESVector(builder, len(self.TIME_SERIES))
-            for i in reversed(range(len(self.TIME_SERIES))):
-                builder.PrependUOffsetTRelative(TIME_SERIESlist[i])
-            TIME_SERIES = builder.EndVector()
         if self.HISTOGRAMS is not None:
             HISTOGRAMSlist = []
             for i in range(len(self.HISTOGRAMS)):
@@ -662,14 +404,6 @@ class SCVResultT(object):
             for i in reversed(range(len(self.HISTOGRAMS))):
                 builder.PrependUOffsetTRelative(HISTOGRAMSlist[i])
             HISTOGRAMS = builder.EndVector()
-        if self.HEATMAP is not None:
-            HEATMAPlist = []
-            for i in range(len(self.HEATMAP)):
-                HEATMAPlist.append(self.HEATMAP[i].Pack(builder))
-            SCVResultStartHEATMAPVector(builder, len(self.HEATMAP))
-            for i in reversed(range(len(self.HEATMAP))):
-                builder.PrependUOffsetTRelative(HEATMAPlist[i])
-            HEATMAP = builder.EndVector()
         if self.CONTRIBUTIONS is not None:
             CONTRIBUTIONSlist = []
             for i in range(len(self.CONTRIBUTIONS)):
@@ -680,8 +414,12 @@ class SCVResultT(object):
             CONTRIBUTIONS = builder.EndVector()
         if self.GEOMETRY is not None:
             GEOMETRY = self.GEOMETRY.Pack(builder)
+        if self.RASTER_PRODUCTS is not None:
+            RASTER_PRODUCTS = self.RASTER_PRODUCTS.Pack(builder)
         if self.MESSAGE is not None:
             MESSAGE = builder.CreateString(self.MESSAGE)
+        if self.AGGREGATE_STATISTICS is not None:
+            AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.Pack(builder)
         SCVResultStart(builder)
         if self.JOB_ID is not None:
             SCVResultAddJOB_ID(builder, JOB_ID)
@@ -693,23 +431,17 @@ class SCVResultT(object):
             SCVResultAddTARGET_BODY(builder, TARGET_BODY)
         SCVResultAddTOTAL_SENSORS(builder, self.TOTAL_SENSORS)
         SCVResultAddTOTAL_WINDOWS(builder, self.TOTAL_WINDOWS)
-        if self.CELL_STATS is not None:
-            SCVResultAddCELL_STATS(builder, CELL_STATS)
-        if self.INTERVALS is not None:
-            SCVResultAddINTERVALS(builder, INTERVALS)
-        if self.LATITUDE_BANDS is not None:
-            SCVResultAddLATITUDE_BANDS(builder, LATITUDE_BANDS)
-        if self.TIME_SERIES is not None:
-            SCVResultAddTIME_SERIES(builder, TIME_SERIES)
         if self.HISTOGRAMS is not None:
             SCVResultAddHISTOGRAMS(builder, HISTOGRAMS)
-        if self.HEATMAP is not None:
-            SCVResultAddHEATMAP(builder, HEATMAP)
         if self.CONTRIBUTIONS is not None:
             SCVResultAddCONTRIBUTIONS(builder, CONTRIBUTIONS)
         if self.GEOMETRY is not None:
             SCVResultAddGEOMETRY(builder, GEOMETRY)
+        if self.RASTER_PRODUCTS is not None:
+            SCVResultAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
         if self.MESSAGE is not None:
             SCVResultAddMESSAGE(builder, MESSAGE)
+        if self.AGGREGATE_STATISTICS is not None:
+            SCVResultAddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICS)
         SCVResult = SCVResultEnd(builder)
         return SCVResult

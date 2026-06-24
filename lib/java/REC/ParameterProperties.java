@@ -77,4 +77,3 @@ public final class ParameterProperties extends com.google.flatbuffers.Table {
     public ParameterProperties get(ParameterProperties obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

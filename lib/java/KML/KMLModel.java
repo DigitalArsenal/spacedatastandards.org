@@ -138,4 +138,3 @@ public final class KMLModel extends com.google.flatbuffers.Table {
     public KMLModel get(KMLModel obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

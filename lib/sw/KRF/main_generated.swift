@@ -131,4 +131,3 @@ public struct KRF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

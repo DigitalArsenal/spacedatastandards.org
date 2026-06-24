@@ -246,4 +246,3 @@ public final class KMLPlacemark extends com.google.flatbuffers.Table {
     public KMLPlacemark get(KMLPlacemark obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

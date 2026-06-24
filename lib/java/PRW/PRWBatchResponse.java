@@ -108,4 +108,3 @@ public final class PRWBatchResponse extends com.google.flatbuffers.Table {
     public PRWBatchResponse get(PRWBatchResponse obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

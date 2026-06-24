@@ -72,4 +72,3 @@ public final class FPCWeightedEdgeList extends com.google.flatbuffers.Table {
     public FPCWeightedEdgeList get(FPCWeightedEdgeList obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

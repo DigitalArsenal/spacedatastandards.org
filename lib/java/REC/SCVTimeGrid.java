@@ -73,4 +73,3 @@ public final class SCVTimeGrid extends com.google.flatbuffers.Table {
     public SCVTimeGrid get(SCVTimeGrid obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

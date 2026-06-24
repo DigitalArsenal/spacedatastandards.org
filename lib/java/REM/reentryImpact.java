@@ -97,4 +97,3 @@ public final class reentryImpact extends com.google.flatbuffers.Table {
     public reentryImpact get(reentryImpact obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

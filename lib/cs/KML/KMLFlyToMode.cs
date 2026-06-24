@@ -7,4 +7,3 @@ public enum KMLFlyToMode : sbyte
   BOUNCE = 0,
   SMOOTH = 1,
 };
-

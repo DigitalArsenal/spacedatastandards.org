@@ -192,4 +192,3 @@ struct ENGINEBuilder:
         return this
     def end():
         return b_.EndObject()
-

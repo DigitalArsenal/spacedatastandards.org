@@ -84,4 +84,3 @@ public final class CZMDynSampled extends com.google.flatbuffers.Table {
     public CZMDynSampled get(CZMDynSampled obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

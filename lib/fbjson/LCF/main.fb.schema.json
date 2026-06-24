@@ -116,7 +116,8 @@
             "DecryptKey": {
               "value": 6
             }
-          }
+          },
+          "x-flatbuffer-default": "Unknown"
         },
         "ALGORITHM": {
           "$ref": "#/definitions/keyReferenceAlgorithm",
@@ -145,7 +146,8 @@
             "Opaque": {
               "value": 6
             }
-          }
+          },
+          "x-flatbuffer-default": "Unknown"
         },
         "PUBLIC_KEY": {
           "type": "array",
@@ -174,7 +176,8 @@
         "HOST_MANAGED": {
           "type": "boolean",
           "description": "True when the secret material remains in the host key slot.",
-          "x-flatbuffer-type": "bool"
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         }
       },
       "additionalProperties": false

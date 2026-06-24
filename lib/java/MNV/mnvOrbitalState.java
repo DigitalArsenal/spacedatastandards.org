@@ -222,4 +222,3 @@ public final class mnvOrbitalState extends com.google.flatbuffers.Table {
     public mnvOrbitalState get(mnvOrbitalState obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

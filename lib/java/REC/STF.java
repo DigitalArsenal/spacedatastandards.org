@@ -204,4 +204,3 @@ public final class STF extends com.google.flatbuffers.Table {
     public STF get(STF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

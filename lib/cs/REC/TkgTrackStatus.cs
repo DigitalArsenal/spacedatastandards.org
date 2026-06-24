@@ -10,4 +10,3 @@ public enum TkgTrackStatus : sbyte
   LOST = 3,
   DELETED = 4,
 };
-

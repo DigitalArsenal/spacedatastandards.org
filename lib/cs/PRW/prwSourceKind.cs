@@ -17,4 +17,3 @@ public enum prwSourceKind : byte
   /// Source is a single classical Keplerian element set.
   KEPLERIAN = 5,
 };
-

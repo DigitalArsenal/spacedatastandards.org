@@ -31,52 +31,30 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public int SHAPE() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int FRAME() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public int FRAME() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   public SCVVec3 POSITION_M() { return POSITION_M(new SCVVec3()); }
-  public SCVVec3 POSITION_M(SCVVec3 obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVVec3 POSITION_M(SCVVec3 obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public SCVVec3 VELOCITY_MPS() { return VELOCITY_MPS(new SCVVec3()); }
-  public SCVVec3 VELOCITY_MPS(SCVVec3 obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVVec3 VELOCITY_MPS(SCVVec3 obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public SCVVec3 BORESIGHT_UNIT() { return BORESIGHT_UNIT(new SCVVec3()); }
-  public SCVVec3 BORESIGHT_UNIT(SCVVec3 obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVVec3 BORESIGHT_UNIT(SCVVec3 obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public SCVVec3 UP_UNIT() { return UP_UNIT(new SCVVec3()); }
-  public SCVVec3 UP_UNIT(SCVVec3 obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public double HALF_ANGLE_DEG() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CROSS_TRACK_HALF_ANGLE_DEG() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ALONG_TRACK_HALF_ANGLE_DEG() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MIN_RANGE_M() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MAX_RANGE_M() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public SCVVec3 POLYGON_VERTICES(int j) { return POLYGON_VERTICES(new SCVVec3(), j); }
-  public SCVVec3 POLYGON_VERTICES(SCVVec3 obj, int j) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int POLYGON_VERTICESLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
-  public SCVVec3.Vector polygonVerticesVector() { return polygonVerticesVector(new SCVVec3.Vector()); }
-  public SCVVec3.Vector polygonVerticesVector(SCVVec3.Vector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public int POLYGON_FRAME() { int o = __offset(34); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  public SCVVec3 UP_UNIT(SCVVec3 obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVSensorShapeContract SHAPE_CONTRACT() { return SHAPE_CONTRACT(new SCVSensorShapeContract()); }
+  public SCVSensorShapeContract SHAPE_CONTRACT(SCVSensorShapeContract obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCVSensor(FlatBufferBuilder builder,
       long SENSOR_ID,
       int OBJECT_IDOffset,
       int NAMEOffset,
-      int SHAPE,
       int FRAME,
       int POSITION_MOffset,
       int VELOCITY_MPSOffset,
       int BORESIGHT_UNITOffset,
       int UP_UNITOffset,
-      double HALF_ANGLE_DEG,
-      double CROSS_TRACK_HALF_ANGLE_DEG,
-      double ALONG_TRACK_HALF_ANGLE_DEG,
-      double MIN_RANGE_M,
-      double MAX_RANGE_M,
-      int POLYGON_VERTICESOffset,
-      int POLYGON_FRAME) {
-    builder.startTable(16);
-    SCVSensor.addMaxRangeM(builder, MAX_RANGE_M);
-    SCVSensor.addMinRangeM(builder, MIN_RANGE_M);
-    SCVSensor.addAlongTrackHalfAngleDeg(builder, ALONG_TRACK_HALF_ANGLE_DEG);
-    SCVSensor.addCrossTrackHalfAngleDeg(builder, CROSS_TRACK_HALF_ANGLE_DEG);
-    SCVSensor.addHalfAngleDeg(builder, HALF_ANGLE_DEG);
-    SCVSensor.addPolygonVertices(builder, POLYGON_VERTICESOffset);
+      int SHAPE_CONTRACTOffset) {
+    builder.startTable(9);
+    SCVSensor.addShapeContract(builder, SHAPE_CONTRACTOffset);
     SCVSensor.addUpUnit(builder, UP_UNITOffset);
     SCVSensor.addBoresightUnit(builder, BORESIGHT_UNITOffset);
     SCVSensor.addVelocityMps(builder, VELOCITY_MPSOffset);
@@ -84,31 +62,20 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
     SCVSensor.addName(builder, NAMEOffset);
     SCVSensor.addObjectId(builder, OBJECT_IDOffset);
     SCVSensor.addSensorId(builder, SENSOR_ID);
-    SCVSensor.addPolygonFrame(builder, POLYGON_FRAME);
     SCVSensor.addFrame(builder, FRAME);
-    SCVSensor.addShape(builder, SHAPE);
     return SCVSensor.endSCVSensor(builder);
   }
 
-  public static void startSCVSensor(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSCVSensor(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addSensorId(FlatBufferBuilder builder, long SENSOR_ID) { builder.addInt(0, (int) SENSOR_ID, (int) 0L); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
-  public static void addShape(FlatBufferBuilder builder, int SHAPE) { builder.addByte(3, (byte) SHAPE, (byte) 0); }
-  public static void addFrame(FlatBufferBuilder builder, int FRAME) { builder.addByte(4, (byte) FRAME, (byte) 0); }
-  public static void addPositionM(FlatBufferBuilder builder, int POSITION_MOffset) { builder.addOffset(5, POSITION_MOffset, 0); }
-  public static void addVelocityMps(FlatBufferBuilder builder, int VELOCITY_MPSOffset) { builder.addOffset(6, VELOCITY_MPSOffset, 0); }
-  public static void addBoresightUnit(FlatBufferBuilder builder, int BORESIGHT_UNITOffset) { builder.addOffset(7, BORESIGHT_UNITOffset, 0); }
-  public static void addUpUnit(FlatBufferBuilder builder, int UP_UNITOffset) { builder.addOffset(8, UP_UNITOffset, 0); }
-  public static void addHalfAngleDeg(FlatBufferBuilder builder, double HALF_ANGLE_DEG) { builder.addDouble(9, HALF_ANGLE_DEG, 0.0); }
-  public static void addCrossTrackHalfAngleDeg(FlatBufferBuilder builder, double CROSS_TRACK_HALF_ANGLE_DEG) { builder.addDouble(10, CROSS_TRACK_HALF_ANGLE_DEG, 0.0); }
-  public static void addAlongTrackHalfAngleDeg(FlatBufferBuilder builder, double ALONG_TRACK_HALF_ANGLE_DEG) { builder.addDouble(11, ALONG_TRACK_HALF_ANGLE_DEG, 0.0); }
-  public static void addMinRangeM(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.addDouble(12, MIN_RANGE_M, 0.0); }
-  public static void addMaxRangeM(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.addDouble(13, MAX_RANGE_M, 0.0); }
-  public static void addPolygonVertices(FlatBufferBuilder builder, int POLYGON_VERTICESOffset) { builder.addOffset(14, POLYGON_VERTICESOffset, 0); }
-  public static int createPolygonVerticesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startPolygonVerticesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addPolygonFrame(FlatBufferBuilder builder, int POLYGON_FRAME) { builder.addByte(15, (byte) POLYGON_FRAME, (byte) 0); }
+  public static void addFrame(FlatBufferBuilder builder, int FRAME) { builder.addByte(3, (byte) FRAME, (byte) 0); }
+  public static void addPositionM(FlatBufferBuilder builder, int POSITION_MOffset) { builder.addOffset(4, POSITION_MOffset, 0); }
+  public static void addVelocityMps(FlatBufferBuilder builder, int VELOCITY_MPSOffset) { builder.addOffset(5, VELOCITY_MPSOffset, 0); }
+  public static void addBoresightUnit(FlatBufferBuilder builder, int BORESIGHT_UNITOffset) { builder.addOffset(6, BORESIGHT_UNITOffset, 0); }
+  public static void addUpUnit(FlatBufferBuilder builder, int UP_UNITOffset) { builder.addOffset(7, UP_UNITOffset, 0); }
+  public static void addShapeContract(FlatBufferBuilder builder, int SHAPE_CONTRACTOffset) { builder.addOffset(8, SHAPE_CONTRACTOffset, 0); }
   public static int endSCVSensor(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;
@@ -121,4 +88,3 @@ public final class SCVSensor extends com.google.flatbuffers.Table {
     public SCVSensor get(SCVSensor obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

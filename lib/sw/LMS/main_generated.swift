@@ -151,4 +151,3 @@ public struct LMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

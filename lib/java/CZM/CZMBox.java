@@ -143,4 +143,3 @@ public final class CZMBox extends com.google.flatbuffers.Table {
     public CZMBox get(CZMBox obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

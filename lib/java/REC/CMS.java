@@ -176,4 +176,3 @@ public final class CMS extends com.google.flatbuffers.Table {
     public CMS get(CMS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

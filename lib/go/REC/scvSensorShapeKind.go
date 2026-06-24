@@ -7,21 +7,24 @@ import "strconv"
 type scvSensorShapeKind byte
 
 const (
-	scvSensorShapeKindCONIC          scvSensorShapeKind = 0
-	scvSensorShapeKindRECTANGULAR    scvSensorShapeKind = 1
-	scvSensorShapeKindCUSTOM_POLYGON scvSensorShapeKind = 2
+	scvSensorShapeKindCONIC              scvSensorShapeKind = 0
+	scvSensorShapeKindRECTANGULAR        scvSensorShapeKind = 1
+	scvSensorShapeKindCUSTOM_POLYGON     scvSensorShapeKind = 2
+	scvSensorShapeKindSAR_ANNULAR_SECTOR scvSensorShapeKind = 3
 )
 
 var EnumNamesscvSensorShapeKind = map[scvSensorShapeKind]string{
-	scvSensorShapeKindCONIC:          "CONIC",
-	scvSensorShapeKindRECTANGULAR:    "RECTANGULAR",
-	scvSensorShapeKindCUSTOM_POLYGON: "CUSTOM_POLYGON",
+	scvSensorShapeKindCONIC:              "CONIC",
+	scvSensorShapeKindRECTANGULAR:        "RECTANGULAR",
+	scvSensorShapeKindCUSTOM_POLYGON:     "CUSTOM_POLYGON",
+	scvSensorShapeKindSAR_ANNULAR_SECTOR: "SAR_ANNULAR_SECTOR",
 }
 
 var EnumValuesscvSensorShapeKind = map[string]scvSensorShapeKind{
-	"CONIC":          scvSensorShapeKindCONIC,
-	"RECTANGULAR":    scvSensorShapeKindRECTANGULAR,
-	"CUSTOM_POLYGON": scvSensorShapeKindCUSTOM_POLYGON,
+	"CONIC":              scvSensorShapeKindCONIC,
+	"RECTANGULAR":        scvSensorShapeKindRECTANGULAR,
+	"CUSTOM_POLYGON":     scvSensorShapeKindCUSTOM_POLYGON,
+	"SAR_ANNULAR_SECTOR": scvSensorShapeKindSAR_ANNULAR_SECTOR,
 }
 
 func (v scvSensorShapeKind) String() string {

@@ -199,4 +199,3 @@ public final class PhysicalProperties extends com.google.flatbuffers.Table {
     public PhysicalProperties get(PhysicalProperties obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

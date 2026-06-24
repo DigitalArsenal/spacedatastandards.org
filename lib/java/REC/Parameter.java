@@ -108,4 +108,3 @@ public final class Parameter extends com.google.flatbuffers.Table {
     public Parameter get(Parameter obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

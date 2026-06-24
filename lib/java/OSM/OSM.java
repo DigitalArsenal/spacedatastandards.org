@@ -97,4 +97,3 @@ public final class OSM extends com.google.flatbuffers.Table {
     public OSM get(OSM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

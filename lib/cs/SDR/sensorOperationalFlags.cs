@@ -13,4 +13,3 @@ public enum sensorOperationalFlags : uint
   SLEWING = 16,
   CALIBRATING = 32,
 };
-

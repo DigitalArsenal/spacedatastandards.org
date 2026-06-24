@@ -107,4 +107,3 @@ public final class BMC extends com.google.flatbuffers.Table {
     public BMC get(BMC obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

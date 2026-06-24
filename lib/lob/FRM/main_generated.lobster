@@ -207,4 +207,3 @@ struct FRMBuilder:
         return this
     def end():
         return b_.EndObject()
-

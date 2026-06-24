@@ -15,4 +15,3 @@ public enum WaveformType : sbyte
   COMPLEX = 8,
   LPI = 9,
 };
-

@@ -10,4 +10,3 @@ public enum frmOperationCode : sbyte
   LLA_TO_PCPF = 3,
   PCPF_TO_LLA = 4,
 };
-

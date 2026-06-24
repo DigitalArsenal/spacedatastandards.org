@@ -55,4 +55,3 @@ public enum SpacecraftFrame : sbyte
   /// Thermal Assembly Module frame.
   TAM_i = 15,
 };
-

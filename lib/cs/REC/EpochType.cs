@@ -16,4 +16,3 @@ public enum EpochType : sbyte
   /// Custom epoch specified in offset
   CUSTOM = 4,
 };
-

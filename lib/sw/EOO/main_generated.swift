@@ -545,4 +545,3 @@ public struct IDM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

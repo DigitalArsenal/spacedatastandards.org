@@ -62,4 +62,3 @@ public final class CZMInterpolation extends com.google.flatbuffers.Table {
     public CZMInterpolation get(CZMInterpolation obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

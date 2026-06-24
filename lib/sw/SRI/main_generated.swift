@@ -94,4 +94,3 @@ public struct SRI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -236,4 +236,3 @@ public struct GEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -78,4 +78,3 @@ public final class ContainerEntry extends com.google.flatbuffers.Table {
     public ContainerEntry get(ContainerEntry obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

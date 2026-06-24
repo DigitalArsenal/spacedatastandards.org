@@ -328,4 +328,3 @@ public struct SHW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

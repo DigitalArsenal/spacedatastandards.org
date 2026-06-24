@@ -116,4 +116,3 @@ public struct ESL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

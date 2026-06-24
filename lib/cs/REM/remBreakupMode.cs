@@ -12,4 +12,3 @@ public enum remBreakupMode : sbyte
   COMMAND_DESTRUCT = 4,
   NONE = 5,
 };
-

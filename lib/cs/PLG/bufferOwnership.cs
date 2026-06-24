@@ -12,4 +12,3 @@ public enum bufferOwnership : byte
   /// Ownership transfers with the frame (hand-off semantics).
   TRANSFERRED = 2,
 };
-

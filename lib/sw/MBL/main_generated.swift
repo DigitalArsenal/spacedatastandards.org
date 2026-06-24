@@ -333,4 +333,3 @@ public struct MBL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -24,4 +24,3 @@ public final class spaceObjectClass {
 
   public static String name(int e) { return names[e]; }
 }
-

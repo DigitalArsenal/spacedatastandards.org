@@ -186,4 +186,3 @@ public struct OOT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -18,4 +18,3 @@ public enum CoordFrame : sbyte
   GEOCENTRIC = 11,
   GEODETIC = 12,
 };
-

@@ -77,4 +77,3 @@ public final class AEM extends com.google.flatbuffers.Table {
     public AEM get(AEM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -8,4 +8,3 @@ public enum KMLUnits : sbyte
   FRACTION = 1,
   INSET_PIXELS = 2,
 };
-

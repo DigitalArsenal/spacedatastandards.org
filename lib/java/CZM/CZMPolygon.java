@@ -236,4 +236,3 @@ public final class CZMPolygon extends com.google.flatbuffers.Table {
     public CZMPolygon get(CZMPolygon obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

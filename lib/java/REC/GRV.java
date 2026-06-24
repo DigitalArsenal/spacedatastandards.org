@@ -121,4 +121,3 @@ public final class GRV extends com.google.flatbuffers.Table {
     public GRV get(GRV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -17,4 +17,3 @@ public enum ForceModel : sbyte
   OCEAN_TIDES = 10,
   MANEUVER = 11,
 };
-

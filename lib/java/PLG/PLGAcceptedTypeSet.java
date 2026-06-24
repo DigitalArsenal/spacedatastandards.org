@@ -100,4 +100,3 @@ public final class PLGAcceptedTypeSet extends com.google.flatbuffers.Table {
     public PLGAcceptedTypeSet get(PLGAcceptedTypeSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

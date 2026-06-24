@@ -185,4 +185,3 @@ public final class DPMQueryBinding extends com.google.flatbuffers.Table {
     public DPMQueryBinding get(DPMQueryBinding obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

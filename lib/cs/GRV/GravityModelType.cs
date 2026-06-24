@@ -11,4 +11,3 @@ public enum GravityModelType : sbyte
   SPHERICAL_HARMONICS = 4,
   CUSTOM = 5,
 };
-

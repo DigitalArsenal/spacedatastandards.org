@@ -14,4 +14,3 @@ public enum numOperationCode : sbyte
   /// Generate a bounded Gauss-Markov random sequence and summary statistics.
   GAUSS_MARKOV_SEQUENCE = 4,
 };
-

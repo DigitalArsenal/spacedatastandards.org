@@ -15,4 +15,3 @@ public enum maneuverCharacterization : sbyte
   COLLISION_AVOIDANCE = 8,
   UNKNOWN = 9,
 };
-

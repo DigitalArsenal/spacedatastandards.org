@@ -223,4 +223,3 @@ public struct SON: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -18,4 +18,3 @@ public final class scvEnvelopeKind {
 
   public static String name(int e) { return names[e]; }
 }
-

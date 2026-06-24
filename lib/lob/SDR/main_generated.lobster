@@ -560,4 +560,3 @@ struct SDRBuilder:
         return this
     def end():
         return b_.EndObject()
-

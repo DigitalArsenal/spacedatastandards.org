@@ -8,4 +8,3 @@ public enum lambertTransferPath : sbyte
   SHORT = 0,
   LONG = 1,
 };
-

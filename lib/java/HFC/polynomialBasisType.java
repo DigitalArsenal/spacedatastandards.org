@@ -36,4 +36,3 @@ public final class polynomialBasisType {
 
   public static String name(int e) { return names[e]; }
 }
-

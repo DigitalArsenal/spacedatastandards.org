@@ -117,4 +117,3 @@ public final class lamAscentEvent extends com.google.flatbuffers.Table {
     public lamAscentEvent get(lamAscentEvent obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -8,4 +8,3 @@ public enum CZMClockRange : sbyte
   CLAMPED = 1,
   LOOP_STOP = 2,
 };
-

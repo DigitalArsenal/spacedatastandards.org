@@ -97,4 +97,3 @@ public final class SON extends com.google.flatbuffers.Table {
     public SON get(SON obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

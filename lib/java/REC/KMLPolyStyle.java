@@ -76,4 +76,3 @@ public final class KMLPolyStyle extends com.google.flatbuffers.Table {
     public KMLPolyStyle get(KMLPolyStyle obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

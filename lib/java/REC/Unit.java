@@ -78,4 +78,3 @@ public final class Unit extends com.google.flatbuffers.Table {
     public Unit get(Unit obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

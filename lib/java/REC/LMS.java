@@ -153,4 +153,3 @@ public final class LMS extends com.google.flatbuffers.Table {
     public LMS get(LMS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

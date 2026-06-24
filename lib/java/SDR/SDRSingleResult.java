@@ -99,4 +99,3 @@ public final class SDRSingleResult extends com.google.flatbuffers.Table {
     public SDRSingleResult get(SDRSingleResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

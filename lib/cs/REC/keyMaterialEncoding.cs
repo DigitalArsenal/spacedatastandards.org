@@ -9,4 +9,3 @@ public enum keyMaterialEncoding : sbyte
   Seed32 = 2,
   PublicKey32 = 3,
 };
-

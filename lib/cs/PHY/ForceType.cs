@@ -16,4 +16,3 @@ public enum ForceType : sbyte
   ELECTRIC = 9,
   CUSTOM = 10,
 };
-

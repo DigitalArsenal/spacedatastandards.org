@@ -10,4 +10,3 @@ public enum irDetectionType : sbyte
   UNRESOLVED = 3,
   EXTENDED = 4,
 };
-

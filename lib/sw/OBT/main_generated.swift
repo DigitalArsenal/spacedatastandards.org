@@ -350,4 +350,3 @@ public struct OBT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

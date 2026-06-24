@@ -50,22 +50,15 @@ class SCVSensor(object):
         return None
 
     # SCVSensor
-    def SHAPE(self):
+    def FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
     # SCVSensor
-    def FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
-
-    # SCVSensor
     def POSITION_M(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVVec3 import SCVVec3
@@ -76,7 +69,7 @@ class SCVSensor(object):
 
     # SCVSensor
     def VELOCITY_MPS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVVec3 import SCVVec3
@@ -87,7 +80,7 @@ class SCVSensor(object):
 
     # SCVSensor
     def BORESIGHT_UNIT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVVec3 import SCVVec3
@@ -98,7 +91,7 @@ class SCVSensor(object):
 
     # SCVSensor
     def UP_UNIT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCVVec3 import SCVVec3
@@ -108,74 +101,18 @@ class SCVSensor(object):
         return None
 
     # SCVSensor
-    def HALF_ANGLE_DEG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+    def SHAPE_CONTRACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SCVSensor
-    def CROSS_TRACK_HALF_ANGLE_DEG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SCVSensor
-    def ALONG_TRACK_HALF_ANGLE_DEG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SCVSensor
-    def MIN_RANGE_M(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SCVSensor
-    def MAX_RANGE_M(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SCVSensor
-    def POLYGON_VERTICES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCVVec3 import SCVVec3
-            obj = SCVVec3()
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVSensorShapeContract import SCVSensorShapeContract
+            obj = SCVSensorShapeContract()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
 
-    # SCVSensor
-    def POLYGON_VERTICESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCVSensor
-    def POLYGON_VERTICESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        return o == 0
-
-    # SCVSensor
-    def POLYGON_FRAME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
-
 def SCVSensorStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(9)
 
 def Start(builder):
     SCVSensorStart(builder)
@@ -198,95 +135,41 @@ def SCVSensorAddNAME(builder, NAME):
 def AddNAME(builder, NAME):
     SCVSensorAddNAME(builder, NAME)
 
-def SCVSensorAddSHAPE(builder, SHAPE):
-    builder.PrependUint8Slot(3, SHAPE, 0)
-
-def AddSHAPE(builder, SHAPE):
-    SCVSensorAddSHAPE(builder, SHAPE)
-
 def SCVSensorAddFRAME(builder, FRAME):
-    builder.PrependUint8Slot(4, FRAME, 0)
+    builder.PrependUint8Slot(3, FRAME, 0)
 
 def AddFRAME(builder, FRAME):
     SCVSensorAddFRAME(builder, FRAME)
 
 def SCVSensorAddPOSITION_M(builder, POSITION_M):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_M), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_M), 0)
 
 def AddPOSITION_M(builder, POSITION_M):
     SCVSensorAddPOSITION_M(builder, POSITION_M)
 
 def SCVSensorAddVELOCITY_MPS(builder, VELOCITY_MPS):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_MPS), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(VELOCITY_MPS), 0)
 
 def AddVELOCITY_MPS(builder, VELOCITY_MPS):
     SCVSensorAddVELOCITY_MPS(builder, VELOCITY_MPS)
 
 def SCVSensorAddBORESIGHT_UNIT(builder, BORESIGHT_UNIT):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BORESIGHT_UNIT), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BORESIGHT_UNIT), 0)
 
 def AddBORESIGHT_UNIT(builder, BORESIGHT_UNIT):
     SCVSensorAddBORESIGHT_UNIT(builder, BORESIGHT_UNIT)
 
 def SCVSensorAddUP_UNIT(builder, UP_UNIT):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(UP_UNIT), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(UP_UNIT), 0)
 
 def AddUP_UNIT(builder, UP_UNIT):
     SCVSensorAddUP_UNIT(builder, UP_UNIT)
 
-def SCVSensorAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG):
-    builder.PrependFloat64Slot(9, HALF_ANGLE_DEG, 0.0)
+def SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE_CONTRACT), 0)
 
-def AddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG):
-    SCVSensorAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG)
-
-def SCVSensorAddCROSS_TRACK_HALF_ANGLE_DEG(builder, CROSS_TRACK_HALF_ANGLE_DEG):
-    builder.PrependFloat64Slot(10, CROSS_TRACK_HALF_ANGLE_DEG, 0.0)
-
-def AddCROSS_TRACK_HALF_ANGLE_DEG(builder, CROSS_TRACK_HALF_ANGLE_DEG):
-    SCVSensorAddCROSS_TRACK_HALF_ANGLE_DEG(builder, CROSS_TRACK_HALF_ANGLE_DEG)
-
-def SCVSensorAddALONG_TRACK_HALF_ANGLE_DEG(builder, ALONG_TRACK_HALF_ANGLE_DEG):
-    builder.PrependFloat64Slot(11, ALONG_TRACK_HALF_ANGLE_DEG, 0.0)
-
-def AddALONG_TRACK_HALF_ANGLE_DEG(builder, ALONG_TRACK_HALF_ANGLE_DEG):
-    SCVSensorAddALONG_TRACK_HALF_ANGLE_DEG(builder, ALONG_TRACK_HALF_ANGLE_DEG)
-
-def SCVSensorAddMIN_RANGE_M(builder, MIN_RANGE_M):
-    builder.PrependFloat64Slot(12, MIN_RANGE_M, 0.0)
-
-def AddMIN_RANGE_M(builder, MIN_RANGE_M):
-    SCVSensorAddMIN_RANGE_M(builder, MIN_RANGE_M)
-
-def SCVSensorAddMAX_RANGE_M(builder, MAX_RANGE_M):
-    builder.PrependFloat64Slot(13, MAX_RANGE_M, 0.0)
-
-def AddMAX_RANGE_M(builder, MAX_RANGE_M):
-    SCVSensorAddMAX_RANGE_M(builder, MAX_RANGE_M)
-
-def SCVSensorAddPOLYGON_VERTICES(builder, POLYGON_VERTICES):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_VERTICES), 0)
-
-def AddPOLYGON_VERTICES(builder, POLYGON_VERTICES):
-    SCVSensorAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
-
-def SCVSensorStartPOLYGON_VERTICESVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartPOLYGON_VERTICESVector(builder, numElems):
-    return SCVSensorStartPOLYGON_VERTICESVector(builder, numElems)
-
-def SCVSensorCreatePOLYGON_VERTICESVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreatePOLYGON_VERTICESVector(builder, data):
-    SCVSensorCreatePOLYGON_VERTICESVector(builder, data)
-
-def SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME):
-    builder.PrependUint8Slot(15, POLYGON_FRAME, 0)
-
-def AddPOLYGON_FRAME(builder, POLYGON_FRAME):
-    SCVSensorAddPOLYGON_FRAME(builder, POLYGON_FRAME)
+def AddSHAPE_CONTRACT(builder, SHAPE_CONTRACT):
+    SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
 
 def SCVSensorEnd(builder):
     return builder.EndObject()
@@ -294,9 +177,10 @@ def SCVSensorEnd(builder):
 def End(builder):
     return SCVSensorEnd(builder)
 
+import SCVSensorShapeContract
 import SCVVec3
 try:
-    from typing import List, Optional
+    from typing import Optional
 except:
     pass
 
@@ -308,36 +192,22 @@ class SCVSensorT(object):
         SENSOR_ID = 0,
         OBJECT_ID = None,
         NAME = None,
-        SHAPE = 0,
         FRAME = 0,
         POSITION_M = None,
         VELOCITY_MPS = None,
         BORESIGHT_UNIT = None,
         UP_UNIT = None,
-        HALF_ANGLE_DEG = 0.0,
-        CROSS_TRACK_HALF_ANGLE_DEG = 0.0,
-        ALONG_TRACK_HALF_ANGLE_DEG = 0.0,
-        MIN_RANGE_M = 0.0,
-        MAX_RANGE_M = 0.0,
-        POLYGON_VERTICES = None,
-        POLYGON_FRAME = 0,
+        SHAPE_CONTRACT = None,
     ):
         self.SENSOR_ID = SENSOR_ID  # type: int
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
-        self.SHAPE = SHAPE  # type: int
         self.FRAME = FRAME  # type: int
         self.POSITION_M = POSITION_M  # type: Optional[SCVVec3.SCVVec3T]
         self.VELOCITY_MPS = VELOCITY_MPS  # type: Optional[SCVVec3.SCVVec3T]
         self.BORESIGHT_UNIT = BORESIGHT_UNIT  # type: Optional[SCVVec3.SCVVec3T]
         self.UP_UNIT = UP_UNIT  # type: Optional[SCVVec3.SCVVec3T]
-        self.HALF_ANGLE_DEG = HALF_ANGLE_DEG  # type: float
-        self.CROSS_TRACK_HALF_ANGLE_DEG = CROSS_TRACK_HALF_ANGLE_DEG  # type: float
-        self.ALONG_TRACK_HALF_ANGLE_DEG = ALONG_TRACK_HALF_ANGLE_DEG  # type: float
-        self.MIN_RANGE_M = MIN_RANGE_M  # type: float
-        self.MAX_RANGE_M = MAX_RANGE_M  # type: float
-        self.POLYGON_VERTICES = POLYGON_VERTICES  # type: Optional[List[SCVVec3.SCVVec3T]]
-        self.POLYGON_FRAME = POLYGON_FRAME  # type: int
+        self.SHAPE_CONTRACT = SHAPE_CONTRACT  # type: Optional[SCVSensorShapeContract.SCVSensorShapeContractT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -363,7 +233,6 @@ class SCVSensorT(object):
         self.SENSOR_ID = SCVSensor.SENSOR_ID()
         self.OBJECT_ID = SCVSensor.OBJECT_ID()
         self.NAME = SCVSensor.NAME()
-        self.SHAPE = SCVSensor.SHAPE()
         self.FRAME = SCVSensor.FRAME()
         if SCVSensor.POSITION_M() is not None:
             self.POSITION_M = SCVVec3.SCVVec3T.InitFromObj(SCVSensor.POSITION_M())
@@ -373,20 +242,8 @@ class SCVSensorT(object):
             self.BORESIGHT_UNIT = SCVVec3.SCVVec3T.InitFromObj(SCVSensor.BORESIGHT_UNIT())
         if SCVSensor.UP_UNIT() is not None:
             self.UP_UNIT = SCVVec3.SCVVec3T.InitFromObj(SCVSensor.UP_UNIT())
-        self.HALF_ANGLE_DEG = SCVSensor.HALF_ANGLE_DEG()
-        self.CROSS_TRACK_HALF_ANGLE_DEG = SCVSensor.CROSS_TRACK_HALF_ANGLE_DEG()
-        self.ALONG_TRACK_HALF_ANGLE_DEG = SCVSensor.ALONG_TRACK_HALF_ANGLE_DEG()
-        self.MIN_RANGE_M = SCVSensor.MIN_RANGE_M()
-        self.MAX_RANGE_M = SCVSensor.MAX_RANGE_M()
-        if not SCVSensor.POLYGON_VERTICESIsNone():
-            self.POLYGON_VERTICES = []
-            for i in range(SCVSensor.POLYGON_VERTICESLength()):
-                if SCVSensor.POLYGON_VERTICES(i) is None:
-                    self.POLYGON_VERTICES.append(None)
-                else:
-                    sCVVec3_ = SCVVec3.SCVVec3T.InitFromObj(SCVSensor.POLYGON_VERTICES(i))
-                    self.POLYGON_VERTICES.append(sCVVec3_)
-        self.POLYGON_FRAME = SCVSensor.POLYGON_FRAME()
+        if SCVSensor.SHAPE_CONTRACT() is not None:
+            self.SHAPE_CONTRACT = SCVSensorShapeContract.SCVSensorShapeContractT.InitFromObj(SCVSensor.SHAPE_CONTRACT())
 
     # SCVSensorT
     def Pack(self, builder):
@@ -402,21 +259,14 @@ class SCVSensorT(object):
             BORESIGHT_UNIT = self.BORESIGHT_UNIT.Pack(builder)
         if self.UP_UNIT is not None:
             UP_UNIT = self.UP_UNIT.Pack(builder)
-        if self.POLYGON_VERTICES is not None:
-            POLYGON_VERTICESlist = []
-            for i in range(len(self.POLYGON_VERTICES)):
-                POLYGON_VERTICESlist.append(self.POLYGON_VERTICES[i].Pack(builder))
-            SCVSensorStartPOLYGON_VERTICESVector(builder, len(self.POLYGON_VERTICES))
-            for i in reversed(range(len(self.POLYGON_VERTICES))):
-                builder.PrependUOffsetTRelative(POLYGON_VERTICESlist[i])
-            POLYGON_VERTICES = builder.EndVector()
+        if self.SHAPE_CONTRACT is not None:
+            SHAPE_CONTRACT = self.SHAPE_CONTRACT.Pack(builder)
         SCVSensorStart(builder)
         SCVSensorAddSENSOR_ID(builder, self.SENSOR_ID)
         if self.OBJECT_ID is not None:
             SCVSensorAddOBJECT_ID(builder, OBJECT_ID)
         if self.NAME is not None:
             SCVSensorAddNAME(builder, NAME)
-        SCVSensorAddSHAPE(builder, self.SHAPE)
         SCVSensorAddFRAME(builder, self.FRAME)
         if self.POSITION_M is not None:
             SCVSensorAddPOSITION_M(builder, POSITION_M)
@@ -426,13 +276,7 @@ class SCVSensorT(object):
             SCVSensorAddBORESIGHT_UNIT(builder, BORESIGHT_UNIT)
         if self.UP_UNIT is not None:
             SCVSensorAddUP_UNIT(builder, UP_UNIT)
-        SCVSensorAddHALF_ANGLE_DEG(builder, self.HALF_ANGLE_DEG)
-        SCVSensorAddCROSS_TRACK_HALF_ANGLE_DEG(builder, self.CROSS_TRACK_HALF_ANGLE_DEG)
-        SCVSensorAddALONG_TRACK_HALF_ANGLE_DEG(builder, self.ALONG_TRACK_HALF_ANGLE_DEG)
-        SCVSensorAddMIN_RANGE_M(builder, self.MIN_RANGE_M)
-        SCVSensorAddMAX_RANGE_M(builder, self.MAX_RANGE_M)
-        if self.POLYGON_VERTICES is not None:
-            SCVSensorAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
-        SCVSensorAddPOLYGON_FRAME(builder, self.POLYGON_FRAME)
+        if self.SHAPE_CONTRACT is not None:
+            SCVSensorAddSHAPE_CONTRACT(builder, SHAPE_CONTRACT)
         SCVSensor = SCVSensorEnd(builder)
         return SCVSensor

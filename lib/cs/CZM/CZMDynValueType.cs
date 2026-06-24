@@ -14,4 +14,3 @@ public enum CZMDynValueType : sbyte
   NEAR_FAR_SCALAR = 6,
   UNIT_QUATERNION = 7,
 };
-

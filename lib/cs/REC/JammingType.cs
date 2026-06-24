@@ -19,4 +19,3 @@ public enum JammingType : sbyte
   FLARE = 12,
   TOWED_DECOY = 13,
 };
-

@@ -11,4 +11,3 @@ public final class maneuverableFlag {
 
   public static String name(int e) { return names[e]; }
 }
-

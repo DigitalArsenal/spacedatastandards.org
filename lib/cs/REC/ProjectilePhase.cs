@@ -10,4 +10,3 @@ public enum ProjectilePhase : sbyte
   DUD = 3,
   IMPACT = 4,
 };
-

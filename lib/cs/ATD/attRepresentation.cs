@@ -9,4 +9,3 @@ public enum attRepresentation : sbyte
   SPIN = 2,
   DIRECTION_COSINE = 3,
 };
-

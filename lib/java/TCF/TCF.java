@@ -120,4 +120,3 @@ public final class TCF extends com.google.flatbuffers.Table {
     public TCF get(TCF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

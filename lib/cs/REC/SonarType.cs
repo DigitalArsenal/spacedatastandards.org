@@ -16,4 +16,3 @@ public enum SonarType : sbyte
   INTERCEPT = 9,
   TORPEDO = 10,
 };
-

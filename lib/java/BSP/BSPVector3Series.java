@@ -102,4 +102,3 @@ public final class BSPVector3Series extends com.google.flatbuffers.Table {
     public BSPVector3Series get(BSPVector3Series obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

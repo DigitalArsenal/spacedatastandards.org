@@ -60,4 +60,3 @@ public final class FrequencyRange extends com.google.flatbuffers.Table {
     public FrequencyRange get(FrequencyRange obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

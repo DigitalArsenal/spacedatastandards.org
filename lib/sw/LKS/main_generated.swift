@@ -251,4 +251,3 @@ public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -385,4 +385,3 @@ public struct GNO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

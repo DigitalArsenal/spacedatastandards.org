@@ -16,4 +16,3 @@ public enum DragModel : sbyte
   RA4 = 9,
   CUSTOM = 10,
 };
-

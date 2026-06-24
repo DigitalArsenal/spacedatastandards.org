@@ -21,4 +21,3 @@ public enum ProjectileType : sbyte
   GRENADE = 14,
   ROCKET = 15,
 };
-

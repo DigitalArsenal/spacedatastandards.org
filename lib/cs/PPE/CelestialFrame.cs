@@ -90,4 +90,3 @@ public enum CelestialFrame : sbyte
   /// Classical Besselian 1950 equator and equinox frame.
   B1950 = 27,
 };
-

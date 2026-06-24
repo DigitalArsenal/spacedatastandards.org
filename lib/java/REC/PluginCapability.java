@@ -71,4 +71,3 @@ public final class PluginCapability extends com.google.flatbuffers.Table {
     public PluginCapability get(PluginCapability obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

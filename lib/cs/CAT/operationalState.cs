@@ -21,4 +21,3 @@ public enum operationalState : sbyte
   /// ?
   UNKNOWN = 7,
 };
-

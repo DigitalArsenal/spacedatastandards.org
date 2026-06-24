@@ -9,4 +9,3 @@ public enum licensingGrantMessageType : sbyte
   Granted = 1,
   Denied = 2,
 };
-

@@ -18,4 +18,3 @@ public final class NoiseSource {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -10,4 +10,3 @@ public enum sizeShapeProfile : sbyte
   /// Radius of periapsis (km). Preferred for hyperbolic orbits.
   R_PERIAPSIS = 1,
 };
-

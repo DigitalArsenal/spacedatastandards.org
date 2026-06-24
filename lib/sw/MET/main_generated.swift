@@ -61,4 +61,3 @@ public struct MET: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

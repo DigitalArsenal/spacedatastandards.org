@@ -11,4 +11,3 @@ public enum SONPropagationModel : sbyte
   RANGE_DEPENDENT = 4,
   FAST_FIELD = 5,
 };
-

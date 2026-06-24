@@ -96,4 +96,3 @@ public enum DeviceType : sbyte
   /// High-frequency radio communication device
   HF_RADIO_COMMUNICATIONS = 45,
 };
-

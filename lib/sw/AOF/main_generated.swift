@@ -119,4 +119,3 @@ public struct AOF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -44,4 +44,3 @@ public enum hostCapabilityKind : ushort
   CRYPTO_KDF = 34,
   SCHEDULE_CRON = 35,
 };
-

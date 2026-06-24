@@ -68,4 +68,3 @@ public final class CZMPolylineGlowMaterial extends com.google.flatbuffers.Table 
     public CZMPolylineGlowMaterial get(CZMPolylineGlowMaterial obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

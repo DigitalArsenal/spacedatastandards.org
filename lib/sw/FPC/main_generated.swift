@@ -515,4 +515,3 @@ public struct FPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

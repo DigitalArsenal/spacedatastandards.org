@@ -11,4 +11,3 @@ public enum geoStationKeeping : sbyte
   REPOSITIONING = 4,
   UNKNOWN = 5,
 };
-

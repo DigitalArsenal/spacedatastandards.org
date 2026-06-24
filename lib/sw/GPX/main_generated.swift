@@ -671,4 +671,3 @@ public struct GPX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

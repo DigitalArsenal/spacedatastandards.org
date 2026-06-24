@@ -120,4 +120,3 @@ public final class StringParameterType extends com.google.flatbuffers.Table {
     public StringParameterType get(StringParameterType obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

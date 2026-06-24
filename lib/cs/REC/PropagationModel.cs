@@ -18,4 +18,3 @@ public enum PropagationModel : sbyte
   LOG_DISTANCE = 11,
   TERRAIN_INTEGRATED = 12,
 };
-

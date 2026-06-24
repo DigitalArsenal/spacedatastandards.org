@@ -20,4 +20,3 @@ public enum ComModulationType : sbyte
   FHSS = 13,
   DSSS = 14,
 };
-

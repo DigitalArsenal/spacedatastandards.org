@@ -12,4 +12,3 @@ public enum TimeReference : sbyte
   JULIAN_DATE = 5,
   MODIFIED_JULIAN_DATE = 6,
 };
-

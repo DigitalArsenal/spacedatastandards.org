@@ -16,4 +16,3 @@ public enum sdfOperation : byte
   /// Smooth union with a blend radius.
   SMOOTH_UNION = 4,
 };
-

@@ -265,4 +265,3 @@ public struct ETM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

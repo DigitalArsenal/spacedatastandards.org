@@ -9,5 +9,6 @@ class scvCoordinateFrame private constructor() {
         const val ECEF: UByte = 3u
         const val ECI: UByte = 4u
         const val CUSTOM: UByte = 5u
+        const val SENSOR_LOCAL: UByte = 6u
     }
 }

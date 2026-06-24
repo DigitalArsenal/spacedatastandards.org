@@ -50,7 +50,8 @@
           "minimum": 0,
           "maximum": 255,
           "description": "Number of components per attitude state.\n7 = quaternion + angular rates (Q1, Q2, Q3, QC, RATE_X, RATE_Y, RATE_Z)\n4 = quaternion only (Q1, Q2, Q3, QC)",
-          "x-flatbuffer-type": "uint8"
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "7"
         },
         "ATTITUDE_DATA": {
           "type": "array",

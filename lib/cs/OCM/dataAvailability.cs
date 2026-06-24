@@ -13,4 +13,3 @@ public enum dataAvailability : sbyte
   /// OK
   OK = 3,
 };
-

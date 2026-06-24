@@ -59,4 +59,3 @@ public final class MetaCommandSet extends com.google.flatbuffers.Table {
     public MetaCommandSet get(MetaCommandSet obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

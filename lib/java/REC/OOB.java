@@ -159,4 +159,3 @@ public final class OOB extends com.google.flatbuffers.Table {
     public OOB get(OOB obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

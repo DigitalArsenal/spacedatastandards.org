@@ -84,28 +84,36 @@ class SCV extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    public function getRASTER_PRODUCTS()
+    {
+        $obj = new SCVPackedRasterProducts();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCV(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(7);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCV
      */
-    public static function createSCV(FlatBufferBuilder $builder, $ENVELOPE_KIND, $REQUEST, $PROGRESS, $CANCEL, $RESULT, $GEOMETRY)
+    public static function createSCV(FlatBufferBuilder $builder, $ENVELOPE_KIND, $REQUEST, $PROGRESS, $CANCEL, $RESULT, $GEOMETRY, $RASTER_PRODUCTS)
     {
-        $builder->startObject(6);
+        $builder->startObject(7);
         self::addENVELOPE_KIND($builder, $ENVELOPE_KIND);
         self::addREQUEST($builder, $REQUEST);
         self::addPROGRESS($builder, $PROGRESS);
         self::addCANCEL($builder, $CANCEL);
         self::addRESULT($builder, $RESULT);
         self::addGEOMETRY($builder, $GEOMETRY);
+        self::addRASTER_PRODUCTS($builder, $RASTER_PRODUCTS);
         $o = $builder->endObject();
         return $o;
     }
@@ -168,6 +176,16 @@ class SCV extends Table
     public static function addGEOMETRY(FlatBufferBuilder $builder, $GEOMETRY)
     {
         $builder->addOffsetX(5, $GEOMETRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRASTER_PRODUCTS(FlatBufferBuilder $builder, $RASTER_PRODUCTS)
+    {
+        $builder->addOffsetX(6, $RASTER_PRODUCTS, 0);
     }
 
     /**

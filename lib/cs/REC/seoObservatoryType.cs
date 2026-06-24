@@ -12,4 +12,3 @@ public enum seoObservatoryType : sbyte
   INTERPLANETARY = 5,
   SOLAR = 6,
 };
-

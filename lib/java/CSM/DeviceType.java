@@ -189,4 +189,3 @@ public final class DeviceType {
 
   public static String name(int e) { return names[e]; }
 }
-

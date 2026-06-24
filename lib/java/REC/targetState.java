@@ -67,4 +67,3 @@ public final class targetState extends Struct {
     public targetState get(targetState obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

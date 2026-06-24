@@ -55,4 +55,3 @@ public final class MathOperation extends com.google.flatbuffers.Table {
     public MathOperation get(MathOperation obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

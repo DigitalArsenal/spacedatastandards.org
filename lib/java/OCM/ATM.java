@@ -63,4 +63,3 @@ public final class ATM extends com.google.flatbuffers.Table {
     public ATM get(ATM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

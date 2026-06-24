@@ -8,4 +8,3 @@ public enum BalStabilizationType : sbyte
   FIN = 1,
   DUAL = 2,
 };
-

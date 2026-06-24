@@ -10,4 +10,3 @@ public enum licensingModuleRequestAction : sbyte
   Load = 2,
   Error = 3,
 };
-

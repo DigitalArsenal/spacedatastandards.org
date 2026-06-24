@@ -12,4 +12,3 @@ public enum DateFormat : sbyte
   UNIX_EPOCH = 5,
   MISSION_ELAPSED = 6,
 };
-

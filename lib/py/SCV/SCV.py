@@ -90,8 +90,19 @@ class SCV(object):
             return obj
         return None
 
+    # SCV
+    def RASTER_PRODUCTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SCVPackedRasterProducts import SCVPackedRasterProducts
+            obj = SCVPackedRasterProducts()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SCVStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(7)
 
 def Start(builder):
     SCVStart(builder)
@@ -132,6 +143,12 @@ def SCVAddGEOMETRY(builder, GEOMETRY):
 def AddGEOMETRY(builder, GEOMETRY):
     SCVAddGEOMETRY(builder, GEOMETRY)
 
+def SCVAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RASTER_PRODUCTS), 0)
+
+def AddRASTER_PRODUCTS(builder, RASTER_PRODUCTS):
+    SCVAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
+
 def SCVEnd(builder):
     return builder.EndObject()
 
@@ -141,6 +158,7 @@ def End(builder):
 import SCVCancel
 import SCVCoverageRequest
 import SCVPackedGeometryChunk
+import SCVPackedRasterProducts
 import SCVProgress
 import SCVResult
 try:
@@ -159,6 +177,7 @@ class SCVT(object):
         CANCEL = None,
         RESULT = None,
         GEOMETRY = None,
+        RASTER_PRODUCTS = None,
     ):
         self.ENVELOPE_KIND = ENVELOPE_KIND  # type: int
         self.REQUEST = REQUEST  # type: Optional[SCVCoverageRequest.SCVCoverageRequestT]
@@ -166,6 +185,7 @@ class SCVT(object):
         self.CANCEL = CANCEL  # type: Optional[SCVCancel.SCVCancelT]
         self.RESULT = RESULT  # type: Optional[SCVResult.SCVResultT]
         self.GEOMETRY = GEOMETRY  # type: Optional[SCVPackedGeometryChunk.SCVPackedGeometryChunkT]
+        self.RASTER_PRODUCTS = RASTER_PRODUCTS  # type: Optional[SCVPackedRasterProducts.SCVPackedRasterProductsT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -199,6 +219,8 @@ class SCVT(object):
             self.RESULT = SCVResult.SCVResultT.InitFromObj(SCV.RESULT())
         if SCV.GEOMETRY() is not None:
             self.GEOMETRY = SCVPackedGeometryChunk.SCVPackedGeometryChunkT.InitFromObj(SCV.GEOMETRY())
+        if SCV.RASTER_PRODUCTS() is not None:
+            self.RASTER_PRODUCTS = SCVPackedRasterProducts.SCVPackedRasterProductsT.InitFromObj(SCV.RASTER_PRODUCTS())
 
     # SCVT
     def Pack(self, builder):
@@ -212,6 +234,8 @@ class SCVT(object):
             RESULT = self.RESULT.Pack(builder)
         if self.GEOMETRY is not None:
             GEOMETRY = self.GEOMETRY.Pack(builder)
+        if self.RASTER_PRODUCTS is not None:
+            RASTER_PRODUCTS = self.RASTER_PRODUCTS.Pack(builder)
         SCVStart(builder)
         SCVAddENVELOPE_KIND(builder, self.ENVELOPE_KIND)
         if self.REQUEST is not None:
@@ -224,5 +248,7 @@ class SCVT(object):
             SCVAddRESULT(builder, RESULT)
         if self.GEOMETRY is not None:
             SCVAddGEOMETRY(builder, GEOMETRY)
+        if self.RASTER_PRODUCTS is not None:
+            SCVAddRASTER_PRODUCTS(builder, RASTER_PRODUCTS)
         SCV = SCVEnd(builder)
         return SCV

@@ -150,4 +150,3 @@ public final class AOF extends com.google.flatbuffers.Table {
     public AOF get(AOF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

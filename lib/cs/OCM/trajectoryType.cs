@@ -22,4 +22,3 @@ public enum trajectoryType : sbyte
   /// Lagrange interpolating polynomial representation.
   LAGRANGE = 5,
 };
-

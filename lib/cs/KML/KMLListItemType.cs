@@ -9,4 +9,3 @@ public enum KMLListItemType : sbyte
   CHECK_HIDE_CHILDREN = 2,
   RADIO_FOLDER = 3,
 };
-

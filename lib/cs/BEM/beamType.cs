@@ -11,4 +11,3 @@ public enum beamType : sbyte
   STEERABLE = 4,
   HOPPING = 5,
 };
-

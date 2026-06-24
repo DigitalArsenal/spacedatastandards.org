@@ -124,4 +124,3 @@ public final class RCF extends com.google.flatbuffers.Table {
     public RCF get(RCF obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

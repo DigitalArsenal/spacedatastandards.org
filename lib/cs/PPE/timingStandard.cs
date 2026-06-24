@@ -41,4 +41,3 @@ public enum timingStandard : sbyte
   /// Satellite-Based Augmentation System Time
   SBAS = 17,
 };
-

@@ -10,4 +10,3 @@ public enum CrewState : sbyte
   DEAD = 3,
   BAILED = 4,
 };
-

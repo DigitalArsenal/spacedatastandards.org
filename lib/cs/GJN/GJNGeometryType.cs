@@ -12,4 +12,3 @@ public enum GJNGeometryType : sbyte
   MULTI_POLYGON = 5,
   GEOMETRY_COLLECTION = 6,
 };
-

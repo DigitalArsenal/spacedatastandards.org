@@ -74,4 +74,3 @@ public final class StokesParameters extends com.google.flatbuffers.Table {
     public StokesParameters get(StokesParameters obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

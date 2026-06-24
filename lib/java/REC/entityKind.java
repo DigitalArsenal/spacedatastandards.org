@@ -16,4 +16,3 @@ public final class entityKind {
   public static final byte SENSOR = 7;
   public static final byte OTHER = 127;
 }
-

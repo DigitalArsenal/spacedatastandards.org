@@ -277,4 +277,3 @@ public struct ACR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

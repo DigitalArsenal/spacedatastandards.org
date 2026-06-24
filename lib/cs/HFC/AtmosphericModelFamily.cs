@@ -75,4 +75,3 @@ public enum AtmosphericModelFamily : sbyte
   /// Known versions: 1962, 1976
   USSA_XX = 16,
 };
-

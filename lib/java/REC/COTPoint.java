@@ -81,4 +81,3 @@ public final class COTPoint extends com.google.flatbuffers.Table {
     public COTPoint get(COTPoint obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

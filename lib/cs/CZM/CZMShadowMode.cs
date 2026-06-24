@@ -9,4 +9,3 @@ public enum CZMShadowMode : sbyte
   CAST_ONLY = 2,
   RECEIVE_ONLY = 3,
 };
-

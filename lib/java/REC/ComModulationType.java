@@ -23,4 +23,3 @@ public final class ComModulationType {
 
   public static String name(int e) { return names[e]; }
 }
-

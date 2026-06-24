@@ -115,4 +115,3 @@ public struct STV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

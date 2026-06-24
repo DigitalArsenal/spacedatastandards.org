@@ -96,4 +96,3 @@ public final class SEV extends com.google.flatbuffers.Table {
     public SEV get(SEV obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

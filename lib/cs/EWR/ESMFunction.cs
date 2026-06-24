@@ -12,4 +12,3 @@ public enum ESMFunction : sbyte
   RECORDING = 5,
   SITUATIONAL_AWARENESS = 6,
 };
-

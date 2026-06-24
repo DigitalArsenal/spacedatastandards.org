@@ -103,4 +103,3 @@ public final class sensorPlan extends com.google.flatbuffers.Table {
     public sensorPlan get(sensorPlan obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

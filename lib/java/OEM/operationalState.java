@@ -40,4 +40,3 @@ public final class operationalState {
 
   public static String name(int e) { return names[e]; }
 }
-

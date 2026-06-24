@@ -20,4 +20,3 @@ public enum ArmorMaterial : sbyte
   KEVLAR = 13,
   GLASS = 14,
 };
-

@@ -86,4 +86,3 @@ public final class EntryFunction extends com.google.flatbuffers.Table {
     public EntryFunction get(EntryFunction obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

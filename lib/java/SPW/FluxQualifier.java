@@ -13,4 +13,3 @@ public final class FluxQualifier {
 
   public static String name(int e) { return names[e]; }
 }
-

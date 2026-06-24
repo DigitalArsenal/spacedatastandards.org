@@ -9,4 +9,3 @@ public enum F107DataType : sbyte
   PRD = 2,
   PRM = 3,
 };
-

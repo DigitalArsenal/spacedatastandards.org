@@ -64,4 +64,3 @@ public final class ACWRefractionModel extends com.google.flatbuffers.Table {
     public ACWRefractionModel get(ACWRefractionModel obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

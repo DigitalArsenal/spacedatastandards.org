@@ -278,4 +278,3 @@ public final class ETM extends com.google.flatbuffers.Table {
     public ETM get(ETM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

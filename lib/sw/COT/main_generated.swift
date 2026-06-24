@@ -436,4 +436,3 @@ public struct COT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

@@ -9,9 +9,9 @@ public final class scvCoordinateFrame {
   public static final int ECEF = 3;
   public static final int ECI = 4;
   public static final int CUSTOM = 5;
+  public static final int SENSOR_LOCAL = 6;
 
-  public static final String[] names = { "UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM", };
+  public static final String[] names = { "UNKNOWN", "BODY_FIXED", "INERTIAL", "ECEF", "ECI", "CUSTOM", "SENSOR_LOCAL", };
 
   public static String name(int e) { return names[e]; }
 }
-

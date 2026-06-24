@@ -12,4 +12,3 @@ public enum keyReferenceRole : sbyte
   VerificationKey = 5,
   DecryptKey = 6,
 };
-

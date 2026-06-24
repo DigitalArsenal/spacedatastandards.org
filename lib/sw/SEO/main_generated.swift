@@ -360,4 +360,3 @@ public struct SEO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

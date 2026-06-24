@@ -24,4 +24,3 @@ public final class SensorType {
 
   public static String name(int e) { return names[e]; }
 }
-

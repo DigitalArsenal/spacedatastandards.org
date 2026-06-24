@@ -12,4 +12,3 @@ public enum purchaseTier : sbyte
   /// Recurring subscription purchase
   Subscription = 2,
 };
-

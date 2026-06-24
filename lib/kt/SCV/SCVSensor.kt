@@ -53,19 +53,14 @@ class SCVSensor : Table() {
         }
     val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
-    val shape : UByte
+    val frame : UByte
         get() {
             val o = __offset(10)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val frame : UByte
-        get() {
-            val o = __offset(12)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
     val positionM : SCVVec3? get() = positionM(SCVVec3())
     fun positionM(obj: SCVVec3) : SCVVec3? {
-        val o = __offset(14)
+        val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -74,7 +69,7 @@ class SCVSensor : Table() {
     }
     val velocityMps : SCVVec3? get() = velocityMps(SCVVec3())
     fun velocityMps(obj: SCVVec3) : SCVVec3? {
-        val o = __offset(16)
+        val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -83,7 +78,7 @@ class SCVSensor : Table() {
     }
     val boresightUnit : SCVVec3? get() = boresightUnit(SCVVec3())
     fun boresightUnit(obj: SCVVec3) : SCVVec3? {
-        val o = __offset(18)
+        val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -92,6 +87,15 @@ class SCVSensor : Table() {
     }
     val upUnit : SCVVec3? get() = upUnit(SCVVec3())
     fun upUnit(obj: SCVVec3) : SCVVec3? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val shapeContract : SCVSensorShapeContract? get() = shapeContract(SCVSensorShapeContract())
+    fun shapeContract(obj: SCVSensorShapeContract) : SCVSensorShapeContract? {
         val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -99,49 +103,6 @@ class SCVSensor : Table() {
             null
         }
     }
-    val halfAngleDeg : Double
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val crossTrackHalfAngleDeg : Double
-        get() {
-            val o = __offset(24)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val alongTrackHalfAngleDeg : Double
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val minRangeM : Double
-        get() {
-            val o = __offset(28)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val maxRangeM : Double
-        get() {
-            val o = __offset(30)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    fun polygonVertices(j: Int) : SCVVec3? = polygonVertices(SCVVec3(), j)
-    fun polygonVertices(obj: SCVVec3, j: Int) : SCVVec3? {
-        val o = __offset(32)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val polygonVerticesLength : Int
-        get() {
-            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
-        }
-    val polygonFrame : UByte
-        get() {
-            val o = __offset(34)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVSensor(_bb: ByteBuffer): SCVSensor = getRootAsSCVSensor(_bb, SCVSensor())
@@ -149,14 +110,9 @@ class SCVSensor : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVSensor(builder: FlatBufferBuilder, sensorId: UInt, objectIdOffset: Int, nameOffset: Int, shape: UByte, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, boresightUnitOffset: Int, upUnitOffset: Int, halfAngleDeg: Double, crossTrackHalfAngleDeg: Double, alongTrackHalfAngleDeg: Double, minRangeM: Double, maxRangeM: Double, polygonVerticesOffset: Int, polygonFrame: UByte) : Int {
-            builder.startTable(16)
-            addMAXRANGEM(builder, maxRangeM)
-            addMINRANGEM(builder, minRangeM)
-            addALONGTRACKHALFANGLEDEG(builder, alongTrackHalfAngleDeg)
-            addCROSSTRACKHALFANGLEDEG(builder, crossTrackHalfAngleDeg)
-            addHALFANGLEDEG(builder, halfAngleDeg)
-            addPOLYGONVERTICES(builder, polygonVerticesOffset)
+        fun createSCVSensor(builder: FlatBufferBuilder, sensorId: UInt, objectIdOffset: Int, nameOffset: Int, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, boresightUnitOffset: Int, upUnitOffset: Int, shapeContractOffset: Int) : Int {
+            builder.startTable(9)
+            addSHAPECONTRACT(builder, shapeContractOffset)
             addUPUNIT(builder, upUnitOffset)
             addBORESIGHTUNIT(builder, boresightUnitOffset)
             addVELOCITYMPS(builder, velocityMpsOffset)
@@ -164,36 +120,19 @@ class SCVSensor : Table() {
             addNAME(builder, nameOffset)
             addOBJECTID(builder, objectIdOffset)
             addSENSORID(builder, sensorId)
-            addPOLYGONFRAME(builder, polygonFrame)
             addFRAME(builder, frame)
-            addSHAPE(builder, shape)
             return endSCVSensor(builder)
         }
-        fun startSCVSensor(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSCVSensor(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addSENSORID(builder: FlatBufferBuilder, sensorId: UInt) = builder.addInt(0, sensorId.toInt(), 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
-        fun addSHAPE(builder: FlatBufferBuilder, shape: UByte) = builder.addByte(3, shape.toByte(), 0)
-        fun addFRAME(builder: FlatBufferBuilder, frame: UByte) = builder.addByte(4, frame.toByte(), 0)
-        fun addPOSITIONM(builder: FlatBufferBuilder, positionM: Int) = builder.addOffset(5, positionM, 0)
-        fun addVELOCITYMPS(builder: FlatBufferBuilder, velocityMps: Int) = builder.addOffset(6, velocityMps, 0)
-        fun addBORESIGHTUNIT(builder: FlatBufferBuilder, boresightUnit: Int) = builder.addOffset(7, boresightUnit, 0)
-        fun addUPUNIT(builder: FlatBufferBuilder, upUnit: Int) = builder.addOffset(8, upUnit, 0)
-        fun addHALFANGLEDEG(builder: FlatBufferBuilder, halfAngleDeg: Double) = builder.addDouble(9, halfAngleDeg, 0.0)
-        fun addCROSSTRACKHALFANGLEDEG(builder: FlatBufferBuilder, crossTrackHalfAngleDeg: Double) = builder.addDouble(10, crossTrackHalfAngleDeg, 0.0)
-        fun addALONGTRACKHALFANGLEDEG(builder: FlatBufferBuilder, alongTrackHalfAngleDeg: Double) = builder.addDouble(11, alongTrackHalfAngleDeg, 0.0)
-        fun addMINRANGEM(builder: FlatBufferBuilder, minRangeM: Double) = builder.addDouble(12, minRangeM, 0.0)
-        fun addMAXRANGEM(builder: FlatBufferBuilder, maxRangeM: Double) = builder.addDouble(13, maxRangeM, 0.0)
-        fun addPOLYGONVERTICES(builder: FlatBufferBuilder, polygonVertices: Int) = builder.addOffset(14, polygonVertices, 0)
-        fun createPolygonVerticesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startPolygonVerticesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOLYGONFRAME(builder: FlatBufferBuilder, polygonFrame: UByte) = builder.addByte(15, polygonFrame.toByte(), 0)
+        fun addFRAME(builder: FlatBufferBuilder, frame: UByte) = builder.addByte(3, frame.toByte(), 0)
+        fun addPOSITIONM(builder: FlatBufferBuilder, positionM: Int) = builder.addOffset(4, positionM, 0)
+        fun addVELOCITYMPS(builder: FlatBufferBuilder, velocityMps: Int) = builder.addOffset(5, velocityMps, 0)
+        fun addBORESIGHTUNIT(builder: FlatBufferBuilder, boresightUnit: Int) = builder.addOffset(6, boresightUnit, 0)
+        fun addUPUNIT(builder: FlatBufferBuilder, upUnit: Int) = builder.addOffset(7, upUnit, 0)
+        fun addSHAPECONTRACT(builder: FlatBufferBuilder, shapeContract: Int) = builder.addOffset(8, shapeContract, 0)
         fun endSCVSensor(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

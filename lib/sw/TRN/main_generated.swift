@@ -127,4 +127,3 @@ public struct TRN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

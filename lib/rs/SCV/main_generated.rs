@@ -197,16 +197,17 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvAnalysisMode {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_COORDINATE_FRAME: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_COORDINATE_FRAME: u8 = 5;
+pub const ENUM_MAX_SCV_COORDINATE_FRAME: u8 = 6;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_COORDINATE_FRAME: [scvCoordinateFrame; 6] = [
+pub const ENUM_VALUES_SCV_COORDINATE_FRAME: [scvCoordinateFrame; 7] = [
   scvCoordinateFrame::UNKNOWN,
   scvCoordinateFrame::BODY_FIXED,
   scvCoordinateFrame::INERTIAL,
   scvCoordinateFrame::ECEF,
   scvCoordinateFrame::ECI,
   scvCoordinateFrame::CUSTOM,
+  scvCoordinateFrame::SENSOR_LOCAL,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -220,9 +221,10 @@ impl scvCoordinateFrame {
   pub const ECEF: Self = Self(3);
   pub const ECI: Self = Self(4);
   pub const CUSTOM: Self = Self(5);
+  pub const SENSOR_LOCAL: Self = Self(6);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 5;
+  pub const ENUM_MAX: u8 = 6;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::UNKNOWN,
     Self::BODY_FIXED,
@@ -230,6 +232,7 @@ impl scvCoordinateFrame {
     Self::ECEF,
     Self::ECI,
     Self::CUSTOM,
+    Self::SENSOR_LOCAL,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -240,6 +243,7 @@ impl scvCoordinateFrame {
       Self::ECEF => Some("ECEF"),
       Self::ECI => Some("ECI"),
       Self::CUSTOM => Some("CUSTOM"),
+      Self::SENSOR_LOCAL => Some("SENSOR_LOCAL"),
       _ => None,
     }
   }
@@ -389,13 +393,14 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvBodyKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_SENSOR_SHAPE_KIND: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_SENSOR_SHAPE_KIND: u8 = 2;
+pub const ENUM_MAX_SCV_SENSOR_SHAPE_KIND: u8 = 3;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_SENSOR_SHAPE_KIND: [scvSensorShapeKind; 3] = [
+pub const ENUM_VALUES_SCV_SENSOR_SHAPE_KIND: [scvSensorShapeKind; 4] = [
   scvSensorShapeKind::CONIC,
   scvSensorShapeKind::RECTANGULAR,
   scvSensorShapeKind::CUSTOM_POLYGON,
+  scvSensorShapeKind::SAR_ANNULAR_SECTOR,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -406,13 +411,15 @@ impl scvSensorShapeKind {
   pub const CONIC: Self = Self(0);
   pub const RECTANGULAR: Self = Self(1);
   pub const CUSTOM_POLYGON: Self = Self(2);
+  pub const SAR_ANNULAR_SECTOR: Self = Self(3);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_MAX: u8 = 3;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::CONIC,
     Self::RECTANGULAR,
     Self::CUSTOM_POLYGON,
+    Self::SAR_ANNULAR_SECTOR,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -420,6 +427,7 @@ impl scvSensorShapeKind {
       Self::CONIC => Some("CONIC"),
       Self::RECTANGULAR => Some("RECTANGULAR"),
       Self::CUSTOM_POLYGON => Some("CUSTOM_POLYGON"),
+      Self::SAR_ANNULAR_SECTOR => Some("SAR_ANNULAR_SECTOR"),
       _ => None,
     }
   }
@@ -474,6 +482,170 @@ impl<'a> ::flatbuffers::Verifiable for scvSensorShapeKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorShapeKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_SENSOR_AXIS_CONVENTION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_SENSOR_AXIS_CONVENTION: [scvSensorAxisConvention; 1] = [
+  scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvSensorAxisConvention(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvSensorAxisConvention {
+  pub const LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT: Self = Self(0);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 0;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT => Some("LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvSensorAxisConvention {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvSensorAxisConvention {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvSensorAxisConvention {
+    type Output = scvSensorAxisConvention;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvSensorAxisConvention {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvSensorAxisConvention {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorAxisConvention {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_SENSOR_RANGE_BOUNDARY_KIND: u8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_SENSOR_RANGE_BOUNDARY_KIND: [scvSensorRangeBoundaryKind; 2] = [
+  scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+  scvSensorRangeBoundaryKind::LOCAL_Z_PLANE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvSensorRangeBoundaryKind(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvSensorRangeBoundaryKind {
+  pub const RADIAL_SPHERICAL: Self = Self(0);
+  pub const LOCAL_Z_PLANE: Self = Self(1);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::RADIAL_SPHERICAL,
+    Self::LOCAL_Z_PLANE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::RADIAL_SPHERICAL => Some("RADIAL_SPHERICAL"),
+      Self::LOCAL_Z_PLANE => Some("LOCAL_Z_PLANE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvSensorRangeBoundaryKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvSensorRangeBoundaryKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvSensorRangeBoundaryKind {
+    type Output = scvSensorRangeBoundaryKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvSensorRangeBoundaryKind {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvSensorRangeBoundaryKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvSensorRangeBoundaryKind {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_GEOMETRY_DOMAIN: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -662,102 +834,6 @@ impl<'a> ::flatbuffers::Verifiable for scvResultState {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scvResultState {}
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_SCV_INTERVAL_CATEGORY: u8 = 0;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_INTERVAL_CATEGORY: u8 = 4;
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_INTERVAL_CATEGORY: [scvIntervalCategory; 5] = [
-  scvIntervalCategory::ACCESS,
-  scvIntervalCategory::COVERAGE,
-  scvIntervalCategory::GAP,
-  scvIntervalCategory::REVISIT,
-  scvIntervalCategory::OVERLAP,
-];
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct scvIntervalCategory(pub u8);
-#[allow(non_upper_case_globals)]
-impl scvIntervalCategory {
-  pub const ACCESS: Self = Self(0);
-  pub const COVERAGE: Self = Self(1);
-  pub const GAP: Self = Self(2);
-  pub const REVISIT: Self = Self(3);
-  pub const OVERLAP: Self = Self(4);
-
-  pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 4;
-  pub const ENUM_VALUES: &'static [Self] = &[
-    Self::ACCESS,
-    Self::COVERAGE,
-    Self::GAP,
-    Self::REVISIT,
-    Self::OVERLAP,
-  ];
-  /// Returns the variant's name or "" if unknown.
-  pub fn variant_name(self) -> Option<&'static str> {
-    match self {
-      Self::ACCESS => Some("ACCESS"),
-      Self::COVERAGE => Some("COVERAGE"),
-      Self::GAP => Some("GAP"),
-      Self::REVISIT => Some("REVISIT"),
-      Self::OVERLAP => Some("OVERLAP"),
-      _ => None,
-    }
-  }
-}
-impl ::core::fmt::Debug for scvIntervalCategory {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-    if let Some(name) = self.variant_name() {
-      f.write_str(name)
-    } else {
-      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-    }
-  }
-}
-impl<'a> ::flatbuffers::Follow<'a> for scvIntervalCategory {
-  type Inner = Self;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-    Self(b)
-  }
-}
-
-impl ::flatbuffers::Push for scvIntervalCategory {
-    type Output = scvIntervalCategory;
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for scvIntervalCategory {
-  type Scalar = u8;
-  #[inline]
-  fn to_little_endian(self) -> u8 {
-    self.0.to_le()
-  }
-  #[inline]
-  #[allow(clippy::wrong_self_convention)]
-  fn from_little_endian(v: u8) -> Self {
-    let b = u8::from_le(v);
-    Self(b)
-  }
-}
-
-impl<'a> ::flatbuffers::Verifiable for scvIntervalCategory {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    u8::run_verifier(v, pos)
-  }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for scvIntervalCategory {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_METRIC_SERIES_KIND: u16 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -962,6 +1038,238 @@ impl<'a> ::flatbuffers::Verifiable for scvGeometryEncoding {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scvGeometryEncoding {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_RASTER_PRODUCT_KIND: u16 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_RASTER_PRODUCT_KIND: u16 = 14;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_RASTER_PRODUCT_KIND: [scvRasterProductKind; 15] = [
+  scvRasterProductKind::CELL_BOUNDS_DEG,
+  scvRasterProductKind::CELL_CENTERS_DEG,
+  scvRasterProductKind::PERCENT_COVERAGE,
+  scvRasterProductKind::PASS_COUNT,
+  scvRasterProductKind::CONTACT_DURATION_SECONDS,
+  scvRasterProductKind::REVISIT_SECONDS,
+  scvRasterProductKind::GAP_SECONDS,
+  scvRasterProductKind::REDUNDANCY,
+  scvRasterProductKind::CURRENT_ACCESS_BITSET,
+  scvRasterProductKind::BUCKET_START_SECONDS,
+  scvRasterProductKind::BUCKET_STOP_SECONDS,
+  scvRasterProductKind::BUCKET_ACTIVE_CELL_COUNT,
+  scvRasterProductKind::PASS_COUNT_RGBA,
+  scvRasterProductKind::CURRENT_ACCESS_RGBA,
+  scvRasterProductKind::LATITUDE_BAND_COVERAGE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvRasterProductKind(pub u16);
+#[allow(non_upper_case_globals)]
+impl scvRasterProductKind {
+  pub const CELL_BOUNDS_DEG: Self = Self(0);
+  pub const CELL_CENTERS_DEG: Self = Self(1);
+  pub const PERCENT_COVERAGE: Self = Self(2);
+  pub const PASS_COUNT: Self = Self(3);
+  pub const CONTACT_DURATION_SECONDS: Self = Self(4);
+  pub const REVISIT_SECONDS: Self = Self(5);
+  pub const GAP_SECONDS: Self = Self(6);
+  pub const REDUNDANCY: Self = Self(7);
+  pub const CURRENT_ACCESS_BITSET: Self = Self(8);
+  pub const BUCKET_START_SECONDS: Self = Self(9);
+  pub const BUCKET_STOP_SECONDS: Self = Self(10);
+  pub const BUCKET_ACTIVE_CELL_COUNT: Self = Self(11);
+  pub const PASS_COUNT_RGBA: Self = Self(12);
+  pub const CURRENT_ACCESS_RGBA: Self = Self(13);
+  pub const LATITUDE_BAND_COVERAGE: Self = Self(14);
+
+  pub const ENUM_MIN: u16 = 0;
+  pub const ENUM_MAX: u16 = 14;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CELL_BOUNDS_DEG,
+    Self::CELL_CENTERS_DEG,
+    Self::PERCENT_COVERAGE,
+    Self::PASS_COUNT,
+    Self::CONTACT_DURATION_SECONDS,
+    Self::REVISIT_SECONDS,
+    Self::GAP_SECONDS,
+    Self::REDUNDANCY,
+    Self::CURRENT_ACCESS_BITSET,
+    Self::BUCKET_START_SECONDS,
+    Self::BUCKET_STOP_SECONDS,
+    Self::BUCKET_ACTIVE_CELL_COUNT,
+    Self::PASS_COUNT_RGBA,
+    Self::CURRENT_ACCESS_RGBA,
+    Self::LATITUDE_BAND_COVERAGE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CELL_BOUNDS_DEG => Some("CELL_BOUNDS_DEG"),
+      Self::CELL_CENTERS_DEG => Some("CELL_CENTERS_DEG"),
+      Self::PERCENT_COVERAGE => Some("PERCENT_COVERAGE"),
+      Self::PASS_COUNT => Some("PASS_COUNT"),
+      Self::CONTACT_DURATION_SECONDS => Some("CONTACT_DURATION_SECONDS"),
+      Self::REVISIT_SECONDS => Some("REVISIT_SECONDS"),
+      Self::GAP_SECONDS => Some("GAP_SECONDS"),
+      Self::REDUNDANCY => Some("REDUNDANCY"),
+      Self::CURRENT_ACCESS_BITSET => Some("CURRENT_ACCESS_BITSET"),
+      Self::BUCKET_START_SECONDS => Some("BUCKET_START_SECONDS"),
+      Self::BUCKET_STOP_SECONDS => Some("BUCKET_STOP_SECONDS"),
+      Self::BUCKET_ACTIVE_CELL_COUNT => Some("BUCKET_ACTIVE_CELL_COUNT"),
+      Self::PASS_COUNT_RGBA => Some("PASS_COUNT_RGBA"),
+      Self::CURRENT_ACCESS_RGBA => Some("CURRENT_ACCESS_RGBA"),
+      Self::LATITUDE_BAND_COVERAGE => Some("LATITUDE_BAND_COVERAGE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvRasterProductKind {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvRasterProductKind {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u16>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvRasterProductKind {
+    type Output = scvRasterProductKind;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u16>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvRasterProductKind {
+  type Scalar = u16;
+  #[inline]
+  fn to_little_endian(self) -> u16 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u16) -> Self {
+    let b = u16::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvRasterProductKind {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u16::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvRasterProductKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_RASTER_PRODUCT_ENCODING: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_RASTER_PRODUCT_ENCODING: u8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_RASTER_PRODUCT_ENCODING: [scvRasterProductEncoding; 5] = [
+  scvRasterProductEncoding::FLOAT32,
+  scvRasterProductEncoding::FLOAT64,
+  scvRasterProductEncoding::UINT32,
+  scvRasterProductEncoding::BITSET_UINT32,
+  scvRasterProductEncoding::UINT8,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvRasterProductEncoding(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvRasterProductEncoding {
+  pub const FLOAT32: Self = Self(0);
+  pub const FLOAT64: Self = Self(1);
+  pub const UINT32: Self = Self(2);
+  pub const BITSET_UINT32: Self = Self(3);
+  pub const UINT8: Self = Self(4);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::FLOAT32,
+    Self::FLOAT64,
+    Self::UINT32,
+    Self::BITSET_UINT32,
+    Self::UINT8,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::FLOAT32 => Some("FLOAT32"),
+      Self::FLOAT64 => Some("FLOAT64"),
+      Self::UINT32 => Some("UINT32"),
+      Self::BITSET_UINT32 => Some("BITSET_UINT32"),
+      Self::UINT8 => Some("UINT8"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvRasterProductEncoding {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvRasterProductEncoding {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvRasterProductEncoding {
+    type Output = scvRasterProductEncoding;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvRasterProductEncoding {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvRasterProductEncoding {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvRasterProductEncoding {}
 pub enum SCVVec3Offset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1644,6 +1952,480 @@ impl SCVTimeGridT {
     })
   }
 }
+pub enum SCVSensorShapeContractOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVSensorShapeContract<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVSensorShapeContract<'a> {
+  type Inner = SCVSensorShapeContract<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVSensorShapeContract<'a> {
+  pub const VT_SHAPE_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_AXIS_CONVENTION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_RANGE_BOUNDARY: ::flatbuffers::VOffsetT = 8;
+  pub const VT_OUTER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 10;
+  pub const VT_INNER_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MIN_CLOCK_ANGLE_DEG: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAX_CLOCK_ANGLE_DEG: ::flatbuffers::VOffsetT = 16;
+  pub const VT_X_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 18;
+  pub const VT_Y_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 20;
+  pub const VT_INNER_LOOK_ANGLE_DEG: ::flatbuffers::VOffsetT = 22;
+  pub const VT_OUTER_LOOK_ANGLE_DEG: ::flatbuffers::VOffsetT = 24;
+  pub const VT_SAR_SAMPLING_DENSITY: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 30;
+  pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
+  pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVSensorShapeContract { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVSensorShapeContractArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'bldr>> {
+    let mut builder = SCVSensorShapeContractBuilder::new(_fbb);
+    builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
+    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
+    builder.add_SAR_SAMPLING_DENSITY(args.SAR_SAMPLING_DENSITY);
+    builder.add_OUTER_LOOK_ANGLE_DEG(args.OUTER_LOOK_ANGLE_DEG);
+    builder.add_INNER_LOOK_ANGLE_DEG(args.INNER_LOOK_ANGLE_DEG);
+    builder.add_Y_HALF_ANGLE_DEG(args.Y_HALF_ANGLE_DEG);
+    builder.add_X_HALF_ANGLE_DEG(args.X_HALF_ANGLE_DEG);
+    builder.add_MAX_CLOCK_ANGLE_DEG(args.MAX_CLOCK_ANGLE_DEG);
+    builder.add_MIN_CLOCK_ANGLE_DEG(args.MIN_CLOCK_ANGLE_DEG);
+    builder.add_INNER_HALF_ANGLE_DEG(args.INNER_HALF_ANGLE_DEG);
+    builder.add_OUTER_HALF_ANGLE_DEG(args.OUTER_HALF_ANGLE_DEG);
+    if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
+    builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
+    builder.add_RANGE_BOUNDARY(args.RANGE_BOUNDARY);
+    builder.add_AXIS_CONVENTION(args.AXIS_CONVENTION);
+    builder.add_SHAPE_KIND(args.SHAPE_KIND);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVSensorShapeContractT {
+    let SHAPE_KIND = self.SHAPE_KIND();
+    let AXIS_CONVENTION = self.AXIS_CONVENTION();
+    let RANGE_BOUNDARY = self.RANGE_BOUNDARY();
+    let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG();
+    let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG();
+    let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG();
+    let MAX_CLOCK_ANGLE_DEG = self.MAX_CLOCK_ANGLE_DEG();
+    let X_HALF_ANGLE_DEG = self.X_HALF_ANGLE_DEG();
+    let Y_HALF_ANGLE_DEG = self.Y_HALF_ANGLE_DEG();
+    let INNER_LOOK_ANGLE_DEG = self.INNER_LOOK_ANGLE_DEG();
+    let OUTER_LOOK_ANGLE_DEG = self.OUTER_LOOK_ANGLE_DEG();
+    let SAR_SAMPLING_DENSITY = self.SAR_SAMPLING_DENSITY();
+    let MIN_RANGE_M = self.MIN_RANGE_M();
+    let MAX_RANGE_M = self.MAX_RANGE_M();
+    let POLYGON_VERTICES = self.POLYGON_VERTICES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let POLYGON_FRAME = self.POLYGON_FRAME();
+    SCVSensorShapeContractT {
+      SHAPE_KIND,
+      AXIS_CONVENTION,
+      RANGE_BOUNDARY,
+      OUTER_HALF_ANGLE_DEG,
+      INNER_HALF_ANGLE_DEG,
+      MIN_CLOCK_ANGLE_DEG,
+      MAX_CLOCK_ANGLE_DEG,
+      X_HALF_ANGLE_DEG,
+      Y_HALF_ANGLE_DEG,
+      INNER_LOOK_ANGLE_DEG,
+      OUTER_LOOK_ANGLE_DEG,
+      SAR_SAMPLING_DENSITY,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      POLYGON_VERTICES,
+      POLYGON_FRAME,
+    }
+  }
+
+  #[inline]
+  pub fn SHAPE_KIND(&self) -> scvSensorShapeKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE_KIND, Some(scvSensorShapeKind::CONIC)).unwrap()}
+  }
+  #[inline]
+  pub fn AXIS_CONVENTION(&self) -> scvSensorAxisConvention {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, Some(scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT)).unwrap()}
+  }
+  #[inline]
+  pub fn RANGE_BOUNDARY(&self) -> scvSensorRangeBoundaryKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY, Some(scvSensorRangeBoundaryKind::RADIAL_SPHERICAL)).unwrap()}
+  }
+  #[inline]
+  pub fn OUTER_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INNER_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_INNER_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MIN_CLOCK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MIN_CLOCK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_CLOCK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MAX_CLOCK_ANGLE_DEG, Some(360.0)).unwrap()}
+  }
+  #[inline]
+  pub fn X_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_X_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn Y_HALF_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_Y_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INNER_LOOK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_INNER_LOOK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn OUTER_LOOK_ANGLE_DEG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_OUTER_LOOK_ANGLE_DEG, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn SAR_SAMPLING_DENSITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_SAR_SAMPLING_DENSITY, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MIN_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RANGE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVSensorShapeContract::VT_MAX_RANGE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn POLYGON_VERTICES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>(SCVSensorShapeContract::VT_POLYGON_VERTICES, None)}
+  }
+  #[inline]
+  pub fn POLYGON_FRAME(&self) -> scvCoordinateFrame {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvCoordinateFrame>(SCVSensorShapeContract::VT_POLYGON_FRAME, Some(scvCoordinateFrame::UNKNOWN)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVSensorShapeContract<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<scvSensorShapeKind>("SHAPE_KIND", Self::VT_SHAPE_KIND, false)?
+     .visit_field::<scvSensorAxisConvention>("AXIS_CONVENTION", Self::VT_AXIS_CONVENTION, false)?
+     .visit_field::<scvSensorRangeBoundaryKind>("RANGE_BOUNDARY", Self::VT_RANGE_BOUNDARY, false)?
+     .visit_field::<f64>("OUTER_HALF_ANGLE_DEG", Self::VT_OUTER_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("INNER_HALF_ANGLE_DEG", Self::VT_INNER_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("MIN_CLOCK_ANGLE_DEG", Self::VT_MIN_CLOCK_ANGLE_DEG, false)?
+     .visit_field::<f64>("MAX_CLOCK_ANGLE_DEG", Self::VT_MAX_CLOCK_ANGLE_DEG, false)?
+     .visit_field::<f64>("X_HALF_ANGLE_DEG", Self::VT_X_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("Y_HALF_ANGLE_DEG", Self::VT_Y_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("INNER_LOOK_ANGLE_DEG", Self::VT_INNER_LOOK_ANGLE_DEG, false)?
+     .visit_field::<f64>("OUTER_LOOK_ANGLE_DEG", Self::VT_OUTER_LOOK_ANGLE_DEG, false)?
+     .visit_field::<f64>("SAR_SAMPLING_DENSITY", Self::VT_SAR_SAMPLING_DENSITY, false)?
+     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
+     .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
+     .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVSensorShapeContractArgs<'a> {
+    pub SHAPE_KIND: scvSensorShapeKind,
+    pub AXIS_CONVENTION: scvSensorAxisConvention,
+    pub RANGE_BOUNDARY: scvSensorRangeBoundaryKind,
+    pub OUTER_HALF_ANGLE_DEG: f64,
+    pub INNER_HALF_ANGLE_DEG: f64,
+    pub MIN_CLOCK_ANGLE_DEG: f64,
+    pub MAX_CLOCK_ANGLE_DEG: f64,
+    pub X_HALF_ANGLE_DEG: f64,
+    pub Y_HALF_ANGLE_DEG: f64,
+    pub INNER_LOOK_ANGLE_DEG: f64,
+    pub OUTER_LOOK_ANGLE_DEG: f64,
+    pub SAR_SAMPLING_DENSITY: f64,
+    pub MIN_RANGE_M: f64,
+    pub MAX_RANGE_M: f64,
+    pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
+    pub POLYGON_FRAME: scvCoordinateFrame,
+}
+impl<'a> Default for SCVSensorShapeContractArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCVSensorShapeContractArgs {
+      SHAPE_KIND: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+      RANGE_BOUNDARY: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      OUTER_HALF_ANGLE_DEG: 0.0,
+      INNER_HALF_ANGLE_DEG: 0.0,
+      MIN_CLOCK_ANGLE_DEG: 0.0,
+      MAX_CLOCK_ANGLE_DEG: 360.0,
+      X_HALF_ANGLE_DEG: 0.0,
+      Y_HALF_ANGLE_DEG: 0.0,
+      INNER_LOOK_ANGLE_DEG: 0.0,
+      OUTER_LOOK_ANGLE_DEG: 0.0,
+      SAR_SAMPLING_DENSITY: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      POLYGON_VERTICES: None,
+      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+    }
+  }
+}
+
+pub struct SCVSensorShapeContractBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorShapeContractBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SHAPE_KIND(&mut self, SHAPE_KIND: scvSensorShapeKind) {
+    self.fbb_.push_slot::<scvSensorShapeKind>(SCVSensorShapeContract::VT_SHAPE_KIND, SHAPE_KIND, scvSensorShapeKind::CONIC);
+  }
+  #[inline]
+  pub fn add_AXIS_CONVENTION(&mut self, AXIS_CONVENTION: scvSensorAxisConvention) {
+    self.fbb_.push_slot::<scvSensorAxisConvention>(SCVSensorShapeContract::VT_AXIS_CONVENTION, AXIS_CONVENTION, scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT);
+  }
+  #[inline]
+  pub fn add_RANGE_BOUNDARY(&mut self, RANGE_BOUNDARY: scvSensorRangeBoundaryKind) {
+    self.fbb_.push_slot::<scvSensorRangeBoundaryKind>(SCVSensorShapeContract::VT_RANGE_BOUNDARY, RANGE_BOUNDARY, scvSensorRangeBoundaryKind::RADIAL_SPHERICAL);
+  }
+  #[inline]
+  pub fn add_OUTER_HALF_ANGLE_DEG(&mut self, OUTER_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_OUTER_HALF_ANGLE_DEG, OUTER_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_HALF_ANGLE_DEG(&mut self, INNER_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_INNER_HALF_ANGLE_DEG, INNER_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_CLOCK_ANGLE_DEG(&mut self, MIN_CLOCK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MIN_CLOCK_ANGLE_DEG, MIN_CLOCK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_CLOCK_ANGLE_DEG(&mut self, MAX_CLOCK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MAX_CLOCK_ANGLE_DEG, MAX_CLOCK_ANGLE_DEG, 360.0);
+  }
+  #[inline]
+  pub fn add_X_HALF_ANGLE_DEG(&mut self, X_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_X_HALF_ANGLE_DEG, X_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_HALF_ANGLE_DEG(&mut self, Y_HALF_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_Y_HALF_ANGLE_DEG, Y_HALF_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_INNER_LOOK_ANGLE_DEG(&mut self, INNER_LOOK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_INNER_LOOK_ANGLE_DEG, INNER_LOOK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_OUTER_LOOK_ANGLE_DEG(&mut self, OUTER_LOOK_ANGLE_DEG: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_OUTER_LOOK_ANGLE_DEG, OUTER_LOOK_ANGLE_DEG, 0.0);
+  }
+  #[inline]
+  pub fn add_SAR_SAMPLING_DENSITY(&mut self, SAR_SAMPLING_DENSITY: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_SAR_SAMPLING_DENSITY, SAR_SAMPLING_DENSITY, 0.0);
+  }
+  #[inline]
+  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RANGE_M(&mut self, MAX_RANGE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVSensorShapeContract::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_POLYGON_VERTICES(&mut self, POLYGON_VERTICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVVec3<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVSensorShapeContract::VT_POLYGON_VERTICES, POLYGON_VERTICES);
+  }
+  #[inline]
+  pub fn add_POLYGON_FRAME(&mut self, POLYGON_FRAME: scvCoordinateFrame) {
+    self.fbb_.push_slot::<scvCoordinateFrame>(SCVSensorShapeContract::VT_POLYGON_FRAME, POLYGON_FRAME, scvCoordinateFrame::UNKNOWN);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorShapeContractBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVSensorShapeContractBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVSensorShapeContract<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVSensorShapeContract");
+      ds.field("SHAPE_KIND", &self.SHAPE_KIND());
+      ds.field("AXIS_CONVENTION", &self.AXIS_CONVENTION());
+      ds.field("RANGE_BOUNDARY", &self.RANGE_BOUNDARY());
+      ds.field("OUTER_HALF_ANGLE_DEG", &self.OUTER_HALF_ANGLE_DEG());
+      ds.field("INNER_HALF_ANGLE_DEG", &self.INNER_HALF_ANGLE_DEG());
+      ds.field("MIN_CLOCK_ANGLE_DEG", &self.MIN_CLOCK_ANGLE_DEG());
+      ds.field("MAX_CLOCK_ANGLE_DEG", &self.MAX_CLOCK_ANGLE_DEG());
+      ds.field("X_HALF_ANGLE_DEG", &self.X_HALF_ANGLE_DEG());
+      ds.field("Y_HALF_ANGLE_DEG", &self.Y_HALF_ANGLE_DEG());
+      ds.field("INNER_LOOK_ANGLE_DEG", &self.INNER_LOOK_ANGLE_DEG());
+      ds.field("OUTER_LOOK_ANGLE_DEG", &self.OUTER_LOOK_ANGLE_DEG());
+      ds.field("SAR_SAMPLING_DENSITY", &self.SAR_SAMPLING_DENSITY());
+      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
+      ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
+      ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
+      ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVSensorShapeContractT {
+  pub SHAPE_KIND: scvSensorShapeKind,
+  pub AXIS_CONVENTION: scvSensorAxisConvention,
+  pub RANGE_BOUNDARY: scvSensorRangeBoundaryKind,
+  pub OUTER_HALF_ANGLE_DEG: f64,
+  pub INNER_HALF_ANGLE_DEG: f64,
+  pub MIN_CLOCK_ANGLE_DEG: f64,
+  pub MAX_CLOCK_ANGLE_DEG: f64,
+  pub X_HALF_ANGLE_DEG: f64,
+  pub Y_HALF_ANGLE_DEG: f64,
+  pub INNER_LOOK_ANGLE_DEG: f64,
+  pub OUTER_LOOK_ANGLE_DEG: f64,
+  pub SAR_SAMPLING_DENSITY: f64,
+  pub MIN_RANGE_M: f64,
+  pub MAX_RANGE_M: f64,
+  pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
+  pub POLYGON_FRAME: scvCoordinateFrame,
+}
+impl Default for SCVSensorShapeContractT {
+  fn default() -> Self {
+    Self {
+      SHAPE_KIND: scvSensorShapeKind::CONIC,
+      AXIS_CONVENTION: scvSensorAxisConvention::LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT,
+      RANGE_BOUNDARY: scvSensorRangeBoundaryKind::RADIAL_SPHERICAL,
+      OUTER_HALF_ANGLE_DEG: 0.0,
+      INNER_HALF_ANGLE_DEG: 0.0,
+      MIN_CLOCK_ANGLE_DEG: 0.0,
+      MAX_CLOCK_ANGLE_DEG: 360.0,
+      X_HALF_ANGLE_DEG: 0.0,
+      Y_HALF_ANGLE_DEG: 0.0,
+      INNER_LOOK_ANGLE_DEG: 0.0,
+      OUTER_LOOK_ANGLE_DEG: 0.0,
+      SAR_SAMPLING_DENSITY: 0.0,
+      MIN_RANGE_M: 0.0,
+      MAX_RANGE_M: 0.0,
+      POLYGON_VERTICES: None,
+      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+    }
+  }
+}
+impl SCVSensorShapeContractT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVSensorShapeContract<'b>> {
+    let SHAPE_KIND = self.SHAPE_KIND;
+    let AXIS_CONVENTION = self.AXIS_CONVENTION;
+    let RANGE_BOUNDARY = self.RANGE_BOUNDARY;
+    let OUTER_HALF_ANGLE_DEG = self.OUTER_HALF_ANGLE_DEG;
+    let INNER_HALF_ANGLE_DEG = self.INNER_HALF_ANGLE_DEG;
+    let MIN_CLOCK_ANGLE_DEG = self.MIN_CLOCK_ANGLE_DEG;
+    let MAX_CLOCK_ANGLE_DEG = self.MAX_CLOCK_ANGLE_DEG;
+    let X_HALF_ANGLE_DEG = self.X_HALF_ANGLE_DEG;
+    let Y_HALF_ANGLE_DEG = self.Y_HALF_ANGLE_DEG;
+    let INNER_LOOK_ANGLE_DEG = self.INNER_LOOK_ANGLE_DEG;
+    let OUTER_LOOK_ANGLE_DEG = self.OUTER_LOOK_ANGLE_DEG;
+    let SAR_SAMPLING_DENSITY = self.SAR_SAMPLING_DENSITY;
+    let MIN_RANGE_M = self.MIN_RANGE_M;
+    let MAX_RANGE_M = self.MAX_RANGE_M;
+    let POLYGON_VERTICES = self.POLYGON_VERTICES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let POLYGON_FRAME = self.POLYGON_FRAME;
+    SCVSensorShapeContract::create(_fbb, &SCVSensorShapeContractArgs{
+      SHAPE_KIND,
+      AXIS_CONVENTION,
+      RANGE_BOUNDARY,
+      OUTER_HALF_ANGLE_DEG,
+      INNER_HALF_ANGLE_DEG,
+      MIN_CLOCK_ANGLE_DEG,
+      MAX_CLOCK_ANGLE_DEG,
+      X_HALF_ANGLE_DEG,
+      Y_HALF_ANGLE_DEG,
+      INNER_LOOK_ANGLE_DEG,
+      OUTER_LOOK_ANGLE_DEG,
+      SAR_SAMPLING_DENSITY,
+      MIN_RANGE_M,
+      MAX_RANGE_M,
+      POLYGON_VERTICES,
+      POLYGON_FRAME,
+    })
+  }
+}
 pub enum SCVSensorOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1663,19 +2445,12 @@ impl<'a> SCVSensor<'a> {
   pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 4;
   pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 6;
   pub const VT_NAME: ::flatbuffers::VOffsetT = 8;
-  pub const VT_SHAPE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_FRAME: ::flatbuffers::VOffsetT = 12;
-  pub const VT_POSITION_M: ::flatbuffers::VOffsetT = 14;
-  pub const VT_VELOCITY_MPS: ::flatbuffers::VOffsetT = 16;
-  pub const VT_BORESIGHT_UNIT: ::flatbuffers::VOffsetT = 18;
-  pub const VT_UP_UNIT: ::flatbuffers::VOffsetT = 20;
-  pub const VT_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 22;
-  pub const VT_CROSS_TRACK_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 24;
-  pub const VT_ALONG_TRACK_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 26;
-  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 28;
-  pub const VT_MAX_RANGE_M: ::flatbuffers::VOffsetT = 30;
-  pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 32;
-  pub const VT_POLYGON_FRAME: ::flatbuffers::VOffsetT = 34;
+  pub const VT_FRAME: ::flatbuffers::VOffsetT = 10;
+  pub const VT_POSITION_M: ::flatbuffers::VOffsetT = 12;
+  pub const VT_VELOCITY_MPS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_BORESIGHT_UNIT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_UP_UNIT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SHAPE_CONTRACT: ::flatbuffers::VOffsetT = 20;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1687,12 +2462,7 @@ impl<'a> SCVSensor<'a> {
     args: &'args SCVSensorArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCVSensor<'bldr>> {
     let mut builder = SCVSensorBuilder::new(_fbb);
-    builder.add_MAX_RANGE_M(args.MAX_RANGE_M);
-    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
-    builder.add_ALONG_TRACK_HALF_ANGLE_DEG(args.ALONG_TRACK_HALF_ANGLE_DEG);
-    builder.add_CROSS_TRACK_HALF_ANGLE_DEG(args.CROSS_TRACK_HALF_ANGLE_DEG);
-    builder.add_HALF_ANGLE_DEG(args.HALF_ANGLE_DEG);
-    if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
+    if let Some(x) = args.SHAPE_CONTRACT { builder.add_SHAPE_CONTRACT(x); }
     if let Some(x) = args.UP_UNIT { builder.add_UP_UNIT(x); }
     if let Some(x) = args.BORESIGHT_UNIT { builder.add_BORESIGHT_UNIT(x); }
     if let Some(x) = args.VELOCITY_MPS { builder.add_VELOCITY_MPS(x); }
@@ -1700,9 +2470,7 @@ impl<'a> SCVSensor<'a> {
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     builder.add_SENSOR_ID(args.SENSOR_ID);
-    builder.add_POLYGON_FRAME(args.POLYGON_FRAME);
     builder.add_FRAME(args.FRAME);
-    builder.add_SHAPE(args.SHAPE);
     builder.finish()
   }
 
@@ -1714,7 +2482,6 @@ impl<'a> SCVSensor<'a> {
     let NAME = self.NAME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SHAPE = self.SHAPE();
     let FRAME = self.FRAME();
     let POSITION_M = self.POSITION_M().map(|x| {
       alloc::boxed::Box::new(x.unpack())
@@ -1728,32 +2495,19 @@ impl<'a> SCVSensor<'a> {
     let UP_UNIT = self.UP_UNIT().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
-    let HALF_ANGLE_DEG = self.HALF_ANGLE_DEG();
-    let CROSS_TRACK_HALF_ANGLE_DEG = self.CROSS_TRACK_HALF_ANGLE_DEG();
-    let ALONG_TRACK_HALF_ANGLE_DEG = self.ALONG_TRACK_HALF_ANGLE_DEG();
-    let MIN_RANGE_M = self.MIN_RANGE_M();
-    let MAX_RANGE_M = self.MAX_RANGE_M();
-    let POLYGON_VERTICES = self.POLYGON_VERTICES().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
+    let SHAPE_CONTRACT = self.SHAPE_CONTRACT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
     });
-    let POLYGON_FRAME = self.POLYGON_FRAME();
     SCVSensorT {
       SENSOR_ID,
       OBJECT_ID,
       NAME,
-      SHAPE,
       FRAME,
       POSITION_M,
       VELOCITY_MPS,
       BORESIGHT_UNIT,
       UP_UNIT,
-      HALF_ANGLE_DEG,
-      CROSS_TRACK_HALF_ANGLE_DEG,
-      ALONG_TRACK_HALF_ANGLE_DEG,
-      MIN_RANGE_M,
-      MAX_RANGE_M,
-      POLYGON_VERTICES,
-      POLYGON_FRAME,
+      SHAPE_CONTRACT,
     }
   }
 
@@ -1777,13 +2531,6 @@ impl<'a> SCVSensor<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCVSensor::VT_NAME, None)}
-  }
-  #[inline]
-  pub fn SHAPE(&self) -> scvSensorShapeKind {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvSensorShapeKind>(SCVSensor::VT_SHAPE, Some(scvSensorShapeKind::CONIC)).unwrap()}
   }
   #[inline]
   pub fn FRAME(&self) -> scvCoordinateFrame {
@@ -1821,53 +2568,11 @@ impl<'a> SCVSensor<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVVec3>>(SCVSensor::VT_UP_UNIT, None)}
   }
   #[inline]
-  pub fn HALF_ANGLE_DEG(&self) -> f64 {
+  pub fn SHAPE_CONTRACT(&self) -> Option<SCVSensorShapeContract<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVSensor::VT_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CROSS_TRACK_HALF_ANGLE_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVSensor::VT_CROSS_TRACK_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ALONG_TRACK_HALF_ANGLE_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVSensor::VT_ALONG_TRACK_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MIN_RANGE_M(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVSensor::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_RANGE_M(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVSensor::VT_MAX_RANGE_M, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POLYGON_VERTICES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>(SCVSensor::VT_POLYGON_VERTICES, None)}
-  }
-  #[inline]
-  pub fn POLYGON_FRAME(&self) -> scvCoordinateFrame {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvCoordinateFrame>(SCVSensor::VT_POLYGON_FRAME, Some(scvCoordinateFrame::UNKNOWN)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVSensorShapeContract>>(SCVSensor::VT_SHAPE_CONTRACT, None)}
   }
 }
 
@@ -1880,19 +2585,12 @@ impl ::flatbuffers::Verifiable for SCVSensor<'_> {
      .visit_field::<u32>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<scvSensorShapeKind>("SHAPE", Self::VT_SHAPE, false)?
      .visit_field::<scvCoordinateFrame>("FRAME", Self::VT_FRAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("POSITION_M", Self::VT_POSITION_M, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("VELOCITY_MPS", Self::VT_VELOCITY_MPS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("BORESIGHT_UNIT", Self::VT_BORESIGHT_UNIT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("UP_UNIT", Self::VT_UP_UNIT, false)?
-     .visit_field::<f64>("HALF_ANGLE_DEG", Self::VT_HALF_ANGLE_DEG, false)?
-     .visit_field::<f64>("CROSS_TRACK_HALF_ANGLE_DEG", Self::VT_CROSS_TRACK_HALF_ANGLE_DEG, false)?
-     .visit_field::<f64>("ALONG_TRACK_HALF_ANGLE_DEG", Self::VT_ALONG_TRACK_HALF_ANGLE_DEG, false)?
-     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
-     .visit_field::<f64>("MAX_RANGE_M", Self::VT_MAX_RANGE_M, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
-     .visit_field::<scvCoordinateFrame>("POLYGON_FRAME", Self::VT_POLYGON_FRAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVSensorShapeContract>>("SHAPE_CONTRACT", Self::VT_SHAPE_CONTRACT, false)?
      .finish();
     Ok(())
   }
@@ -1901,19 +2599,12 @@ pub struct SCVSensorArgs<'a> {
     pub SENSOR_ID: u32,
     pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SHAPE: scvSensorShapeKind,
     pub FRAME: scvCoordinateFrame,
     pub POSITION_M: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
     pub VELOCITY_MPS: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
     pub BORESIGHT_UNIT: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
     pub UP_UNIT: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
-    pub HALF_ANGLE_DEG: f64,
-    pub CROSS_TRACK_HALF_ANGLE_DEG: f64,
-    pub ALONG_TRACK_HALF_ANGLE_DEG: f64,
-    pub MIN_RANGE_M: f64,
-    pub MAX_RANGE_M: f64,
-    pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
-    pub POLYGON_FRAME: scvCoordinateFrame,
+    pub SHAPE_CONTRACT: Option<::flatbuffers::WIPOffset<SCVSensorShapeContract<'a>>>,
 }
 impl<'a> Default for SCVSensorArgs<'a> {
   #[inline]
@@ -1922,19 +2613,12 @@ impl<'a> Default for SCVSensorArgs<'a> {
       SENSOR_ID: 0,
       OBJECT_ID: None,
       NAME: None,
-      SHAPE: scvSensorShapeKind::CONIC,
       FRAME: scvCoordinateFrame::UNKNOWN,
       POSITION_M: None,
       VELOCITY_MPS: None,
       BORESIGHT_UNIT: None,
       UP_UNIT: None,
-      HALF_ANGLE_DEG: 0.0,
-      CROSS_TRACK_HALF_ANGLE_DEG: 0.0,
-      ALONG_TRACK_HALF_ANGLE_DEG: 0.0,
-      MIN_RANGE_M: 0.0,
-      MAX_RANGE_M: 0.0,
-      POLYGON_VERTICES: None,
-      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+      SHAPE_CONTRACT: None,
     }
   }
 }
@@ -1957,10 +2641,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVSensor::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_SHAPE(&mut self, SHAPE: scvSensorShapeKind) {
-    self.fbb_.push_slot::<scvSensorShapeKind>(SCVSensor::VT_SHAPE, SHAPE, scvSensorShapeKind::CONIC);
-  }
-  #[inline]
   pub fn add_FRAME(&mut self, FRAME: scvCoordinateFrame) {
     self.fbb_.push_slot::<scvCoordinateFrame>(SCVSensor::VT_FRAME, FRAME, scvCoordinateFrame::UNKNOWN);
   }
@@ -1981,32 +2661,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVSensorBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVVec3>>(SCVSensor::VT_UP_UNIT, UP_UNIT);
   }
   #[inline]
-  pub fn add_HALF_ANGLE_DEG(&mut self, HALF_ANGLE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVSensor::VT_HALF_ANGLE_DEG, HALF_ANGLE_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_CROSS_TRACK_HALF_ANGLE_DEG(&mut self, CROSS_TRACK_HALF_ANGLE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVSensor::VT_CROSS_TRACK_HALF_ANGLE_DEG, CROSS_TRACK_HALF_ANGLE_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_ALONG_TRACK_HALF_ANGLE_DEG(&mut self, ALONG_TRACK_HALF_ANGLE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVSensor::VT_ALONG_TRACK_HALF_ANGLE_DEG, ALONG_TRACK_HALF_ANGLE_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
-    self.fbb_.push_slot::<f64>(SCVSensor::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
-  }
-  #[inline]
-  pub fn add_MAX_RANGE_M(&mut self, MAX_RANGE_M: f64) {
-    self.fbb_.push_slot::<f64>(SCVSensor::VT_MAX_RANGE_M, MAX_RANGE_M, 0.0);
-  }
-  #[inline]
-  pub fn add_POLYGON_VERTICES(&mut self, POLYGON_VERTICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVVec3<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVSensor::VT_POLYGON_VERTICES, POLYGON_VERTICES);
-  }
-  #[inline]
-  pub fn add_POLYGON_FRAME(&mut self, POLYGON_FRAME: scvCoordinateFrame) {
-    self.fbb_.push_slot::<scvCoordinateFrame>(SCVSensor::VT_POLYGON_FRAME, POLYGON_FRAME, scvCoordinateFrame::UNKNOWN);
+  pub fn add_SHAPE_CONTRACT(&mut self, SHAPE_CONTRACT: ::flatbuffers::WIPOffset<SCVSensorShapeContract<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVSensorShapeContract>>(SCVSensor::VT_SHAPE_CONTRACT, SHAPE_CONTRACT);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVSensorBuilder<'a, 'b, A> {
@@ -2029,19 +2685,12 @@ impl ::core::fmt::Debug for SCVSensor<'_> {
       ds.field("SENSOR_ID", &self.SENSOR_ID());
       ds.field("OBJECT_ID", &self.OBJECT_ID());
       ds.field("NAME", &self.NAME());
-      ds.field("SHAPE", &self.SHAPE());
       ds.field("FRAME", &self.FRAME());
       ds.field("POSITION_M", &self.POSITION_M());
       ds.field("VELOCITY_MPS", &self.VELOCITY_MPS());
       ds.field("BORESIGHT_UNIT", &self.BORESIGHT_UNIT());
       ds.field("UP_UNIT", &self.UP_UNIT());
-      ds.field("HALF_ANGLE_DEG", &self.HALF_ANGLE_DEG());
-      ds.field("CROSS_TRACK_HALF_ANGLE_DEG", &self.CROSS_TRACK_HALF_ANGLE_DEG());
-      ds.field("ALONG_TRACK_HALF_ANGLE_DEG", &self.ALONG_TRACK_HALF_ANGLE_DEG());
-      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
-      ds.field("MAX_RANGE_M", &self.MAX_RANGE_M());
-      ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
-      ds.field("POLYGON_FRAME", &self.POLYGON_FRAME());
+      ds.field("SHAPE_CONTRACT", &self.SHAPE_CONTRACT());
       ds.finish()
   }
 }
@@ -2051,19 +2700,12 @@ pub struct SCVSensorT {
   pub SENSOR_ID: u32,
   pub OBJECT_ID: Option<alloc::string::String>,
   pub NAME: Option<alloc::string::String>,
-  pub SHAPE: scvSensorShapeKind,
   pub FRAME: scvCoordinateFrame,
   pub POSITION_M: Option<alloc::boxed::Box<SCVVec3T>>,
   pub VELOCITY_MPS: Option<alloc::boxed::Box<SCVVec3T>>,
   pub BORESIGHT_UNIT: Option<alloc::boxed::Box<SCVVec3T>>,
   pub UP_UNIT: Option<alloc::boxed::Box<SCVVec3T>>,
-  pub HALF_ANGLE_DEG: f64,
-  pub CROSS_TRACK_HALF_ANGLE_DEG: f64,
-  pub ALONG_TRACK_HALF_ANGLE_DEG: f64,
-  pub MIN_RANGE_M: f64,
-  pub MAX_RANGE_M: f64,
-  pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
-  pub POLYGON_FRAME: scvCoordinateFrame,
+  pub SHAPE_CONTRACT: Option<alloc::boxed::Box<SCVSensorShapeContractT>>,
 }
 impl Default for SCVSensorT {
   fn default() -> Self {
@@ -2071,19 +2713,12 @@ impl Default for SCVSensorT {
       SENSOR_ID: 0,
       OBJECT_ID: None,
       NAME: None,
-      SHAPE: scvSensorShapeKind::CONIC,
       FRAME: scvCoordinateFrame::UNKNOWN,
       POSITION_M: None,
       VELOCITY_MPS: None,
       BORESIGHT_UNIT: None,
       UP_UNIT: None,
-      HALF_ANGLE_DEG: 0.0,
-      CROSS_TRACK_HALF_ANGLE_DEG: 0.0,
-      ALONG_TRACK_HALF_ANGLE_DEG: 0.0,
-      MIN_RANGE_M: 0.0,
-      MAX_RANGE_M: 0.0,
-      POLYGON_VERTICES: None,
-      POLYGON_FRAME: scvCoordinateFrame::UNKNOWN,
+      SHAPE_CONTRACT: None,
     }
   }
 }
@@ -2099,7 +2734,6 @@ impl SCVSensorT {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SHAPE = self.SHAPE;
     let FRAME = self.FRAME;
     let POSITION_M = self.POSITION_M.as_ref().map(|x|{
       x.pack(_fbb)
@@ -2113,32 +2747,19 @@ impl SCVSensorT {
     let UP_UNIT = self.UP_UNIT.as_ref().map(|x|{
       x.pack(_fbb)
     });
-    let HALF_ANGLE_DEG = self.HALF_ANGLE_DEG;
-    let CROSS_TRACK_HALF_ANGLE_DEG = self.CROSS_TRACK_HALF_ANGLE_DEG;
-    let ALONG_TRACK_HALF_ANGLE_DEG = self.ALONG_TRACK_HALF_ANGLE_DEG;
-    let MIN_RANGE_M = self.MIN_RANGE_M;
-    let MAX_RANGE_M = self.MAX_RANGE_M;
-    let POLYGON_VERTICES = self.POLYGON_VERTICES.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    let SHAPE_CONTRACT = self.SHAPE_CONTRACT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
-    let POLYGON_FRAME = self.POLYGON_FRAME;
     SCVSensor::create(_fbb, &SCVSensorArgs{
       SENSOR_ID,
       OBJECT_ID,
       NAME,
-      SHAPE,
       FRAME,
       POSITION_M,
       VELOCITY_MPS,
       BORESIGHT_UNIT,
       UP_UNIT,
-      HALF_ANGLE_DEG,
-      CROSS_TRACK_HALF_ANGLE_DEG,
-      ALONG_TRACK_HALF_ANGLE_DEG,
-      MIN_RANGE_M,
-      MAX_RANGE_M,
-      POLYGON_VERTICES,
-      POLYGON_FRAME,
+      SHAPE_CONTRACT,
     })
   }
 }
@@ -4702,1204 +5323,6 @@ impl SCVSensorContributionT {
     })
   }
 }
-pub enum SCVCellStatOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SCVCellStat<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCVCellStat<'a> {
-  type Inner = SCVCellStat<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCVCellStat<'a> {
-  pub const VT_CELL_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_LATITUDE_DEG: ::flatbuffers::VOffsetT = 6;
-  pub const VT_LONGITUDE_DEG: ::flatbuffers::VOffsetT = 8;
-  pub const VT_ALTITUDE_M: ::flatbuffers::VOffsetT = 10;
-  pub const VT_COVERED_WINDOW_COUNT: ::flatbuffers::VOffsetT = 12;
-  pub const VT_TOTAL_WINDOW_COUNT: ::flatbuffers::VOffsetT = 14;
-  pub const VT_COVERAGE_FRACTION: ::flatbuffers::VOffsetT = 16;
-  pub const VT_MEAN_REVISIT_SEC: ::flatbuffers::VOffsetT = 18;
-  pub const VT_MAX_GAP_SEC: ::flatbuffers::VOffsetT = 20;
-  pub const VT_MEAN_GAP_SEC: ::flatbuffers::VOffsetT = 22;
-  pub const VT_REDUNDANCY: ::flatbuffers::VOffsetT = 24;
-  pub const VT_SENSOR_IDS: ::flatbuffers::VOffsetT = 26;
-  pub const VT_SENSOR_BITSET_WORDS: ::flatbuffers::VOffsetT = 28;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCVCellStat { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCVCellStatArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<SCVCellStat<'bldr>> {
-    let mut builder = SCVCellStatBuilder::new(_fbb);
-    builder.add_REDUNDANCY(args.REDUNDANCY);
-    builder.add_MEAN_GAP_SEC(args.MEAN_GAP_SEC);
-    builder.add_MAX_GAP_SEC(args.MAX_GAP_SEC);
-    builder.add_MEAN_REVISIT_SEC(args.MEAN_REVISIT_SEC);
-    builder.add_COVERAGE_FRACTION(args.COVERAGE_FRACTION);
-    builder.add_ALTITUDE_M(args.ALTITUDE_M);
-    builder.add_LONGITUDE_DEG(args.LONGITUDE_DEG);
-    builder.add_LATITUDE_DEG(args.LATITUDE_DEG);
-    if let Some(x) = args.SENSOR_BITSET_WORDS { builder.add_SENSOR_BITSET_WORDS(x); }
-    if let Some(x) = args.SENSOR_IDS { builder.add_SENSOR_IDS(x); }
-    builder.add_TOTAL_WINDOW_COUNT(args.TOTAL_WINDOW_COUNT);
-    builder.add_COVERED_WINDOW_COUNT(args.COVERED_WINDOW_COUNT);
-    builder.add_CELL_ID(args.CELL_ID);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCVCellStatT {
-    let CELL_ID = self.CELL_ID();
-    let LATITUDE_DEG = self.LATITUDE_DEG();
-    let LONGITUDE_DEG = self.LONGITUDE_DEG();
-    let ALTITUDE_M = self.ALTITUDE_M();
-    let COVERED_WINDOW_COUNT = self.COVERED_WINDOW_COUNT();
-    let TOTAL_WINDOW_COUNT = self.TOTAL_WINDOW_COUNT();
-    let COVERAGE_FRACTION = self.COVERAGE_FRACTION();
-    let MEAN_REVISIT_SEC = self.MEAN_REVISIT_SEC();
-    let MAX_GAP_SEC = self.MAX_GAP_SEC();
-    let MEAN_GAP_SEC = self.MEAN_GAP_SEC();
-    let REDUNDANCY = self.REDUNDANCY();
-    let SENSOR_IDS = self.SENSOR_IDS().map(|x| {
-      x.into_iter().collect()
-    });
-    let SENSOR_BITSET_WORDS = self.SENSOR_BITSET_WORDS().map(|x| {
-      x.into_iter().collect()
-    });
-    SCVCellStatT {
-      CELL_ID,
-      LATITUDE_DEG,
-      LONGITUDE_DEG,
-      ALTITUDE_M,
-      COVERED_WINDOW_COUNT,
-      TOTAL_WINDOW_COUNT,
-      COVERAGE_FRACTION,
-      MEAN_REVISIT_SEC,
-      MAX_GAP_SEC,
-      MEAN_GAP_SEC,
-      REDUNDANCY,
-      SENSOR_IDS,
-      SENSOR_BITSET_WORDS,
-    }
-  }
-
-  #[inline]
-  pub fn CELL_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVCellStat::VT_CELL_ID, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn LATITUDE_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_LATITUDE_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LONGITUDE_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_LONGITUDE_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ALTITUDE_M(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_ALTITUDE_M, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn COVERED_WINDOW_COUNT(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVCellStat::VT_COVERED_WINDOW_COUNT, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TOTAL_WINDOW_COUNT(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVCellStat::VT_TOTAL_WINDOW_COUNT, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn COVERAGE_FRACTION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_COVERAGE_FRACTION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_REVISIT_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_MEAN_REVISIT_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_GAP_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_MAX_GAP_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_GAP_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_MEAN_GAP_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn REDUNDANCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVCellStat::VT_REDUNDANCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENSOR_IDS(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(SCVCellStat::VT_SENSOR_IDS, None)}
-  }
-  #[inline]
-  pub fn SENSOR_BITSET_WORDS(&self) -> Option<::flatbuffers::Vector<'a, u64>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u64>>>(SCVCellStat::VT_SENSOR_BITSET_WORDS, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCVCellStat<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<u32>("CELL_ID", Self::VT_CELL_ID, false)?
-     .visit_field::<f64>("LATITUDE_DEG", Self::VT_LATITUDE_DEG, false)?
-     .visit_field::<f64>("LONGITUDE_DEG", Self::VT_LONGITUDE_DEG, false)?
-     .visit_field::<f64>("ALTITUDE_M", Self::VT_ALTITUDE_M, false)?
-     .visit_field::<u32>("COVERED_WINDOW_COUNT", Self::VT_COVERED_WINDOW_COUNT, false)?
-     .visit_field::<u32>("TOTAL_WINDOW_COUNT", Self::VT_TOTAL_WINDOW_COUNT, false)?
-     .visit_field::<f64>("COVERAGE_FRACTION", Self::VT_COVERAGE_FRACTION, false)?
-     .visit_field::<f64>("MEAN_REVISIT_SEC", Self::VT_MEAN_REVISIT_SEC, false)?
-     .visit_field::<f64>("MAX_GAP_SEC", Self::VT_MAX_GAP_SEC, false)?
-     .visit_field::<f64>("MEAN_GAP_SEC", Self::VT_MEAN_GAP_SEC, false)?
-     .visit_field::<f64>("REDUNDANCY", Self::VT_REDUNDANCY, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("SENSOR_IDS", Self::VT_SENSOR_IDS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u64>>>("SENSOR_BITSET_WORDS", Self::VT_SENSOR_BITSET_WORDS, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCVCellStatArgs<'a> {
-    pub CELL_ID: u32,
-    pub LATITUDE_DEG: f64,
-    pub LONGITUDE_DEG: f64,
-    pub ALTITUDE_M: f64,
-    pub COVERED_WINDOW_COUNT: u32,
-    pub TOTAL_WINDOW_COUNT: u32,
-    pub COVERAGE_FRACTION: f64,
-    pub MEAN_REVISIT_SEC: f64,
-    pub MAX_GAP_SEC: f64,
-    pub MEAN_GAP_SEC: f64,
-    pub REDUNDANCY: f64,
-    pub SENSOR_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
-    pub SENSOR_BITSET_WORDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u64>>>,
-}
-impl<'a> Default for SCVCellStatArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    SCVCellStatArgs {
-      CELL_ID: 0,
-      LATITUDE_DEG: 0.0,
-      LONGITUDE_DEG: 0.0,
-      ALTITUDE_M: 0.0,
-      COVERED_WINDOW_COUNT: 0,
-      TOTAL_WINDOW_COUNT: 0,
-      COVERAGE_FRACTION: 0.0,
-      MEAN_REVISIT_SEC: 0.0,
-      MAX_GAP_SEC: 0.0,
-      MEAN_GAP_SEC: 0.0,
-      REDUNDANCY: 0.0,
-      SENSOR_IDS: None,
-      SENSOR_BITSET_WORDS: None,
-    }
-  }
-}
-
-pub struct SCVCellStatBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVCellStatBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_CELL_ID(&mut self, CELL_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVCellStat::VT_CELL_ID, CELL_ID, 0);
-  }
-  #[inline]
-  pub fn add_LATITUDE_DEG(&mut self, LATITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_LATITUDE_DEG, LATITUDE_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_LONGITUDE_DEG(&mut self, LONGITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_LONGITUDE_DEG, LONGITUDE_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_ALTITUDE_M(&mut self, ALTITUDE_M: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_ALTITUDE_M, ALTITUDE_M, 0.0);
-  }
-  #[inline]
-  pub fn add_COVERED_WINDOW_COUNT(&mut self, COVERED_WINDOW_COUNT: u32) {
-    self.fbb_.push_slot::<u32>(SCVCellStat::VT_COVERED_WINDOW_COUNT, COVERED_WINDOW_COUNT, 0);
-  }
-  #[inline]
-  pub fn add_TOTAL_WINDOW_COUNT(&mut self, TOTAL_WINDOW_COUNT: u32) {
-    self.fbb_.push_slot::<u32>(SCVCellStat::VT_TOTAL_WINDOW_COUNT, TOTAL_WINDOW_COUNT, 0);
-  }
-  #[inline]
-  pub fn add_COVERAGE_FRACTION(&mut self, COVERAGE_FRACTION: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_COVERAGE_FRACTION, COVERAGE_FRACTION, 0.0);
-  }
-  #[inline]
-  pub fn add_MEAN_REVISIT_SEC(&mut self, MEAN_REVISIT_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_MEAN_REVISIT_SEC, MEAN_REVISIT_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_MAX_GAP_SEC(&mut self, MAX_GAP_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_MAX_GAP_SEC, MAX_GAP_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_MEAN_GAP_SEC(&mut self, MEAN_GAP_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_MEAN_GAP_SEC, MEAN_GAP_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_REDUNDANCY(&mut self, REDUNDANCY: f64) {
-    self.fbb_.push_slot::<f64>(SCVCellStat::VT_REDUNDANCY, REDUNDANCY, 0.0);
-  }
-  #[inline]
-  pub fn add_SENSOR_IDS(&mut self, SENSOR_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVCellStat::VT_SENSOR_IDS, SENSOR_IDS);
-  }
-  #[inline]
-  pub fn add_SENSOR_BITSET_WORDS(&mut self, SENSOR_BITSET_WORDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u64>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVCellStat::VT_SENSOR_BITSET_WORDS, SENSOR_BITSET_WORDS);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVCellStatBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCVCellStatBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVCellStat<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCVCellStat<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCVCellStat");
-      ds.field("CELL_ID", &self.CELL_ID());
-      ds.field("LATITUDE_DEG", &self.LATITUDE_DEG());
-      ds.field("LONGITUDE_DEG", &self.LONGITUDE_DEG());
-      ds.field("ALTITUDE_M", &self.ALTITUDE_M());
-      ds.field("COVERED_WINDOW_COUNT", &self.COVERED_WINDOW_COUNT());
-      ds.field("TOTAL_WINDOW_COUNT", &self.TOTAL_WINDOW_COUNT());
-      ds.field("COVERAGE_FRACTION", &self.COVERAGE_FRACTION());
-      ds.field("MEAN_REVISIT_SEC", &self.MEAN_REVISIT_SEC());
-      ds.field("MAX_GAP_SEC", &self.MAX_GAP_SEC());
-      ds.field("MEAN_GAP_SEC", &self.MEAN_GAP_SEC());
-      ds.field("REDUNDANCY", &self.REDUNDANCY());
-      ds.field("SENSOR_IDS", &self.SENSOR_IDS());
-      ds.field("SENSOR_BITSET_WORDS", &self.SENSOR_BITSET_WORDS());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCVCellStatT {
-  pub CELL_ID: u32,
-  pub LATITUDE_DEG: f64,
-  pub LONGITUDE_DEG: f64,
-  pub ALTITUDE_M: f64,
-  pub COVERED_WINDOW_COUNT: u32,
-  pub TOTAL_WINDOW_COUNT: u32,
-  pub COVERAGE_FRACTION: f64,
-  pub MEAN_REVISIT_SEC: f64,
-  pub MAX_GAP_SEC: f64,
-  pub MEAN_GAP_SEC: f64,
-  pub REDUNDANCY: f64,
-  pub SENSOR_IDS: Option<alloc::vec::Vec<u32>>,
-  pub SENSOR_BITSET_WORDS: Option<alloc::vec::Vec<u64>>,
-}
-impl Default for SCVCellStatT {
-  fn default() -> Self {
-    Self {
-      CELL_ID: 0,
-      LATITUDE_DEG: 0.0,
-      LONGITUDE_DEG: 0.0,
-      ALTITUDE_M: 0.0,
-      COVERED_WINDOW_COUNT: 0,
-      TOTAL_WINDOW_COUNT: 0,
-      COVERAGE_FRACTION: 0.0,
-      MEAN_REVISIT_SEC: 0.0,
-      MAX_GAP_SEC: 0.0,
-      MEAN_GAP_SEC: 0.0,
-      REDUNDANCY: 0.0,
-      SENSOR_IDS: None,
-      SENSOR_BITSET_WORDS: None,
-    }
-  }
-}
-impl SCVCellStatT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCVCellStat<'b>> {
-    let CELL_ID = self.CELL_ID;
-    let LATITUDE_DEG = self.LATITUDE_DEG;
-    let LONGITUDE_DEG = self.LONGITUDE_DEG;
-    let ALTITUDE_M = self.ALTITUDE_M;
-    let COVERED_WINDOW_COUNT = self.COVERED_WINDOW_COUNT;
-    let TOTAL_WINDOW_COUNT = self.TOTAL_WINDOW_COUNT;
-    let COVERAGE_FRACTION = self.COVERAGE_FRACTION;
-    let MEAN_REVISIT_SEC = self.MEAN_REVISIT_SEC;
-    let MAX_GAP_SEC = self.MAX_GAP_SEC;
-    let MEAN_GAP_SEC = self.MEAN_GAP_SEC;
-    let REDUNDANCY = self.REDUNDANCY;
-    let SENSOR_IDS = self.SENSOR_IDS.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    let SENSOR_BITSET_WORDS = self.SENSOR_BITSET_WORDS.as_ref().map(|x|{
-      _fbb.create_vector(x)
-    });
-    SCVCellStat::create(_fbb, &SCVCellStatArgs{
-      CELL_ID,
-      LATITUDE_DEG,
-      LONGITUDE_DEG,
-      ALTITUDE_M,
-      COVERED_WINDOW_COUNT,
-      TOTAL_WINDOW_COUNT,
-      COVERAGE_FRACTION,
-      MEAN_REVISIT_SEC,
-      MAX_GAP_SEC,
-      MEAN_GAP_SEC,
-      REDUNDANCY,
-      SENSOR_IDS,
-      SENSOR_BITSET_WORDS,
-    })
-  }
-}
-pub enum SCVIntervalOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SCVInterval<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCVInterval<'a> {
-  type Inner = SCVInterval<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCVInterval<'a> {
-  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_TARGET_ID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_INTERVAL_KIND: ::flatbuffers::VOffsetT = 8;
-  pub const VT_START_OFFSET_SEC: ::flatbuffers::VOffsetT = 10;
-  pub const VT_STOP_OFFSET_SEC: ::flatbuffers::VOffsetT = 12;
-  pub const VT_DURATION_SEC: ::flatbuffers::VOffsetT = 14;
-  pub const VT_MIN_RANGE_M: ::flatbuffers::VOffsetT = 16;
-  pub const VT_MAX_ELEVATION_DEG: ::flatbuffers::VOffsetT = 18;
-  pub const VT_CELL_ID: ::flatbuffers::VOffsetT = 20;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCVInterval { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCVIntervalArgs
-  ) -> ::flatbuffers::WIPOffset<SCVInterval<'bldr>> {
-    let mut builder = SCVIntervalBuilder::new(_fbb);
-    builder.add_MAX_ELEVATION_DEG(args.MAX_ELEVATION_DEG);
-    builder.add_MIN_RANGE_M(args.MIN_RANGE_M);
-    builder.add_DURATION_SEC(args.DURATION_SEC);
-    builder.add_STOP_OFFSET_SEC(args.STOP_OFFSET_SEC);
-    builder.add_START_OFFSET_SEC(args.START_OFFSET_SEC);
-    builder.add_CELL_ID(args.CELL_ID);
-    builder.add_TARGET_ID(args.TARGET_ID);
-    builder.add_SENSOR_ID(args.SENSOR_ID);
-    builder.add_INTERVAL_KIND(args.INTERVAL_KIND);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCVIntervalT {
-    let SENSOR_ID = self.SENSOR_ID();
-    let TARGET_ID = self.TARGET_ID();
-    let INTERVAL_KIND = self.INTERVAL_KIND();
-    let START_OFFSET_SEC = self.START_OFFSET_SEC();
-    let STOP_OFFSET_SEC = self.STOP_OFFSET_SEC();
-    let DURATION_SEC = self.DURATION_SEC();
-    let MIN_RANGE_M = self.MIN_RANGE_M();
-    let MAX_ELEVATION_DEG = self.MAX_ELEVATION_DEG();
-    let CELL_ID = self.CELL_ID();
-    SCVIntervalT {
-      SENSOR_ID,
-      TARGET_ID,
-      INTERVAL_KIND,
-      START_OFFSET_SEC,
-      STOP_OFFSET_SEC,
-      DURATION_SEC,
-      MIN_RANGE_M,
-      MAX_ELEVATION_DEG,
-      CELL_ID,
-    }
-  }
-
-  #[inline]
-  pub fn SENSOR_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVInterval::VT_SENSOR_ID, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TARGET_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVInterval::VT_TARGET_ID, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn INTERVAL_KIND(&self) -> scvIntervalCategory {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvIntervalCategory>(SCVInterval::VT_INTERVAL_KIND, Some(scvIntervalCategory::ACCESS)).unwrap()}
-  }
-  #[inline]
-  pub fn START_OFFSET_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVInterval::VT_START_OFFSET_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn STOP_OFFSET_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVInterval::VT_STOP_OFFSET_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DURATION_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVInterval::VT_DURATION_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MIN_RANGE_M(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVInterval::VT_MIN_RANGE_M, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_ELEVATION_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVInterval::VT_MAX_ELEVATION_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CELL_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVInterval::VT_CELL_ID, Some(0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCVInterval<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<u32>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
-     .visit_field::<u32>("TARGET_ID", Self::VT_TARGET_ID, false)?
-     .visit_field::<scvIntervalCategory>("INTERVAL_KIND", Self::VT_INTERVAL_KIND, false)?
-     .visit_field::<f64>("START_OFFSET_SEC", Self::VT_START_OFFSET_SEC, false)?
-     .visit_field::<f64>("STOP_OFFSET_SEC", Self::VT_STOP_OFFSET_SEC, false)?
-     .visit_field::<f64>("DURATION_SEC", Self::VT_DURATION_SEC, false)?
-     .visit_field::<f64>("MIN_RANGE_M", Self::VT_MIN_RANGE_M, false)?
-     .visit_field::<f64>("MAX_ELEVATION_DEG", Self::VT_MAX_ELEVATION_DEG, false)?
-     .visit_field::<u32>("CELL_ID", Self::VT_CELL_ID, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCVIntervalArgs {
-    pub SENSOR_ID: u32,
-    pub TARGET_ID: u32,
-    pub INTERVAL_KIND: scvIntervalCategory,
-    pub START_OFFSET_SEC: f64,
-    pub STOP_OFFSET_SEC: f64,
-    pub DURATION_SEC: f64,
-    pub MIN_RANGE_M: f64,
-    pub MAX_ELEVATION_DEG: f64,
-    pub CELL_ID: u32,
-}
-impl<'a> Default for SCVIntervalArgs {
-  #[inline]
-  fn default() -> Self {
-    SCVIntervalArgs {
-      SENSOR_ID: 0,
-      TARGET_ID: 0,
-      INTERVAL_KIND: scvIntervalCategory::ACCESS,
-      START_OFFSET_SEC: 0.0,
-      STOP_OFFSET_SEC: 0.0,
-      DURATION_SEC: 0.0,
-      MIN_RANGE_M: 0.0,
-      MAX_ELEVATION_DEG: 0.0,
-      CELL_ID: 0,
-    }
-  }
-}
-
-pub struct SCVIntervalBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVIntervalBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVInterval::VT_SENSOR_ID, SENSOR_ID, 0);
-  }
-  #[inline]
-  pub fn add_TARGET_ID(&mut self, TARGET_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVInterval::VT_TARGET_ID, TARGET_ID, 0);
-  }
-  #[inline]
-  pub fn add_INTERVAL_KIND(&mut self, INTERVAL_KIND: scvIntervalCategory) {
-    self.fbb_.push_slot::<scvIntervalCategory>(SCVInterval::VT_INTERVAL_KIND, INTERVAL_KIND, scvIntervalCategory::ACCESS);
-  }
-  #[inline]
-  pub fn add_START_OFFSET_SEC(&mut self, START_OFFSET_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVInterval::VT_START_OFFSET_SEC, START_OFFSET_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_STOP_OFFSET_SEC(&mut self, STOP_OFFSET_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVInterval::VT_STOP_OFFSET_SEC, STOP_OFFSET_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_DURATION_SEC(&mut self, DURATION_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVInterval::VT_DURATION_SEC, DURATION_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_MIN_RANGE_M(&mut self, MIN_RANGE_M: f64) {
-    self.fbb_.push_slot::<f64>(SCVInterval::VT_MIN_RANGE_M, MIN_RANGE_M, 0.0);
-  }
-  #[inline]
-  pub fn add_MAX_ELEVATION_DEG(&mut self, MAX_ELEVATION_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVInterval::VT_MAX_ELEVATION_DEG, MAX_ELEVATION_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_CELL_ID(&mut self, CELL_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVInterval::VT_CELL_ID, CELL_ID, 0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVIntervalBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCVIntervalBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVInterval<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCVInterval<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCVInterval");
-      ds.field("SENSOR_ID", &self.SENSOR_ID());
-      ds.field("TARGET_ID", &self.TARGET_ID());
-      ds.field("INTERVAL_KIND", &self.INTERVAL_KIND());
-      ds.field("START_OFFSET_SEC", &self.START_OFFSET_SEC());
-      ds.field("STOP_OFFSET_SEC", &self.STOP_OFFSET_SEC());
-      ds.field("DURATION_SEC", &self.DURATION_SEC());
-      ds.field("MIN_RANGE_M", &self.MIN_RANGE_M());
-      ds.field("MAX_ELEVATION_DEG", &self.MAX_ELEVATION_DEG());
-      ds.field("CELL_ID", &self.CELL_ID());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCVIntervalT {
-  pub SENSOR_ID: u32,
-  pub TARGET_ID: u32,
-  pub INTERVAL_KIND: scvIntervalCategory,
-  pub START_OFFSET_SEC: f64,
-  pub STOP_OFFSET_SEC: f64,
-  pub DURATION_SEC: f64,
-  pub MIN_RANGE_M: f64,
-  pub MAX_ELEVATION_DEG: f64,
-  pub CELL_ID: u32,
-}
-impl Default for SCVIntervalT {
-  fn default() -> Self {
-    Self {
-      SENSOR_ID: 0,
-      TARGET_ID: 0,
-      INTERVAL_KIND: scvIntervalCategory::ACCESS,
-      START_OFFSET_SEC: 0.0,
-      STOP_OFFSET_SEC: 0.0,
-      DURATION_SEC: 0.0,
-      MIN_RANGE_M: 0.0,
-      MAX_ELEVATION_DEG: 0.0,
-      CELL_ID: 0,
-    }
-  }
-}
-impl SCVIntervalT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCVInterval<'b>> {
-    let SENSOR_ID = self.SENSOR_ID;
-    let TARGET_ID = self.TARGET_ID;
-    let INTERVAL_KIND = self.INTERVAL_KIND;
-    let START_OFFSET_SEC = self.START_OFFSET_SEC;
-    let STOP_OFFSET_SEC = self.STOP_OFFSET_SEC;
-    let DURATION_SEC = self.DURATION_SEC;
-    let MIN_RANGE_M = self.MIN_RANGE_M;
-    let MAX_ELEVATION_DEG = self.MAX_ELEVATION_DEG;
-    let CELL_ID = self.CELL_ID;
-    SCVInterval::create(_fbb, &SCVIntervalArgs{
-      SENSOR_ID,
-      TARGET_ID,
-      INTERVAL_KIND,
-      START_OFFSET_SEC,
-      STOP_OFFSET_SEC,
-      DURATION_SEC,
-      MIN_RANGE_M,
-      MAX_ELEVATION_DEG,
-      CELL_ID,
-    })
-  }
-}
-pub enum SCVLatitudeBandStatOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SCVLatitudeBandStat<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCVLatitudeBandStat<'a> {
-  type Inner = SCVLatitudeBandStat<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCVLatitudeBandStat<'a> {
-  pub const VT_MIN_LAT_DEG: ::flatbuffers::VOffsetT = 4;
-  pub const VT_MAX_LAT_DEG: ::flatbuffers::VOffsetT = 6;
-  pub const VT_COVERAGE_FRACTION: ::flatbuffers::VOffsetT = 8;
-  pub const VT_MEAN_REVISIT_SEC: ::flatbuffers::VOffsetT = 10;
-  pub const VT_MAX_GAP_SEC: ::flatbuffers::VOffsetT = 12;
-  pub const VT_MEAN_REDUNDANCY: ::flatbuffers::VOffsetT = 14;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCVLatitudeBandStat { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCVLatitudeBandStatArgs
-  ) -> ::flatbuffers::WIPOffset<SCVLatitudeBandStat<'bldr>> {
-    let mut builder = SCVLatitudeBandStatBuilder::new(_fbb);
-    builder.add_MEAN_REDUNDANCY(args.MEAN_REDUNDANCY);
-    builder.add_MAX_GAP_SEC(args.MAX_GAP_SEC);
-    builder.add_MEAN_REVISIT_SEC(args.MEAN_REVISIT_SEC);
-    builder.add_COVERAGE_FRACTION(args.COVERAGE_FRACTION);
-    builder.add_MAX_LAT_DEG(args.MAX_LAT_DEG);
-    builder.add_MIN_LAT_DEG(args.MIN_LAT_DEG);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCVLatitudeBandStatT {
-    let MIN_LAT_DEG = self.MIN_LAT_DEG();
-    let MAX_LAT_DEG = self.MAX_LAT_DEG();
-    let COVERAGE_FRACTION = self.COVERAGE_FRACTION();
-    let MEAN_REVISIT_SEC = self.MEAN_REVISIT_SEC();
-    let MAX_GAP_SEC = self.MAX_GAP_SEC();
-    let MEAN_REDUNDANCY = self.MEAN_REDUNDANCY();
-    SCVLatitudeBandStatT {
-      MIN_LAT_DEG,
-      MAX_LAT_DEG,
-      COVERAGE_FRACTION,
-      MEAN_REVISIT_SEC,
-      MAX_GAP_SEC,
-      MEAN_REDUNDANCY,
-    }
-  }
-
-  #[inline]
-  pub fn MIN_LAT_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_MIN_LAT_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_LAT_DEG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_MAX_LAT_DEG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn COVERAGE_FRACTION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_COVERAGE_FRACTION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_REVISIT_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_MEAN_REVISIT_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_GAP_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_MAX_GAP_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_REDUNDANCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVLatitudeBandStat::VT_MEAN_REDUNDANCY, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCVLatitudeBandStat<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("MIN_LAT_DEG", Self::VT_MIN_LAT_DEG, false)?
-     .visit_field::<f64>("MAX_LAT_DEG", Self::VT_MAX_LAT_DEG, false)?
-     .visit_field::<f64>("COVERAGE_FRACTION", Self::VT_COVERAGE_FRACTION, false)?
-     .visit_field::<f64>("MEAN_REVISIT_SEC", Self::VT_MEAN_REVISIT_SEC, false)?
-     .visit_field::<f64>("MAX_GAP_SEC", Self::VT_MAX_GAP_SEC, false)?
-     .visit_field::<f64>("MEAN_REDUNDANCY", Self::VT_MEAN_REDUNDANCY, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCVLatitudeBandStatArgs {
-    pub MIN_LAT_DEG: f64,
-    pub MAX_LAT_DEG: f64,
-    pub COVERAGE_FRACTION: f64,
-    pub MEAN_REVISIT_SEC: f64,
-    pub MAX_GAP_SEC: f64,
-    pub MEAN_REDUNDANCY: f64,
-}
-impl<'a> Default for SCVLatitudeBandStatArgs {
-  #[inline]
-  fn default() -> Self {
-    SCVLatitudeBandStatArgs {
-      MIN_LAT_DEG: 0.0,
-      MAX_LAT_DEG: 0.0,
-      COVERAGE_FRACTION: 0.0,
-      MEAN_REVISIT_SEC: 0.0,
-      MAX_GAP_SEC: 0.0,
-      MEAN_REDUNDANCY: 0.0,
-    }
-  }
-}
-
-pub struct SCVLatitudeBandStatBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVLatitudeBandStatBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_MIN_LAT_DEG(&mut self, MIN_LAT_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_MIN_LAT_DEG, MIN_LAT_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_MAX_LAT_DEG(&mut self, MAX_LAT_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_MAX_LAT_DEG, MAX_LAT_DEG, 0.0);
-  }
-  #[inline]
-  pub fn add_COVERAGE_FRACTION(&mut self, COVERAGE_FRACTION: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_COVERAGE_FRACTION, COVERAGE_FRACTION, 0.0);
-  }
-  #[inline]
-  pub fn add_MEAN_REVISIT_SEC(&mut self, MEAN_REVISIT_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_MEAN_REVISIT_SEC, MEAN_REVISIT_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_MAX_GAP_SEC(&mut self, MAX_GAP_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_MAX_GAP_SEC, MAX_GAP_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_MEAN_REDUNDANCY(&mut self, MEAN_REDUNDANCY: f64) {
-    self.fbb_.push_slot::<f64>(SCVLatitudeBandStat::VT_MEAN_REDUNDANCY, MEAN_REDUNDANCY, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVLatitudeBandStatBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCVLatitudeBandStatBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVLatitudeBandStat<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCVLatitudeBandStat<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCVLatitudeBandStat");
-      ds.field("MIN_LAT_DEG", &self.MIN_LAT_DEG());
-      ds.field("MAX_LAT_DEG", &self.MAX_LAT_DEG());
-      ds.field("COVERAGE_FRACTION", &self.COVERAGE_FRACTION());
-      ds.field("MEAN_REVISIT_SEC", &self.MEAN_REVISIT_SEC());
-      ds.field("MAX_GAP_SEC", &self.MAX_GAP_SEC());
-      ds.field("MEAN_REDUNDANCY", &self.MEAN_REDUNDANCY());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCVLatitudeBandStatT {
-  pub MIN_LAT_DEG: f64,
-  pub MAX_LAT_DEG: f64,
-  pub COVERAGE_FRACTION: f64,
-  pub MEAN_REVISIT_SEC: f64,
-  pub MAX_GAP_SEC: f64,
-  pub MEAN_REDUNDANCY: f64,
-}
-impl Default for SCVLatitudeBandStatT {
-  fn default() -> Self {
-    Self {
-      MIN_LAT_DEG: 0.0,
-      MAX_LAT_DEG: 0.0,
-      COVERAGE_FRACTION: 0.0,
-      MEAN_REVISIT_SEC: 0.0,
-      MAX_GAP_SEC: 0.0,
-      MEAN_REDUNDANCY: 0.0,
-    }
-  }
-}
-impl SCVLatitudeBandStatT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCVLatitudeBandStat<'b>> {
-    let MIN_LAT_DEG = self.MIN_LAT_DEG;
-    let MAX_LAT_DEG = self.MAX_LAT_DEG;
-    let COVERAGE_FRACTION = self.COVERAGE_FRACTION;
-    let MEAN_REVISIT_SEC = self.MEAN_REVISIT_SEC;
-    let MAX_GAP_SEC = self.MAX_GAP_SEC;
-    let MEAN_REDUNDANCY = self.MEAN_REDUNDANCY;
-    SCVLatitudeBandStat::create(_fbb, &SCVLatitudeBandStatArgs{
-      MIN_LAT_DEG,
-      MAX_LAT_DEG,
-      COVERAGE_FRACTION,
-      MEAN_REVISIT_SEC,
-      MAX_GAP_SEC,
-      MEAN_REDUNDANCY,
-    })
-  }
-}
-pub enum SCVTimeSeriesPointOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SCVTimeSeriesPoint<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCVTimeSeriesPoint<'a> {
-  type Inner = SCVTimeSeriesPoint<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCVTimeSeriesPoint<'a> {
-  pub const VT_METRIC_KIND: ::flatbuffers::VOffsetT = 4;
-  pub const VT_TIME_OFFSET_SEC: ::flatbuffers::VOffsetT = 6;
-  pub const VT_WINDOW_INDEX: ::flatbuffers::VOffsetT = 8;
-  pub const VT_VALUE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 12;
-  pub const VT_CELL_ID: ::flatbuffers::VOffsetT = 14;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCVTimeSeriesPoint { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCVTimeSeriesPointArgs
-  ) -> ::flatbuffers::WIPOffset<SCVTimeSeriesPoint<'bldr>> {
-    let mut builder = SCVTimeSeriesPointBuilder::new(_fbb);
-    builder.add_VALUE(args.VALUE);
-    builder.add_TIME_OFFSET_SEC(args.TIME_OFFSET_SEC);
-    builder.add_CELL_ID(args.CELL_ID);
-    builder.add_SENSOR_ID(args.SENSOR_ID);
-    builder.add_WINDOW_INDEX(args.WINDOW_INDEX);
-    builder.add_METRIC_KIND(args.METRIC_KIND);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCVTimeSeriesPointT {
-    let METRIC_KIND = self.METRIC_KIND();
-    let TIME_OFFSET_SEC = self.TIME_OFFSET_SEC();
-    let WINDOW_INDEX = self.WINDOW_INDEX();
-    let VALUE = self.VALUE();
-    let SENSOR_ID = self.SENSOR_ID();
-    let CELL_ID = self.CELL_ID();
-    SCVTimeSeriesPointT {
-      METRIC_KIND,
-      TIME_OFFSET_SEC,
-      WINDOW_INDEX,
-      VALUE,
-      SENSOR_ID,
-      CELL_ID,
-    }
-  }
-
-  #[inline]
-  pub fn METRIC_KIND(&self) -> scvMetricSeriesKind {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvMetricSeriesKind>(SCVTimeSeriesPoint::VT_METRIC_KIND, Some(scvMetricSeriesKind::PERCENT_COVERED)).unwrap()}
-  }
-  #[inline]
-  pub fn TIME_OFFSET_SEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVTimeSeriesPoint::VT_TIME_OFFSET_SEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn WINDOW_INDEX(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVTimeSeriesPoint::VT_WINDOW_INDEX, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn VALUE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVTimeSeriesPoint::VT_VALUE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENSOR_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVTimeSeriesPoint::VT_SENSOR_ID, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn CELL_ID(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVTimeSeriesPoint::VT_CELL_ID, Some(0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCVTimeSeriesPoint<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<scvMetricSeriesKind>("METRIC_KIND", Self::VT_METRIC_KIND, false)?
-     .visit_field::<f64>("TIME_OFFSET_SEC", Self::VT_TIME_OFFSET_SEC, false)?
-     .visit_field::<u32>("WINDOW_INDEX", Self::VT_WINDOW_INDEX, false)?
-     .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
-     .visit_field::<u32>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
-     .visit_field::<u32>("CELL_ID", Self::VT_CELL_ID, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCVTimeSeriesPointArgs {
-    pub METRIC_KIND: scvMetricSeriesKind,
-    pub TIME_OFFSET_SEC: f64,
-    pub WINDOW_INDEX: u32,
-    pub VALUE: f64,
-    pub SENSOR_ID: u32,
-    pub CELL_ID: u32,
-}
-impl<'a> Default for SCVTimeSeriesPointArgs {
-  #[inline]
-  fn default() -> Self {
-    SCVTimeSeriesPointArgs {
-      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
-      TIME_OFFSET_SEC: 0.0,
-      WINDOW_INDEX: 0,
-      VALUE: 0.0,
-      SENSOR_ID: 0,
-      CELL_ID: 0,
-    }
-  }
-}
-
-pub struct SCVTimeSeriesPointBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVTimeSeriesPointBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_METRIC_KIND(&mut self, METRIC_KIND: scvMetricSeriesKind) {
-    self.fbb_.push_slot::<scvMetricSeriesKind>(SCVTimeSeriesPoint::VT_METRIC_KIND, METRIC_KIND, scvMetricSeriesKind::PERCENT_COVERED);
-  }
-  #[inline]
-  pub fn add_TIME_OFFSET_SEC(&mut self, TIME_OFFSET_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCVTimeSeriesPoint::VT_TIME_OFFSET_SEC, TIME_OFFSET_SEC, 0.0);
-  }
-  #[inline]
-  pub fn add_WINDOW_INDEX(&mut self, WINDOW_INDEX: u32) {
-    self.fbb_.push_slot::<u32>(SCVTimeSeriesPoint::VT_WINDOW_INDEX, WINDOW_INDEX, 0);
-  }
-  #[inline]
-  pub fn add_VALUE(&mut self, VALUE: f64) {
-    self.fbb_.push_slot::<f64>(SCVTimeSeriesPoint::VT_VALUE, VALUE, 0.0);
-  }
-  #[inline]
-  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVTimeSeriesPoint::VT_SENSOR_ID, SENSOR_ID, 0);
-  }
-  #[inline]
-  pub fn add_CELL_ID(&mut self, CELL_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCVTimeSeriesPoint::VT_CELL_ID, CELL_ID, 0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVTimeSeriesPointBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCVTimeSeriesPointBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVTimeSeriesPoint<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCVTimeSeriesPoint<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCVTimeSeriesPoint");
-      ds.field("METRIC_KIND", &self.METRIC_KIND());
-      ds.field("TIME_OFFSET_SEC", &self.TIME_OFFSET_SEC());
-      ds.field("WINDOW_INDEX", &self.WINDOW_INDEX());
-      ds.field("VALUE", &self.VALUE());
-      ds.field("SENSOR_ID", &self.SENSOR_ID());
-      ds.field("CELL_ID", &self.CELL_ID());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCVTimeSeriesPointT {
-  pub METRIC_KIND: scvMetricSeriesKind,
-  pub TIME_OFFSET_SEC: f64,
-  pub WINDOW_INDEX: u32,
-  pub VALUE: f64,
-  pub SENSOR_ID: u32,
-  pub CELL_ID: u32,
-}
-impl Default for SCVTimeSeriesPointT {
-  fn default() -> Self {
-    Self {
-      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
-      TIME_OFFSET_SEC: 0.0,
-      WINDOW_INDEX: 0,
-      VALUE: 0.0,
-      SENSOR_ID: 0,
-      CELL_ID: 0,
-    }
-  }
-}
-impl SCVTimeSeriesPointT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCVTimeSeriesPoint<'b>> {
-    let METRIC_KIND = self.METRIC_KIND;
-    let TIME_OFFSET_SEC = self.TIME_OFFSET_SEC;
-    let WINDOW_INDEX = self.WINDOW_INDEX;
-    let VALUE = self.VALUE;
-    let SENSOR_ID = self.SENSOR_ID;
-    let CELL_ID = self.CELL_ID;
-    SCVTimeSeriesPoint::create(_fbb, &SCVTimeSeriesPointArgs{
-      METRIC_KIND,
-      TIME_OFFSET_SEC,
-      WINDOW_INDEX,
-      VALUE,
-      SENSOR_ID,
-      CELL_ID,
-    })
-  }
-}
 pub enum SCVHistogramBinOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -6114,223 +5537,6 @@ impl SCVHistogramBinT {
       MAX_VALUE,
       COUNT,
       WEIGHT,
-    })
-  }
-}
-pub enum SCVHeatmapCellOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-pub struct SCVHeatmapCell<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCVHeatmapCell<'a> {
-  type Inner = SCVHeatmapCell<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCVHeatmapCell<'a> {
-  pub const VT_METRIC_KIND: ::flatbuffers::VOffsetT = 4;
-  pub const VT_X_INDEX: ::flatbuffers::VOffsetT = 6;
-  pub const VT_Y_INDEX: ::flatbuffers::VOffsetT = 8;
-  pub const VT_VALUE: ::flatbuffers::VOffsetT = 10;
-  pub const VT_SENSOR_COUNT: ::flatbuffers::VOffsetT = 12;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCVHeatmapCell { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCVHeatmapCellArgs
-  ) -> ::flatbuffers::WIPOffset<SCVHeatmapCell<'bldr>> {
-    let mut builder = SCVHeatmapCellBuilder::new(_fbb);
-    builder.add_VALUE(args.VALUE);
-    builder.add_SENSOR_COUNT(args.SENSOR_COUNT);
-    builder.add_Y_INDEX(args.Y_INDEX);
-    builder.add_X_INDEX(args.X_INDEX);
-    builder.add_METRIC_KIND(args.METRIC_KIND);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCVHeatmapCellT {
-    let METRIC_KIND = self.METRIC_KIND();
-    let X_INDEX = self.X_INDEX();
-    let Y_INDEX = self.Y_INDEX();
-    let VALUE = self.VALUE();
-    let SENSOR_COUNT = self.SENSOR_COUNT();
-    SCVHeatmapCellT {
-      METRIC_KIND,
-      X_INDEX,
-      Y_INDEX,
-      VALUE,
-      SENSOR_COUNT,
-    }
-  }
-
-  #[inline]
-  pub fn METRIC_KIND(&self) -> scvMetricSeriesKind {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<scvMetricSeriesKind>(SCVHeatmapCell::VT_METRIC_KIND, Some(scvMetricSeriesKind::PERCENT_COVERED)).unwrap()}
-  }
-  #[inline]
-  pub fn X_INDEX(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVHeatmapCell::VT_X_INDEX, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn Y_INDEX(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVHeatmapCell::VT_Y_INDEX, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn VALUE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCVHeatmapCell::VT_VALUE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENSOR_COUNT(&self) -> u32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCVHeatmapCell::VT_SENSOR_COUNT, Some(0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCVHeatmapCell<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<scvMetricSeriesKind>("METRIC_KIND", Self::VT_METRIC_KIND, false)?
-     .visit_field::<u32>("X_INDEX", Self::VT_X_INDEX, false)?
-     .visit_field::<u32>("Y_INDEX", Self::VT_Y_INDEX, false)?
-     .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
-     .visit_field::<u32>("SENSOR_COUNT", Self::VT_SENSOR_COUNT, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCVHeatmapCellArgs {
-    pub METRIC_KIND: scvMetricSeriesKind,
-    pub X_INDEX: u32,
-    pub Y_INDEX: u32,
-    pub VALUE: f64,
-    pub SENSOR_COUNT: u32,
-}
-impl<'a> Default for SCVHeatmapCellArgs {
-  #[inline]
-  fn default() -> Self {
-    SCVHeatmapCellArgs {
-      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
-      X_INDEX: 0,
-      Y_INDEX: 0,
-      VALUE: 0.0,
-      SENSOR_COUNT: 0,
-    }
-  }
-}
-
-pub struct SCVHeatmapCellBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVHeatmapCellBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_METRIC_KIND(&mut self, METRIC_KIND: scvMetricSeriesKind) {
-    self.fbb_.push_slot::<scvMetricSeriesKind>(SCVHeatmapCell::VT_METRIC_KIND, METRIC_KIND, scvMetricSeriesKind::PERCENT_COVERED);
-  }
-  #[inline]
-  pub fn add_X_INDEX(&mut self, X_INDEX: u32) {
-    self.fbb_.push_slot::<u32>(SCVHeatmapCell::VT_X_INDEX, X_INDEX, 0);
-  }
-  #[inline]
-  pub fn add_Y_INDEX(&mut self, Y_INDEX: u32) {
-    self.fbb_.push_slot::<u32>(SCVHeatmapCell::VT_Y_INDEX, Y_INDEX, 0);
-  }
-  #[inline]
-  pub fn add_VALUE(&mut self, VALUE: f64) {
-    self.fbb_.push_slot::<f64>(SCVHeatmapCell::VT_VALUE, VALUE, 0.0);
-  }
-  #[inline]
-  pub fn add_SENSOR_COUNT(&mut self, SENSOR_COUNT: u32) {
-    self.fbb_.push_slot::<u32>(SCVHeatmapCell::VT_SENSOR_COUNT, SENSOR_COUNT, 0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVHeatmapCellBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCVHeatmapCellBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVHeatmapCell<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCVHeatmapCell<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCVHeatmapCell");
-      ds.field("METRIC_KIND", &self.METRIC_KIND());
-      ds.field("X_INDEX", &self.X_INDEX());
-      ds.field("Y_INDEX", &self.Y_INDEX());
-      ds.field("VALUE", &self.VALUE());
-      ds.field("SENSOR_COUNT", &self.SENSOR_COUNT());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCVHeatmapCellT {
-  pub METRIC_KIND: scvMetricSeriesKind,
-  pub X_INDEX: u32,
-  pub Y_INDEX: u32,
-  pub VALUE: f64,
-  pub SENSOR_COUNT: u32,
-}
-impl Default for SCVHeatmapCellT {
-  fn default() -> Self {
-    Self {
-      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
-      X_INDEX: 0,
-      Y_INDEX: 0,
-      VALUE: 0.0,
-      SENSOR_COUNT: 0,
-    }
-  }
-}
-impl SCVHeatmapCellT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCVHeatmapCell<'b>> {
-    let METRIC_KIND = self.METRIC_KIND;
-    let X_INDEX = self.X_INDEX;
-    let Y_INDEX = self.Y_INDEX;
-    let VALUE = self.VALUE;
-    let SENSOR_COUNT = self.SENSOR_COUNT;
-    SCVHeatmapCell::create(_fbb, &SCVHeatmapCellArgs{
-      METRIC_KIND,
-      X_INDEX,
-      Y_INDEX,
-      VALUE,
-      SENSOR_COUNT,
     })
   }
 }
@@ -7838,6 +7044,1218 @@ impl SCVPackedGeometryChunkT {
     })
   }
 }
+pub enum SCVPackedRasterBandOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVPackedRasterBand<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVPackedRasterBand<'a> {
+  type Inner = SCVPackedRasterBand<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVPackedRasterBand<'a> {
+  pub const VT_PRODUCT_KIND: ::flatbuffers::VOffsetT = 4;
+  pub const VT_METRIC_KIND: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ENCODING: ::flatbuffers::VOffsetT = 8;
+  pub const VT_COMPONENTS_PER_CELL: ::flatbuffers::VOffsetT = 10;
+  pub const VT_CELL_COUNT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_BUCKET_COUNT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_WORDS_PER_BUCKET: ::flatbuffers::VOffsetT = 16;
+  pub const VT_MEMORY_REGION_ID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_MEMORY_RECORD_INDEX: ::flatbuffers::VOffsetT = 20;
+  pub const VT_FLOAT32_VALUES: ::flatbuffers::VOffsetT = 22;
+  pub const VT_FLOAT64_VALUES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_UINT32_VALUES: ::flatbuffers::VOffsetT = 26;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVPackedRasterBand { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVPackedRasterBandArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SCVPackedRasterBand<'bldr>> {
+    let mut builder = SCVPackedRasterBandBuilder::new(_fbb);
+    if let Some(x) = args.UINT32_VALUES { builder.add_UINT32_VALUES(x); }
+    if let Some(x) = args.FLOAT64_VALUES { builder.add_FLOAT64_VALUES(x); }
+    if let Some(x) = args.FLOAT32_VALUES { builder.add_FLOAT32_VALUES(x); }
+    builder.add_MEMORY_RECORD_INDEX(args.MEMORY_RECORD_INDEX);
+    builder.add_MEMORY_REGION_ID(args.MEMORY_REGION_ID);
+    builder.add_WORDS_PER_BUCKET(args.WORDS_PER_BUCKET);
+    builder.add_BUCKET_COUNT(args.BUCKET_COUNT);
+    builder.add_CELL_COUNT(args.CELL_COUNT);
+    builder.add_COMPONENTS_PER_CELL(args.COMPONENTS_PER_CELL);
+    builder.add_METRIC_KIND(args.METRIC_KIND);
+    builder.add_PRODUCT_KIND(args.PRODUCT_KIND);
+    builder.add_ENCODING(args.ENCODING);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVPackedRasterBandT {
+    let PRODUCT_KIND = self.PRODUCT_KIND();
+    let METRIC_KIND = self.METRIC_KIND();
+    let ENCODING = self.ENCODING();
+    let COMPONENTS_PER_CELL = self.COMPONENTS_PER_CELL();
+    let CELL_COUNT = self.CELL_COUNT();
+    let BUCKET_COUNT = self.BUCKET_COUNT();
+    let WORDS_PER_BUCKET = self.WORDS_PER_BUCKET();
+    let MEMORY_REGION_ID = self.MEMORY_REGION_ID();
+    let MEMORY_RECORD_INDEX = self.MEMORY_RECORD_INDEX();
+    let FLOAT32_VALUES = self.FLOAT32_VALUES().map(|x| {
+      x.into_iter().collect()
+    });
+    let FLOAT64_VALUES = self.FLOAT64_VALUES().map(|x| {
+      x.into_iter().collect()
+    });
+    let UINT32_VALUES = self.UINT32_VALUES().map(|x| {
+      x.into_iter().collect()
+    });
+    SCVPackedRasterBandT {
+      PRODUCT_KIND,
+      METRIC_KIND,
+      ENCODING,
+      COMPONENTS_PER_CELL,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGION_ID,
+      MEMORY_RECORD_INDEX,
+      FLOAT32_VALUES,
+      FLOAT64_VALUES,
+      UINT32_VALUES,
+    }
+  }
+
+  #[inline]
+  pub fn PRODUCT_KIND(&self) -> scvRasterProductKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvRasterProductKind>(SCVPackedRasterBand::VT_PRODUCT_KIND, Some(scvRasterProductKind::CELL_BOUNDS_DEG)).unwrap()}
+  }
+  #[inline]
+  pub fn METRIC_KIND(&self) -> scvMetricSeriesKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvMetricSeriesKind>(SCVPackedRasterBand::VT_METRIC_KIND, Some(scvMetricSeriesKind::PERCENT_COVERED)).unwrap()}
+  }
+  #[inline]
+  pub fn ENCODING(&self) -> scvRasterProductEncoding {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvRasterProductEncoding>(SCVPackedRasterBand::VT_ENCODING, Some(scvRasterProductEncoding::FLOAT32)).unwrap()}
+  }
+  #[inline]
+  pub fn COMPONENTS_PER_CELL(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_COMPONENTS_PER_CELL, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn CELL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_CELL_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn BUCKET_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_BUCKET_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn WORDS_PER_BUCKET(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_WORDS_PER_BUCKET, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEMORY_REGION_ID(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_MEMORY_REGION_ID, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEMORY_RECORD_INDEX(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterBand::VT_MEMORY_RECORD_INDEX, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn FLOAT32_VALUES(&self) -> Option<::flatbuffers::Vector<'a, f32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f32>>>(SCVPackedRasterBand::VT_FLOAT32_VALUES, None)}
+  }
+  #[inline]
+  pub fn FLOAT64_VALUES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(SCVPackedRasterBand::VT_FLOAT64_VALUES, None)}
+  }
+  #[inline]
+  pub fn UINT32_VALUES(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(SCVPackedRasterBand::VT_UINT32_VALUES, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVPackedRasterBand<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<scvRasterProductKind>("PRODUCT_KIND", Self::VT_PRODUCT_KIND, false)?
+     .visit_field::<scvMetricSeriesKind>("METRIC_KIND", Self::VT_METRIC_KIND, false)?
+     .visit_field::<scvRasterProductEncoding>("ENCODING", Self::VT_ENCODING, false)?
+     .visit_field::<u32>("COMPONENTS_PER_CELL", Self::VT_COMPONENTS_PER_CELL, false)?
+     .visit_field::<u32>("CELL_COUNT", Self::VT_CELL_COUNT, false)?
+     .visit_field::<u32>("BUCKET_COUNT", Self::VT_BUCKET_COUNT, false)?
+     .visit_field::<u32>("WORDS_PER_BUCKET", Self::VT_WORDS_PER_BUCKET, false)?
+     .visit_field::<u32>("MEMORY_REGION_ID", Self::VT_MEMORY_REGION_ID, false)?
+     .visit_field::<u32>("MEMORY_RECORD_INDEX", Self::VT_MEMORY_RECORD_INDEX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f32>>>("FLOAT32_VALUES", Self::VT_FLOAT32_VALUES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("FLOAT64_VALUES", Self::VT_FLOAT64_VALUES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("UINT32_VALUES", Self::VT_UINT32_VALUES, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVPackedRasterBandArgs<'a> {
+    pub PRODUCT_KIND: scvRasterProductKind,
+    pub METRIC_KIND: scvMetricSeriesKind,
+    pub ENCODING: scvRasterProductEncoding,
+    pub COMPONENTS_PER_CELL: u32,
+    pub CELL_COUNT: u32,
+    pub BUCKET_COUNT: u32,
+    pub WORDS_PER_BUCKET: u32,
+    pub MEMORY_REGION_ID: u32,
+    pub MEMORY_RECORD_INDEX: u32,
+    pub FLOAT32_VALUES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f32>>>,
+    pub FLOAT64_VALUES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub UINT32_VALUES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+}
+impl<'a> Default for SCVPackedRasterBandArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCVPackedRasterBandArgs {
+      PRODUCT_KIND: scvRasterProductKind::CELL_BOUNDS_DEG,
+      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
+      ENCODING: scvRasterProductEncoding::FLOAT32,
+      COMPONENTS_PER_CELL: 0,
+      CELL_COUNT: 0,
+      BUCKET_COUNT: 0,
+      WORDS_PER_BUCKET: 0,
+      MEMORY_REGION_ID: 0,
+      MEMORY_RECORD_INDEX: 0,
+      FLOAT32_VALUES: None,
+      FLOAT64_VALUES: None,
+      UINT32_VALUES: None,
+    }
+  }
+}
+
+pub struct SCVPackedRasterBandBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVPackedRasterBandBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_PRODUCT_KIND(&mut self, PRODUCT_KIND: scvRasterProductKind) {
+    self.fbb_.push_slot::<scvRasterProductKind>(SCVPackedRasterBand::VT_PRODUCT_KIND, PRODUCT_KIND, scvRasterProductKind::CELL_BOUNDS_DEG);
+  }
+  #[inline]
+  pub fn add_METRIC_KIND(&mut self, METRIC_KIND: scvMetricSeriesKind) {
+    self.fbb_.push_slot::<scvMetricSeriesKind>(SCVPackedRasterBand::VT_METRIC_KIND, METRIC_KIND, scvMetricSeriesKind::PERCENT_COVERED);
+  }
+  #[inline]
+  pub fn add_ENCODING(&mut self, ENCODING: scvRasterProductEncoding) {
+    self.fbb_.push_slot::<scvRasterProductEncoding>(SCVPackedRasterBand::VT_ENCODING, ENCODING, scvRasterProductEncoding::FLOAT32);
+  }
+  #[inline]
+  pub fn add_COMPONENTS_PER_CELL(&mut self, COMPONENTS_PER_CELL: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_COMPONENTS_PER_CELL, COMPONENTS_PER_CELL, 0);
+  }
+  #[inline]
+  pub fn add_CELL_COUNT(&mut self, CELL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_CELL_COUNT, CELL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_BUCKET_COUNT(&mut self, BUCKET_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_BUCKET_COUNT, BUCKET_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_WORDS_PER_BUCKET(&mut self, WORDS_PER_BUCKET: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_WORDS_PER_BUCKET, WORDS_PER_BUCKET, 0);
+  }
+  #[inline]
+  pub fn add_MEMORY_REGION_ID(&mut self, MEMORY_REGION_ID: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_MEMORY_REGION_ID, MEMORY_REGION_ID, 0);
+  }
+  #[inline]
+  pub fn add_MEMORY_RECORD_INDEX(&mut self, MEMORY_RECORD_INDEX: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterBand::VT_MEMORY_RECORD_INDEX, MEMORY_RECORD_INDEX, 0);
+  }
+  #[inline]
+  pub fn add_FLOAT32_VALUES(&mut self, FLOAT32_VALUES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterBand::VT_FLOAT32_VALUES, FLOAT32_VALUES);
+  }
+  #[inline]
+  pub fn add_FLOAT64_VALUES(&mut self, FLOAT64_VALUES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterBand::VT_FLOAT64_VALUES, FLOAT64_VALUES);
+  }
+  #[inline]
+  pub fn add_UINT32_VALUES(&mut self, UINT32_VALUES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterBand::VT_UINT32_VALUES, UINT32_VALUES);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVPackedRasterBandBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVPackedRasterBandBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVPackedRasterBand<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVPackedRasterBand<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVPackedRasterBand");
+      ds.field("PRODUCT_KIND", &self.PRODUCT_KIND());
+      ds.field("METRIC_KIND", &self.METRIC_KIND());
+      ds.field("ENCODING", &self.ENCODING());
+      ds.field("COMPONENTS_PER_CELL", &self.COMPONENTS_PER_CELL());
+      ds.field("CELL_COUNT", &self.CELL_COUNT());
+      ds.field("BUCKET_COUNT", &self.BUCKET_COUNT());
+      ds.field("WORDS_PER_BUCKET", &self.WORDS_PER_BUCKET());
+      ds.field("MEMORY_REGION_ID", &self.MEMORY_REGION_ID());
+      ds.field("MEMORY_RECORD_INDEX", &self.MEMORY_RECORD_INDEX());
+      ds.field("FLOAT32_VALUES", &self.FLOAT32_VALUES());
+      ds.field("FLOAT64_VALUES", &self.FLOAT64_VALUES());
+      ds.field("UINT32_VALUES", &self.UINT32_VALUES());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVPackedRasterBandT {
+  pub PRODUCT_KIND: scvRasterProductKind,
+  pub METRIC_KIND: scvMetricSeriesKind,
+  pub ENCODING: scvRasterProductEncoding,
+  pub COMPONENTS_PER_CELL: u32,
+  pub CELL_COUNT: u32,
+  pub BUCKET_COUNT: u32,
+  pub WORDS_PER_BUCKET: u32,
+  pub MEMORY_REGION_ID: u32,
+  pub MEMORY_RECORD_INDEX: u32,
+  pub FLOAT32_VALUES: Option<alloc::vec::Vec<f32>>,
+  pub FLOAT64_VALUES: Option<alloc::vec::Vec<f64>>,
+  pub UINT32_VALUES: Option<alloc::vec::Vec<u32>>,
+}
+impl Default for SCVPackedRasterBandT {
+  fn default() -> Self {
+    Self {
+      PRODUCT_KIND: scvRasterProductKind::CELL_BOUNDS_DEG,
+      METRIC_KIND: scvMetricSeriesKind::PERCENT_COVERED,
+      ENCODING: scvRasterProductEncoding::FLOAT32,
+      COMPONENTS_PER_CELL: 0,
+      CELL_COUNT: 0,
+      BUCKET_COUNT: 0,
+      WORDS_PER_BUCKET: 0,
+      MEMORY_REGION_ID: 0,
+      MEMORY_RECORD_INDEX: 0,
+      FLOAT32_VALUES: None,
+      FLOAT64_VALUES: None,
+      UINT32_VALUES: None,
+    }
+  }
+}
+impl SCVPackedRasterBandT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVPackedRasterBand<'b>> {
+    let PRODUCT_KIND = self.PRODUCT_KIND;
+    let METRIC_KIND = self.METRIC_KIND;
+    let ENCODING = self.ENCODING;
+    let COMPONENTS_PER_CELL = self.COMPONENTS_PER_CELL;
+    let CELL_COUNT = self.CELL_COUNT;
+    let BUCKET_COUNT = self.BUCKET_COUNT;
+    let WORDS_PER_BUCKET = self.WORDS_PER_BUCKET;
+    let MEMORY_REGION_ID = self.MEMORY_REGION_ID;
+    let MEMORY_RECORD_INDEX = self.MEMORY_RECORD_INDEX;
+    let FLOAT32_VALUES = self.FLOAT32_VALUES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let FLOAT64_VALUES = self.FLOAT64_VALUES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let UINT32_VALUES = self.UINT32_VALUES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    SCVPackedRasterBand::create(_fbb, &SCVPackedRasterBandArgs{
+      PRODUCT_KIND,
+      METRIC_KIND,
+      ENCODING,
+      COMPONENTS_PER_CELL,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGION_ID,
+      MEMORY_RECORD_INDEX,
+      FLOAT32_VALUES,
+      FLOAT64_VALUES,
+      UINT32_VALUES,
+    })
+  }
+}
+pub enum SCVPackedRasterProductsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVPackedRasterProducts<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVPackedRasterProducts<'a> {
+  type Inner = SCVPackedRasterProducts<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVPackedRasterProducts<'a> {
+  pub const VT_JOB_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_GRID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TIME_GRID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ROWS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_COLUMNS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_CELL_COUNT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_BUCKET_COUNT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_WORDS_PER_BUCKET: ::flatbuffers::VOffsetT = 20;
+  pub const VT_MEMORY_REGIONS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_BANDS: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVPackedRasterProducts { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVPackedRasterProductsArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SCVPackedRasterProducts<'bldr>> {
+    let mut builder = SCVPackedRasterProductsBuilder::new(_fbb);
+    builder.add_TRACE_ID(args.TRACE_ID);
+    if let Some(x) = args.BANDS { builder.add_BANDS(x); }
+    if let Some(x) = args.MEMORY_REGIONS { builder.add_MEMORY_REGIONS(x); }
+    builder.add_WORDS_PER_BUCKET(args.WORDS_PER_BUCKET);
+    builder.add_BUCKET_COUNT(args.BUCKET_COUNT);
+    builder.add_CELL_COUNT(args.CELL_COUNT);
+    builder.add_COLUMNS(args.COLUMNS);
+    builder.add_ROWS(args.ROWS);
+    if let Some(x) = args.TIME_GRID { builder.add_TIME_GRID(x); }
+    if let Some(x) = args.GRID { builder.add_GRID(x); }
+    if let Some(x) = args.JOB_ID { builder.add_JOB_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVPackedRasterProductsT {
+    let JOB_ID = self.JOB_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID();
+    let GRID = self.GRID().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let TIME_GRID = self.TIME_GRID().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let ROWS = self.ROWS();
+    let COLUMNS = self.COLUMNS();
+    let CELL_COUNT = self.CELL_COUNT();
+    let BUCKET_COUNT = self.BUCKET_COUNT();
+    let WORDS_PER_BUCKET = self.WORDS_PER_BUCKET();
+    let MEMORY_REGIONS = self.MEMORY_REGIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let BANDS = self.BANDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    SCVPackedRasterProductsT {
+      JOB_ID,
+      TRACE_ID,
+      GRID,
+      TIME_GRID,
+      ROWS,
+      COLUMNS,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGIONS,
+      BANDS,
+    }
+  }
+
+  #[inline]
+  pub fn JOB_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCVPackedRasterProducts::VT_JOB_ID, None)}
+  }
+  #[inline]
+  pub fn TRACE_ID(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(SCVPackedRasterProducts::VT_TRACE_ID, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn GRID(&self) -> Option<SCVCoverageGrid<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVCoverageGrid>>(SCVPackedRasterProducts::VT_GRID, None)}
+  }
+  #[inline]
+  pub fn TIME_GRID(&self) -> Option<SCVTimeGrid<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVTimeGrid>>(SCVPackedRasterProducts::VT_TIME_GRID, None)}
+  }
+  #[inline]
+  pub fn ROWS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterProducts::VT_ROWS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn COLUMNS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterProducts::VT_COLUMNS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn CELL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterProducts::VT_CELL_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn BUCKET_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterProducts::VT_BUCKET_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn WORDS_PER_BUCKET(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVPackedRasterProducts::VT_WORDS_PER_BUCKET, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEMORY_REGIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVMemoryRegion<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVMemoryRegion>>>>(SCVPackedRasterProducts::VT_MEMORY_REGIONS, None)}
+  }
+  #[inline]
+  pub fn BANDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVPackedRasterBand<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVPackedRasterBand>>>>(SCVPackedRasterProducts::VT_BANDS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVPackedRasterProducts<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("JOB_ID", Self::VT_JOB_ID, false)?
+     .visit_field::<u64>("TRACE_ID", Self::VT_TRACE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVCoverageGrid>>("GRID", Self::VT_GRID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVTimeGrid>>("TIME_GRID", Self::VT_TIME_GRID, false)?
+     .visit_field::<u32>("ROWS", Self::VT_ROWS, false)?
+     .visit_field::<u32>("COLUMNS", Self::VT_COLUMNS, false)?
+     .visit_field::<u32>("CELL_COUNT", Self::VT_CELL_COUNT, false)?
+     .visit_field::<u32>("BUCKET_COUNT", Self::VT_BUCKET_COUNT, false)?
+     .visit_field::<u32>("WORDS_PER_BUCKET", Self::VT_WORDS_PER_BUCKET, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVMemoryRegion>>>>("MEMORY_REGIONS", Self::VT_MEMORY_REGIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVPackedRasterBand>>>>("BANDS", Self::VT_BANDS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVPackedRasterProductsArgs<'a> {
+    pub JOB_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRACE_ID: u64,
+    pub GRID: Option<::flatbuffers::WIPOffset<SCVCoverageGrid<'a>>>,
+    pub TIME_GRID: Option<::flatbuffers::WIPOffset<SCVTimeGrid<'a>>>,
+    pub ROWS: u32,
+    pub COLUMNS: u32,
+    pub CELL_COUNT: u32,
+    pub BUCKET_COUNT: u32,
+    pub WORDS_PER_BUCKET: u32,
+    pub MEMORY_REGIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVMemoryRegion<'a>>>>>,
+    pub BANDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVPackedRasterBand<'a>>>>>,
+}
+impl<'a> Default for SCVPackedRasterProductsArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCVPackedRasterProductsArgs {
+      JOB_ID: None,
+      TRACE_ID: 0,
+      GRID: None,
+      TIME_GRID: None,
+      ROWS: 0,
+      COLUMNS: 0,
+      CELL_COUNT: 0,
+      BUCKET_COUNT: 0,
+      WORDS_PER_BUCKET: 0,
+      MEMORY_REGIONS: None,
+      BANDS: None,
+    }
+  }
+}
+
+pub struct SCVPackedRasterProductsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVPackedRasterProductsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_JOB_ID(&mut self, JOB_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterProducts::VT_JOB_ID, JOB_ID);
+  }
+  #[inline]
+  pub fn add_TRACE_ID(&mut self, TRACE_ID: u64) {
+    self.fbb_.push_slot::<u64>(SCVPackedRasterProducts::VT_TRACE_ID, TRACE_ID, 0);
+  }
+  #[inline]
+  pub fn add_GRID(&mut self, GRID: ::flatbuffers::WIPOffset<SCVCoverageGrid<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVCoverageGrid>>(SCVPackedRasterProducts::VT_GRID, GRID);
+  }
+  #[inline]
+  pub fn add_TIME_GRID(&mut self, TIME_GRID: ::flatbuffers::WIPOffset<SCVTimeGrid<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVTimeGrid>>(SCVPackedRasterProducts::VT_TIME_GRID, TIME_GRID);
+  }
+  #[inline]
+  pub fn add_ROWS(&mut self, ROWS: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterProducts::VT_ROWS, ROWS, 0);
+  }
+  #[inline]
+  pub fn add_COLUMNS(&mut self, COLUMNS: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterProducts::VT_COLUMNS, COLUMNS, 0);
+  }
+  #[inline]
+  pub fn add_CELL_COUNT(&mut self, CELL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterProducts::VT_CELL_COUNT, CELL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_BUCKET_COUNT(&mut self, BUCKET_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterProducts::VT_BUCKET_COUNT, BUCKET_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_WORDS_PER_BUCKET(&mut self, WORDS_PER_BUCKET: u32) {
+    self.fbb_.push_slot::<u32>(SCVPackedRasterProducts::VT_WORDS_PER_BUCKET, WORDS_PER_BUCKET, 0);
+  }
+  #[inline]
+  pub fn add_MEMORY_REGIONS(&mut self, MEMORY_REGIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVMemoryRegion<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterProducts::VT_MEMORY_REGIONS, MEMORY_REGIONS);
+  }
+  #[inline]
+  pub fn add_BANDS(&mut self, BANDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVPackedRasterBand<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVPackedRasterProducts::VT_BANDS, BANDS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVPackedRasterProductsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVPackedRasterProductsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVPackedRasterProducts<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVPackedRasterProducts<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVPackedRasterProducts");
+      ds.field("JOB_ID", &self.JOB_ID());
+      ds.field("TRACE_ID", &self.TRACE_ID());
+      ds.field("GRID", &self.GRID());
+      ds.field("TIME_GRID", &self.TIME_GRID());
+      ds.field("ROWS", &self.ROWS());
+      ds.field("COLUMNS", &self.COLUMNS());
+      ds.field("CELL_COUNT", &self.CELL_COUNT());
+      ds.field("BUCKET_COUNT", &self.BUCKET_COUNT());
+      ds.field("WORDS_PER_BUCKET", &self.WORDS_PER_BUCKET());
+      ds.field("MEMORY_REGIONS", &self.MEMORY_REGIONS());
+      ds.field("BANDS", &self.BANDS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVPackedRasterProductsT {
+  pub JOB_ID: Option<alloc::string::String>,
+  pub TRACE_ID: u64,
+  pub GRID: Option<alloc::boxed::Box<SCVCoverageGridT>>,
+  pub TIME_GRID: Option<alloc::boxed::Box<SCVTimeGridT>>,
+  pub ROWS: u32,
+  pub COLUMNS: u32,
+  pub CELL_COUNT: u32,
+  pub BUCKET_COUNT: u32,
+  pub WORDS_PER_BUCKET: u32,
+  pub MEMORY_REGIONS: Option<alloc::vec::Vec<SCVMemoryRegionT>>,
+  pub BANDS: Option<alloc::vec::Vec<SCVPackedRasterBandT>>,
+}
+impl Default for SCVPackedRasterProductsT {
+  fn default() -> Self {
+    Self {
+      JOB_ID: None,
+      TRACE_ID: 0,
+      GRID: None,
+      TIME_GRID: None,
+      ROWS: 0,
+      COLUMNS: 0,
+      CELL_COUNT: 0,
+      BUCKET_COUNT: 0,
+      WORDS_PER_BUCKET: 0,
+      MEMORY_REGIONS: None,
+      BANDS: None,
+    }
+  }
+}
+impl SCVPackedRasterProductsT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVPackedRasterProducts<'b>> {
+    let JOB_ID = self.JOB_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRACE_ID = self.TRACE_ID;
+    let GRID = self.GRID.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let TIME_GRID = self.TIME_GRID.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ROWS = self.ROWS;
+    let COLUMNS = self.COLUMNS;
+    let CELL_COUNT = self.CELL_COUNT;
+    let BUCKET_COUNT = self.BUCKET_COUNT;
+    let WORDS_PER_BUCKET = self.WORDS_PER_BUCKET;
+    let MEMORY_REGIONS = self.MEMORY_REGIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let BANDS = self.BANDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    SCVPackedRasterProducts::create(_fbb, &SCVPackedRasterProductsArgs{
+      JOB_ID,
+      TRACE_ID,
+      GRID,
+      TIME_GRID,
+      ROWS,
+      COLUMNS,
+      CELL_COUNT,
+      BUCKET_COUNT,
+      WORDS_PER_BUCKET,
+      MEMORY_REGIONS,
+      BANDS,
+    })
+  }
+}
+pub enum SCVAggregateStatisticsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVAggregateStatistics<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVAggregateStatistics<'a> {
+  type Inner = SCVAggregateStatistics<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVAggregateStatistics<'a> {
+  pub const VT_TOTAL_CELLS: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ACCESSED_CELLS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MULTI_ACCESS_CELLS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ACTIVE_SENSOR_COUNT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SWATH_COUNT: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TOTAL_WINDOWS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TOTAL_INTERVAL_COUNT: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TOTAL_REVISIT_COUNT: ::flatbuffers::VOffsetT = 18;
+  pub const VT_TOTAL_ACCESS_DURATION_SEC: ::flatbuffers::VOffsetT = 20;
+  pub const VT_TOTAL_GAP_DURATION_SEC: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MAX_GAP_DURATION_SEC: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MEAN_REVISIT_TIME_SEC: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MAX_RESPONSE_TIME_SEC: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MEAN_RESPONSE_TIME_SEC: ::flatbuffers::VOffsetT = 30;
+  pub const VT_PERCENT_COVERAGE: ::flatbuffers::VOffsetT = 32;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVAggregateStatistics { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVAggregateStatisticsArgs
+  ) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'bldr>> {
+    let mut builder = SCVAggregateStatisticsBuilder::new(_fbb);
+    builder.add_PERCENT_COVERAGE(args.PERCENT_COVERAGE);
+    builder.add_MEAN_RESPONSE_TIME_SEC(args.MEAN_RESPONSE_TIME_SEC);
+    builder.add_MAX_RESPONSE_TIME_SEC(args.MAX_RESPONSE_TIME_SEC);
+    builder.add_MEAN_REVISIT_TIME_SEC(args.MEAN_REVISIT_TIME_SEC);
+    builder.add_MAX_GAP_DURATION_SEC(args.MAX_GAP_DURATION_SEC);
+    builder.add_TOTAL_GAP_DURATION_SEC(args.TOTAL_GAP_DURATION_SEC);
+    builder.add_TOTAL_ACCESS_DURATION_SEC(args.TOTAL_ACCESS_DURATION_SEC);
+    builder.add_TOTAL_REVISIT_COUNT(args.TOTAL_REVISIT_COUNT);
+    builder.add_TOTAL_INTERVAL_COUNT(args.TOTAL_INTERVAL_COUNT);
+    builder.add_TOTAL_WINDOWS(args.TOTAL_WINDOWS);
+    builder.add_SWATH_COUNT(args.SWATH_COUNT);
+    builder.add_ACTIVE_SENSOR_COUNT(args.ACTIVE_SENSOR_COUNT);
+    builder.add_MULTI_ACCESS_CELLS(args.MULTI_ACCESS_CELLS);
+    builder.add_ACCESSED_CELLS(args.ACCESSED_CELLS);
+    builder.add_TOTAL_CELLS(args.TOTAL_CELLS);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVAggregateStatisticsT {
+    let TOTAL_CELLS = self.TOTAL_CELLS();
+    let ACCESSED_CELLS = self.ACCESSED_CELLS();
+    let MULTI_ACCESS_CELLS = self.MULTI_ACCESS_CELLS();
+    let ACTIVE_SENSOR_COUNT = self.ACTIVE_SENSOR_COUNT();
+    let SWATH_COUNT = self.SWATH_COUNT();
+    let TOTAL_WINDOWS = self.TOTAL_WINDOWS();
+    let TOTAL_INTERVAL_COUNT = self.TOTAL_INTERVAL_COUNT();
+    let TOTAL_REVISIT_COUNT = self.TOTAL_REVISIT_COUNT();
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC();
+    let TOTAL_GAP_DURATION_SEC = self.TOTAL_GAP_DURATION_SEC();
+    let MAX_GAP_DURATION_SEC = self.MAX_GAP_DURATION_SEC();
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC();
+    let MAX_RESPONSE_TIME_SEC = self.MAX_RESPONSE_TIME_SEC();
+    let MEAN_RESPONSE_TIME_SEC = self.MEAN_RESPONSE_TIME_SEC();
+    let PERCENT_COVERAGE = self.PERCENT_COVERAGE();
+    SCVAggregateStatisticsT {
+      TOTAL_CELLS,
+      ACCESSED_CELLS,
+      MULTI_ACCESS_CELLS,
+      ACTIVE_SENSOR_COUNT,
+      SWATH_COUNT,
+      TOTAL_WINDOWS,
+      TOTAL_INTERVAL_COUNT,
+      TOTAL_REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      TOTAL_GAP_DURATION_SEC,
+      MAX_GAP_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_RESPONSE_TIME_SEC,
+      MEAN_RESPONSE_TIME_SEC,
+      PERCENT_COVERAGE,
+    }
+  }
+
+  #[inline]
+  pub fn TOTAL_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn ACCESSED_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_ACCESSED_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn MULTI_ACCESS_CELLS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_MULTI_ACCESS_CELLS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn ACTIVE_SENSOR_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_ACTIVE_SENSOR_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn SWATH_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_SWATH_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_WINDOWS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_WINDOWS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_INTERVAL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_INTERVAL_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_REVISIT_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVAggregateStatistics::VT_TOTAL_REVISIT_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_ACCESS_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_TOTAL_ACCESS_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_GAP_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_TOTAL_GAP_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_GAP_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MAX_GAP_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_REVISIT_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MEAN_REVISIT_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_RESPONSE_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MAX_RESPONSE_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_RESPONSE_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_MEAN_RESPONSE_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn PERCENT_COVERAGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVAggregateStatistics::VT_PERCENT_COVERAGE, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVAggregateStatistics<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<u32>("TOTAL_CELLS", Self::VT_TOTAL_CELLS, false)?
+     .visit_field::<u32>("ACCESSED_CELLS", Self::VT_ACCESSED_CELLS, false)?
+     .visit_field::<u32>("MULTI_ACCESS_CELLS", Self::VT_MULTI_ACCESS_CELLS, false)?
+     .visit_field::<u32>("ACTIVE_SENSOR_COUNT", Self::VT_ACTIVE_SENSOR_COUNT, false)?
+     .visit_field::<u32>("SWATH_COUNT", Self::VT_SWATH_COUNT, false)?
+     .visit_field::<u32>("TOTAL_WINDOWS", Self::VT_TOTAL_WINDOWS, false)?
+     .visit_field::<u32>("TOTAL_INTERVAL_COUNT", Self::VT_TOTAL_INTERVAL_COUNT, false)?
+     .visit_field::<u32>("TOTAL_REVISIT_COUNT", Self::VT_TOTAL_REVISIT_COUNT, false)?
+     .visit_field::<f64>("TOTAL_ACCESS_DURATION_SEC", Self::VT_TOTAL_ACCESS_DURATION_SEC, false)?
+     .visit_field::<f64>("TOTAL_GAP_DURATION_SEC", Self::VT_TOTAL_GAP_DURATION_SEC, false)?
+     .visit_field::<f64>("MAX_GAP_DURATION_SEC", Self::VT_MAX_GAP_DURATION_SEC, false)?
+     .visit_field::<f64>("MEAN_REVISIT_TIME_SEC", Self::VT_MEAN_REVISIT_TIME_SEC, false)?
+     .visit_field::<f64>("MAX_RESPONSE_TIME_SEC", Self::VT_MAX_RESPONSE_TIME_SEC, false)?
+     .visit_field::<f64>("MEAN_RESPONSE_TIME_SEC", Self::VT_MEAN_RESPONSE_TIME_SEC, false)?
+     .visit_field::<f64>("PERCENT_COVERAGE", Self::VT_PERCENT_COVERAGE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVAggregateStatisticsArgs {
+    pub TOTAL_CELLS: u32,
+    pub ACCESSED_CELLS: u32,
+    pub MULTI_ACCESS_CELLS: u32,
+    pub ACTIVE_SENSOR_COUNT: u32,
+    pub SWATH_COUNT: u32,
+    pub TOTAL_WINDOWS: u32,
+    pub TOTAL_INTERVAL_COUNT: u32,
+    pub TOTAL_REVISIT_COUNT: u32,
+    pub TOTAL_ACCESS_DURATION_SEC: f64,
+    pub TOTAL_GAP_DURATION_SEC: f64,
+    pub MAX_GAP_DURATION_SEC: f64,
+    pub MEAN_REVISIT_TIME_SEC: f64,
+    pub MAX_RESPONSE_TIME_SEC: f64,
+    pub MEAN_RESPONSE_TIME_SEC: f64,
+    pub PERCENT_COVERAGE: f64,
+}
+impl<'a> Default for SCVAggregateStatisticsArgs {
+  #[inline]
+  fn default() -> Self {
+    SCVAggregateStatisticsArgs {
+      TOTAL_CELLS: 0,
+      ACCESSED_CELLS: 0,
+      MULTI_ACCESS_CELLS: 0,
+      ACTIVE_SENSOR_COUNT: 0,
+      SWATH_COUNT: 0,
+      TOTAL_WINDOWS: 0,
+      TOTAL_INTERVAL_COUNT: 0,
+      TOTAL_REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      TOTAL_GAP_DURATION_SEC: 0.0,
+      MAX_GAP_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_RESPONSE_TIME_SEC: 0.0,
+      MEAN_RESPONSE_TIME_SEC: 0.0,
+      PERCENT_COVERAGE: 0.0,
+    }
+  }
+}
+
+pub struct SCVAggregateStatisticsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVAggregateStatisticsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TOTAL_CELLS(&mut self, TOTAL_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_CELLS, TOTAL_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_ACCESSED_CELLS(&mut self, ACCESSED_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_ACCESSED_CELLS, ACCESSED_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_MULTI_ACCESS_CELLS(&mut self, MULTI_ACCESS_CELLS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_MULTI_ACCESS_CELLS, MULTI_ACCESS_CELLS, 0);
+  }
+  #[inline]
+  pub fn add_ACTIVE_SENSOR_COUNT(&mut self, ACTIVE_SENSOR_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_ACTIVE_SENSOR_COUNT, ACTIVE_SENSOR_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_SWATH_COUNT(&mut self, SWATH_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_SWATH_COUNT, SWATH_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_WINDOWS(&mut self, TOTAL_WINDOWS: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_WINDOWS, TOTAL_WINDOWS, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_INTERVAL_COUNT(&mut self, TOTAL_INTERVAL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_INTERVAL_COUNT, TOTAL_INTERVAL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_REVISIT_COUNT(&mut self, TOTAL_REVISIT_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVAggregateStatistics::VT_TOTAL_REVISIT_COUNT, TOTAL_REVISIT_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_ACCESS_DURATION_SEC(&mut self, TOTAL_ACCESS_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_TOTAL_ACCESS_DURATION_SEC, TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_TOTAL_GAP_DURATION_SEC(&mut self, TOTAL_GAP_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_TOTAL_GAP_DURATION_SEC, TOTAL_GAP_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_GAP_DURATION_SEC(&mut self, MAX_GAP_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MAX_GAP_DURATION_SEC, MAX_GAP_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_REVISIT_TIME_SEC(&mut self, MEAN_REVISIT_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MEAN_REVISIT_TIME_SEC, MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_RESPONSE_TIME_SEC(&mut self, MAX_RESPONSE_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MAX_RESPONSE_TIME_SEC, MAX_RESPONSE_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_RESPONSE_TIME_SEC(&mut self, MEAN_RESPONSE_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_MEAN_RESPONSE_TIME_SEC, MEAN_RESPONSE_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_PERCENT_COVERAGE(&mut self, PERCENT_COVERAGE: f64) {
+    self.fbb_.push_slot::<f64>(SCVAggregateStatistics::VT_PERCENT_COVERAGE, PERCENT_COVERAGE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVAggregateStatisticsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVAggregateStatisticsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVAggregateStatistics<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVAggregateStatistics");
+      ds.field("TOTAL_CELLS", &self.TOTAL_CELLS());
+      ds.field("ACCESSED_CELLS", &self.ACCESSED_CELLS());
+      ds.field("MULTI_ACCESS_CELLS", &self.MULTI_ACCESS_CELLS());
+      ds.field("ACTIVE_SENSOR_COUNT", &self.ACTIVE_SENSOR_COUNT());
+      ds.field("SWATH_COUNT", &self.SWATH_COUNT());
+      ds.field("TOTAL_WINDOWS", &self.TOTAL_WINDOWS());
+      ds.field("TOTAL_INTERVAL_COUNT", &self.TOTAL_INTERVAL_COUNT());
+      ds.field("TOTAL_REVISIT_COUNT", &self.TOTAL_REVISIT_COUNT());
+      ds.field("TOTAL_ACCESS_DURATION_SEC", &self.TOTAL_ACCESS_DURATION_SEC());
+      ds.field("TOTAL_GAP_DURATION_SEC", &self.TOTAL_GAP_DURATION_SEC());
+      ds.field("MAX_GAP_DURATION_SEC", &self.MAX_GAP_DURATION_SEC());
+      ds.field("MEAN_REVISIT_TIME_SEC", &self.MEAN_REVISIT_TIME_SEC());
+      ds.field("MAX_RESPONSE_TIME_SEC", &self.MAX_RESPONSE_TIME_SEC());
+      ds.field("MEAN_RESPONSE_TIME_SEC", &self.MEAN_RESPONSE_TIME_SEC());
+      ds.field("PERCENT_COVERAGE", &self.PERCENT_COVERAGE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVAggregateStatisticsT {
+  pub TOTAL_CELLS: u32,
+  pub ACCESSED_CELLS: u32,
+  pub MULTI_ACCESS_CELLS: u32,
+  pub ACTIVE_SENSOR_COUNT: u32,
+  pub SWATH_COUNT: u32,
+  pub TOTAL_WINDOWS: u32,
+  pub TOTAL_INTERVAL_COUNT: u32,
+  pub TOTAL_REVISIT_COUNT: u32,
+  pub TOTAL_ACCESS_DURATION_SEC: f64,
+  pub TOTAL_GAP_DURATION_SEC: f64,
+  pub MAX_GAP_DURATION_SEC: f64,
+  pub MEAN_REVISIT_TIME_SEC: f64,
+  pub MAX_RESPONSE_TIME_SEC: f64,
+  pub MEAN_RESPONSE_TIME_SEC: f64,
+  pub PERCENT_COVERAGE: f64,
+}
+impl Default for SCVAggregateStatisticsT {
+  fn default() -> Self {
+    Self {
+      TOTAL_CELLS: 0,
+      ACCESSED_CELLS: 0,
+      MULTI_ACCESS_CELLS: 0,
+      ACTIVE_SENSOR_COUNT: 0,
+      SWATH_COUNT: 0,
+      TOTAL_WINDOWS: 0,
+      TOTAL_INTERVAL_COUNT: 0,
+      TOTAL_REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      TOTAL_GAP_DURATION_SEC: 0.0,
+      MAX_GAP_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_RESPONSE_TIME_SEC: 0.0,
+      MEAN_RESPONSE_TIME_SEC: 0.0,
+      PERCENT_COVERAGE: 0.0,
+    }
+  }
+}
+impl SCVAggregateStatisticsT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVAggregateStatistics<'b>> {
+    let TOTAL_CELLS = self.TOTAL_CELLS;
+    let ACCESSED_CELLS = self.ACCESSED_CELLS;
+    let MULTI_ACCESS_CELLS = self.MULTI_ACCESS_CELLS;
+    let ACTIVE_SENSOR_COUNT = self.ACTIVE_SENSOR_COUNT;
+    let SWATH_COUNT = self.SWATH_COUNT;
+    let TOTAL_WINDOWS = self.TOTAL_WINDOWS;
+    let TOTAL_INTERVAL_COUNT = self.TOTAL_INTERVAL_COUNT;
+    let TOTAL_REVISIT_COUNT = self.TOTAL_REVISIT_COUNT;
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC;
+    let TOTAL_GAP_DURATION_SEC = self.TOTAL_GAP_DURATION_SEC;
+    let MAX_GAP_DURATION_SEC = self.MAX_GAP_DURATION_SEC;
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC;
+    let MAX_RESPONSE_TIME_SEC = self.MAX_RESPONSE_TIME_SEC;
+    let MEAN_RESPONSE_TIME_SEC = self.MEAN_RESPONSE_TIME_SEC;
+    let PERCENT_COVERAGE = self.PERCENT_COVERAGE;
+    SCVAggregateStatistics::create(_fbb, &SCVAggregateStatisticsArgs{
+      TOTAL_CELLS,
+      ACCESSED_CELLS,
+      MULTI_ACCESS_CELLS,
+      ACTIVE_SENSOR_COUNT,
+      SWATH_COUNT,
+      TOTAL_WINDOWS,
+      TOTAL_INTERVAL_COUNT,
+      TOTAL_REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      TOTAL_GAP_DURATION_SEC,
+      MAX_GAP_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_RESPONSE_TIME_SEC,
+      MEAN_RESPONSE_TIME_SEC,
+      PERCENT_COVERAGE,
+    })
+  }
+}
 pub enum SCVResultOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -7861,15 +8279,12 @@ impl<'a> SCVResult<'a> {
   pub const VT_TARGET_BODY: ::flatbuffers::VOffsetT = 12;
   pub const VT_TOTAL_SENSORS: ::flatbuffers::VOffsetT = 14;
   pub const VT_TOTAL_WINDOWS: ::flatbuffers::VOffsetT = 16;
-  pub const VT_CELL_STATS: ::flatbuffers::VOffsetT = 18;
-  pub const VT_INTERVALS: ::flatbuffers::VOffsetT = 20;
-  pub const VT_LATITUDE_BANDS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_TIME_SERIES: ::flatbuffers::VOffsetT = 24;
-  pub const VT_HISTOGRAMS: ::flatbuffers::VOffsetT = 26;
-  pub const VT_HEATMAP: ::flatbuffers::VOffsetT = 28;
-  pub const VT_CONTRIBUTIONS: ::flatbuffers::VOffsetT = 30;
-  pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 32;
-  pub const VT_MESSAGE: ::flatbuffers::VOffsetT = 34;
+  pub const VT_HISTOGRAMS: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CONTRIBUTIONS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 22;
+  pub const VT_RASTER_PRODUCTS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MESSAGE: ::flatbuffers::VOffsetT = 26;
+  pub const VT_AGGREGATE_STATISTICS: ::flatbuffers::VOffsetT = 28;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -7882,15 +8297,12 @@ impl<'a> SCVResult<'a> {
   ) -> ::flatbuffers::WIPOffset<SCVResult<'bldr>> {
     let mut builder = SCVResultBuilder::new(_fbb);
     builder.add_TRACE_ID(args.TRACE_ID);
+    if let Some(x) = args.AGGREGATE_STATISTICS { builder.add_AGGREGATE_STATISTICS(x); }
     if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
+    if let Some(x) = args.RASTER_PRODUCTS { builder.add_RASTER_PRODUCTS(x); }
     if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
     if let Some(x) = args.CONTRIBUTIONS { builder.add_CONTRIBUTIONS(x); }
-    if let Some(x) = args.HEATMAP { builder.add_HEATMAP(x); }
     if let Some(x) = args.HISTOGRAMS { builder.add_HISTOGRAMS(x); }
-    if let Some(x) = args.TIME_SERIES { builder.add_TIME_SERIES(x); }
-    if let Some(x) = args.LATITUDE_BANDS { builder.add_LATITUDE_BANDS(x); }
-    if let Some(x) = args.INTERVALS { builder.add_INTERVALS(x); }
-    if let Some(x) = args.CELL_STATS { builder.add_CELL_STATS(x); }
     builder.add_TOTAL_WINDOWS(args.TOTAL_WINDOWS);
     builder.add_TOTAL_SENSORS(args.TOTAL_SENSORS);
     if let Some(x) = args.TARGET_BODY { builder.add_TARGET_BODY(x); }
@@ -7914,22 +8326,7 @@ impl<'a> SCVResult<'a> {
     });
     let TOTAL_SENSORS = self.TOTAL_SENSORS();
     let TOTAL_WINDOWS = self.TOTAL_WINDOWS();
-    let CELL_STATS = self.CELL_STATS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let INTERVALS = self.INTERVALS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let LATITUDE_BANDS = self.LATITUDE_BANDS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let TIME_SERIES = self.TIME_SERIES().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
     let HISTOGRAMS = self.HISTOGRAMS().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
-    let HEATMAP = self.HEATMAP().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
     let CONTRIBUTIONS = self.CONTRIBUTIONS().map(|x| {
@@ -7938,8 +8335,14 @@ impl<'a> SCVResult<'a> {
     let GEOMETRY = self.GEOMETRY().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let RASTER_PRODUCTS = self.RASTER_PRODUCTS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     let MESSAGE = self.MESSAGE().map(|x| {
       alloc::string::ToString::to_string(x)
+    });
+    let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
     });
     SCVResultT {
       JOB_ID,
@@ -7949,15 +8352,12 @@ impl<'a> SCVResult<'a> {
       TARGET_BODY,
       TOTAL_SENSORS,
       TOTAL_WINDOWS,
-      CELL_STATS,
-      INTERVALS,
-      LATITUDE_BANDS,
-      TIME_SERIES,
       HISTOGRAMS,
-      HEATMAP,
       CONTRIBUTIONS,
       GEOMETRY,
+      RASTER_PRODUCTS,
       MESSAGE,
+      AGGREGATE_STATISTICS,
     }
   }
 
@@ -8011,46 +8411,11 @@ impl<'a> SCVResult<'a> {
     unsafe { self._tab.get::<u32>(SCVResult::VT_TOTAL_WINDOWS, Some(0)).unwrap()}
   }
   #[inline]
-  pub fn CELL_STATS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVCellStat<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVCellStat>>>>(SCVResult::VT_CELL_STATS, None)}
-  }
-  #[inline]
-  pub fn INTERVALS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVInterval<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVInterval>>>>(SCVResult::VT_INTERVALS, None)}
-  }
-  #[inline]
-  pub fn LATITUDE_BANDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVLatitudeBandStat<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVLatitudeBandStat>>>>(SCVResult::VT_LATITUDE_BANDS, None)}
-  }
-  #[inline]
-  pub fn TIME_SERIES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTimeSeriesPoint<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTimeSeriesPoint>>>>(SCVResult::VT_TIME_SERIES, None)}
-  }
-  #[inline]
   pub fn HISTOGRAMS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHistogramBin<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHistogramBin>>>>(SCVResult::VT_HISTOGRAMS, None)}
-  }
-  #[inline]
-  pub fn HEATMAP(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHeatmapCell<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHeatmapCell>>>>(SCVResult::VT_HEATMAP, None)}
   }
   #[inline]
   pub fn CONTRIBUTIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVSensorContribution<'a>>>> {
@@ -8067,11 +8432,25 @@ impl<'a> SCVResult<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVPackedGeometryChunk>>(SCVResult::VT_GEOMETRY, None)}
   }
   #[inline]
+  pub fn RASTER_PRODUCTS(&self) -> Option<SCVPackedRasterProducts<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVPackedRasterProducts>>(SCVResult::VT_RASTER_PRODUCTS, None)}
+  }
+  #[inline]
   pub fn MESSAGE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCVResult::VT_MESSAGE, None)}
+  }
+  #[inline]
+  pub fn AGGREGATE_STATISTICS(&self) -> Option<SCVAggregateStatistics<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, None)}
   }
 }
 
@@ -8088,15 +8467,12 @@ impl ::flatbuffers::Verifiable for SCVResult<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVEllipsoid>>("TARGET_BODY", Self::VT_TARGET_BODY, false)?
      .visit_field::<u32>("TOTAL_SENSORS", Self::VT_TOTAL_SENSORS, false)?
      .visit_field::<u32>("TOTAL_WINDOWS", Self::VT_TOTAL_WINDOWS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVCellStat>>>>("CELL_STATS", Self::VT_CELL_STATS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVInterval>>>>("INTERVALS", Self::VT_INTERVALS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVLatitudeBandStat>>>>("LATITUDE_BANDS", Self::VT_LATITUDE_BANDS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVTimeSeriesPoint>>>>("TIME_SERIES", Self::VT_TIME_SERIES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVHistogramBin>>>>("HISTOGRAMS", Self::VT_HISTOGRAMS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVHeatmapCell>>>>("HEATMAP", Self::VT_HEATMAP, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVSensorContribution>>>>("CONTRIBUTIONS", Self::VT_CONTRIBUTIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedGeometryChunk>>("GEOMETRY", Self::VT_GEOMETRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedRasterProducts>>("RASTER_PRODUCTS", Self::VT_RASTER_PRODUCTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE", Self::VT_MESSAGE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>("AGGREGATE_STATISTICS", Self::VT_AGGREGATE_STATISTICS, false)?
      .finish();
     Ok(())
   }
@@ -8109,15 +8485,12 @@ pub struct SCVResultArgs<'a> {
     pub TARGET_BODY: Option<::flatbuffers::WIPOffset<SCVEllipsoid<'a>>>,
     pub TOTAL_SENSORS: u32,
     pub TOTAL_WINDOWS: u32,
-    pub CELL_STATS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVCellStat<'a>>>>>,
-    pub INTERVALS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVInterval<'a>>>>>,
-    pub LATITUDE_BANDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVLatitudeBandStat<'a>>>>>,
-    pub TIME_SERIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTimeSeriesPoint<'a>>>>>,
     pub HISTOGRAMS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHistogramBin<'a>>>>>,
-    pub HEATMAP: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVHeatmapCell<'a>>>>>,
     pub CONTRIBUTIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVSensorContribution<'a>>>>>,
     pub GEOMETRY: Option<::flatbuffers::WIPOffset<SCVPackedGeometryChunk<'a>>>,
+    pub RASTER_PRODUCTS: Option<::flatbuffers::WIPOffset<SCVPackedRasterProducts<'a>>>,
     pub MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AGGREGATE_STATISTICS: Option<::flatbuffers::WIPOffset<SCVAggregateStatistics<'a>>>,
 }
 impl<'a> Default for SCVResultArgs<'a> {
   #[inline]
@@ -8130,15 +8503,12 @@ impl<'a> Default for SCVResultArgs<'a> {
       TARGET_BODY: None,
       TOTAL_SENSORS: 0,
       TOTAL_WINDOWS: 0,
-      CELL_STATS: None,
-      INTERVALS: None,
-      LATITUDE_BANDS: None,
-      TIME_SERIES: None,
       HISTOGRAMS: None,
-      HEATMAP: None,
       CONTRIBUTIONS: None,
       GEOMETRY: None,
+      RASTER_PRODUCTS: None,
       MESSAGE: None,
+      AGGREGATE_STATISTICS: None,
     }
   }
 }
@@ -8177,28 +8547,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVResultBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u32>(SCVResult::VT_TOTAL_WINDOWS, TOTAL_WINDOWS, 0);
   }
   #[inline]
-  pub fn add_CELL_STATS(&mut self, CELL_STATS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVCellStat<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_CELL_STATS, CELL_STATS);
-  }
-  #[inline]
-  pub fn add_INTERVALS(&mut self, INTERVALS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVInterval<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_INTERVALS, INTERVALS);
-  }
-  #[inline]
-  pub fn add_LATITUDE_BANDS(&mut self, LATITUDE_BANDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVLatitudeBandStat<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_LATITUDE_BANDS, LATITUDE_BANDS);
-  }
-  #[inline]
-  pub fn add_TIME_SERIES(&mut self, TIME_SERIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVTimeSeriesPoint<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_TIME_SERIES, TIME_SERIES);
-  }
-  #[inline]
   pub fn add_HISTOGRAMS(&mut self, HISTOGRAMS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVHistogramBin<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_HISTOGRAMS, HISTOGRAMS);
-  }
-  #[inline]
-  pub fn add_HEATMAP(&mut self, HEATMAP: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVHeatmapCell<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_HEATMAP, HEATMAP);
   }
   #[inline]
   pub fn add_CONTRIBUTIONS(&mut self, CONTRIBUTIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVSensorContribution<'b >>>>) {
@@ -8209,8 +8559,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVResultBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVPackedGeometryChunk>>(SCVResult::VT_GEOMETRY, GEOMETRY);
   }
   #[inline]
+  pub fn add_RASTER_PRODUCTS(&mut self, RASTER_PRODUCTS: ::flatbuffers::WIPOffset<SCVPackedRasterProducts<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVPackedRasterProducts>>(SCVResult::VT_RASTER_PRODUCTS, RASTER_PRODUCTS);
+  }
+  #[inline]
   pub fn add_MESSAGE(&mut self, MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_MESSAGE, MESSAGE);
+  }
+  #[inline]
+  pub fn add_AGGREGATE_STATISTICS(&mut self, AGGREGATE_STATISTICS: ::flatbuffers::WIPOffset<SCVAggregateStatistics<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, AGGREGATE_STATISTICS);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVResultBuilder<'a, 'b, A> {
@@ -8237,15 +8595,12 @@ impl ::core::fmt::Debug for SCVResult<'_> {
       ds.field("TARGET_BODY", &self.TARGET_BODY());
       ds.field("TOTAL_SENSORS", &self.TOTAL_SENSORS());
       ds.field("TOTAL_WINDOWS", &self.TOTAL_WINDOWS());
-      ds.field("CELL_STATS", &self.CELL_STATS());
-      ds.field("INTERVALS", &self.INTERVALS());
-      ds.field("LATITUDE_BANDS", &self.LATITUDE_BANDS());
-      ds.field("TIME_SERIES", &self.TIME_SERIES());
       ds.field("HISTOGRAMS", &self.HISTOGRAMS());
-      ds.field("HEATMAP", &self.HEATMAP());
       ds.field("CONTRIBUTIONS", &self.CONTRIBUTIONS());
       ds.field("GEOMETRY", &self.GEOMETRY());
+      ds.field("RASTER_PRODUCTS", &self.RASTER_PRODUCTS());
       ds.field("MESSAGE", &self.MESSAGE());
+      ds.field("AGGREGATE_STATISTICS", &self.AGGREGATE_STATISTICS());
       ds.finish()
   }
 }
@@ -8259,15 +8614,12 @@ pub struct SCVResultT {
   pub TARGET_BODY: Option<alloc::boxed::Box<SCVEllipsoidT>>,
   pub TOTAL_SENSORS: u32,
   pub TOTAL_WINDOWS: u32,
-  pub CELL_STATS: Option<alloc::vec::Vec<SCVCellStatT>>,
-  pub INTERVALS: Option<alloc::vec::Vec<SCVIntervalT>>,
-  pub LATITUDE_BANDS: Option<alloc::vec::Vec<SCVLatitudeBandStatT>>,
-  pub TIME_SERIES: Option<alloc::vec::Vec<SCVTimeSeriesPointT>>,
   pub HISTOGRAMS: Option<alloc::vec::Vec<SCVHistogramBinT>>,
-  pub HEATMAP: Option<alloc::vec::Vec<SCVHeatmapCellT>>,
   pub CONTRIBUTIONS: Option<alloc::vec::Vec<SCVSensorContributionT>>,
   pub GEOMETRY: Option<alloc::boxed::Box<SCVPackedGeometryChunkT>>,
+  pub RASTER_PRODUCTS: Option<alloc::boxed::Box<SCVPackedRasterProductsT>>,
   pub MESSAGE: Option<alloc::string::String>,
+  pub AGGREGATE_STATISTICS: Option<alloc::boxed::Box<SCVAggregateStatisticsT>>,
 }
 impl Default for SCVResultT {
   fn default() -> Self {
@@ -8279,15 +8631,12 @@ impl Default for SCVResultT {
       TARGET_BODY: None,
       TOTAL_SENSORS: 0,
       TOTAL_WINDOWS: 0,
-      CELL_STATS: None,
-      INTERVALS: None,
-      LATITUDE_BANDS: None,
-      TIME_SERIES: None,
       HISTOGRAMS: None,
-      HEATMAP: None,
       CONTRIBUTIONS: None,
       GEOMETRY: None,
+      RASTER_PRODUCTS: None,
       MESSAGE: None,
+      AGGREGATE_STATISTICS: None,
     }
   }
 }
@@ -8309,22 +8658,7 @@ impl SCVResultT {
     });
     let TOTAL_SENSORS = self.TOTAL_SENSORS;
     let TOTAL_WINDOWS = self.TOTAL_WINDOWS;
-    let CELL_STATS = self.CELL_STATS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let INTERVALS = self.INTERVALS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let LATITUDE_BANDS = self.LATITUDE_BANDS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let TIME_SERIES = self.TIME_SERIES.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
     let HISTOGRAMS = self.HISTOGRAMS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
-    let HEATMAP = self.HEATMAP.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let CONTRIBUTIONS = self.CONTRIBUTIONS.as_ref().map(|x|{
@@ -8333,8 +8667,14 @@ impl SCVResultT {
     let GEOMETRY = self.GEOMETRY.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let RASTER_PRODUCTS = self.RASTER_PRODUCTS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let MESSAGE = self.MESSAGE.as_ref().map(|x|{
       _fbb.create_string(x)
+    });
+    let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     SCVResult::create(_fbb, &SCVResultArgs{
       JOB_ID,
@@ -8344,15 +8684,12 @@ impl SCVResultT {
       TARGET_BODY,
       TOTAL_SENSORS,
       TOTAL_WINDOWS,
-      CELL_STATS,
-      INTERVALS,
-      LATITUDE_BANDS,
-      TIME_SERIES,
       HISTOGRAMS,
-      HEATMAP,
       CONTRIBUTIONS,
       GEOMETRY,
+      RASTER_PRODUCTS,
       MESSAGE,
+      AGGREGATE_STATISTICS,
     })
   }
 }
@@ -8378,6 +8715,7 @@ impl<'a> SCV<'a> {
   pub const VT_CANCEL: ::flatbuffers::VOffsetT = 10;
   pub const VT_RESULT: ::flatbuffers::VOffsetT = 12;
   pub const VT_GEOMETRY: ::flatbuffers::VOffsetT = 14;
+  pub const VT_RASTER_PRODUCTS: ::flatbuffers::VOffsetT = 16;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -8389,6 +8727,7 @@ impl<'a> SCV<'a> {
     args: &'args SCVArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCV<'bldr>> {
     let mut builder = SCVBuilder::new(_fbb);
+    if let Some(x) = args.RASTER_PRODUCTS { builder.add_RASTER_PRODUCTS(x); }
     if let Some(x) = args.GEOMETRY { builder.add_GEOMETRY(x); }
     if let Some(x) = args.RESULT { builder.add_RESULT(x); }
     if let Some(x) = args.CANCEL { builder.add_CANCEL(x); }
@@ -8415,6 +8754,9 @@ impl<'a> SCV<'a> {
     let GEOMETRY = self.GEOMETRY().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let RASTER_PRODUCTS = self.RASTER_PRODUCTS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     SCVT {
       ENVELOPE_KIND,
       REQUEST,
@@ -8422,6 +8764,7 @@ impl<'a> SCV<'a> {
       CANCEL,
       RESULT,
       GEOMETRY,
+      RASTER_PRODUCTS,
     }
   }
 
@@ -8467,6 +8810,13 @@ impl<'a> SCV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVPackedGeometryChunk>>(SCV::VT_GEOMETRY, None)}
   }
+  #[inline]
+  pub fn RASTER_PRODUCTS(&self) -> Option<SCVPackedRasterProducts<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVPackedRasterProducts>>(SCV::VT_RASTER_PRODUCTS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCV<'_> {
@@ -8481,6 +8831,7 @@ impl ::flatbuffers::Verifiable for SCV<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVCancel>>("CANCEL", Self::VT_CANCEL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVResult>>("RESULT", Self::VT_RESULT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedGeometryChunk>>("GEOMETRY", Self::VT_GEOMETRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedRasterProducts>>("RASTER_PRODUCTS", Self::VT_RASTER_PRODUCTS, false)?
      .finish();
     Ok(())
   }
@@ -8492,6 +8843,7 @@ pub struct SCVArgs<'a> {
     pub CANCEL: Option<::flatbuffers::WIPOffset<SCVCancel<'a>>>,
     pub RESULT: Option<::flatbuffers::WIPOffset<SCVResult<'a>>>,
     pub GEOMETRY: Option<::flatbuffers::WIPOffset<SCVPackedGeometryChunk<'a>>>,
+    pub RASTER_PRODUCTS: Option<::flatbuffers::WIPOffset<SCVPackedRasterProducts<'a>>>,
 }
 impl<'a> Default for SCVArgs<'a> {
   #[inline]
@@ -8503,6 +8855,7 @@ impl<'a> Default for SCVArgs<'a> {
       CANCEL: None,
       RESULT: None,
       GEOMETRY: None,
+      RASTER_PRODUCTS: None,
     }
   }
 }
@@ -8537,6 +8890,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVPackedGeometryChunk>>(SCV::VT_GEOMETRY, GEOMETRY);
   }
   #[inline]
+  pub fn add_RASTER_PRODUCTS(&mut self, RASTER_PRODUCTS: ::flatbuffers::WIPOffset<SCVPackedRasterProducts<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVPackedRasterProducts>>(SCV::VT_RASTER_PRODUCTS, RASTER_PRODUCTS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCVBuilder {
@@ -8560,6 +8917,7 @@ impl ::core::fmt::Debug for SCV<'_> {
       ds.field("CANCEL", &self.CANCEL());
       ds.field("RESULT", &self.RESULT());
       ds.field("GEOMETRY", &self.GEOMETRY());
+      ds.field("RASTER_PRODUCTS", &self.RASTER_PRODUCTS());
       ds.finish()
   }
 }
@@ -8572,6 +8930,7 @@ pub struct SCVT {
   pub CANCEL: Option<alloc::boxed::Box<SCVCancelT>>,
   pub RESULT: Option<alloc::boxed::Box<SCVResultT>>,
   pub GEOMETRY: Option<alloc::boxed::Box<SCVPackedGeometryChunkT>>,
+  pub RASTER_PRODUCTS: Option<alloc::boxed::Box<SCVPackedRasterProductsT>>,
 }
 impl Default for SCVT {
   fn default() -> Self {
@@ -8582,6 +8941,7 @@ impl Default for SCVT {
       CANCEL: None,
       RESULT: None,
       GEOMETRY: None,
+      RASTER_PRODUCTS: None,
     }
   }
 }
@@ -8606,6 +8966,9 @@ impl SCVT {
     let GEOMETRY = self.GEOMETRY.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let RASTER_PRODUCTS = self.RASTER_PRODUCTS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     SCV::create(_fbb, &SCVArgs{
       ENVELOPE_KIND,
       REQUEST,
@@ -8613,6 +8976,7 @@ impl SCVT {
       CANCEL,
       RESULT,
       GEOMETRY,
+      RASTER_PRODUCTS,
     })
   }
 }

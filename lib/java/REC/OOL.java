@@ -76,4 +76,3 @@ public final class OOL extends com.google.flatbuffers.Table {
     public OOL get(OOL obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

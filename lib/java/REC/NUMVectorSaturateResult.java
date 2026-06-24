@@ -79,4 +79,3 @@ public final class NUMVectorSaturateResult extends com.google.flatbuffers.Table 
     public NUMVectorSaturateResult get(NUMVectorSaturateResult obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

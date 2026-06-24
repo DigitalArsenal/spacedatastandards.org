@@ -121,4 +121,3 @@ public final class MPE extends com.google.flatbuffers.Table {
     public MPE get(MPE obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -47,4 +47,3 @@ public final class OrbitFrameWrapper extends com.google.flatbuffers.Table {
     public OrbitFrameWrapper get(OrbitFrameWrapper obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

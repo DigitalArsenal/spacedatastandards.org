@@ -31,45 +31,25 @@ public struct SCVSensor : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
-  public scvSensorShapeKind SHAPE { get { int o = __p.__offset(10); return o != 0 ? (scvSensorShapeKind)__p.bb.Get(o + __p.bb_pos) : scvSensorShapeKind.CONIC; } }
-  public scvCoordinateFrame FRAME { get { int o = __p.__offset(12); return o != 0 ? (scvCoordinateFrame)__p.bb.Get(o + __p.bb_pos) : scvCoordinateFrame.UNKNOWN; } }
-  public SCVVec3? POSITION_M { get { int o = __p.__offset(14); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public SCVVec3? VELOCITY_MPS { get { int o = __p.__offset(16); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public SCVVec3? BORESIGHT_UNIT { get { int o = __p.__offset(18); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public SCVVec3? UP_UNIT { get { int o = __p.__offset(20); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public double HALF_ANGLE_DEG { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CROSS_TRACK_HALF_ANGLE_DEG { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ALONG_TRACK_HALF_ANGLE_DEG { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MIN_RANGE_M { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MAX_RANGE_M { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public SCVVec3? POLYGON_VERTICES(int j) { int o = __p.__offset(32); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int POLYGON_VERTICESLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public scvCoordinateFrame POLYGON_FRAME { get { int o = __p.__offset(34); return o != 0 ? (scvCoordinateFrame)__p.bb.Get(o + __p.bb_pos) : scvCoordinateFrame.UNKNOWN; } }
+  public scvCoordinateFrame FRAME { get { int o = __p.__offset(10); return o != 0 ? (scvCoordinateFrame)__p.bb.Get(o + __p.bb_pos) : scvCoordinateFrame.UNKNOWN; } }
+  public SCVVec3? POSITION_M { get { int o = __p.__offset(12); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVVec3? VELOCITY_MPS { get { int o = __p.__offset(14); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVVec3? BORESIGHT_UNIT { get { int o = __p.__offset(16); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVVec3? UP_UNIT { get { int o = __p.__offset(18); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVSensorShapeContract? SHAPE_CONTRACT { get { int o = __p.__offset(20); return o != 0 ? (SCVSensorShapeContract?)(new SCVSensorShapeContract()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCVSensor> CreateSCVSensor(FlatBufferBuilder builder,
       uint SENSOR_ID = 0,
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
-      scvSensorShapeKind SHAPE = scvSensorShapeKind.CONIC,
       scvCoordinateFrame FRAME = scvCoordinateFrame.UNKNOWN,
       Offset<SCVVec3> POSITION_MOffset = default(Offset<SCVVec3>),
       Offset<SCVVec3> VELOCITY_MPSOffset = default(Offset<SCVVec3>),
       Offset<SCVVec3> BORESIGHT_UNITOffset = default(Offset<SCVVec3>),
       Offset<SCVVec3> UP_UNITOffset = default(Offset<SCVVec3>),
-      double HALF_ANGLE_DEG = 0.0,
-      double CROSS_TRACK_HALF_ANGLE_DEG = 0.0,
-      double ALONG_TRACK_HALF_ANGLE_DEG = 0.0,
-      double MIN_RANGE_M = 0.0,
-      double MAX_RANGE_M = 0.0,
-      VectorOffset POLYGON_VERTICESOffset = default(VectorOffset),
-      scvCoordinateFrame POLYGON_FRAME = scvCoordinateFrame.UNKNOWN) {
-    builder.StartTable(16);
-    SCVSensor.AddMAX_RANGE_M(builder, MAX_RANGE_M);
-    SCVSensor.AddMIN_RANGE_M(builder, MIN_RANGE_M);
-    SCVSensor.AddALONG_TRACK_HALF_ANGLE_DEG(builder, ALONG_TRACK_HALF_ANGLE_DEG);
-    SCVSensor.AddCROSS_TRACK_HALF_ANGLE_DEG(builder, CROSS_TRACK_HALF_ANGLE_DEG);
-    SCVSensor.AddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG);
-    SCVSensor.AddPOLYGON_VERTICES(builder, POLYGON_VERTICESOffset);
+      Offset<SCVSensorShapeContract> SHAPE_CONTRACTOffset = default(Offset<SCVSensorShapeContract>)) {
+    builder.StartTable(9);
+    SCVSensor.AddSHAPE_CONTRACT(builder, SHAPE_CONTRACTOffset);
     SCVSensor.AddUP_UNIT(builder, UP_UNITOffset);
     SCVSensor.AddBORESIGHT_UNIT(builder, BORESIGHT_UNITOffset);
     SCVSensor.AddVELOCITY_MPS(builder, VELOCITY_MPSOffset);
@@ -77,34 +57,20 @@ public struct SCVSensor : IFlatbufferObject
     SCVSensor.AddNAME(builder, NAMEOffset);
     SCVSensor.AddOBJECT_ID(builder, OBJECT_IDOffset);
     SCVSensor.AddSENSOR_ID(builder, SENSOR_ID);
-    SCVSensor.AddPOLYGON_FRAME(builder, POLYGON_FRAME);
     SCVSensor.AddFRAME(builder, FRAME);
-    SCVSensor.AddSHAPE(builder, SHAPE);
     return SCVSensor.EndSCVSensor(builder);
   }
 
-  public static void StartSCVSensor(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartSCVSensor(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddSENSOR_ID(FlatBufferBuilder builder, uint SENSOR_ID) { builder.AddUint(0, SENSOR_ID, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
-  public static void AddSHAPE(FlatBufferBuilder builder, scvSensorShapeKind SHAPE) { builder.AddByte(3, (byte)SHAPE, 0); }
-  public static void AddFRAME(FlatBufferBuilder builder, scvCoordinateFrame FRAME) { builder.AddByte(4, (byte)FRAME, 0); }
-  public static void AddPOSITION_M(FlatBufferBuilder builder, Offset<SCVVec3> POSITION_MOffset) { builder.AddOffset(5, POSITION_MOffset.Value, 0); }
-  public static void AddVELOCITY_MPS(FlatBufferBuilder builder, Offset<SCVVec3> VELOCITY_MPSOffset) { builder.AddOffset(6, VELOCITY_MPSOffset.Value, 0); }
-  public static void AddBORESIGHT_UNIT(FlatBufferBuilder builder, Offset<SCVVec3> BORESIGHT_UNITOffset) { builder.AddOffset(7, BORESIGHT_UNITOffset.Value, 0); }
-  public static void AddUP_UNIT(FlatBufferBuilder builder, Offset<SCVVec3> UP_UNITOffset) { builder.AddOffset(8, UP_UNITOffset.Value, 0); }
-  public static void AddHALF_ANGLE_DEG(FlatBufferBuilder builder, double HALF_ANGLE_DEG) { builder.AddDouble(9, HALF_ANGLE_DEG, 0.0); }
-  public static void AddCROSS_TRACK_HALF_ANGLE_DEG(FlatBufferBuilder builder, double CROSS_TRACK_HALF_ANGLE_DEG) { builder.AddDouble(10, CROSS_TRACK_HALF_ANGLE_DEG, 0.0); }
-  public static void AddALONG_TRACK_HALF_ANGLE_DEG(FlatBufferBuilder builder, double ALONG_TRACK_HALF_ANGLE_DEG) { builder.AddDouble(11, ALONG_TRACK_HALF_ANGLE_DEG, 0.0); }
-  public static void AddMIN_RANGE_M(FlatBufferBuilder builder, double MIN_RANGE_M) { builder.AddDouble(12, MIN_RANGE_M, 0.0); }
-  public static void AddMAX_RANGE_M(FlatBufferBuilder builder, double MAX_RANGE_M) { builder.AddDouble(13, MAX_RANGE_M, 0.0); }
-  public static void AddPOLYGON_VERTICES(FlatBufferBuilder builder, VectorOffset POLYGON_VERTICESOffset) { builder.AddOffset(14, POLYGON_VERTICESOffset.Value, 0); }
-  public static VectorOffset CreatePOLYGON_VERTICESVector(FlatBufferBuilder builder, Offset<SCVVec3>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, Offset<SCVVec3>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVVec3>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVVec3>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartPOLYGON_VERTICESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPOLYGON_FRAME(FlatBufferBuilder builder, scvCoordinateFrame POLYGON_FRAME) { builder.AddByte(15, (byte)POLYGON_FRAME, 0); }
+  public static void AddFRAME(FlatBufferBuilder builder, scvCoordinateFrame FRAME) { builder.AddByte(3, (byte)FRAME, 0); }
+  public static void AddPOSITION_M(FlatBufferBuilder builder, Offset<SCVVec3> POSITION_MOffset) { builder.AddOffset(4, POSITION_MOffset.Value, 0); }
+  public static void AddVELOCITY_MPS(FlatBufferBuilder builder, Offset<SCVVec3> VELOCITY_MPSOffset) { builder.AddOffset(5, VELOCITY_MPSOffset.Value, 0); }
+  public static void AddBORESIGHT_UNIT(FlatBufferBuilder builder, Offset<SCVVec3> BORESIGHT_UNITOffset) { builder.AddOffset(6, BORESIGHT_UNITOffset.Value, 0); }
+  public static void AddUP_UNIT(FlatBufferBuilder builder, Offset<SCVVec3> UP_UNITOffset) { builder.AddOffset(7, UP_UNITOffset.Value, 0); }
+  public static void AddSHAPE_CONTRACT(FlatBufferBuilder builder, Offset<SCVSensorShapeContract> SHAPE_CONTRACTOffset) { builder.AddOffset(8, SHAPE_CONTRACTOffset.Value, 0); }
   public static Offset<SCVSensor> EndSCVSensor(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVSensor>(o);
@@ -118,20 +84,12 @@ public struct SCVSensor : IFlatbufferObject
     _o.SENSOR_ID = this.SENSOR_ID;
     _o.OBJECT_ID = this.OBJECT_ID;
     _o.NAME = this.NAME;
-    _o.SHAPE = this.SHAPE;
     _o.FRAME = this.FRAME;
     _o.POSITION_M = this.POSITION_M.HasValue ? this.POSITION_M.Value.UnPack() : null;
     _o.VELOCITY_MPS = this.VELOCITY_MPS.HasValue ? this.VELOCITY_MPS.Value.UnPack() : null;
     _o.BORESIGHT_UNIT = this.BORESIGHT_UNIT.HasValue ? this.BORESIGHT_UNIT.Value.UnPack() : null;
     _o.UP_UNIT = this.UP_UNIT.HasValue ? this.UP_UNIT.Value.UnPack() : null;
-    _o.HALF_ANGLE_DEG = this.HALF_ANGLE_DEG;
-    _o.CROSS_TRACK_HALF_ANGLE_DEG = this.CROSS_TRACK_HALF_ANGLE_DEG;
-    _o.ALONG_TRACK_HALF_ANGLE_DEG = this.ALONG_TRACK_HALF_ANGLE_DEG;
-    _o.MIN_RANGE_M = this.MIN_RANGE_M;
-    _o.MAX_RANGE_M = this.MAX_RANGE_M;
-    _o.POLYGON_VERTICES = new List<SCVVec3T>();
-    for (var _j = 0; _j < this.POLYGON_VERTICESLength; ++_j) {_o.POLYGON_VERTICES.Add(this.POLYGON_VERTICES(_j).HasValue ? this.POLYGON_VERTICES(_j).Value.UnPack() : null);}
-    _o.POLYGON_FRAME = this.POLYGON_FRAME;
+    _o.SHAPE_CONTRACT = this.SHAPE_CONTRACT.HasValue ? this.SHAPE_CONTRACT.Value.UnPack() : null;
   }
   public static Offset<SCVSensor> Pack(FlatBufferBuilder builder, SCVSensorT _o) {
     if (_o == null) return default(Offset<SCVSensor>);
@@ -141,30 +99,18 @@ public struct SCVSensor : IFlatbufferObject
     var _VELOCITY_MPS = _o.VELOCITY_MPS == null ? default(Offset<SCVVec3>) : SCVVec3.Pack(builder, _o.VELOCITY_MPS);
     var _BORESIGHT_UNIT = _o.BORESIGHT_UNIT == null ? default(Offset<SCVVec3>) : SCVVec3.Pack(builder, _o.BORESIGHT_UNIT);
     var _UP_UNIT = _o.UP_UNIT == null ? default(Offset<SCVVec3>) : SCVVec3.Pack(builder, _o.UP_UNIT);
-    var _POLYGON_VERTICES = default(VectorOffset);
-    if (_o.POLYGON_VERTICES != null) {
-      var __POLYGON_VERTICES = new Offset<SCVVec3>[_o.POLYGON_VERTICES.Count];
-      for (var _j = 0; _j < __POLYGON_VERTICES.Length; ++_j) { __POLYGON_VERTICES[_j] = SCVVec3.Pack(builder, _o.POLYGON_VERTICES[_j]); }
-      _POLYGON_VERTICES = CreatePOLYGON_VERTICESVector(builder, __POLYGON_VERTICES);
-    }
+    var _SHAPE_CONTRACT = _o.SHAPE_CONTRACT == null ? default(Offset<SCVSensorShapeContract>) : SCVSensorShapeContract.Pack(builder, _o.SHAPE_CONTRACT);
     return CreateSCVSensor(
       builder,
       _o.SENSOR_ID,
       _OBJECT_ID,
       _NAME,
-      _o.SHAPE,
       _o.FRAME,
       _POSITION_M,
       _VELOCITY_MPS,
       _BORESIGHT_UNIT,
       _UP_UNIT,
-      _o.HALF_ANGLE_DEG,
-      _o.CROSS_TRACK_HALF_ANGLE_DEG,
-      _o.ALONG_TRACK_HALF_ANGLE_DEG,
-      _o.MIN_RANGE_M,
-      _o.MAX_RANGE_M,
-      _POLYGON_VERTICES,
-      _o.POLYGON_FRAME);
+      _SHAPE_CONTRACT);
   }
 }
 
@@ -173,37 +119,23 @@ public class SCVSensorT
   public uint SENSOR_ID { get; set; }
   public string OBJECT_ID { get; set; }
   public string NAME { get; set; }
-  public scvSensorShapeKind SHAPE { get; set; }
   public scvCoordinateFrame FRAME { get; set; }
   public SCVVec3T POSITION_M { get; set; }
   public SCVVec3T VELOCITY_MPS { get; set; }
   public SCVVec3T BORESIGHT_UNIT { get; set; }
   public SCVVec3T UP_UNIT { get; set; }
-  public double HALF_ANGLE_DEG { get; set; }
-  public double CROSS_TRACK_HALF_ANGLE_DEG { get; set; }
-  public double ALONG_TRACK_HALF_ANGLE_DEG { get; set; }
-  public double MIN_RANGE_M { get; set; }
-  public double MAX_RANGE_M { get; set; }
-  public List<SCVVec3T> POLYGON_VERTICES { get; set; }
-  public scvCoordinateFrame POLYGON_FRAME { get; set; }
+  public SCVSensorShapeContractT SHAPE_CONTRACT { get; set; }
 
   public SCVSensorT() {
     this.SENSOR_ID = 0;
     this.OBJECT_ID = null;
     this.NAME = null;
-    this.SHAPE = scvSensorShapeKind.CONIC;
     this.FRAME = scvCoordinateFrame.UNKNOWN;
     this.POSITION_M = null;
     this.VELOCITY_MPS = null;
     this.BORESIGHT_UNIT = null;
     this.UP_UNIT = null;
-    this.HALF_ANGLE_DEG = 0.0;
-    this.CROSS_TRACK_HALF_ANGLE_DEG = 0.0;
-    this.ALONG_TRACK_HALF_ANGLE_DEG = 0.0;
-    this.MIN_RANGE_M = 0.0;
-    this.MAX_RANGE_M = 0.0;
-    this.POLYGON_VERTICES = null;
-    this.POLYGON_FRAME = scvCoordinateFrame.UNKNOWN;
+    this.SHAPE_CONTRACT = null;
   }
 }
 
@@ -216,19 +148,12 @@ static public class SCVSensorVerify
       && verifier.VerifyField(tablePos, 4 /*SENSOR_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 6 /*OBJECT_ID*/, false)
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
-      && verifier.VerifyField(tablePos, 10 /*SHAPE*/, 1 /*scvSensorShapeKind*/, 1, false)
-      && verifier.VerifyField(tablePos, 12 /*FRAME*/, 1 /*scvCoordinateFrame*/, 1, false)
-      && verifier.VerifyTable(tablePos, 14 /*POSITION_M*/, SCVVec3Verify.Verify, false)
-      && verifier.VerifyTable(tablePos, 16 /*VELOCITY_MPS*/, SCVVec3Verify.Verify, false)
-      && verifier.VerifyTable(tablePos, 18 /*BORESIGHT_UNIT*/, SCVVec3Verify.Verify, false)
-      && verifier.VerifyTable(tablePos, 20 /*UP_UNIT*/, SCVVec3Verify.Verify, false)
-      && verifier.VerifyField(tablePos, 22 /*HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*CROSS_TRACK_HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*ALONG_TRACK_HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*MIN_RANGE_M*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*MAX_RANGE_M*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfTables(tablePos, 32 /*POLYGON_VERTICES*/, SCVVec3Verify.Verify, false)
-      && verifier.VerifyField(tablePos, 34 /*POLYGON_FRAME*/, 1 /*scvCoordinateFrame*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*FRAME*/, 1 /*scvCoordinateFrame*/, 1, false)
+      && verifier.VerifyTable(tablePos, 12 /*POSITION_M*/, SCVVec3Verify.Verify, false)
+      && verifier.VerifyTable(tablePos, 14 /*VELOCITY_MPS*/, SCVVec3Verify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*BORESIGHT_UNIT*/, SCVVec3Verify.Verify, false)
+      && verifier.VerifyTable(tablePos, 18 /*UP_UNIT*/, SCVVec3Verify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*SHAPE_CONTRACT*/, SCVSensorShapeContractVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -20,4 +20,3 @@ public final class numDiscretizeRoundDirection {
 
   public static String name(int e) { return names[e]; }
 }
-

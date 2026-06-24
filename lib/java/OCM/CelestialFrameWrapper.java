@@ -47,4 +47,3 @@ public final class CelestialFrameWrapper extends com.google.flatbuffers.Table {
     public CelestialFrameWrapper get(CelestialFrameWrapper obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

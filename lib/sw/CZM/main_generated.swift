@@ -4207,4 +4207,3 @@ public struct CZM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

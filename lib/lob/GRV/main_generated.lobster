@@ -135,4 +135,3 @@ struct GRVBuilder:
         return this
     def end():
         return b_.EndObject()
-

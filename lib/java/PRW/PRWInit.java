@@ -80,4 +80,3 @@ public final class PRWInit extends com.google.flatbuffers.Table {
     public PRWInit get(PRWInit obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

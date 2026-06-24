@@ -62,4 +62,3 @@ public final class CommandSignificance extends com.google.flatbuffers.Table {
     public CommandSignificance get(CommandSignificance obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -128,4 +128,3 @@ public struct CHN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

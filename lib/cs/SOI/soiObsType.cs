@@ -8,4 +8,3 @@ public enum soiObsType : sbyte
   RADAR = 1,
   COMBINED = 2,
 };
-

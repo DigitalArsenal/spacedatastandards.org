@@ -110,4 +110,3 @@ public final class CLT extends com.google.flatbuffers.Table {
     public CLT get(CLT obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

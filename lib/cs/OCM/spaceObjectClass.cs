@@ -13,4 +13,3 @@ public enum spaceObjectClass : sbyte
   /// 3
   UNKNOWN = 3,
 };
-

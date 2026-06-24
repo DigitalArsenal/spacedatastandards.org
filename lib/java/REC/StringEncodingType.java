@@ -39,4 +39,3 @@ public final class StringEncodingType {
 
   public static String name(int e) { return names[e]; }
 }
-

@@ -232,4 +232,3 @@ public final class BUS extends com.google.flatbuffers.Table {
     public BUS get(BUS obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

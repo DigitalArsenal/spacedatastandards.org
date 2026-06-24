@@ -177,4 +177,3 @@ public final class OON extends com.google.flatbuffers.Table {
     public OON get(OON obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

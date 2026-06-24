@@ -7,4 +7,3 @@ public enum screeningVolumeShape : sbyte
   ELLIPSOID = 0,
   BOX = 1,
 };
-

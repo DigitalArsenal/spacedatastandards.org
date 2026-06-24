@@ -282,4 +282,3 @@ public struct OOD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

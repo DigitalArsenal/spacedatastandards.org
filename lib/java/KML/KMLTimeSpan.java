@@ -64,4 +64,3 @@ public final class KMLTimeSpan extends com.google.flatbuffers.Table {
     public KMLTimeSpan get(KMLTimeSpan obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

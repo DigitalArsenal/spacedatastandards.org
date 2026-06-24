@@ -14,4 +14,3 @@ public final class ClockType {
 
   public static String name(int e) { return names[e]; }
 }
-

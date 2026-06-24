@@ -80,4 +80,3 @@ public final class TIM extends com.google.flatbuffers.Table {
     public TIM get(TIM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

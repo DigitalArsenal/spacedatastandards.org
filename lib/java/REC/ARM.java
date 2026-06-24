@@ -109,4 +109,3 @@ public final class ARM extends com.google.flatbuffers.Table {
     public ARM get(ARM obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

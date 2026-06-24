@@ -7,4 +7,3 @@ public enum elementType : sbyte
   OSCULATING = 0,
   MEAN = 1,
 };
-

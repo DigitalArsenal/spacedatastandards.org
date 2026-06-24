@@ -70,4 +70,3 @@ public final class GJN extends com.google.flatbuffers.Table {
     public GJN get(GJN obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

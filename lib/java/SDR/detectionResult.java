@@ -77,4 +77,3 @@ public final class detectionResult extends Struct {
     public detectionResult get(detectionResult obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

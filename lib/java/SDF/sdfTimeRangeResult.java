@@ -67,4 +67,3 @@ public final class sdfTimeRangeResult extends Struct {
     public sdfTimeRangeResult get(sdfTimeRangeResult obj, int j) {  return obj.__assign(__element(j), bb); }
   }
 }
-

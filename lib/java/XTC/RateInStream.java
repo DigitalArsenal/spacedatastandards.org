@@ -69,4 +69,3 @@ public final class RateInStream extends com.google.flatbuffers.Table {
     public RateInStream get(RateInStream obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

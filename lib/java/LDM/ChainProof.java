@@ -118,4 +118,3 @@ public final class ChainProof extends com.google.flatbuffers.Table {
     public ChainProof get(ChainProof obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

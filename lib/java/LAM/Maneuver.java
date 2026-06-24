@@ -167,4 +167,3 @@ public final class Maneuver extends com.google.flatbuffers.Table {
     public Maneuver get(Maneuver obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

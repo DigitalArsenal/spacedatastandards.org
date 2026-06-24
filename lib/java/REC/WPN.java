@@ -125,4 +125,3 @@ public final class WPN extends com.google.flatbuffers.Table {
     public WPN get(WPN obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

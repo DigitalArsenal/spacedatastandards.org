@@ -15,4 +15,3 @@ public final class keyReferenceRole {
 
   public static String name(int e) { return names[e]; }
 }
-

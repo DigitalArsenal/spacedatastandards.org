@@ -12,4 +12,3 @@ public enum shortestPathAlgorithm : byte
   /// Dijkstra's algorithm.
   DIJKSTRA = 2,
 };
-

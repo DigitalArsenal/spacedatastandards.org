@@ -182,4 +182,3 @@ public final class OOT extends com.google.flatbuffers.Table {
     public OOT get(OOT obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

@@ -62,4 +62,3 @@ public final class EnumerationAlarm extends com.google.flatbuffers.Table {
     public EnumerationAlarm get(EnumerationAlarm obj, int j) {  return obj.__assign(__indirect(__element(j), bb), bb); }
   }
 }
-

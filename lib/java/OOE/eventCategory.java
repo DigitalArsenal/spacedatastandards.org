@@ -17,4 +17,3 @@ public final class eventCategory {
 
   public static String name(int e) { return names[e]; }
 }
-

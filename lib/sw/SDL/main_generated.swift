@@ -89,4 +89,3 @@ public struct SDL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     _v.finish()
   }
 }
-

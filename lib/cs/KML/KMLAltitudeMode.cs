@@ -15,4 +15,3 @@ public enum KMLAltitudeMode : sbyte
   /// Relative to sea floor
   RELATIVE_TO_SEA_FLOOR = 4,
 };
-
