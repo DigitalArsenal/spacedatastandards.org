@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fieldStreamValueStateCategory": {
+      "type": "string",
+      "enum": [
+        "Public",
+        "Encrypted",
+        "Redacted",
+        "Unavailable"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Public": {
+          "value": 0
+        },
+        "Encrypted": {
+          "value": 1
+        },
+        "Redacted": {
+          "value": 2
+        },
+        "Unavailable": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamValueEncodingCategory": {
+      "type": "string",
+      "enum": [
+        "Bytes",
+        "JsonUtf8",
+        "FlatBuffer",
+        "TextUtf8"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Bytes": {
+          "value": 0
+        },
+        "JsonUtf8": {
+          "value": 1
+        },
+        "FlatBuffer": {
+          "value": 2
+        },
+        "TextUtf8": {
+          "value": 3
+        }
+      }
+    },
+    "FieldStreamValue": {
+      "type": "object",
+      "properties": {
+        "FIELD_PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FIELD_ID_PATH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "STATE": {
+          "$ref": "#/definitions/fieldStreamValueStateCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Public": {
+              "value": 0
+            },
+            "Encrypted": {
+              "value": 1
+            },
+            "Redacted": {
+              "value": 2
+            },
+            "Unavailable": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "Unavailable"
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/fieldStreamValueEncodingCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Bytes": {
+              "value": 0
+            },
+            "JsonUtf8": {
+              "value": 1
+            },
+            "FlatBuffer": {
+              "value": 2
+            },
+            "TextUtf8": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "Bytes"
+        },
+        "VALUE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CIPHERTEXT": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "NONCE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "TAG": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AAD_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "RELEASE_TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DECISION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "FIELD_PATH"
+      ],
+      "additionalProperties": false
+    },
+    "FSM": {
+      "type": "object",
+      "properties": {
+        "MESSAGE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIELDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamValue"
+          },
+          "x-flatbuffer-type": "[FieldStreamValue]"
+        },
+        "PAYLOAD_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PREVIOUS_MESSAGE_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "MESSAGE_ID",
+        "PROVIDER_PEER_ID",
+        "LISTING_ID",
+        "STREAM_ID",
+        "SCHEMA_CODE",
+        "POLICY_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FSM",
+  "x-flatbuffer-root-type": "FSM",
+  "x-flatbuffer-file-identifier": "$FSM"
+}

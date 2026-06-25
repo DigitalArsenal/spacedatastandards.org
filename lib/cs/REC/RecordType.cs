@@ -171,6 +171,8 @@ public enum RecordType : byte
   WTH = 164,
   XTC = 165,
   SCV = 166,
+  FSM = 167,
+  FSP = 168,
 };
 
 public class RecordTypeUnion {
@@ -515,6 +517,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromXTC(XTCT _xtc) { return new RecordTypeUnion{ Type = RecordType.XTC, Value = _xtc }; }
   public SCVT AsSCV() { return this.As<SCVT>(); }
   public static RecordTypeUnion FromSCV(SCVT _scv) { return new RecordTypeUnion{ Type = RecordType.SCV, Value = _scv }; }
+  public FSMT AsFSM() { return this.As<FSMT>(); }
+  public static RecordTypeUnion FromFSM(FSMT _fsm) { return new RecordTypeUnion{ Type = RecordType.FSM, Value = _fsm }; }
+  public FSPT AsFSP() { return this.As<FSPT>(); }
+  public static RecordTypeUnion FromFSP(FSPT _fsp) { return new RecordTypeUnion{ Type = RecordType.FSP, Value = _fsp }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -685,6 +691,8 @@ public class RecordTypeUnion {
       case RecordType.WTH: return WTH.Pack(builder, _o.AsWTH()).Value;
       case RecordType.XTC: return XTC.Pack(builder, _o.AsXTC()).Value;
       case RecordType.SCV: return SCV.Pack(builder, _o.AsSCV()).Value;
+      case RecordType.FSM: return FSM.Pack(builder, _o.AsFSM()).Value;
+      case RecordType.FSP: return FSP.Pack(builder, _o.AsFSP()).Value;
     }
   }
 }
@@ -1195,6 +1203,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.SCV:
         result = SCVVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.FSM:
+        result = FSMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.FSP:
+        result = FSPVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

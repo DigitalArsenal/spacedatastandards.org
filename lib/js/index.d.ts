@@ -47,6 +47,8 @@ export * as EWR from './EWR/main.js';
 export * as FCS from './FCS/main.js';
 export * as FPC from './FPC/main.js';
 export * as FRM from './FRM/main.js';
+export * as FSM from './FSM/main.js';
+export * as FSP from './FSP/main.js';
 export * as GDI from './GDI/main.js';
 export * as GEO from './GEO/main.js';
 export * as GJN from './GJN/main.js';

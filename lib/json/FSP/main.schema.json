@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fieldStreamAudienceCategory" : {
+      "type" : "string",
+      "enum": ["Customer", "Group", "Enclave", "Coalition", "Public"]
+    },
+    "fieldStreamOperationCategory" : {
+      "type" : "string",
+      "enum": ["Subscribe", "Decrypt", "Query", "InvokeModule"]
+    },
+    "fieldStreamDecisionCategory" : {
+      "type" : "string",
+      "enum": ["AllowPublic", "AllowEncrypted", "Redact", "Deny"]
+    },
+    "fieldStreamRevocationCategory" : {
+      "type" : "string",
+      "enum": ["Active", "Revoked", "Superseded", "Expired"]
+    },
+    "FieldStreamAudience" : {
+      "type" : "object",
+      "properties" : {
+        "AUDIENCE_TYPE" : {
+                "$ref" : "#/definitions/fieldStreamAudienceCategory"
+              },
+        "SUBJECT_ID" : {
+                "type" : "string"
+              },
+        "SUBJECT_EPM_CID" : {
+                "type" : "string"
+              },
+        "SUBJECT_KEY_ID" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FieldStreamRule" : {
+      "type" : "object",
+      "properties" : {
+        "FIELD_PATH" : {
+                "type" : "string"
+              },
+        "FIELD_ID_PATH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "DECISION" : {
+                "$ref" : "#/definitions/fieldStreamDecisionCategory"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REQUIRED_ATTRIBUTES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "KEY_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["FIELD_PATH"],
+      "additionalProperties" : false
+    },
+    "FSP" : {
+      "type" : "object",
+      "properties" : {
+        "POLICY_ID" : {
+                "type" : "string"
+              },
+        "POLICY_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string"
+              },
+        "LISTING_ID" : {
+                "type" : "string"
+              },
+        "STREAM_ID" : {
+                "type" : "string"
+              },
+        "SCHEMA_CODE" : {
+                "type" : "string"
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "AUDIENCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FieldStreamAudience"}
+              },
+        "RULES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FieldStreamRule"}
+              },
+        "ALLOWED_OPERATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/fieldStreamOperationCategory"}
+              },
+        "KEY_SCOPE" : {
+                "type" : "string"
+              },
+        "KEY_EPOCH" : {
+                "type" : "string"
+              },
+        "VALID_FROM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "REVOCATION_STATUS" : {
+                "$ref" : "#/definitions/fieldStreamRevocationCategory"
+              },
+        "REVOKED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "REVOCATION_REASON" : {
+                "type" : "string"
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "required" : ["POLICY_ID", "PROVIDER_PEER_ID", "LISTING_ID", "STREAM_ID", "SCHEMA_CODE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FSP"
+}

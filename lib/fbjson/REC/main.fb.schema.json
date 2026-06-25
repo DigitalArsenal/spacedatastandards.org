@@ -8755,6 +8755,162 @@
         }
       }
     },
+    "fieldStreamValueStateCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Field Stream Message for marketplace-protected live streams",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Public": {
+          "value": 0
+        },
+        "Encrypted": {
+          "value": 1
+        },
+        "Redacted": {
+          "value": 2
+        },
+        "Unavailable": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamValueEncodingCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Bytes": {
+          "value": 0
+        },
+        "JsonUtf8": {
+          "value": 1
+        },
+        "FlatBuffer": {
+          "value": 2
+        },
+        "TextUtf8": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamAudienceCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Field Stream Policy for marketplace-protected live streams",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Customer": {
+          "value": 0
+        },
+        "Group": {
+          "value": 1
+        },
+        "Enclave": {
+          "value": 2
+        },
+        "Coalition": {
+          "value": 3
+        },
+        "Public": {
+          "value": 4
+        }
+      }
+    },
+    "fieldStreamOperationCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Subscribe": {
+          "value": 0
+        },
+        "Decrypt": {
+          "value": 1
+        },
+        "Query": {
+          "value": 2
+        },
+        "InvokeModule": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamDecisionCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "AllowPublic": {
+          "value": 0
+        },
+        "AllowEncrypted": {
+          "value": 1
+        },
+        "Redact": {
+          "value": 2
+        },
+        "Deny": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamRevocationCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0
+        },
+        "Revoked": {
+          "value": 1
+        },
+        "Superseded": {
+          "value": 2
+        },
+        "Expired": {
+          "value": 3
+        }
+      }
+    },
     "imageFormat": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -28770,6 +28926,443 @@
           "x-flatbuffer-type": "FRMFrameTransformResult"
         }
       }
+    },
+    "FieldStreamValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FIELD_PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FIELD_ID_PATH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "STATE": {
+          "$ref": "#/definitions/fieldStreamValueStateCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Unavailable",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Public": {
+              "value": 0
+            },
+            "Encrypted": {
+              "value": 1
+            },
+            "Redacted": {
+              "value": 2
+            },
+            "Unavailable": {
+              "value": 3
+            }
+          }
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/fieldStreamValueEncodingCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Bytes",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Bytes": {
+              "value": 0
+            },
+            "JsonUtf8": {
+              "value": 1
+            },
+            "FlatBuffer": {
+              "value": 2
+            },
+            "TextUtf8": {
+              "value": 3
+            }
+          }
+        },
+        "VALUE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CIPHERTEXT": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "NONCE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "TAG": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AAD_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "RELEASE_TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DECISION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "FIELD_PATH"
+      ]
+    },
+    "FSM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MESSAGE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SEQUENCE": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRODUCED_AT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIELDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamValue"
+          },
+          "x-flatbuffer-type": "[FieldStreamValue]"
+        },
+        "PAYLOAD_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PREVIOUS_MESSAGE_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "MESSAGE_ID",
+        "PROVIDER_PEER_ID",
+        "LISTING_ID",
+        "STREAM_ID",
+        "SCHEMA_CODE",
+        "POLICY_ID"
+      ]
+    },
+    "FieldStreamAudience": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "AUDIENCE_TYPE": {
+          "$ref": "#/definitions/fieldStreamAudienceCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Customer",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Customer": {
+              "value": 0
+            },
+            "Group": {
+              "value": 1
+            },
+            "Enclave": {
+              "value": 2
+            },
+            "Coalition": {
+              "value": 3
+            },
+            "Public": {
+              "value": 4
+            }
+          }
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_EPM_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      }
+    },
+    "FieldStreamRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "FIELD_PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FIELD_ID_PATH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "DECISION": {
+          "$ref": "#/definitions/fieldStreamDecisionCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "AllowEncrypted",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AllowPublic": {
+              "value": 0
+            },
+            "AllowEncrypted": {
+              "value": 1
+            },
+            "Redact": {
+              "value": 2
+            },
+            "Deny": {
+              "value": 3
+            }
+          }
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REQUIRED_ATTRIBUTES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "FIELD_PATH"
+      ]
+    },
+    "FSP": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "AUDIENCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamAudience"
+          },
+          "x-flatbuffer-type": "[FieldStreamAudience]"
+        },
+        "RULES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamRule"
+          },
+          "x-flatbuffer-type": "[FieldStreamRule]"
+        },
+        "ALLOWED_OPERATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fieldStreamOperationCategory"
+          },
+          "x-flatbuffer-type": "[fieldStreamOperationCategory]"
+        },
+        "KEY_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_FROM": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "REVOCATION_STATUS": {
+          "$ref": "#/definitions/fieldStreamRevocationCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Active",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0
+            },
+            "Revoked": {
+              "value": 1
+            },
+            "Superseded": {
+              "value": 2
+            },
+            "Expired": {
+              "value": 3
+            }
+          }
+        },
+        "REVOKED_AT": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint64"
+        },
+        "REVOCATION_REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "POLICY_ID",
+        "PROVIDER_PEER_ID",
+        "LISTING_ID",
+        "STREAM_ID",
+        "SCHEMA_CODE"
+      ]
     },
     "GDI": {
       "type": "object",

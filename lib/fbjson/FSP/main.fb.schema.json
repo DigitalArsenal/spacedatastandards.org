@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fieldStreamAudienceCategory": {
+      "type": "string",
+      "enum": [
+        "Customer",
+        "Group",
+        "Enclave",
+        "Coalition",
+        "Public"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Customer": {
+          "value": 0
+        },
+        "Group": {
+          "value": 1
+        },
+        "Enclave": {
+          "value": 2
+        },
+        "Coalition": {
+          "value": 3
+        },
+        "Public": {
+          "value": 4
+        }
+      }
+    },
+    "fieldStreamOperationCategory": {
+      "type": "string",
+      "enum": [
+        "Subscribe",
+        "Decrypt",
+        "Query",
+        "InvokeModule"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Subscribe": {
+          "value": 0
+        },
+        "Decrypt": {
+          "value": 1
+        },
+        "Query": {
+          "value": 2
+        },
+        "InvokeModule": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamDecisionCategory": {
+      "type": "string",
+      "enum": [
+        "AllowPublic",
+        "AllowEncrypted",
+        "Redact",
+        "Deny"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "AllowPublic": {
+          "value": 0
+        },
+        "AllowEncrypted": {
+          "value": 1
+        },
+        "Redact": {
+          "value": 2
+        },
+        "Deny": {
+          "value": 3
+        }
+      }
+    },
+    "fieldStreamRevocationCategory": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Revoked",
+        "Superseded",
+        "Expired"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0
+        },
+        "Revoked": {
+          "value": 1
+        },
+        "Superseded": {
+          "value": 2
+        },
+        "Expired": {
+          "value": 3
+        }
+      }
+    },
+    "FieldStreamAudience": {
+      "type": "object",
+      "properties": {
+        "AUDIENCE_TYPE": {
+          "$ref": "#/definitions/fieldStreamAudienceCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Customer": {
+              "value": 0
+            },
+            "Group": {
+              "value": 1
+            },
+            "Enclave": {
+              "value": 2
+            },
+            "Coalition": {
+              "value": 3
+            },
+            "Public": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Customer"
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_EPM_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FieldStreamRule": {
+      "type": "object",
+      "properties": {
+        "FIELD_PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FIELD_ID_PATH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "DECISION": {
+          "$ref": "#/definitions/fieldStreamDecisionCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "AllowPublic": {
+              "value": 0
+            },
+            "AllowEncrypted": {
+              "value": 1
+            },
+            "Redact": {
+              "value": 2
+            },
+            "Deny": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "AllowEncrypted"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REQUIRED_ATTRIBUTES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "FIELD_PATH"
+      ],
+      "additionalProperties": false
+    },
+    "FSP": {
+      "type": "object",
+      "properties": {
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCHEMA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "AUDIENCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamAudience"
+          },
+          "x-flatbuffer-type": "[FieldStreamAudience]"
+        },
+        "RULES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldStreamRule"
+          },
+          "x-flatbuffer-type": "[FieldStreamRule]"
+        },
+        "ALLOWED_OPERATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/fieldStreamOperationCategory"
+          },
+          "x-flatbuffer-type": "[fieldStreamOperationCategory]"
+        },
+        "KEY_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALID_FROM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "REVOCATION_STATUS": {
+          "$ref": "#/definitions/fieldStreamRevocationCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0
+            },
+            "Revoked": {
+              "value": 1
+            },
+            "Superseded": {
+              "value": 2
+            },
+            "Expired": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "Active"
+        },
+        "REVOKED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "REVOCATION_REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "POLICY_ID",
+        "PROVIDER_PEER_ID",
+        "LISTING_ID",
+        "STREAM_ID",
+        "SCHEMA_CODE"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FSP",
+  "x-flatbuffer-root-type": "FSP",
+  "x-flatbuffer-file-identifier": "$FSP"
+}

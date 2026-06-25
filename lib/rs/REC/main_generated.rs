@@ -167,6 +167,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -301,10 +303,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 166;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 168;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 167] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 169] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -472,6 +474,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 167] = [
   RecordType::WTH,
   RecordType::XTC,
   RecordType::SCV,
+  RecordType::FSM,
+  RecordType::FSP,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -646,9 +650,11 @@ impl RecordType {
   pub const WTH: Self = Self(164);
   pub const XTC: Self = Self(165);
   pub const SCV: Self = Self(166);
+  pub const FSM: Self = Self(167);
+  pub const FSP: Self = Self(168);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 166;
+  pub const ENUM_MAX: u8 = 168;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -817,6 +823,8 @@ impl RecordType {
     Self::WTH,
     Self::XTC,
     Self::SCV,
+    Self::FSM,
+    Self::FSP,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -988,6 +996,8 @@ impl RecordType {
       Self::WTH => Some("WTH"),
       Self::XTC => Some("XTC"),
       Self::SCV => Some("SCV"),
+      Self::FSM => Some("FSM"),
+      Self::FSP => Some("FSP"),
       _ => None,
     }
   }
@@ -1215,6 +1225,8 @@ pub enum RecordTypeT {
   WTH(alloc::boxed::Box<WTHT>),
   XTC(alloc::boxed::Box<XTCT>),
   SCV(alloc::boxed::Box<SCVT>),
+  FSM(alloc::boxed::Box<FSMT>),
+  FSP(alloc::boxed::Box<FSPT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1391,6 +1403,8 @@ impl RecordTypeT {
       Self::WTH(_) => RecordType::WTH,
       Self::XTC(_) => RecordType::XTC,
       Self::SCV(_) => RecordType::SCV,
+      Self::FSM(_) => RecordType::FSM,
+      Self::FSP(_) => RecordType::FSP,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1562,6 +1576,8 @@ impl RecordTypeT {
       Self::WTH(v) => Some(v.pack(fbb).as_union_value()),
       Self::XTC(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::FSM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::FSP(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5050,6 +5066,48 @@ impl RecordTypeT {
   pub fn as_scv_mut(&mut self) -> Option<&mut SCVT> {
     if let Self::SCV(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned FSMT, setting the union to NONE.
+  pub fn take_fsm(&mut self) -> Option<alloc::boxed::Box<FSMT>> {
+    if let Self::FSM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::FSM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the FSMT.
+  pub fn as_fsm(&self) -> Option<&FSMT> {
+    if let Self::FSM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the FSMT.
+  pub fn as_fsm_mut(&mut self) -> Option<&mut FSMT> {
+    if let Self::FSM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned FSPT, setting the union to NONE.
+  pub fn take_fsp(&mut self) -> Option<alloc::boxed::Box<FSPT>> {
+    if let Self::FSP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::FSP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the FSPT.
+  pub fn as_fsp(&self) -> Option<&FSPT> {
+    if let Self::FSP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the FSPT.
+  pub fn as_fsp_mut(&mut self) -> Option<&mut FSPT> {
+    if let Self::FSP(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -5919,6 +5977,16 @@ impl<'a> Record<'a> {
       RecordType::SCV => RecordTypeT::SCV(alloc::boxed::Box::new(
         self.value_as_scv()
             .expect("Invalid union table, expected `RecordType::SCV`.")
+            .unpack()
+      )),
+      RecordType::FSM => RecordTypeT::FSM(alloc::boxed::Box::new(
+        self.value_as_fsm()
+            .expect("Invalid union table, expected `RecordType::FSM`.")
+            .unpack()
+      )),
+      RecordType::FSP => RecordTypeT::FSP(alloc::boxed::Box::new(
+        self.value_as_fsp()
+            .expect("Invalid union table, expected `RecordType::FSP`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -8445,6 +8513,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_fsm(&self) -> Option<FSM<'a>> {
+    if self.value_type() == RecordType::FSM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { FSM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_fsp(&self) -> Option<FSP<'a>> {
+    if self.value_type() == RecordType::FSP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { FSP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -8621,6 +8719,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::WTH => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<WTH>>("RecordType::WTH", pos),
           RecordType::XTC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<XTC>>("RecordType::XTC", pos),
           RecordType::SCV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SCV>>("RecordType::SCV", pos),
+          RecordType::FSM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<FSM>>("RecordType::FSM", pos),
+          RecordType::FSP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<FSP>>("RecordType::FSP", pos),
           _ => Ok(()),
         }
      })?
@@ -9839,6 +9939,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::SCV => {
           if let Some(x) = self.value_as_scv() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::FSM => {
+          if let Some(x) = self.value_as_fsm() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::FSP => {
+          if let Some(x) = self.value_as_fsp() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

@@ -1,0 +1,56 @@
+// Hash: 35b779af8cb83b644fbaa73d1668770ff2bcdd4f4c7c4ad850d5dc5c360d933e
+// Version: 1.132.0
+// -----------------------------------END_HEADER
+/// Field Stream Message for marketplace-protected live streams
+
+enum fieldStreamValueStateCategory : byte {
+  Public,
+  Encrypted,
+  Redacted,
+  Unavailable
+}
+
+enum fieldStreamValueEncodingCategory : byte {
+  Bytes,
+  JsonUtf8,
+  FlatBuffer,
+  TextUtf8
+}
+
+table FieldStreamValue {
+  FIELD_PATH: string (required);
+  FIELD_ID_PATH: [uint32];
+  STATE: fieldStreamValueStateCategory = Unavailable;
+  ENCODING: fieldStreamValueEncodingCategory = Bytes;
+  VALUE: [ubyte];
+  CIPHERTEXT: [ubyte];
+  NONCE: [ubyte];
+  TAG: [ubyte];
+  KEY_ID: string;
+  AAD_HASH: [ubyte];
+  RELEASE_TAGS: [string];
+  DECISION: string;
+}
+
+table FSM {
+  MESSAGE_ID: string (required);
+  PROVIDER_PEER_ID: string (required);
+  LISTING_ID: string (required);
+  STREAM_ID: string (required);
+  SCHEMA_CODE: string (required);
+  SCHEMA_HASH: [ubyte];
+  POLICY_ID: string (required);
+  POLICY_VERSION: uint32 = 1;
+  KEY_EPOCH: string;
+  SEQUENCE: uint64;
+  PRODUCED_AT: uint64;
+  EXPIRES_AT: uint64;
+  SUBJECT_ID: string;
+  FIELDS: [FieldStreamValue];
+  PAYLOAD_HASH: [ubyte];
+  PREVIOUS_MESSAGE_HASH: [ubyte];
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type FSM;
+file_identifier "$FSM";

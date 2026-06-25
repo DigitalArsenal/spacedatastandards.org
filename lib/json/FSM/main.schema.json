@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fieldStreamValueStateCategory" : {
+      "type" : "string",
+      "enum": ["Public", "Encrypted", "Redacted", "Unavailable"]
+    },
+    "fieldStreamValueEncodingCategory" : {
+      "type" : "string",
+      "enum": ["Bytes", "JsonUtf8", "FlatBuffer", "TextUtf8"]
+    },
+    "FieldStreamValue" : {
+      "type" : "object",
+      "properties" : {
+        "FIELD_PATH" : {
+                "type" : "string"
+              },
+        "FIELD_ID_PATH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295}
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/fieldStreamValueStateCategory"
+              },
+        "ENCODING" : {
+                "$ref" : "#/definitions/fieldStreamValueEncodingCategory"
+              },
+        "VALUE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "CIPHERTEXT" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "NONCE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "TAG" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "KEY_ID" : {
+                "type" : "string"
+              },
+        "AAD_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "RELEASE_TAGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "DECISION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["FIELD_PATH"],
+      "additionalProperties" : false
+    },
+    "FSM" : {
+      "type" : "object",
+      "properties" : {
+        "MESSAGE_ID" : {
+                "type" : "string"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string"
+              },
+        "LISTING_ID" : {
+                "type" : "string"
+              },
+        "STREAM_ID" : {
+                "type" : "string"
+              },
+        "SCHEMA_CODE" : {
+                "type" : "string"
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "POLICY_ID" : {
+                "type" : "string"
+              },
+        "POLICY_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "KEY_EPOCH" : {
+                "type" : "string"
+              },
+        "SEQUENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRODUCED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "SUBJECT_ID" : {
+                "type" : "string"
+              },
+        "FIELDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FieldStreamValue"}
+              },
+        "PAYLOAD_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "PREVIOUS_MESSAGE_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "required" : ["MESSAGE_ID", "PROVIDER_PEER_ID", "LISTING_ID", "STREAM_ID", "SCHEMA_CODE", "POLICY_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FSM"
+}

@@ -1,0 +1,91 @@
+import * as flatbuffers from 'flatbuffers';
+import { fieldStreamValueEncodingCategory } from './fieldStreamValueEncodingCategory.js';
+import { fieldStreamValueStateCategory } from './fieldStreamValueStateCategory.js';
+export declare class FieldStreamValue implements flatbuffers.IUnpackableObject<FieldStreamValueT> {
+    bb: flatbuffers.ByteBuffer | null;
+    bb_pos: number;
+    __init(i: number, bb: flatbuffers.ByteBuffer): FieldStreamValue;
+    static getRootAsFieldStreamValue(bb: flatbuffers.ByteBuffer, obj?: FieldStreamValue): FieldStreamValue;
+    static getSizePrefixedRootAsFieldStreamValue(bb: flatbuffers.ByteBuffer, obj?: FieldStreamValue): FieldStreamValue;
+    FIELD_PATH(): string;
+    FIELD_PATH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    FIELD_ID_PATH(index: number): number | null;
+    fieldIdPathLength(): number;
+    fieldIdPathArray(): Uint32Array | null;
+    STATE(): fieldStreamValueStateCategory;
+    ENCODING(): fieldStreamValueEncodingCategory;
+    VALUE(index: number): number | null;
+    valueLength(): number;
+    valueArray(): Uint8Array | null;
+    CIPHERTEXT(index: number): number | null;
+    ciphertextLength(): number;
+    ciphertextArray(): Uint8Array | null;
+    NONCE(index: number): number | null;
+    nonceLength(): number;
+    nonceArray(): Uint8Array | null;
+    TAG(index: number): number | null;
+    tagLength(): number;
+    tagArray(): Uint8Array | null;
+    KEY_ID(): string | null;
+    KEY_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    AAD_HASH(index: number): number | null;
+    aadHashLength(): number;
+    aadHashArray(): Uint8Array | null;
+    RELEASE_TAGS(index: number): string;
+    RELEASE_TAGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    releaseTagsLength(): number;
+    DECISION(): string | null;
+    DECISION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    static startFieldStreamValue(builder: flatbuffers.Builder): void;
+    static addFieldPath(builder: flatbuffers.Builder, FIELD_PATHOffset: flatbuffers.Offset): void;
+    static addFieldIdPath(builder: flatbuffers.Builder, FIELD_ID_PATHOffset: flatbuffers.Offset): void;
+    static createFieldIdPathVector(builder: flatbuffers.Builder, data: number[] | Uint32Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createFieldIdPathVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startFieldIdPathVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addState(builder: flatbuffers.Builder, STATE: fieldStreamValueStateCategory): void;
+    static addEncoding(builder: flatbuffers.Builder, ENCODING: fieldStreamValueEncodingCategory): void;
+    static addValue(builder: flatbuffers.Builder, VALUEOffset: flatbuffers.Offset): void;
+    static createValueVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startValueVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addCiphertext(builder: flatbuffers.Builder, CIPHERTEXTOffset: flatbuffers.Offset): void;
+    static createCiphertextVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startCiphertextVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addNonce(builder: flatbuffers.Builder, NONCEOffset: flatbuffers.Offset): void;
+    static createNonceVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startNonceVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTag(builder: flatbuffers.Builder, TAGOffset: flatbuffers.Offset): void;
+    static createTagVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startTagVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addKeyId(builder: flatbuffers.Builder, KEY_IDOffset: flatbuffers.Offset): void;
+    static addAadHash(builder: flatbuffers.Builder, AAD_HASHOffset: flatbuffers.Offset): void;
+    static createAadHashVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startAadHashVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addReleaseTags(builder: flatbuffers.Builder, RELEASE_TAGSOffset: flatbuffers.Offset): void;
+    static createReleaseTagsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startReleaseTagsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDecision(builder: flatbuffers.Builder, DECISIONOffset: flatbuffers.Offset): void;
+    static endFieldStreamValue(builder: flatbuffers.Builder): flatbuffers.Offset;
+    static createFieldStreamValue(builder: flatbuffers.Builder, FIELD_PATHOffset: flatbuffers.Offset, FIELD_ID_PATHOffset: flatbuffers.Offset, STATE: fieldStreamValueStateCategory, ENCODING: fieldStreamValueEncodingCategory, VALUEOffset: flatbuffers.Offset, CIPHERTEXTOffset: flatbuffers.Offset, NONCEOffset: flatbuffers.Offset, TAGOffset: flatbuffers.Offset, KEY_IDOffset: flatbuffers.Offset, AAD_HASHOffset: flatbuffers.Offset, RELEASE_TAGSOffset: flatbuffers.Offset, DECISIONOffset: flatbuffers.Offset): flatbuffers.Offset;
+    unpack(): FieldStreamValueT;
+    unpackTo(_o: FieldStreamValueT): void;
+}
+export declare class FieldStreamValueT implements flatbuffers.IGeneratedObject {
+    FIELD_PATH: string | Uint8Array | null;
+    FIELD_ID_PATH: (number)[];
+    STATE: fieldStreamValueStateCategory;
+    ENCODING: fieldStreamValueEncodingCategory;
+    VALUE: (number)[];
+    CIPHERTEXT: (number)[];
+    NONCE: (number)[];
+    TAG: (number)[];
+    KEY_ID: string | Uint8Array | null;
+    AAD_HASH: (number)[];
+    RELEASE_TAGS: (string)[];
+    DECISION: string | Uint8Array | null;
+    constructor(FIELD_PATH?: string | Uint8Array | null, FIELD_ID_PATH?: (number)[], STATE?: fieldStreamValueStateCategory, ENCODING?: fieldStreamValueEncodingCategory, VALUE?: (number)[], CIPHERTEXT?: (number)[], NONCE?: (number)[], TAG?: (number)[], KEY_ID?: string | Uint8Array | null, AAD_HASH?: (number)[], RELEASE_TAGS?: (string)[], DECISION?: string | Uint8Array | null);
+    pack(builder: flatbuffers.Builder): flatbuffers.Offset;
+}
+//# sourceMappingURL=FieldStreamValue.d.ts.map
