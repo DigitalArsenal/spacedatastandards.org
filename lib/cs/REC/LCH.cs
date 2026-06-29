@@ -128,6 +128,17 @@ public struct LCH : IFlatbufferObject
   public ArraySegment<byte>? GetERROR_MESSAGEBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetERROR_MESSAGEArray() { return __p.__vector_as_array<byte>(36); }
+  /// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+  /// freshness. Verified in-module to bind the requester's xpub identity to its
+  /// authenticated ed25519 signing key (cross-curve attestation).
+  public byte REQUESTER_EPM(int j) { int o = __p.__offset(38); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int REQUESTER_EPMLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREQUESTER_EPMBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetREQUESTER_EPMBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetREQUESTER_EPMArray() { return __p.__vector_as_array<byte>(38); }
 
   public static Offset<LCH> CreateLCH(FlatBufferBuilder builder,
       licensingChallengeMessageType MESSAGE_TYPE = licensingChallengeMessageType.Request,
@@ -146,11 +157,13 @@ public struct LCH : IFlatbufferObject
       ulong EXPIRES_AT = 0,
       StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
       StringOffset ERROR_CODEOffset = default(StringOffset),
-      StringOffset ERROR_MESSAGEOffset = default(StringOffset)) {
-    builder.StartTable(17);
+      StringOffset ERROR_MESSAGEOffset = default(StringOffset),
+      VectorOffset REQUESTER_EPMOffset = default(VectorOffset)) {
+    builder.StartTable(18);
     LCH.AddEXPIRES_AT(builder, EXPIRES_AT);
     LCH.AddREQUESTED_AT(builder, REQUESTED_AT);
     LCH.AddREQUESTED_TIMEOUT_MS(builder, REQUESTED_TIMEOUT_MS);
+    LCH.AddREQUESTER_EPM(builder, REQUESTER_EPMOffset);
     LCH.AddERROR_MESSAGE(builder, ERROR_MESSAGEOffset);
     LCH.AddERROR_CODE(builder, ERROR_CODEOffset);
     LCH.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
@@ -168,7 +181,7 @@ public struct LCH : IFlatbufferObject
     return LCH.EndLCH(builder);
   }
 
-  public static void StartLCH(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartLCH(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddMESSAGE_TYPE(FlatBufferBuilder builder, licensingChallengeMessageType MESSAGE_TYPE) { builder.AddSbyte(0, (sbyte)MESSAGE_TYPE, 0); }
   public static void AddROLE(FlatBufferBuilder builder, licensingChallengeRole ROLE) { builder.AddSbyte(1, (sbyte)ROLE, 0); }
   public static void AddREQUEST_ID(FlatBufferBuilder builder, StringOffset REQUEST_IDOffset) { builder.AddOffset(2, REQUEST_IDOffset.Value, 0); }
@@ -201,6 +214,12 @@ public struct LCH : IFlatbufferObject
   public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(14, PROVIDER_PEER_IDOffset.Value, 0); }
   public static void AddERROR_CODE(FlatBufferBuilder builder, StringOffset ERROR_CODEOffset) { builder.AddOffset(15, ERROR_CODEOffset.Value, 0); }
   public static void AddERROR_MESSAGE(FlatBufferBuilder builder, StringOffset ERROR_MESSAGEOffset) { builder.AddOffset(16, ERROR_MESSAGEOffset.Value, 0); }
+  public static void AddREQUESTER_EPM(FlatBufferBuilder builder, VectorOffset REQUESTER_EPMOffset) { builder.AddOffset(17, REQUESTER_EPMOffset.Value, 0); }
+  public static VectorOffset CreateREQUESTER_EPMVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateREQUESTER_EPMVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateREQUESTER_EPMVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateREQUESTER_EPMVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartREQUESTER_EPMVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<LCH> EndLCH(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 8);  // REQUEST_ID
@@ -235,6 +254,8 @@ public struct LCH : IFlatbufferObject
     _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
     _o.ERROR_CODE = this.ERROR_CODE;
     _o.ERROR_MESSAGE = this.ERROR_MESSAGE;
+    _o.REQUESTER_EPM = new List<byte>();
+    for (var _j = 0; _j < this.REQUESTER_EPMLength; ++_j) {_o.REQUESTER_EPM.Add(this.REQUESTER_EPM(_j));}
   }
   public static Offset<LCH> Pack(FlatBufferBuilder builder, LCHT _o) {
     if (_o == null) return default(Offset<LCH>);
@@ -262,6 +283,11 @@ public struct LCH : IFlatbufferObject
     var _PROVIDER_PEER_ID = _o.PROVIDER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_PEER_ID);
     var _ERROR_CODE = _o.ERROR_CODE == null ? default(StringOffset) : builder.CreateString(_o.ERROR_CODE);
     var _ERROR_MESSAGE = _o.ERROR_MESSAGE == null ? default(StringOffset) : builder.CreateString(_o.ERROR_MESSAGE);
+    var _REQUESTER_EPM = default(VectorOffset);
+    if (_o.REQUESTER_EPM != null) {
+      var __REQUESTER_EPM = _o.REQUESTER_EPM.ToArray();
+      _REQUESTER_EPM = CreateREQUESTER_EPMVector(builder, __REQUESTER_EPM);
+    }
     return CreateLCH(
       builder,
       _o.MESSAGE_TYPE,
@@ -280,7 +306,8 @@ public struct LCH : IFlatbufferObject
       _o.EXPIRES_AT,
       _PROVIDER_PEER_ID,
       _ERROR_CODE,
-      _ERROR_MESSAGE);
+      _ERROR_MESSAGE,
+      _REQUESTER_EPM);
   }
 }
 
@@ -303,6 +330,7 @@ public class LCHT
   public string PROVIDER_PEER_ID { get; set; }
   public string ERROR_CODE { get; set; }
   public string ERROR_MESSAGE { get; set; }
+  public List<byte> REQUESTER_EPM { get; set; }
 
   public LCHT() {
     this.MESSAGE_TYPE = licensingChallengeMessageType.Request;
@@ -322,6 +350,7 @@ public class LCHT
     this.PROVIDER_PEER_ID = null;
     this.ERROR_CODE = null;
     this.ERROR_MESSAGE = null;
+    this.REQUESTER_EPM = null;
   }
   public static LCHT DeserializeFromBinary(byte[] fbBuffer) {
     return LCH.GetRootAsLCH(new ByteBuffer(fbBuffer)).UnPack();
@@ -356,6 +385,7 @@ static public class LCHVerify
       && verifier.VerifyString(tablePos, 32 /*PROVIDER_PEER_ID*/, false)
       && verifier.VerifyString(tablePos, 34 /*ERROR_CODE*/, false)
       && verifier.VerifyString(tablePos, 36 /*ERROR_MESSAGE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 38 /*REQUESTER_EPM*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

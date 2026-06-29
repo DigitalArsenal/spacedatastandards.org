@@ -38923,6 +38923,14 @@
           "type": "string",
           "description": "Structured error message",
           "x-flatbuffer-type": "string"
+        },
+        "REQUESTER_EPM": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "authenticated ed25519 signing key (cross-curve attestation).",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "description": "Licensing challenge message",
@@ -39824,7 +39832,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Allowed requester domains for module grants",
+          "description": "DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.",
           "x-flatbuffer-type": "[string]"
         },
         "MAX_GRANT_TIMEOUT_MS": {
@@ -40000,6 +40008,14 @@
             "type": "string"
           },
           "description": "Opaque runtime-target tags (e.g. \"wasmtime\", \"wasmedge\", \"browser\").",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ALLOWED_XPUBS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "xpub in this list is granted. Empty list = no xpub allowlist gate.",
           "x-flatbuffer-type": "[string]"
         }
       },

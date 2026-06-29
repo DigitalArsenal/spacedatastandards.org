@@ -209,7 +209,7 @@ public final class PLG extends com.google.flatbuffers.Table {
   public ByteBuffer KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
   public ByteBuffer KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
   /**
-   * Allowed requester domains for module grants
+   * DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
    */
   public String ALLOWED_DOMAINS(int j) { int o = __offset(62); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int ALLOWED_DOMAINSLength() { int o = __offset(62); return o != 0 ? __vector_len(o) : 0; }
@@ -359,6 +359,15 @@ public final class PLG extends com.google.flatbuffers.Table {
   public int RUNTIME_TARGETSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
   public StringVector runtimeTargetsVector() { return runtimeTargetsVector(new StringVector()); }
   public StringVector runtimeTargetsVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+   * PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+   * xpub in this list is granted. Empty list = no xpub allowlist gate.
+   */
+  public String ALLOWED_XPUBS(int j) { int o = __offset(108); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ALLOWED_XPUBSLength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector allowedXpubsVector() { return allowedXpubsVector(new StringVector()); }
+  public StringVector allowedXpubsVector(StringVector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
@@ -412,13 +421,15 @@ public final class PLG extends com.google.flatbuffers.Table {
       int PROTOCOLSOffset,
       int SCHEMAS_USEDOffset,
       int BUILD_ARTIFACTSOffset,
-      int RUNTIME_TARGETSOffset) {
-    builder.startTable(52);
+      int RUNTIME_TARGETSOffset,
+      int ALLOWED_XPUBSOffset) {
+    builder.startTable(53);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
     PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
+    PLG.addAllowedXpubs(builder, ALLOWED_XPUBSOffset);
     PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
     PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
     PLG.addSchemasUsed(builder, SCHEMAS_USEDOffset);
@@ -469,7 +480,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(52); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(53); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -568,6 +579,9 @@ public final class PLG extends com.google.flatbuffers.Table {
   public static void addRuntimeTargets(FlatBufferBuilder builder, int RUNTIME_TARGETSOffset) { builder.addOffset(51, RUNTIME_TARGETSOffset, 0); }
   public static int createRuntimeTargetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRuntimeTargetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAllowedXpubs(FlatBufferBuilder builder, int ALLOWED_XPUBSOffset) { builder.addOffset(52, ALLOWED_XPUBSOffset, 0); }
+  public static int createAllowedXpubsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAllowedXpubsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endPLG(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PLUGIN_ID

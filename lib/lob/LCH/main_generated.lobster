@@ -73,13 +73,20 @@ class LCH : flatbuffers.handle
     /// Structured error message
     def ERROR_MESSAGE() -> string:
         return flatbuffers.field_string(buf_, pos_, 36)
+    /// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+    /// freshness. Verified in-module to bind the requester's xpub identity to its
+    /// authenticated ed25519 signing key (cross-curve attestation).
+    def REQUESTER_EPM(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 1)
+    def REQUESTER_EPM_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
 
 def GetRootAsLCH(buf:string): return LCH { buf, flatbuffers.indirect(buf, 0) }
 
 struct LCHBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(18)
         return this
     def add_MESSAGE_TYPE(MESSAGE_TYPE:licensingChallengeMessageType):
         b_.PrependInt8Slot(0, MESSAGE_TYPE, 0)
@@ -132,6 +139,9 @@ struct LCHBuilder:
     def add_ERROR_MESSAGE(ERROR_MESSAGE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, ERROR_MESSAGE)
         return this
+    def add_REQUESTER_EPM(REQUESTER_EPM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, REQUESTER_EPM)
+        return this
     def end():
         return b_.EndObject()
 
@@ -152,6 +162,13 @@ def LCHCreateREQUESTEREPHEMERALPUBKEYVector(b_:flatbuffers.builder, v_:[int]):
 def LCHStartCHALLENGENONCEVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(1, n_, 1)
 def LCHCreateCHALLENGENONCEVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def LCHStartREQUESTEREPMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def LCHCreateREQUESTEREPMVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)

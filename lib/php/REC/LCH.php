@@ -238,22 +238,52 @@ class LCH extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+    /// freshness. Verified in-module to bind the requester's xpub identity to its
+    /// authenticated ed25519 signing key (cross-curve attestation).
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getREQUESTER_EPM($j)
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getREQUESTER_EPMLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getREQUESTER_EPMBytes()
+    {
+        return $this->__vector_as_bytes(38);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startLCH(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LCH
      */
-    public static function createLCH(FlatBufferBuilder $builder, $MESSAGE_TYPE, $ROLE, $REQUEST_ID, $MODULE_ID, $MODULE_VERSION, $REQUESTER_PEER_ID, $REQUESTER_XPUB, $REQUESTER_SIGNING_PUBKEY, $REQUESTER_EPHEMERAL_PUBKEY, $REQUESTED_DOMAIN, $REQUESTED_TIMEOUT_MS, $REQUESTED_AT, $CHALLENGE_NONCE, $EXPIRES_AT, $PROVIDER_PEER_ID, $ERROR_CODE, $ERROR_MESSAGE)
+    public static function createLCH(FlatBufferBuilder $builder, $MESSAGE_TYPE, $ROLE, $REQUEST_ID, $MODULE_ID, $MODULE_VERSION, $REQUESTER_PEER_ID, $REQUESTER_XPUB, $REQUESTER_SIGNING_PUBKEY, $REQUESTER_EPHEMERAL_PUBKEY, $REQUESTED_DOMAIN, $REQUESTED_TIMEOUT_MS, $REQUESTED_AT, $CHALLENGE_NONCE, $EXPIRES_AT, $PROVIDER_PEER_ID, $ERROR_CODE, $ERROR_MESSAGE, $REQUESTER_EPM)
     {
-        $builder->startObject(17);
+        $builder->startObject(18);
         self::addMESSAGE_TYPE($builder, $MESSAGE_TYPE);
         self::addROLE($builder, $ROLE);
         self::addREQUEST_ID($builder, $REQUEST_ID);
@@ -271,6 +301,7 @@ class LCH extends Table
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addERROR_CODE($builder, $ERROR_CODE);
         self::addERROR_MESSAGE($builder, $ERROR_MESSAGE);
+        self::addREQUESTER_EPM($builder, $REQUESTER_EPM);
         $o = $builder->endObject();
         $builder->required($o, 8);  // REQUEST_ID
         $builder->required($o, 10);  // MODULE_ID
@@ -517,6 +548,40 @@ class LCH extends Table
     public static function addERROR_MESSAGE(FlatBufferBuilder $builder, $ERROR_MESSAGE)
     {
         $builder->addOffsetX(16, $ERROR_MESSAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREQUESTER_EPM(FlatBufferBuilder $builder, $REQUESTER_EPM)
+    {
+        $builder->addOffsetX(17, $REQUESTER_EPM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createREQUESTER_EPMVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startREQUESTER_EPMVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

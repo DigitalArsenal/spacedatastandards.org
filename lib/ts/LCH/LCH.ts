@@ -217,8 +217,28 @@ ERROR_MESSAGE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+ * freshness. Verified in-module to bind the requester's xpub identity to its
+ * authenticated ed25519 signing key (cross-curve attestation).
+ */
+REQUESTER_EPM(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+requesterEpmLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+requesterEpmArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startLCH(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(18);
 }
 
 static addMessageType(builder:flatbuffers.Builder, MESSAGE_TYPE:licensingChallengeMessageType) {
@@ -325,6 +345,22 @@ static addErrorMessage(builder:flatbuffers.Builder, ERROR_MESSAGEOffset:flatbuff
   builder.addFieldOffset(16, ERROR_MESSAGEOffset, 0);
 }
 
+static addRequesterEpm(builder:flatbuffers.Builder, REQUESTER_EPMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, REQUESTER_EPMOffset, 0);
+}
+
+static createRequesterEpmVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startRequesterEpmVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endLCH(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 8) // REQUEST_ID
@@ -340,7 +376,7 @@ static finishSizePrefixedLCHBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LCH', true);
 }
 
-static createLCH(builder:flatbuffers.Builder, MESSAGE_TYPE:licensingChallengeMessageType, ROLE:licensingChallengeRole, REQUEST_IDOffset:flatbuffers.Offset, MODULE_IDOffset:flatbuffers.Offset, MODULE_VERSIONOffset:flatbuffers.Offset, REQUESTER_PEER_IDOffset:flatbuffers.Offset, REQUESTER_XPUBOffset:flatbuffers.Offset, REQUESTER_SIGNING_PUBKEYOffset:flatbuffers.Offset, REQUESTER_EPHEMERAL_PUBKEYOffset:flatbuffers.Offset, REQUESTED_DOMAINOffset:flatbuffers.Offset, REQUESTED_TIMEOUT_MS:bigint, REQUESTED_AT:bigint, CHALLENGE_NONCEOffset:flatbuffers.Offset, EXPIRES_AT:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, ERROR_CODEOffset:flatbuffers.Offset, ERROR_MESSAGEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createLCH(builder:flatbuffers.Builder, MESSAGE_TYPE:licensingChallengeMessageType, ROLE:licensingChallengeRole, REQUEST_IDOffset:flatbuffers.Offset, MODULE_IDOffset:flatbuffers.Offset, MODULE_VERSIONOffset:flatbuffers.Offset, REQUESTER_PEER_IDOffset:flatbuffers.Offset, REQUESTER_XPUBOffset:flatbuffers.Offset, REQUESTER_SIGNING_PUBKEYOffset:flatbuffers.Offset, REQUESTER_EPHEMERAL_PUBKEYOffset:flatbuffers.Offset, REQUESTED_DOMAINOffset:flatbuffers.Offset, REQUESTED_TIMEOUT_MS:bigint, REQUESTED_AT:bigint, CHALLENGE_NONCEOffset:flatbuffers.Offset, EXPIRES_AT:bigint, PROVIDER_PEER_IDOffset:flatbuffers.Offset, ERROR_CODEOffset:flatbuffers.Offset, ERROR_MESSAGEOffset:flatbuffers.Offset, REQUESTER_EPMOffset:flatbuffers.Offset):flatbuffers.Offset {
   LCH.startLCH(builder);
   LCH.addMessageType(builder, MESSAGE_TYPE);
   LCH.addRole(builder, ROLE);
@@ -359,6 +395,7 @@ static createLCH(builder:flatbuffers.Builder, MESSAGE_TYPE:licensingChallengeMes
   LCH.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
   LCH.addErrorCode(builder, ERROR_CODEOffset);
   LCH.addErrorMessage(builder, ERROR_MESSAGEOffset);
+  LCH.addRequesterEpm(builder, REQUESTER_EPMOffset);
   return LCH.endLCH(builder);
 }
 
@@ -380,7 +417,8 @@ unpack(): LCHT {
     this.EXPIRES_AT(),
     this.PROVIDER_PEER_ID(),
     this.ERROR_CODE(),
-    this.ERROR_MESSAGE()
+    this.ERROR_MESSAGE(),
+    this.bb!.createScalarList<number>(this.REQUESTER_EPM.bind(this), this.requesterEpmLength())
   );
 }
 
@@ -403,6 +441,7 @@ unpackTo(_o: LCHT): void {
   _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID();
   _o.ERROR_CODE = this.ERROR_CODE();
   _o.ERROR_MESSAGE = this.ERROR_MESSAGE();
+  _o.REQUESTER_EPM = this.bb!.createScalarList<number>(this.REQUESTER_EPM.bind(this), this.requesterEpmLength());
 }
 }
 
@@ -424,7 +463,8 @@ constructor(
   public EXPIRES_AT: bigint = BigInt('0'),
   public PROVIDER_PEER_ID: string|Uint8Array|null = null,
   public ERROR_CODE: string|Uint8Array|null = null,
-  public ERROR_MESSAGE: string|Uint8Array|null = null
+  public ERROR_MESSAGE: string|Uint8Array|null = null,
+  public REQUESTER_EPM: (number)[] = []
 ){}
 
 
@@ -441,6 +481,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVIDER_PEER_ID = (this.PROVIDER_PEER_ID !== null ? builder.createString(this.PROVIDER_PEER_ID!) : 0);
   const ERROR_CODE = (this.ERROR_CODE !== null ? builder.createString(this.ERROR_CODE!) : 0);
   const ERROR_MESSAGE = (this.ERROR_MESSAGE !== null ? builder.createString(this.ERROR_MESSAGE!) : 0);
+  const REQUESTER_EPM = LCH.createRequesterEpmVector(builder, this.REQUESTER_EPM);
 
   return LCH.createLCH(builder,
     this.MESSAGE_TYPE,
@@ -459,7 +500,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.EXPIRES_AT,
     PROVIDER_PEER_ID,
     ERROR_CODE,
-    ERROR_MESSAGE
+    ERROR_MESSAGE,
+    REQUESTER_EPM
   );
 }
 }

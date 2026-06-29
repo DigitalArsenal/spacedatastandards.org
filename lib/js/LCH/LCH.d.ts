@@ -94,6 +94,14 @@ export declare class LCH implements flatbuffers.IUnpackableObject<LCHT> {
      */
     ERROR_MESSAGE(): string | null;
     ERROR_MESSAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+     * freshness. Verified in-module to bind the requester's xpub identity to its
+     * authenticated ed25519 signing key (cross-curve attestation).
+     */
+    REQUESTER_EPM(index: number): number | null;
+    requesterEpmLength(): number;
+    requesterEpmArray(): Uint8Array | null;
     static startLCH(builder: flatbuffers.Builder): void;
     static addMessageType(builder: flatbuffers.Builder, MESSAGE_TYPE: licensingChallengeMessageType): void;
     static addRole(builder: flatbuffers.Builder, ROLE: licensingChallengeRole): void;
@@ -118,10 +126,13 @@ export declare class LCH implements flatbuffers.IUnpackableObject<LCHT> {
     static addProviderPeerId(builder: flatbuffers.Builder, PROVIDER_PEER_IDOffset: flatbuffers.Offset): void;
     static addErrorCode(builder: flatbuffers.Builder, ERROR_CODEOffset: flatbuffers.Offset): void;
     static addErrorMessage(builder: flatbuffers.Builder, ERROR_MESSAGEOffset: flatbuffers.Offset): void;
+    static addRequesterEpm(builder: flatbuffers.Builder, REQUESTER_EPMOffset: flatbuffers.Offset): void;
+    static createRequesterEpmVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startRequesterEpmVector(builder: flatbuffers.Builder, numElems: number): void;
     static endLCH(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishLCHBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedLCHBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createLCH(builder: flatbuffers.Builder, MESSAGE_TYPE: licensingChallengeMessageType, ROLE: licensingChallengeRole, REQUEST_IDOffset: flatbuffers.Offset, MODULE_IDOffset: flatbuffers.Offset, MODULE_VERSIONOffset: flatbuffers.Offset, REQUESTER_PEER_IDOffset: flatbuffers.Offset, REQUESTER_XPUBOffset: flatbuffers.Offset, REQUESTER_SIGNING_PUBKEYOffset: flatbuffers.Offset, REQUESTER_EPHEMERAL_PUBKEYOffset: flatbuffers.Offset, REQUESTED_DOMAINOffset: flatbuffers.Offset, REQUESTED_TIMEOUT_MS: bigint, REQUESTED_AT: bigint, CHALLENGE_NONCEOffset: flatbuffers.Offset, EXPIRES_AT: bigint, PROVIDER_PEER_IDOffset: flatbuffers.Offset, ERROR_CODEOffset: flatbuffers.Offset, ERROR_MESSAGEOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createLCH(builder: flatbuffers.Builder, MESSAGE_TYPE: licensingChallengeMessageType, ROLE: licensingChallengeRole, REQUEST_IDOffset: flatbuffers.Offset, MODULE_IDOffset: flatbuffers.Offset, MODULE_VERSIONOffset: flatbuffers.Offset, REQUESTER_PEER_IDOffset: flatbuffers.Offset, REQUESTER_XPUBOffset: flatbuffers.Offset, REQUESTER_SIGNING_PUBKEYOffset: flatbuffers.Offset, REQUESTER_EPHEMERAL_PUBKEYOffset: flatbuffers.Offset, REQUESTED_DOMAINOffset: flatbuffers.Offset, REQUESTED_TIMEOUT_MS: bigint, REQUESTED_AT: bigint, CHALLENGE_NONCEOffset: flatbuffers.Offset, EXPIRES_AT: bigint, PROVIDER_PEER_IDOffset: flatbuffers.Offset, ERROR_CODEOffset: flatbuffers.Offset, ERROR_MESSAGEOffset: flatbuffers.Offset, REQUESTER_EPMOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): LCHT;
     unpackTo(_o: LCHT): void;
 }
@@ -143,7 +154,8 @@ export declare class LCHT implements flatbuffers.IGeneratedObject {
     PROVIDER_PEER_ID: string | Uint8Array | null;
     ERROR_CODE: string | Uint8Array | null;
     ERROR_MESSAGE: string | Uint8Array | null;
-    constructor(MESSAGE_TYPE?: licensingChallengeMessageType, ROLE?: licensingChallengeRole, REQUEST_ID?: string | Uint8Array | null, MODULE_ID?: string | Uint8Array | null, MODULE_VERSION?: string | Uint8Array | null, REQUESTER_PEER_ID?: string | Uint8Array | null, REQUESTER_XPUB?: string | Uint8Array | null, REQUESTER_SIGNING_PUBKEY?: (number)[], REQUESTER_EPHEMERAL_PUBKEY?: (number)[], REQUESTED_DOMAIN?: string | Uint8Array | null, REQUESTED_TIMEOUT_MS?: bigint, REQUESTED_AT?: bigint, CHALLENGE_NONCE?: (number)[], EXPIRES_AT?: bigint, PROVIDER_PEER_ID?: string | Uint8Array | null, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null);
+    REQUESTER_EPM: (number)[];
+    constructor(MESSAGE_TYPE?: licensingChallengeMessageType, ROLE?: licensingChallengeRole, REQUEST_ID?: string | Uint8Array | null, MODULE_ID?: string | Uint8Array | null, MODULE_VERSION?: string | Uint8Array | null, REQUESTER_PEER_ID?: string | Uint8Array | null, REQUESTER_XPUB?: string | Uint8Array | null, REQUESTER_SIGNING_PUBKEY?: (number)[], REQUESTER_EPHEMERAL_PUBKEY?: (number)[], REQUESTED_DOMAIN?: string | Uint8Array | null, REQUESTED_TIMEOUT_MS?: bigint, REQUESTED_AT?: bigint, CHALLENGE_NONCE?: (number)[], EXPIRES_AT?: bigint, PROVIDER_PEER_ID?: string | Uint8Array | null, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null, REQUESTER_EPM?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=LCH.d.ts.map

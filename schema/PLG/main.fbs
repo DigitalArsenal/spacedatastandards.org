@@ -1,5 +1,5 @@
-// Hash: f7066df27455ff5888770c68a80c18ab9495d1bbfc25f8c2ec4181407ef5cf29
-// Version: 1.0.7
+// Hash: b50edc7287de9d8d8fb63456b4744611d9d3f650bd675357fb5105a8ee566725
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -297,7 +297,7 @@ table PLG {
   REQUIRED_SCOPE: string;
   /// Provider-local identifier for the module content key
   KEY_ID: string;
-  /// Allowed requester domains for module grants
+  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
   ALLOWED_DOMAINS: [string];
   /// Maximum grant timeout allowed for this module publication
   MAX_GRANT_TIMEOUT_MS: uint64;
@@ -351,6 +351,10 @@ table PLG {
   BUILD_ARTIFACTS: [PLGBuildArtifact];
   /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
   RUNTIME_TARGETS: [string];
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+  ALLOWED_XPUBS: [string];
 }
 
 root_type PLG;

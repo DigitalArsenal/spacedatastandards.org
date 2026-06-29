@@ -370,7 +370,7 @@ KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Allowed requester domains for module grants
+ * DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
  */
 ALLOWED_DOMAINS(index: number):string
 ALLOWED_DOMAINS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -644,8 +644,25 @@ runtimeTargetsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+ * PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+ * xpub in this list is granted. Empty list = no xpub allowlist gate.
+ */
+ALLOWED_XPUBS(index: number):string
+ALLOWED_XPUBS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+ALLOWED_XPUBS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+allowedXpubsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(52);
+  builder.startObject(53);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -1108,6 +1125,22 @@ static startRuntimeTargetsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addAllowedXpubs(builder:flatbuffers.Builder, ALLOWED_XPUBSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, ALLOWED_XPUBSOffset, 0);
+}
+
+static createAllowedXpubsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAllowedXpubsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endPLG(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PLUGIN_ID
@@ -1124,7 +1157,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -1178,6 +1211,7 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addSchemasUsed(builder, SCHEMAS_USEDOffset);
   PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
   PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
+  PLG.addAllowedXpubs(builder, ALLOWED_XPUBSOffset);
   return PLG.endPLG(builder);
 }
 
@@ -1234,7 +1268,8 @@ unpack(): PLGT {
     this.bb!.createObjList<PLGProtocolSpec, PLGProtocolSpecT>(this.PROTOCOLS.bind(this), this.protocolsLength()),
     this.bb!.createObjList<FlatBufferTypeRef, FlatBufferTypeRefT>(this.SCHEMAS_USED.bind(this), this.schemasUsedLength()),
     this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength()),
-    this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength())
+    this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength()),
+    this.bb!.createScalarList<string>(this.ALLOWED_XPUBS.bind(this), this.allowedXpubsLength())
   );
 }
 
@@ -1292,6 +1327,7 @@ unpackTo(_o: PLGT): void {
   _o.SCHEMAS_USED = this.bb!.createObjList<FlatBufferTypeRef, FlatBufferTypeRefT>(this.SCHEMAS_USED.bind(this), this.schemasUsedLength());
   _o.BUILD_ARTIFACTS = this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength());
   _o.RUNTIME_TARGETS = this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength());
+  _o.ALLOWED_XPUBS = this.bb!.createScalarList<string>(this.ALLOWED_XPUBS.bind(this), this.allowedXpubsLength());
 }
 }
 
@@ -1348,7 +1384,8 @@ constructor(
   public PROTOCOLS: (PLGProtocolSpecT)[] = [],
   public SCHEMAS_USED: (FlatBufferTypeRefT)[] = [],
   public BUILD_ARTIFACTS: (PLGBuildArtifactT)[] = [],
-  public RUNTIME_TARGETS: (string)[] = []
+  public RUNTIME_TARGETS: (string)[] = [],
+  public ALLOWED_XPUBS: (string)[] = []
 ){}
 
 
@@ -1393,6 +1430,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SCHEMAS_USED = PLG.createSchemasUsedVector(builder, builder.createObjectOffsetList(this.SCHEMAS_USED));
   const BUILD_ARTIFACTS = PLG.createBuildArtifactsVector(builder, builder.createObjectOffsetList(this.BUILD_ARTIFACTS));
   const RUNTIME_TARGETS = PLG.createRuntimeTargetsVector(builder, builder.createObjectOffsetList(this.RUNTIME_TARGETS));
+  const ALLOWED_XPUBS = PLG.createAllowedXpubsVector(builder, builder.createObjectOffsetList(this.ALLOWED_XPUBS));
 
   return PLG.createPLG(builder,
     PLUGIN_ID,
@@ -1446,7 +1484,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PROTOCOLS,
     SCHEMAS_USED,
     BUILD_ARTIFACTS,
-    RUNTIME_TARGETS
+    RUNTIME_TARGETS,
+    ALLOWED_XPUBS
   );
 }
 }

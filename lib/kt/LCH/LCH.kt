@@ -246,6 +246,25 @@ class LCH : Table() {
         }
     val errorMessageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
     fun errorMessageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+     * freshness. Verified in-module to bind the requester's xpub identity to its
+     * authenticated ed25519 signing key (cross-curve attestation).
+     */
+    fun requesterEpm(j: Int) : UByte {
+        val o = __offset(38)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val requesterEpmLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    val requesterEpmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun requesterEpmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsLCH(_bb: ByteBuffer): LCH = getRootAsLCH(_bb, LCH())
@@ -254,11 +273,12 @@ class LCH : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LCHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCH")
-        fun createLCH(builder: FlatBufferBuilder, messageType: Byte, role: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requesterSigningPubkeyOffset: Int, requesterEphemeralPubkeyOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, requestedAt: ULong, challengeNonceOffset: Int, expiresAt: ULong, providerPeerIdOffset: Int, errorCodeOffset: Int, errorMessageOffset: Int) : Int {
-            builder.startTable(17)
+        fun createLCH(builder: FlatBufferBuilder, messageType: Byte, role: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requesterSigningPubkeyOffset: Int, requesterEphemeralPubkeyOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, requestedAt: ULong, challengeNonceOffset: Int, expiresAt: ULong, providerPeerIdOffset: Int, errorCodeOffset: Int, errorMessageOffset: Int, requesterEpmOffset: Int) : Int {
+            builder.startTable(18)
             addEXPIRESAT(builder, expiresAt)
             addREQUESTEDAT(builder, requestedAt)
             addREQUESTEDTIMEOUTMS(builder, requestedTimeoutMs)
+            addREQUESTEREPM(builder, requesterEpmOffset)
             addERRORMESSAGE(builder, errorMessageOffset)
             addERRORCODE(builder, errorCodeOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
@@ -275,7 +295,7 @@ class LCH : Table() {
             addMESSAGETYPE(builder, messageType)
             return endLCH(builder)
         }
-        fun startLCH(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startLCH(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addMESSAGETYPE(builder: FlatBufferBuilder, messageType: Byte) = builder.addByte(0, messageType, 0)
         fun addROLE(builder: FlatBufferBuilder, role: Byte) = builder.addByte(1, role, 0)
         fun addREQUESTID(builder: FlatBufferBuilder, requestId: Int) = builder.addOffset(2, requestId, 0)
@@ -320,6 +340,16 @@ class LCH : Table() {
         fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(14, providerPeerId, 0)
         fun addERRORCODE(builder: FlatBufferBuilder, errorCode: Int) = builder.addOffset(15, errorCode, 0)
         fun addERRORMESSAGE(builder: FlatBufferBuilder, errorMessage: Int) = builder.addOffset(16, errorMessage, 0)
+        fun addREQUESTEREPM(builder: FlatBufferBuilder, requesterEpm: Int) = builder.addOffset(17, requesterEpm, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createRequesterEpmVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startRequesterEpmVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endLCH(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 8)

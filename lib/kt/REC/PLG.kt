@@ -422,7 +422,7 @@ class PLG : Table() {
     val keyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
     fun keyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
     /**
-     * Allowed requester domains for module grants
+     * DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
      */
     fun allowedDomains(j: Int) : String? {
         val o = __offset(62)
@@ -728,6 +728,23 @@ class PLG : Table() {
         get() {
             val o = __offset(106); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+     * PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+     * xpub in this list is granted. Empty list = no xpub allowlist gate.
+     */
+    fun allowedXpubs(j: Int) : String? {
+        val o = __offset(108)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val allowedXpubsLength : Int
+        get() {
+            val o = __offset(108); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLG(_bb: ByteBuffer): PLG = getRootAsPLG(_bb, PLG())
@@ -736,13 +753,14 @@ class PLG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
-        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int) : Int {
-            builder.startTable(52)
+        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, allowedDomainsOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int) : Int {
+            builder.startTable(53)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addMAXGRANTTIMEOUTMS(builder, maxGrantTimeoutMs)
             addENCRYPTEDWASMSIZE(builder, encryptedWasmSize)
             addWASMSIZE(builder, wasmSize)
+            addALLOWEDXPUBS(builder, allowedXpubsOffset)
             addRUNTIMETARGETS(builder, runtimeTargetsOffset)
             addBUILDARTIFACTS(builder, buildArtifactsOffset)
             addSCHEMASUSED(builder, schemasUsedOffset)
@@ -792,7 +810,7 @@ class PLG : Table() {
             addPLUGINTYPE(builder, pluginType)
             return endPLG(builder)
         }
-        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(52)
+        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(53)
         fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -1017,6 +1035,15 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startRuntimeTargetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addALLOWEDXPUBS(builder: FlatBufferBuilder, allowedXpubs: Int) = builder.addOffset(52, allowedXpubs, 0)
+        fun createAllowedXpubsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAllowedXpubsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endPLG(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

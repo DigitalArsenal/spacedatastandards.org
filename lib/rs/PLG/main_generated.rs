@@ -3332,6 +3332,7 @@ impl<'a> PLG<'a> {
   pub const VT_SCHEMAS_USED: ::flatbuffers::VOffsetT = 102;
   pub const VT_BUILD_ARTIFACTS: ::flatbuffers::VOffsetT = 104;
   pub const VT_RUNTIME_TARGETS: ::flatbuffers::VOffsetT = 106;
+  pub const VT_ALLOWED_XPUBS: ::flatbuffers::VOffsetT = 108;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3348,6 +3349,7 @@ impl<'a> PLG<'a> {
     builder.add_MAX_GRANT_TIMEOUT_MS(args.MAX_GRANT_TIMEOUT_MS);
     builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
     builder.add_WASM_SIZE(args.WASM_SIZE);
+    if let Some(x) = args.ALLOWED_XPUBS { builder.add_ALLOWED_XPUBS(x); }
     if let Some(x) = args.RUNTIME_TARGETS { builder.add_RUNTIME_TARGETS(x); }
     if let Some(x) = args.BUILD_ARTIFACTS { builder.add_BUILD_ARTIFACTS(x); }
     if let Some(x) = args.SCHEMAS_USED { builder.add_SCHEMAS_USED(x); }
@@ -3534,6 +3536,9 @@ impl<'a> PLG<'a> {
     let RUNTIME_TARGETS = self.RUNTIME_TARGETS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let ALLOWED_XPUBS = self.ALLOWED_XPUBS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
     PLGT {
       PLUGIN_ID,
       NAME,
@@ -3587,6 +3592,7 @@ impl<'a> PLG<'a> {
       SCHEMAS_USED,
       BUILD_ARTIFACTS,
       RUNTIME_TARGETS,
+      ALLOWED_XPUBS,
     }
   }
 
@@ -3822,7 +3828,7 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_KEY_ID, None)}
   }
-  /// Allowed requester domains for module grants
+  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
   #[inline]
   pub fn ALLOWED_DOMAINS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -4011,6 +4017,16 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_RUNTIME_TARGETS, None)}
   }
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+  #[inline]
+  pub fn ALLOWED_XPUBS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ALLOWED_XPUBS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PLG<'_> {
@@ -4071,6 +4087,7 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>>>("SCHEMAS_USED", Self::VT_SCHEMAS_USED, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact>>>>("BUILD_ARTIFACTS", Self::VT_BUILD_ARTIFACTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("RUNTIME_TARGETS", Self::VT_RUNTIME_TARGETS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_XPUBS", Self::VT_ALLOWED_XPUBS, false)?
      .finish();
     Ok(())
   }
@@ -4128,6 +4145,7 @@ pub struct PLGArgs<'a> {
     pub SCHEMAS_USED: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FlatBufferTypeRef<'a>>>>>,
     pub BUILD_ARTIFACTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact<'a>>>>>,
     pub RUNTIME_TARGETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ALLOWED_XPUBS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for PLGArgs<'a> {
   #[inline]
@@ -4185,6 +4203,7 @@ impl<'a> Default for PLGArgs<'a> {
       SCHEMAS_USED: None,
       BUILD_ARTIFACTS: None,
       RUNTIME_TARGETS: None,
+      ALLOWED_XPUBS: None,
     }
   }
 }
@@ -4403,6 +4422,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_RUNTIME_TARGETS, RUNTIME_TARGETS);
   }
   #[inline]
+  pub fn add_ALLOWED_XPUBS(&mut self, ALLOWED_XPUBS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ALLOWED_XPUBS, ALLOWED_XPUBS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLGBuilder {
@@ -4475,6 +4498,7 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("SCHEMAS_USED", &self.SCHEMAS_USED());
       ds.field("BUILD_ARTIFACTS", &self.BUILD_ARTIFACTS());
       ds.field("RUNTIME_TARGETS", &self.RUNTIME_TARGETS());
+      ds.field("ALLOWED_XPUBS", &self.ALLOWED_XPUBS());
       ds.finish()
   }
 }
@@ -4533,6 +4557,7 @@ pub struct PLGT {
   pub SCHEMAS_USED: Option<alloc::vec::Vec<FlatBufferTypeRefT>>,
   pub BUILD_ARTIFACTS: Option<alloc::vec::Vec<PLGBuildArtifactT>>,
   pub RUNTIME_TARGETS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub ALLOWED_XPUBS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 impl Default for PLGT {
   fn default() -> Self {
@@ -4589,6 +4614,7 @@ impl Default for PLGT {
       SCHEMAS_USED: None,
       BUILD_ARTIFACTS: None,
       RUNTIME_TARGETS: None,
+      ALLOWED_XPUBS: None,
     }
   }
 }
@@ -4732,6 +4758,9 @@ impl PLGT {
     let RUNTIME_TARGETS = self.RUNTIME_TARGETS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let ALLOWED_XPUBS = self.ALLOWED_XPUBS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
     PLG::create(_fbb, &PLGArgs{
       PLUGIN_ID,
       NAME,
@@ -4785,6 +4814,7 @@ impl PLGT {
       SCHEMAS_USED,
       BUILD_ARTIFACTS,
       RUNTIME_TARGETS,
+      ALLOWED_XPUBS,
     })
   }
 }

@@ -129,6 +129,17 @@ public final class LCH extends com.google.flatbuffers.Table {
   public String ERROR_MESSAGE() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ERROR_MESSAGEAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer ERROR_MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+   * freshness. Verified in-module to bind the requester's xpub identity to its
+   * authenticated ed25519 signing key (cross-curve attestation).
+   */
+  public int REQUESTER_EPM(int j) { int o = __offset(38); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int REQUESTER_EPMLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector requesterEpmVector() { return requesterEpmVector(new ByteVector()); }
+  public ByteVector requesterEpmVector(ByteVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer REQUESTER_EPMAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer REQUESTER_EPMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
 
   public static int createLCH(FlatBufferBuilder builder,
       byte MESSAGE_TYPE,
@@ -147,11 +158,13 @@ public final class LCH extends com.google.flatbuffers.Table {
       long EXPIRES_AT,
       int PROVIDER_PEER_IDOffset,
       int ERROR_CODEOffset,
-      int ERROR_MESSAGEOffset) {
-    builder.startTable(17);
+      int ERROR_MESSAGEOffset,
+      int REQUESTER_EPMOffset) {
+    builder.startTable(18);
     LCH.addExpiresAt(builder, EXPIRES_AT);
     LCH.addRequestedAt(builder, REQUESTED_AT);
     LCH.addRequestedTimeoutMs(builder, REQUESTED_TIMEOUT_MS);
+    LCH.addRequesterEpm(builder, REQUESTER_EPMOffset);
     LCH.addErrorMessage(builder, ERROR_MESSAGEOffset);
     LCH.addErrorCode(builder, ERROR_CODEOffset);
     LCH.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
@@ -169,7 +182,7 @@ public final class LCH extends com.google.flatbuffers.Table {
     return LCH.endLCH(builder);
   }
 
-  public static void startLCH(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startLCH(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addMessageType(FlatBufferBuilder builder, byte MESSAGE_TYPE) { builder.addByte(0, MESSAGE_TYPE, 0); }
   public static void addRole(FlatBufferBuilder builder, byte ROLE) { builder.addByte(1, ROLE, 0); }
   public static void addRequestId(FlatBufferBuilder builder, int REQUEST_IDOffset) { builder.addOffset(2, REQUEST_IDOffset, 0); }
@@ -196,6 +209,10 @@ public final class LCH extends com.google.flatbuffers.Table {
   public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(14, PROVIDER_PEER_IDOffset, 0); }
   public static void addErrorCode(FlatBufferBuilder builder, int ERROR_CODEOffset) { builder.addOffset(15, ERROR_CODEOffset, 0); }
   public static void addErrorMessage(FlatBufferBuilder builder, int ERROR_MESSAGEOffset) { builder.addOffset(16, ERROR_MESSAGEOffset, 0); }
+  public static void addRequesterEpm(FlatBufferBuilder builder, int REQUESTER_EPMOffset) { builder.addOffset(17, REQUESTER_EPMOffset, 0); }
+  public static int createRequesterEpmVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createRequesterEpmVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startRequesterEpmVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endLCH(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 8);  // REQUEST_ID

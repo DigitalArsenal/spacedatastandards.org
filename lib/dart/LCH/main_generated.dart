@@ -141,10 +141,15 @@ class LCH {
   ///  Structured error message
   String? get ERROR_MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   String? get errorMessage => ERROR_MESSAGE;
+  ///  Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+  ///  freshness. Verified in-module to bind the requester's xpub identity to its
+  ///  authenticated ed25519 signing key (cross-curve attestation).
+  List<int>? get REQUESTER_EPM => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 38);
+  List<int>? get requesterEpm => REQUESTER_EPM;
 
   @override
   String toString() {
-    return 'LCH{messageType: ${messageType}, ROLE: ${ROLE}, requestId: ${requestId}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, requesterPeerId: ${requesterPeerId}, requesterXpub: ${requesterXpub}, requesterSigningPubkey: ${requesterSigningPubkey}, requesterEphemeralPubkey: ${requesterEphemeralPubkey}, requestedDomain: ${requestedDomain}, requestedTimeoutMs: ${requestedTimeoutMs}, requestedAt: ${requestedAt}, challengeNonce: ${challengeNonce}, expiresAt: ${expiresAt}, providerPeerId: ${providerPeerId}, errorCode: ${errorCode}, errorMessage: ${errorMessage}}';
+    return 'LCH{messageType: ${messageType}, ROLE: ${ROLE}, requestId: ${requestId}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, requesterPeerId: ${requesterPeerId}, requesterXpub: ${requesterXpub}, requesterSigningPubkey: ${requesterSigningPubkey}, requesterEphemeralPubkey: ${requesterEphemeralPubkey}, requestedDomain: ${requestedDomain}, requestedTimeoutMs: ${requestedTimeoutMs}, requestedAt: ${requestedAt}, challengeNonce: ${challengeNonce}, expiresAt: ${expiresAt}, providerPeerId: ${providerPeerId}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, requesterEpm: ${requesterEpm}}';
   }
 }
 
@@ -162,7 +167,7 @@ class LCHBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(18);
   }
 
   int addMessageType(licensingChallengeMessageType? MESSAGE_TYPE) {
@@ -233,6 +238,10 @@ class LCHBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addRequesterEpmOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -257,6 +266,7 @@ class LCHObjectBuilder extends fb.ObjectBuilder {
   final String? _PROVIDER_PEER_ID;
   final String? _ERROR_CODE;
   final String? _ERROR_MESSAGE;
+  final List<int>? _REQUESTER_EPM;
 
   LCHObjectBuilder({
     licensingChallengeMessageType? MESSAGE_TYPE,
@@ -292,6 +302,8 @@ class LCHObjectBuilder extends fb.ObjectBuilder {
     String? errorCode,
     String? ERROR_MESSAGE,
     String? errorMessage,
+    List<int>? REQUESTER_EPM,
+    List<int>? requesterEpm,
   })
       : _MESSAGE_TYPE = messageType ?? MESSAGE_TYPE,
         _ROLE = ROLE,
@@ -309,7 +321,8 @@ class LCHObjectBuilder extends fb.ObjectBuilder {
         _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
         _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
         _ERROR_CODE = errorCode ?? ERROR_CODE,
-        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE;
+        _ERROR_MESSAGE = errorMessage ?? ERROR_MESSAGE,
+        _REQUESTER_EPM = requesterEpm ?? REQUESTER_EPM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -338,7 +351,9 @@ class LCHObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ERROR_CODE!);
     final int? ERROR_MESSAGEOffset = _ERROR_MESSAGE == null ? null
         : fbBuilder.writeString(_ERROR_MESSAGE!);
-    fbBuilder.startTable(17);
+    final int? REQUESTER_EPMOffset = _REQUESTER_EPM == null ? null
+        : fbBuilder.writeListUint8(_REQUESTER_EPM!);
+    fbBuilder.startTable(18);
     fbBuilder.addInt8(0, _MESSAGE_TYPE?.value);
     fbBuilder.addInt8(1, _ROLE?.value);
     fbBuilder.addOffset(2, REQUEST_IDOffset);
@@ -356,6 +371,7 @@ class LCHObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, PROVIDER_PEER_IDOffset);
     fbBuilder.addOffset(15, ERROR_CODEOffset);
     fbBuilder.addOffset(16, ERROR_MESSAGEOffset);
+    fbBuilder.addOffset(17, REQUESTER_EPMOffset);
     return fbBuilder.endTable();
   }
 

@@ -392,7 +392,7 @@ class PLG extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Allowed requester domains for module grants
+    /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
     /**
      * @param int offset
      * @return string
@@ -751,22 +751,44 @@ class PLG extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+    /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+    /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getALLOWED_XPUBS($j)
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getALLOWED_XPUBSLength()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(52);
+        $builder->StartObject(53);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS)
     {
-        $builder->startObject(52);
+        $builder->startObject(53);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -819,6 +841,7 @@ class PLG extends Table
         self::addSCHEMAS_USED($builder, $SCHEMAS_USED);
         self::addBUILD_ARTIFACTS($builder, $BUILD_ARTIFACTS);
         self::addRUNTIME_TARGETS($builder, $RUNTIME_TARGETS);
+        self::addALLOWED_XPUBS($builder, $ALLOWED_XPUBS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PLUGIN_ID
         $builder->required($o, 6);  // NAME
@@ -1846,6 +1869,40 @@ class PLG extends Table
      * @return void
      */
     public static function startRUNTIME_TARGETSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addALLOWED_XPUBS(FlatBufferBuilder $builder, $ALLOWED_XPUBS)
+    {
+        $builder->addOffsetX(52, $ALLOWED_XPUBS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createALLOWED_XPUBSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startALLOWED_XPUBSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

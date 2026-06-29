@@ -173,6 +173,16 @@
           "type": "string",
           "description": "Structured error message",
           "x-flatbuffer-type": "string"
+        },
+        "REQUESTER_EPM": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for\nfreshness. Verified in-module to bind the requester's xpub identity to its\nauthenticated ed25519 signing key (cross-curve attestation).",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "required": [

@@ -1,5 +1,5 @@
-// Hash: 356cbbc336bd59f11f29c6f1624e71269991be598ca150f65e29715feeedb834
-// Version: 0.1.2
+// Hash: dacded1e3ff81d60ddfffa79e267345419b38cc1a48a50f0a974241a3e6e023f
+// Version: 0.1.3
 // -----------------------------------END_HEADER
 /// Licensing challenge participant role
 enum licensingChallengeRole : byte {
@@ -50,6 +50,10 @@ table LCH {
   ERROR_CODE: string;
   /// Structured error message
   ERROR_MESSAGE: string;
+  /// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+  /// freshness. Verified in-module to bind the requester's xpub identity to its
+  /// authenticated ed25519 signing key (cross-curve attestation).
+  REQUESTER_EPM: [ubyte];
 }
 
 root_type LCH;

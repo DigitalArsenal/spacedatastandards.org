@@ -225,8 +225,38 @@ class LCH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+    # freshness. Verified in-module to bind the requester's xpub identity to its
+    # authenticated ed25519 signing key (cross-curve attestation).
+    # LCH
+    def REQUESTER_EPM(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # LCH
+    def REQUESTER_EPMAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # LCH
+    def REQUESTER_EPMLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # LCH
+    def REQUESTER_EPMIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
 def LCHStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(18)
 
 def Start(builder):
     LCHStart(builder)
@@ -381,6 +411,28 @@ def LCHAddERROR_MESSAGE(builder, ERROR_MESSAGE):
 def AddERROR_MESSAGE(builder, ERROR_MESSAGE):
     LCHAddERROR_MESSAGE(builder, ERROR_MESSAGE)
 
+def LCHAddREQUESTER_EPM(builder, REQUESTER_EPM):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(REQUESTER_EPM), 0)
+
+def AddREQUESTER_EPM(builder, REQUESTER_EPM):
+    LCHAddREQUESTER_EPM(builder, REQUESTER_EPM)
+
+def LCHStartREQUESTER_EPMVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartREQUESTER_EPMVector(builder, numElems):
+    return LCHStartREQUESTER_EPMVector(builder, numElems)
+
+def LCHCreateREQUESTER_EPMVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreateREQUESTER_EPMVector(builder, data):
+    LCHCreateREQUESTER_EPMVector(builder, data)
+
 def LCHEnd(builder):
     return builder.EndObject()
 
@@ -414,6 +466,7 @@ class LCHT(object):
         PROVIDER_PEER_ID = None,
         ERROR_CODE = None,
         ERROR_MESSAGE = None,
+        REQUESTER_EPM = None,
     ):
         self.MESSAGE_TYPE = MESSAGE_TYPE  # type: int
         self.ROLE = ROLE  # type: int
@@ -432,6 +485,7 @@ class LCHT(object):
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
         self.ERROR_CODE = ERROR_CODE  # type: Optional[str]
         self.ERROR_MESSAGE = ERROR_MESSAGE  # type: Optional[str]
+        self.REQUESTER_EPM = REQUESTER_EPM  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -489,6 +543,13 @@ class LCHT(object):
         self.PROVIDER_PEER_ID = LCH.PROVIDER_PEER_ID()
         self.ERROR_CODE = LCH.ERROR_CODE()
         self.ERROR_MESSAGE = LCH.ERROR_MESSAGE()
+        if not LCH.REQUESTER_EPMIsNone():
+            if np is None:
+                self.REQUESTER_EPM = []
+                for i in range(LCH.REQUESTER_EPMLength()):
+                    self.REQUESTER_EPM.append(LCH.REQUESTER_EPM(i))
+            else:
+                self.REQUESTER_EPM = LCH.REQUESTER_EPMAsNumpy()
 
     # LCHT
     def Pack(self, builder):
@@ -534,6 +595,14 @@ class LCHT(object):
             ERROR_CODE = builder.CreateString(self.ERROR_CODE)
         if self.ERROR_MESSAGE is not None:
             ERROR_MESSAGE = builder.CreateString(self.ERROR_MESSAGE)
+        if self.REQUESTER_EPM is not None:
+            if np is not None and type(self.REQUESTER_EPM) is np.ndarray:
+                REQUESTER_EPM = builder.CreateNumpyVector(self.REQUESTER_EPM)
+            else:
+                LCHStartREQUESTER_EPMVector(builder, len(self.REQUESTER_EPM))
+                for i in reversed(range(len(self.REQUESTER_EPM))):
+                    builder.PrependUint8(self.REQUESTER_EPM[i])
+                REQUESTER_EPM = builder.EndVector()
         LCHStart(builder)
         LCHAddMESSAGE_TYPE(builder, self.MESSAGE_TYPE)
         LCHAddROLE(builder, self.ROLE)
@@ -564,5 +633,7 @@ class LCHT(object):
             LCHAddERROR_CODE(builder, ERROR_CODE)
         if self.ERROR_MESSAGE is not None:
             LCHAddERROR_MESSAGE(builder, ERROR_MESSAGE)
+        if self.REQUESTER_EPM is not None:
+            LCHAddREQUESTER_EPM(builder, REQUESTER_EPM)
         LCH = LCHEnd(builder)
         return LCH

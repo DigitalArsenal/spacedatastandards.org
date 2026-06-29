@@ -211,6 +211,7 @@ impl<'a> LCH<'a> {
   pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 32;
   pub const VT_ERROR_CODE: ::flatbuffers::VOffsetT = 34;
   pub const VT_ERROR_MESSAGE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_REQUESTER_EPM: ::flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -225,6 +226,7 @@ impl<'a> LCH<'a> {
     builder.add_EXPIRES_AT(args.EXPIRES_AT);
     builder.add_REQUESTED_AT(args.REQUESTED_AT);
     builder.add_REQUESTED_TIMEOUT_MS(args.REQUESTED_TIMEOUT_MS);
+    if let Some(x) = args.REQUESTER_EPM { builder.add_REQUESTER_EPM(x); }
     if let Some(x) = args.ERROR_MESSAGE { builder.add_ERROR_MESSAGE(x); }
     if let Some(x) = args.ERROR_CODE { builder.add_ERROR_CODE(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
@@ -286,6 +288,9 @@ impl<'a> LCH<'a> {
     let ERROR_MESSAGE = self.ERROR_MESSAGE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let REQUESTER_EPM = self.REQUESTER_EPM().map(|x| {
+      x.into_iter().collect()
+    });
     LCHT {
       MESSAGE_TYPE,
       ROLE,
@@ -304,6 +309,7 @@ impl<'a> LCH<'a> {
       PROVIDER_PEER_ID,
       ERROR_CODE,
       ERROR_MESSAGE,
+      REQUESTER_EPM,
     }
   }
 
@@ -443,6 +449,16 @@ impl<'a> LCH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(LCH::VT_ERROR_MESSAGE, None)}
   }
+  /// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+  /// freshness. Verified in-module to bind the requester's xpub identity to its
+  /// authenticated ed25519 signing key (cross-curve attestation).
+  #[inline]
+  pub fn REQUESTER_EPM(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(LCH::VT_REQUESTER_EPM, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for LCH<'_> {
@@ -468,6 +484,7 @@ impl ::flatbuffers::Verifiable for LCH<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_CODE", Self::VT_ERROR_CODE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ERROR_MESSAGE", Self::VT_ERROR_MESSAGE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("REQUESTER_EPM", Self::VT_REQUESTER_EPM, false)?
      .finish();
     Ok(())
   }
@@ -490,6 +507,7 @@ pub struct LCHArgs<'a> {
     pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ERROR_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ERROR_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUESTER_EPM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for LCHArgs<'a> {
   #[inline]
@@ -512,6 +530,7 @@ impl<'a> Default for LCHArgs<'a> {
       PROVIDER_PEER_ID: None,
       ERROR_CODE: None,
       ERROR_MESSAGE: None,
+      REQUESTER_EPM: None,
     }
   }
 }
@@ -590,6 +609,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> LCHBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCH::VT_ERROR_MESSAGE, ERROR_MESSAGE);
   }
   #[inline]
+  pub fn add_REQUESTER_EPM(&mut self, REQUESTER_EPM: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(LCH::VT_REQUESTER_EPM, REQUESTER_EPM);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> LCHBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     LCHBuilder {
@@ -626,6 +649,7 @@ impl ::core::fmt::Debug for LCH<'_> {
       ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
       ds.field("ERROR_CODE", &self.ERROR_CODE());
       ds.field("ERROR_MESSAGE", &self.ERROR_MESSAGE());
+      ds.field("REQUESTER_EPM", &self.REQUESTER_EPM());
       ds.finish()
   }
 }
@@ -649,6 +673,7 @@ pub struct LCHT {
   pub PROVIDER_PEER_ID: Option<alloc::string::String>,
   pub ERROR_CODE: Option<alloc::string::String>,
   pub ERROR_MESSAGE: Option<alloc::string::String>,
+  pub REQUESTER_EPM: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for LCHT {
   fn default() -> Self {
@@ -670,6 +695,7 @@ impl Default for LCHT {
       PROVIDER_PEER_ID: None,
       ERROR_CODE: None,
       ERROR_MESSAGE: None,
+      REQUESTER_EPM: None,
     }
   }
 }
@@ -721,6 +747,9 @@ impl LCHT {
     let ERROR_MESSAGE = self.ERROR_MESSAGE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let REQUESTER_EPM = self.REQUESTER_EPM.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     LCH::create(_fbb, &LCHArgs{
       MESSAGE_TYPE,
       ROLE,
@@ -739,6 +768,7 @@ impl LCHT {
       PROVIDER_PEER_ID,
       ERROR_CODE,
       ERROR_MESSAGE,
+      REQUESTER_EPM,
     })
   }
 }

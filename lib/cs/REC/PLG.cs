@@ -188,7 +188,7 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetKEY_IDBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
   public byte[] GetKEY_IDArray() { return __p.__vector_as_array<byte>(60); }
-  /// Allowed requester domains for module grants
+  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
   public string ALLOWED_DOMAINS(int j) { int o = __p.__offset(62); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int ALLOWED_DOMAINSLength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Maximum grant timeout allowed for this module publication
@@ -287,6 +287,11 @@ public struct PLG : IFlatbufferObject
   /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
   public string RUNTIME_TARGETS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int RUNTIME_TARGETSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+  public string ALLOWED_XPUBS(int j) { int o = __p.__offset(108); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALLOWED_XPUBSLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -340,13 +345,15 @@ public struct PLG : IFlatbufferObject
       VectorOffset PROTOCOLSOffset = default(VectorOffset),
       VectorOffset SCHEMAS_USEDOffset = default(VectorOffset),
       VectorOffset BUILD_ARTIFACTSOffset = default(VectorOffset),
-      VectorOffset RUNTIME_TARGETSOffset = default(VectorOffset)) {
-    builder.StartTable(52);
+      VectorOffset RUNTIME_TARGETSOffset = default(VectorOffset),
+      VectorOffset ALLOWED_XPUBSOffset = default(VectorOffset)) {
+    builder.StartTable(53);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
+    PLG.AddALLOWED_XPUBS(builder, ALLOWED_XPUBSOffset);
     PLG.AddRUNTIME_TARGETS(builder, RUNTIME_TARGETSOffset);
     PLG.AddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTSOffset);
     PLG.AddSCHEMAS_USED(builder, SCHEMAS_USEDOffset);
@@ -397,7 +404,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(52); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(53); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -555,6 +562,12 @@ public struct PLG : IFlatbufferObject
   public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRUNTIME_TARGETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddALLOWED_XPUBS(FlatBufferBuilder builder, VectorOffset ALLOWED_XPUBSOffset) { builder.AddOffset(52, ALLOWED_XPUBSOffset.Value, 0); }
+  public static VectorOffset CreateALLOWED_XPUBSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartALLOWED_XPUBSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<PLG> EndPLG(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PLUGIN_ID
@@ -643,6 +656,8 @@ public struct PLG : IFlatbufferObject
     for (var _j = 0; _j < this.BUILD_ARTIFACTSLength; ++_j) {_o.BUILD_ARTIFACTS.Add(this.BUILD_ARTIFACTS(_j).HasValue ? this.BUILD_ARTIFACTS(_j).Value.UnPack() : null);}
     _o.RUNTIME_TARGETS = new List<string>();
     for (var _j = 0; _j < this.RUNTIME_TARGETSLength; ++_j) {_o.RUNTIME_TARGETS.Add(this.RUNTIME_TARGETS(_j));}
+    _o.ALLOWED_XPUBS = new List<string>();
+    for (var _j = 0; _j < this.ALLOWED_XPUBSLength; ++_j) {_o.ALLOWED_XPUBS.Add(this.ALLOWED_XPUBS(_j));}
   }
   public static Offset<PLG> Pack(FlatBufferBuilder builder, PLGT _o) {
     if (_o == null) return default(Offset<PLG>);
@@ -787,6 +802,12 @@ public struct PLG : IFlatbufferObject
       for (var _j = 0; _j < __RUNTIME_TARGETS.Length; ++_j) { __RUNTIME_TARGETS[_j] = builder.CreateString(_o.RUNTIME_TARGETS[_j]); }
       _RUNTIME_TARGETS = CreateRUNTIME_TARGETSVector(builder, __RUNTIME_TARGETS);
     }
+    var _ALLOWED_XPUBS = default(VectorOffset);
+    if (_o.ALLOWED_XPUBS != null) {
+      var __ALLOWED_XPUBS = new StringOffset[_o.ALLOWED_XPUBS.Count];
+      for (var _j = 0; _j < __ALLOWED_XPUBS.Length; ++_j) { __ALLOWED_XPUBS[_j] = builder.CreateString(_o.ALLOWED_XPUBS[_j]); }
+      _ALLOWED_XPUBS = CreateALLOWED_XPUBSVector(builder, __ALLOWED_XPUBS);
+    }
     return CreatePLG(
       builder,
       _PLUGIN_ID,
@@ -840,7 +861,8 @@ public struct PLG : IFlatbufferObject
       _PROTOCOLS,
       _SCHEMAS_USED,
       _BUILD_ARTIFACTS,
-      _RUNTIME_TARGETS);
+      _RUNTIME_TARGETS,
+      _ALLOWED_XPUBS);
   }
 }
 
@@ -898,6 +920,7 @@ public class PLGT
   public List<FlatBufferTypeRefT> SCHEMAS_USED { get; set; }
   public List<PLGBuildArtifactT> BUILD_ARTIFACTS { get; set; }
   public List<string> RUNTIME_TARGETS { get; set; }
+  public List<string> ALLOWED_XPUBS { get; set; }
 
   public PLGT() {
     this.PLUGIN_ID = null;
@@ -952,6 +975,7 @@ public class PLGT
     this.SCHEMAS_USED = null;
     this.BUILD_ARTIFACTS = null;
     this.RUNTIME_TARGETS = null;
+    this.ALLOWED_XPUBS = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
     return PLG.GetRootAsPLG(new ByteBuffer(fbBuffer)).UnPack();
@@ -1021,6 +1045,7 @@ static public class PLGVerify
       && verifier.VerifyVectorOfTables(tablePos, 102 /*SCHEMAS_USED*/, FlatBufferTypeRefVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 104 /*BUILD_ARTIFACTS*/, PLGBuildArtifactVerify.Verify, false)
       && verifier.VerifyVectorOfStrings(tablePos, 106 /*RUNTIME_TARGETS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 108 /*ALLOWED_XPUBS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

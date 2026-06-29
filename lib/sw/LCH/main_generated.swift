@@ -65,6 +65,7 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let PROVIDER_PEER_ID: VOffset = 32
     static let ERROR_CODE: VOffset = 34
     static let ERROR_MESSAGE: VOffset = 36
+    static let REQUESTER_EPM: VOffset = 38
   }
 
   ///  Message type
@@ -113,7 +114,12 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Structured error message
   public var ERROR_MESSAGE: String? { let o = _accessor.offset(VT.ERROR_MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var ERROR_MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ERROR_MESSAGE) }
-  public static func startLCH(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+  ///  freshness. Verified in-module to bind the requester's xpub identity to its
+  ///  authenticated ed25519 signing key (cross-curve attestation).
+  public var REQUESTER_EPM: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REQUESTER_EPM, byteSize: 1) }
+  public func withUnsafePointerToRequesterEpm<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REQUESTER_EPM, body: body) }
+  public static func startLCH(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(MESSAGE_TYPE: licensingChallengeMessageType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MESSAGE_TYPE.rawValue, def: 0, at: VT.MESSAGE_TYPE) }
   public static func add(ROLE: licensingChallengeRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
   public static func add(REQUEST_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUEST_ID, at: VT.REQUEST_ID) }
@@ -131,6 +137,7 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
   public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
   public static func add(ERROR_MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_MESSAGE, at: VT.ERROR_MESSAGE) }
+  public static func addVectorOf(REQUESTER_EPM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUESTER_EPM, at: VT.REQUESTER_EPM) }
   public static func endLCH(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [8, 10]); return end }
   public static func createLCH(
     _ fbb: inout FlatBufferBuilder,
@@ -150,7 +157,8 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EXPIRES_AT: UInt64 = 0,
     PROVIDER_PEER_IDOffset PROVIDER_PEER_ID: Offset = Offset(),
     ERROR_CODEOffset ERROR_CODE: Offset = Offset(),
-    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset()
+    ERROR_MESSAGEOffset ERROR_MESSAGE: Offset = Offset(),
+    REQUESTER_EPMVectorOffset REQUESTER_EPM: Offset = Offset()
   ) -> Offset {
     let __start = LCH.startLCH(&fbb)
     LCH.add(MESSAGE_TYPE: MESSAGE_TYPE, &fbb)
@@ -170,6 +178,7 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     LCH.add(PROVIDER_PEER_ID: PROVIDER_PEER_ID, &fbb)
     LCH.add(ERROR_CODE: ERROR_CODE, &fbb)
     LCH.add(ERROR_MESSAGE: ERROR_MESSAGE, &fbb)
+    LCH.addVectorOf(REQUESTER_EPM: REQUESTER_EPM, &fbb)
     return LCH.endLCH(&fbb, start: __start)
   }
 
@@ -192,6 +201,7 @@ public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.PROVIDER_PEER_ID, fieldName: "PROVIDER_PEER_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ERROR_CODE, fieldName: "ERROR_CODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ERROR_MESSAGE, fieldName: "ERROR_MESSAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUESTER_EPM, fieldName: "REQUESTER_EPM", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     _v.finish()
   }
 }

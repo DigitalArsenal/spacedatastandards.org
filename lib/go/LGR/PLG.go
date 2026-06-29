@@ -685,7 +685,7 @@ func (rcv *PLG) KeyId() []byte {
 }
 
 /// Provider-local identifier for the module content key
-/// Allowed requester domains for module grants
+/// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
 func (rcv *PLG) ALLOWED_DOMAINS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -711,7 +711,7 @@ func (rcv *PLG) AllowedDomainsLength() int {
 	return rcv.ALLOWED_DOMAINSLength()
 }
 
-/// Allowed requester domains for module grants
+/// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
 /// Maximum grant timeout allowed for this module publication
 func (rcv *PLG) MAX_GRANT_TIMEOUT_MS() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
@@ -1315,8 +1315,39 @@ func (rcv *PLG) RuntimeTargetsLength() int {
 }
 
 /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
+/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+/// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+/// xpub in this list is granted. Empty list = no xpub allowlist gate.
+func (rcv *PLG) ALLOWED_XPUBS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *PLG) AllowedXpubs(j int) []byte {
+	return rcv.ALLOWED_XPUBS(j)
+}
+
+func (rcv *PLG) ALLOWED_XPUBSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) AllowedXpubsLength() int {
+	return rcv.ALLOWED_XPUBSLength()
+}
+
+/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+/// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+/// xpub in this list is granted. Empty list = no xpub allowlist gate.
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(52)
+	builder.StartObject(53)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -1755,6 +1786,18 @@ func PLGStartRUNTIME_TARGETSVector(builder *flatbuffers.Builder, numElems int) f
 }
 func PLGStartRuntimeTargetsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLGStartRUNTIME_TARGETSVector(builder, numElems)
+}
+func PLGAddALLOWED_XPUBS(builder *flatbuffers.Builder, ALLOWED_XPUBS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(ALLOWED_XPUBS), 0)
+}
+func PLGAddAllowedXpubs(builder *flatbuffers.Builder, ALLOWED_XPUBS flatbuffers.UOffsetT) {
+	PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS)
+}
+func PLGStartALLOWED_XPUBSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartAllowedXpubsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartALLOWED_XPUBSVector(builder, numElems)
 }
 func PLGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

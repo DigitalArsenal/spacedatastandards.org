@@ -407,7 +407,7 @@ class PLG(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Allowed requester domains for module grants
+    # DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
     # PLG
     def ALLOWED_DOMAINS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
@@ -796,8 +796,31 @@ class PLG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         return o == 0
 
+    # Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
+    # PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
+    # xpub in this list is granted. Empty list = no xpub allowlist gate.
+    # PLG
+    def ALLOWED_XPUBS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # PLG
+    def ALLOWED_XPUBSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def ALLOWED_XPUBSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        return o == 0
+
 def PLGStart(builder):
-    builder.StartObject(52)
+    builder.StartObject(53)
 
 def Start(builder):
     PLGStart(builder)
@@ -1382,6 +1405,24 @@ def PLGCreateRUNTIME_TARGETSVector(builder, data):
 def CreateRUNTIME_TARGETSVector(builder, data):
     PLGCreateRUNTIME_TARGETSVector(builder, data)
 
+def PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_XPUBS), 0)
+
+def AddALLOWED_XPUBS(builder, ALLOWED_XPUBS):
+    PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS)
+
+def PLGStartALLOWED_XPUBSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartALLOWED_XPUBSVector(builder, numElems):
+    return PLGStartALLOWED_XPUBSVector(builder, numElems)
+
+def PLGCreateALLOWED_XPUBSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALLOWED_XPUBSVector(builder, data):
+    PLGCreateALLOWED_XPUBSVector(builder, data)
+
 def PLGEnd(builder):
     return builder.EndObject()
 
@@ -1459,6 +1500,7 @@ class PLGT(object):
         SCHEMAS_USED = None,
         BUILD_ARTIFACTS = None,
         RUNTIME_TARGETS = None,
+        ALLOWED_XPUBS = None,
     ):
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -1512,6 +1554,7 @@ class PLGT(object):
         self.SCHEMAS_USED = SCHEMAS_USED  # type: Optional[List[FlatBufferTypeRef.FlatBufferTypeRefT]]
         self.BUILD_ARTIFACTS = BUILD_ARTIFACTS  # type: Optional[List[PLGBuildArtifact.PLGBuildArtifactT]]
         self.RUNTIME_TARGETS = RUNTIME_TARGETS  # type: Optional[List[Optional[str]]]
+        self.ALLOWED_XPUBS = ALLOWED_XPUBS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1697,6 +1740,10 @@ class PLGT(object):
             self.RUNTIME_TARGETS = []
             for i in range(PLG.RUNTIME_TARGETSLength()):
                 self.RUNTIME_TARGETS.append(PLG.RUNTIME_TARGETS(i))
+        if not PLG.ALLOWED_XPUBSIsNone():
+            self.ALLOWED_XPUBS = []
+            for i in range(PLG.ALLOWED_XPUBSLength()):
+                self.ALLOWED_XPUBS.append(PLG.ALLOWED_XPUBS(i))
 
     # PLGT
     def Pack(self, builder):
@@ -1906,6 +1953,14 @@ class PLGT(object):
             for i in reversed(range(len(self.RUNTIME_TARGETS))):
                 builder.PrependUOffsetTRelative(RUNTIME_TARGETSlist[i])
             RUNTIME_TARGETS = builder.EndVector()
+        if self.ALLOWED_XPUBS is not None:
+            ALLOWED_XPUBSlist = []
+            for i in range(len(self.ALLOWED_XPUBS)):
+                ALLOWED_XPUBSlist.append(builder.CreateString(self.ALLOWED_XPUBS[i]))
+            PLGStartALLOWED_XPUBSVector(builder, len(self.ALLOWED_XPUBS))
+            for i in reversed(range(len(self.ALLOWED_XPUBS))):
+                builder.PrependUOffsetTRelative(ALLOWED_XPUBSlist[i])
+            ALLOWED_XPUBS = builder.EndVector()
         PLGStart(builder)
         if self.PLUGIN_ID is not None:
             PLGAddPLUGIN_ID(builder, PLUGIN_ID)
@@ -1999,5 +2054,7 @@ class PLGT(object):
             PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS)
         if self.RUNTIME_TARGETS is not None:
             PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
+        if self.ALLOWED_XPUBS is not None:
+            PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS)
         PLG = PLGEnd(builder)
         return PLG

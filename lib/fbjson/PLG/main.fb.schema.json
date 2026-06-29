@@ -1281,7 +1281,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Allowed requester domains for module grants",
+          "description": "DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.",
           "x-flatbuffer-type": "[string]"
         },
         "MAX_GRANT_TIMEOUT_MS": {
@@ -1457,6 +1457,14 @@
             "type": "string"
           },
           "description": "Opaque runtime-target tags (e.g. \"wasmtime\", \"wasmedge\", \"browser\").",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ALLOWED_XPUBS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "xpub in this list is granted. Empty list = no xpub allowlist gate.",
           "x-flatbuffer-type": "[string]"
         }
       },

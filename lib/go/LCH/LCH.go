@@ -446,8 +446,64 @@ func (rcv *LCH) ErrorMessage() []byte {
 }
 
 /// Structured error message
+/// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+/// freshness. Verified in-module to bind the requester's xpub identity to its
+/// authenticated ed25519 signing key (cross-curve attestation).
+func (rcv *LCH) REQUESTER_EPM(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *LCH) RequesterEpm(j int) byte {
+	return rcv.REQUESTER_EPM(j)
+}
+
+func (rcv *LCH) REQUESTER_EPMLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *LCH) RequesterEpmLength() int {
+	return rcv.REQUESTER_EPMLength()
+}
+
+func (rcv *LCH) REQUESTER_EPMBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *LCH) RequesterEpmBytes() []byte {
+	return rcv.REQUESTER_EPMBytes()
+}
+
+/// Requester's full $EPM (Entity Profile) FlatBuffer, re-sent per grant for
+/// freshness. Verified in-module to bind the requester's xpub identity to its
+/// authenticated ed25519 signing key (cross-curve attestation).
+func (rcv *LCH) MutateREQUESTER_EPM(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *LCH) MutateRequesterEpm(j int, n byte) bool {
+	return rcv.MutateREQUESTER_EPM(j, n)
+}
+
 func LCHStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(18)
 }
 func LCHAddMESSAGE_TYPE(builder *flatbuffers.Builder, MESSAGE_TYPE licensingChallengeMessageType) {
 	builder.PrependInt8Slot(0, int8(MESSAGE_TYPE), 0)
@@ -568,6 +624,18 @@ func LCHAddERROR_MESSAGE(builder *flatbuffers.Builder, ERROR_MESSAGE flatbuffers
 }
 func LCHAddErrorMessage(builder *flatbuffers.Builder, ERROR_MESSAGE flatbuffers.UOffsetT) {
 	LCHAddERROR_MESSAGE(builder, ERROR_MESSAGE)
+}
+func LCHAddREQUESTER_EPM(builder *flatbuffers.Builder, REQUESTER_EPM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(REQUESTER_EPM), 0)
+}
+func LCHAddRequesterEpm(builder *flatbuffers.Builder, REQUESTER_EPM flatbuffers.UOffsetT) {
+	LCHAddREQUESTER_EPM(builder, REQUESTER_EPM)
+}
+func LCHStartREQUESTER_EPMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func LCHStartRequesterEpmVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return LCHStartREQUESTER_EPMVector(builder, numElems)
 }
 func LCHEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
