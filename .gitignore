@@ -33,3 +33,4 @@ packages/ccsds-parser/build/
 
 # C++ build artifacts
 src/cpp/build/
+.worktrees/
