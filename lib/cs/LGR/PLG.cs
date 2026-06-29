@@ -188,110 +188,107 @@ public struct PLG : IFlatbufferObject
   public ArraySegment<byte>? GetKEY_IDBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
   public byte[] GetKEY_IDArray() { return __p.__vector_as_array<byte>(60); }
-  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
-  public string ALLOWED_DOMAINS(int j) { int o = __p.__offset(62); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ALLOWED_DOMAINSLength { get { int o = __p.__offset(62); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Maximum grant timeout allowed for this module publication
-  public ulong MAX_GRANT_TIMEOUT_MS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong MAX_GRANT_TIMEOUT_MS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Minimum permissions required to run
-  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string MIN_PERMISSIONS(int j) { int o = __p.__offset(64); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MIN_PERMISSIONSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Unix timestamp when plugin was created
-  public ulong CREATED_AT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong CREATED_AT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Unix timestamp when plugin was last updated
-  public ulong UPDATED_AT { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong UPDATED_AT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// URL to plugin documentation
-  public string DOCUMENTATION_URL { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string DOCUMENTATION_URL { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(72, 1); }
+  public Span<byte> GetDOCUMENTATION_URLBytes() { return __p.__vector_as_span<byte>(70, 1); }
 #else
-  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(72); }
+  public ArraySegment<byte>? GetDOCUMENTATION_URLBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
-  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(72); }
+  public byte[] GetDOCUMENTATION_URLArray() { return __p.__vector_as_array<byte>(70); }
   /// URL to plugin changelog or release notes
-  public string CHANGELOG_URL { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string CHANGELOG_URL { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCHANGELOG_URLBytes() { return __p.__vector_as_span<byte>(74, 1); }
+  public Span<byte> GetCHANGELOG_URLBytes() { return __p.__vector_as_span<byte>(72, 1); }
 #else
-  public ArraySegment<byte>? GetCHANGELOG_URLBytes() { return __p.__vector_as_arraysegment(74); }
+  public ArraySegment<byte>? GetCHANGELOG_URLBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
-  public byte[] GetCHANGELOG_URLArray() { return __p.__vector_as_array<byte>(74); }
+  public byte[] GetCHANGELOG_URLArray() { return __p.__vector_as_array<byte>(72); }
   /// URL to plugin icon/logo
-  public string ICON_URL { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string ICON_URL { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(76, 1); }
+  public Span<byte> GetICON_URLBytes() { return __p.__vector_as_span<byte>(74, 1); }
 #else
-  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(76); }
+  public ArraySegment<byte>? GetICON_URLBytes() { return __p.__vector_as_arraysegment(74); }
 #endif
-  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(76); }
+  public byte[] GetICON_URLArray() { return __p.__vector_as_array<byte>(74); }
   /// License identifier (SPDX format)
-  public string LICENSE { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string LICENSE { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(78, 1); }
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(76, 1); }
 #else
-  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(78); }
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(78); }
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(76); }
   /// Commercial model used for storefront purchase flows
-  public purchaseTier PAYMENT_MODEL { get { int o = __p.__offset(80); return o != 0 ? (purchaseTier)__p.bb.GetSbyte(o + __p.bb_pos) : purchaseTier.Free; } }
+  public purchaseTier PAYMENT_MODEL { get { int o = __p.__offset(78); return o != 0 ? (purchaseTier)__p.bb.GetSbyte(o + __p.bb_pos) : purchaseTier.Free; } }
   /// Price in USD cents for one-time purchase or subscription period
-  public uint PRICE_USD_CENTS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint PRICE_USD_CENTS { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Subscription billing period length in days
-  public uint SUBSCRIPTION_PERIOD_DAYS { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint SUBSCRIPTION_PERIOD_DAYS { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
-  public string ACCEPTED_PAYMENT_METHODS(int j) { int o = __p.__offset(86); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ACCEPTED_PAYMENT_METHODSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string ACCEPTED_PAYMENT_METHODS(int j) { int o = __p.__offset(84); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ACCEPTED_PAYMENT_METHODSLength { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Storefront publication state for this manifest version
-  public publicationState LISTING_STATUS { get { int o = __p.__offset(88); return o != 0 ? (publicationState)__p.bb.GetSbyte(o + __p.bb_pos) : publicationState.Public; } }
+  public publicationState LISTING_STATUS { get { int o = __p.__offset(86); return o != 0 ? (publicationState)__p.bb.GetSbyte(o + __p.bb_pos) : publicationState.Public; } }
   /// Ed25519 signature from provider over manifest
-  public byte SIGNATURE(int j) { int o = __p.__offset(90); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
-  public int SIGNATURELength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte SIGNATURE(int j) { int o = __p.__offset(88); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int SIGNATURELength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(90, 1); }
+  public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(88, 1); }
 #else
-  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(90); }
+  public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
-  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(90); }
+  public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(88); }
   /// Canonical invoke surfaces this artifact exposes. A single plugin
   /// MAY list both DIRECT and COMMAND when it supports both.
-  public invokeSurfaceKind INVOKE_SURFACES(int j) { int o = __p.__offset(92); return o != 0 ? (invokeSurfaceKind)__p.bb.Get(__p.__vector(o) + j * 1) : (invokeSurfaceKind)0; }
-  public int INVOKE_SURFACESLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public invokeSurfaceKind INVOKE_SURFACES(int j) { int o = __p.__offset(90); return o != 0 ? (invokeSurfaceKind)__p.bb.Get(__p.__vector(o) + j * 1) : (invokeSurfaceKind)0; }
+  public int INVOKE_SURFACESLength { get { int o = __p.__offset(90); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<invokeSurfaceKind> GetINVOKE_SURFACESBytes() { return __p.__vector_as_span<invokeSurfaceKind>(92, 1); }
+  public Span<invokeSurfaceKind> GetINVOKE_SURFACESBytes() { return __p.__vector_as_span<invokeSurfaceKind>(90, 1); }
 #else
-  public ArraySegment<byte>? GetINVOKE_SURFACESBytes() { return __p.__vector_as_arraysegment(92); }
+  public ArraySegment<byte>? GetINVOKE_SURFACESBytes() { return __p.__vector_as_arraysegment(90); }
 #endif
-  public invokeSurfaceKind[] GetINVOKE_SURFACESArray() { int o = __p.__offset(92); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); invokeSurfaceKind[] a = new invokeSurfaceKind[l]; for (int i = 0; i < l; i++) { a[i] = (invokeSurfaceKind)__p.bb.Get(p + i * 1); } return a; }
+  public invokeSurfaceKind[] GetINVOKE_SURFACESArray() { int o = __p.__offset(90); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); invokeSurfaceKind[] a = new invokeSurfaceKind[l]; for (int i = 0; i < l; i++) { a[i] = (invokeSurfaceKind)__p.bb.Get(p + i * 1); } return a; }
   /// Rich per-method invoke manifests (port shape, drain semantics,
   /// accepted wire formats). ENTRY_FUNCTIONS retains the slim
   /// name+input_schemas+output_schema summary; METHODS carries the full
   /// invoke-surface detail including aligned-binary advertisement.
-  public PLGMethodManifest? METHODS(int j) { int o = __p.__offset(94); return o != 0 ? (PLGMethodManifest?)(new PLGMethodManifest()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int METHODSLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PLGMethodManifest? METHODS(int j) { int o = __p.__offset(92); return o != 0 ? (PLGMethodManifest?)(new PLGMethodManifest()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int METHODSLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Enum-typed host capability dependencies (richer than CAPABILITIES,
   /// which is string-tagged metadata).
-  public PLGHostCapability? HOST_CAPABILITIES(int j) { int o = __p.__offset(96); return o != 0 ? (PLGHostCapability?)(new PLGHostCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int HOST_CAPABILITIESLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PLGHostCapability? HOST_CAPABILITIES(int j) { int o = __p.__offset(94); return o != 0 ? (PLGHostCapability?)(new PLGHostCapability()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int HOST_CAPABILITIESLength { get { int o = __p.__offset(94); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Timer declarations for scheduled invocations.
-  public PLGTimerSpec? TIMERS(int j) { int o = __p.__offset(98); return o != 0 ? (PLGTimerSpec?)(new PLGTimerSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int TIMERSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PLGTimerSpec? TIMERS(int j) { int o = __p.__offset(96); return o != 0 ? (PLGTimerSpec?)(new PLGTimerSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TIMERSLength { get { int o = __p.__offset(96); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Protocol handler declarations.
-  public PLGProtocolSpec? PROTOCOLS(int j) { int o = __p.__offset(100); return o != 0 ? (PLGProtocolSpec?)(new PLGProtocolSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int PROTOCOLSLength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PLGProtocolSpec? PROTOCOLS(int j) { int o = __p.__offset(98); return o != 0 ? (PLGProtocolSpec?)(new PLGProtocolSpec()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PROTOCOLSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// FlatBuffer schemas this plugin depends on at the invoke surface.
-  public FlatBufferTypeRef? SCHEMAS_USED(int j) { int o = __p.__offset(102); return o != 0 ? (FlatBufferTypeRef?)(new FlatBufferTypeRef()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int SCHEMAS_USEDLength { get { int o = __p.__offset(102); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public FlatBufferTypeRef? SCHEMAS_USED(int j) { int o = __p.__offset(100); return o != 0 ? (FlatBufferTypeRef?)(new FlatBufferTypeRef()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SCHEMAS_USEDLength { get { int o = __p.__offset(100); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
-  public PLGBuildArtifact? BUILD_ARTIFACTS(int j) { int o = __p.__offset(104); return o != 0 ? (PLGBuildArtifact?)(new PLGBuildArtifact()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int BUILD_ARTIFACTSLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public PLGBuildArtifact? BUILD_ARTIFACTS(int j) { int o = __p.__offset(102); return o != 0 ? (PLGBuildArtifact?)(new PLGBuildArtifact()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int BUILD_ARTIFACTSLength { get { int o = __p.__offset(102); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
-  public string RUNTIME_TARGETS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int RUNTIME_TARGETSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
-  public string ALLOWED_XPUBS(int j) { int o = __p.__offset(108); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ALLOWED_XPUBSLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string RUNTIME_TARGETS(int j) { int o = __p.__offset(104); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int RUNTIME_TARGETSLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+  /// a requester whose verified EPM binds an xpub in this list is granted (PKI
+  /// identity authorization). Empty list = no xpub allowlist gate.
+  public string ALLOWED_XPUBS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALLOWED_XPUBSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -323,7 +320,6 @@ public struct PLG : IFlatbufferObject
       bool ENCRYPTED = true,
       StringOffset REQUIRED_SCOPEOffset = default(StringOffset),
       StringOffset KEY_IDOffset = default(StringOffset),
-      VectorOffset ALLOWED_DOMAINSOffset = default(VectorOffset),
       ulong MAX_GRANT_TIMEOUT_MS = 0,
       VectorOffset MIN_PERMISSIONSOffset = default(VectorOffset),
       ulong CREATED_AT = 0,
@@ -347,7 +343,7 @@ public struct PLG : IFlatbufferObject
       VectorOffset BUILD_ARTIFACTSOffset = default(VectorOffset),
       VectorOffset RUNTIME_TARGETSOffset = default(VectorOffset),
       VectorOffset ALLOWED_XPUBSOffset = default(VectorOffset)) {
-    builder.StartTable(53);
+    builder.StartTable(52);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
@@ -371,7 +367,6 @@ public struct PLG : IFlatbufferObject
     PLG.AddCHANGELOG_URL(builder, CHANGELOG_URLOffset);
     PLG.AddDOCUMENTATION_URL(builder, DOCUMENTATION_URLOffset);
     PLG.AddMIN_PERMISSIONS(builder, MIN_PERMISSIONSOffset);
-    PLG.AddALLOWED_DOMAINS(builder, ALLOWED_DOMAINSOffset);
     PLG.AddKEY_ID(builder, KEY_IDOffset);
     PLG.AddREQUIRED_SCOPE(builder, REQUIRED_SCOPEOffset);
     PLG.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
@@ -404,7 +399,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(53); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(52); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -479,90 +474,84 @@ public struct PLG : IFlatbufferObject
   public static void AddENCRYPTED(FlatBufferBuilder builder, bool ENCRYPTED) { builder.AddBool(26, ENCRYPTED, true); }
   public static void AddREQUIRED_SCOPE(FlatBufferBuilder builder, StringOffset REQUIRED_SCOPEOffset) { builder.AddOffset(27, REQUIRED_SCOPEOffset.Value, 0); }
   public static void AddKEY_ID(FlatBufferBuilder builder, StringOffset KEY_IDOffset) { builder.AddOffset(28, KEY_IDOffset.Value, 0); }
-  public static void AddALLOWED_DOMAINS(FlatBufferBuilder builder, VectorOffset ALLOWED_DOMAINSOffset) { builder.AddOffset(29, ALLOWED_DOMAINSOffset.Value, 0); }
-  public static VectorOffset CreateALLOWED_DOMAINSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateALLOWED_DOMAINSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartALLOWED_DOMAINSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder builder, ulong MAX_GRANT_TIMEOUT_MS) { builder.AddUlong(30, MAX_GRANT_TIMEOUT_MS, 0); }
-  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(31, MIN_PERMISSIONSOffset.Value, 0); }
+  public static void AddMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder builder, ulong MAX_GRANT_TIMEOUT_MS) { builder.AddUlong(29, MAX_GRANT_TIMEOUT_MS, 0); }
+  public static void AddMIN_PERMISSIONS(FlatBufferBuilder builder, VectorOffset MIN_PERMISSIONSOffset) { builder.AddOffset(30, MIN_PERMISSIONSOffset.Value, 0); }
   public static VectorOffset CreateMIN_PERMISSIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMIN_PERMISSIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMIN_PERMISSIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(32, CREATED_AT, 0); }
-  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(33, UPDATED_AT, 0); }
-  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(34, DOCUMENTATION_URLOffset.Value, 0); }
-  public static void AddCHANGELOG_URL(FlatBufferBuilder builder, StringOffset CHANGELOG_URLOffset) { builder.AddOffset(35, CHANGELOG_URLOffset.Value, 0); }
-  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(36, ICON_URLOffset.Value, 0); }
-  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(37, LICENSEOffset.Value, 0); }
-  public static void AddPAYMENT_MODEL(FlatBufferBuilder builder, purchaseTier PAYMENT_MODEL) { builder.AddSbyte(38, (sbyte)PAYMENT_MODEL, 0); }
-  public static void AddPRICE_USD_CENTS(FlatBufferBuilder builder, uint PRICE_USD_CENTS) { builder.AddUint(39, PRICE_USD_CENTS, 0); }
-  public static void AddSUBSCRIPTION_PERIOD_DAYS(FlatBufferBuilder builder, uint SUBSCRIPTION_PERIOD_DAYS) { builder.AddUint(40, SUBSCRIPTION_PERIOD_DAYS, 0); }
-  public static void AddACCEPTED_PAYMENT_METHODS(FlatBufferBuilder builder, VectorOffset ACCEPTED_PAYMENT_METHODSOffset) { builder.AddOffset(41, ACCEPTED_PAYMENT_METHODSOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(31, CREATED_AT, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(32, UPDATED_AT, 0); }
+  public static void AddDOCUMENTATION_URL(FlatBufferBuilder builder, StringOffset DOCUMENTATION_URLOffset) { builder.AddOffset(33, DOCUMENTATION_URLOffset.Value, 0); }
+  public static void AddCHANGELOG_URL(FlatBufferBuilder builder, StringOffset CHANGELOG_URLOffset) { builder.AddOffset(34, CHANGELOG_URLOffset.Value, 0); }
+  public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(35, ICON_URLOffset.Value, 0); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(36, LICENSEOffset.Value, 0); }
+  public static void AddPAYMENT_MODEL(FlatBufferBuilder builder, purchaseTier PAYMENT_MODEL) { builder.AddSbyte(37, (sbyte)PAYMENT_MODEL, 0); }
+  public static void AddPRICE_USD_CENTS(FlatBufferBuilder builder, uint PRICE_USD_CENTS) { builder.AddUint(38, PRICE_USD_CENTS, 0); }
+  public static void AddSUBSCRIPTION_PERIOD_DAYS(FlatBufferBuilder builder, uint SUBSCRIPTION_PERIOD_DAYS) { builder.AddUint(39, SUBSCRIPTION_PERIOD_DAYS, 0); }
+  public static void AddACCEPTED_PAYMENT_METHODS(FlatBufferBuilder builder, VectorOffset ACCEPTED_PAYMENT_METHODSOffset) { builder.AddOffset(40, ACCEPTED_PAYMENT_METHODSOffset.Value, 0); }
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_PAYMENT_METHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartACCEPTED_PAYMENT_METHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddLISTING_STATUS(FlatBufferBuilder builder, publicationState LISTING_STATUS) { builder.AddSbyte(42, (sbyte)LISTING_STATUS, 0); }
-  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(43, SIGNATUREOffset.Value, 0); }
+  public static void AddLISTING_STATUS(FlatBufferBuilder builder, publicationState LISTING_STATUS) { builder.AddSbyte(41, (sbyte)LISTING_STATUS, 0); }
+  public static void AddSIGNATURE(FlatBufferBuilder builder, VectorOffset SIGNATUREOffset) { builder.AddOffset(42, SIGNATUREOffset.Value, 0); }
   public static VectorOffset CreateSIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddINVOKE_SURFACES(FlatBufferBuilder builder, VectorOffset INVOKE_SURFACESOffset) { builder.AddOffset(44, INVOKE_SURFACESOffset.Value, 0); }
+  public static void AddINVOKE_SURFACES(FlatBufferBuilder builder, VectorOffset INVOKE_SURFACESOffset) { builder.AddOffset(43, INVOKE_SURFACESOffset.Value, 0); }
   public static VectorOffset CreateINVOKE_SURFACESVector(FlatBufferBuilder builder, invokeSurfaceKind[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte((byte)data[i]); return builder.EndVector(); }
   public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, invokeSurfaceKind[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, ArraySegment<invokeSurfaceKind> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateINVOKE_SURFACESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<invokeSurfaceKind>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartINVOKE_SURFACESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
-  public static void AddMETHODS(FlatBufferBuilder builder, VectorOffset METHODSOffset) { builder.AddOffset(45, METHODSOffset.Value, 0); }
+  public static void AddMETHODS(FlatBufferBuilder builder, VectorOffset METHODSOffset) { builder.AddOffset(44, METHODSOffset.Value, 0); }
   public static VectorOffset CreateMETHODSVector(FlatBufferBuilder builder, Offset<PLGMethodManifest>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, Offset<PLGMethodManifest>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGMethodManifest>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMETHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGMethodManifest>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMETHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddHOST_CAPABILITIES(FlatBufferBuilder builder, VectorOffset HOST_CAPABILITIESOffset) { builder.AddOffset(46, HOST_CAPABILITIESOffset.Value, 0); }
+  public static void AddHOST_CAPABILITIES(FlatBufferBuilder builder, VectorOffset HOST_CAPABILITIESOffset) { builder.AddOffset(45, HOST_CAPABILITIESOffset.Value, 0); }
   public static VectorOffset CreateHOST_CAPABILITIESVector(FlatBufferBuilder builder, Offset<PLGHostCapability>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, Offset<PLGHostCapability>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGHostCapability>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateHOST_CAPABILITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGHostCapability>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartHOST_CAPABILITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddTIMERS(FlatBufferBuilder builder, VectorOffset TIMERSOffset) { builder.AddOffset(47, TIMERSOffset.Value, 0); }
+  public static void AddTIMERS(FlatBufferBuilder builder, VectorOffset TIMERSOffset) { builder.AddOffset(46, TIMERSOffset.Value, 0); }
   public static VectorOffset CreateTIMERSVector(FlatBufferBuilder builder, Offset<PLGTimerSpec>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, Offset<PLGTimerSpec>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGTimerSpec>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTIMERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGTimerSpec>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTIMERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPROTOCOLS(FlatBufferBuilder builder, VectorOffset PROTOCOLSOffset) { builder.AddOffset(48, PROTOCOLSOffset.Value, 0); }
+  public static void AddPROTOCOLS(FlatBufferBuilder builder, VectorOffset PROTOCOLSOffset) { builder.AddOffset(47, PROTOCOLSOffset.Value, 0); }
   public static VectorOffset CreatePROTOCOLSVector(FlatBufferBuilder builder, Offset<PLGProtocolSpec>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, Offset<PLGProtocolSpec>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGProtocolSpec>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROTOCOLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGProtocolSpec>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROTOCOLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSCHEMAS_USED(FlatBufferBuilder builder, VectorOffset SCHEMAS_USEDOffset) { builder.AddOffset(49, SCHEMAS_USEDOffset.Value, 0); }
+  public static void AddSCHEMAS_USED(FlatBufferBuilder builder, VectorOffset SCHEMAS_USEDOffset) { builder.AddOffset(48, SCHEMAS_USEDOffset.Value, 0); }
   public static VectorOffset CreateSCHEMAS_USEDVector(FlatBufferBuilder builder, Offset<FlatBufferTypeRef>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, Offset<FlatBufferTypeRef>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<FlatBufferTypeRef>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSCHEMAS_USEDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<FlatBufferTypeRef>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSCHEMAS_USEDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddBUILD_ARTIFACTS(FlatBufferBuilder builder, VectorOffset BUILD_ARTIFACTSOffset) { builder.AddOffset(50, BUILD_ARTIFACTSOffset.Value, 0); }
+  public static void AddBUILD_ARTIFACTS(FlatBufferBuilder builder, VectorOffset BUILD_ARTIFACTSOffset) { builder.AddOffset(49, BUILD_ARTIFACTSOffset.Value, 0); }
   public static VectorOffset CreateBUILD_ARTIFACTSVector(FlatBufferBuilder builder, Offset<PLGBuildArtifact>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, Offset<PLGBuildArtifact>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGBuildArtifact>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateBUILD_ARTIFACTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGBuildArtifact>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBUILD_ARTIFACTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddRUNTIME_TARGETS(FlatBufferBuilder builder, VectorOffset RUNTIME_TARGETSOffset) { builder.AddOffset(51, RUNTIME_TARGETSOffset.Value, 0); }
+  public static void AddRUNTIME_TARGETS(FlatBufferBuilder builder, VectorOffset RUNTIME_TARGETSOffset) { builder.AddOffset(50, RUNTIME_TARGETSOffset.Value, 0); }
   public static VectorOffset CreateRUNTIME_TARGETSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateRUNTIME_TARGETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRUNTIME_TARGETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddALLOWED_XPUBS(FlatBufferBuilder builder, VectorOffset ALLOWED_XPUBSOffset) { builder.AddOffset(52, ALLOWED_XPUBSOffset.Value, 0); }
+  public static void AddALLOWED_XPUBS(FlatBufferBuilder builder, VectorOffset ALLOWED_XPUBSOffset) { builder.AddOffset(51, ALLOWED_XPUBSOffset.Value, 0); }
   public static VectorOffset CreateALLOWED_XPUBSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -621,8 +610,6 @@ public struct PLG : IFlatbufferObject
     _o.ENCRYPTED = this.ENCRYPTED;
     _o.REQUIRED_SCOPE = this.REQUIRED_SCOPE;
     _o.KEY_ID = this.KEY_ID;
-    _o.ALLOWED_DOMAINS = new List<string>();
-    for (var _j = 0; _j < this.ALLOWED_DOMAINSLength; ++_j) {_o.ALLOWED_DOMAINS.Add(this.ALLOWED_DOMAINS(_j));}
     _o.MAX_GRANT_TIMEOUT_MS = this.MAX_GRANT_TIMEOUT_MS;
     _o.MIN_PERMISSIONS = new List<string>();
     for (var _j = 0; _j < this.MIN_PERMISSIONSLength; ++_j) {_o.MIN_PERMISSIONS.Add(this.MIN_PERMISSIONS(_j));}
@@ -728,12 +715,6 @@ public struct PLG : IFlatbufferObject
     var _PROVIDER_EPM_CID = _o.PROVIDER_EPM_CID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_EPM_CID);
     var _REQUIRED_SCOPE = _o.REQUIRED_SCOPE == null ? default(StringOffset) : builder.CreateString(_o.REQUIRED_SCOPE);
     var _KEY_ID = _o.KEY_ID == null ? default(StringOffset) : builder.CreateString(_o.KEY_ID);
-    var _ALLOWED_DOMAINS = default(VectorOffset);
-    if (_o.ALLOWED_DOMAINS != null) {
-      var __ALLOWED_DOMAINS = new StringOffset[_o.ALLOWED_DOMAINS.Count];
-      for (var _j = 0; _j < __ALLOWED_DOMAINS.Length; ++_j) { __ALLOWED_DOMAINS[_j] = builder.CreateString(_o.ALLOWED_DOMAINS[_j]); }
-      _ALLOWED_DOMAINS = CreateALLOWED_DOMAINSVector(builder, __ALLOWED_DOMAINS);
-    }
     var _MIN_PERMISSIONS = default(VectorOffset);
     if (_o.MIN_PERMISSIONS != null) {
       var __MIN_PERMISSIONS = new StringOffset[_o.MIN_PERMISSIONS.Count];
@@ -839,7 +820,6 @@ public struct PLG : IFlatbufferObject
       _o.ENCRYPTED,
       _REQUIRED_SCOPE,
       _KEY_ID,
-      _ALLOWED_DOMAINS,
       _o.MAX_GRANT_TIMEOUT_MS,
       _MIN_PERMISSIONS,
       _o.CREATED_AT,
@@ -897,7 +877,6 @@ public class PLGT
   public bool ENCRYPTED { get; set; }
   public string REQUIRED_SCOPE { get; set; }
   public string KEY_ID { get; set; }
-  public List<string> ALLOWED_DOMAINS { get; set; }
   public ulong MAX_GRANT_TIMEOUT_MS { get; set; }
   public List<string> MIN_PERMISSIONS { get; set; }
   public ulong CREATED_AT { get; set; }
@@ -952,7 +931,6 @@ public class PLGT
     this.ENCRYPTED = true;
     this.REQUIRED_SCOPE = null;
     this.KEY_ID = null;
-    this.ALLOWED_DOMAINS = null;
     this.MAX_GRANT_TIMEOUT_MS = 0;
     this.MIN_PERMISSIONS = null;
     this.CREATED_AT = 0;
@@ -1022,30 +1000,29 @@ static public class PLGVerify
       && verifier.VerifyField(tablePos, 56 /*ENCRYPTED*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 58 /*REQUIRED_SCOPE*/, false)
       && verifier.VerifyString(tablePos, 60 /*KEY_ID*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 62 /*ALLOWED_DOMAINS*/, false)
-      && verifier.VerifyField(tablePos, 64 /*MAX_GRANT_TIMEOUT_MS*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 66 /*MIN_PERMISSIONS*/, false)
-      && verifier.VerifyField(tablePos, 68 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
-      && verifier.VerifyString(tablePos, 72 /*DOCUMENTATION_URL*/, false)
-      && verifier.VerifyString(tablePos, 74 /*CHANGELOG_URL*/, false)
-      && verifier.VerifyString(tablePos, 76 /*ICON_URL*/, false)
-      && verifier.VerifyString(tablePos, 78 /*LICENSE*/, false)
-      && verifier.VerifyField(tablePos, 80 /*PAYMENT_MODEL*/, 1 /*purchaseTier*/, 1, false)
-      && verifier.VerifyField(tablePos, 82 /*PRICE_USD_CENTS*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 84 /*SUBSCRIPTION_PERIOD_DAYS*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 86 /*ACCEPTED_PAYMENT_METHODS*/, false)
-      && verifier.VerifyField(tablePos, 88 /*LISTING_STATUS*/, 1 /*publicationState*/, 1, false)
-      && verifier.VerifyVectorOfData(tablePos, 90 /*SIGNATURE*/, 1 /*byte*/, false)
-      && verifier.VerifyVectorOfData(tablePos, 92 /*INVOKE_SURFACES*/, 1 /*invokeSurfaceKind*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 94 /*METHODS*/, PLGMethodManifestVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 96 /*HOST_CAPABILITIES*/, PLGHostCapabilityVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 98 /*TIMERS*/, PLGTimerSpecVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 100 /*PROTOCOLS*/, PLGProtocolSpecVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 102 /*SCHEMAS_USED*/, FlatBufferTypeRefVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 104 /*BUILD_ARTIFACTS*/, PLGBuildArtifactVerify.Verify, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 106 /*RUNTIME_TARGETS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 108 /*ALLOWED_XPUBS*/, false)
+      && verifier.VerifyField(tablePos, 62 /*MAX_GRANT_TIMEOUT_MS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 64 /*MIN_PERMISSIONS*/, false)
+      && verifier.VerifyField(tablePos, 66 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 70 /*DOCUMENTATION_URL*/, false)
+      && verifier.VerifyString(tablePos, 72 /*CHANGELOG_URL*/, false)
+      && verifier.VerifyString(tablePos, 74 /*ICON_URL*/, false)
+      && verifier.VerifyString(tablePos, 76 /*LICENSE*/, false)
+      && verifier.VerifyField(tablePos, 78 /*PAYMENT_MODEL*/, 1 /*purchaseTier*/, 1, false)
+      && verifier.VerifyField(tablePos, 80 /*PRICE_USD_CENTS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 82 /*SUBSCRIPTION_PERIOD_DAYS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 84 /*ACCEPTED_PAYMENT_METHODS*/, false)
+      && verifier.VerifyField(tablePos, 86 /*LISTING_STATUS*/, 1 /*publicationState*/, 1, false)
+      && verifier.VerifyVectorOfData(tablePos, 88 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 90 /*INVOKE_SURFACES*/, 1 /*invokeSurfaceKind*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 92 /*METHODS*/, PLGMethodManifestVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 94 /*HOST_CAPABILITIES*/, PLGHostCapabilityVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 96 /*TIMERS*/, PLGTimerSpecVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 98 /*PROTOCOLS*/, PLGProtocolSpecVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 100 /*SCHEMAS_USED*/, FlatBufferTypeRefVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 102 /*BUILD_ARTIFACTS*/, PLGBuildArtifactVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 104 /*RUNTIME_TARGETS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 106 /*ALLOWED_XPUBS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

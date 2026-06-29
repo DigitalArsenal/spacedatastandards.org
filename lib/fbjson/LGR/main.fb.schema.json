@@ -1440,14 +1440,6 @@
           "description": "Provider-local identifier for the module content key",
           "x-flatbuffer-type": "string"
         },
-        "ALLOWED_DOMAINS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.",
-          "x-flatbuffer-type": "[string]"
-        },
         "MAX_GRANT_TIMEOUT_MS": {
           "type": "integer",
           "description": "Maximum grant timeout allowed for this module publication",
@@ -1628,7 +1620,7 @@
           "items": {
             "type": "string"
           },
-          "description": "xpub in this list is granted. Empty list = no xpub allowlist gate.",
+          "description": "identity authorization). Empty list = no xpub allowlist gate.",
           "x-flatbuffer-type": "[string]"
         }
       },

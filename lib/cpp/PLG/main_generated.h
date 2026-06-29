@@ -1615,30 +1615,29 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ENCRYPTED = 56,
     VT_REQUIRED_SCOPE = 58,
     VT_KEY_ID = 60,
-    VT_ALLOWED_DOMAINS = 62,
-    VT_MAX_GRANT_TIMEOUT_MS = 64,
-    VT_MIN_PERMISSIONS = 66,
-    VT_CREATED_AT = 68,
-    VT_UPDATED_AT = 70,
-    VT_DOCUMENTATION_URL = 72,
-    VT_CHANGELOG_URL = 74,
-    VT_ICON_URL = 76,
-    VT_LICENSE = 78,
-    VT_PAYMENT_MODEL = 80,
-    VT_PRICE_USD_CENTS = 82,
-    VT_SUBSCRIPTION_PERIOD_DAYS = 84,
-    VT_ACCEPTED_PAYMENT_METHODS = 86,
-    VT_LISTING_STATUS = 88,
-    VT_SIGNATURE = 90,
-    VT_INVOKE_SURFACES = 92,
-    VT_METHODS = 94,
-    VT_HOST_CAPABILITIES = 96,
-    VT_TIMERS = 98,
-    VT_PROTOCOLS = 100,
-    VT_SCHEMAS_USED = 102,
-    VT_BUILD_ARTIFACTS = 104,
-    VT_RUNTIME_TARGETS = 106,
-    VT_ALLOWED_XPUBS = 108
+    VT_MAX_GRANT_TIMEOUT_MS = 62,
+    VT_MIN_PERMISSIONS = 64,
+    VT_CREATED_AT = 66,
+    VT_UPDATED_AT = 68,
+    VT_DOCUMENTATION_URL = 70,
+    VT_CHANGELOG_URL = 72,
+    VT_ICON_URL = 74,
+    VT_LICENSE = 76,
+    VT_PAYMENT_MODEL = 78,
+    VT_PRICE_USD_CENTS = 80,
+    VT_SUBSCRIPTION_PERIOD_DAYS = 82,
+    VT_ACCEPTED_PAYMENT_METHODS = 84,
+    VT_LISTING_STATUS = 86,
+    VT_SIGNATURE = 88,
+    VT_INVOKE_SURFACES = 90,
+    VT_METHODS = 92,
+    VT_HOST_CAPABILITIES = 94,
+    VT_TIMERS = 96,
+    VT_PROTOCOLS = 98,
+    VT_SCHEMAS_USED = 100,
+    VT_BUILD_ARTIFACTS = 102,
+    VT_RUNTIME_TARGETS = 104,
+    VT_ALLOWED_XPUBS = 106
   };
   /// Unique identifier for the plugin
   const ::flatbuffers::String *PLUGIN_ID() const {
@@ -1756,10 +1755,6 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *KEY_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ID);
   }
-  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALLOWED_DOMAINS);
-  }
   /// Maximum grant timeout allowed for this module publication
   uint64_t MAX_GRANT_TIMEOUT_MS() const {
     return GetField<uint64_t>(VT_MAX_GRANT_TIMEOUT_MS, 0);
@@ -1853,9 +1848,9 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RUNTIME_TARGETS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RUNTIME_TARGETS);
   }
-  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+  /// a requester whose verified EPM binds an xpub in this list is granted (PKI
+  /// identity authorization). Empty list = no xpub allowlist gate.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_XPUBS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALLOWED_XPUBS);
   }
@@ -1922,9 +1917,6 @@ struct PLG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(REQUIRED_SCOPE()) &&
            VerifyOffset(verifier, VT_KEY_ID) &&
            verifier.VerifyString(KEY_ID()) &&
-           VerifyOffset(verifier, VT_ALLOWED_DOMAINS) &&
-           verifier.VerifyVector(ALLOWED_DOMAINS()) &&
-           verifier.VerifyVectorOfStrings(ALLOWED_DOMAINS()) &&
            VerifyField<uint64_t>(verifier, VT_MAX_GRANT_TIMEOUT_MS, 8) &&
            VerifyOffset(verifier, VT_MIN_PERMISSIONS) &&
            verifier.VerifyVector(MIN_PERMISSIONS()) &&
@@ -2069,9 +2061,6 @@ struct PLGBuilder {
   void add_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> KEY_ID) {
     fbb_.AddOffset(PLG::VT_KEY_ID, KEY_ID);
   }
-  void add_ALLOWED_DOMAINS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS) {
-    fbb_.AddOffset(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
-  }
   void add_MAX_GRANT_TIMEOUT_MS(uint64_t MAX_GRANT_TIMEOUT_MS) {
     fbb_.AddElement<uint64_t>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
   }
@@ -2186,7 +2175,6 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
     bool ENCRYPTED = true,
     ::flatbuffers::Offset<::flatbuffers::String> REQUIRED_SCOPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALLOWED_DOMAINS = 0,
     uint64_t MAX_GRANT_TIMEOUT_MS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MIN_PERMISSIONS = 0,
     uint64_t CREATED_AT = 0,
@@ -2234,7 +2222,6 @@ inline ::flatbuffers::Offset<PLG> CreatePLG(
   builder_.add_CHANGELOG_URL(CHANGELOG_URL);
   builder_.add_DOCUMENTATION_URL(DOCUMENTATION_URL);
   builder_.add_MIN_PERMISSIONS(MIN_PERMISSIONS);
-  builder_.add_ALLOWED_DOMAINS(ALLOWED_DOMAINS);
   builder_.add_KEY_ID(KEY_ID);
   builder_.add_REQUIRED_SCOPE(REQUIRED_SCOPE);
   builder_.add_PROVIDER_EPM_CID(PROVIDER_EPM_CID);
@@ -2298,7 +2285,6 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
     bool ENCRYPTED = true,
     const char *REQUIRED_SCOPE = nullptr,
     const char *KEY_ID = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALLOWED_DOMAINS = nullptr,
     uint64_t MAX_GRANT_TIMEOUT_MS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MIN_PERMISSIONS = nullptr,
     uint64_t CREATED_AT = 0,
@@ -2346,7 +2332,6 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
   auto PROVIDER_EPM_CID__ = PROVIDER_EPM_CID ? _fbb.CreateString(PROVIDER_EPM_CID) : 0;
   auto REQUIRED_SCOPE__ = REQUIRED_SCOPE ? _fbb.CreateString(REQUIRED_SCOPE) : 0;
   auto KEY_ID__ = KEY_ID ? _fbb.CreateString(KEY_ID) : 0;
-  auto ALLOWED_DOMAINS__ = ALLOWED_DOMAINS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALLOWED_DOMAINS) : 0;
   auto MIN_PERMISSIONS__ = MIN_PERMISSIONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MIN_PERMISSIONS) : 0;
   auto DOCUMENTATION_URL__ = DOCUMENTATION_URL ? _fbb.CreateString(DOCUMENTATION_URL) : 0;
   auto CHANGELOG_URL__ = CHANGELOG_URL ? _fbb.CreateString(CHANGELOG_URL) : 0;
@@ -2394,7 +2379,6 @@ inline ::flatbuffers::Offset<PLG> CreatePLGDirect(
       ENCRYPTED,
       REQUIRED_SCOPE__,
       KEY_ID__,
-      ALLOWED_DOMAINS__,
       MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS__,
       CREATED_AT,

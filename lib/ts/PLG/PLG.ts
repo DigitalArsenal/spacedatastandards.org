@@ -370,25 +370,10 @@ KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
- */
-ALLOWED_DOMAINS(index: number):string
-ALLOWED_DOMAINS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ALLOWED_DOMAINS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-allowedDomainsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-/**
  * Maximum grant timeout allowed for this module publication
  */
 MAX_GRANT_TIMEOUT_MS():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -398,12 +383,12 @@ MAX_GRANT_TIMEOUT_MS():bigint {
 MIN_PERMISSIONS(index: number):string
 MIN_PERMISSIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MIN_PERMISSIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 minPermissionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -411,7 +396,7 @@ minPermissionsLength():number {
  * Unix timestamp when plugin was created
  */
 CREATED_AT():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -419,7 +404,7 @@ CREATED_AT():bigint {
  * Unix timestamp when plugin was last updated
  */
 UPDATED_AT():bigint {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
@@ -429,7 +414,7 @@ UPDATED_AT():bigint {
 DOCUMENTATION_URL():string|null
 DOCUMENTATION_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DOCUMENTATION_URL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -439,7 +424,7 @@ DOCUMENTATION_URL(optionalEncoding?:any):string|Uint8Array|null {
 CHANGELOG_URL():string|null
 CHANGELOG_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CHANGELOG_URL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -449,7 +434,7 @@ CHANGELOG_URL(optionalEncoding?:any):string|Uint8Array|null {
 ICON_URL():string|null
 ICON_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ICON_URL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -459,7 +444,7 @@ ICON_URL(optionalEncoding?:any):string|Uint8Array|null {
 LICENSE():string|null
 LICENSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LICENSE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 78);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -467,7 +452,7 @@ LICENSE(optionalEncoding?:any):string|Uint8Array|null {
  * Commercial model used for storefront purchase flows
  */
 PAYMENT_MODEL():purchaseTier {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : purchaseTier.Free;
 }
 
@@ -475,7 +460,7 @@ PAYMENT_MODEL():purchaseTier {
  * Price in USD cents for one-time purchase or subscription period
  */
 PRICE_USD_CENTS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
+  const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -483,7 +468,7 @@ PRICE_USD_CENTS():number {
  * Subscription billing period length in days
  */
 SUBSCRIPTION_PERIOD_DAYS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
+  const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
@@ -493,12 +478,12 @@ SUBSCRIPTION_PERIOD_DAYS():number {
 ACCEPTED_PAYMENT_METHODS(index: number):string
 ACCEPTED_PAYMENT_METHODS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ACCEPTED_PAYMENT_METHODS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
+  const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 acceptedPaymentMethodsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
+  const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -506,7 +491,7 @@ acceptedPaymentMethodsLength():number {
  * Storefront publication state for this manifest version
  */
 LISTING_STATUS():publicationState {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
+  const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : publicationState.Public;
 }
 
@@ -514,17 +499,17 @@ LISTING_STATUS():publicationState {
  * Ed25519 signature from provider over manifest
  */
 SIGNATURE(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
 }
 
 signatureLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 signatureArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -533,17 +518,17 @@ signatureArray():Uint8Array|null {
  * MAY list both DIRECT and COMMAND when it supports both.
  */
 INVOKE_SURFACES(index: number):invokeSurfaceKind|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : null;
 }
 
 invokeSurfacesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 invokeSurfacesArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
+  const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
@@ -554,12 +539,12 @@ invokeSurfacesArray():Uint8Array|null {
  * invoke-surface detail including aligned-binary advertisement.
  */
 METHODS(index: number, obj?:PLGMethodManifest):PLGMethodManifest|null {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
+  const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? (obj || new PLGMethodManifest()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 methodsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
+  const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -568,12 +553,12 @@ methodsLength():number {
  * which is string-tagged metadata).
  */
 HOST_CAPABILITIES(index: number, obj?:PLGHostCapability):PLGHostCapability|null {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
+  const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? (obj || new PLGHostCapability()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 hostCapabilitiesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
+  const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -581,12 +566,12 @@ hostCapabilitiesLength():number {
  * Timer declarations for scheduled invocations.
  */
 TIMERS(index: number, obj?:PLGTimerSpec):PLGTimerSpec|null {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
+  const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? (obj || new PLGTimerSpec()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 timersLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
+  const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -594,12 +579,12 @@ timersLength():number {
  * Protocol handler declarations.
  */
 PROTOCOLS(index: number, obj?:PLGProtocolSpec):PLGProtocolSpec|null {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
+  const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? (obj || new PLGProtocolSpec()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 protocolsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
+  const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -607,12 +592,12 @@ protocolsLength():number {
  * FlatBuffer schemas this plugin depends on at the invoke surface.
  */
 SCHEMAS_USED(index: number, obj?:FlatBufferTypeRef):FlatBufferTypeRef|null {
-  const offset = this.bb!.__offset(this.bb_pos, 102);
+  const offset = this.bb!.__offset(this.bb_pos, 100);
   return offset ? (obj || new FlatBufferTypeRef()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 schemasUsedLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 102);
+  const offset = this.bb!.__offset(this.bb_pos, 100);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -620,12 +605,12 @@ schemasUsedLength():number {
  * Build artifacts emitted by the toolchain (WASM, bindings, etc.).
  */
 BUILD_ARTIFACTS(index: number, obj?:PLGBuildArtifact):PLGBuildArtifact|null {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
+  const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? (obj || new PLGBuildArtifact()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 buildArtifactsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
+  const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -635,34 +620,34 @@ buildArtifactsLength():number {
 RUNTIME_TARGETS(index: number):string
 RUNTIME_TARGETS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 RUNTIME_TARGETS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
+  const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 runtimeTargetsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
+  const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 /**
- * Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
- * PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
- * xpub in this list is granted. Empty list = no xpub allowlist gate.
+ * Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+ * a requester whose verified EPM binds an xpub in this list is granted (PKI
+ * identity authorization). Empty list = no xpub allowlist gate.
  */
 ALLOWED_XPUBS(index: number):string
 ALLOWED_XPUBS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ALLOWED_XPUBS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 108);
+  const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 allowedXpubsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 108);
+  const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(53);
+  builder.startObject(52);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -889,28 +874,12 @@ static addKeyId(builder:flatbuffers.Builder, KEY_IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(28, KEY_IDOffset, 0);
 }
 
-static addAllowedDomains(builder:flatbuffers.Builder, ALLOWED_DOMAINSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, ALLOWED_DOMAINSOffset, 0);
-}
-
-static createAllowedDomainsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startAllowedDomainsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addMaxGrantTimeoutMs(builder:flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS:bigint) {
-  builder.addFieldInt64(30, MAX_GRANT_TIMEOUT_MS, BigInt('0'));
+  builder.addFieldInt64(29, MAX_GRANT_TIMEOUT_MS, BigInt('0'));
 }
 
 static addMinPermissions(builder:flatbuffers.Builder, MIN_PERMISSIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, MIN_PERMISSIONSOffset, 0);
+  builder.addFieldOffset(30, MIN_PERMISSIONSOffset, 0);
 }
 
 static createMinPermissionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -926,43 +895,43 @@ static startMinPermissionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addCreatedAt(builder:flatbuffers.Builder, CREATED_AT:bigint) {
-  builder.addFieldInt64(32, CREATED_AT, BigInt('0'));
+  builder.addFieldInt64(31, CREATED_AT, BigInt('0'));
 }
 
 static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_AT:bigint) {
-  builder.addFieldInt64(33, UPDATED_AT, BigInt('0'));
+  builder.addFieldInt64(32, UPDATED_AT, BigInt('0'));
 }
 
 static addDocumentationUrl(builder:flatbuffers.Builder, DOCUMENTATION_URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(34, DOCUMENTATION_URLOffset, 0);
+  builder.addFieldOffset(33, DOCUMENTATION_URLOffset, 0);
 }
 
 static addChangelogUrl(builder:flatbuffers.Builder, CHANGELOG_URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(35, CHANGELOG_URLOffset, 0);
+  builder.addFieldOffset(34, CHANGELOG_URLOffset, 0);
 }
 
 static addIconUrl(builder:flatbuffers.Builder, ICON_URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(36, ICON_URLOffset, 0);
+  builder.addFieldOffset(35, ICON_URLOffset, 0);
 }
 
 static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(37, LICENSEOffset, 0);
+  builder.addFieldOffset(36, LICENSEOffset, 0);
 }
 
 static addPaymentModel(builder:flatbuffers.Builder, PAYMENT_MODEL:purchaseTier) {
-  builder.addFieldInt8(38, PAYMENT_MODEL, purchaseTier.Free);
+  builder.addFieldInt8(37, PAYMENT_MODEL, purchaseTier.Free);
 }
 
 static addPriceUsdCents(builder:flatbuffers.Builder, PRICE_USD_CENTS:number) {
-  builder.addFieldInt32(39, PRICE_USD_CENTS, 0);
+  builder.addFieldInt32(38, PRICE_USD_CENTS, 0);
 }
 
 static addSubscriptionPeriodDays(builder:flatbuffers.Builder, SUBSCRIPTION_PERIOD_DAYS:number) {
-  builder.addFieldInt32(40, SUBSCRIPTION_PERIOD_DAYS, 0);
+  builder.addFieldInt32(39, SUBSCRIPTION_PERIOD_DAYS, 0);
 }
 
 static addAcceptedPaymentMethods(builder:flatbuffers.Builder, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, ACCEPTED_PAYMENT_METHODSOffset, 0);
+  builder.addFieldOffset(40, ACCEPTED_PAYMENT_METHODSOffset, 0);
 }
 
 static createAcceptedPaymentMethodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -978,11 +947,11 @@ static startAcceptedPaymentMethodsVector(builder:flatbuffers.Builder, numElems:n
 }
 
 static addListingStatus(builder:flatbuffers.Builder, LISTING_STATUS:publicationState) {
-  builder.addFieldInt8(42, LISTING_STATUS, publicationState.Public);
+  builder.addFieldInt8(41, LISTING_STATUS, publicationState.Public);
 }
 
 static addSignature(builder:flatbuffers.Builder, SIGNATUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, SIGNATUREOffset, 0);
+  builder.addFieldOffset(42, SIGNATUREOffset, 0);
 }
 
 static createSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
@@ -998,7 +967,7 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addInvokeSurfaces(builder:flatbuffers.Builder, INVOKE_SURFACESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(44, INVOKE_SURFACESOffset, 0);
+  builder.addFieldOffset(43, INVOKE_SURFACESOffset, 0);
 }
 
 static createInvokeSurfacesVector(builder:flatbuffers.Builder, data:invokeSurfaceKind[]):flatbuffers.Offset {
@@ -1014,7 +983,7 @@ static startInvokeSurfacesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMethods(builder:flatbuffers.Builder, METHODSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(45, METHODSOffset, 0);
+  builder.addFieldOffset(44, METHODSOffset, 0);
 }
 
 static createMethodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1030,7 +999,7 @@ static startMethodsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addHostCapabilities(builder:flatbuffers.Builder, HOST_CAPABILITIESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(46, HOST_CAPABILITIESOffset, 0);
+  builder.addFieldOffset(45, HOST_CAPABILITIESOffset, 0);
 }
 
 static createHostCapabilitiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1046,7 +1015,7 @@ static startHostCapabilitiesVector(builder:flatbuffers.Builder, numElems:number)
 }
 
 static addTimers(builder:flatbuffers.Builder, TIMERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(47, TIMERSOffset, 0);
+  builder.addFieldOffset(46, TIMERSOffset, 0);
 }
 
 static createTimersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1062,7 +1031,7 @@ static startTimersVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addProtocols(builder:flatbuffers.Builder, PROTOCOLSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(48, PROTOCOLSOffset, 0);
+  builder.addFieldOffset(47, PROTOCOLSOffset, 0);
 }
 
 static createProtocolsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1078,7 +1047,7 @@ static startProtocolsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSchemasUsed(builder:flatbuffers.Builder, SCHEMAS_USEDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(49, SCHEMAS_USEDOffset, 0);
+  builder.addFieldOffset(48, SCHEMAS_USEDOffset, 0);
 }
 
 static createSchemasUsedVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1094,7 +1063,7 @@ static startSchemasUsedVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addBuildArtifacts(builder:flatbuffers.Builder, BUILD_ARTIFACTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(50, BUILD_ARTIFACTSOffset, 0);
+  builder.addFieldOffset(49, BUILD_ARTIFACTSOffset, 0);
 }
 
 static createBuildArtifactsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1110,7 +1079,7 @@ static startBuildArtifactsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addRuntimeTargets(builder:flatbuffers.Builder, RUNTIME_TARGETSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(51, RUNTIME_TARGETSOffset, 0);
+  builder.addFieldOffset(50, RUNTIME_TARGETSOffset, 0);
 }
 
 static createRuntimeTargetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1126,7 +1095,7 @@ static startRuntimeTargetsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addAllowedXpubs(builder:flatbuffers.Builder, ALLOWED_XPUBSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(52, ALLOWED_XPUBSOffset, 0);
+  builder.addFieldOffset(51, ALLOWED_XPUBSOffset, 0);
 }
 
 static createAllowedXpubsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1157,7 +1126,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, ALLOWED_DOMAINSOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -1188,7 +1157,6 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addEncrypted(builder, ENCRYPTED);
   PLG.addRequiredScope(builder, REQUIRED_SCOPEOffset);
   PLG.addKeyId(builder, KEY_IDOffset);
-  PLG.addAllowedDomains(builder, ALLOWED_DOMAINSOffset);
   PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
   PLG.addMinPermissions(builder, MIN_PERMISSIONSOffset);
   PLG.addCreatedAt(builder, CREATED_AT);
@@ -1246,7 +1214,6 @@ unpack(): PLGT {
     this.ENCRYPTED(),
     this.REQUIRED_SCOPE(),
     this.KEY_ID(),
-    this.bb!.createScalarList<string>(this.ALLOWED_DOMAINS.bind(this), this.allowedDomainsLength()),
     this.MAX_GRANT_TIMEOUT_MS(),
     this.bb!.createScalarList<string>(this.MIN_PERMISSIONS.bind(this), this.minPermissionsLength()),
     this.CREATED_AT(),
@@ -1304,7 +1271,6 @@ unpackTo(_o: PLGT): void {
   _o.ENCRYPTED = this.ENCRYPTED();
   _o.REQUIRED_SCOPE = this.REQUIRED_SCOPE();
   _o.KEY_ID = this.KEY_ID();
-  _o.ALLOWED_DOMAINS = this.bb!.createScalarList<string>(this.ALLOWED_DOMAINS.bind(this), this.allowedDomainsLength());
   _o.MAX_GRANT_TIMEOUT_MS = this.MAX_GRANT_TIMEOUT_MS();
   _o.MIN_PERMISSIONS = this.bb!.createScalarList<string>(this.MIN_PERMISSIONS.bind(this), this.minPermissionsLength());
   _o.CREATED_AT = this.CREATED_AT();
@@ -1362,7 +1328,6 @@ constructor(
   public ENCRYPTED: boolean = true,
   public REQUIRED_SCOPE: string|Uint8Array|null = null,
   public KEY_ID: string|Uint8Array|null = null,
-  public ALLOWED_DOMAINS: (string)[] = [],
   public MAX_GRANT_TIMEOUT_MS: bigint = BigInt('0'),
   public MIN_PERMISSIONS: (string)[] = [],
   public CREATED_AT: bigint = BigInt('0'),
@@ -1414,7 +1379,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROVIDER_EPM_CID = (this.PROVIDER_EPM_CID !== null ? builder.createString(this.PROVIDER_EPM_CID!) : 0);
   const REQUIRED_SCOPE = (this.REQUIRED_SCOPE !== null ? builder.createString(this.REQUIRED_SCOPE!) : 0);
   const KEY_ID = (this.KEY_ID !== null ? builder.createString(this.KEY_ID!) : 0);
-  const ALLOWED_DOMAINS = PLG.createAllowedDomainsVector(builder, builder.createObjectOffsetList(this.ALLOWED_DOMAINS));
   const MIN_PERMISSIONS = PLG.createMinPermissionsVector(builder, builder.createObjectOffsetList(this.MIN_PERMISSIONS));
   const DOCUMENTATION_URL = (this.DOCUMENTATION_URL !== null ? builder.createString(this.DOCUMENTATION_URL!) : 0);
   const CHANGELOG_URL = (this.CHANGELOG_URL !== null ? builder.createString(this.CHANGELOG_URL!) : 0);
@@ -1462,7 +1426,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ENCRYPTED,
     REQUIRED_SCOPE,
     KEY_ID,
-    ALLOWED_DOMAINS,
     this.MAX_GRANT_TIMEOUT_MS,
     MIN_PERMISSIONS,
     this.CREATED_AT,

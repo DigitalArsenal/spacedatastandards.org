@@ -392,33 +392,13 @@ class PLG extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getALLOWED_DOMAINS($j)
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getALLOWED_DOMAINSLength()
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
     /// Maximum grant timeout allowed for this module publication
     /**
      * @return ulong
      */
     public function getMAX_GRANT_TIMEOUT_MS()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
@@ -429,7 +409,7 @@ class PLG extends Table
      */
     public function getMIN_PERMISSIONS($j)
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -438,7 +418,7 @@ class PLG extends Table
      */
     public function getMIN_PERMISSIONSLength()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -448,7 +428,7 @@ class PLG extends Table
      */
     public function getCREATED_AT()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
@@ -458,35 +438,35 @@ class PLG extends Table
      */
     public function getUPDATED_AT()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// URL to plugin documentation
     public function getDOCUMENTATION_URL()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// URL to plugin changelog or release notes
     public function getCHANGELOG_URL()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// URL to plugin icon/logo
     public function getICON_URL()
     {
-        $o = $this->__offset(76);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// License identifier (SPDX format)
     public function getLICENSE()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -496,7 +476,7 @@ class PLG extends Table
      */
     public function getPAYMENT_MODEL()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \purchaseTier::Free;
     }
 
@@ -506,7 +486,7 @@ class PLG extends Table
      */
     public function getPRICE_USD_CENTS()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -516,7 +496,7 @@ class PLG extends Table
      */
     public function getSUBSCRIPTION_PERIOD_DAYS()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
@@ -527,7 +507,7 @@ class PLG extends Table
      */
     public function getACCEPTED_PAYMENT_METHODS($j)
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -536,7 +516,7 @@ class PLG extends Table
      */
     public function getACCEPTED_PAYMENT_METHODSLength()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -546,7 +526,7 @@ class PLG extends Table
      */
     public function getLISTING_STATUS()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \publicationState::Public;
     }
 
@@ -557,7 +537,7 @@ class PLG extends Table
      */
     public function getSIGNATURE($j)
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
     }
 
@@ -566,7 +546,7 @@ class PLG extends Table
      */
     public function getSIGNATURELength()
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -575,7 +555,7 @@ class PLG extends Table
      */
     public function getSIGNATUREBytes()
     {
-        return $this->__vector_as_bytes(90);
+        return $this->__vector_as_bytes(88);
     }
 
     /// Canonical invoke surfaces this artifact exposes. A single plugin
@@ -586,7 +566,7 @@ class PLG extends Table
      */
     public function getINVOKE_SURFACES($j)
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : \invokeSurfaceKind::DIRECT;
     }
 
@@ -595,7 +575,7 @@ class PLG extends Table
      */
     public function getINVOKE_SURFACESLength()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -604,7 +584,7 @@ class PLG extends Table
      */
     public function getINVOKE_SURFACESBytes()
     {
-        return $this->__vector_as_bytes(92);
+        return $this->__vector_as_bytes(90);
     }
 
     /// Rich per-method invoke manifests (port shape, drain semantics,
@@ -616,7 +596,7 @@ class PLG extends Table
      */
     public function getMETHODS($j)
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(92);
         $obj = new PLGMethodManifest();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -626,7 +606,7 @@ class PLG extends Table
      */
     public function getMETHODSLength()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -637,7 +617,7 @@ class PLG extends Table
      */
     public function getHOST_CAPABILITIES($j)
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(94);
         $obj = new PLGHostCapability();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -647,7 +627,7 @@ class PLG extends Table
      */
     public function getHOST_CAPABILITIESLength()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -657,7 +637,7 @@ class PLG extends Table
      */
     public function getTIMERS($j)
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(96);
         $obj = new PLGTimerSpec();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -667,7 +647,7 @@ class PLG extends Table
      */
     public function getTIMERSLength()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -677,7 +657,7 @@ class PLG extends Table
      */
     public function getPROTOCOLS($j)
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(98);
         $obj = new PLGProtocolSpec();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -687,7 +667,7 @@ class PLG extends Table
      */
     public function getPROTOCOLSLength()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -697,7 +677,7 @@ class PLG extends Table
      */
     public function getSCHEMAS_USED($j)
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(100);
         $obj = new FlatBufferTypeRef();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -707,7 +687,7 @@ class PLG extends Table
      */
     public function getSCHEMAS_USEDLength()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(100);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -717,7 +697,7 @@ class PLG extends Table
      */
     public function getBUILD_ARTIFACTS($j)
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(102);
         $obj = new PLGBuildArtifact();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -727,7 +707,7 @@ class PLG extends Table
      */
     public function getBUILD_ARTIFACTSLength()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -738,7 +718,7 @@ class PLG extends Table
      */
     public function getRUNTIME_TARGETS($j)
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -747,20 +727,20 @@ class PLG extends Table
      */
     public function getRUNTIME_TARGETSLength()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-    /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-    /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+    /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+    /// a requester whose verified EPM binds an xpub in this list is granted (PKI
+    /// identity authorization). Empty list = no xpub allowlist gate.
     /**
      * @param int offset
      * @return string
      */
     public function getALLOWED_XPUBS($j)
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -769,7 +749,7 @@ class PLG extends Table
      */
     public function getALLOWED_XPUBSLength()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -779,16 +759,16 @@ class PLG extends Table
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(53);
+        $builder->StartObject(52);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $ALLOWED_DOMAINS, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS)
     {
-        $builder->startObject(53);
+        $builder->startObject(52);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -818,7 +798,6 @@ class PLG extends Table
         self::addENCRYPTED($builder, $ENCRYPTED);
         self::addREQUIRED_SCOPE($builder, $REQUIRED_SCOPE);
         self::addKEY_ID($builder, $KEY_ID);
-        self::addALLOWED_DOMAINS($builder, $ALLOWED_DOMAINS);
         self::addMAX_GRANT_TIMEOUT_MS($builder, $MAX_GRANT_TIMEOUT_MS);
         self::addMIN_PERMISSIONS($builder, $MIN_PERMISSIONS);
         self::addCREATED_AT($builder, $CREATED_AT);
@@ -1357,46 +1336,12 @@ class PLG extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addALLOWED_DOMAINS(FlatBufferBuilder $builder, $ALLOWED_DOMAINS)
-    {
-        $builder->addOffsetX(29, $ALLOWED_DOMAINS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createALLOWED_DOMAINSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startALLOWED_DOMAINSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param ulong
      * @return void
      */
     public static function addMAX_GRANT_TIMEOUT_MS(FlatBufferBuilder $builder, $MAX_GRANT_TIMEOUT_MS)
     {
-        $builder->addUlongX(30, $MAX_GRANT_TIMEOUT_MS, 0);
+        $builder->addUlongX(29, $MAX_GRANT_TIMEOUT_MS, 0);
     }
 
     /**
@@ -1406,7 +1351,7 @@ class PLG extends Table
      */
     public static function addMIN_PERMISSIONS(FlatBufferBuilder $builder, $MIN_PERMISSIONS)
     {
-        $builder->addOffsetX(31, $MIN_PERMISSIONS, 0);
+        $builder->addOffsetX(30, $MIN_PERMISSIONS, 0);
     }
 
     /**
@@ -1440,7 +1385,7 @@ class PLG extends Table
      */
     public static function addCREATED_AT(FlatBufferBuilder $builder, $CREATED_AT)
     {
-        $builder->addUlongX(32, $CREATED_AT, 0);
+        $builder->addUlongX(31, $CREATED_AT, 0);
     }
 
     /**
@@ -1450,7 +1395,7 @@ class PLG extends Table
      */
     public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
     {
-        $builder->addUlongX(33, $UPDATED_AT, 0);
+        $builder->addUlongX(32, $UPDATED_AT, 0);
     }
 
     /**
@@ -1460,7 +1405,7 @@ class PLG extends Table
      */
     public static function addDOCUMENTATION_URL(FlatBufferBuilder $builder, $DOCUMENTATION_URL)
     {
-        $builder->addOffsetX(34, $DOCUMENTATION_URL, 0);
+        $builder->addOffsetX(33, $DOCUMENTATION_URL, 0);
     }
 
     /**
@@ -1470,7 +1415,7 @@ class PLG extends Table
      */
     public static function addCHANGELOG_URL(FlatBufferBuilder $builder, $CHANGELOG_URL)
     {
-        $builder->addOffsetX(35, $CHANGELOG_URL, 0);
+        $builder->addOffsetX(34, $CHANGELOG_URL, 0);
     }
 
     /**
@@ -1480,7 +1425,7 @@ class PLG extends Table
      */
     public static function addICON_URL(FlatBufferBuilder $builder, $ICON_URL)
     {
-        $builder->addOffsetX(36, $ICON_URL, 0);
+        $builder->addOffsetX(35, $ICON_URL, 0);
     }
 
     /**
@@ -1490,7 +1435,7 @@ class PLG extends Table
      */
     public static function addLICENSE(FlatBufferBuilder $builder, $LICENSE)
     {
-        $builder->addOffsetX(37, $LICENSE, 0);
+        $builder->addOffsetX(36, $LICENSE, 0);
     }
 
     /**
@@ -1500,7 +1445,7 @@ class PLG extends Table
      */
     public static function addPAYMENT_MODEL(FlatBufferBuilder $builder, $PAYMENT_MODEL)
     {
-        $builder->addSbyteX(38, $PAYMENT_MODEL, 0);
+        $builder->addSbyteX(37, $PAYMENT_MODEL, 0);
     }
 
     /**
@@ -1510,7 +1455,7 @@ class PLG extends Table
      */
     public static function addPRICE_USD_CENTS(FlatBufferBuilder $builder, $PRICE_USD_CENTS)
     {
-        $builder->addUintX(39, $PRICE_USD_CENTS, 0);
+        $builder->addUintX(38, $PRICE_USD_CENTS, 0);
     }
 
     /**
@@ -1520,7 +1465,7 @@ class PLG extends Table
      */
     public static function addSUBSCRIPTION_PERIOD_DAYS(FlatBufferBuilder $builder, $SUBSCRIPTION_PERIOD_DAYS)
     {
-        $builder->addUintX(40, $SUBSCRIPTION_PERIOD_DAYS, 0);
+        $builder->addUintX(39, $SUBSCRIPTION_PERIOD_DAYS, 0);
     }
 
     /**
@@ -1530,7 +1475,7 @@ class PLG extends Table
      */
     public static function addACCEPTED_PAYMENT_METHODS(FlatBufferBuilder $builder, $ACCEPTED_PAYMENT_METHODS)
     {
-        $builder->addOffsetX(41, $ACCEPTED_PAYMENT_METHODS, 0);
+        $builder->addOffsetX(40, $ACCEPTED_PAYMENT_METHODS, 0);
     }
 
     /**
@@ -1564,7 +1509,7 @@ class PLG extends Table
      */
     public static function addLISTING_STATUS(FlatBufferBuilder $builder, $LISTING_STATUS)
     {
-        $builder->addSbyteX(42, $LISTING_STATUS, 0);
+        $builder->addSbyteX(41, $LISTING_STATUS, 0);
     }
 
     /**
@@ -1574,7 +1519,7 @@ class PLG extends Table
      */
     public static function addSIGNATURE(FlatBufferBuilder $builder, $SIGNATURE)
     {
-        $builder->addOffsetX(43, $SIGNATURE, 0);
+        $builder->addOffsetX(42, $SIGNATURE, 0);
     }
 
     /**
@@ -1608,7 +1553,7 @@ class PLG extends Table
      */
     public static function addINVOKE_SURFACES(FlatBufferBuilder $builder, $INVOKE_SURFACES)
     {
-        $builder->addOffsetX(44, $INVOKE_SURFACES, 0);
+        $builder->addOffsetX(43, $INVOKE_SURFACES, 0);
     }
 
     /**
@@ -1642,7 +1587,7 @@ class PLG extends Table
      */
     public static function addMETHODS(FlatBufferBuilder $builder, $METHODS)
     {
-        $builder->addOffsetX(45, $METHODS, 0);
+        $builder->addOffsetX(44, $METHODS, 0);
     }
 
     /**
@@ -1676,7 +1621,7 @@ class PLG extends Table
      */
     public static function addHOST_CAPABILITIES(FlatBufferBuilder $builder, $HOST_CAPABILITIES)
     {
-        $builder->addOffsetX(46, $HOST_CAPABILITIES, 0);
+        $builder->addOffsetX(45, $HOST_CAPABILITIES, 0);
     }
 
     /**
@@ -1710,7 +1655,7 @@ class PLG extends Table
      */
     public static function addTIMERS(FlatBufferBuilder $builder, $TIMERS)
     {
-        $builder->addOffsetX(47, $TIMERS, 0);
+        $builder->addOffsetX(46, $TIMERS, 0);
     }
 
     /**
@@ -1744,7 +1689,7 @@ class PLG extends Table
      */
     public static function addPROTOCOLS(FlatBufferBuilder $builder, $PROTOCOLS)
     {
-        $builder->addOffsetX(48, $PROTOCOLS, 0);
+        $builder->addOffsetX(47, $PROTOCOLS, 0);
     }
 
     /**
@@ -1778,7 +1723,7 @@ class PLG extends Table
      */
     public static function addSCHEMAS_USED(FlatBufferBuilder $builder, $SCHEMAS_USED)
     {
-        $builder->addOffsetX(49, $SCHEMAS_USED, 0);
+        $builder->addOffsetX(48, $SCHEMAS_USED, 0);
     }
 
     /**
@@ -1812,7 +1757,7 @@ class PLG extends Table
      */
     public static function addBUILD_ARTIFACTS(FlatBufferBuilder $builder, $BUILD_ARTIFACTS)
     {
-        $builder->addOffsetX(50, $BUILD_ARTIFACTS, 0);
+        $builder->addOffsetX(49, $BUILD_ARTIFACTS, 0);
     }
 
     /**
@@ -1846,7 +1791,7 @@ class PLG extends Table
      */
     public static function addRUNTIME_TARGETS(FlatBufferBuilder $builder, $RUNTIME_TARGETS)
     {
-        $builder->addOffsetX(51, $RUNTIME_TARGETS, 0);
+        $builder->addOffsetX(50, $RUNTIME_TARGETS, 0);
     }
 
     /**
@@ -1880,7 +1825,7 @@ class PLG extends Table
      */
     public static function addALLOWED_XPUBS(FlatBufferBuilder $builder, $ALLOWED_XPUBS)
     {
-        $builder->addOffsetX(52, $ALLOWED_XPUBS, 0);
+        $builder->addOffsetX(51, $ALLOWED_XPUBS, 0);
     }
 
     /**

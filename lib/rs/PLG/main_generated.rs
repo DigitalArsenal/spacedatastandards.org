@@ -3309,30 +3309,29 @@ impl<'a> PLG<'a> {
   pub const VT_ENCRYPTED: ::flatbuffers::VOffsetT = 56;
   pub const VT_REQUIRED_SCOPE: ::flatbuffers::VOffsetT = 58;
   pub const VT_KEY_ID: ::flatbuffers::VOffsetT = 60;
-  pub const VT_ALLOWED_DOMAINS: ::flatbuffers::VOffsetT = 62;
-  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 64;
-  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 66;
-  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 68;
-  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 70;
-  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 72;
-  pub const VT_CHANGELOG_URL: ::flatbuffers::VOffsetT = 74;
-  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 76;
-  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 78;
-  pub const VT_PAYMENT_MODEL: ::flatbuffers::VOffsetT = 80;
-  pub const VT_PRICE_USD_CENTS: ::flatbuffers::VOffsetT = 82;
-  pub const VT_SUBSCRIPTION_PERIOD_DAYS: ::flatbuffers::VOffsetT = 84;
-  pub const VT_ACCEPTED_PAYMENT_METHODS: ::flatbuffers::VOffsetT = 86;
-  pub const VT_LISTING_STATUS: ::flatbuffers::VOffsetT = 88;
-  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 90;
-  pub const VT_INVOKE_SURFACES: ::flatbuffers::VOffsetT = 92;
-  pub const VT_METHODS: ::flatbuffers::VOffsetT = 94;
-  pub const VT_HOST_CAPABILITIES: ::flatbuffers::VOffsetT = 96;
-  pub const VT_TIMERS: ::flatbuffers::VOffsetT = 98;
-  pub const VT_PROTOCOLS: ::flatbuffers::VOffsetT = 100;
-  pub const VT_SCHEMAS_USED: ::flatbuffers::VOffsetT = 102;
-  pub const VT_BUILD_ARTIFACTS: ::flatbuffers::VOffsetT = 104;
-  pub const VT_RUNTIME_TARGETS: ::flatbuffers::VOffsetT = 106;
-  pub const VT_ALLOWED_XPUBS: ::flatbuffers::VOffsetT = 108;
+  pub const VT_MAX_GRANT_TIMEOUT_MS: ::flatbuffers::VOffsetT = 62;
+  pub const VT_MIN_PERMISSIONS: ::flatbuffers::VOffsetT = 64;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 66;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 68;
+  pub const VT_DOCUMENTATION_URL: ::flatbuffers::VOffsetT = 70;
+  pub const VT_CHANGELOG_URL: ::flatbuffers::VOffsetT = 72;
+  pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 74;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 76;
+  pub const VT_PAYMENT_MODEL: ::flatbuffers::VOffsetT = 78;
+  pub const VT_PRICE_USD_CENTS: ::flatbuffers::VOffsetT = 80;
+  pub const VT_SUBSCRIPTION_PERIOD_DAYS: ::flatbuffers::VOffsetT = 82;
+  pub const VT_ACCEPTED_PAYMENT_METHODS: ::flatbuffers::VOffsetT = 84;
+  pub const VT_LISTING_STATUS: ::flatbuffers::VOffsetT = 86;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 88;
+  pub const VT_INVOKE_SURFACES: ::flatbuffers::VOffsetT = 90;
+  pub const VT_METHODS: ::flatbuffers::VOffsetT = 92;
+  pub const VT_HOST_CAPABILITIES: ::flatbuffers::VOffsetT = 94;
+  pub const VT_TIMERS: ::flatbuffers::VOffsetT = 96;
+  pub const VT_PROTOCOLS: ::flatbuffers::VOffsetT = 98;
+  pub const VT_SCHEMAS_USED: ::flatbuffers::VOffsetT = 100;
+  pub const VT_BUILD_ARTIFACTS: ::flatbuffers::VOffsetT = 102;
+  pub const VT_RUNTIME_TARGETS: ::flatbuffers::VOffsetT = 104;
+  pub const VT_ALLOWED_XPUBS: ::flatbuffers::VOffsetT = 106;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3367,7 +3366,6 @@ impl<'a> PLG<'a> {
     if let Some(x) = args.CHANGELOG_URL { builder.add_CHANGELOG_URL(x); }
     if let Some(x) = args.DOCUMENTATION_URL { builder.add_DOCUMENTATION_URL(x); }
     if let Some(x) = args.MIN_PERMISSIONS { builder.add_MIN_PERMISSIONS(x); }
-    if let Some(x) = args.ALLOWED_DOMAINS { builder.add_ALLOWED_DOMAINS(x); }
     if let Some(x) = args.KEY_ID { builder.add_KEY_ID(x); }
     if let Some(x) = args.REQUIRED_SCOPE { builder.add_REQUIRED_SCOPE(x); }
     if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
@@ -3481,9 +3479,6 @@ impl<'a> PLG<'a> {
     let KEY_ID = self.KEY_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS().map(|x| {
-      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
-    });
     let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS();
     let MIN_PERMISSIONS = self.MIN_PERMISSIONS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
@@ -3569,7 +3564,6 @@ impl<'a> PLG<'a> {
       ENCRYPTED,
       REQUIRED_SCOPE,
       KEY_ID,
-      ALLOWED_DOMAINS,
       MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS,
       CREATED_AT,
@@ -3828,14 +3822,6 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLG::VT_KEY_ID, None)}
   }
-  /// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
-  #[inline]
-  pub fn ALLOWED_DOMAINS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ALLOWED_DOMAINS, None)}
-  }
   /// Maximum grant timeout allowed for this module publication
   #[inline]
   pub fn MAX_GRANT_TIMEOUT_MS(&self) -> u64 {
@@ -4017,9 +4003,9 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_RUNTIME_TARGETS, None)}
   }
-  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-  /// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-  /// xpub in this list is granted. Empty list = no xpub allowlist gate.
+  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+  /// a requester whose verified EPM binds an xpub in this list is granted (PKI
+  /// identity authorization). Empty list = no xpub allowlist gate.
   #[inline]
   pub fn ALLOWED_XPUBS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -4064,7 +4050,6 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<bool>("ENCRYPTED", Self::VT_ENCRYPTED, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REQUIRED_SCOPE", Self::VT_REQUIRED_SCOPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ID", Self::VT_KEY_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_DOMAINS", Self::VT_ALLOWED_DOMAINS, false)?
      .visit_field::<u64>("MAX_GRANT_TIMEOUT_MS", Self::VT_MAX_GRANT_TIMEOUT_MS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("MIN_PERMISSIONS", Self::VT_MIN_PERMISSIONS, false)?
      .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
@@ -4122,7 +4107,6 @@ pub struct PLGArgs<'a> {
     pub ENCRYPTED: bool,
     pub REQUIRED_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ALLOWED_DOMAINS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub MAX_GRANT_TIMEOUT_MS: u64,
     pub MIN_PERMISSIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub CREATED_AT: u64,
@@ -4180,7 +4164,6 @@ impl<'a> Default for PLGArgs<'a> {
       ENCRYPTED: true,
       REQUIRED_SCOPE: None,
       KEY_ID: None,
-      ALLOWED_DOMAINS: None,
       MAX_GRANT_TIMEOUT_MS: 0,
       MIN_PERMISSIONS: None,
       CREATED_AT: 0,
@@ -4330,10 +4313,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_KEY_ID, KEY_ID);
   }
   #[inline]
-  pub fn add_ALLOWED_DOMAINS(&mut self, ALLOWED_DOMAINS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ALLOWED_DOMAINS, ALLOWED_DOMAINS);
-  }
-  #[inline]
   pub fn add_MAX_GRANT_TIMEOUT_MS(&mut self, MAX_GRANT_TIMEOUT_MS: u64) {
     self.fbb_.push_slot::<u64>(PLG::VT_MAX_GRANT_TIMEOUT_MS, MAX_GRANT_TIMEOUT_MS, 0);
   }
@@ -4475,7 +4454,6 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("ENCRYPTED", &self.ENCRYPTED());
       ds.field("REQUIRED_SCOPE", &self.REQUIRED_SCOPE());
       ds.field("KEY_ID", &self.KEY_ID());
-      ds.field("ALLOWED_DOMAINS", &self.ALLOWED_DOMAINS());
       ds.field("MAX_GRANT_TIMEOUT_MS", &self.MAX_GRANT_TIMEOUT_MS());
       ds.field("MIN_PERMISSIONS", &self.MIN_PERMISSIONS());
       ds.field("CREATED_AT", &self.CREATED_AT());
@@ -4534,7 +4512,6 @@ pub struct PLGT {
   pub ENCRYPTED: bool,
   pub REQUIRED_SCOPE: Option<alloc::string::String>,
   pub KEY_ID: Option<alloc::string::String>,
-  pub ALLOWED_DOMAINS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub MAX_GRANT_TIMEOUT_MS: u64,
   pub MIN_PERMISSIONS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub CREATED_AT: u64,
@@ -4591,7 +4568,6 @@ impl Default for PLGT {
       ENCRYPTED: true,
       REQUIRED_SCOPE: None,
       KEY_ID: None,
-      ALLOWED_DOMAINS: None,
       MAX_GRANT_TIMEOUT_MS: 0,
       MIN_PERMISSIONS: None,
       CREATED_AT: 0,
@@ -4703,9 +4679,6 @@ impl PLGT {
     let KEY_ID = self.KEY_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ALLOWED_DOMAINS = self.ALLOWED_DOMAINS.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let MAX_GRANT_TIMEOUT_MS = self.MAX_GRANT_TIMEOUT_MS;
     let MIN_PERMISSIONS = self.MIN_PERMISSIONS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
@@ -4791,7 +4764,6 @@ impl PLGT {
       ENCRYPTED,
       REQUIRED_SCOPE,
       KEY_ID,
-      ALLOWED_DOMAINS,
       MAX_GRANT_TIMEOUT_MS,
       MIN_PERMISSIONS,
       CREATED_AT,

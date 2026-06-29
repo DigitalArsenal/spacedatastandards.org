@@ -685,36 +685,9 @@ func (rcv *PLG) KeyId() []byte {
 }
 
 /// Provider-local identifier for the module content key
-/// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
-func (rcv *PLG) ALLOWED_DOMAINS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *PLG) AllowedDomains(j int) []byte {
-	return rcv.ALLOWED_DOMAINS(j)
-}
-
-func (rcv *PLG) ALLOWED_DOMAINSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *PLG) AllowedDomainsLength() int {
-	return rcv.ALLOWED_DOMAINSLength()
-}
-
-/// DEPRECATED (use ALLOWED_XPUBS): allowed requester domains for module grants.
 /// Maximum grant timeout allowed for this module publication
 func (rcv *PLG) MAX_GRANT_TIMEOUT_MS() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -727,7 +700,7 @@ func (rcv *PLG) MaxGrantTimeoutMs() uint64 {
 
 /// Maximum grant timeout allowed for this module publication
 func (rcv *PLG) MutateMAX_GRANT_TIMEOUT_MS(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(64, n)
+	return rcv._tab.MutateUint64Slot(62, n)
 }
 
 func (rcv *PLG) MutateMaxGrantTimeoutMs(n uint64) bool {
@@ -736,7 +709,7 @@ func (rcv *PLG) MutateMaxGrantTimeoutMs(n uint64) bool {
 
 /// Minimum permissions required to run
 func (rcv *PLG) MIN_PERMISSIONS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -749,7 +722,7 @@ func (rcv *PLG) MinPermissions(j int) []byte {
 }
 
 func (rcv *PLG) MIN_PERMISSIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -763,7 +736,7 @@ func (rcv *PLG) MinPermissionsLength() int {
 /// Minimum permissions required to run
 /// Unix timestamp when plugin was created
 func (rcv *PLG) CREATED_AT() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -776,7 +749,7 @@ func (rcv *PLG) CreatedAt() uint64 {
 
 /// Unix timestamp when plugin was created
 func (rcv *PLG) MutateCREATED_AT(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(68, n)
+	return rcv._tab.MutateUint64Slot(66, n)
 }
 
 func (rcv *PLG) MutateCreatedAt(n uint64) bool {
@@ -785,7 +758,7 @@ func (rcv *PLG) MutateCreatedAt(n uint64) bool {
 
 /// Unix timestamp when plugin was last updated
 func (rcv *PLG) UPDATED_AT() uint64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
@@ -798,7 +771,7 @@ func (rcv *PLG) UpdatedAt() uint64 {
 
 /// Unix timestamp when plugin was last updated
 func (rcv *PLG) MutateUPDATED_AT(n uint64) bool {
-	return rcv._tab.MutateUint64Slot(70, n)
+	return rcv._tab.MutateUint64Slot(68, n)
 }
 
 func (rcv *PLG) MutateUpdatedAt(n uint64) bool {
@@ -807,7 +780,7 @@ func (rcv *PLG) MutateUpdatedAt(n uint64) bool {
 
 /// URL to plugin documentation
 func (rcv *PLG) DOCUMENTATION_URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -821,7 +794,7 @@ func (rcv *PLG) DocumentationUrl() []byte {
 /// URL to plugin documentation
 /// URL to plugin changelog or release notes
 func (rcv *PLG) CHANGELOG_URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -835,7 +808,7 @@ func (rcv *PLG) ChangelogUrl() []byte {
 /// URL to plugin changelog or release notes
 /// URL to plugin icon/logo
 func (rcv *PLG) ICON_URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -849,7 +822,7 @@ func (rcv *PLG) IconUrl() []byte {
 /// URL to plugin icon/logo
 /// License identifier (SPDX format)
 func (rcv *PLG) LICENSE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -863,7 +836,7 @@ func (rcv *PLG) License() []byte {
 /// License identifier (SPDX format)
 /// Commercial model used for storefront purchase flows
 func (rcv *PLG) PAYMENT_MODEL() purchaseTier {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return purchaseTier(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
@@ -876,7 +849,7 @@ func (rcv *PLG) PaymentModel() purchaseTier {
 
 /// Commercial model used for storefront purchase flows
 func (rcv *PLG) MutatePAYMENT_MODEL(n purchaseTier) bool {
-	return rcv._tab.MutateInt8Slot(80, int8(n))
+	return rcv._tab.MutateInt8Slot(78, int8(n))
 }
 
 func (rcv *PLG) MutatePaymentModel(n purchaseTier) bool {
@@ -885,7 +858,7 @@ func (rcv *PLG) MutatePaymentModel(n purchaseTier) bool {
 
 /// Price in USD cents for one-time purchase or subscription period
 func (rcv *PLG) PRICE_USD_CENTS() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -898,7 +871,7 @@ func (rcv *PLG) PriceUsdCents() uint32 {
 
 /// Price in USD cents for one-time purchase or subscription period
 func (rcv *PLG) MutatePRICE_USD_CENTS(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(82, n)
+	return rcv._tab.MutateUint32Slot(80, n)
 }
 
 func (rcv *PLG) MutatePriceUsdCents(n uint32) bool {
@@ -907,7 +880,7 @@ func (rcv *PLG) MutatePriceUsdCents(n uint32) bool {
 
 /// Subscription billing period length in days
 func (rcv *PLG) SUBSCRIPTION_PERIOD_DAYS() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
@@ -920,7 +893,7 @@ func (rcv *PLG) SubscriptionPeriodDays() uint32 {
 
 /// Subscription billing period length in days
 func (rcv *PLG) MutateSUBSCRIPTION_PERIOD_DAYS(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(84, n)
+	return rcv._tab.MutateUint32Slot(82, n)
 }
 
 func (rcv *PLG) MutateSubscriptionPeriodDays(n uint32) bool {
@@ -929,7 +902,7 @@ func (rcv *PLG) MutateSubscriptionPeriodDays(n uint32) bool {
 
 /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
 func (rcv *PLG) ACCEPTED_PAYMENT_METHODS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -942,7 +915,7 @@ func (rcv *PLG) AcceptedPaymentMethods(j int) []byte {
 }
 
 func (rcv *PLG) ACCEPTED_PAYMENT_METHODSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -956,7 +929,7 @@ func (rcv *PLG) AcceptedPaymentMethodsLength() int {
 /// Accepted payment methods, e.g. "stripe", "sol", "usdc"
 /// Storefront publication state for this manifest version
 func (rcv *PLG) LISTING_STATUS() publicationState {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return publicationState(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
@@ -969,7 +942,7 @@ func (rcv *PLG) ListingStatus() publicationState {
 
 /// Storefront publication state for this manifest version
 func (rcv *PLG) MutateLISTING_STATUS(n publicationState) bool {
-	return rcv._tab.MutateInt8Slot(88, int8(n))
+	return rcv._tab.MutateInt8Slot(86, int8(n))
 }
 
 func (rcv *PLG) MutateListingStatus(n publicationState) bool {
@@ -978,7 +951,7 @@ func (rcv *PLG) MutateListingStatus(n publicationState) bool {
 
 /// Ed25519 signature from provider over manifest
 func (rcv *PLG) SIGNATURE(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
@@ -991,7 +964,7 @@ func (rcv *PLG) Signature(j int) byte {
 }
 
 func (rcv *PLG) SIGNATURELength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1003,7 +976,7 @@ func (rcv *PLG) SignatureLength() int {
 }
 
 func (rcv *PLG) SIGNATUREBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1016,7 +989,7 @@ func (rcv *PLG) SignatureBytes() []byte {
 
 /// Ed25519 signature from provider over manifest
 func (rcv *PLG) MutateSIGNATURE(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
@@ -1031,7 +1004,7 @@ func (rcv *PLG) MutateSignature(j int, n byte) bool {
 /// Canonical invoke surfaces this artifact exposes. A single plugin
 /// MAY list both DIRECT and COMMAND when it supports both.
 func (rcv *PLG) INVOKE_SURFACES(j int) invokeSurfaceKind {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return invokeSurfaceKind(rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1)))
@@ -1044,7 +1017,7 @@ func (rcv *PLG) InvokeSurfaces(j int) invokeSurfaceKind {
 }
 
 func (rcv *PLG) INVOKE_SURFACESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1056,7 +1029,7 @@ func (rcv *PLG) InvokeSurfacesLength() int {
 }
 
 func (rcv *PLG) INVOKE_SURFACESBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -1070,7 +1043,7 @@ func (rcv *PLG) InvokeSurfacesBytes() []byte {
 /// Canonical invoke surfaces this artifact exposes. A single plugin
 /// MAY list both DIRECT and COMMAND when it supports both.
 func (rcv *PLG) MutateINVOKE_SURFACES(j int, n invokeSurfaceKind) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), byte(n))
@@ -1087,7 +1060,7 @@ func (rcv *PLG) MutateInvokeSurfaces(j int, n invokeSurfaceKind) bool {
 /// name+input_schemas+output_schema summary; METHODS carries the full
 /// invoke-surface detail including aligned-binary advertisement.
 func (rcv *PLG) METHODS(obj *PLGMethodManifest, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1106,7 +1079,7 @@ func (rcv *PLG) Methods(obj *PLGMethodManifest, j int) bool {
 }
 
 func (rcv *PLG) METHODSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1124,7 +1097,7 @@ func (rcv *PLG) MethodsLength() int {
 /// Enum-typed host capability dependencies (richer than CAPABILITIES,
 /// which is string-tagged metadata).
 func (rcv *PLG) HOST_CAPABILITIES(obj *PLGHostCapability, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1143,7 +1116,7 @@ func (rcv *PLG) HostCapabilities(obj *PLGHostCapability, j int) bool {
 }
 
 func (rcv *PLG) HOST_CAPABILITIESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1158,7 +1131,7 @@ func (rcv *PLG) HostCapabilitiesLength() int {
 /// which is string-tagged metadata).
 /// Timer declarations for scheduled invocations.
 func (rcv *PLG) TIMERS(obj *PLGTimerSpec, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1177,7 +1150,7 @@ func (rcv *PLG) Timers(obj *PLGTimerSpec, j int) bool {
 }
 
 func (rcv *PLG) TIMERSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1191,7 +1164,7 @@ func (rcv *PLG) TimersLength() int {
 /// Timer declarations for scheduled invocations.
 /// Protocol handler declarations.
 func (rcv *PLG) PROTOCOLS(obj *PLGProtocolSpec, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1210,7 +1183,7 @@ func (rcv *PLG) Protocols(obj *PLGProtocolSpec, j int) bool {
 }
 
 func (rcv *PLG) PROTOCOLSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1224,7 +1197,7 @@ func (rcv *PLG) ProtocolsLength() int {
 /// Protocol handler declarations.
 /// FlatBuffer schemas this plugin depends on at the invoke surface.
 func (rcv *PLG) SCHEMAS_USED(obj *FlatBufferTypeRef, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1243,7 +1216,7 @@ func (rcv *PLG) SchemasUsed(obj *FlatBufferTypeRef, j int) bool {
 }
 
 func (rcv *PLG) SCHEMAS_USEDLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1257,7 +1230,7 @@ func (rcv *PLG) SchemasUsedLength() int {
 /// FlatBuffer schemas this plugin depends on at the invoke surface.
 /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
 func (rcv *PLG) BUILD_ARTIFACTS(obj *PLGBuildArtifact, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1276,7 +1249,7 @@ func (rcv *PLG) BuildArtifacts(obj *PLGBuildArtifact, j int) bool {
 }
 
 func (rcv *PLG) BUILD_ARTIFACTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1290,7 +1263,7 @@ func (rcv *PLG) BuildArtifactsLength() int {
 /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).
 /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
 func (rcv *PLG) RUNTIME_TARGETS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -1303,7 +1276,7 @@ func (rcv *PLG) RuntimeTargets(j int) []byte {
 }
 
 func (rcv *PLG) RUNTIME_TARGETSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1315,11 +1288,11 @@ func (rcv *PLG) RuntimeTargetsLength() int {
 }
 
 /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").
-/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-/// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-/// xpub in this list is granted. Empty list = no xpub allowlist gate.
+/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+/// a requester whose verified EPM binds an xpub in this list is granted (PKI
+/// identity authorization). Empty list = no xpub allowlist gate.
 func (rcv *PLG) ALLOWED_XPUBS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -1332,7 +1305,7 @@ func (rcv *PLG) AllowedXpubs(j int) []byte {
 }
 
 func (rcv *PLG) ALLOWED_XPUBSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1343,11 +1316,11 @@ func (rcv *PLG) AllowedXpubsLength() int {
 	return rcv.ALLOWED_XPUBSLength()
 }
 
-/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants.
-/// PKI replacement for ALLOWED_DOMAINS: a requester whose verified EPM binds an
-/// xpub in this list is granted. Empty list = no xpub allowlist gate.
+/// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
+/// a requester whose verified EPM binds an xpub in this list is granted (PKI
+/// identity authorization). Empty list = no xpub allowlist gate.
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(53)
+	builder.StartObject(52)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -1577,26 +1550,14 @@ func PLGAddKEY_ID(builder *flatbuffers.Builder, KEY_ID flatbuffers.UOffsetT) {
 func PLGAddKeyId(builder *flatbuffers.Builder, KEY_ID flatbuffers.UOffsetT) {
 	PLGAddKEY_ID(builder, KEY_ID)
 }
-func PLGAddALLOWED_DOMAINS(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(ALLOWED_DOMAINS), 0)
-}
-func PLGAddAllowedDomains(builder *flatbuffers.Builder, ALLOWED_DOMAINS flatbuffers.UOffsetT) {
-	PLGAddALLOWED_DOMAINS(builder, ALLOWED_DOMAINS)
-}
-func PLGStartALLOWED_DOMAINSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func PLGStartAllowedDomainsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return PLGStartALLOWED_DOMAINSVector(builder, numElems)
-}
 func PLGAddMAX_GRANT_TIMEOUT_MS(builder *flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS uint64) {
-	builder.PrependUint64Slot(30, MAX_GRANT_TIMEOUT_MS, 0)
+	builder.PrependUint64Slot(29, MAX_GRANT_TIMEOUT_MS, 0)
 }
 func PLGAddMaxGrantTimeoutMs(builder *flatbuffers.Builder, MAX_GRANT_TIMEOUT_MS uint64) {
 	PLGAddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS)
 }
 func PLGAddMIN_PERMISSIONS(builder *flatbuffers.Builder, MIN_PERMISSIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(MIN_PERMISSIONS), 0)
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(MIN_PERMISSIONS), 0)
 }
 func PLGAddMinPermissions(builder *flatbuffers.Builder, MIN_PERMISSIONS flatbuffers.UOffsetT) {
 	PLGAddMIN_PERMISSIONS(builder, MIN_PERMISSIONS)
@@ -1608,61 +1569,61 @@ func PLGStartMinPermissionsVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartMIN_PERMISSIONSVector(builder, numElems)
 }
 func PLGAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT uint64) {
-	builder.PrependUint64Slot(32, CREATED_AT, 0)
+	builder.PrependUint64Slot(31, CREATED_AT, 0)
 }
 func PLGAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT uint64) {
 	PLGAddCREATED_AT(builder, CREATED_AT)
 }
 func PLGAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
-	builder.PrependUint64Slot(33, UPDATED_AT, 0)
+	builder.PrependUint64Slot(32, UPDATED_AT, 0)
 }
 func PLGAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
 	PLGAddUPDATED_AT(builder, UPDATED_AT)
 }
 func PLGAddDOCUMENTATION_URL(builder *flatbuffers.Builder, DOCUMENTATION_URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DOCUMENTATION_URL), 0)
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(DOCUMENTATION_URL), 0)
 }
 func PLGAddDocumentationUrl(builder *flatbuffers.Builder, DOCUMENTATION_URL flatbuffers.UOffsetT) {
 	PLGAddDOCUMENTATION_URL(builder, DOCUMENTATION_URL)
 }
 func PLGAddCHANGELOG_URL(builder *flatbuffers.Builder, CHANGELOG_URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(CHANGELOG_URL), 0)
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(CHANGELOG_URL), 0)
 }
 func PLGAddChangelogUrl(builder *flatbuffers.Builder, CHANGELOG_URL flatbuffers.UOffsetT) {
 	PLGAddCHANGELOG_URL(builder, CHANGELOG_URL)
 }
 func PLGAddICON_URL(builder *flatbuffers.Builder, ICON_URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(ICON_URL), 0)
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(ICON_URL), 0)
 }
 func PLGAddIconUrl(builder *flatbuffers.Builder, ICON_URL flatbuffers.UOffsetT) {
 	PLGAddICON_URL(builder, ICON_URL)
 }
 func PLGAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(LICENSE), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(LICENSE), 0)
 }
 func PLGAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
 	PLGAddLICENSE(builder, LICENSE)
 }
 func PLGAddPAYMENT_MODEL(builder *flatbuffers.Builder, PAYMENT_MODEL purchaseTier) {
-	builder.PrependInt8Slot(38, int8(PAYMENT_MODEL), 0)
+	builder.PrependInt8Slot(37, int8(PAYMENT_MODEL), 0)
 }
 func PLGAddPaymentModel(builder *flatbuffers.Builder, PAYMENT_MODEL purchaseTier) {
 	PLGAddPAYMENT_MODEL(builder, PAYMENT_MODEL)
 }
 func PLGAddPRICE_USD_CENTS(builder *flatbuffers.Builder, PRICE_USD_CENTS uint32) {
-	builder.PrependUint32Slot(39, PRICE_USD_CENTS, 0)
+	builder.PrependUint32Slot(38, PRICE_USD_CENTS, 0)
 }
 func PLGAddPriceUsdCents(builder *flatbuffers.Builder, PRICE_USD_CENTS uint32) {
 	PLGAddPRICE_USD_CENTS(builder, PRICE_USD_CENTS)
 }
 func PLGAddSUBSCRIPTION_PERIOD_DAYS(builder *flatbuffers.Builder, SUBSCRIPTION_PERIOD_DAYS uint32) {
-	builder.PrependUint32Slot(40, SUBSCRIPTION_PERIOD_DAYS, 0)
+	builder.PrependUint32Slot(39, SUBSCRIPTION_PERIOD_DAYS, 0)
 }
 func PLGAddSubscriptionPeriodDays(builder *flatbuffers.Builder, SUBSCRIPTION_PERIOD_DAYS uint32) {
 	PLGAddSUBSCRIPTION_PERIOD_DAYS(builder, SUBSCRIPTION_PERIOD_DAYS)
 }
 func PLGAddACCEPTED_PAYMENT_METHODS(builder *flatbuffers.Builder, ACCEPTED_PAYMENT_METHODS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(ACCEPTED_PAYMENT_METHODS), 0)
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(ACCEPTED_PAYMENT_METHODS), 0)
 }
 func PLGAddAcceptedPaymentMethods(builder *flatbuffers.Builder, ACCEPTED_PAYMENT_METHODS flatbuffers.UOffsetT) {
 	PLGAddACCEPTED_PAYMENT_METHODS(builder, ACCEPTED_PAYMENT_METHODS)
@@ -1674,13 +1635,13 @@ func PLGStartAcceptedPaymentMethodsVector(builder *flatbuffers.Builder, numElems
 	return PLGStartACCEPTED_PAYMENT_METHODSVector(builder, numElems)
 }
 func PLGAddLISTING_STATUS(builder *flatbuffers.Builder, LISTING_STATUS publicationState) {
-	builder.PrependInt8Slot(42, int8(LISTING_STATUS), 0)
+	builder.PrependInt8Slot(41, int8(LISTING_STATUS), 0)
 }
 func PLGAddListingStatus(builder *flatbuffers.Builder, LISTING_STATUS publicationState) {
 	PLGAddLISTING_STATUS(builder, LISTING_STATUS)
 }
 func PLGAddSIGNATURE(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(SIGNATURE), 0)
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(SIGNATURE), 0)
 }
 func PLGAddSignature(builder *flatbuffers.Builder, SIGNATURE flatbuffers.UOffsetT) {
 	PLGAddSIGNATURE(builder, SIGNATURE)
@@ -1692,7 +1653,7 @@ func PLGStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuf
 	return PLGStartSIGNATUREVector(builder, numElems)
 }
 func PLGAddINVOKE_SURFACES(builder *flatbuffers.Builder, INVOKE_SURFACES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(INVOKE_SURFACES), 0)
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(INVOKE_SURFACES), 0)
 }
 func PLGAddInvokeSurfaces(builder *flatbuffers.Builder, INVOKE_SURFACES flatbuffers.UOffsetT) {
 	PLGAddINVOKE_SURFACES(builder, INVOKE_SURFACES)
@@ -1704,7 +1665,7 @@ func PLGStartInvokeSurfacesVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartINVOKE_SURFACESVector(builder, numElems)
 }
 func PLGAddMETHODS(builder *flatbuffers.Builder, METHODS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(METHODS), 0)
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(METHODS), 0)
 }
 func PLGAddMethods(builder *flatbuffers.Builder, METHODS flatbuffers.UOffsetT) {
 	PLGAddMETHODS(builder, METHODS)
@@ -1716,7 +1677,7 @@ func PLGStartMethodsVector(builder *flatbuffers.Builder, numElems int) flatbuffe
 	return PLGStartMETHODSVector(builder, numElems)
 }
 func PLGAddHOST_CAPABILITIES(builder *flatbuffers.Builder, HOST_CAPABILITIES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(HOST_CAPABILITIES), 0)
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(HOST_CAPABILITIES), 0)
 }
 func PLGAddHostCapabilities(builder *flatbuffers.Builder, HOST_CAPABILITIES flatbuffers.UOffsetT) {
 	PLGAddHOST_CAPABILITIES(builder, HOST_CAPABILITIES)
@@ -1728,7 +1689,7 @@ func PLGStartHostCapabilitiesVector(builder *flatbuffers.Builder, numElems int) 
 	return PLGStartHOST_CAPABILITIESVector(builder, numElems)
 }
 func PLGAddTIMERS(builder *flatbuffers.Builder, TIMERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(TIMERS), 0)
+	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(TIMERS), 0)
 }
 func PLGAddTimers(builder *flatbuffers.Builder, TIMERS flatbuffers.UOffsetT) {
 	PLGAddTIMERS(builder, TIMERS)
@@ -1740,7 +1701,7 @@ func PLGStartTimersVector(builder *flatbuffers.Builder, numElems int) flatbuffer
 	return PLGStartTIMERSVector(builder, numElems)
 }
 func PLGAddPROTOCOLS(builder *flatbuffers.Builder, PROTOCOLS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(PROTOCOLS), 0)
+	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(PROTOCOLS), 0)
 }
 func PLGAddProtocols(builder *flatbuffers.Builder, PROTOCOLS flatbuffers.UOffsetT) {
 	PLGAddPROTOCOLS(builder, PROTOCOLS)
@@ -1752,7 +1713,7 @@ func PLGStartProtocolsVector(builder *flatbuffers.Builder, numElems int) flatbuf
 	return PLGStartPROTOCOLSVector(builder, numElems)
 }
 func PLGAddSCHEMAS_USED(builder *flatbuffers.Builder, SCHEMAS_USED flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(SCHEMAS_USED), 0)
+	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(SCHEMAS_USED), 0)
 }
 func PLGAddSchemasUsed(builder *flatbuffers.Builder, SCHEMAS_USED flatbuffers.UOffsetT) {
 	PLGAddSCHEMAS_USED(builder, SCHEMAS_USED)
@@ -1764,7 +1725,7 @@ func PLGStartSchemasUsedVector(builder *flatbuffers.Builder, numElems int) flatb
 	return PLGStartSCHEMAS_USEDVector(builder, numElems)
 }
 func PLGAddBUILD_ARTIFACTS(builder *flatbuffers.Builder, BUILD_ARTIFACTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(BUILD_ARTIFACTS), 0)
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(BUILD_ARTIFACTS), 0)
 }
 func PLGAddBuildArtifacts(builder *flatbuffers.Builder, BUILD_ARTIFACTS flatbuffers.UOffsetT) {
 	PLGAddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTS)
@@ -1776,7 +1737,7 @@ func PLGStartBuildArtifactsVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartBUILD_ARTIFACTSVector(builder, numElems)
 }
 func PLGAddRUNTIME_TARGETS(builder *flatbuffers.Builder, RUNTIME_TARGETS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(RUNTIME_TARGETS), 0)
+	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(RUNTIME_TARGETS), 0)
 }
 func PLGAddRuntimeTargets(builder *flatbuffers.Builder, RUNTIME_TARGETS flatbuffers.UOffsetT) {
 	PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
@@ -1788,7 +1749,7 @@ func PLGStartRuntimeTargetsVector(builder *flatbuffers.Builder, numElems int) fl
 	return PLGStartRUNTIME_TARGETSVector(builder, numElems)
 }
 func PLGAddALLOWED_XPUBS(builder *flatbuffers.Builder, ALLOWED_XPUBS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(ALLOWED_XPUBS), 0)
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(ALLOWED_XPUBS), 0)
 }
 func PLGAddAllowedXpubs(builder *flatbuffers.Builder, ALLOWED_XPUBS flatbuffers.UOffsetT) {
 	PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS)
