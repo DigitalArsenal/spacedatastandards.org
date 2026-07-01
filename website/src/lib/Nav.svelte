@@ -92,7 +92,7 @@
 <style>
   nav {
     position: fixed;
-    top: 0;
+    top: var(--sdn-stack-nav-height, 32px);
     left: 0;
     right: 0;
     height: 52px;
@@ -197,7 +197,7 @@
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 52px;
+    top: calc(var(--sdn-stack-nav-height, 32px) + 52px);
     left: 0;
     right: 0;
     background: var(--nav-bg);
