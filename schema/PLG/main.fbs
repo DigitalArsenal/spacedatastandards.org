@@ -1,5 +1,5 @@
-// Hash: 700ec92c59d4f0aed0d58afcfe3b53265ada5c001902380af6a3a621fcb31ede
-// Version: 1.0.9
+// Hash: 030f073b28283868e236aa81858ea1d80836d9bee704c01fdce6b6486838ae91
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -22,7 +22,27 @@ enum pluginCategory : byte {
   /// Physics simulation
   Physics,
   /// GLSL shader plugins for custom visualization
-  Shader
+  Shader,
+  /// Parses raw upstream bytes into canonical SDS records
+  Parser,
+  /// Validates records (integrity, physical bounds, continuity)
+  Validator,
+  /// Interpolates ephemeris / state-vector records
+  Interpolator,
+  /// Exports records to external formats (CSV, etc.)
+  Exporter,
+  /// Foundational math / utility library module
+  Foundation,
+  /// Node infrastructure (runtime, delivery, registry)
+  Infrastructure,
+  /// Module-delivery licensing / key authority
+  Licensing,
+  /// Storefront listing / discovery
+  Storefront,
+  /// Publication: PNM signing + pub/sub announcement
+  Publisher,
+  /// Basilisk astrodynamics simulation module
+  Basilisk
 }
 
 /// Storefront payment model for the plugin listing

@@ -9,47 +9,87 @@ type pluginCategory int8
 
 const (
 	/// Sensor simulation and analysis
-	pluginCategorySensor     pluginCategory = 0
+	pluginCategorySensor         pluginCategory = 0
 	/// Orbital propagation algorithms
-	pluginCategoryPropagator pluginCategory = 1
+	pluginCategoryPropagator     pluginCategory = 1
 	/// Custom rendering/visualization
-	pluginCategoryRenderer   pluginCategory = 2
+	pluginCategoryRenderer       pluginCategory = 2
 	/// Data analysis and processing
-	pluginCategoryAnalysis   pluginCategory = 3
+	pluginCategoryAnalysis       pluginCategory = 3
 	/// External data source integration
-	pluginCategoryDataSource pluginCategory = 4
+	pluginCategoryDataSource     pluginCategory = 4
 	/// Electronic warfare simulation
-	pluginCategoryEW         pluginCategory = 5
+	pluginCategoryEW             pluginCategory = 5
 	/// Communications modeling
-	pluginCategoryComms      pluginCategory = 6
+	pluginCategoryComms          pluginCategory = 6
 	/// Physics simulation
-	pluginCategoryPhysics    pluginCategory = 7
+	pluginCategoryPhysics        pluginCategory = 7
 	/// GLSL shader plugins for custom visualization
-	pluginCategoryShader     pluginCategory = 8
+	pluginCategoryShader         pluginCategory = 8
+	/// Parses raw upstream bytes into canonical SDS records
+	pluginCategoryParser         pluginCategory = 9
+	/// Validates records (integrity, physical bounds, continuity)
+	pluginCategoryValidator      pluginCategory = 10
+	/// Interpolates ephemeris / state-vector records
+	pluginCategoryInterpolator   pluginCategory = 11
+	/// Exports records to external formats (CSV, etc.)
+	pluginCategoryExporter       pluginCategory = 12
+	/// Foundational math / utility library module
+	pluginCategoryFoundation     pluginCategory = 13
+	/// Node infrastructure (runtime, delivery, registry)
+	pluginCategoryInfrastructure pluginCategory = 14
+	/// Module-delivery licensing / key authority
+	pluginCategoryLicensing      pluginCategory = 15
+	/// Storefront listing / discovery
+	pluginCategoryStorefront     pluginCategory = 16
+	/// Publication: PNM signing + pub/sub announcement
+	pluginCategoryPublisher      pluginCategory = 17
+	/// Basilisk astrodynamics simulation module
+	pluginCategoryBasilisk       pluginCategory = 18
 )
 
 var EnumNamespluginCategory = map[pluginCategory]string{
-	pluginCategorySensor:     "Sensor",
-	pluginCategoryPropagator: "Propagator",
-	pluginCategoryRenderer:   "Renderer",
-	pluginCategoryAnalysis:   "Analysis",
-	pluginCategoryDataSource: "DataSource",
-	pluginCategoryEW:         "EW",
-	pluginCategoryComms:      "Comms",
-	pluginCategoryPhysics:    "Physics",
-	pluginCategoryShader:     "Shader",
+	pluginCategorySensor:         "Sensor",
+	pluginCategoryPropagator:     "Propagator",
+	pluginCategoryRenderer:       "Renderer",
+	pluginCategoryAnalysis:       "Analysis",
+	pluginCategoryDataSource:     "DataSource",
+	pluginCategoryEW:             "EW",
+	pluginCategoryComms:          "Comms",
+	pluginCategoryPhysics:        "Physics",
+	pluginCategoryShader:         "Shader",
+	pluginCategoryParser:         "Parser",
+	pluginCategoryValidator:      "Validator",
+	pluginCategoryInterpolator:   "Interpolator",
+	pluginCategoryExporter:       "Exporter",
+	pluginCategoryFoundation:     "Foundation",
+	pluginCategoryInfrastructure: "Infrastructure",
+	pluginCategoryLicensing:      "Licensing",
+	pluginCategoryStorefront:     "Storefront",
+	pluginCategoryPublisher:      "Publisher",
+	pluginCategoryBasilisk:       "Basilisk",
 }
 
 var EnumValuespluginCategory = map[string]pluginCategory{
-	"Sensor":     pluginCategorySensor,
-	"Propagator": pluginCategoryPropagator,
-	"Renderer":   pluginCategoryRenderer,
-	"Analysis":   pluginCategoryAnalysis,
-	"DataSource": pluginCategoryDataSource,
-	"EW":         pluginCategoryEW,
-	"Comms":      pluginCategoryComms,
-	"Physics":    pluginCategoryPhysics,
-	"Shader":     pluginCategoryShader,
+	"Sensor":         pluginCategorySensor,
+	"Propagator":     pluginCategoryPropagator,
+	"Renderer":       pluginCategoryRenderer,
+	"Analysis":       pluginCategoryAnalysis,
+	"DataSource":     pluginCategoryDataSource,
+	"EW":             pluginCategoryEW,
+	"Comms":          pluginCategoryComms,
+	"Physics":        pluginCategoryPhysics,
+	"Shader":         pluginCategoryShader,
+	"Parser":         pluginCategoryParser,
+	"Validator":      pluginCategoryValidator,
+	"Interpolator":   pluginCategoryInterpolator,
+	"Exporter":       pluginCategoryExporter,
+	"Foundation":     pluginCategoryFoundation,
+	"Infrastructure": pluginCategoryInfrastructure,
+	"Licensing":      pluginCategoryLicensing,
+	"Storefront":     pluginCategoryStorefront,
+	"Publisher":      pluginCategoryPublisher,
+	"Basilisk":       pluginCategoryBasilisk,
 }
 
 func (v pluginCategory) String() string {

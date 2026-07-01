@@ -42,5 +42,45 @@ class pluginCategory private constructor() {
          * GLSL shader plugins for custom visualization
          */
         const val Shader: Byte = 8
+        /**
+         * Parses raw upstream bytes into canonical SDS records
+         */
+        const val Parser: Byte = 9
+        /**
+         * Validates records (integrity, physical bounds, continuity)
+         */
+        const val Validator: Byte = 10
+        /**
+         * Interpolates ephemeris / state-vector records
+         */
+        const val Interpolator: Byte = 11
+        /**
+         * Exports records to external formats (CSV, etc.)
+         */
+        const val Exporter: Byte = 12
+        /**
+         * Foundational math / utility library module
+         */
+        const val Foundation: Byte = 13
+        /**
+         * Node infrastructure (runtime, delivery, registry)
+         */
+        const val Infrastructure: Byte = 14
+        /**
+         * Module-delivery licensing / key authority
+         */
+        const val Licensing: Byte = 15
+        /**
+         * Storefront listing / discovery
+         */
+        const val Storefront: Byte = 16
+        /**
+         * Publication: PNM signing + pub/sub announcement
+         */
+        const val Publisher: Byte = 17
+        /**
+         * Basilisk astrodynamics simulation module
+         */
+        const val Basilisk: Byte = 18
     }
 }

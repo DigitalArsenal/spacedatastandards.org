@@ -264,7 +264,17 @@
         5,
         6,
         7,
-        8
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
       ],
       "x-flatbuffer-enum-values": {
         "Sensor": {
@@ -302,6 +312,46 @@
         "Shader": {
           "value": 8,
           "description": "GLSL shader plugins for custom visualization"
+        },
+        "Parser": {
+          "value": 9,
+          "description": "Parses raw upstream bytes into canonical SDS records"
+        },
+        "Validator": {
+          "value": 10,
+          "description": "Validates records (integrity, physical bounds, continuity)"
+        },
+        "Interpolator": {
+          "value": 11,
+          "description": "Interpolates ephemeris / state-vector records"
+        },
+        "Exporter": {
+          "value": 12,
+          "description": "Exports records to external formats (CSV, etc.)"
+        },
+        "Foundation": {
+          "value": 13,
+          "description": "Foundational math / utility library module"
+        },
+        "Infrastructure": {
+          "value": 14,
+          "description": "Node infrastructure (runtime, delivery, registry)"
+        },
+        "Licensing": {
+          "value": 15,
+          "description": "Module-delivery licensing / key authority"
+        },
+        "Storefront": {
+          "value": 16,
+          "description": "Storefront listing / discovery"
+        },
+        "Publisher": {
+          "value": 17,
+          "description": "Publication: PNM signing + pub/sub announcement"
+        },
+        "Basilisk": {
+          "value": 18,
+          "description": "Basilisk astrodynamics simulation module"
         }
       }
     },
@@ -1129,6 +1179,46 @@
             "Shader": {
               "value": 8,
               "description": "GLSL shader plugins for custom visualization"
+            },
+            "Parser": {
+              "value": 9,
+              "description": "Parses raw upstream bytes into canonical SDS records"
+            },
+            "Validator": {
+              "value": 10,
+              "description": "Validates records (integrity, physical bounds, continuity)"
+            },
+            "Interpolator": {
+              "value": 11,
+              "description": "Interpolates ephemeris / state-vector records"
+            },
+            "Exporter": {
+              "value": 12,
+              "description": "Exports records to external formats (CSV, etc.)"
+            },
+            "Foundation": {
+              "value": 13,
+              "description": "Foundational math / utility library module"
+            },
+            "Infrastructure": {
+              "value": 14,
+              "description": "Node infrastructure (runtime, delivery, registry)"
+            },
+            "Licensing": {
+              "value": 15,
+              "description": "Module-delivery licensing / key authority"
+            },
+            "Storefront": {
+              "value": 16,
+              "description": "Storefront listing / discovery"
+            },
+            "Publisher": {
+              "value": 17,
+              "description": "Publication: PNM signing + pub/sub announcement"
+            },
+            "Basilisk": {
+              "value": 18,
+              "description": "Basilisk astrodynamics simulation module"
             }
           }
         },

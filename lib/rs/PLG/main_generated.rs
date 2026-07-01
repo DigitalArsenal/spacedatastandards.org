@@ -7,10 +7,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PLUGIN_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 8;
+pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 18;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 9] = [
+pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 19] = [
   pluginCategory::Sensor,
   pluginCategory::Propagator,
   pluginCategory::Renderer,
@@ -20,6 +20,16 @@ pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 9] = [
   pluginCategory::Comms,
   pluginCategory::Physics,
   pluginCategory::Shader,
+  pluginCategory::Parser,
+  pluginCategory::Validator,
+  pluginCategory::Interpolator,
+  pluginCategory::Exporter,
+  pluginCategory::Foundation,
+  pluginCategory::Infrastructure,
+  pluginCategory::Licensing,
+  pluginCategory::Storefront,
+  pluginCategory::Publisher,
+  pluginCategory::Basilisk,
 ];
 
 /// Plugin type category
@@ -46,9 +56,29 @@ impl pluginCategory {
   pub const Physics: Self = Self(7);
   /// GLSL shader plugins for custom visualization
   pub const Shader: Self = Self(8);
+  /// Parses raw upstream bytes into canonical SDS records
+  pub const Parser: Self = Self(9);
+  /// Validates records (integrity, physical bounds, continuity)
+  pub const Validator: Self = Self(10);
+  /// Interpolates ephemeris / state-vector records
+  pub const Interpolator: Self = Self(11);
+  /// Exports records to external formats (CSV, etc.)
+  pub const Exporter: Self = Self(12);
+  /// Foundational math / utility library module
+  pub const Foundation: Self = Self(13);
+  /// Node infrastructure (runtime, delivery, registry)
+  pub const Infrastructure: Self = Self(14);
+  /// Module-delivery licensing / key authority
+  pub const Licensing: Self = Self(15);
+  /// Storefront listing / discovery
+  pub const Storefront: Self = Self(16);
+  /// Publication: PNM signing + pub/sub announcement
+  pub const Publisher: Self = Self(17);
+  /// Basilisk astrodynamics simulation module
+  pub const Basilisk: Self = Self(18);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_MAX: i8 = 18;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Sensor,
     Self::Propagator,
@@ -59,6 +89,16 @@ impl pluginCategory {
     Self::Comms,
     Self::Physics,
     Self::Shader,
+    Self::Parser,
+    Self::Validator,
+    Self::Interpolator,
+    Self::Exporter,
+    Self::Foundation,
+    Self::Infrastructure,
+    Self::Licensing,
+    Self::Storefront,
+    Self::Publisher,
+    Self::Basilisk,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -72,6 +112,16 @@ impl pluginCategory {
       Self::Comms => Some("Comms"),
       Self::Physics => Some("Physics"),
       Self::Shader => Some("Shader"),
+      Self::Parser => Some("Parser"),
+      Self::Validator => Some("Validator"),
+      Self::Interpolator => Some("Interpolator"),
+      Self::Exporter => Some("Exporter"),
+      Self::Foundation => Some("Foundation"),
+      Self::Infrastructure => Some("Infrastructure"),
+      Self::Licensing => Some("Licensing"),
+      Self::Storefront => Some("Storefront"),
+      Self::Publisher => Some("Publisher"),
+      Self::Basilisk => Some("Basilisk"),
       _ => None,
     }
   }

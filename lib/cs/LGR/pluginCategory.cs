@@ -23,4 +23,24 @@ public enum pluginCategory : sbyte
   Physics = 7,
   /// GLSL shader plugins for custom visualization
   Shader = 8,
+  /// Parses raw upstream bytes into canonical SDS records
+  Parser = 9,
+  /// Validates records (integrity, physical bounds, continuity)
+  Validator = 10,
+  /// Interpolates ephemeris / state-vector records
+  Interpolator = 11,
+  /// Exports records to external formats (CSV, etc.)
+  Exporter = 12,
+  /// Foundational math / utility library module
+  Foundation = 13,
+  /// Node infrastructure (runtime, delivery, registry)
+  Infrastructure = 14,
+  /// Module-delivery licensing / key authority
+  Licensing = 15,
+  /// Storefront listing / discovery
+  Storefront = 16,
+  /// Publication: PNM signing + pub/sub announcement
+  Publisher = 17,
+  /// Basilisk astrodynamics simulation module
+  Basilisk = 18,
 };

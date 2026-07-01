@@ -22,6 +22,26 @@ class pluginCategory
     const Physics = 7;
     /// GLSL shader plugins for custom visualization
     const Shader = 8;
+    /// Parses raw upstream bytes into canonical SDS records
+    const Parser = 9;
+    /// Validates records (integrity, physical bounds, continuity)
+    const Validator = 10;
+    /// Interpolates ephemeris / state-vector records
+    const Interpolator = 11;
+    /// Exports records to external formats (CSV, etc.)
+    const Exporter = 12;
+    /// Foundational math / utility library module
+    const Foundation = 13;
+    /// Node infrastructure (runtime, delivery, registry)
+    const Infrastructure = 14;
+    /// Module-delivery licensing / key authority
+    const Licensing = 15;
+    /// Storefront listing / discovery
+    const Storefront = 16;
+    /// Publication: PNM signing + pub/sub announcement
+    const Publisher = 17;
+    /// Basilisk astrodynamics simulation module
+    const Basilisk = 18;
 
     private static $names = array(
         pluginCategory::Sensor=>"Sensor",
@@ -33,6 +53,16 @@ class pluginCategory
         pluginCategory::Comms=>"Comms",
         pluginCategory::Physics=>"Physics",
         pluginCategory::Shader=>"Shader",
+        pluginCategory::Parser=>"Parser",
+        pluginCategory::Validator=>"Validator",
+        pluginCategory::Interpolator=>"Interpolator",
+        pluginCategory::Exporter=>"Exporter",
+        pluginCategory::Foundation=>"Foundation",
+        pluginCategory::Infrastructure=>"Infrastructure",
+        pluginCategory::Licensing=>"Licensing",
+        pluginCategory::Storefront=>"Storefront",
+        pluginCategory::Publisher=>"Publisher",
+        pluginCategory::Basilisk=>"Basilisk",
     );
 
     public static function Name($e)

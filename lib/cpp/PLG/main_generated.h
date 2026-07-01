@@ -68,11 +68,31 @@ enum pluginCategory : int8_t {
   pluginCategory_Physics = 7,
   /// GLSL shader plugins for custom visualization
   pluginCategory_Shader = 8,
+  /// Parses raw upstream bytes into canonical SDS records
+  pluginCategory_Parser = 9,
+  /// Validates records (integrity, physical bounds, continuity)
+  pluginCategory_Validator = 10,
+  /// Interpolates ephemeris / state-vector records
+  pluginCategory_Interpolator = 11,
+  /// Exports records to external formats (CSV, etc.)
+  pluginCategory_Exporter = 12,
+  /// Foundational math / utility library module
+  pluginCategory_Foundation = 13,
+  /// Node infrastructure (runtime, delivery, registry)
+  pluginCategory_Infrastructure = 14,
+  /// Module-delivery licensing / key authority
+  pluginCategory_Licensing = 15,
+  /// Storefront listing / discovery
+  pluginCategory_Storefront = 16,
+  /// Publication: PNM signing + pub/sub announcement
+  pluginCategory_Publisher = 17,
+  /// Basilisk astrodynamics simulation module
+  pluginCategory_Basilisk = 18,
   pluginCategory_MIN = pluginCategory_Sensor,
-  pluginCategory_MAX = pluginCategory_Shader
+  pluginCategory_MAX = pluginCategory_Basilisk
 };
 
-inline const pluginCategory (&EnumValuespluginCategory())[9] {
+inline const pluginCategory (&EnumValuespluginCategory())[19] {
   static const pluginCategory values[] = {
     pluginCategory_Sensor,
     pluginCategory_Propagator,
@@ -82,13 +102,23 @@ inline const pluginCategory (&EnumValuespluginCategory())[9] {
     pluginCategory_EW,
     pluginCategory_Comms,
     pluginCategory_Physics,
-    pluginCategory_Shader
+    pluginCategory_Shader,
+    pluginCategory_Parser,
+    pluginCategory_Validator,
+    pluginCategory_Interpolator,
+    pluginCategory_Exporter,
+    pluginCategory_Foundation,
+    pluginCategory_Infrastructure,
+    pluginCategory_Licensing,
+    pluginCategory_Storefront,
+    pluginCategory_Publisher,
+    pluginCategory_Basilisk
   };
   return values;
 }
 
 inline const char * const *EnumNamespluginCategory() {
-  static const char * const names[10] = {
+  static const char * const names[20] = {
     "Sensor",
     "Propagator",
     "Renderer",
@@ -98,13 +128,23 @@ inline const char * const *EnumNamespluginCategory() {
     "Comms",
     "Physics",
     "Shader",
+    "Parser",
+    "Validator",
+    "Interpolator",
+    "Exporter",
+    "Foundation",
+    "Infrastructure",
+    "Licensing",
+    "Storefront",
+    "Publisher",
+    "Basilisk",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepluginCategory(pluginCategory e) {
-  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Shader)) return "";
+  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Basilisk)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespluginCategory()[index];
 }

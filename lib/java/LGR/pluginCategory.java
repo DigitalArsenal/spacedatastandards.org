@@ -42,8 +42,48 @@ public final class pluginCategory {
    * GLSL shader plugins for custom visualization
    */
   public static final byte Shader = 8;
+  /**
+   * Parses raw upstream bytes into canonical SDS records
+   */
+  public static final byte Parser = 9;
+  /**
+   * Validates records (integrity, physical bounds, continuity)
+   */
+  public static final byte Validator = 10;
+  /**
+   * Interpolates ephemeris / state-vector records
+   */
+  public static final byte Interpolator = 11;
+  /**
+   * Exports records to external formats (CSV, etc.)
+   */
+  public static final byte Exporter = 12;
+  /**
+   * Foundational math / utility library module
+   */
+  public static final byte Foundation = 13;
+  /**
+   * Node infrastructure (runtime, delivery, registry)
+   */
+  public static final byte Infrastructure = 14;
+  /**
+   * Module-delivery licensing / key authority
+   */
+  public static final byte Licensing = 15;
+  /**
+   * Storefront listing / discovery
+   */
+  public static final byte Storefront = 16;
+  /**
+   * Publication: PNM signing + pub/sub announcement
+   */
+  public static final byte Publisher = 17;
+  /**
+   * Basilisk astrodynamics simulation module
+   */
+  public static final byte Basilisk = 18;
 
-  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", };
+  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", "Parser", "Validator", "Interpolator", "Exporter", "Foundation", "Infrastructure", "Licensing", "Storefront", "Publisher", "Basilisk", };
 
   public static String name(int e) { return names[e]; }
 }
