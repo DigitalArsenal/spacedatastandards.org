@@ -30,6 +30,11 @@
   --radius-sm: 16px;
   --radius-xs: 8px;
   --sdn-stack-footer-height: 40px;
+  --sdn-stack-header-height: 52px;
+  --sdn-stack-header-brand-size: 15px;
+  --sdn-stack-header-link-size: 14px;
+  --sdn-stack-header-action-size: 13px;
+  --sdn-stack-header-mobile-link-size: 16px;
 }
 
 html {

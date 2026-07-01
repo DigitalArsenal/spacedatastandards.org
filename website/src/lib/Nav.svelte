@@ -97,7 +97,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 52px;
+    height: var(--sdn-stack-header-height, 52px);
     z-index: 9999;
     background: var(--nav-bg);
     backdrop-filter: blur(20px);
@@ -128,7 +128,7 @@
     align-items: center;
     gap: 10px;
     font-weight: 600;
-    font-size: 15px;
+    font-size: var(--sdn-stack-header-brand-size, 15px);
     color: var(--text-primary);
     white-space: nowrap;
     flex-shrink: 0;
@@ -149,7 +149,7 @@
 
   .nav-links a {
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: var(--sdn-stack-header-link-size, 14px);
     font-weight: 500;
     transition: color 0.2s;
     white-space: nowrap;
@@ -175,7 +175,7 @@
     background: var(--ui-bg);
     border: 1px solid var(--ui-border);
     border-radius: var(--radius-sm);
-    font-size: 13px;
+    font-size: var(--sdn-stack-header-action-size, 13px);
     font-weight: 600;
     color: var(--text-primary);
     backdrop-filter: blur(10px);
@@ -199,7 +199,7 @@
   .mobile-menu {
     display: none;
     position: fixed;
-    top: 52px;
+    top: var(--sdn-stack-header-height, 52px);
     left: 0;
     right: 0;
     background: var(--nav-bg);
@@ -218,7 +218,7 @@
 
   .mobile-menu a {
     color: var(--text-secondary);
-    font-size: 16px;
+    font-size: var(--sdn-stack-header-mobile-link-size, 16px);
     font-weight: 500;
     padding: 8px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);

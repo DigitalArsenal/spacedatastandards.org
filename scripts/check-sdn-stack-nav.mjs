@@ -8,6 +8,14 @@ const links = [
   ["module-sdk", "Module SDK", "https://digitalarsenal.github.io/space-data-module-sdk/"],
 ];
 
+const headerTokens = [
+  ["--sdn-stack-header-height", "52px"],
+  ["--sdn-stack-header-brand-size", "15px"],
+  ["--sdn-stack-header-link-size", "14px"],
+  ["--sdn-stack-header-action-size", "13px"],
+  ["--sdn-stack-header-mobile-link-size", "16px"],
+];
+
 const args = process.argv.slice(2);
 const assetIndex = args.indexOf("--asset");
 const assetPath = assetIndex === -1 ? null : args[assetIndex + 1];
@@ -59,6 +67,21 @@ if (!contents.some(([, content]) => content.includes('href="#stack"'))) {
 
 if (!contents.some(([, content]) => content.includes('id="stack"'))) {
   throw new Error("Expected a local #stack section");
+}
+
+for (const [name, value] of headerTokens) {
+  const declaration = `${name}: ${value}`;
+  if (!contents.some(([, content]) => content.includes(declaration))) {
+    throw new Error(`Expected shared header token ${declaration}`);
+  }
+}
+
+if (!contents.some(([, content]) => content.includes("height: var(--sdn-stack-header-height, 52px)"))) {
+  throw new Error("Expected header height to use --sdn-stack-header-height");
+}
+
+if (!contents.some(([, content]) => content.includes("font-size: var(--sdn-stack-header-link-size, 14px)"))) {
+  throw new Error("Expected desktop header links to use --sdn-stack-header-link-size");
 }
 
 if (assetPath) {
