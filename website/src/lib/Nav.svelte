@@ -55,6 +55,7 @@
           {item.label}
         </a>
       {/each}
+      <a href="#stack" on:click={closeMobileMenu}>Stack</a>
     </div>
 
     <div class="nav-right">
@@ -86,13 +87,14 @@
   {#each navItems as item}
     <a href={item.href} use:link on:click={closeMobileMenu}>{item.label}</a>
   {/each}
+  <a href="#stack" on:click={closeMobileMenu}>Stack</a>
   <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank" on:click={closeMobileMenu}>GitHub</a>
 </div>
 
 <style>
   nav {
     position: fixed;
-    top: var(--sdn-stack-nav-height, 32px);
+    top: 0;
     left: 0;
     right: 0;
     height: 52px;
@@ -197,7 +199,7 @@
   .mobile-menu {
     display: none;
     position: fixed;
-    top: calc(var(--sdn-stack-nav-height, 32px) + 52px);
+    top: 52px;
     left: 0;
     right: 0;
     background: var(--nav-bg);

@@ -1,5 +1,5 @@
 (() => {
-  const navHeight = "32px";
+  const footerHeight = "40px";
   const links = [
     {
       key: "standards",
@@ -30,19 +30,19 @@
 
   const styles = `
     :host {
-      --sdn-stack-height: ${navHeight};
+      --sdn-stack-height: ${footerHeight};
       color-scheme: dark;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .sdn-stack-bar {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
       right: 0;
       z-index: 2147483000;
       height: var(--sdn-stack-height);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(5, 7, 10, 0.94);
       color: #f5f5f7;
       backdrop-filter: blur(18px) saturate(140%);
@@ -157,17 +157,17 @@
 
       this.shadowRoot.innerHTML = `
         <style>${styles}</style>
-        <nav class="sdn-stack-bar" aria-label="SDN Stack">
-          <div class="sdn-stack-inner">
+        <footer class="sdn-stack-bar">
+          <nav class="sdn-stack-inner" aria-label="SDN Stack sites">
             <div class="sdn-stack-brand">SDN Stack</div>
             <div class="sdn-stack-links">${items}</div>
-          </div>
-        </nav>
+          </nav>
+        </footer>
       `;
     }
   }
 
-  document.documentElement.style.setProperty("--sdn-stack-nav-height", navHeight);
+  document.documentElement.style.setProperty("--sdn-stack-footer-height", footerHeight);
 
   if (!customElements.get("sdn-stack-nav")) {
     customElements.define("sdn-stack-nav", SdnStackNav);

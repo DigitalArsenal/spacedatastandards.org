@@ -29,7 +29,7 @@
   --radius: 28px;
   --radius-sm: 16px;
   --radius-xs: 8px;
-  --sdn-stack-nav-height: 32px;
+  --sdn-stack-footer-height: 40px;
 }
 
 html {
@@ -56,12 +56,12 @@ body {
 main {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 80px; /* Space for fixed footer */
+  padding-bottom: calc(var(--sdn-stack-footer-height, 40px) + 80px);
 }
 
 @media (max-width: 768px) {
   main {
-    padding-bottom: 0;
+    padding-bottom: calc(var(--sdn-stack-footer-height, 40px) + 24px);
   }
 }
 

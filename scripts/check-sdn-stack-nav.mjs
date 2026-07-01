@@ -30,22 +30,49 @@ function assertContains(content, expected, path) {
 
 function checkContent(path) {
   const content = read(path);
-  assertContains(content, "sdn-stack-nav.js", path);
-  assertContains(content, "<sdn-stack-nav", path);
-  assertContains(content, `active="${active}"`, path);
+  if (content.includes("--sdn-stack-nav-height")) {
+    throw new Error(`${path} must not reserve top header space for the SDN Stack nav`);
+  }
   if (content.includes("Space Stack")) {
     throw new Error(`${path} must use SDN Stack, not Space Stack`);
   }
+  return content;
 }
 
-for (const path of contentPaths) {
-  checkContent(path);
+const contents = contentPaths.map((path) => [path, checkContent(path)]);
+
+if (!contents.some(([, content]) => content.includes("sdn-stack-nav.js"))) {
+  throw new Error("Expected a page shell to load sdn-stack-nav.js");
+}
+
+if (!contents.some(([, content]) => content.includes("<sdn-stack-nav"))) {
+  throw new Error("Expected a page shell to render <sdn-stack-nav>");
+}
+
+if (!contents.some(([, content]) => content.includes(`active="${active}"`))) {
+  throw new Error(`Expected an sdn-stack-nav element with active="${active}"`);
+}
+
+if (!contents.some(([, content]) => content.includes('href="#stack"'))) {
+  throw new Error("Expected a header Stack link pointing to #stack");
+}
+
+if (!contents.some(([, content]) => content.includes('id="stack"'))) {
+  throw new Error("Expected a local #stack section");
 }
 
 if (assetPath) {
   const asset = read(assetPath);
   assertContains(asset, "SDN Stack", assetPath);
   assertContains(asset, "customElements.define(\"sdn-stack-nav\"", assetPath);
+  assertContains(asset, "--sdn-stack-footer-height", assetPath);
+  assertContains(asset, "bottom: 0", assetPath);
+  if (asset.includes("top: 0")) {
+    throw new Error(`${assetPath} must render as a fixed footer, not a top bar`);
+  }
+  if (asset.includes("--sdn-stack-nav-height")) {
+    throw new Error(`${assetPath} must not publish a top nav offset variable`);
+  }
   for (const [, label, href] of links) {
     assertContains(asset, label, assetPath);
     assertContains(asset, href, assetPath);

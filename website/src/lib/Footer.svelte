@@ -30,7 +30,7 @@
 <style>
   footer {
     position: fixed;
-    bottom: 0;
+    bottom: var(--sdn-stack-footer-height, 40px);
     left: 0;
     right: 0;
     padding: 20px 24px;

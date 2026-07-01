@@ -109,7 +109,7 @@
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && node ./scripts/fixTSCasing.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "build:wasm": "node ./scripts/buildWasm.mjs",
         "dev": "npm --prefix website run dev",
-        "check:nav": "node scripts/check-sdn-stack-nav.mjs standards website/index.html index.html --asset sdn-stack-nav.js",
+        "check:nav": "node scripts/check-sdn-stack-nav.mjs standards website/index.html index.html website/src/lib/Nav.svelte website/src/lib/Landing.svelte --asset sdn-stack-nav.js",
         "dev:static": "npx serve . -l 8601",
         "prepare": "husky"
     },
