@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
 const links = [
-  ["provider-onboarding", "Provider Onboarding", "https://spacedatanetwork.org/data-providers.html"],
+  ["onboarding", "Onboarding", "https://spacedatanetwork.org/onboarding.html"],
   ["standards", "Standards", "https://spacedatastandards.org/"],
   ["flatbuffers", "FlatBuffers", "https://digitalarsenal.github.io/flatbuffers/"],
   ["flatsql", "FlatSQL", "https://digitalarsenal.github.io/flatsql/"],

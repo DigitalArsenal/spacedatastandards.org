@@ -2,9 +2,9 @@
   const footerHeight = "40px";
   const links = [
     {
-      key: "provider-onboarding",
-      label: "Provider Onboarding",
-      href: "https://spacedatanetwork.org/data-providers.html",
+      key: "onboarding",
+      label: "Onboarding",
+      href: "https://spacedatanetwork.org/onboarding.html",
     },
     {
       key: "standards",
