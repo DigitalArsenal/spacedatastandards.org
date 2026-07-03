@@ -173,6 +173,9 @@ public enum RecordType : byte
   SCV = 166,
   FSM = 167,
   FSP = 168,
+  SCC = 169,
+  SCN = 170,
+  VST = 171,
 };
 
 public class RecordTypeUnion {
@@ -521,6 +524,12 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromFSM(FSMT _fsm) { return new RecordTypeUnion{ Type = RecordType.FSM, Value = _fsm }; }
   public FSPT AsFSP() { return this.As<FSPT>(); }
   public static RecordTypeUnion FromFSP(FSPT _fsp) { return new RecordTypeUnion{ Type = RecordType.FSP, Value = _fsp }; }
+  public SCCT AsSCC() { return this.As<SCCT>(); }
+  public static RecordTypeUnion FromSCC(SCCT _scc) { return new RecordTypeUnion{ Type = RecordType.SCC, Value = _scc }; }
+  public SCNT AsSCN() { return this.As<SCNT>(); }
+  public static RecordTypeUnion FromSCN(SCNT _scn) { return new RecordTypeUnion{ Type = RecordType.SCN, Value = _scn }; }
+  public VSTT AsVST() { return this.As<VSTT>(); }
+  public static RecordTypeUnion FromVST(VSTT _vst) { return new RecordTypeUnion{ Type = RecordType.VST, Value = _vst }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -693,6 +702,9 @@ public class RecordTypeUnion {
       case RecordType.SCV: return SCV.Pack(builder, _o.AsSCV()).Value;
       case RecordType.FSM: return FSM.Pack(builder, _o.AsFSM()).Value;
       case RecordType.FSP: return FSP.Pack(builder, _o.AsFSP()).Value;
+      case RecordType.SCC: return SCC.Pack(builder, _o.AsSCC()).Value;
+      case RecordType.SCN: return SCN.Pack(builder, _o.AsSCN()).Value;
+      case RecordType.VST: return VST.Pack(builder, _o.AsVST()).Value;
     }
   }
 }
@@ -1209,6 +1221,15 @@ static public class RecordTypeVerify
         break;
       case RecordType.FSP:
         result = FSPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SCC:
+        result = SCCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SCN:
+        result = SCNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.VST:
+        result = VSTVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

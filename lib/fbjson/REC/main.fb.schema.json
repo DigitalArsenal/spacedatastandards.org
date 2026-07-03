@@ -13984,6 +13984,345 @@
         }
       }
     },
+    "STVReferenceFrame": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0
+        },
+        "ITRF": {
+          "value": 1
+        },
+        "EME2000": {
+          "value": 2
+        },
+        "TEME": {
+          "value": 3
+        },
+        "ICRF": {
+          "value": 4
+        },
+        "MOON_CI": {
+          "value": 5
+        },
+        "MARS_CI": {
+          "value": 6
+        }
+      }
+    },
+    "sensorStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "x-flatbuffer-enum-values": {
+        "OPERATIONAL": {
+          "value": 0
+        },
+        "DEGRADED": {
+          "value": 1
+        },
+        "MAINTENANCE": {
+          "value": 2
+        },
+        "OFFLINE": {
+          "value": 3
+        },
+        "CALIBRATING": {
+          "value": 4
+        },
+        "TESTING": {
+          "value": 5
+        },
+        "DECOMMISSIONED": {
+          "value": 6
+        }
+      }
+    },
+    "maintenanceType": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "x-flatbuffer-enum-values": {
+        "SCHEDULED": {
+          "value": 0
+        },
+        "UNSCHEDULED": {
+          "value": 1
+        },
+        "CORRECTIVE": {
+          "value": 2
+        },
+        "PREVENTIVE": {
+          "value": 3
+        },
+        "CALIBRATION": {
+          "value": 4
+        },
+        "UPGRADE": {
+          "value": 5
+        },
+        "INSPECTION": {
+          "value": 6
+        }
+      }
+    },
+    "viewerMapMode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Viewer map style for scenario display.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "GEOGRAPHICAL_DAY_NIGHT": {
+          "value": 1
+        },
+        "GEOGRAPHICAL_CONSTANT": {
+          "value": 2
+        },
+        "POLITICAL": {
+          "value": 3
+        }
+      }
+    },
+    "viewerCameraFrameMode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Camera frame mode relative to a focused satellite or default scene frame.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "DEFAULT": {
+          "value": 0
+        },
+        "RADIAL_INTRACK": {
+          "value": 1
+        },
+        "CROSSTRACK_INTRACK": {
+          "value": 2
+        },
+        "RADIAL_CROSSTRACK": {
+          "value": 3
+        }
+      }
+    },
+    "viewerSatelliteAlignmentMode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Satellite body alignment used by a 3D viewer when focused on a satellite.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ORBITAL": {
+          "value": 1
+        },
+        "NADIR": {
+          "value": 2
+        }
+      }
+    },
+    "scenarioReferenceKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "record, a variable placeholder, or a visual annotation.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "SATELLITE": {
+          "value": 1
+        },
+        "GROUND_SITE": {
+          "value": 2
+        },
+        "SENSOR": {
+          "value": 3
+        },
+        "VARIABLE_SATELLITE": {
+          "value": 4
+        },
+        "VARIABLE_SITE": {
+          "value": 5
+        },
+        "POINT_OF_INTEREST": {
+          "value": 6
+        },
+        "EXCLUSION_ZONE": {
+          "value": 7
+        },
+        "OBSERVATION": {
+          "value": 8
+        }
+      }
+    },
+    "scenarioActionCode": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Scenario command action.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "CLEAR": {
+          "value": 1
+        },
+        "RESET": {
+          "value": 2
+        }
+      }
+    },
+    "controlMessageKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Scenario controls message discriminator.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "READY": {
+          "value": 1
+        },
+        "SCENARIO_SETUP": {
+          "value": 2
+        },
+        "REQUEST_STATE": {
+          "value": 3
+        },
+        "STATE_RESPONSE": {
+          "value": 4
+        },
+        "OPEN_ASSET_PICKER": {
+          "value": 5
+        },
+        "OPEN_ASSET_PICKER_ACK": {
+          "value": 6
+        },
+        "ASSETS_CHANGED": {
+          "value": 7
+        }
+      }
+    },
+    "stateRequestKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "State request kind for a control-message request/response pair.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "SCENARIO": {
+          "value": 1
+        },
+        "REFERENCES": {
+          "value": 2
+        }
+      }
+    },
+    "assetCatalogTab": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Asset catalog tab requested by a host or embedded scenario controls surface.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "SATELLITES": {
+          "value": 1
+        },
+        "SENSORS": {
+          "value": 2
+        }
+      }
+    },
     "scvEnvelopeKind": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -14483,80 +14822,6 @@
         },
         "CUSTOM": {
           "value": 255
-        }
-      }
-    },
-    "sensorStatus": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "x-flatbuffer-enum-values": {
-        "OPERATIONAL": {
-          "value": 0
-        },
-        "DEGRADED": {
-          "value": 1
-        },
-        "MAINTENANCE": {
-          "value": 2
-        },
-        "OFFLINE": {
-          "value": 3
-        },
-        "CALIBRATING": {
-          "value": 4
-        },
-        "TESTING": {
-          "value": 5
-        },
-        "DECOMMISSIONED": {
-          "value": 6
-        }
-      }
-    },
-    "maintenanceType": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "x-flatbuffer-enum-values": {
-        "SCHEDULED": {
-          "value": 0
-        },
-        "UNSCHEDULED": {
-          "value": 1
-        },
-        "CORRECTIVE": {
-          "value": 2
-        },
-        "PREVENTIVE": {
-          "value": 3
-        },
-        "CALIBRATION": {
-          "value": 4
-        },
-        "UPGRADE": {
-          "value": 5
-        },
-        "INSPECTION": {
-          "value": 6
         }
       }
     },
@@ -15517,43 +15782,6 @@
         },
         "PRM": {
           "value": 3
-        }
-      }
-    },
-    "STVReferenceFrame": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "x-flatbuffer-enum-values": {
-        "GCRF": {
-          "value": 0
-        },
-        "ITRF": {
-          "value": 1
-        },
-        "EME2000": {
-          "value": 2
-        },
-        "TEME": {
-          "value": 3
-        },
-        "ICRF": {
-          "value": 4
-        },
-        "MOON_CI": {
-          "value": 5
-        },
-        "MARS_CI": {
-          "value": 6
         }
       }
     },
@@ -49009,6 +49237,1177 @@
       },
       "description": "SAR Observation"
     },
+    "STV": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EPOCH": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "REF_FRAME": {
+          "type": "integer",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "FLAGS": {
+          "type": "integer",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "RESERVED": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[uint8]"
+        }
+      },
+      "description": "State Vector"
+    },
+    "sensorMaintenanceEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "START_TIME": {
+          "type": "string",
+          "description": "Maintenance start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Maintenance end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/maintenanceType",
+          "description": "Type of maintenance",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SCHEDULED": {
+              "value": 0
+            },
+            "UNSCHEDULED": {
+              "value": 1
+            },
+            "CORRECTIVE": {
+              "value": 2
+            },
+            "PREVENTIVE": {
+              "value": 3
+            },
+            "CALIBRATION": {
+              "value": 4
+            },
+            "UPGRADE": {
+              "value": 5
+            },
+            "INSPECTION": {
+              "value": 6
+            }
+          }
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of maintenance performed",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Components affected",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "description": "Sensor Maintenance Event"
+    },
+    "sensorPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "START_TIME": {
+          "type": "string",
+          "description": "Plan start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Plan end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ID": {
+          "type": "string",
+          "description": "Target satellite number or designator",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIORITY": {
+          "type": "integer",
+          "description": "Priority level (1=highest)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "MODE": {
+          "type": "string",
+          "description": "Requested observation mode",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_ELEVATION": {
+          "type": "number",
+          "description": "Minimum elevation in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "description": "Maximum range in km",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Sensor Tasking Plan"
+    },
+    "sensorStats": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PERIOD_START": {
+          "type": "string",
+          "description": "Statistics period start (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIOD_END": {
+          "type": "string",
+          "description": "Statistics period end (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_ATTEMPTED": {
+          "type": "integer",
+          "description": "Total observation attempts",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBS_SUCCESSFUL": {
+          "type": "integer",
+          "description": "Successful observations",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBS_FAILED": {
+          "type": "integer",
+          "description": "Failed observations",
+          "x-flatbuffer-type": "uint"
+        },
+        "UPTIME": {
+          "type": "number",
+          "description": "Uptime fraction (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "AVG_ACCURACY": {
+          "type": "number",
+          "description": "Average tracking accuracy in arcseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DETECTIONS": {
+          "type": "integer",
+          "description": "Detected objects count",
+          "x-flatbuffer-type": "uint"
+        },
+        "UCT_COUNT": {
+          "type": "integer",
+          "description": "Uncorrelated tracks count",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "description": "Sensor Operational Statistics"
+    },
+    "SEN": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Sensor name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Sensor type",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/sensorStatus",
+          "description": "Current operational status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPERATIONAL": {
+              "value": 0
+            },
+            "DEGRADED": {
+              "value": 1
+            },
+            "MAINTENANCE": {
+              "value": 2
+            },
+            "OFFLINE": {
+              "value": 3
+            },
+            "CALIBRATING": {
+              "value": 4
+            },
+            "TESTING": {
+              "value": 5
+            },
+            "DECOMMISSIONED": {
+              "value": 6
+            }
+          }
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "Site identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Geodetic latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Geodetic longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters above WGS-84",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS_TIME": {
+          "type": "string",
+          "description": "Last status update (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAINTENANCE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorMaintenanceEvent"
+          },
+          "description": "Maintenance history",
+          "x-flatbuffer-type": "[sensorMaintenanceEvent]"
+        },
+        "PLANS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorPlan"
+          },
+          "description": "Observation plans/taskings",
+          "x-flatbuffer-type": "[sensorPlan]"
+        },
+        "STATISTICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorStats"
+          },
+          "description": "Operational statistics",
+          "x-flatbuffer-type": "[sensorStats]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Sensor Management"
+    },
+    "VSTCameraRotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "YAW_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PITCH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "USES_QUATERNION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "description": "Camera rotation offset. Quaternions are preferred when present; Euler angles are retained for import of older scenario JSON."
+    },
+    "VSTDisplaySettings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MAP_MODE": {
+          "$ref": "#/definitions/viewerMapMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "GEOGRAPHICAL_DAY_NIGHT": {
+              "value": 1
+            },
+            "GEOGRAPHICAL_CONSTANT": {
+              "value": 2
+            },
+            "POLITICAL": {
+              "value": 3
+            }
+          }
+        },
+        "SHOW_GEO_BELT_MARKERS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_CIS_LUNAR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_EQUATOR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_LATITUDE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_LONGITUDE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_SHADOW_CONES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_GIF_CONTROLS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_ATMOSPHERE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_SUN_DIRECTION_INDICATOR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "USE_STARFIELD": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "USE_STITCHED_ORBIT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "description": "App display toggles for a scenario viewer."
+    },
+    "VSTCameraOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CAMERA_FRAME_MODE": {
+          "$ref": "#/definitions/viewerCameraFrameMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DEFAULT": {
+              "value": 0
+            },
+            "RADIAL_INTRACK": {
+              "value": 1
+            },
+            "CROSSTRACK_INTRACK": {
+              "value": 2
+            },
+            "RADIAL_CROSSTRACK": {
+              "value": 3
+            }
+          }
+        },
+        "SATELLITE_ALIGNMENT": {
+          "$ref": "#/definitions/viewerSatelliteAlignmentMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ORBITAL": {
+              "value": 1
+            },
+            "NADIR": {
+              "value": 2
+            }
+          }
+        },
+        "DISTANCE_FROM_TARGET_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ROTATION": {
+          "$ref": "#/definitions/VSTCameraRotation",
+          "x-flatbuffer-type": "VSTCameraRotation"
+        }
+      },
+      "description": "Camera options for a space-domain scenario viewer."
+    },
+    "VST": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CAMERA": {
+          "$ref": "#/definitions/VSTCameraOptions",
+          "x-flatbuffer-type": "VSTCameraOptions"
+        },
+        "DISPLAY_SETTINGS": {
+          "$ref": "#/definitions/VSTDisplaySettings",
+          "x-flatbuffer-type": "VSTDisplaySettings"
+        },
+        "FOCUSED_REFERENCE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FOCUSED_REFERENCE_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        }
+      },
+      "description": "Viewer State \u2014 display and camera state associated with a scenario."
+    },
+    "SCNTleLines": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LINE1": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LINE2": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Raw TLE lines retained as import provenance for scenario setup."
+    },
+    "SCNGeodeticPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LATITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "Geodetic point in latitude, longitude, altitude order."
+    },
+    "SCNPointOfInterest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HIGHLIGHT_BEFORE_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HIGHLIGHT_AFTER_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COLOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION": {
+          "$ref": "#/definitions/SCNGeodeticPoint",
+          "x-flatbuffer-type": "SCNGeodeticPoint"
+        }
+      },
+      "description": "Time-tagged point or annotation shown in a scenario."
+    },
+    "SCNViewCone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MIN_ELEVATION_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ELEVATION_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_AZIMUTH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_AZIMUTH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "HALF_ANGLE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DYNAMIC_RANGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Sensor or site view-cone overlay used by scenario tools."
+    },
+    "SCNSunAdvantageTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TARGET_REFERENCE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_NORAD_CAT_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "GROUND_SITE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Target pairing for sun-advantage visualization."
+    },
+    "SCNExclusionZone": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILL_COLOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LABEL_COLOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_FILLED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNGeodeticPoint"
+          },
+          "x-flatbuffer-type": "[SCNGeodeticPoint]"
+        },
+        "BOUNDARY": {
+          "$ref": "#/definitions/GJNGeometry",
+          "x-flatbuffer-type": "GJNGeometry"
+        }
+      },
+      "description": "Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape when available; POINTS preserves simple LLA polygon imports."
+    },
+    "SCNReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REFERENCE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISPLAY_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_KIND": {
+          "$ref": "#/definitions/scenarioReferenceKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "SATELLITE": {
+              "value": 1
+            },
+            "GROUND_SITE": {
+              "value": 2
+            },
+            "SENSOR": {
+              "value": 3
+            },
+            "VARIABLE_SATELLITE": {
+              "value": 4
+            },
+            "VARIABLE_SITE": {
+              "value": 5
+            },
+            "POINT_OF_INTEREST": {
+              "value": 6
+            },
+            "EXCLUSION_ZONE": {
+              "value": 7
+            },
+            "OBSERVATION": {
+              "value": 8
+            }
+          }
+        },
+        "REMOVE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTRY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "DATA_MODES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "TLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNTleLines"
+          },
+          "x-flatbuffer-type": "[SCNTleLines]"
+        },
+        "MEAN_ELEMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OMM"
+          },
+          "x-flatbuffer-type": "[OMM]"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/STV"
+          },
+          "x-flatbuffer-type": "[STV]"
+        },
+        "MANEUVERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MNV"
+          },
+          "x-flatbuffer-type": "[MNV]"
+        },
+        "SITE": {
+          "$ref": "#/definitions/SIT",
+          "x-flatbuffer-type": "SIT"
+        },
+        "SENSOR": {
+          "$ref": "#/definitions/SEN",
+          "x-flatbuffer-type": "SEN"
+        },
+        "SENSOR_SYSTEM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_LATITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SITE_LONGITUDE_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VARIABLE_SATELLITE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIABLE_SITE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNPointOfInterest"
+          },
+          "x-flatbuffer-type": "[SCNPointOfInterest]"
+        },
+        "VIEW_CONE": {
+          "$ref": "#/definitions/SCNViewCone",
+          "x-flatbuffer-type": "SCNViewCone"
+        },
+        "SUN_ADVANTAGE_TARGET": {
+          "$ref": "#/definitions/SCNSunAdvantageTarget",
+          "x-flatbuffer-type": "SCNSunAdvantageTarget"
+        },
+        "EXCLUSION_ZONE": {
+          "$ref": "#/definitions/SCNExclusionZone",
+          "x-flatbuffer-type": "SCNExclusionZone"
+        },
+        "OBSERVATION_EO": {
+          "$ref": "#/definitions/EOO",
+          "x-flatbuffer-type": "EOO"
+        },
+        "OBSERVATION_RADAR": {
+          "$ref": "#/definitions/RDO",
+          "x-flatbuffer-type": "RDO"
+        }
+      },
+      "description": "Scene reference that binds viewer-scene state to existing SDS domain records without duplicating those records."
+    },
+    "SCNEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EVENT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ELSETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OMM"
+          },
+          "x-flatbuffer-type": "[OMM]"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/STV"
+          },
+          "x-flatbuffer-type": "[STV]"
+        },
+        "EO_OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EOO"
+          },
+          "x-flatbuffer-type": "[EOO]"
+        },
+        "RADAR_OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RDO"
+          },
+          "x-flatbuffer-type": "[RDO]"
+        }
+      },
+      "description": "Imported scenario event payload composed from existing SDS records."
+    },
+    "SCNAssetsChanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ADDED_SATELLITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "ADDED_GROUND_SITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "REMOVED_SATELLITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "REMOVED_GROUND_SITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "SATELLITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "GROUND_SITES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "REFERENCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        }
+      },
+      "description": "Scenario asset-change notification payload."
+    },
+    "SCN": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SCENARIO_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "EVENT": {
+          "$ref": "#/definitions/SCNEvent",
+          "x-flatbuffer-type": "SCNEvent"
+        },
+        "FOCUSED_REFERENCE_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "FOCUSED_REFERENCE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIM_TIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SIM_SPEED": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "USE_ECEF_FRAME": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "x-flatbuffer-type": "RFM"
+        },
+        "ACTION": {
+          "$ref": "#/definitions/scenarioActionCode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "CLEAR": {
+              "value": 1
+            },
+            "RESET": {
+              "value": 2
+            }
+          }
+        },
+        "VIEW_STATE": {
+          "$ref": "#/definitions/VST",
+          "x-flatbuffer-type": "VST"
+        },
+        "ASSETS_CHANGED": {
+          "$ref": "#/definitions/SCNAssetsChanged",
+          "x-flatbuffer-type": "SCNAssetsChanged"
+        }
+      },
+      "description": "Scenario \u2014 canonical scene composition and simulation state for external scenario controls integrations. Domain records remain in their native SDS schemas and are referenced or embedded here only as scenario content."
+    },
+    "SCCRequestState": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUEST_KIND": {
+          "$ref": "#/definitions/stateRequestKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "SCENARIO": {
+              "value": 1
+            },
+            "REFERENCES": {
+              "value": 2
+            }
+          }
+        }
+      },
+      "description": "Request current state from a scenario controls host."
+    },
+    "SCCStateResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUEST_KIND": {
+          "$ref": "#/definitions/stateRequestKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "SCENARIO": {
+              "value": 1
+            },
+            "REFERENCES": {
+              "value": 2
+            }
+          }
+        },
+        "SCENARIO": {
+          "$ref": "#/definitions/SCN",
+          "x-flatbuffer-type": "SCN"
+        },
+        "REFERENCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCNReference"
+          },
+          "x-flatbuffer-type": "[SCNReference]"
+        },
+        "FOCUSED_REFERENCE_INDEX": {
+          "type": "integer",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "State response. SCENARIO carries full scenario state; REFERENCES can carry the lighter reference-list response for reference-only requests."
+    },
+    "SCCAssetPicker": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CATALOG_TAB": {
+          "$ref": "#/definitions/assetCatalogTab",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "SATELLITES": {
+              "value": 1
+            },
+            "SENSORS": {
+              "value": 2
+            }
+          }
+        },
+        "ACKNOWLEDGED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "description": "Asset-picker request or acknowledgement."
+    },
+    "SCCReady": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "READY": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "description": "Startup readiness message."
+    },
+    "SCC": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MESSAGE_KIND": {
+          "$ref": "#/definitions/controlMessageKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "READY": {
+              "value": 1
+            },
+            "SCENARIO_SETUP": {
+              "value": 2
+            },
+            "REQUEST_STATE": {
+              "value": 3
+            },
+            "STATE_RESPONSE": {
+              "value": 4
+            },
+            "OPEN_ASSET_PICKER": {
+              "value": 5
+            },
+            "OPEN_ASSET_PICKER_ACK": {
+              "value": 6
+            },
+            "ASSETS_CHANGED": {
+              "value": 7
+            }
+          }
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCENARIOS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCN"
+          },
+          "x-flatbuffer-type": "[SCN]"
+        },
+        "SCENARIO": {
+          "$ref": "#/definitions/SCN",
+          "x-flatbuffer-type": "SCN"
+        },
+        "REQUEST_STATE": {
+          "$ref": "#/definitions/SCCRequestState",
+          "x-flatbuffer-type": "SCCRequestState"
+        },
+        "STATE_RESPONSE": {
+          "$ref": "#/definitions/SCCStateResponse",
+          "x-flatbuffer-type": "SCCStateResponse"
+        },
+        "ASSET_PICKER": {
+          "$ref": "#/definitions/SCCAssetPicker",
+          "x-flatbuffer-type": "SCCAssetPicker"
+        },
+        "READY": {
+          "$ref": "#/definitions/SCCReady",
+          "x-flatbuffer-type": "SCCReady"
+        }
+      },
+      "description": "Scenario Controls - message-bus envelope for scenario setup, state requests/responses, startup readiness, and asset-picker delegation."
+    },
     "SCHEMA_STANDARD": {
       "type": "object",
       "additionalProperties": false,
@@ -51462,264 +52861,6 @@
       },
       "description": "Sensor Detection Report envelope message."
     },
-    "sensorMaintenanceEvent": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "START_TIME": {
-          "type": "string",
-          "description": "Maintenance start time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "END_TIME": {
-          "type": "string",
-          "description": "Maintenance end time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "TYPE": {
-          "$ref": "#/definitions/maintenanceType",
-          "description": "Type of maintenance",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "SCHEDULED": {
-              "value": 0
-            },
-            "UNSCHEDULED": {
-              "value": 1
-            },
-            "CORRECTIVE": {
-              "value": 2
-            },
-            "PREVENTIVE": {
-              "value": 3
-            },
-            "CALIBRATION": {
-              "value": 4
-            },
-            "UPGRADE": {
-              "value": 5
-            },
-            "INSPECTION": {
-              "value": 6
-            }
-          }
-        },
-        "DESCRIPTION": {
-          "type": "string",
-          "description": "Description of maintenance performed",
-          "x-flatbuffer-type": "string"
-        },
-        "COMPONENTS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Components affected",
-          "x-flatbuffer-type": "[string]"
-        }
-      },
-      "description": "Sensor Maintenance Event"
-    },
-    "sensorPlan": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "START_TIME": {
-          "type": "string",
-          "description": "Plan start time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "END_TIME": {
-          "type": "string",
-          "description": "Plan end time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "TARGET_ID": {
-          "type": "string",
-          "description": "Target satellite number or designator",
-          "x-flatbuffer-type": "string"
-        },
-        "PRIORITY": {
-          "type": "integer",
-          "description": "Priority level (1=highest)",
-          "x-flatbuffer-type": "uint8"
-        },
-        "MODE": {
-          "type": "string",
-          "description": "Requested observation mode",
-          "x-flatbuffer-type": "string"
-        },
-        "MIN_ELEVATION": {
-          "type": "number",
-          "description": "Minimum elevation in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_RANGE": {
-          "type": "number",
-          "description": "Maximum range in km",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "description": "Sensor Tasking Plan"
-    },
-    "sensorStats": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "PERIOD_START": {
-          "type": "string",
-          "description": "Statistics period start (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "PERIOD_END": {
-          "type": "string",
-          "description": "Statistics period end (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "OBS_ATTEMPTED": {
-          "type": "integer",
-          "description": "Total observation attempts",
-          "x-flatbuffer-type": "uint"
-        },
-        "OBS_SUCCESSFUL": {
-          "type": "integer",
-          "description": "Successful observations",
-          "x-flatbuffer-type": "uint"
-        },
-        "OBS_FAILED": {
-          "type": "integer",
-          "description": "Failed observations",
-          "x-flatbuffer-type": "uint"
-        },
-        "UPTIME": {
-          "type": "number",
-          "description": "Uptime fraction (0.0-1.0)",
-          "x-flatbuffer-type": "double"
-        },
-        "AVG_ACCURACY": {
-          "type": "number",
-          "description": "Average tracking accuracy in arcseconds",
-          "x-flatbuffer-type": "double"
-        },
-        "DETECTIONS": {
-          "type": "integer",
-          "description": "Detected objects count",
-          "x-flatbuffer-type": "uint"
-        },
-        "UCT_COUNT": {
-          "type": "integer",
-          "description": "Uncorrelated tracks count",
-          "x-flatbuffer-type": "uint"
-        }
-      },
-      "description": "Sensor Operational Statistics"
-    },
-    "SEN": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "ID": {
-          "type": "string",
-          "description": "Unique sensor identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "NAME": {
-          "type": "string",
-          "description": "Sensor name",
-          "x-flatbuffer-type": "string"
-        },
-        "TYPE": {
-          "type": "string",
-          "description": "Sensor type",
-          "x-flatbuffer-type": "string"
-        },
-        "STATUS": {
-          "$ref": "#/definitions/sensorStatus",
-          "description": "Current operational status",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "OPERATIONAL": {
-              "value": 0
-            },
-            "DEGRADED": {
-              "value": 1
-            },
-            "MAINTENANCE": {
-              "value": 2
-            },
-            "OFFLINE": {
-              "value": 3
-            },
-            "CALIBRATING": {
-              "value": 4
-            },
-            "TESTING": {
-              "value": 5
-            },
-            "DECOMMISSIONED": {
-              "value": 6
-            }
-          }
-        },
-        "SITE_ID": {
-          "type": "string",
-          "description": "Site identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "LATITUDE": {
-          "type": "number",
-          "description": "Geodetic latitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE": {
-          "type": "number",
-          "description": "Geodetic longitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "ALTITUDE": {
-          "type": "number",
-          "description": "Altitude in meters above WGS-84",
-          "x-flatbuffer-type": "double"
-        },
-        "STATUS_TIME": {
-          "type": "string",
-          "description": "Last status update (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "MAINTENANCE": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/sensorMaintenanceEvent"
-          },
-          "description": "Maintenance history",
-          "x-flatbuffer-type": "[sensorMaintenanceEvent]"
-        },
-        "PLANS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/sensorPlan"
-          },
-          "description": "Observation plans/taskings",
-          "x-flatbuffer-type": "[sensorPlan]"
-        },
-        "STATISTICS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/sensorStats"
-          },
-          "description": "Operational statistics",
-          "x-flatbuffer-type": "[sensorStats]"
-        },
-        "NOTES": {
-          "type": "string",
-          "description": "Additional notes",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "description": "Sensor Management"
-    },
     "SEO": {
       "type": "object",
       "additionalProperties": false,
@@ -53655,56 +54796,6 @@
         }
       },
       "description": "Star Catalog Entry"
-    },
-    "STV": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "EPOCH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POS_X": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POS_Y": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POS_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "VEL_X": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "VEL_Y": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "VEL_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "REF_FRAME": {
-          "type": "integer",
-          "x-flatbuffer-type": "ubyte"
-        },
-        "FLAGS": {
-          "type": "integer",
-          "x-flatbuffer-type": "ubyte"
-        },
-        "RESERVED": {
-          "type": "array",
-          "items": {
-            "type": "integer"
-          },
-          "x-flatbuffer-type": "[uint8]"
-        }
-      },
-      "description": "State Vector"
     },
     "SWR": {
       "type": "object",

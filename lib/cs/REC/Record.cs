@@ -188,6 +188,9 @@ public struct Record : IFlatbufferObject
   public SCV valueAsSCV() { return value<SCV>().Value; }
   public FSM valueAsFSM() { return value<FSM>().Value; }
   public FSP valueAsFSP() { return value<FSP>().Value; }
+  public SCC valueAsSCC() { return value<SCC>().Value; }
+  public SCN valueAsSCN() { return value<SCN>().Value; }
+  public VST valueAsVST() { return value<VST>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -729,6 +732,15 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.FSP:
         _o.value.Value = this.value<FSP>().HasValue ? this.value<FSP>().Value.UnPack() : null;
+        break;
+      case RecordType.SCC:
+        _o.value.Value = this.value<SCC>().HasValue ? this.value<SCC>().Value.UnPack() : null;
+        break;
+      case RecordType.SCN:
+        _o.value.Value = this.value<SCN>().HasValue ? this.value<SCN>().Value.UnPack() : null;
+        break;
+      case RecordType.VST:
+        _o.value.Value = this.value<VST>().HasValue ? this.value<VST>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

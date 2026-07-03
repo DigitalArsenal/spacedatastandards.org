@@ -94,7 +94,7 @@ describe('Licensing module delivery schemas', () => {
             'ENCRYPTED_WASM_SIZE',
             'REQUIRED_SCOPE',
             'KEY_ID',
-            'ALLOWED_DOMAINS',
+            'ALLOWED_XPUBS',
             'MAX_GRANT_TIMEOUT_MS'
         ]) {
             assert.match(source, new RegExp(`\\b${field}\\b`), `PLG missing ${field}`);

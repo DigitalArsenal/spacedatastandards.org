@@ -172,6 +172,9 @@ class RecordType(object):
     SCV = 166
     FSM = 167
     FSP = 168
+    SCC = 169
+    SCN = 170
+    VST = 171
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -681,4 +684,13 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.FSP:
         import FSP
         return FSP.FSPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SCC:
+        import SCC
+        return SCC.SCCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SCN:
+        import SCN
+        return SCN.SCNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.VST:
+        import VST
+        return VST.VSTT.InitFromBuf(table.Bytes, table.Pos)
     return None

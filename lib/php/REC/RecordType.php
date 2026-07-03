@@ -172,6 +172,9 @@ class RecordType
     const SCV = 166;
     const FSM = 167;
     const FSP = 168;
+    const SCC = 169;
+    const SCN = 170;
+    const VST = 171;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -343,6 +346,9 @@ class RecordType
         RecordType::SCV=>"SCV",
         RecordType::FSM=>"FSM",
         RecordType::FSP=>"FSP",
+        RecordType::SCC=>"SCC",
+        RecordType::SCN=>"SCN",
+        RecordType::VST=>"VST",
     );
 
     public static function Name($e)

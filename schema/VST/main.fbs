@@ -1,0 +1,73 @@
+// Hash: 96cbbc6c34ea6c46b73c2a344331bf5df2f96c82ddc0eb1bb01c61110b5c7d65
+// Version: 1.136.0
+// -----------------------------------END_HEADER
+/// Viewer map style for scenario display.
+enum viewerMapMode : byte {
+  UNKNOWN,
+  GEOGRAPHICAL_DAY_NIGHT,
+  GEOGRAPHICAL_CONSTANT,
+  POLITICAL
+}
+
+/// Camera frame mode relative to a focused satellite or default scene frame.
+enum viewerCameraFrameMode : byte {
+  DEFAULT,
+  RADIAL_INTRACK,
+  CROSSTRACK_INTRACK,
+  RADIAL_CROSSTRACK
+}
+
+/// Satellite body alignment used by a 3D viewer when focused on a satellite.
+enum viewerSatelliteAlignmentMode : byte {
+  UNKNOWN,
+  ORBITAL,
+  NADIR
+}
+
+/// Camera rotation offset. Quaternions are preferred when present; Euler
+/// angles are retained for import of older scenario JSON.
+table VSTCameraRotation {
+  YAW_DEG:double;
+  PITCH_DEG:double;
+  ROLL_DEG:double;
+  QUATERNION_X:double;
+  QUATERNION_Y:double;
+  QUATERNION_Z:double;
+  QUATERNION_W:double;
+  USES_QUATERNION:bool = true;
+}
+
+/// App display toggles for a scenario viewer.
+table VSTDisplaySettings {
+  MAP_MODE:viewerMapMode;
+  SHOW_GEO_BELT_MARKERS:bool;
+  SHOW_CIS_LUNAR:bool;
+  SHOW_EQUATOR:bool;
+  SHOW_LATITUDE:bool;
+  SHOW_LONGITUDE:bool;
+  SHOW_SHADOW_CONES:bool;
+  SHOW_GIF_CONTROLS:bool;
+  SHOW_ATMOSPHERE:bool;
+  SHOW_SUN_DIRECTION_INDICATOR:bool;
+  USE_STARFIELD:bool;
+  USE_STITCHED_ORBIT:bool;
+}
+
+/// Camera options for a space-domain scenario viewer.
+table VSTCameraOptions {
+  CAMERA_FRAME_MODE:viewerCameraFrameMode;
+  SATELLITE_ALIGNMENT:viewerSatelliteAlignmentMode;
+  DISTANCE_FROM_TARGET_KM:double;
+  ROTATION:VSTCameraRotation;
+}
+
+/// Viewer State — display and camera state associated with a scenario.
+table VST {
+  CAMERA:VSTCameraOptions;
+  DISPLAY_SETTINGS:VSTDisplaySettings;
+  FOCUSED_REFERENCE_ID:string;
+  FOCUSED_REFERENCE_INDEX:int = -1;
+}
+
+root_type VST;
+file_identifier "$VST";

@@ -181,6 +181,9 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -358,11 +361,14 @@ enum RecordType : uint8_t {
   RecordType_SCV = 166,
   RecordType_FSM = 167,
   RecordType_FSP = 168,
+  RecordType_SCC = 169,
+  RecordType_SCN = 170,
+  RecordType_VST = 171,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_FSP
+  RecordType_MAX = RecordType_VST
 };
 
-inline const RecordType (&EnumValuesRecordType())[169] {
+inline const RecordType (&EnumValuesRecordType())[172] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -532,13 +538,16 @@ inline const RecordType (&EnumValuesRecordType())[169] {
     RecordType_XTC,
     RecordType_SCV,
     RecordType_FSM,
-    RecordType_FSP
+    RecordType_FSP,
+    RecordType_SCC,
+    RecordType_SCN,
+    RecordType_VST
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[170] = {
+  static const char * const names[173] = {
     "NONE",
     "ACL",
     "ACM",
@@ -708,13 +717,16 @@ inline const char * const *EnumNamesRecordType() {
     "SCV",
     "FSM",
     "FSP",
+    "SCC",
+    "SCN",
+    "VST",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_FSP)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_VST)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1395,6 +1407,18 @@ template<> struct RecordTypeTraits<FSP> {
   static const RecordType enum_value = RecordType_FSP;
 };
 
+template<> struct RecordTypeTraits<SCC> {
+  static const RecordType enum_value = RecordType_SCC;
+};
+
+template<> struct RecordTypeTraits<SCN> {
+  static const RecordType enum_value = RecordType_SCN;
+};
+
+template<> struct RecordTypeTraits<VST> {
+  static const RecordType enum_value = RecordType_VST;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -1919,6 +1943,15 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const FSP *value_as_FSP() const {
     return value_type() == RecordType_FSP ? static_cast<const FSP *>(value()) : nullptr;
+  }
+  const SCC *value_as_SCC() const {
+    return value_type() == RecordType_SCC ? static_cast<const SCC *>(value()) : nullptr;
+  }
+  const SCN *value_as_SCN() const {
+    return value_type() == RecordType_SCN ? static_cast<const SCN *>(value()) : nullptr;
+  }
+  const VST *value_as_VST() const {
+    return value_type() == RecordType_VST ? static_cast<const VST *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -2606,6 +2639,18 @@ template<> inline const FSM *Record::value_as<FSM>() const {
 
 template<> inline const FSP *Record::value_as<FSP>() const {
   return value_as_FSP();
+}
+
+template<> inline const SCC *Record::value_as<SCC>() const {
+  return value_as_SCC();
+}
+
+template<> inline const SCN *Record::value_as<SCN>() const {
+  return value_as_SCN();
+}
+
+template<> inline const VST *Record::value_as<VST>() const {
+  return value_as_VST();
 }
 
 struct RecordBuilder {
@@ -3403,6 +3448,18 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_FSP: {
       auto ptr = reinterpret_cast<const FSP *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SCC: {
+      auto ptr = reinterpret_cast<const SCC *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_SCN: {
+      auto ptr = reinterpret_cast<const SCN *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_VST: {
+      auto ptr = reinterpret_cast<const VST *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

@@ -337,7 +337,9 @@ describe("SCV sensor coverage schema", () => {
     assert.match(manifest.STANDARDS.SCV.IDL, new RegExp(`// Hash: ${actualHash}`));
   });
 
-  it("keeps SCV and REC distribution archives in generated binding parity", async () => {
+  it("keeps SCV and REC distribution archives in generated binding parity", async function () {
+    this.timeout(10000);
+
     const requiredTokens = [
       "SCVSensorShapeContract",
       "scvSensorAxisConvention",

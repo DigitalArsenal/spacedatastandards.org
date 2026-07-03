@@ -1,0 +1,75 @@
+// Hash: 33514c1101072c2485b1168bf8110c78fee9f3c6209114bc132a089868e2e843
+// Version: 1.136.1
+// -----------------------------------END_HEADER
+include "../SCN/main.fbs";
+
+/// Scenario controls message discriminator.
+enum controlMessageKind : byte {
+  UNKNOWN,
+  READY,
+  SCENARIO_SETUP,
+  REQUEST_STATE,
+  STATE_RESPONSE,
+  OPEN_ASSET_PICKER,
+  OPEN_ASSET_PICKER_ACK,
+  ASSETS_CHANGED
+}
+
+/// State request kind for a control-message request/response pair.
+enum stateRequestKind : byte {
+  UNKNOWN,
+  SCENARIO,
+  REFERENCES
+}
+
+/// Asset catalog tab requested by a host or embedded scenario controls surface.
+enum assetCatalogTab : byte {
+  UNKNOWN,
+  SATELLITES,
+  SENSORS
+}
+
+/// Request current state from a scenario controls host.
+table SCCRequestState {
+  REQUEST_ID:string;
+  REQUEST_KIND:stateRequestKind;
+}
+
+/// State response. SCENARIO carries full scenario state; REFERENCES can carry
+/// the lighter reference-list response for reference-only requests.
+table SCCStateResponse {
+  REQUEST_ID:string;
+  REQUEST_KIND:stateRequestKind;
+  SCENARIO:SCN;
+  REFERENCES:[SCNReference];
+  FOCUSED_REFERENCE_INDEX:int = -1;
+  ERROR_MESSAGE:string;
+}
+
+/// Asset-picker request or acknowledgement.
+table SCCAssetPicker {
+  REQUEST_ID:string;
+  CATALOG_TAB:assetCatalogTab;
+  ACKNOWLEDGED:bool;
+}
+
+/// Startup readiness message.
+table SCCReady {
+  READY:bool = true;
+}
+
+/// Scenario Controls - message-bus envelope for scenario setup, state
+/// requests/responses, startup readiness, and asset-picker delegation.
+table SCC {
+  MESSAGE_KIND:controlMessageKind;
+  TRACE_ID:string;
+  SCENARIOS:[SCN];
+  SCENARIO:SCN;
+  REQUEST_STATE:SCCRequestState;
+  STATE_RESPONSE:SCCStateResponse;
+  ASSET_PICKER:SCCAssetPicker;
+  READY:SCCReady;
+}
+
+root_type SCC;
+file_identifier "$SCC";

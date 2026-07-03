@@ -1,0 +1,10 @@
+/**
+ * Viewer map style for scenario display.
+ */
+export declare enum viewerMapMode {
+    UNKNOWN = 0,
+    GEOGRAPHICAL_DAY_NIGHT = 1,
+    GEOGRAPHICAL_CONSTANT = 2,
+    POLITICAL = 3
+}
+//# sourceMappingURL=viewerMapMode.d.ts.map

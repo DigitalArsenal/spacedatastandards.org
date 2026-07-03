@@ -1,0 +1,162 @@
+// Hash: 54437fe58a8d83be05f4f54b1d3fb034ccfbb8dadfdaf1b019df009e60c41e31
+// Version: 1.136.1
+// -----------------------------------END_HEADER
+include "../EOO/main.fbs";
+include "../RDO/main.fbs";
+include "../OMM/main.fbs";
+include "../STV/main.fbs";
+include "../MNV/main.fbs";
+include "../SIT/main.fbs";
+include "../SEN/main.fbs";
+include "../GJN/main.fbs";
+include "../RFM/main.fbs";
+include "../VST/main.fbs";
+
+/// Scenario reference category. This is intentionally broader than the
+/// underlying domain schemas because a scene reference can point at an SDS
+/// record, a variable placeholder, or a visual annotation.
+enum scenarioReferenceKind : byte {
+  UNKNOWN,
+  SATELLITE,
+  GROUND_SITE,
+  SENSOR,
+  VARIABLE_SATELLITE,
+  VARIABLE_SITE,
+  POINT_OF_INTEREST,
+  EXCLUSION_ZONE,
+  OBSERVATION
+}
+
+/// Scenario command action.
+enum scenarioActionCode : byte {
+  NONE,
+  CLEAR,
+  RESET
+}
+
+/// Raw TLE lines retained as import provenance for scenario setup.
+table SCNTleLines {
+  LINE1:string;
+  LINE2:string;
+  SOURCE:string;
+}
+
+/// Geodetic point in latitude, longitude, altitude order.
+table SCNGeodeticPoint {
+  LATITUDE_DEG:double;
+  LONGITUDE_DEG:double;
+  ALTITUDE_KM:double;
+}
+
+/// Time-tagged point or annotation shown in a scenario.
+table SCNPointOfInterest {
+  NAME:string;
+  DESCRIPTION:string;
+  EPOCH:string;
+  HIGHLIGHT_BEFORE_SEC:double;
+  HIGHLIGHT_AFTER_SEC:double;
+  COLOR:string;
+  POSITION:SCNGeodeticPoint;
+}
+
+/// Sensor or site view-cone overlay used by scenario tools.
+table SCNViewCone {
+  MIN_ELEVATION_DEG:double;
+  MAX_ELEVATION_DEG:double;
+  MIN_AZIMUTH_DEG:double;
+  MAX_AZIMUTH_DEG:double;
+  MAX_RANGE_KM:double;
+  HALF_ANGLE_DEG:double;
+  DYNAMIC_RANGE:string;
+}
+
+/// Target pairing for sun-advantage visualization.
+table SCNSunAdvantageTarget {
+  TARGET_REFERENCE_ID:string;
+  TARGET_NORAD_CAT_ID:uint32;
+  GROUND_SITE_ID:string;
+}
+
+/// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
+/// when available; POINTS preserves simple LLA polygon imports.
+table SCNExclusionZone {
+  LABEL:string;
+  FILL_COLOR:string;
+  LABEL_COLOR:string;
+  IS_FILLED:bool;
+  POINTS:[SCNGeodeticPoint];
+  BOUNDARY:GJNGeometry;
+}
+
+/// Scene reference that binds viewer-scene state to existing SDS domain
+/// records without duplicating those records.
+table SCNReference {
+  REFERENCE_ID:string;
+  DISPLAY_NAME:string;
+  REFERENCE_KIND:scenarioReferenceKind;
+  REMOVE:bool;
+  NORAD_CAT_ID:uint32;
+  OBJECT_ID:string;
+  COUNTRY:string;
+  SOURCES:[string];
+  DATA_MODES:[string];
+  TLES:[SCNTleLines];
+  MEAN_ELEMENTS:[OMM];
+  STATES:[STV];
+  MANEUVERS:[MNV];
+  SITE:SIT;
+  SENSOR:SEN;
+  SENSOR_SYSTEM_ID:string;
+  SENSOR_ID:string;
+  SITE_LATITUDE_DEG:double;
+  SITE_LONGITUDE_DEG:double;
+  VARIABLE_SATELLITE_ID:string;
+  VARIABLE_SITE_ID:string;
+  POINTS:[SCNPointOfInterest];
+  VIEW_CONE:SCNViewCone;
+  SUN_ADVANTAGE_TARGET:SCNSunAdvantageTarget;
+  EXCLUSION_ZONE:SCNExclusionZone;
+  OBSERVATION_EO:EOO;
+  OBSERVATION_RADAR:RDO;
+}
+
+/// Imported scenario event payload composed from existing SDS records.
+table SCNEvent {
+  EVENT_ID:string;
+  ELSETS:[OMM];
+  STATES:[STV];
+  EO_OBSERVATIONS:[EOO];
+  RADAR_OBSERVATIONS:[RDO];
+}
+
+/// Scenario asset-change notification payload.
+table SCNAssetsChanged {
+  ADDED_SATELLITES:[SCNReference];
+  ADDED_GROUND_SITES:[SCNReference];
+  REMOVED_SATELLITES:[SCNReference];
+  REMOVED_GROUND_SITES:[SCNReference];
+  SATELLITES:[SCNReference];
+  GROUND_SITES:[SCNReference];
+  REFERENCES:[SCNReference];
+}
+
+/// Scenario — canonical scene composition and simulation state for external
+/// scenario controls integrations. Domain records remain in their native SDS
+/// schemas and are referenced or embedded here only as scenario content.
+table SCN {
+  SCENARIO_ID:string;
+  REFERENCES:[SCNReference];
+  EVENT:SCNEvent;
+  FOCUSED_REFERENCE_INDEX:int = -1;
+  FOCUSED_REFERENCE_ID:string;
+  SIM_TIME:string;
+  SIM_SPEED:double;
+  USE_ECEF_FRAME:bool;
+  REFERENCE_FRAME:RFM;
+  ACTION:scenarioActionCode;
+  VIEW_STATE:VST;
+  ASSETS_CHANGED:SCNAssetsChanged;
+}
+
+root_type SCN;
+file_identifier "$SCN";

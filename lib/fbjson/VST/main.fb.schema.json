@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "viewerMapMode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "GEOGRAPHICAL_DAY_NIGHT",
+        "GEOGRAPHICAL_CONSTANT",
+        "POLITICAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "GEOGRAPHICAL_DAY_NIGHT": {
+          "value": 1
+        },
+        "GEOGRAPHICAL_CONSTANT": {
+          "value": 2
+        },
+        "POLITICAL": {
+          "value": 3
+        }
+      }
+    },
+    "viewerCameraFrameMode": {
+      "type": "string",
+      "enum": [
+        "DEFAULT",
+        "RADIAL_INTRACK",
+        "CROSSTRACK_INTRACK",
+        "RADIAL_CROSSTRACK"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DEFAULT": {
+          "value": 0
+        },
+        "RADIAL_INTRACK": {
+          "value": 1
+        },
+        "CROSSTRACK_INTRACK": {
+          "value": 2
+        },
+        "RADIAL_CROSSTRACK": {
+          "value": 3
+        }
+      }
+    },
+    "viewerSatelliteAlignmentMode": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "ORBITAL",
+        "NADIR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ORBITAL": {
+          "value": 1
+        },
+        "NADIR": {
+          "value": 2
+        }
+      }
+    },
+    "VSTCameraRotation": {
+      "type": "object",
+      "description": "Camera rotation offset. Quaternions are preferred when present; Euler\nangles are retained for import of older scenario JSON.",
+      "properties": {
+        "YAW_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PITCH_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "QUATERNION_W": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "USES_QUATERNION": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VSTDisplaySettings": {
+      "type": "object",
+      "description": "App display toggles for a scenario viewer.",
+      "properties": {
+        "MAP_MODE": {
+          "$ref": "#/definitions/viewerMapMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "GEOGRAPHICAL_DAY_NIGHT": {
+              "value": 1
+            },
+            "GEOGRAPHICAL_CONSTANT": {
+              "value": 2
+            },
+            "POLITICAL": {
+              "value": 3
+            }
+          }
+        },
+        "SHOW_GEO_BELT_MARKERS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_CIS_LUNAR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_EQUATOR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_LATITUDE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_LONGITUDE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_SHADOW_CONES": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_GIF_CONTROLS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_ATMOSPHERE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "SHOW_SUN_DIRECTION_INDICATOR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "USE_STARFIELD": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "USE_STITCHED_ORBIT": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VSTCameraOptions": {
+      "type": "object",
+      "description": "Camera options for a space-domain scenario viewer.",
+      "properties": {
+        "CAMERA_FRAME_MODE": {
+          "$ref": "#/definitions/viewerCameraFrameMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DEFAULT": {
+              "value": 0
+            },
+            "RADIAL_INTRACK": {
+              "value": 1
+            },
+            "CROSSTRACK_INTRACK": {
+              "value": 2
+            },
+            "RADIAL_CROSSTRACK": {
+              "value": 3
+            }
+          }
+        },
+        "SATELLITE_ALIGNMENT": {
+          "$ref": "#/definitions/viewerSatelliteAlignmentMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ORBITAL": {
+              "value": 1
+            },
+            "NADIR": {
+              "value": 2
+            }
+          }
+        },
+        "DISTANCE_FROM_TARGET_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ROTATION": {
+          "$ref": "#/definitions/VSTCameraRotation",
+          "x-flatbuffer-type": "VSTCameraRotation"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VST": {
+      "type": "object",
+      "description": "Viewer State \u2014 display and camera state associated with a scenario.",
+      "properties": {
+        "CAMERA": {
+          "$ref": "#/definitions/VSTCameraOptions",
+          "x-flatbuffer-type": "VSTCameraOptions"
+        },
+        "DISPLAY_SETTINGS": {
+          "$ref": "#/definitions/VSTDisplaySettings",
+          "x-flatbuffer-type": "VSTDisplaySettings"
+        },
+        "FOCUSED_REFERENCE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FOCUSED_REFERENCE_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/VST",
+  "x-flatbuffer-root-type": "VST",
+  "x-flatbuffer-file-identifier": "$VST"
+}

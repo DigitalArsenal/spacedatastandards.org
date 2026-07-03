@@ -1,0 +1,1072 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/MessageBus.schema.json",
+  "title": "ScenarioControlsMessageBus",
+  "description": "JSON schema for the scenario controls message bus / external command API. Property names use PascalCase. Date-time values are serialized as UTC strings in yyyy-MM-dd HH:mm:ss format. Incoming messages (controller -> scenario controls): a single ScenarioSetupCommand, an array of ScenarioSetupCommand, a RequestStateCommand (has Request property), or an OpenAssetPickerAck (has Ack property). Outgoing messages (scenario controls -> controller): { ready: true } on startup; StateResponse for state requests; { ScenarioAssetsChanged: ... } when the user adds/removes satellites or ground sites; OpenAssetPickerMessage when external asset-picker delegation is enabled. FocusedReferenceIndex may be sent without References to change focus using the last canonical reference list.",
+  "type": "object",
+  "properties": {
+    "References": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SceneReference"
+      },
+      "description": "Scene references (satellites, ground sites, etc.)"
+    },
+    "Event": {
+      "$ref": "#/$defs/Event",
+      "description": "JCO event (elsets, states, observations)"
+    },
+    "FocusedReferenceIndex": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Index into the canonical References list. May be sent without References to change focus only; ignored when out of bounds."
+    },
+    "SimTime": {
+      "$ref": "#/$defs/DateTimeString"
+    },
+    "SimSpeed": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "UseEcefFrame": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "When set, forces the simulation reference frame for this scenario (false = ECI/J2000, true = ECEF/ITRF)."
+    },
+    "Action": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Special scenario action. Supported values: 'clear' (remove all scene objects), 'reset' (clear and reload default scenario)."
+    },
+    "Camera": {
+      "$ref": "#/$defs/CameraOptions",
+      "description": "Camera options. RIC applies only when a satellite is focused."
+    },
+    "AppSettings": {
+      "$ref": "#/$defs/AppSettings",
+      "description": "App display settings. Only non-null properties are applied."
+    }
+  },
+  "$defs": {
+    "DateTimeString": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$",
+      "description": "UTC date-time in yyyy-MM-dd HH:mm:ss format."
+    },
+    "ScenarioSetupCommand": {
+      "type": "object",
+      "description": "Primary command to set up or update a scenario. May be sent as a single object or as an array of objects.",
+      "properties": {
+        "References": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "Event": {
+          "$ref": "#/$defs/Event"
+        },
+        "FocusedReferenceIndex": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "SimTime": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "SimSpeed": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "UseEcefFrame": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "Action": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "Camera": {
+          "$ref": "#/$defs/CameraOptions"
+        },
+        "AppSettings": {
+          "$ref": "#/$defs/AppSettings"
+        }
+      }
+    },
+    "RequestStateCommand": {
+      "type": "object",
+      "description": "Incoming command to request state from scenario controls. Routed when the message has a Request property.",
+      "required": [
+        "Request"
+      ],
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "Correlation id echoed back in the StateResponse."
+        },
+        "Request": {
+          "type": "string",
+          "description": "What to request. Supported values: 'scenario' (full ScenarioSetupCommand[]), 'references' (References and FocusedReferenceIndex only)."
+        }
+      }
+    },
+    "StateResponse": {
+      "type": "object",
+      "description": "Outgoing response to a RequestStateCommand.",
+      "properties": {
+        "Id": {
+          "type": "string",
+          "description": "Echo of the request Id for correlation."
+        },
+        "Request": {
+          "type": "string",
+          "description": "Echo of the request type (e.g. 'scenario', 'references')."
+        },
+        "Data": {
+          "description": "Response payload. ScenarioSetupCommand[] for request 'scenario'; ScenarioSetupCommand (References + FocusedReferenceIndex) for request 'references'."
+        },
+        "Error": {
+          "type": "string",
+          "description": "Error message when the request could not be fulfilled."
+        }
+      }
+    },
+    "OpenAssetPickerMessage": {
+      "type": "object",
+      "description": "Outgoing message when the user opens the asset catalog and external delegation is enabled. Parent should respond with OpenAssetPickerAck.",
+      "properties": {
+        "Action": {
+          "type": "string",
+          "const": "openAssetPicker"
+        },
+        "Id": {
+          "type": "string",
+          "description": "Correlation id echoed in the acknowledgement."
+        },
+        "Tab": {
+          "type": "string",
+          "description": "Requested catalog tab: 'satellites' or 'sensors'."
+        }
+      }
+    },
+    "OpenAssetPickerAck": {
+      "type": "object",
+      "description": "Incoming acknowledgement that the parent will handle asset selection.",
+      "required": [
+        "Ack"
+      ],
+      "properties": {
+        "Ack": {
+          "type": "string",
+          "const": "openAssetPicker"
+        },
+        "Id": {
+          "type": "string",
+          "description": "Echo of OpenAssetPickerMessage.Id."
+        }
+      }
+    },
+    "ReadyMessage": {
+      "type": "object",
+      "description": "Outgoing message posted once on startup when data is ready.",
+      "properties": {
+        "ready": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "AppSettings": {
+      "type": "object",
+      "description": "App display settings. Nullable properties allow partial updates (only non-null values are applied).",
+      "properties": {
+        "ShowGeoBeltMarkers": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowCisLunar": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "MapType": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Map type: 'GeographicalDayNight', 'GeographicalConstant', or 'Political'."
+        },
+        "ShowEquator": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowLatitude": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowLongitude": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowShadowCones": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowGifControls": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowAtmosphere": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "ShowSunDirectionIndicator": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "UseStarfield": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "UseStitchedOrbit": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "CameraOptions": {
+      "type": "object",
+      "description": "Camera options. RIC frame is ignored if no satellite is focused. Distance and rotation are offset from focus target.",
+      "properties": {
+        "Ric": {
+          "type": "string",
+          "description": "RIC frame: 'ri', 'ci', 'rc', or 'default'"
+        },
+        "SatelliteAlignment": {
+          "type": "string",
+          "description": "Satellite alignment when focused in 3D (non-RIC): 'orbital' or 'nadir'. Ignored when not focused on a satellite."
+        },
+        "DistanceFromTarget": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Distance from focus target in km"
+        },
+        "RotationEuler": {
+          "$ref": "#/$defs/EulerRotation",
+          "description": "Legacy rotational offset (euler degrees). Read when loading older scenario JSON; not written on save."
+        },
+        "RotationQuaternion": {
+          "$ref": "#/$defs/QuaternionRotation",
+          "description": "Rotational offset from default pose (quaternion). Written on save; preferred over RotationEuler when present."
+        }
+      }
+    },
+    "EulerRotation": {
+      "type": "object",
+      "description": "Euler angles in degrees (Yaw, Pitch, Roll). Offset from default camera pose.",
+      "properties": {
+        "Yaw": {
+          "type": "number"
+        },
+        "Pitch": {
+          "type": "number"
+        },
+        "Roll": {
+          "type": "number"
+        }
+      }
+    },
+    "QuaternionRotation": {
+      "type": "object",
+      "description": "Quaternion rotation (X, Y, Z, W). Preferred over Euler to avoid roundtrip drift.",
+      "properties": {
+        "X": {
+          "type": "number"
+        },
+        "Y": {
+          "type": "number"
+        },
+        "Z": {
+          "type": "number"
+        },
+        "W": {
+          "type": "number"
+        }
+      }
+    },
+    "SceneReference": {
+      "type": "object",
+      "description": "A scene reference: satellite, ground site, or variable reference",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Remove": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "SatNo": {
+          "type": "string"
+        },
+        "Sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "DataModes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Tles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Tle"
+          }
+        },
+        "Country": {
+          "type": "string"
+        },
+        "States": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StateVector"
+          }
+        },
+        "Pois": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CustomPoiData"
+          }
+        },
+        "Maneuvers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Maneuver"
+          }
+        },
+        "VarSatId": {
+          "type": "string"
+        },
+        "SensorId": {
+          "type": "string"
+        },
+        "SiteLat": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "SiteLon": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "VarSiteId": {
+          "type": "string"
+        },
+        "ViewCone": {
+          "$ref": "#/$defs/ViewConeParameters"
+        },
+        "SunAdvantageTarget": {
+          "$ref": "#/$defs/SunAdvantageTarget"
+        },
+        "ExclusionZone": {
+          "$ref": "#/$defs/ExclusionZone"
+        },
+        "Observation": {
+          "$ref": "#/$defs/Observation"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "string"
+        },
+        "elsets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JcoEventElsetDto"
+          }
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JcoEventStateVectorDto"
+          }
+        },
+        "eoObs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JcoEventEoObservationDto"
+          }
+        },
+        "radarObs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JcoEventRadarObservationDto"
+          }
+        }
+      }
+    },
+    "Tle": {
+      "type": "object",
+      "properties": {
+        "Line1": {
+          "type": "string"
+        },
+        "Line2": {
+          "type": "string"
+        },
+        "Source": {
+          "type": "string"
+        }
+      }
+    },
+    "StateVector": {
+      "type": "object",
+      "properties": {
+        "P": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "V": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "Rx": {
+          "type": "number"
+        },
+        "Ry": {
+          "type": "number"
+        },
+        "Rz": {
+          "type": "number"
+        },
+        "Vx": {
+          "type": "number"
+        },
+        "Vy": {
+          "type": "number"
+        },
+        "Vz": {
+          "type": "number"
+        },
+        "Epoch": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "Source": {
+          "type": "string"
+        }
+      }
+    },
+    "ViewConeParameters": {
+      "type": "object",
+      "properties": {
+        "MinElevation": {
+          "type": "number"
+        },
+        "MaxElevation": {
+          "type": "number"
+        },
+        "MinAzimuth": {
+          "type": "number"
+        },
+        "MaxAzimuth": {
+          "type": "number"
+        },
+        "Range": {
+          "type": "number"
+        },
+        "HalfAngle": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "DynamicRange": {
+          "type": "string"
+        }
+      }
+    },
+    "SunAdvantageTarget": {
+      "type": "object",
+      "properties": {
+        "SatNo": {
+          "type": "string"
+        },
+        "GroundSite": {
+          "type": "string"
+        }
+      }
+    },
+    "ExclusionZone": {
+      "type": "object",
+      "properties": {
+        "Points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LLA"
+          }
+        },
+        "Label": {
+          "type": "string"
+        },
+        "FillColor": {
+          "type": "string"
+        },
+        "LabelColor": {
+          "type": "string"
+        },
+        "IsFilled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "LLA": {
+      "type": "object",
+      "properties": {
+        "Lat": {
+          "type": "number"
+        },
+        "Lon": {
+          "type": "number"
+        },
+        "Alt": {
+          "type": "number"
+        }
+      }
+    },
+    "Observation": {
+      "type": "object",
+      "properties": {
+        "Azimuth": {
+          "type": "number"
+        },
+        "DataMode": {
+          "type": "string"
+        },
+        "Elevation": {
+          "type": "number"
+        },
+        "Id": {
+          "type": "integer"
+        },
+        "IdUdl": {
+          "type": "string"
+        },
+        "IDSensor": {
+          "type": "string"
+        },
+        "ObTime": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "Range": {
+          "type": "number"
+        },
+        "ReferenceFrame": {
+          "type": "string"
+        },
+        "SatName": {
+          "type": "string"
+        },
+        "SatNo": {
+          "type": "string"
+        },
+        "SatCountry": {
+          "type": "string"
+        },
+        "SenName": {
+          "type": "string"
+        },
+        "SenCountry": {
+          "type": "string"
+        },
+        "SenAlt": {
+          "type": "number"
+        },
+        "SenLat": {
+          "type": "number"
+        },
+        "SenLon": {
+          "type": "number"
+        },
+        "Source": {
+          "type": "string"
+        },
+        "TrackId": {
+          "type": "string"
+        },
+        "Type": {
+          "type": "string"
+        },
+        "Uct": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "GeoAlt": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "GeoLat": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "GeoLon": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "GeoRange": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "RangeRate": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "SolarDecAngle": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "SolarEqPhaseAngle": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "SolarPhaseAngle": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "Doppler": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "RadarCrossSection": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "Maneuver": {
+      "type": "object",
+      "properties": {
+        "Dx": {
+          "type": "number"
+        },
+        "Dy": {
+          "type": "number"
+        },
+        "Dz": {
+          "type": "number"
+        },
+        "Epoch": {
+          "$ref": "#/$defs/DateTimeString"
+        }
+      }
+    },
+    "CustomPoiData": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Description": {
+          "type": "string"
+        },
+        "Time": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "HighlightRangeBeforeSecs": {
+          "type": "number"
+        },
+        "HighlightRangeAfterSecs": {
+          "type": "number"
+        },
+        "Color": {
+          "type": "string"
+        }
+      }
+    },
+    "JcoEventElsetDto": {
+      "type": "object",
+      "properties": {
+        "argOfPerigee": {
+          "type": "number"
+        },
+        "eccentricity": {
+          "type": "number"
+        },
+        "epoch": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "inclination": {
+          "type": "number"
+        },
+        "line1": {
+          "type": "string"
+        },
+        "line2": {
+          "type": "string"
+        },
+        "meanAnomaly": {
+          "type": "number"
+        },
+        "raan": {
+          "type": "number"
+        },
+        "satNo": {
+          "type": "integer"
+        },
+        "semiMajorAxis": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        },
+        "dataMode": {
+          "type": "string"
+        }
+      }
+    },
+    "JcoEventStateVectorDto": {
+      "type": "object",
+      "properties": {
+        "epoch": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "satNo": {
+          "type": "integer"
+        },
+        "origObjectId": {
+          "type": "string"
+        },
+        "xpos": {
+          "type": "number"
+        },
+        "ypos": {
+          "type": "number"
+        },
+        "zpos": {
+          "type": "number"
+        },
+        "xvel": {
+          "type": "number"
+        },
+        "yvel": {
+          "type": "number"
+        },
+        "zvel": {
+          "type": "number"
+        },
+        "referenceFrame": {
+          "type": "string"
+        }
+      }
+    },
+    "JcoEventEoObservationDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "classificationMarking": {
+          "type": "string"
+        },
+        "obTime": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "idOnOrbit": {
+          "type": "string"
+        },
+        "idSensor": {
+          "type": "string"
+        },
+        "satNo": {
+          "type": "integer"
+        },
+        "taskId": {
+          "type": "string"
+        },
+        "origObjectId": {
+          "type": "string"
+        },
+        "origSensorId": {
+          "type": "string"
+        },
+        "uct": {
+          "type": "boolean"
+        },
+        "azimuth": {
+          "type": "number"
+        },
+        "elevation": {
+          "type": "number"
+        },
+        "range": {
+          "type": "number"
+        },
+        "ra": {
+          "type": "number"
+        },
+        "declination": {
+          "type": "number"
+        },
+        "losUnc": {
+          "type": "number"
+        },
+        "senlat": {
+          "type": "number"
+        },
+        "senlon": {
+          "type": "number"
+        },
+        "senalt": {
+          "type": "number"
+        },
+        "senx": {
+          "type": "number"
+        },
+        "seny": {
+          "type": "number"
+        },
+        "senz": {
+          "type": "number"
+        },
+        "expDuration": {
+          "type": "number"
+        },
+        "zeroptd": {
+          "type": "number"
+        },
+        "netObjSig": {
+          "type": "number"
+        },
+        "netObjSigUnc": {
+          "type": "number"
+        },
+        "mag": {
+          "type": "number"
+        },
+        "magUnc": {
+          "type": "number"
+        },
+        "geolat": {
+          "type": "number"
+        },
+        "geolon": {
+          "type": "number"
+        },
+        "geoalt": {
+          "type": "number"
+        },
+        "georange": {
+          "type": "number"
+        },
+        "solarPhaseAngle": {
+          "type": "number"
+        },
+        "solarEqPhaseAngle": {
+          "type": "number"
+        },
+        "solarDecAngle": {
+          "type": "number"
+        },
+        "shutterDelay": {
+          "type": "number"
+        },
+        "rawFileURI": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "dataMode": {
+          "type": "string"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "origNetwork": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "JcoEventRadarObservationDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "obTime": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "idSensor": {
+          "type": "string"
+        },
+        "trackId": {
+          "type": "string"
+        },
+        "origObjectId": {
+          "type": "string"
+        },
+        "uct": {
+          "type": "boolean"
+        },
+        "azimuth": {
+          "type": "number"
+        },
+        "elevation": {
+          "type": "number"
+        },
+        "range": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        },
+        "dataMode": {
+          "type": "string"
+        },
+        "descriptor": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "ScenarioAssetsChangedMessage": {
+      "type": "object",
+      "description": "Outgoing message payload (wrapped as { ScenarioAssetsChanged: ... }) when the user adds or removes satellites or ground sites in the active scenario.",
+      "properties": {
+        "AddedSatellites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "AddedGroundSites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "RemovedSatellites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "RemovedGroundSites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "Satellites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "GroundSites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          }
+        },
+        "References": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SceneReference"
+          },
+          "description": "All scene references in scenario order; becomes the canonical list for FocusedReferenceIndex."
+        }
+      }
+    }
+  }
+}
