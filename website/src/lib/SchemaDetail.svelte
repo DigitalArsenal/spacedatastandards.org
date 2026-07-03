@@ -1,8 +1,8 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { schemaTagMap } from "./schemaTaxonomy";
-  import { parseSchemaFields } from "./schemaFields.js";
+  import { parseSchemaFieldDefinitions } from "./schemaFields.js";
 
   export let params: { name: string } = { name: "" };
 
@@ -16,6 +16,7 @@
   let selectedLanguage = "ts";
   let generatedFiles: Record<string, string> = {};
   let selectedFile = "";
+  let focusedDefinitionName = "";
   let isGenerating = false;
   let generationError = "";
   let standardsExplorer: any = null;
@@ -53,10 +54,23 @@
     required: boolean;
     flatbufferType?: string;
     flatbufferId?: number;
+    typeParts: FieldTypePart[];
     children?: FieldInfo[];
   }
 
-  let fields: FieldInfo[] = [];
+  interface FieldTypePart {
+    text: string;
+    definitionName?: string;
+  }
+
+  interface FieldDefinitionInfo {
+    name: string;
+    description: string;
+    root: boolean;
+    fields: FieldInfo[];
+  }
+
+  let fieldDefinitions: FieldDefinitionInfo[] = [];
   const localStandardsExplorerSrc = "/packages/standards-explorer/dist/standards-explorer.min.js";
 
   async function fetchSchemaJson(name: string): Promise<any> {
@@ -122,7 +136,11 @@
     try {
       schema = await fetchSchemaJson(params.name);
       if (schema) {
-        fields = parseSchemaFields(schema, params.name);
+        fieldDefinitions = parseSchemaFieldDefinitions(schema, params.name);
+        const linkedDefinition = getLinkedDefinitionFromHash();
+        if (linkedDefinition) {
+          void scrollToFieldDefinition(linkedDefinition);
+        }
       }
     } catch (e) {
       console.error("Error loading schema:", e);
@@ -144,17 +162,56 @@
     generateCode();
   });
 
-  function toggleField(fieldName: string) {
-    if (expandedFields.has(fieldName)) {
-      expandedFields.delete(fieldName);
+  function fieldKey(definitionName: string, fieldName: string): string {
+    return `${definitionName}.${fieldName}`;
+  }
+
+  function fieldDefinitionAnchor(definitionName: string): string {
+    return `field-definition-${definitionName}`;
+  }
+
+  function fieldDefinitionHref(definitionName: string): string {
+    return `#/schemas/${params.name}?field=${encodeURIComponent(definitionName)}`;
+  }
+
+  function fieldTypeDefinitionName(part: FieldTypePart): string {
+    return part.definitionName || "";
+  }
+
+  function getLinkedDefinitionFromHash(): string {
+    const query = window.location.hash.split("?")[1] || "";
+    return new URLSearchParams(query).get("field") || "";
+  }
+
+  async function scrollToFieldDefinition(definitionName: string) {
+    focusedDefinitionName = definitionName;
+    await tick();
+    document.getElementById(fieldDefinitionAnchor(definitionName))?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }
+
+  function handleFieldTypeLink(event: MouseEvent, definitionName: string) {
+    event.preventDefault();
+    window.history.replaceState(null, "", fieldDefinitionHref(definitionName));
+    void scrollToFieldDefinition(definitionName);
+  }
+
+  function toggleField(definitionName: string, fieldName: string) {
+    const key = fieldKey(definitionName, fieldName);
+    if (expandedFields.has(key)) {
+      expandedFields.delete(key);
     } else {
-      expandedFields.add(fieldName);
+      expandedFields.add(key);
     }
     expandedFields = expandedFields;
   }
 
   function expandAll() {
-    fields.forEach(f => expandedFields.add(f.name));
+    fieldDefinitions.forEach(definition => {
+      definition.fields.forEach(field => expandedFields.add(fieldKey(definition.name, field.name)));
+    });
     expandedFields = expandedFields;
   }
 
@@ -349,45 +406,80 @@
                 <button on:click={expandAll}>Expand All</button>
                 <button on:click={collapseAll}>Collapse All</button>
               </div>
-              {#each fields as field}
-                <div class="field-item">
-                  <button
-                    class="field-header"
-                    type="button"
-                    aria-expanded={expandedFields.has(field.name)}
-                    on:click={() => toggleField(field.name)}
-                  >
-                    <span class="field-expand" class:expanded={expandedFields.has(field.name)}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </span>
-                    <span class="field-name">{field.name}</span>
-                    <span class="field-type">{field.type}</span>
-                    {#if field.required}
-                      <span class="field-required">required</span>
-                    {/if}
-                  </button>
-                  {#if expandedFields.has(field.name)}
-                    <div class="field-details">
-                      <p class="field-description">{field.description || "No description available"}</p>
-                      {#if field.flatbufferType}
-                        <div class="field-annotation">
-                          <span class="field-annotation-key">x-flatbuffer-type:</span>
-                          <span class="field-annotation-value">{field.flatbufferType}</span>
-                        </div>
+              {#each fieldDefinitions as definition}
+                <div
+                  class="field-definition"
+                  class:focused={focusedDefinitionName === definition.name}
+                  id={fieldDefinitionAnchor(definition.name)}
+                >
+                  <div class="field-definition-header">
+                    <h3 class="field-definition-title">
+                      <span>{definition.name}</span>
+                      {#if definition.root}
+                        <span class="field-definition-badge">root</span>
                       {/if}
-                      {#if field.flatbufferId !== undefined}
-                        <div class="field-annotation">
-                          <span class="field-annotation-key">x-flatbuffer-field-id:</span>
-                          <span class="field-annotation-value">{field.flatbufferId}</span>
+                    </h3>
+                    {#if definition.description}
+                      <p class="field-definition-description">{definition.description}</p>
+                    {/if}
+                  </div>
+                  {#each definition.fields as field}
+                    <div class="field-item">
+                      <div class="field-header">
+                        <button
+                          class="field-summary"
+                          type="button"
+                          aria-expanded={expandedFields.has(fieldKey(definition.name, field.name))}
+                          on:click={() => toggleField(definition.name, field.name)}
+                        >
+                          <span class="field-expand" class:expanded={expandedFields.has(fieldKey(definition.name, field.name))}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </span>
+                          <span class="field-name">{field.name}</span>
+                        </button>
+                        <span class="field-type">
+                          {#each field.typeParts as part}
+                            {#if part.definitionName}
+                              <a
+                                class="field-type-link"
+                                href={fieldDefinitionHref(fieldTypeDefinitionName(part))}
+                                on:click|stopPropagation={(event) => handleFieldTypeLink(event, fieldTypeDefinitionName(part))}
+                              >
+                                {part.text}
+                              </a>
+                            {:else}
+                              {part.text}
+                            {/if}
+                          {/each}
+                        </span>
+                        {#if field.required}
+                          <span class="field-required">required</span>
+                        {/if}
+                      </div>
+                      {#if expandedFields.has(fieldKey(definition.name, field.name))}
+                        <div class="field-details">
+                          <p class="field-description">{field.description || "No description available"}</p>
+                          {#if field.flatbufferType}
+                            <div class="field-annotation">
+                              <span class="field-annotation-key">x-flatbuffer-type:</span>
+                              <span class="field-annotation-value">{field.flatbufferType}</span>
+                            </div>
+                          {/if}
+                          {#if field.flatbufferId !== undefined}
+                            <div class="field-annotation">
+                              <span class="field-annotation-key">x-flatbuffer-field-id:</span>
+                              <span class="field-annotation-value">{field.flatbufferId}</span>
+                            </div>
+                          {/if}
                         </div>
                       {/if}
                     </div>
-                  {/if}
+                  {/each}
                 </div>
               {/each}
-              {#if fields.length === 0}
+              {#if fieldDefinitions.length === 0}
                 <p class="no-fields">No field information available for this schema.</p>
               {/if}
             </div>
@@ -720,6 +812,58 @@
     color: var(--text-primary);
   }
 
+  .field-definition {
+    scroll-margin-top: 96px;
+    border-bottom: 1px solid var(--ui-border);
+    padding: 18px 0;
+  }
+
+  .field-definition:first-of-type {
+    padding-top: 0;
+  }
+
+  .field-definition:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .field-definition:target .field-definition-title,
+  .field-definition.focused .field-definition-title {
+    color: var(--accent);
+  }
+
+  .field-definition-header {
+    margin-bottom: 10px;
+  }
+
+  .field-definition-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 4px;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .field-definition-badge {
+    padding: 2px 6px;
+    border: 1px solid var(--ui-border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .field-definition-description {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
   .field-item {
     border-bottom: 1px solid var(--ui-border);
     padding: 12px 0;
@@ -734,17 +878,28 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
+    padding: 0;
+    text-align: left;
+    font: inherit;
+  }
+
+  .field-summary {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 0;
     border: none;
     background: none;
-    text-align: left;
+    color: inherit;
+    cursor: pointer;
     font: inherit;
   }
 
   .field-expand {
     width: 20px;
     height: 20px;
+    flex: 0 0 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -760,12 +915,25 @@
     font-family: var(--font-mono);
     font-weight: 500;
     color: var(--text-primary);
+    overflow-wrap: anywhere;
   }
 
   .field-type {
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--accent);
+    overflow-wrap: anywhere;
+  }
+
+  .field-type-link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .field-type-link:hover {
+    color: var(--text-primary);
   }
 
   .field-required {

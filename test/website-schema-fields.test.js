@@ -2,6 +2,7 @@ import { strict as assert } from "node:assert";
 import { readdirSync, readFileSync } from "node:fs";
 
 import {
+  parseSchemaFieldDefinitions,
   parseSchemaFields,
   resolveSchemaRootDefinitionName,
 } from "../website/src/lib/schemaFields.js";
@@ -55,5 +56,35 @@ describe("website schema field explorer", () => {
     const description = schema.definitions?.CAT?.description;
 
     assert.equal(description, "Catalog Entity Message");
+  });
+
+  it("marks referenced field types as Field Explorer link targets", () => {
+    const schema = loadFbJsonSchema("SCN");
+    const definitions = parseSchemaFieldDefinitions(schema, "SCN");
+    const definitionNames = definitions.map((definition) => definition.name);
+
+    assert.equal(definitions[0].name, "SCN");
+    assert.ok(definitionNames.includes("SCNReference"));
+    assert.ok(definitionNames.includes("OMM"));
+
+    const rootReferences = definitions[0].fields.find((field) => field.name === "REFERENCES");
+    assert.equal(rootReferences.type, "[SCNReference]");
+    assert.deepEqual(rootReferences.typeParts, [
+      { text: "[" },
+      { text: "SCNReference", definitionName: "SCNReference" },
+      { text: "]" },
+    ]);
+
+    const simTime = definitions[0].fields.find((field) => field.name === "SIM_TIME");
+    assert.deepEqual(simTime.typeParts, [{ text: "string" }]);
+
+    const scnReference = definitions.find((definition) => definition.name === "SCNReference");
+    const meanElements = scnReference.fields.find((field) => field.name === "MEAN_ELEMENTS");
+    assert.equal(meanElements.type, "[OMM]");
+    assert.deepEqual(meanElements.typeParts, [
+      { text: "[" },
+      { text: "OMM", definitionName: "OMM" },
+      { text: "]" },
+    ]);
   });
 });
