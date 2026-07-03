@@ -30,31 +30,31 @@ public final class SCNGeodeticPoint extends com.google.flatbuffers.Table {
   /**
    * Latitude in degrees.
    */
-  public double LATITUDE_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double LATITUDE() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Longitude in degrees.
    */
-  public double LONGITUDE_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double LONGITUDE() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Altitude above the reference ellipsoid in kilometers.
    */
-  public double ALTITUDE_KM() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ALTITUDE() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createSCNGeodeticPoint(FlatBufferBuilder builder,
-      double LATITUDE_DEG,
-      double LONGITUDE_DEG,
-      double ALTITUDE_KM) {
+      double LATITUDE,
+      double LONGITUDE,
+      double ALTITUDE) {
     builder.startTable(3);
-    SCNGeodeticPoint.addAltitudeKm(builder, ALTITUDE_KM);
-    SCNGeodeticPoint.addLongitudeDeg(builder, LONGITUDE_DEG);
-    SCNGeodeticPoint.addLatitudeDeg(builder, LATITUDE_DEG);
+    SCNGeodeticPoint.addAltitude(builder, ALTITUDE);
+    SCNGeodeticPoint.addLongitude(builder, LONGITUDE);
+    SCNGeodeticPoint.addLatitude(builder, LATITUDE);
     return SCNGeodeticPoint.endSCNGeodeticPoint(builder);
   }
 
   public static void startSCNGeodeticPoint(FlatBufferBuilder builder) { builder.startTable(3); }
-  public static void addLatitudeDeg(FlatBufferBuilder builder, double LATITUDE_DEG) { builder.addDouble(0, LATITUDE_DEG, 0.0); }
-  public static void addLongitudeDeg(FlatBufferBuilder builder, double LONGITUDE_DEG) { builder.addDouble(1, LONGITUDE_DEG, 0.0); }
-  public static void addAltitudeKm(FlatBufferBuilder builder, double ALTITUDE_KM) { builder.addDouble(2, ALTITUDE_KM, 0.0); }
+  public static void addLatitude(FlatBufferBuilder builder, double LATITUDE) { builder.addDouble(0, LATITUDE, 0.0); }
+  public static void addLongitude(FlatBufferBuilder builder, double LONGITUDE) { builder.addDouble(1, LONGITUDE, 0.0); }
+  public static void addAltitude(FlatBufferBuilder builder, double ALTITUDE) { builder.addDouble(2, ALTITUDE, 0.0); }
   public static int endSCNGeodeticPoint(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

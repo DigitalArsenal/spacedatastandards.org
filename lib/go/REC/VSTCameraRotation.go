@@ -44,7 +44,7 @@ func (rcv *VSTCameraRotation) Table() flatbuffers.Table {
 }
 
 /// Yaw angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) YAW_DEG() float64 {
+func (rcv *VSTCameraRotation) YAW() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -52,21 +52,21 @@ func (rcv *VSTCameraRotation) YAW_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *VSTCameraRotation) YawDeg() float64 {
-	return rcv.YAW_DEG()
+func (rcv *VSTCameraRotation) Yaw() float64 {
+	return rcv.YAW()
 }
 
 /// Yaw angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) MutateYAW_DEG(n float64) bool {
+func (rcv *VSTCameraRotation) MutateYAW(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
 
-func (rcv *VSTCameraRotation) MutateYawDeg(n float64) bool {
-	return rcv.MutateYAW_DEG(n)
+func (rcv *VSTCameraRotation) MutateYaw(n float64) bool {
+	return rcv.MutateYAW(n)
 }
 
 /// Pitch angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) PITCH_DEG() float64 {
+func (rcv *VSTCameraRotation) PITCH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -74,21 +74,21 @@ func (rcv *VSTCameraRotation) PITCH_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *VSTCameraRotation) PitchDeg() float64 {
-	return rcv.PITCH_DEG()
+func (rcv *VSTCameraRotation) Pitch() float64 {
+	return rcv.PITCH()
 }
 
 /// Pitch angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) MutatePITCH_DEG(n float64) bool {
+func (rcv *VSTCameraRotation) MutatePITCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
-func (rcv *VSTCameraRotation) MutatePitchDeg(n float64) bool {
-	return rcv.MutatePITCH_DEG(n)
+func (rcv *VSTCameraRotation) MutatePitch(n float64) bool {
+	return rcv.MutatePITCH(n)
 }
 
 /// Roll angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) ROLL_DEG() float64 {
+func (rcv *VSTCameraRotation) ROLL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -96,17 +96,17 @@ func (rcv *VSTCameraRotation) ROLL_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *VSTCameraRotation) RollDeg() float64 {
-	return rcv.ROLL_DEG()
+func (rcv *VSTCameraRotation) Roll() float64 {
+	return rcv.ROLL()
 }
 
 /// Roll angle in degrees for Euler-angle camera imports.
-func (rcv *VSTCameraRotation) MutateROLL_DEG(n float64) bool {
+func (rcv *VSTCameraRotation) MutateROLL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
-func (rcv *VSTCameraRotation) MutateRollDeg(n float64) bool {
-	return rcv.MutateROLL_DEG(n)
+func (rcv *VSTCameraRotation) MutateRoll(n float64) bool {
+	return rcv.MutateROLL(n)
 }
 
 /// Quaternion x component for camera orientation.
@@ -222,23 +222,23 @@ func (rcv *VSTCameraRotation) MutateUsesQuaternion(n bool) bool {
 func VSTCameraRotationStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }
-func VSTCameraRotationAddYAW_DEG(builder *flatbuffers.Builder, YAW_DEG float64) {
-	builder.PrependFloat64Slot(0, YAW_DEG, 0.0)
+func VSTCameraRotationAddYAW(builder *flatbuffers.Builder, YAW float64) {
+	builder.PrependFloat64Slot(0, YAW, 0.0)
 }
-func VSTCameraRotationAddYawDeg(builder *flatbuffers.Builder, YAW_DEG float64) {
-	VSTCameraRotationAddYAW_DEG(builder, YAW_DEG)
+func VSTCameraRotationAddYaw(builder *flatbuffers.Builder, YAW float64) {
+	VSTCameraRotationAddYAW(builder, YAW)
 }
-func VSTCameraRotationAddPITCH_DEG(builder *flatbuffers.Builder, PITCH_DEG float64) {
-	builder.PrependFloat64Slot(1, PITCH_DEG, 0.0)
+func VSTCameraRotationAddPITCH(builder *flatbuffers.Builder, PITCH float64) {
+	builder.PrependFloat64Slot(1, PITCH, 0.0)
 }
-func VSTCameraRotationAddPitchDeg(builder *flatbuffers.Builder, PITCH_DEG float64) {
-	VSTCameraRotationAddPITCH_DEG(builder, PITCH_DEG)
+func VSTCameraRotationAddPitch(builder *flatbuffers.Builder, PITCH float64) {
+	VSTCameraRotationAddPITCH(builder, PITCH)
 }
-func VSTCameraRotationAddROLL_DEG(builder *flatbuffers.Builder, ROLL_DEG float64) {
-	builder.PrependFloat64Slot(2, ROLL_DEG, 0.0)
+func VSTCameraRotationAddROLL(builder *flatbuffers.Builder, ROLL float64) {
+	builder.PrependFloat64Slot(2, ROLL, 0.0)
 }
-func VSTCameraRotationAddRollDeg(builder *flatbuffers.Builder, ROLL_DEG float64) {
-	VSTCameraRotationAddROLL_DEG(builder, ROLL_DEG)
+func VSTCameraRotationAddRoll(builder *flatbuffers.Builder, ROLL float64) {
+	VSTCameraRotationAddROLL(builder, ROLL)
 }
 func VSTCameraRotationAddQUATERNION_X(builder *flatbuffers.Builder, QUATERNION_X float64) {
 	builder.PrependFloat64Slot(3, QUATERNION_X, 0.0)

@@ -66,7 +66,7 @@ class SCNPointOfInterest extends Table
     /**
      * @return double
      */
-    public function getHIGHLIGHT_BEFORE_SEC()
+    public function getHIGHLIGHT_BEFORE()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -76,7 +76,7 @@ class SCNPointOfInterest extends Table
     /**
      * @return double
      */
-    public function getHIGHLIGHT_AFTER_SEC()
+    public function getHIGHLIGHT_AFTER()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -110,14 +110,14 @@ class SCNPointOfInterest extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNPointOfInterest
      */
-    public static function createSCNPointOfInterest(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $EPOCH, $HIGHLIGHT_BEFORE_SEC, $HIGHLIGHT_AFTER_SEC, $COLOR, $POSITION)
+    public static function createSCNPointOfInterest(FlatBufferBuilder $builder, $NAME, $DESCRIPTION, $EPOCH, $HIGHLIGHT_BEFORE, $HIGHLIGHT_AFTER, $COLOR, $POSITION)
     {
         $builder->startObject(7);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addEPOCH($builder, $EPOCH);
-        self::addHIGHLIGHT_BEFORE_SEC($builder, $HIGHLIGHT_BEFORE_SEC);
-        self::addHIGHLIGHT_AFTER_SEC($builder, $HIGHLIGHT_AFTER_SEC);
+        self::addHIGHLIGHT_BEFORE($builder, $HIGHLIGHT_BEFORE);
+        self::addHIGHLIGHT_AFTER($builder, $HIGHLIGHT_AFTER);
         self::addCOLOR($builder, $COLOR);
         self::addPOSITION($builder, $POSITION);
         $o = $builder->endObject();
@@ -159,9 +159,9 @@ class SCNPointOfInterest extends Table
      * @param double
      * @return void
      */
-    public static function addHIGHLIGHT_BEFORE_SEC(FlatBufferBuilder $builder, $HIGHLIGHT_BEFORE_SEC)
+    public static function addHIGHLIGHT_BEFORE(FlatBufferBuilder $builder, $HIGHLIGHT_BEFORE)
     {
-        $builder->addDoubleX(3, $HIGHLIGHT_BEFORE_SEC, 0.0);
+        $builder->addDoubleX(3, $HIGHLIGHT_BEFORE, 0.0);
     }
 
     /**
@@ -169,9 +169,9 @@ class SCNPointOfInterest extends Table
      * @param double
      * @return void
      */
-    public static function addHIGHLIGHT_AFTER_SEC(FlatBufferBuilder $builder, $HIGHLIGHT_AFTER_SEC)
+    public static function addHIGHLIGHT_AFTER(FlatBufferBuilder $builder, $HIGHLIGHT_AFTER)
     {
-        $builder->addDoubleX(4, $HIGHLIGHT_AFTER_SEC, 0.0);
+        $builder->addDoubleX(4, $HIGHLIGHT_AFTER, 0.0);
     }
 
     /**

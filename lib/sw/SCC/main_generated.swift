@@ -66,9 +66,9 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let YAW_DEG: VOffset = 4
-    static let PITCH_DEG: VOffset = 6
-    static let ROLL_DEG: VOffset = 8
+    static let YAW: VOffset = 4
+    static let PITCH: VOffset = 6
+    static let ROLL: VOffset = 8
     static let QUATERNION_X: VOffset = 10
     static let QUATERNION_Y: VOffset = 12
     static let QUATERNION_Z: VOffset = 14
@@ -77,11 +77,11 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
   }
 
   ///  Yaw angle in degrees for Euler-angle camera imports.
-  public var YAW_DEG: Double { let o = _accessor.offset(VT.YAW_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var YAW: Double { let o = _accessor.offset(VT.YAW); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Pitch angle in degrees for Euler-angle camera imports.
-  public var PITCH_DEG: Double { let o = _accessor.offset(VT.PITCH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var PITCH: Double { let o = _accessor.offset(VT.PITCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Roll angle in degrees for Euler-angle camera imports.
-  public var ROLL_DEG: Double { let o = _accessor.offset(VT.ROLL_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var ROLL: Double { let o = _accessor.offset(VT.ROLL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Quaternion x component for camera orientation.
   public var QUATERNION_X: Double { let o = _accessor.offset(VT.QUATERNION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Quaternion y component for camera orientation.
@@ -93,9 +93,9 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
   ///  True when quaternion fields define the authoritative rotation.
   public var USES_QUATERNION: Bool { let o = _accessor.offset(VT.USES_QUATERNION); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startVSTCameraRotation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(YAW_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YAW_DEG, def: 0.0, at: VT.YAW_DEG) }
-  public static func add(PITCH_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PITCH_DEG, def: 0.0, at: VT.PITCH_DEG) }
-  public static func add(ROLL_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL_DEG, def: 0.0, at: VT.ROLL_DEG) }
+  public static func add(YAW: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YAW, def: 0.0, at: VT.YAW) }
+  public static func add(PITCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PITCH, def: 0.0, at: VT.PITCH) }
+  public static func add(ROLL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL, def: 0.0, at: VT.ROLL) }
   public static func add(QUATERNION_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_X, def: 0.0, at: VT.QUATERNION_X) }
   public static func add(QUATERNION_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_Y, def: 0.0, at: VT.QUATERNION_Y) }
   public static func add(QUATERNION_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUATERNION_Z, def: 0.0, at: VT.QUATERNION_Z) }
@@ -105,9 +105,9 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
   public static func endVSTCameraRotation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createVSTCameraRotation(
     _ fbb: inout FlatBufferBuilder,
-    YAW_DEG: Double = 0.0,
-    PITCH_DEG: Double = 0.0,
-    ROLL_DEG: Double = 0.0,
+    YAW: Double = 0.0,
+    PITCH: Double = 0.0,
+    ROLL: Double = 0.0,
     QUATERNION_X: Double = 0.0,
     QUATERNION_Y: Double = 0.0,
     QUATERNION_Z: Double = 0.0,
@@ -115,9 +115,9 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
     USES_QUATERNION: Bool = true
   ) -> Offset {
     let __start = VSTCameraRotation.startVSTCameraRotation(&fbb)
-    VSTCameraRotation.add(YAW_DEG: YAW_DEG, &fbb)
-    VSTCameraRotation.add(PITCH_DEG: PITCH_DEG, &fbb)
-    VSTCameraRotation.add(ROLL_DEG: ROLL_DEG, &fbb)
+    VSTCameraRotation.add(YAW: YAW, &fbb)
+    VSTCameraRotation.add(PITCH: PITCH, &fbb)
+    VSTCameraRotation.add(ROLL: ROLL, &fbb)
     VSTCameraRotation.add(QUATERNION_X: QUATERNION_X, &fbb)
     VSTCameraRotation.add(QUATERNION_Y: QUATERNION_Y, &fbb)
     VSTCameraRotation.add(QUATERNION_Z: QUATERNION_Z, &fbb)
@@ -128,9 +128,9 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.YAW_DEG, fieldName: "YAW_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.PITCH_DEG, fieldName: "PITCH_DEG", required: false, type: Double.self)
-    try _v.visit(field: VT.ROLL_DEG, fieldName: "ROLL_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.YAW, fieldName: "YAW", required: false, type: Double.self)
+    try _v.visit(field: VT.PITCH, fieldName: "PITCH", required: false, type: Double.self)
+    try _v.visit(field: VT.ROLL, fieldName: "ROLL", required: false, type: Double.self)
     try _v.visit(field: VT.QUATERNION_X, fieldName: "QUATERNION_X", required: false, type: Double.self)
     try _v.visit(field: VT.QUATERNION_Y, fieldName: "QUATERNION_Y", required: false, type: Double.self)
     try _v.visit(field: VT.QUATERNION_Z, fieldName: "QUATERNION_Z", required: false, type: Double.self)
@@ -280,7 +280,7 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
   private struct VT {
     static let CAMERA_FRAME_MODE: VOffset = 4
     static let SATELLITE_ALIGNMENT: VOffset = 6
-    static let DISTANCE_FROM_TARGET_KM: VOffset = 8
+    static let DISTANCE_FROM_TARGET: VOffset = 8
     static let ROTATION: VOffset = 10
   }
 
@@ -289,26 +289,26 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
   ///  Satellite body alignment mode when focused on a satellite.
   public var SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode { let o = _accessor.offset(VT.SATELLITE_ALIGNMENT); return o == 0 ? .unknown : viewerSatelliteAlignmentMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
   ///  Camera distance from the current target in kilometers.
-  public var DISTANCE_FROM_TARGET_KM: Double { let o = _accessor.offset(VT.DISTANCE_FROM_TARGET_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var DISTANCE_FROM_TARGET: Double { let o = _accessor.offset(VT.DISTANCE_FROM_TARGET); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Camera orientation offset.
   public var ROTATION: VSTCameraRotation? { let o = _accessor.offset(VT.ROTATION); return o == 0 ? nil : VSTCameraRotation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startVSTCameraOptions(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(CAMERA_FRAME_MODE: viewerCameraFrameMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAMERA_FRAME_MODE.rawValue, def: 0, at: VT.CAMERA_FRAME_MODE) }
   public static func add(SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SATELLITE_ALIGNMENT.rawValue, def: 0, at: VT.SATELLITE_ALIGNMENT) }
-  public static func add(DISTANCE_FROM_TARGET_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_FROM_TARGET_KM, def: 0.0, at: VT.DISTANCE_FROM_TARGET_KM) }
+  public static func add(DISTANCE_FROM_TARGET: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_FROM_TARGET, def: 0.0, at: VT.DISTANCE_FROM_TARGET) }
   public static func add(ROTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROTATION, at: VT.ROTATION) }
   public static func endVSTCameraOptions(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createVSTCameraOptions(
     _ fbb: inout FlatBufferBuilder,
     CAMERA_FRAME_MODE: viewerCameraFrameMode = .default_,
     SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode = .unknown,
-    DISTANCE_FROM_TARGET_KM: Double = 0.0,
+    DISTANCE_FROM_TARGET: Double = 0.0,
     ROTATIONOffset ROTATION: Offset = Offset()
   ) -> Offset {
     let __start = VSTCameraOptions.startVSTCameraOptions(&fbb)
     VSTCameraOptions.add(CAMERA_FRAME_MODE: CAMERA_FRAME_MODE, &fbb)
     VSTCameraOptions.add(SATELLITE_ALIGNMENT: SATELLITE_ALIGNMENT, &fbb)
-    VSTCameraOptions.add(DISTANCE_FROM_TARGET_KM: DISTANCE_FROM_TARGET_KM, &fbb)
+    VSTCameraOptions.add(DISTANCE_FROM_TARGET: DISTANCE_FROM_TARGET, &fbb)
     VSTCameraOptions.add(ROTATION: ROTATION, &fbb)
     return VSTCameraOptions.endVSTCameraOptions(&fbb, start: __start)
   }
@@ -317,7 +317,7 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.CAMERA_FRAME_MODE, fieldName: "CAMERA_FRAME_MODE", required: false, type: viewerCameraFrameMode.self)
     try _v.visit(field: VT.SATELLITE_ALIGNMENT, fieldName: "SATELLITE_ALIGNMENT", required: false, type: viewerSatelliteAlignmentMode.self)
-    try _v.visit(field: VT.DISTANCE_FROM_TARGET_KM, fieldName: "DISTANCE_FROM_TARGET_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_FROM_TARGET, fieldName: "DISTANCE_FROM_TARGET", required: false, type: Double.self)
     try _v.visit(field: VT.ROTATION, fieldName: "ROTATION", required: false, type: ForwardOffset<VSTCameraRotation>.self)
     _v.finish()
   }

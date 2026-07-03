@@ -220,193 +220,6 @@ impl<'a> ::flatbuffers::Verifiable for scenarioActionCode {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioActionCode {}
-pub enum SCNTleLinesOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Raw TLE lines retained as import provenance for scenario setup.
-pub struct SCNTleLines<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCNTleLines<'a> {
-  type Inner = SCNTleLines<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCNTleLines<'a> {
-  pub const VT_LINE1: ::flatbuffers::VOffsetT = 4;
-  pub const VT_LINE2: ::flatbuffers::VOffsetT = 6;
-  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 8;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCNTleLines { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCNTleLinesArgs<'args>
-  ) -> ::flatbuffers::WIPOffset<SCNTleLines<'bldr>> {
-    let mut builder = SCNTleLinesBuilder::new(_fbb);
-    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
-    if let Some(x) = args.LINE2 { builder.add_LINE2(x); }
-    if let Some(x) = args.LINE1 { builder.add_LINE1(x); }
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCNTleLinesT {
-    let LINE1 = self.LINE1().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let LINE2 = self.LINE2().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    let SOURCE = self.SOURCE().map(|x| {
-      alloc::string::ToString::to_string(x)
-    });
-    SCNTleLinesT {
-      LINE1,
-      LINE2,
-      SOURCE,
-    }
-  }
-
-  /// First TLE line exactly as imported.
-  #[inline]
-  pub fn LINE1(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNTleLines::VT_LINE1, None)}
-  }
-  /// Second TLE line exactly as imported.
-  #[inline]
-  pub fn LINE2(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNTleLines::VT_LINE2, None)}
-  }
-  /// Source label or URI for the imported TLE.
-  #[inline]
-  pub fn SOURCE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNTleLines::VT_SOURCE, None)}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCNTleLines<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINE1", Self::VT_LINE1, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LINE2", Self::VT_LINE2, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCNTleLinesArgs<'a> {
-    pub LINE1: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LINE2: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
-}
-impl<'a> Default for SCNTleLinesArgs<'a> {
-  #[inline]
-  fn default() -> Self {
-    SCNTleLinesArgs {
-      LINE1: None,
-      LINE2: None,
-      SOURCE: None,
-    }
-  }
-}
-
-pub struct SCNTleLinesBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNTleLinesBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_LINE1(&mut self, LINE1: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNTleLines::VT_LINE1, LINE1);
-  }
-  #[inline]
-  pub fn add_LINE2(&mut self, LINE2: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNTleLines::VT_LINE2, LINE2);
-  }
-  #[inline]
-  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNTleLines::VT_SOURCE, SOURCE);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNTleLinesBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCNTleLinesBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCNTleLines<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCNTleLines<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCNTleLines");
-      ds.field("LINE1", &self.LINE1());
-      ds.field("LINE2", &self.LINE2());
-      ds.field("SOURCE", &self.SOURCE());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCNTleLinesT {
-  pub LINE1: Option<alloc::string::String>,
-  pub LINE2: Option<alloc::string::String>,
-  pub SOURCE: Option<alloc::string::String>,
-}
-impl Default for SCNTleLinesT {
-  fn default() -> Self {
-    Self {
-      LINE1: None,
-      LINE2: None,
-      SOURCE: None,
-    }
-  }
-}
-impl SCNTleLinesT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCNTleLines<'b>> {
-    let LINE1 = self.LINE1.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LINE2 = self.LINE2.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SOURCE = self.SOURCE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    SCNTleLines::create(_fbb, &SCNTleLinesArgs{
-      LINE1,
-      LINE2,
-      SOURCE,
-    })
-  }
-}
 pub enum SCNGeodeticPointOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -424,9 +237,9 @@ impl<'a> ::flatbuffers::Follow<'a> for SCNGeodeticPoint<'a> {
 }
 
 impl<'a> SCNGeodeticPoint<'a> {
-  pub const VT_LATITUDE_DEG: ::flatbuffers::VOffsetT = 4;
-  pub const VT_LONGITUDE_DEG: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ALTITUDE_KM: ::flatbuffers::VOffsetT = 8;
+  pub const VT_LATITUDE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_LONGITUDE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ALTITUDE: ::flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -438,46 +251,46 @@ impl<'a> SCNGeodeticPoint<'a> {
     args: &'args SCNGeodeticPointArgs
   ) -> ::flatbuffers::WIPOffset<SCNGeodeticPoint<'bldr>> {
     let mut builder = SCNGeodeticPointBuilder::new(_fbb);
-    builder.add_ALTITUDE_KM(args.ALTITUDE_KM);
-    builder.add_LONGITUDE_DEG(args.LONGITUDE_DEG);
-    builder.add_LATITUDE_DEG(args.LATITUDE_DEG);
+    builder.add_ALTITUDE(args.ALTITUDE);
+    builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_LATITUDE(args.LATITUDE);
     builder.finish()
   }
 
   pub fn unpack(&self) -> SCNGeodeticPointT {
-    let LATITUDE_DEG = self.LATITUDE_DEG();
-    let LONGITUDE_DEG = self.LONGITUDE_DEG();
-    let ALTITUDE_KM = self.ALTITUDE_KM();
+    let LATITUDE = self.LATITUDE();
+    let LONGITUDE = self.LONGITUDE();
+    let ALTITUDE = self.ALTITUDE();
     SCNGeodeticPointT {
-      LATITUDE_DEG,
-      LONGITUDE_DEG,
-      ALTITUDE_KM,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
     }
   }
 
   /// Latitude in degrees.
   #[inline]
-  pub fn LATITUDE_DEG(&self) -> f64 {
+  pub fn LATITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LATITUDE_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LATITUDE, Some(0.0)).unwrap()}
   }
   /// Longitude in degrees.
   #[inline]
-  pub fn LONGITUDE_DEG(&self) -> f64 {
+  pub fn LONGITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LONGITUDE_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LONGITUDE, Some(0.0)).unwrap()}
   }
   /// Altitude above the reference ellipsoid in kilometers.
   #[inline]
-  pub fn ALTITUDE_KM(&self) -> f64 {
+  pub fn ALTITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_ALTITUDE_KM, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_ALTITUDE, Some(0.0)).unwrap()}
   }
 }
 
@@ -487,25 +300,25 @@ impl ::flatbuffers::Verifiable for SCNGeodeticPoint<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<f64>("LATITUDE_DEG", Self::VT_LATITUDE_DEG, false)?
-     .visit_field::<f64>("LONGITUDE_DEG", Self::VT_LONGITUDE_DEG, false)?
-     .visit_field::<f64>("ALTITUDE_KM", Self::VT_ALTITUDE_KM, false)?
+     .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
+     .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
+     .visit_field::<f64>("ALTITUDE", Self::VT_ALTITUDE, false)?
      .finish();
     Ok(())
   }
 }
 pub struct SCNGeodeticPointArgs {
-    pub LATITUDE_DEG: f64,
-    pub LONGITUDE_DEG: f64,
-    pub ALTITUDE_KM: f64,
+    pub LATITUDE: f64,
+    pub LONGITUDE: f64,
+    pub ALTITUDE: f64,
 }
 impl<'a> Default for SCNGeodeticPointArgs {
   #[inline]
   fn default() -> Self {
     SCNGeodeticPointArgs {
-      LATITUDE_DEG: 0.0,
-      LONGITUDE_DEG: 0.0,
-      ALTITUDE_KM: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
     }
   }
 }
@@ -516,16 +329,16 @@ pub struct SCNGeodeticPointBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a>
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNGeodeticPointBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_LATITUDE_DEG(&mut self, LATITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LATITUDE_DEG, LATITUDE_DEG, 0.0);
+  pub fn add_LATITUDE(&mut self, LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LATITUDE, LATITUDE, 0.0);
   }
   #[inline]
-  pub fn add_LONGITUDE_DEG(&mut self, LONGITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LONGITUDE_DEG, LONGITUDE_DEG, 0.0);
+  pub fn add_LONGITUDE(&mut self, LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LONGITUDE, LONGITUDE, 0.0);
   }
   #[inline]
-  pub fn add_ALTITUDE_KM(&mut self, ALTITUDE_KM: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_ALTITUDE_KM, ALTITUDE_KM, 0.0);
+  pub fn add_ALTITUDE(&mut self, ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_ALTITUDE, ALTITUDE, 0.0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNGeodeticPointBuilder<'a, 'b, A> {
@@ -545,25 +358,25 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNGeodeticPointBuilder<'a, '
 impl ::core::fmt::Debug for SCNGeodeticPoint<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCNGeodeticPoint");
-      ds.field("LATITUDE_DEG", &self.LATITUDE_DEG());
-      ds.field("LONGITUDE_DEG", &self.LONGITUDE_DEG());
-      ds.field("ALTITUDE_KM", &self.ALTITUDE_KM());
+      ds.field("LATITUDE", &self.LATITUDE());
+      ds.field("LONGITUDE", &self.LONGITUDE());
+      ds.field("ALTITUDE", &self.ALTITUDE());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCNGeodeticPointT {
-  pub LATITUDE_DEG: f64,
-  pub LONGITUDE_DEG: f64,
-  pub ALTITUDE_KM: f64,
+  pub LATITUDE: f64,
+  pub LONGITUDE: f64,
+  pub ALTITUDE: f64,
 }
 impl Default for SCNGeodeticPointT {
   fn default() -> Self {
     Self {
-      LATITUDE_DEG: 0.0,
-      LONGITUDE_DEG: 0.0,
-      ALTITUDE_KM: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
     }
   }
 }
@@ -572,13 +385,13 @@ impl SCNGeodeticPointT {
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<SCNGeodeticPoint<'b>> {
-    let LATITUDE_DEG = self.LATITUDE_DEG;
-    let LONGITUDE_DEG = self.LONGITUDE_DEG;
-    let ALTITUDE_KM = self.ALTITUDE_KM;
+    let LATITUDE = self.LATITUDE;
+    let LONGITUDE = self.LONGITUDE;
+    let ALTITUDE = self.ALTITUDE;
     SCNGeodeticPoint::create(_fbb, &SCNGeodeticPointArgs{
-      LATITUDE_DEG,
-      LONGITUDE_DEG,
-      ALTITUDE_KM,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
     })
   }
 }
@@ -602,8 +415,8 @@ impl<'a> SCNPointOfInterest<'a> {
   pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
   pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 6;
   pub const VT_EPOCH: ::flatbuffers::VOffsetT = 8;
-  pub const VT_HIGHLIGHT_BEFORE_SEC: ::flatbuffers::VOffsetT = 10;
-  pub const VT_HIGHLIGHT_AFTER_SEC: ::flatbuffers::VOffsetT = 12;
+  pub const VT_HIGHLIGHT_BEFORE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_HIGHLIGHT_AFTER: ::flatbuffers::VOffsetT = 12;
   pub const VT_COLOR: ::flatbuffers::VOffsetT = 14;
   pub const VT_POSITION: ::flatbuffers::VOffsetT = 16;
 
@@ -617,8 +430,8 @@ impl<'a> SCNPointOfInterest<'a> {
     args: &'args SCNPointOfInterestArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCNPointOfInterest<'bldr>> {
     let mut builder = SCNPointOfInterestBuilder::new(_fbb);
-    builder.add_HIGHLIGHT_AFTER_SEC(args.HIGHLIGHT_AFTER_SEC);
-    builder.add_HIGHLIGHT_BEFORE_SEC(args.HIGHLIGHT_BEFORE_SEC);
+    builder.add_HIGHLIGHT_AFTER(args.HIGHLIGHT_AFTER);
+    builder.add_HIGHLIGHT_BEFORE(args.HIGHLIGHT_BEFORE);
     if let Some(x) = args.POSITION { builder.add_POSITION(x); }
     if let Some(x) = args.COLOR { builder.add_COLOR(x); }
     if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
@@ -637,8 +450,8 @@ impl<'a> SCNPointOfInterest<'a> {
     let EPOCH = self.EPOCH().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let HIGHLIGHT_BEFORE_SEC = self.HIGHLIGHT_BEFORE_SEC();
-    let HIGHLIGHT_AFTER_SEC = self.HIGHLIGHT_AFTER_SEC();
+    let HIGHLIGHT_BEFORE = self.HIGHLIGHT_BEFORE();
+    let HIGHLIGHT_AFTER = self.HIGHLIGHT_AFTER();
     let COLOR = self.COLOR().map(|x| {
       alloc::string::ToString::to_string(x)
     });
@@ -649,8 +462,8 @@ impl<'a> SCNPointOfInterest<'a> {
       NAME,
       DESCRIPTION,
       EPOCH,
-      HIGHLIGHT_BEFORE_SEC,
-      HIGHLIGHT_AFTER_SEC,
+      HIGHLIGHT_BEFORE,
+      HIGHLIGHT_AFTER,
       COLOR,
       POSITION,
     }
@@ -682,19 +495,19 @@ impl<'a> SCNPointOfInterest<'a> {
   }
   /// Seconds before the epoch when highlighting begins.
   #[inline]
-  pub fn HIGHLIGHT_BEFORE_SEC(&self) -> f64 {
+  pub fn HIGHLIGHT_BEFORE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE_SEC, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE, Some(0.0)).unwrap()}
   }
   /// Seconds after the epoch when highlighting remains active.
   #[inline]
-  pub fn HIGHLIGHT_AFTER_SEC(&self) -> f64 {
+  pub fn HIGHLIGHT_AFTER(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER_SEC, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER, Some(0.0)).unwrap()}
   }
   /// Display color token for the point of interest.
   #[inline]
@@ -723,8 +536,8 @@ impl ::flatbuffers::Verifiable for SCNPointOfInterest<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
-     .visit_field::<f64>("HIGHLIGHT_BEFORE_SEC", Self::VT_HIGHLIGHT_BEFORE_SEC, false)?
-     .visit_field::<f64>("HIGHLIGHT_AFTER_SEC", Self::VT_HIGHLIGHT_AFTER_SEC, false)?
+     .visit_field::<f64>("HIGHLIGHT_BEFORE", Self::VT_HIGHLIGHT_BEFORE, false)?
+     .visit_field::<f64>("HIGHLIGHT_AFTER", Self::VT_HIGHLIGHT_AFTER, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>("POSITION", Self::VT_POSITION, false)?
      .finish();
@@ -735,8 +548,8 @@ pub struct SCNPointOfInterestArgs<'a> {
     pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub HIGHLIGHT_BEFORE_SEC: f64,
-    pub HIGHLIGHT_AFTER_SEC: f64,
+    pub HIGHLIGHT_BEFORE: f64,
+    pub HIGHLIGHT_AFTER: f64,
     pub COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub POSITION: Option<::flatbuffers::WIPOffset<SCNGeodeticPoint<'a>>>,
 }
@@ -747,8 +560,8 @@ impl<'a> Default for SCNPointOfInterestArgs<'a> {
       NAME: None,
       DESCRIPTION: None,
       EPOCH: None,
-      HIGHLIGHT_BEFORE_SEC: 0.0,
-      HIGHLIGHT_AFTER_SEC: 0.0,
+      HIGHLIGHT_BEFORE: 0.0,
+      HIGHLIGHT_AFTER: 0.0,
       COLOR: None,
       POSITION: None,
     }
@@ -773,12 +586,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNPointOfInterestBuilder<'a,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPointOfInterest::VT_EPOCH, EPOCH);
   }
   #[inline]
-  pub fn add_HIGHLIGHT_BEFORE_SEC(&mut self, HIGHLIGHT_BEFORE_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE_SEC, HIGHLIGHT_BEFORE_SEC, 0.0);
+  pub fn add_HIGHLIGHT_BEFORE(&mut self, HIGHLIGHT_BEFORE: f64) {
+    self.fbb_.push_slot::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE, HIGHLIGHT_BEFORE, 0.0);
   }
   #[inline]
-  pub fn add_HIGHLIGHT_AFTER_SEC(&mut self, HIGHLIGHT_AFTER_SEC: f64) {
-    self.fbb_.push_slot::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER_SEC, HIGHLIGHT_AFTER_SEC, 0.0);
+  pub fn add_HIGHLIGHT_AFTER(&mut self, HIGHLIGHT_AFTER: f64) {
+    self.fbb_.push_slot::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER, HIGHLIGHT_AFTER, 0.0);
   }
   #[inline]
   pub fn add_COLOR(&mut self, COLOR: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -809,8 +622,8 @@ impl ::core::fmt::Debug for SCNPointOfInterest<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("EPOCH", &self.EPOCH());
-      ds.field("HIGHLIGHT_BEFORE_SEC", &self.HIGHLIGHT_BEFORE_SEC());
-      ds.field("HIGHLIGHT_AFTER_SEC", &self.HIGHLIGHT_AFTER_SEC());
+      ds.field("HIGHLIGHT_BEFORE", &self.HIGHLIGHT_BEFORE());
+      ds.field("HIGHLIGHT_AFTER", &self.HIGHLIGHT_AFTER());
       ds.field("COLOR", &self.COLOR());
       ds.field("POSITION", &self.POSITION());
       ds.finish()
@@ -822,8 +635,8 @@ pub struct SCNPointOfInterestT {
   pub NAME: Option<alloc::string::String>,
   pub DESCRIPTION: Option<alloc::string::String>,
   pub EPOCH: Option<alloc::string::String>,
-  pub HIGHLIGHT_BEFORE_SEC: f64,
-  pub HIGHLIGHT_AFTER_SEC: f64,
+  pub HIGHLIGHT_BEFORE: f64,
+  pub HIGHLIGHT_AFTER: f64,
   pub COLOR: Option<alloc::string::String>,
   pub POSITION: Option<alloc::boxed::Box<SCNGeodeticPointT>>,
 }
@@ -833,8 +646,8 @@ impl Default for SCNPointOfInterestT {
       NAME: None,
       DESCRIPTION: None,
       EPOCH: None,
-      HIGHLIGHT_BEFORE_SEC: 0.0,
-      HIGHLIGHT_AFTER_SEC: 0.0,
+      HIGHLIGHT_BEFORE: 0.0,
+      HIGHLIGHT_AFTER: 0.0,
       COLOR: None,
       POSITION: None,
     }
@@ -854,8 +667,8 @@ impl SCNPointOfInterestT {
     let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let HIGHLIGHT_BEFORE_SEC = self.HIGHLIGHT_BEFORE_SEC;
-    let HIGHLIGHT_AFTER_SEC = self.HIGHLIGHT_AFTER_SEC;
+    let HIGHLIGHT_BEFORE = self.HIGHLIGHT_BEFORE;
+    let HIGHLIGHT_AFTER = self.HIGHLIGHT_AFTER;
     let COLOR = self.COLOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -866,8 +679,8 @@ impl SCNPointOfInterestT {
       NAME,
       DESCRIPTION,
       EPOCH,
-      HIGHLIGHT_BEFORE_SEC,
-      HIGHLIGHT_AFTER_SEC,
+      HIGHLIGHT_BEFORE,
+      HIGHLIGHT_AFTER,
       COLOR,
       POSITION,
     })
@@ -890,12 +703,12 @@ impl<'a> ::flatbuffers::Follow<'a> for SCNViewCone<'a> {
 }
 
 impl<'a> SCNViewCone<'a> {
-  pub const VT_MIN_ELEVATION_DEG: ::flatbuffers::VOffsetT = 4;
-  pub const VT_MAX_ELEVATION_DEG: ::flatbuffers::VOffsetT = 6;
-  pub const VT_MIN_AZIMUTH_DEG: ::flatbuffers::VOffsetT = 8;
-  pub const VT_MAX_AZIMUTH_DEG: ::flatbuffers::VOffsetT = 10;
-  pub const VT_MAX_RANGE_KM: ::flatbuffers::VOffsetT = 12;
-  pub const VT_HALF_ANGLE_DEG: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MIN_ELEVATION: ::flatbuffers::VOffsetT = 4;
+  pub const VT_MAX_ELEVATION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MIN_AZIMUTH: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MAX_AZIMUTH: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MAX_RANGE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_HALF_ANGLE: ::flatbuffers::VOffsetT = 14;
   pub const VT_DYNAMIC_RANGE: ::flatbuffers::VOffsetT = 16;
 
   #[inline]
@@ -908,84 +721,84 @@ impl<'a> SCNViewCone<'a> {
     args: &'args SCNViewConeArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCNViewCone<'bldr>> {
     let mut builder = SCNViewConeBuilder::new(_fbb);
-    builder.add_HALF_ANGLE_DEG(args.HALF_ANGLE_DEG);
-    builder.add_MAX_RANGE_KM(args.MAX_RANGE_KM);
-    builder.add_MAX_AZIMUTH_DEG(args.MAX_AZIMUTH_DEG);
-    builder.add_MIN_AZIMUTH_DEG(args.MIN_AZIMUTH_DEG);
-    builder.add_MAX_ELEVATION_DEG(args.MAX_ELEVATION_DEG);
-    builder.add_MIN_ELEVATION_DEG(args.MIN_ELEVATION_DEG);
+    builder.add_HALF_ANGLE(args.HALF_ANGLE);
+    builder.add_MAX_RANGE(args.MAX_RANGE);
+    builder.add_MAX_AZIMUTH(args.MAX_AZIMUTH);
+    builder.add_MIN_AZIMUTH(args.MIN_AZIMUTH);
+    builder.add_MAX_ELEVATION(args.MAX_ELEVATION);
+    builder.add_MIN_ELEVATION(args.MIN_ELEVATION);
     if let Some(x) = args.DYNAMIC_RANGE { builder.add_DYNAMIC_RANGE(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> SCNViewConeT {
-    let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG();
-    let MAX_ELEVATION_DEG = self.MAX_ELEVATION_DEG();
-    let MIN_AZIMUTH_DEG = self.MIN_AZIMUTH_DEG();
-    let MAX_AZIMUTH_DEG = self.MAX_AZIMUTH_DEG();
-    let MAX_RANGE_KM = self.MAX_RANGE_KM();
-    let HALF_ANGLE_DEG = self.HALF_ANGLE_DEG();
+    let MIN_ELEVATION = self.MIN_ELEVATION();
+    let MAX_ELEVATION = self.MAX_ELEVATION();
+    let MIN_AZIMUTH = self.MIN_AZIMUTH();
+    let MAX_AZIMUTH = self.MAX_AZIMUTH();
+    let MAX_RANGE = self.MAX_RANGE();
+    let HALF_ANGLE = self.HALF_ANGLE();
     let DYNAMIC_RANGE = self.DYNAMIC_RANGE().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     SCNViewConeT {
-      MIN_ELEVATION_DEG,
-      MAX_ELEVATION_DEG,
-      MIN_AZIMUTH_DEG,
-      MAX_AZIMUTH_DEG,
-      MAX_RANGE_KM,
-      HALF_ANGLE_DEG,
+      MIN_ELEVATION,
+      MAX_ELEVATION,
+      MIN_AZIMUTH,
+      MAX_AZIMUTH,
+      MAX_RANGE,
+      HALF_ANGLE,
       DYNAMIC_RANGE,
     }
   }
 
   /// Minimum elevation angle in degrees.
   #[inline]
-  pub fn MIN_ELEVATION_DEG(&self) -> f64 {
+  pub fn MIN_ELEVATION(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_ELEVATION_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_ELEVATION, Some(0.0)).unwrap()}
   }
   /// Maximum elevation angle in degrees.
   #[inline]
-  pub fn MAX_ELEVATION_DEG(&self) -> f64 {
+  pub fn MAX_ELEVATION(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_ELEVATION_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_ELEVATION, Some(0.0)).unwrap()}
   }
   /// Minimum azimuth angle in degrees.
   #[inline]
-  pub fn MIN_AZIMUTH_DEG(&self) -> f64 {
+  pub fn MIN_AZIMUTH(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_AZIMUTH_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_AZIMUTH, Some(0.0)).unwrap()}
   }
   /// Maximum azimuth angle in degrees.
   #[inline]
-  pub fn MAX_AZIMUTH_DEG(&self) -> f64 {
+  pub fn MAX_AZIMUTH(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_AZIMUTH_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_AZIMUTH, Some(0.0)).unwrap()}
   }
   /// Maximum view-cone range in kilometers.
   #[inline]
-  pub fn MAX_RANGE_KM(&self) -> f64 {
+  pub fn MAX_RANGE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_RANGE_KM, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_RANGE, Some(0.0)).unwrap()}
   }
   /// Half angle in degrees for cone-style overlays.
   #[inline]
-  pub fn HALF_ANGLE_DEG(&self) -> f64 {
+  pub fn HALF_ANGLE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNViewCone::VT_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNViewCone::VT_HALF_ANGLE, Some(0.0)).unwrap()}
   }
   /// Dynamic range mode or expression used by the viewer.
   #[inline]
@@ -1003,36 +816,36 @@ impl ::flatbuffers::Verifiable for SCNViewCone<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<f64>("MIN_ELEVATION_DEG", Self::VT_MIN_ELEVATION_DEG, false)?
-     .visit_field::<f64>("MAX_ELEVATION_DEG", Self::VT_MAX_ELEVATION_DEG, false)?
-     .visit_field::<f64>("MIN_AZIMUTH_DEG", Self::VT_MIN_AZIMUTH_DEG, false)?
-     .visit_field::<f64>("MAX_AZIMUTH_DEG", Self::VT_MAX_AZIMUTH_DEG, false)?
-     .visit_field::<f64>("MAX_RANGE_KM", Self::VT_MAX_RANGE_KM, false)?
-     .visit_field::<f64>("HALF_ANGLE_DEG", Self::VT_HALF_ANGLE_DEG, false)?
+     .visit_field::<f64>("MIN_ELEVATION", Self::VT_MIN_ELEVATION, false)?
+     .visit_field::<f64>("MAX_ELEVATION", Self::VT_MAX_ELEVATION, false)?
+     .visit_field::<f64>("MIN_AZIMUTH", Self::VT_MIN_AZIMUTH, false)?
+     .visit_field::<f64>("MAX_AZIMUTH", Self::VT_MAX_AZIMUTH, false)?
+     .visit_field::<f64>("MAX_RANGE", Self::VT_MAX_RANGE, false)?
+     .visit_field::<f64>("HALF_ANGLE", Self::VT_HALF_ANGLE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DYNAMIC_RANGE", Self::VT_DYNAMIC_RANGE, false)?
      .finish();
     Ok(())
   }
 }
 pub struct SCNViewConeArgs<'a> {
-    pub MIN_ELEVATION_DEG: f64,
-    pub MAX_ELEVATION_DEG: f64,
-    pub MIN_AZIMUTH_DEG: f64,
-    pub MAX_AZIMUTH_DEG: f64,
-    pub MAX_RANGE_KM: f64,
-    pub HALF_ANGLE_DEG: f64,
+    pub MIN_ELEVATION: f64,
+    pub MAX_ELEVATION: f64,
+    pub MIN_AZIMUTH: f64,
+    pub MAX_AZIMUTH: f64,
+    pub MAX_RANGE: f64,
+    pub HALF_ANGLE: f64,
     pub DYNAMIC_RANGE: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for SCNViewConeArgs<'a> {
   #[inline]
   fn default() -> Self {
     SCNViewConeArgs {
-      MIN_ELEVATION_DEG: 0.0,
-      MAX_ELEVATION_DEG: 0.0,
-      MIN_AZIMUTH_DEG: 0.0,
-      MAX_AZIMUTH_DEG: 0.0,
-      MAX_RANGE_KM: 0.0,
-      HALF_ANGLE_DEG: 0.0,
+      MIN_ELEVATION: 0.0,
+      MAX_ELEVATION: 0.0,
+      MIN_AZIMUTH: 0.0,
+      MAX_AZIMUTH: 0.0,
+      MAX_RANGE: 0.0,
+      HALF_ANGLE: 0.0,
       DYNAMIC_RANGE: None,
     }
   }
@@ -1044,28 +857,28 @@ pub struct SCNViewConeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNViewConeBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_MIN_ELEVATION_DEG(&mut self, MIN_ELEVATION_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MIN_ELEVATION_DEG, MIN_ELEVATION_DEG, 0.0);
+  pub fn add_MIN_ELEVATION(&mut self, MIN_ELEVATION: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MIN_ELEVATION, MIN_ELEVATION, 0.0);
   }
   #[inline]
-  pub fn add_MAX_ELEVATION_DEG(&mut self, MAX_ELEVATION_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_ELEVATION_DEG, MAX_ELEVATION_DEG, 0.0);
+  pub fn add_MAX_ELEVATION(&mut self, MAX_ELEVATION: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_ELEVATION, MAX_ELEVATION, 0.0);
   }
   #[inline]
-  pub fn add_MIN_AZIMUTH_DEG(&mut self, MIN_AZIMUTH_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MIN_AZIMUTH_DEG, MIN_AZIMUTH_DEG, 0.0);
+  pub fn add_MIN_AZIMUTH(&mut self, MIN_AZIMUTH: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MIN_AZIMUTH, MIN_AZIMUTH, 0.0);
   }
   #[inline]
-  pub fn add_MAX_AZIMUTH_DEG(&mut self, MAX_AZIMUTH_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_AZIMUTH_DEG, MAX_AZIMUTH_DEG, 0.0);
+  pub fn add_MAX_AZIMUTH(&mut self, MAX_AZIMUTH: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_AZIMUTH, MAX_AZIMUTH, 0.0);
   }
   #[inline]
-  pub fn add_MAX_RANGE_KM(&mut self, MAX_RANGE_KM: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_RANGE_KM, MAX_RANGE_KM, 0.0);
+  pub fn add_MAX_RANGE(&mut self, MAX_RANGE: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_MAX_RANGE, MAX_RANGE, 0.0);
   }
   #[inline]
-  pub fn add_HALF_ANGLE_DEG(&mut self, HALF_ANGLE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNViewCone::VT_HALF_ANGLE_DEG, HALF_ANGLE_DEG, 0.0);
+  pub fn add_HALF_ANGLE(&mut self, HALF_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(SCNViewCone::VT_HALF_ANGLE, HALF_ANGLE, 0.0);
   }
   #[inline]
   pub fn add_DYNAMIC_RANGE(&mut self, DYNAMIC_RANGE: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -1089,12 +902,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNViewConeBuilder<'a, 'b, A>
 impl ::core::fmt::Debug for SCNViewCone<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCNViewCone");
-      ds.field("MIN_ELEVATION_DEG", &self.MIN_ELEVATION_DEG());
-      ds.field("MAX_ELEVATION_DEG", &self.MAX_ELEVATION_DEG());
-      ds.field("MIN_AZIMUTH_DEG", &self.MIN_AZIMUTH_DEG());
-      ds.field("MAX_AZIMUTH_DEG", &self.MAX_AZIMUTH_DEG());
-      ds.field("MAX_RANGE_KM", &self.MAX_RANGE_KM());
-      ds.field("HALF_ANGLE_DEG", &self.HALF_ANGLE_DEG());
+      ds.field("MIN_ELEVATION", &self.MIN_ELEVATION());
+      ds.field("MAX_ELEVATION", &self.MAX_ELEVATION());
+      ds.field("MIN_AZIMUTH", &self.MIN_AZIMUTH());
+      ds.field("MAX_AZIMUTH", &self.MAX_AZIMUTH());
+      ds.field("MAX_RANGE", &self.MAX_RANGE());
+      ds.field("HALF_ANGLE", &self.HALF_ANGLE());
       ds.field("DYNAMIC_RANGE", &self.DYNAMIC_RANGE());
       ds.finish()
   }
@@ -1102,23 +915,23 @@ impl ::core::fmt::Debug for SCNViewCone<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCNViewConeT {
-  pub MIN_ELEVATION_DEG: f64,
-  pub MAX_ELEVATION_DEG: f64,
-  pub MIN_AZIMUTH_DEG: f64,
-  pub MAX_AZIMUTH_DEG: f64,
-  pub MAX_RANGE_KM: f64,
-  pub HALF_ANGLE_DEG: f64,
+  pub MIN_ELEVATION: f64,
+  pub MAX_ELEVATION: f64,
+  pub MIN_AZIMUTH: f64,
+  pub MAX_AZIMUTH: f64,
+  pub MAX_RANGE: f64,
+  pub HALF_ANGLE: f64,
   pub DYNAMIC_RANGE: Option<alloc::string::String>,
 }
 impl Default for SCNViewConeT {
   fn default() -> Self {
     Self {
-      MIN_ELEVATION_DEG: 0.0,
-      MAX_ELEVATION_DEG: 0.0,
-      MIN_AZIMUTH_DEG: 0.0,
-      MAX_AZIMUTH_DEG: 0.0,
-      MAX_RANGE_KM: 0.0,
-      HALF_ANGLE_DEG: 0.0,
+      MIN_ELEVATION: 0.0,
+      MAX_ELEVATION: 0.0,
+      MIN_AZIMUTH: 0.0,
+      MAX_AZIMUTH: 0.0,
+      MAX_RANGE: 0.0,
+      HALF_ANGLE: 0.0,
       DYNAMIC_RANGE: None,
     }
   }
@@ -1128,22 +941,22 @@ impl SCNViewConeT {
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<SCNViewCone<'b>> {
-    let MIN_ELEVATION_DEG = self.MIN_ELEVATION_DEG;
-    let MAX_ELEVATION_DEG = self.MAX_ELEVATION_DEG;
-    let MIN_AZIMUTH_DEG = self.MIN_AZIMUTH_DEG;
-    let MAX_AZIMUTH_DEG = self.MAX_AZIMUTH_DEG;
-    let MAX_RANGE_KM = self.MAX_RANGE_KM;
-    let HALF_ANGLE_DEG = self.HALF_ANGLE_DEG;
+    let MIN_ELEVATION = self.MIN_ELEVATION;
+    let MAX_ELEVATION = self.MAX_ELEVATION;
+    let MIN_AZIMUTH = self.MIN_AZIMUTH;
+    let MAX_AZIMUTH = self.MAX_AZIMUTH;
+    let MAX_RANGE = self.MAX_RANGE;
+    let HALF_ANGLE = self.HALF_ANGLE;
     let DYNAMIC_RANGE = self.DYNAMIC_RANGE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     SCNViewCone::create(_fbb, &SCNViewConeArgs{
-      MIN_ELEVATION_DEG,
-      MAX_ELEVATION_DEG,
-      MIN_AZIMUTH_DEG,
-      MAX_AZIMUTH_DEG,
-      MAX_RANGE_KM,
-      HALF_ANGLE_DEG,
+      MIN_ELEVATION,
+      MAX_ELEVATION,
+      MIN_AZIMUTH,
+      MAX_AZIMUTH,
+      MAX_RANGE,
+      HALF_ANGLE,
       DYNAMIC_RANGE,
     })
   }
@@ -1626,24 +1439,23 @@ impl<'a> SCNReference<'a> {
   pub const VT_COUNTRY: ::flatbuffers::VOffsetT = 16;
   pub const VT_SOURCES: ::flatbuffers::VOffsetT = 18;
   pub const VT_DATA_MODES: ::flatbuffers::VOffsetT = 20;
-  pub const VT_TLES: ::flatbuffers::VOffsetT = 22;
-  pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 24;
-  pub const VT_STATES: ::flatbuffers::VOffsetT = 26;
-  pub const VT_MANEUVERS: ::flatbuffers::VOffsetT = 28;
-  pub const VT_SITE: ::flatbuffers::VOffsetT = 30;
-  pub const VT_SENSOR: ::flatbuffers::VOffsetT = 32;
-  pub const VT_SENSOR_SYSTEM_ID: ::flatbuffers::VOffsetT = 34;
-  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 36;
-  pub const VT_SITE_LATITUDE_DEG: ::flatbuffers::VOffsetT = 38;
-  pub const VT_SITE_LONGITUDE_DEG: ::flatbuffers::VOffsetT = 40;
-  pub const VT_VARIABLE_SATELLITE_ID: ::flatbuffers::VOffsetT = 42;
-  pub const VT_VARIABLE_SITE_ID: ::flatbuffers::VOffsetT = 44;
-  pub const VT_POINTS: ::flatbuffers::VOffsetT = 46;
-  pub const VT_VIEW_CONE: ::flatbuffers::VOffsetT = 48;
-  pub const VT_SUN_ADVANTAGE_TARGET: ::flatbuffers::VOffsetT = 50;
-  pub const VT_EXCLUSION_ZONE: ::flatbuffers::VOffsetT = 52;
-  pub const VT_OBSERVATION_EO: ::flatbuffers::VOffsetT = 54;
-  pub const VT_OBSERVATION_RADAR: ::flatbuffers::VOffsetT = 56;
+  pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_STATES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MANEUVERS: ::flatbuffers::VOffsetT = 26;
+  pub const VT_SITE: ::flatbuffers::VOffsetT = 28;
+  pub const VT_SENSOR: ::flatbuffers::VOffsetT = 30;
+  pub const VT_SENSOR_SYSTEM_ID: ::flatbuffers::VOffsetT = 32;
+  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SITE_LATITUDE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_SITE_LONGITUDE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_VARIABLE_SATELLITE_ID: ::flatbuffers::VOffsetT = 40;
+  pub const VT_VARIABLE_SITE_ID: ::flatbuffers::VOffsetT = 42;
+  pub const VT_POINTS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_VIEW_CONE: ::flatbuffers::VOffsetT = 46;
+  pub const VT_SUN_ADVANTAGE_TARGET: ::flatbuffers::VOffsetT = 48;
+  pub const VT_EXCLUSION_ZONE: ::flatbuffers::VOffsetT = 50;
+  pub const VT_OBSERVATION_EO: ::flatbuffers::VOffsetT = 52;
+  pub const VT_OBSERVATION_RADAR: ::flatbuffers::VOffsetT = 54;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1655,8 +1467,8 @@ impl<'a> SCNReference<'a> {
     args: &'args SCNReferenceArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCNReference<'bldr>> {
     let mut builder = SCNReferenceBuilder::new(_fbb);
-    builder.add_SITE_LONGITUDE_DEG(args.SITE_LONGITUDE_DEG);
-    builder.add_SITE_LATITUDE_DEG(args.SITE_LATITUDE_DEG);
+    builder.add_SITE_LONGITUDE(args.SITE_LONGITUDE);
+    builder.add_SITE_LATITUDE(args.SITE_LATITUDE);
     if let Some(x) = args.OBSERVATION_RADAR { builder.add_OBSERVATION_RADAR(x); }
     if let Some(x) = args.OBSERVATION_EO { builder.add_OBSERVATION_EO(x); }
     if let Some(x) = args.EXCLUSION_ZONE { builder.add_EXCLUSION_ZONE(x); }
@@ -1672,7 +1484,6 @@ impl<'a> SCNReference<'a> {
     if let Some(x) = args.MANEUVERS { builder.add_MANEUVERS(x); }
     if let Some(x) = args.STATES { builder.add_STATES(x); }
     if let Some(x) = args.MEAN_ELEMENTS { builder.add_MEAN_ELEMENTS(x); }
-    if let Some(x) = args.TLES { builder.add_TLES(x); }
     if let Some(x) = args.DATA_MODES { builder.add_DATA_MODES(x); }
     if let Some(x) = args.SOURCES { builder.add_SOURCES(x); }
     if let Some(x) = args.COUNTRY { builder.add_COUNTRY(x); }
@@ -1707,9 +1518,6 @@ impl<'a> SCNReference<'a> {
     let DATA_MODES = self.DATA_MODES().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
-    let TLES = self.TLES().map(|x| {
-      x.iter().map(|t| t.unpack()).collect()
-    });
     let MEAN_ELEMENTS = self.MEAN_ELEMENTS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
@@ -1731,8 +1539,8 @@ impl<'a> SCNReference<'a> {
     let SENSOR_ID = self.SENSOR_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SITE_LATITUDE_DEG = self.SITE_LATITUDE_DEG();
-    let SITE_LONGITUDE_DEG = self.SITE_LONGITUDE_DEG();
+    let SITE_LATITUDE = self.SITE_LATITUDE();
+    let SITE_LONGITUDE = self.SITE_LONGITUDE();
     let VARIABLE_SATELLITE_ID = self.VARIABLE_SATELLITE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
@@ -1767,7 +1575,6 @@ impl<'a> SCNReference<'a> {
       COUNTRY,
       SOURCES,
       DATA_MODES,
-      TLES,
       MEAN_ELEMENTS,
       STATES,
       MANEUVERS,
@@ -1775,8 +1582,8 @@ impl<'a> SCNReference<'a> {
       SENSOR,
       SENSOR_SYSTEM_ID,
       SENSOR_ID,
-      SITE_LATITUDE_DEG,
-      SITE_LONGITUDE_DEG,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
       VARIABLE_SATELLITE_ID,
       VARIABLE_SITE_ID,
       POINTS,
@@ -1860,14 +1667,6 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNReference::VT_DATA_MODES, None)}
   }
-  /// TLE provenance and raw lines for satellite references.
-  #[inline]
-  pub fn TLES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNTleLines<'a>>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNTleLines>>>>(SCNReference::VT_TLES, None)}
-  }
   /// Mean orbital elements associated with this reference.
   #[inline]
   pub fn MEAN_ELEMENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>> {
@@ -1926,19 +1725,19 @@ impl<'a> SCNReference<'a> {
   }
   /// Ground-site latitude in degrees when no SIT record is available.
   #[inline]
-  pub fn SITE_LATITUDE_DEG(&self) -> f64 {
+  pub fn SITE_LATITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LATITUDE_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LATITUDE, Some(0.0)).unwrap()}
   }
   /// Ground-site longitude in degrees when no SIT record is available.
   #[inline]
-  pub fn SITE_LONGITUDE_DEG(&self) -> f64 {
+  pub fn SITE_LONGITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LONGITUDE_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LONGITUDE, Some(0.0)).unwrap()}
   }
   /// Scenario variable id for variable satellite references.
   #[inline]
@@ -2021,7 +1820,6 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COUNTRY", Self::VT_COUNTRY, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SOURCES", Self::VT_SOURCES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA_MODES", Self::VT_DATA_MODES, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNTleLines>>>>("TLES", Self::VT_TLES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMM>>>>("MEAN_ELEMENTS", Self::VT_MEAN_ELEMENTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<STV>>>>("STATES", Self::VT_STATES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<MNV>>>>("MANEUVERS", Self::VT_MANEUVERS, false)?
@@ -2029,8 +1827,8 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SEN>>("SENSOR", Self::VT_SENSOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_SYSTEM_ID", Self::VT_SENSOR_SYSTEM_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
-     .visit_field::<f64>("SITE_LATITUDE_DEG", Self::VT_SITE_LATITUDE_DEG, false)?
-     .visit_field::<f64>("SITE_LONGITUDE_DEG", Self::VT_SITE_LONGITUDE_DEG, false)?
+     .visit_field::<f64>("SITE_LATITUDE", Self::VT_SITE_LATITUDE, false)?
+     .visit_field::<f64>("SITE_LONGITUDE", Self::VT_SITE_LONGITUDE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VARIABLE_SATELLITE_ID", Self::VT_VARIABLE_SATELLITE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VARIABLE_SITE_ID", Self::VT_VARIABLE_SITE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest>>>>("POINTS", Self::VT_POINTS, false)?
@@ -2053,7 +1851,6 @@ pub struct SCNReferenceArgs<'a> {
     pub COUNTRY: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub DATA_MODES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub TLES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNTleLines<'a>>>>>,
     pub MEAN_ELEMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>>>,
     pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>>>,
     pub MANEUVERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MNV<'a>>>>>,
@@ -2061,8 +1858,8 @@ pub struct SCNReferenceArgs<'a> {
     pub SENSOR: Option<::flatbuffers::WIPOffset<SEN<'a>>>,
     pub SENSOR_SYSTEM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SITE_LATITUDE_DEG: f64,
-    pub SITE_LONGITUDE_DEG: f64,
+    pub SITE_LATITUDE: f64,
+    pub SITE_LONGITUDE: f64,
     pub VARIABLE_SATELLITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub VARIABLE_SITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub POINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest<'a>>>>>,
@@ -2085,7 +1882,6 @@ impl<'a> Default for SCNReferenceArgs<'a> {
       COUNTRY: None,
       SOURCES: None,
       DATA_MODES: None,
-      TLES: None,
       MEAN_ELEMENTS: None,
       STATES: None,
       MANEUVERS: None,
@@ -2093,8 +1889,8 @@ impl<'a> Default for SCNReferenceArgs<'a> {
       SENSOR: None,
       SENSOR_SYSTEM_ID: None,
       SENSOR_ID: None,
-      SITE_LATITUDE_DEG: 0.0,
-      SITE_LONGITUDE_DEG: 0.0,
+      SITE_LATITUDE: 0.0,
+      SITE_LONGITUDE: 0.0,
       VARIABLE_SATELLITE_ID: None,
       VARIABLE_SITE_ID: None,
       POINTS: None,
@@ -2149,10 +1945,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_DATA_MODES, DATA_MODES);
   }
   #[inline]
-  pub fn add_TLES(&mut self, TLES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCNTleLines<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_TLES, TLES);
-  }
-  #[inline]
   pub fn add_MEAN_ELEMENTS(&mut self, MEAN_ELEMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OMM<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
@@ -2181,12 +1973,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
-  pub fn add_SITE_LATITUDE_DEG(&mut self, SITE_LATITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LATITUDE_DEG, SITE_LATITUDE_DEG, 0.0);
+  pub fn add_SITE_LATITUDE(&mut self, SITE_LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
   }
   #[inline]
-  pub fn add_SITE_LONGITUDE_DEG(&mut self, SITE_LONGITUDE_DEG: f64) {
-    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LONGITUDE_DEG, SITE_LONGITUDE_DEG, 0.0);
+  pub fn add_SITE_LONGITUDE(&mut self, SITE_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
   }
   #[inline]
   pub fn add_VARIABLE_SATELLITE_ID(&mut self, VARIABLE_SATELLITE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -2247,7 +2039,6 @@ impl ::core::fmt::Debug for SCNReference<'_> {
       ds.field("COUNTRY", &self.COUNTRY());
       ds.field("SOURCES", &self.SOURCES());
       ds.field("DATA_MODES", &self.DATA_MODES());
-      ds.field("TLES", &self.TLES());
       ds.field("MEAN_ELEMENTS", &self.MEAN_ELEMENTS());
       ds.field("STATES", &self.STATES());
       ds.field("MANEUVERS", &self.MANEUVERS());
@@ -2255,8 +2046,8 @@ impl ::core::fmt::Debug for SCNReference<'_> {
       ds.field("SENSOR", &self.SENSOR());
       ds.field("SENSOR_SYSTEM_ID", &self.SENSOR_SYSTEM_ID());
       ds.field("SENSOR_ID", &self.SENSOR_ID());
-      ds.field("SITE_LATITUDE_DEG", &self.SITE_LATITUDE_DEG());
-      ds.field("SITE_LONGITUDE_DEG", &self.SITE_LONGITUDE_DEG());
+      ds.field("SITE_LATITUDE", &self.SITE_LATITUDE());
+      ds.field("SITE_LONGITUDE", &self.SITE_LONGITUDE());
       ds.field("VARIABLE_SATELLITE_ID", &self.VARIABLE_SATELLITE_ID());
       ds.field("VARIABLE_SITE_ID", &self.VARIABLE_SITE_ID());
       ds.field("POINTS", &self.POINTS());
@@ -2280,7 +2071,6 @@ pub struct SCNReferenceT {
   pub COUNTRY: Option<alloc::string::String>,
   pub SOURCES: Option<alloc::vec::Vec<alloc::string::String>>,
   pub DATA_MODES: Option<alloc::vec::Vec<alloc::string::String>>,
-  pub TLES: Option<alloc::vec::Vec<SCNTleLinesT>>,
   pub MEAN_ELEMENTS: Option<alloc::vec::Vec<OMMT>>,
   pub STATES: Option<alloc::vec::Vec<STVT>>,
   pub MANEUVERS: Option<alloc::vec::Vec<MNVT>>,
@@ -2288,8 +2078,8 @@ pub struct SCNReferenceT {
   pub SENSOR: Option<alloc::boxed::Box<SENT>>,
   pub SENSOR_SYSTEM_ID: Option<alloc::string::String>,
   pub SENSOR_ID: Option<alloc::string::String>,
-  pub SITE_LATITUDE_DEG: f64,
-  pub SITE_LONGITUDE_DEG: f64,
+  pub SITE_LATITUDE: f64,
+  pub SITE_LONGITUDE: f64,
   pub VARIABLE_SATELLITE_ID: Option<alloc::string::String>,
   pub VARIABLE_SITE_ID: Option<alloc::string::String>,
   pub POINTS: Option<alloc::vec::Vec<SCNPointOfInterestT>>,
@@ -2311,7 +2101,6 @@ impl Default for SCNReferenceT {
       COUNTRY: None,
       SOURCES: None,
       DATA_MODES: None,
-      TLES: None,
       MEAN_ELEMENTS: None,
       STATES: None,
       MANEUVERS: None,
@@ -2319,8 +2108,8 @@ impl Default for SCNReferenceT {
       SENSOR: None,
       SENSOR_SYSTEM_ID: None,
       SENSOR_ID: None,
-      SITE_LATITUDE_DEG: 0.0,
-      SITE_LONGITUDE_DEG: 0.0,
+      SITE_LATITUDE: 0.0,
+      SITE_LONGITUDE: 0.0,
       VARIABLE_SATELLITE_ID: None,
       VARIABLE_SITE_ID: None,
       POINTS: None,
@@ -2358,9 +2147,6 @@ impl SCNReferenceT {
     let DATA_MODES = self.DATA_MODES.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let TLES = self.TLES.as_ref().map(|x|{
-      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-    });
     let MEAN_ELEMENTS = self.MEAN_ELEMENTS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
@@ -2382,8 +2168,8 @@ impl SCNReferenceT {
     let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SITE_LATITUDE_DEG = self.SITE_LATITUDE_DEG;
-    let SITE_LONGITUDE_DEG = self.SITE_LONGITUDE_DEG;
+    let SITE_LATITUDE = self.SITE_LATITUDE;
+    let SITE_LONGITUDE = self.SITE_LONGITUDE;
     let VARIABLE_SATELLITE_ID = self.VARIABLE_SATELLITE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2418,7 +2204,6 @@ impl SCNReferenceT {
       COUNTRY,
       SOURCES,
       DATA_MODES,
-      TLES,
       MEAN_ELEMENTS,
       STATES,
       MANEUVERS,
@@ -2426,8 +2211,8 @@ impl SCNReferenceT {
       SENSOR,
       SENSOR_SYSTEM_ID,
       SENSOR_ID,
-      SITE_LATITUDE_DEG,
-      SITE_LONGITUDE_DEG,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
       VARIABLE_SATELLITE_ID,
       VARIABLE_SITE_ID,
       POINTS,

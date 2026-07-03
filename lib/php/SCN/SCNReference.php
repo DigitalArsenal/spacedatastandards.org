@@ -140,33 +140,13 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// TLE provenance and raw lines for satellite references.
-    /**
-     * @returnVectorOffset
-     */
-    public function getTLES($j)
-    {
-        $o = $this->__offset(22);
-        $obj = new SCNTleLines();
-        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTLESLength()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
     /// Mean orbital elements associated with this reference.
     /**
      * @returnVectorOffset
      */
     public function getMEAN_ELEMENTS($j)
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(22);
         $obj = new OMM();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -176,7 +156,7 @@ class SCNReference extends Table
      */
     public function getMEAN_ELEMENTSLength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -186,7 +166,7 @@ class SCNReference extends Table
      */
     public function getSTATES($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(24);
         $obj = new STV();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -196,7 +176,7 @@ class SCNReference extends Table
      */
     public function getSTATESLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -206,7 +186,7 @@ class SCNReference extends Table
      */
     public function getMANEUVERS($j)
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(26);
         $obj = new MNV();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -216,7 +196,7 @@ class SCNReference extends Table
      */
     public function getMANEUVERSLength()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -224,7 +204,7 @@ class SCNReference extends Table
     public function getSITE()
     {
         $obj = new SIT();
-        $o = $this->__offset(30);
+        $o = $this->__offset(28);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -232,21 +212,21 @@ class SCNReference extends Table
     public function getSENSOR()
     {
         $obj = new SEN();
-        $o = $this->__offset(32);
+        $o = $this->__offset(30);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Sensor system id for references that identify a sensor by id.
     public function getSENSOR_SYSTEM_ID()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Sensor id for references that identify a sensor by id.
     public function getSENSOR_ID()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -254,9 +234,9 @@ class SCNReference extends Table
     /**
      * @return double
      */
-    public function getSITE_LATITUDE_DEG()
+    public function getSITE_LATITUDE()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
@@ -264,23 +244,23 @@ class SCNReference extends Table
     /**
      * @return double
      */
-    public function getSITE_LONGITUDE_DEG()
+    public function getSITE_LONGITUDE()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
     /// Scenario variable id for variable satellite references.
     public function getVARIABLE_SATELLITE_ID()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Scenario variable id for variable site references.
     public function getVARIABLE_SITE_ID()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -290,7 +270,7 @@ class SCNReference extends Table
      */
     public function getPOINTS($j)
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(44);
         $obj = new SCNPointOfInterest();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -300,7 +280,7 @@ class SCNReference extends Table
      */
     public function getPOINTSLength()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -308,7 +288,7 @@ class SCNReference extends Table
     public function getVIEW_CONE()
     {
         $obj = new SCNViewCone();
-        $o = $this->__offset(48);
+        $o = $this->__offset(46);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -316,7 +296,7 @@ class SCNReference extends Table
     public function getSUN_ADVANTAGE_TARGET()
     {
         $obj = new SCNSunAdvantageTarget();
-        $o = $this->__offset(50);
+        $o = $this->__offset(48);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -324,7 +304,7 @@ class SCNReference extends Table
     public function getEXCLUSION_ZONE()
     {
         $obj = new SCNExclusionZone();
-        $o = $this->__offset(52);
+        $o = $this->__offset(50);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -332,7 +312,7 @@ class SCNReference extends Table
     public function getOBSERVATION_EO()
     {
         $obj = new EOO();
-        $o = $this->__offset(54);
+        $o = $this->__offset(52);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -340,7 +320,7 @@ class SCNReference extends Table
     public function getOBSERVATION_RADAR()
     {
         $obj = new RDO();
-        $o = $this->__offset(56);
+        $o = $this->__offset(54);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -350,16 +330,16 @@ class SCNReference extends Table
      */
     public static function startSCNReference(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(27);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCNReference
      */
-    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $DISPLAY_NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $SOURCES, $DATA_MODES, $TLES, $MEAN_ELEMENTS, $STATES, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_LATITUDE_DEG, $SITE_LONGITUDE_DEG, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR)
+    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $DISPLAY_NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $SOURCES, $DATA_MODES, $MEAN_ELEMENTS, $STATES, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_LATITUDE, $SITE_LONGITUDE, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR)
     {
-        $builder->startObject(27);
+        $builder->startObject(26);
         self::addREFERENCE_ID($builder, $REFERENCE_ID);
         self::addDISPLAY_NAME($builder, $DISPLAY_NAME);
         self::addREFERENCE_KIND($builder, $REFERENCE_KIND);
@@ -369,7 +349,6 @@ class SCNReference extends Table
         self::addCOUNTRY($builder, $COUNTRY);
         self::addSOURCES($builder, $SOURCES);
         self::addDATA_MODES($builder, $DATA_MODES);
-        self::addTLES($builder, $TLES);
         self::addMEAN_ELEMENTS($builder, $MEAN_ELEMENTS);
         self::addSTATES($builder, $STATES);
         self::addMANEUVERS($builder, $MANEUVERS);
@@ -377,8 +356,8 @@ class SCNReference extends Table
         self::addSENSOR($builder, $SENSOR);
         self::addSENSOR_SYSTEM_ID($builder, $SENSOR_SYSTEM_ID);
         self::addSENSOR_ID($builder, $SENSOR_ID);
-        self::addSITE_LATITUDE_DEG($builder, $SITE_LATITUDE_DEG);
-        self::addSITE_LONGITUDE_DEG($builder, $SITE_LONGITUDE_DEG);
+        self::addSITE_LATITUDE($builder, $SITE_LATITUDE);
+        self::addSITE_LONGITUDE($builder, $SITE_LONGITUDE);
         self::addVARIABLE_SATELLITE_ID($builder, $VARIABLE_SATELLITE_ID);
         self::addVARIABLE_SITE_ID($builder, $VARIABLE_SITE_ID);
         self::addPOINTS($builder, $POINTS);
@@ -534,43 +513,9 @@ class SCNReference extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addTLES(FlatBufferBuilder $builder, $TLES)
-    {
-        $builder->addOffsetX(9, $TLES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createTLESVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startTLESVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addMEAN_ELEMENTS(FlatBufferBuilder $builder, $MEAN_ELEMENTS)
     {
-        $builder->addOffsetX(10, $MEAN_ELEMENTS, 0);
+        $builder->addOffsetX(9, $MEAN_ELEMENTS, 0);
     }
 
     /**
@@ -604,7 +549,7 @@ class SCNReference extends Table
      */
     public static function addSTATES(FlatBufferBuilder $builder, $STATES)
     {
-        $builder->addOffsetX(11, $STATES, 0);
+        $builder->addOffsetX(10, $STATES, 0);
     }
 
     /**
@@ -638,7 +583,7 @@ class SCNReference extends Table
      */
     public static function addMANEUVERS(FlatBufferBuilder $builder, $MANEUVERS)
     {
-        $builder->addOffsetX(12, $MANEUVERS, 0);
+        $builder->addOffsetX(11, $MANEUVERS, 0);
     }
 
     /**
@@ -672,7 +617,7 @@ class SCNReference extends Table
      */
     public static function addSITE(FlatBufferBuilder $builder, $SITE)
     {
-        $builder->addOffsetX(13, $SITE, 0);
+        $builder->addOffsetX(12, $SITE, 0);
     }
 
     /**
@@ -682,7 +627,7 @@ class SCNReference extends Table
      */
     public static function addSENSOR(FlatBufferBuilder $builder, $SENSOR)
     {
-        $builder->addOffsetX(14, $SENSOR, 0);
+        $builder->addOffsetX(13, $SENSOR, 0);
     }
 
     /**
@@ -692,7 +637,7 @@ class SCNReference extends Table
      */
     public static function addSENSOR_SYSTEM_ID(FlatBufferBuilder $builder, $SENSOR_SYSTEM_ID)
     {
-        $builder->addOffsetX(15, $SENSOR_SYSTEM_ID, 0);
+        $builder->addOffsetX(14, $SENSOR_SYSTEM_ID, 0);
     }
 
     /**
@@ -702,7 +647,7 @@ class SCNReference extends Table
      */
     public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
     {
-        $builder->addOffsetX(16, $SENSOR_ID, 0);
+        $builder->addOffsetX(15, $SENSOR_ID, 0);
     }
 
     /**
@@ -710,9 +655,9 @@ class SCNReference extends Table
      * @param double
      * @return void
      */
-    public static function addSITE_LATITUDE_DEG(FlatBufferBuilder $builder, $SITE_LATITUDE_DEG)
+    public static function addSITE_LATITUDE(FlatBufferBuilder $builder, $SITE_LATITUDE)
     {
-        $builder->addDoubleX(17, $SITE_LATITUDE_DEG, 0.0);
+        $builder->addDoubleX(16, $SITE_LATITUDE, 0.0);
     }
 
     /**
@@ -720,9 +665,9 @@ class SCNReference extends Table
      * @param double
      * @return void
      */
-    public static function addSITE_LONGITUDE_DEG(FlatBufferBuilder $builder, $SITE_LONGITUDE_DEG)
+    public static function addSITE_LONGITUDE(FlatBufferBuilder $builder, $SITE_LONGITUDE)
     {
-        $builder->addDoubleX(18, $SITE_LONGITUDE_DEG, 0.0);
+        $builder->addDoubleX(17, $SITE_LONGITUDE, 0.0);
     }
 
     /**
@@ -732,7 +677,7 @@ class SCNReference extends Table
      */
     public static function addVARIABLE_SATELLITE_ID(FlatBufferBuilder $builder, $VARIABLE_SATELLITE_ID)
     {
-        $builder->addOffsetX(19, $VARIABLE_SATELLITE_ID, 0);
+        $builder->addOffsetX(18, $VARIABLE_SATELLITE_ID, 0);
     }
 
     /**
@@ -742,7 +687,7 @@ class SCNReference extends Table
      */
     public static function addVARIABLE_SITE_ID(FlatBufferBuilder $builder, $VARIABLE_SITE_ID)
     {
-        $builder->addOffsetX(20, $VARIABLE_SITE_ID, 0);
+        $builder->addOffsetX(19, $VARIABLE_SITE_ID, 0);
     }
 
     /**
@@ -752,7 +697,7 @@ class SCNReference extends Table
      */
     public static function addPOINTS(FlatBufferBuilder $builder, $POINTS)
     {
-        $builder->addOffsetX(21, $POINTS, 0);
+        $builder->addOffsetX(20, $POINTS, 0);
     }
 
     /**
@@ -786,7 +731,7 @@ class SCNReference extends Table
      */
     public static function addVIEW_CONE(FlatBufferBuilder $builder, $VIEW_CONE)
     {
-        $builder->addOffsetX(22, $VIEW_CONE, 0);
+        $builder->addOffsetX(21, $VIEW_CONE, 0);
     }
 
     /**
@@ -796,7 +741,7 @@ class SCNReference extends Table
      */
     public static function addSUN_ADVANTAGE_TARGET(FlatBufferBuilder $builder, $SUN_ADVANTAGE_TARGET)
     {
-        $builder->addOffsetX(23, $SUN_ADVANTAGE_TARGET, 0);
+        $builder->addOffsetX(22, $SUN_ADVANTAGE_TARGET, 0);
     }
 
     /**
@@ -806,7 +751,7 @@ class SCNReference extends Table
      */
     public static function addEXCLUSION_ZONE(FlatBufferBuilder $builder, $EXCLUSION_ZONE)
     {
-        $builder->addOffsetX(24, $EXCLUSION_ZONE, 0);
+        $builder->addOffsetX(23, $EXCLUSION_ZONE, 0);
     }
 
     /**
@@ -816,7 +761,7 @@ class SCNReference extends Table
      */
     public static function addOBSERVATION_EO(FlatBufferBuilder $builder, $OBSERVATION_EO)
     {
-        $builder->addOffsetX(25, $OBSERVATION_EO, 0);
+        $builder->addOffsetX(24, $OBSERVATION_EO, 0);
     }
 
     /**
@@ -826,7 +771,7 @@ class SCNReference extends Table
      */
     public static function addOBSERVATION_RADAR(FlatBufferBuilder $builder, $OBSERVATION_RADAR)
     {
-        $builder->addOffsetX(26, $OBSERVATION_RADAR, 0);
+        $builder->addOffsetX(25, $OBSERVATION_RADAR, 0);
     }
 
     /**

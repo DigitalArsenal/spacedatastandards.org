@@ -74,7 +74,7 @@ class SCNPointOfInterest : Table() {
     /**
      * Seconds before the epoch when highlighting begins.
      */
-    val highlightBeforeSec : Double
+    val highlightBefore : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -82,7 +82,7 @@ class SCNPointOfInterest : Table() {
     /**
      * Seconds after the epoch when highlighting remains active.
      */
-    val highlightAfterSec : Double
+    val highlightAfter : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -120,10 +120,10 @@ class SCNPointOfInterest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNPointOfInterest(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, epochOffset: Int, highlightBeforeSec: Double, highlightAfterSec: Double, colorOffset: Int, positionOffset: Int) : Int {
+        fun createSCNPointOfInterest(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, epochOffset: Int, highlightBefore: Double, highlightAfter: Double, colorOffset: Int, positionOffset: Int) : Int {
             builder.startTable(7)
-            addHIGHLIGHTAFTERSEC(builder, highlightAfterSec)
-            addHIGHLIGHTBEFORESEC(builder, highlightBeforeSec)
+            addHIGHLIGHTAFTER(builder, highlightAfter)
+            addHIGHLIGHTBEFORE(builder, highlightBefore)
             addPOSITION(builder, positionOffset)
             addCOLOR(builder, colorOffset)
             addEPOCH(builder, epochOffset)
@@ -135,8 +135,8 @@ class SCNPointOfInterest : Table() {
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, description: Int) = builder.addOffset(1, description, 0)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(2, epoch, 0)
-        fun addHIGHLIGHTBEFORESEC(builder: FlatBufferBuilder, highlightBeforeSec: Double) = builder.addDouble(3, highlightBeforeSec, 0.0)
-        fun addHIGHLIGHTAFTERSEC(builder: FlatBufferBuilder, highlightAfterSec: Double) = builder.addDouble(4, highlightAfterSec, 0.0)
+        fun addHIGHLIGHTBEFORE(builder: FlatBufferBuilder, highlightBefore: Double) = builder.addDouble(3, highlightBefore, 0.0)
+        fun addHIGHLIGHTAFTER(builder: FlatBufferBuilder, highlightAfter: Double) = builder.addDouble(4, highlightAfter, 0.0)
         fun addCOLOR(builder: FlatBufferBuilder, color: Int) = builder.addOffset(5, color, 0)
         fun addPOSITION(builder: FlatBufferBuilder, position: Int) = builder.addOffset(6, position, 0)
         fun endSCNPointOfInterest(builder: FlatBufferBuilder) : Int {

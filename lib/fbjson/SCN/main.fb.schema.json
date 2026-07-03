@@ -76,17 +76,17 @@
       "type": "object",
       "description": "Camera rotation offset. Quaternions are preferred when present; Euler\nangles are retained for import of older scenario JSON.",
       "properties": {
-        "YAW_DEG": {
+        "YAW": {
           "type": "number",
           "description": "Yaw angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
-        "PITCH_DEG": {
+        "PITCH": {
           "type": "number",
           "description": "Pitch angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
-        "ROLL_DEG": {
+        "ROLL": {
           "type": "number",
           "description": "Roll angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
@@ -243,7 +243,7 @@
             }
           }
         },
-        "DISTANCE_FROM_TARGET_KM": {
+        "DISTANCE_FROM_TARGET": {
           "type": "number",
           "description": "Camera distance from the current target in kilometers.",
           "x-flatbuffer-type": "double"
@@ -5990,43 +5990,21 @@
       },
       "description": "GeoJSON FeatureCollection"
     },
-    "SCNTleLines": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "LINE1": {
-          "type": "string",
-          "description": "First TLE line exactly as imported.",
-          "x-flatbuffer-type": "string"
-        },
-        "LINE2": {
-          "type": "string",
-          "description": "Second TLE line exactly as imported.",
-          "x-flatbuffer-type": "string"
-        },
-        "SOURCE": {
-          "type": "string",
-          "description": "Source label or URI for the imported TLE.",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "description": "Raw TLE lines retained as import provenance for scenario setup."
-    },
     "SCNGeodeticPoint": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "LATITUDE_DEG": {
+        "LATITUDE": {
           "type": "number",
           "description": "Latitude in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "LONGITUDE_DEG": {
+        "LONGITUDE": {
           "type": "number",
           "description": "Longitude in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "ALTITUDE_KM": {
+        "ALTITUDE": {
           "type": "number",
           "description": "Altitude above the reference ellipsoid in kilometers.",
           "x-flatbuffer-type": "double"
@@ -6053,12 +6031,12 @@
           "description": "UTC epoch associated with the point of interest.",
           "x-flatbuffer-type": "string"
         },
-        "HIGHLIGHT_BEFORE_SEC": {
+        "HIGHLIGHT_BEFORE": {
           "type": "number",
           "description": "Seconds before the epoch when highlighting begins.",
           "x-flatbuffer-type": "double"
         },
-        "HIGHLIGHT_AFTER_SEC": {
+        "HIGHLIGHT_AFTER": {
           "type": "number",
           "description": "Seconds after the epoch when highlighting remains active.",
           "x-flatbuffer-type": "double"
@@ -6080,32 +6058,32 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "MIN_ELEVATION_DEG": {
+        "MIN_ELEVATION": {
           "type": "number",
           "description": "Minimum elevation angle in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "MAX_ELEVATION_DEG": {
+        "MAX_ELEVATION": {
           "type": "number",
           "description": "Maximum elevation angle in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "MIN_AZIMUTH_DEG": {
+        "MIN_AZIMUTH": {
           "type": "number",
           "description": "Minimum azimuth angle in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "MAX_AZIMUTH_DEG": {
+        "MAX_AZIMUTH": {
           "type": "number",
           "description": "Maximum azimuth angle in degrees.",
           "x-flatbuffer-type": "double"
         },
-        "MAX_RANGE_KM": {
+        "MAX_RANGE": {
           "type": "number",
           "description": "Maximum view-cone range in kilometers.",
           "x-flatbuffer-type": "double"
         },
-        "HALF_ANGLE_DEG": {
+        "HALF_ANGLE": {
           "type": "number",
           "description": "Half angle in degrees for cone-style overlays.",
           "x-flatbuffer-type": "double"
@@ -6265,14 +6243,6 @@
           "description": "Data-mode labels associated with this reference.",
           "x-flatbuffer-type": "[string]"
         },
-        "TLES": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SCNTleLines"
-          },
-          "description": "TLE provenance and raw lines for satellite references.",
-          "x-flatbuffer-type": "[SCNTleLines]"
-        },
         "MEAN_ELEMENTS": {
           "type": "array",
           "items": {
@@ -6317,12 +6287,12 @@
           "description": "Sensor id for references that identify a sensor by id.",
           "x-flatbuffer-type": "string"
         },
-        "SITE_LATITUDE_DEG": {
+        "SITE_LATITUDE": {
           "type": "number",
           "description": "Ground-site latitude in degrees when no SIT record is available.",
           "x-flatbuffer-type": "double"
         },
-        "SITE_LONGITUDE_DEG": {
+        "SITE_LONGITUDE": {
           "type": "number",
           "description": "Ground-site longitude in degrees when no SIT record is available.",
           "x-flatbuffer-type": "double"

@@ -709,7 +709,6 @@ export * from './SCNGeodeticPoint.js';
 export * from './SCNPointOfInterest.js';
 export * from './SCNReference.js';
 export * from './SCNSunAdvantageTarget.js';
-export * from './SCNTleLines.js';
 export * from './SCNViewCone.js';
 export * from './Score.js';
 export * from './ScoreType.js';

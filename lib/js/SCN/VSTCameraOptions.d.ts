@@ -22,7 +22,7 @@ export declare class VSTCameraOptions implements flatbuffers.IUnpackableObject<V
     /**
      * Camera distance from the current target in kilometers.
      */
-    DISTANCE_FROM_TARGET_KM(): number;
+    DISTANCE_FROM_TARGET(): number;
     /**
      * Camera orientation offset.
      */
@@ -30,7 +30,7 @@ export declare class VSTCameraOptions implements flatbuffers.IUnpackableObject<V
     static startVSTCameraOptions(builder: flatbuffers.Builder): void;
     static addCameraFrameMode(builder: flatbuffers.Builder, CAMERA_FRAME_MODE: viewerCameraFrameMode): void;
     static addSatelliteAlignment(builder: flatbuffers.Builder, SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode): void;
-    static addDistanceFromTargetKm(builder: flatbuffers.Builder, DISTANCE_FROM_TARGET_KM: number): void;
+    static addDistanceFromTarget(builder: flatbuffers.Builder, DISTANCE_FROM_TARGET: number): void;
     static addRotation(builder: flatbuffers.Builder, ROTATIONOffset: flatbuffers.Offset): void;
     static endVSTCameraOptions(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): VSTCameraOptionsT;
@@ -39,9 +39,9 @@ export declare class VSTCameraOptions implements flatbuffers.IUnpackableObject<V
 export declare class VSTCameraOptionsT implements flatbuffers.IGeneratedObject {
     CAMERA_FRAME_MODE: viewerCameraFrameMode;
     SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode;
-    DISTANCE_FROM_TARGET_KM: number;
+    DISTANCE_FROM_TARGET: number;
     ROTATION: VSTCameraRotationT | null;
-    constructor(CAMERA_FRAME_MODE?: viewerCameraFrameMode, SATELLITE_ALIGNMENT?: viewerSatelliteAlignmentMode, DISTANCE_FROM_TARGET_KM?: number, ROTATION?: VSTCameraRotationT | null);
+    constructor(CAMERA_FRAME_MODE?: viewerCameraFrameMode, SATELLITE_ALIGNMENT?: viewerSatelliteAlignmentMode, DISTANCE_FROM_TARGET?: number, ROTATION?: VSTCameraRotationT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=VSTCameraOptions.d.ts.map

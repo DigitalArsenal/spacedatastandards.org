@@ -87,7 +87,7 @@ func (rcv *VSTCameraOptions) MutateSatelliteAlignment(n viewerSatelliteAlignment
 }
 
 /// Camera distance from the current target in kilometers.
-func (rcv *VSTCameraOptions) DISTANCE_FROM_TARGET_KM() float64 {
+func (rcv *VSTCameraOptions) DISTANCE_FROM_TARGET() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -95,17 +95,17 @@ func (rcv *VSTCameraOptions) DISTANCE_FROM_TARGET_KM() float64 {
 	return 0.0
 }
 
-func (rcv *VSTCameraOptions) DistanceFromTargetKm() float64 {
-	return rcv.DISTANCE_FROM_TARGET_KM()
+func (rcv *VSTCameraOptions) DistanceFromTarget() float64 {
+	return rcv.DISTANCE_FROM_TARGET()
 }
 
 /// Camera distance from the current target in kilometers.
-func (rcv *VSTCameraOptions) MutateDISTANCE_FROM_TARGET_KM(n float64) bool {
+func (rcv *VSTCameraOptions) MutateDISTANCE_FROM_TARGET(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
-func (rcv *VSTCameraOptions) MutateDistanceFromTargetKm(n float64) bool {
-	return rcv.MutateDISTANCE_FROM_TARGET_KM(n)
+func (rcv *VSTCameraOptions) MutateDistanceFromTarget(n float64) bool {
+	return rcv.MutateDISTANCE_FROM_TARGET(n)
 }
 
 /// Camera orientation offset.
@@ -142,11 +142,11 @@ func VSTCameraOptionsAddSATELLITE_ALIGNMENT(builder *flatbuffers.Builder, SATELL
 func VSTCameraOptionsAddSatelliteAlignment(builder *flatbuffers.Builder, SATELLITE_ALIGNMENT viewerSatelliteAlignmentMode) {
 	VSTCameraOptionsAddSATELLITE_ALIGNMENT(builder, SATELLITE_ALIGNMENT)
 }
-func VSTCameraOptionsAddDISTANCE_FROM_TARGET_KM(builder *flatbuffers.Builder, DISTANCE_FROM_TARGET_KM float64) {
-	builder.PrependFloat64Slot(2, DISTANCE_FROM_TARGET_KM, 0.0)
+func VSTCameraOptionsAddDISTANCE_FROM_TARGET(builder *flatbuffers.Builder, DISTANCE_FROM_TARGET float64) {
+	builder.PrependFloat64Slot(2, DISTANCE_FROM_TARGET, 0.0)
 }
-func VSTCameraOptionsAddDistanceFromTargetKm(builder *flatbuffers.Builder, DISTANCE_FROM_TARGET_KM float64) {
-	VSTCameraOptionsAddDISTANCE_FROM_TARGET_KM(builder, DISTANCE_FROM_TARGET_KM)
+func VSTCameraOptionsAddDistanceFromTarget(builder *flatbuffers.Builder, DISTANCE_FROM_TARGET float64) {
+	VSTCameraOptionsAddDISTANCE_FROM_TARGET(builder, DISTANCE_FROM_TARGET)
 }
 func VSTCameraOptionsAddROTATION(builder *flatbuffers.Builder, ROTATION flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ROTATION), 0)

@@ -12,15 +12,15 @@ export declare class VSTCameraRotation implements flatbuffers.IUnpackableObject<
     /**
      * Yaw angle in degrees for Euler-angle camera imports.
      */
-    YAW_DEG(): number;
+    YAW(): number;
     /**
      * Pitch angle in degrees for Euler-angle camera imports.
      */
-    PITCH_DEG(): number;
+    PITCH(): number;
     /**
      * Roll angle in degrees for Euler-angle camera imports.
      */
-    ROLL_DEG(): number;
+    ROLL(): number;
     /**
      * Quaternion x component for camera orientation.
      */
@@ -42,29 +42,29 @@ export declare class VSTCameraRotation implements flatbuffers.IUnpackableObject<
      */
     USES_QUATERNION(): boolean;
     static startVSTCameraRotation(builder: flatbuffers.Builder): void;
-    static addYawDeg(builder: flatbuffers.Builder, YAW_DEG: number): void;
-    static addPitchDeg(builder: flatbuffers.Builder, PITCH_DEG: number): void;
-    static addRollDeg(builder: flatbuffers.Builder, ROLL_DEG: number): void;
+    static addYaw(builder: flatbuffers.Builder, YAW: number): void;
+    static addPitch(builder: flatbuffers.Builder, PITCH: number): void;
+    static addRoll(builder: flatbuffers.Builder, ROLL: number): void;
     static addQuaternionX(builder: flatbuffers.Builder, QUATERNION_X: number): void;
     static addQuaternionY(builder: flatbuffers.Builder, QUATERNION_Y: number): void;
     static addQuaternionZ(builder: flatbuffers.Builder, QUATERNION_Z: number): void;
     static addQuaternionW(builder: flatbuffers.Builder, QUATERNION_W: number): void;
     static addUsesQuaternion(builder: flatbuffers.Builder, USES_QUATERNION: boolean): void;
     static endVSTCameraRotation(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createVSTCameraRotation(builder: flatbuffers.Builder, YAW_DEG: number, PITCH_DEG: number, ROLL_DEG: number, QUATERNION_X: number, QUATERNION_Y: number, QUATERNION_Z: number, QUATERNION_W: number, USES_QUATERNION: boolean): flatbuffers.Offset;
+    static createVSTCameraRotation(builder: flatbuffers.Builder, YAW: number, PITCH: number, ROLL: number, QUATERNION_X: number, QUATERNION_Y: number, QUATERNION_Z: number, QUATERNION_W: number, USES_QUATERNION: boolean): flatbuffers.Offset;
     unpack(): VSTCameraRotationT;
     unpackTo(_o: VSTCameraRotationT): void;
 }
 export declare class VSTCameraRotationT implements flatbuffers.IGeneratedObject {
-    YAW_DEG: number;
-    PITCH_DEG: number;
-    ROLL_DEG: number;
+    YAW: number;
+    PITCH: number;
+    ROLL: number;
     QUATERNION_X: number;
     QUATERNION_Y: number;
     QUATERNION_Z: number;
     QUATERNION_W: number;
     USES_QUATERNION: boolean;
-    constructor(YAW_DEG?: number, PITCH_DEG?: number, ROLL_DEG?: number, QUATERNION_X?: number, QUATERNION_Y?: number, QUATERNION_Z?: number, QUATERNION_W?: number, USES_QUATERNION?: boolean);
+    constructor(YAW?: number, PITCH?: number, ROLL?: number, QUATERNION_X?: number, QUATERNION_Y?: number, QUATERNION_Z?: number, QUATERNION_W?: number, USES_QUATERNION?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=VSTCameraRotation.d.ts.map

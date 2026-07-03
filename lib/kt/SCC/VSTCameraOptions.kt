@@ -48,7 +48,7 @@ class VSTCameraOptions : Table() {
     /**
      * Camera distance from the current target in kilometers.
      */
-    val distanceFromTargetKm : Double
+    val distanceFromTarget : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,9 +72,9 @@ class VSTCameraOptions : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVSTCameraOptions(builder: FlatBufferBuilder, cameraFrameMode: Byte, satelliteAlignment: Byte, distanceFromTargetKm: Double, rotationOffset: Int) : Int {
+        fun createVSTCameraOptions(builder: FlatBufferBuilder, cameraFrameMode: Byte, satelliteAlignment: Byte, distanceFromTarget: Double, rotationOffset: Int) : Int {
             builder.startTable(4)
-            addDISTANCEFROMTARGETKM(builder, distanceFromTargetKm)
+            addDISTANCEFROMTARGET(builder, distanceFromTarget)
             addROTATION(builder, rotationOffset)
             addSATELLITEALIGNMENT(builder, satelliteAlignment)
             addCAMERAFRAMEMODE(builder, cameraFrameMode)
@@ -83,7 +83,7 @@ class VSTCameraOptions : Table() {
         fun startVSTCameraOptions(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addCAMERAFRAMEMODE(builder: FlatBufferBuilder, cameraFrameMode: Byte) = builder.addByte(0, cameraFrameMode, 0)
         fun addSATELLITEALIGNMENT(builder: FlatBufferBuilder, satelliteAlignment: Byte) = builder.addByte(1, satelliteAlignment, 0)
-        fun addDISTANCEFROMTARGETKM(builder: FlatBufferBuilder, distanceFromTargetKm: Double) = builder.addDouble(2, distanceFromTargetKm, 0.0)
+        fun addDISTANCEFROMTARGET(builder: FlatBufferBuilder, distanceFromTarget: Double) = builder.addDouble(2, distanceFromTarget, 0.0)
         fun addROTATION(builder: FlatBufferBuilder, rotation: Int) = builder.addOffset(3, rotation, 0)
         fun endVSTCameraOptions(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()

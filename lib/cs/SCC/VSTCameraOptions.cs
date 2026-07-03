@@ -22,17 +22,17 @@ public struct VSTCameraOptions : IFlatbufferObject
   /// Satellite body alignment mode when focused on a satellite.
   public viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT { get { int o = __p.__offset(6); return o != 0 ? (viewerSatelliteAlignmentMode)__p.bb.GetSbyte(o + __p.bb_pos) : viewerSatelliteAlignmentMode.UNKNOWN; } }
   /// Camera distance from the current target in kilometers.
-  public double DISTANCE_FROM_TARGET_KM { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double DISTANCE_FROM_TARGET { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Camera orientation offset.
   public VSTCameraRotation? ROTATION { get { int o = __p.__offset(10); return o != 0 ? (VSTCameraRotation?)(new VSTCameraRotation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<VSTCameraOptions> CreateVSTCameraOptions(FlatBufferBuilder builder,
       viewerCameraFrameMode CAMERA_FRAME_MODE = viewerCameraFrameMode.DEFAULT,
       viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT = viewerSatelliteAlignmentMode.UNKNOWN,
-      double DISTANCE_FROM_TARGET_KM = 0.0,
+      double DISTANCE_FROM_TARGET = 0.0,
       Offset<VSTCameraRotation> ROTATIONOffset = default(Offset<VSTCameraRotation>)) {
     builder.StartTable(4);
-    VSTCameraOptions.AddDISTANCE_FROM_TARGET_KM(builder, DISTANCE_FROM_TARGET_KM);
+    VSTCameraOptions.AddDISTANCE_FROM_TARGET(builder, DISTANCE_FROM_TARGET);
     VSTCameraOptions.AddROTATION(builder, ROTATIONOffset);
     VSTCameraOptions.AddSATELLITE_ALIGNMENT(builder, SATELLITE_ALIGNMENT);
     VSTCameraOptions.AddCAMERA_FRAME_MODE(builder, CAMERA_FRAME_MODE);
@@ -42,7 +42,7 @@ public struct VSTCameraOptions : IFlatbufferObject
   public static void StartVSTCameraOptions(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddCAMERA_FRAME_MODE(FlatBufferBuilder builder, viewerCameraFrameMode CAMERA_FRAME_MODE) { builder.AddSbyte(0, (sbyte)CAMERA_FRAME_MODE, 0); }
   public static void AddSATELLITE_ALIGNMENT(FlatBufferBuilder builder, viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT) { builder.AddSbyte(1, (sbyte)SATELLITE_ALIGNMENT, 0); }
-  public static void AddDISTANCE_FROM_TARGET_KM(FlatBufferBuilder builder, double DISTANCE_FROM_TARGET_KM) { builder.AddDouble(2, DISTANCE_FROM_TARGET_KM, 0.0); }
+  public static void AddDISTANCE_FROM_TARGET(FlatBufferBuilder builder, double DISTANCE_FROM_TARGET) { builder.AddDouble(2, DISTANCE_FROM_TARGET, 0.0); }
   public static void AddROTATION(FlatBufferBuilder builder, Offset<VSTCameraRotation> ROTATIONOffset) { builder.AddOffset(3, ROTATIONOffset.Value, 0); }
   public static Offset<VSTCameraOptions> EndVSTCameraOptions(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -56,7 +56,7 @@ public struct VSTCameraOptions : IFlatbufferObject
   public void UnPackTo(VSTCameraOptionsT _o) {
     _o.CAMERA_FRAME_MODE = this.CAMERA_FRAME_MODE;
     _o.SATELLITE_ALIGNMENT = this.SATELLITE_ALIGNMENT;
-    _o.DISTANCE_FROM_TARGET_KM = this.DISTANCE_FROM_TARGET_KM;
+    _o.DISTANCE_FROM_TARGET = this.DISTANCE_FROM_TARGET;
     _o.ROTATION = this.ROTATION.HasValue ? this.ROTATION.Value.UnPack() : null;
   }
   public static Offset<VSTCameraOptions> Pack(FlatBufferBuilder builder, VSTCameraOptionsT _o) {
@@ -66,7 +66,7 @@ public struct VSTCameraOptions : IFlatbufferObject
       builder,
       _o.CAMERA_FRAME_MODE,
       _o.SATELLITE_ALIGNMENT,
-      _o.DISTANCE_FROM_TARGET_KM,
+      _o.DISTANCE_FROM_TARGET,
       _ROTATION);
   }
 }
@@ -75,13 +75,13 @@ public class VSTCameraOptionsT
 {
   public viewerCameraFrameMode CAMERA_FRAME_MODE { get; set; }
   public viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT { get; set; }
-  public double DISTANCE_FROM_TARGET_KM { get; set; }
+  public double DISTANCE_FROM_TARGET { get; set; }
   public VSTCameraRotationT ROTATION { get; set; }
 
   public VSTCameraOptionsT() {
     this.CAMERA_FRAME_MODE = viewerCameraFrameMode.DEFAULT;
     this.SATELLITE_ALIGNMENT = viewerSatelliteAlignmentMode.UNKNOWN;
-    this.DISTANCE_FROM_TARGET_KM = 0.0;
+    this.DISTANCE_FROM_TARGET = 0.0;
     this.ROTATION = null;
   }
 }
@@ -94,7 +94,7 @@ static public class VSTCameraOptionsVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyField(tablePos, 4 /*CAMERA_FRAME_MODE*/, 1 /*viewerCameraFrameMode*/, 1, false)
       && verifier.VerifyField(tablePos, 6 /*SATELLITE_ALIGNMENT*/, 1 /*viewerSatelliteAlignmentMode*/, 1, false)
-      && verifier.VerifyField(tablePos, 8 /*DISTANCE_FROM_TARGET_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*DISTANCE_FROM_TARGET*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 10 /*ROTATION*/, VSTCameraRotationVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }

@@ -36,6 +36,54 @@ function assertFieldDescriptions(schema, definitionNames) {
   }
 }
 
+function assertNoLineElementSetSurface(label, source) {
+  const prohibitedPatterns = [
+    new RegExp(["S", "C", "N", "T", "l", "e", "L", "i", "n", "e", "s"].join(""), "i"),
+    new RegExp(`\\b${["T", "L", "E", "S"].join("")}\\b`, "i"),
+    new RegExp(`\\b${["T", "L", "E"].join("")}\\b`, "i"),
+    new RegExp(["two", "line"].join("-"), "i"),
+    new RegExp(["two", "line"].join(" "), "i"),
+  ];
+
+  for (const pattern of prohibitedPatterns) {
+    assert.doesNotMatch(
+      source,
+      pattern,
+      `${label} should use OMM instead of line-element set terminology`,
+    );
+  }
+}
+
+function assertNoScenarioUnitSuffixFields(label, source) {
+  const prohibitedFields = [
+    "LATITUDE_DEG",
+    "LONGITUDE_DEG",
+    "ALTITUDE_KM",
+    "HIGHLIGHT_BEFORE_SEC",
+    "HIGHLIGHT_AFTER_SEC",
+    "MIN_ELEVATION_DEG",
+    "MAX_ELEVATION_DEG",
+    "MIN_AZIMUTH_DEG",
+    "MAX_AZIMUTH_DEG",
+    "MAX_RANGE_KM",
+    "HALF_ANGLE_DEG",
+    "SITE_LATITUDE_DEG",
+    "SITE_LONGITUDE_DEG",
+    "YAW_DEG",
+    "PITCH_DEG",
+    "ROLL_DEG",
+    "DISTANCE_FROM_TARGET_KM",
+  ];
+
+  for (const fieldName of prohibitedFields) {
+    assert.doesNotMatch(
+      source,
+      escapedTokenRegex(fieldName),
+      `${label} should use CCSDS-derived concept names without unit suffixes`,
+    );
+  }
+}
+
 describe("scenario controls schema consolidation", () => {
   it("keeps scenario controls schema sources and docs vendor neutral", async () => {
     const prohibitedTerms = [
@@ -124,6 +172,10 @@ describe("scenario controls schema consolidation", () => {
       "table VSTDisplaySettings",
       "table VSTCameraOptions",
       "table VST",
+      "YAW:double",
+      "PITCH:double",
+      "ROLL:double",
+      "DISTANCE_FROM_TARGET:double",
       "CAMERA:VSTCameraOptions",
       "DISPLAY_SETTINGS:VSTDisplaySettings",
       "root_type VST;",
@@ -145,17 +197,29 @@ describe("scenario controls schema consolidation", () => {
       'include "../VST/main.fbs";',
       "enum scenarioReferenceKind : byte",
       "enum scenarioActionCode : byte",
-      "table SCNTleLines",
       "table SCNPointOfInterest",
       "table SCNViewCone",
       "table SCNExclusionZone",
       "table SCNReference",
+      "LATITUDE:double",
+      "LONGITUDE:double",
+      "ALTITUDE:double",
+      "HIGHLIGHT_BEFORE:double",
+      "HIGHLIGHT_AFTER:double",
+      "MIN_ELEVATION:double",
+      "MAX_ELEVATION:double",
+      "MIN_AZIMUTH:double",
+      "MAX_AZIMUTH:double",
+      "MAX_RANGE:double",
+      "HALF_ANGLE:double",
       "MEAN_ELEMENTS:[OMM]",
       "STATES:[STV]",
       "MANEUVERS:[MNV]",
       "SITE:SIT",
       "SENSOR:SEN",
       "SENSOR_SYSTEM_ID:string",
+      "SITE_LATITUDE:double",
+      "SITE_LONGITUDE:double",
       "OBSERVATION_EO:EOO",
       "OBSERVATION_RADAR:RDO",
       "EXCLUSION_ZONE:SCNExclusionZone",
@@ -197,6 +261,51 @@ describe("scenario controls schema consolidation", () => {
     }
   });
 
+  it("uses CCSDS-derived concept field names for scenario coordinates, angles, ranges, and durations", async () => {
+    const [vstSource, scnSource, vstSchema, scnSchema] = await Promise.all([
+      readUtf8("schema/VST/main.fbs"),
+      readUtf8("schema/SCN/main.fbs"),
+      readUtf8("lib/fbjson/VST/main.fb.schema.json"),
+      readUtf8("lib/fbjson/SCN/main.fb.schema.json"),
+    ]);
+
+    for (const [label, source] of [
+      ["VST schema", vstSource],
+      ["SCN schema", scnSource],
+      ["VST Field Explorer schema", vstSchema],
+      ["SCN Field Explorer schema", scnSchema],
+    ]) {
+      assertNoScenarioUnitSuffixFields(label, source);
+    }
+
+    for (const token of [
+      "LATITUDE:double",
+      "LONGITUDE:double",
+      "ALTITUDE:double",
+      "HIGHLIGHT_BEFORE:double",
+      "HIGHLIGHT_AFTER:double",
+      "MIN_ELEVATION:double",
+      "MAX_ELEVATION:double",
+      "MIN_AZIMUTH:double",
+      "MAX_AZIMUTH:double",
+      "MAX_RANGE:double",
+      "HALF_ANGLE:double",
+      "SITE_LATITUDE:double",
+      "SITE_LONGITUDE:double",
+    ]) {
+      assert.match(scnSource, escapedTokenRegex(token));
+    }
+
+    for (const token of [
+      "YAW:double",
+      "PITCH:double",
+      "ROLL:double",
+      "DISTANCE_FROM_TARGET:double",
+    ]) {
+      assert.match(vstSource, escapedTokenRegex(token));
+    }
+  });
+
   it("generates bindings and JSON schemas for scenario controls schemas", async () => {
     const generatedFiles = [
       "lib/ts/VST/main.ts",
@@ -235,6 +344,23 @@ describe("scenario controls schema consolidation", () => {
     }
   });
 
+  it("uses OMM instead of line-element set records for scenario orbital elements", async () => {
+    const sources = await Promise.all([
+      readUtf8("schema/SCN/main.fbs"),
+      readUtf8("lib/fbjson/SCN/main.fb.schema.json"),
+      readUtf8("lib/json/SCN/main.schema.json"),
+      readUtf8("lib/ts/SCN/main.ts"),
+      readUtf8("lib/js/SCN/main.js"),
+      readUtf8("lib/go/SCN/SCNReference.go"),
+    ]);
+
+    assert.match(sources[0], escapedTokenRegex("MEAN_ELEMENTS:[OMM]"));
+
+    for (const [index, source] of sources.entries()) {
+      assertNoLineElementSetSurface(`scenario schema artifact ${index}`, source);
+    }
+  });
+
   it("generates Field Explorer descriptions for scenario controls fields", async () => {
     const [vstSchema, scnSchema, sccSchema] = await Promise.all([
       readJson("lib/fbjson/VST/main.fb.schema.json"),
@@ -249,7 +375,6 @@ describe("scenario controls schema consolidation", () => {
       "VST",
     ]);
     assertFieldDescriptions(scnSchema, [
-      "SCNTleLines",
       "SCNGeodeticPoint",
       "SCNPointOfInterest",
       "SCNViewCone",

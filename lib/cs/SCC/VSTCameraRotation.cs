@@ -19,11 +19,11 @@ public struct VSTCameraRotation : IFlatbufferObject
   public VSTCameraRotation __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Yaw angle in degrees for Euler-angle camera imports.
-  public double YAW_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double YAW { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Pitch angle in degrees for Euler-angle camera imports.
-  public double PITCH_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double PITCH { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Roll angle in degrees for Euler-angle camera imports.
-  public double ROLL_DEG { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ROLL { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Quaternion x component for camera orientation.
   public double QUATERNION_X { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Quaternion y component for camera orientation.
@@ -36,9 +36,9 @@ public struct VSTCameraRotation : IFlatbufferObject
   public bool USES_QUATERNION { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
 
   public static Offset<VSTCameraRotation> CreateVSTCameraRotation(FlatBufferBuilder builder,
-      double YAW_DEG = 0.0,
-      double PITCH_DEG = 0.0,
-      double ROLL_DEG = 0.0,
+      double YAW = 0.0,
+      double PITCH = 0.0,
+      double ROLL = 0.0,
       double QUATERNION_X = 0.0,
       double QUATERNION_Y = 0.0,
       double QUATERNION_Z = 0.0,
@@ -49,17 +49,17 @@ public struct VSTCameraRotation : IFlatbufferObject
     VSTCameraRotation.AddQUATERNION_Z(builder, QUATERNION_Z);
     VSTCameraRotation.AddQUATERNION_Y(builder, QUATERNION_Y);
     VSTCameraRotation.AddQUATERNION_X(builder, QUATERNION_X);
-    VSTCameraRotation.AddROLL_DEG(builder, ROLL_DEG);
-    VSTCameraRotation.AddPITCH_DEG(builder, PITCH_DEG);
-    VSTCameraRotation.AddYAW_DEG(builder, YAW_DEG);
+    VSTCameraRotation.AddROLL(builder, ROLL);
+    VSTCameraRotation.AddPITCH(builder, PITCH);
+    VSTCameraRotation.AddYAW(builder, YAW);
     VSTCameraRotation.AddUSES_QUATERNION(builder, USES_QUATERNION);
     return VSTCameraRotation.EndVSTCameraRotation(builder);
   }
 
   public static void StartVSTCameraRotation(FlatBufferBuilder builder) { builder.StartTable(8); }
-  public static void AddYAW_DEG(FlatBufferBuilder builder, double YAW_DEG) { builder.AddDouble(0, YAW_DEG, 0.0); }
-  public static void AddPITCH_DEG(FlatBufferBuilder builder, double PITCH_DEG) { builder.AddDouble(1, PITCH_DEG, 0.0); }
-  public static void AddROLL_DEG(FlatBufferBuilder builder, double ROLL_DEG) { builder.AddDouble(2, ROLL_DEG, 0.0); }
+  public static void AddYAW(FlatBufferBuilder builder, double YAW) { builder.AddDouble(0, YAW, 0.0); }
+  public static void AddPITCH(FlatBufferBuilder builder, double PITCH) { builder.AddDouble(1, PITCH, 0.0); }
+  public static void AddROLL(FlatBufferBuilder builder, double ROLL) { builder.AddDouble(2, ROLL, 0.0); }
   public static void AddQUATERNION_X(FlatBufferBuilder builder, double QUATERNION_X) { builder.AddDouble(3, QUATERNION_X, 0.0); }
   public static void AddQUATERNION_Y(FlatBufferBuilder builder, double QUATERNION_Y) { builder.AddDouble(4, QUATERNION_Y, 0.0); }
   public static void AddQUATERNION_Z(FlatBufferBuilder builder, double QUATERNION_Z) { builder.AddDouble(5, QUATERNION_Z, 0.0); }
@@ -75,9 +75,9 @@ public struct VSTCameraRotation : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(VSTCameraRotationT _o) {
-    _o.YAW_DEG = this.YAW_DEG;
-    _o.PITCH_DEG = this.PITCH_DEG;
-    _o.ROLL_DEG = this.ROLL_DEG;
+    _o.YAW = this.YAW;
+    _o.PITCH = this.PITCH;
+    _o.ROLL = this.ROLL;
     _o.QUATERNION_X = this.QUATERNION_X;
     _o.QUATERNION_Y = this.QUATERNION_Y;
     _o.QUATERNION_Z = this.QUATERNION_Z;
@@ -88,9 +88,9 @@ public struct VSTCameraRotation : IFlatbufferObject
     if (_o == null) return default(Offset<VSTCameraRotation>);
     return CreateVSTCameraRotation(
       builder,
-      _o.YAW_DEG,
-      _o.PITCH_DEG,
-      _o.ROLL_DEG,
+      _o.YAW,
+      _o.PITCH,
+      _o.ROLL,
       _o.QUATERNION_X,
       _o.QUATERNION_Y,
       _o.QUATERNION_Z,
@@ -101,9 +101,9 @@ public struct VSTCameraRotation : IFlatbufferObject
 
 public class VSTCameraRotationT
 {
-  public double YAW_DEG { get; set; }
-  public double PITCH_DEG { get; set; }
-  public double ROLL_DEG { get; set; }
+  public double YAW { get; set; }
+  public double PITCH { get; set; }
+  public double ROLL { get; set; }
   public double QUATERNION_X { get; set; }
   public double QUATERNION_Y { get; set; }
   public double QUATERNION_Z { get; set; }
@@ -111,9 +111,9 @@ public class VSTCameraRotationT
   public bool USES_QUATERNION { get; set; }
 
   public VSTCameraRotationT() {
-    this.YAW_DEG = 0.0;
-    this.PITCH_DEG = 0.0;
-    this.ROLL_DEG = 0.0;
+    this.YAW = 0.0;
+    this.PITCH = 0.0;
+    this.ROLL = 0.0;
     this.QUATERNION_X = 0.0;
     this.QUATERNION_Y = 0.0;
     this.QUATERNION_Z = 0.0;
@@ -128,9 +128,9 @@ static public class VSTCameraRotationVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*YAW_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 6 /*PITCH_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 8 /*ROLL_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 4 /*YAW*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*PITCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*ROLL*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*QUATERNION_X*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*QUATERNION_Y*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 14 /*QUATERNION_Z*/, 8 /*double*/, 8, false)

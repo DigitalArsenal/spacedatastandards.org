@@ -47,7 +47,7 @@ class VSTCameraOptions(object):
 
     # Camera distance from the current target in kilometers.
     # VSTCameraOptions
-    def DISTANCE_FROM_TARGET_KM(self):
+    def DISTANCE_FROM_TARGET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -83,11 +83,11 @@ def VSTCameraOptionsAddSATELLITE_ALIGNMENT(builder, SATELLITE_ALIGNMENT):
 def AddSATELLITE_ALIGNMENT(builder, SATELLITE_ALIGNMENT):
     VSTCameraOptionsAddSATELLITE_ALIGNMENT(builder, SATELLITE_ALIGNMENT)
 
-def VSTCameraOptionsAddDISTANCE_FROM_TARGET_KM(builder, DISTANCE_FROM_TARGET_KM):
-    builder.PrependFloat64Slot(2, DISTANCE_FROM_TARGET_KM, 0.0)
+def VSTCameraOptionsAddDISTANCE_FROM_TARGET(builder, DISTANCE_FROM_TARGET):
+    builder.PrependFloat64Slot(2, DISTANCE_FROM_TARGET, 0.0)
 
-def AddDISTANCE_FROM_TARGET_KM(builder, DISTANCE_FROM_TARGET_KM):
-    VSTCameraOptionsAddDISTANCE_FROM_TARGET_KM(builder, DISTANCE_FROM_TARGET_KM)
+def AddDISTANCE_FROM_TARGET(builder, DISTANCE_FROM_TARGET):
+    VSTCameraOptionsAddDISTANCE_FROM_TARGET(builder, DISTANCE_FROM_TARGET)
 
 def VSTCameraOptionsAddROTATION(builder, ROTATION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ROTATION), 0)
@@ -114,12 +114,12 @@ class VSTCameraOptionsT(object):
         self,
         CAMERA_FRAME_MODE = 0,
         SATELLITE_ALIGNMENT = 0,
-        DISTANCE_FROM_TARGET_KM = 0.0,
+        DISTANCE_FROM_TARGET = 0.0,
         ROTATION = None,
     ):
         self.CAMERA_FRAME_MODE = CAMERA_FRAME_MODE  # type: int
         self.SATELLITE_ALIGNMENT = SATELLITE_ALIGNMENT  # type: int
-        self.DISTANCE_FROM_TARGET_KM = DISTANCE_FROM_TARGET_KM  # type: float
+        self.DISTANCE_FROM_TARGET = DISTANCE_FROM_TARGET  # type: float
         self.ROTATION = ROTATION  # type: Optional[VSTCameraRotation.VSTCameraRotationT]
 
     @classmethod
@@ -145,7 +145,7 @@ class VSTCameraOptionsT(object):
             return
         self.CAMERA_FRAME_MODE = VSTCameraOptions.CAMERA_FRAME_MODE()
         self.SATELLITE_ALIGNMENT = VSTCameraOptions.SATELLITE_ALIGNMENT()
-        self.DISTANCE_FROM_TARGET_KM = VSTCameraOptions.DISTANCE_FROM_TARGET_KM()
+        self.DISTANCE_FROM_TARGET = VSTCameraOptions.DISTANCE_FROM_TARGET()
         if VSTCameraOptions.ROTATION() is not None:
             self.ROTATION = VSTCameraRotation.VSTCameraRotationT.InitFromObj(VSTCameraOptions.ROTATION())
 
@@ -156,7 +156,7 @@ class VSTCameraOptionsT(object):
         VSTCameraOptionsStart(builder)
         VSTCameraOptionsAddCAMERA_FRAME_MODE(builder, self.CAMERA_FRAME_MODE)
         VSTCameraOptionsAddSATELLITE_ALIGNMENT(builder, self.SATELLITE_ALIGNMENT)
-        VSTCameraOptionsAddDISTANCE_FROM_TARGET_KM(builder, self.DISTANCE_FROM_TARGET_KM)
+        VSTCameraOptionsAddDISTANCE_FROM_TARGET(builder, self.DISTANCE_FROM_TARGET)
         if self.ROTATION is not None:
             VSTCameraOptionsAddROTATION(builder, ROTATION)
         VSTCameraOptions = VSTCameraOptionsEnd(builder)

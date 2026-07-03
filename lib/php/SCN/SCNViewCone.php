@@ -45,7 +45,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getMIN_ELEVATION_DEG()
+    public function getMIN_ELEVATION()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -55,7 +55,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getMAX_ELEVATION_DEG()
+    public function getMAX_ELEVATION()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -65,7 +65,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getMIN_AZIMUTH_DEG()
+    public function getMIN_AZIMUTH()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -75,7 +75,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getMAX_AZIMUTH_DEG()
+    public function getMAX_AZIMUTH()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -85,7 +85,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getMAX_RANGE_KM()
+    public function getMAX_RANGE()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -95,7 +95,7 @@ class SCNViewCone extends Table
     /**
      * @return double
      */
-    public function getHALF_ANGLE_DEG()
+    public function getHALF_ANGLE()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -121,15 +121,15 @@ class SCNViewCone extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNViewCone
      */
-    public static function createSCNViewCone(FlatBufferBuilder $builder, $MIN_ELEVATION_DEG, $MAX_ELEVATION_DEG, $MIN_AZIMUTH_DEG, $MAX_AZIMUTH_DEG, $MAX_RANGE_KM, $HALF_ANGLE_DEG, $DYNAMIC_RANGE)
+    public static function createSCNViewCone(FlatBufferBuilder $builder, $MIN_ELEVATION, $MAX_ELEVATION, $MIN_AZIMUTH, $MAX_AZIMUTH, $MAX_RANGE, $HALF_ANGLE, $DYNAMIC_RANGE)
     {
         $builder->startObject(7);
-        self::addMIN_ELEVATION_DEG($builder, $MIN_ELEVATION_DEG);
-        self::addMAX_ELEVATION_DEG($builder, $MAX_ELEVATION_DEG);
-        self::addMIN_AZIMUTH_DEG($builder, $MIN_AZIMUTH_DEG);
-        self::addMAX_AZIMUTH_DEG($builder, $MAX_AZIMUTH_DEG);
-        self::addMAX_RANGE_KM($builder, $MAX_RANGE_KM);
-        self::addHALF_ANGLE_DEG($builder, $HALF_ANGLE_DEG);
+        self::addMIN_ELEVATION($builder, $MIN_ELEVATION);
+        self::addMAX_ELEVATION($builder, $MAX_ELEVATION);
+        self::addMIN_AZIMUTH($builder, $MIN_AZIMUTH);
+        self::addMAX_AZIMUTH($builder, $MAX_AZIMUTH);
+        self::addMAX_RANGE($builder, $MAX_RANGE);
+        self::addHALF_ANGLE($builder, $HALF_ANGLE);
         self::addDYNAMIC_RANGE($builder, $DYNAMIC_RANGE);
         $o = $builder->endObject();
         return $o;
@@ -140,9 +140,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addMIN_ELEVATION_DEG(FlatBufferBuilder $builder, $MIN_ELEVATION_DEG)
+    public static function addMIN_ELEVATION(FlatBufferBuilder $builder, $MIN_ELEVATION)
     {
-        $builder->addDoubleX(0, $MIN_ELEVATION_DEG, 0.0);
+        $builder->addDoubleX(0, $MIN_ELEVATION, 0.0);
     }
 
     /**
@@ -150,9 +150,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addMAX_ELEVATION_DEG(FlatBufferBuilder $builder, $MAX_ELEVATION_DEG)
+    public static function addMAX_ELEVATION(FlatBufferBuilder $builder, $MAX_ELEVATION)
     {
-        $builder->addDoubleX(1, $MAX_ELEVATION_DEG, 0.0);
+        $builder->addDoubleX(1, $MAX_ELEVATION, 0.0);
     }
 
     /**
@@ -160,9 +160,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addMIN_AZIMUTH_DEG(FlatBufferBuilder $builder, $MIN_AZIMUTH_DEG)
+    public static function addMIN_AZIMUTH(FlatBufferBuilder $builder, $MIN_AZIMUTH)
     {
-        $builder->addDoubleX(2, $MIN_AZIMUTH_DEG, 0.0);
+        $builder->addDoubleX(2, $MIN_AZIMUTH, 0.0);
     }
 
     /**
@@ -170,9 +170,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addMAX_AZIMUTH_DEG(FlatBufferBuilder $builder, $MAX_AZIMUTH_DEG)
+    public static function addMAX_AZIMUTH(FlatBufferBuilder $builder, $MAX_AZIMUTH)
     {
-        $builder->addDoubleX(3, $MAX_AZIMUTH_DEG, 0.0);
+        $builder->addDoubleX(3, $MAX_AZIMUTH, 0.0);
     }
 
     /**
@@ -180,9 +180,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addMAX_RANGE_KM(FlatBufferBuilder $builder, $MAX_RANGE_KM)
+    public static function addMAX_RANGE(FlatBufferBuilder $builder, $MAX_RANGE)
     {
-        $builder->addDoubleX(4, $MAX_RANGE_KM, 0.0);
+        $builder->addDoubleX(4, $MAX_RANGE, 0.0);
     }
 
     /**
@@ -190,9 +190,9 @@ class SCNViewCone extends Table
      * @param double
      * @return void
      */
-    public static function addHALF_ANGLE_DEG(FlatBufferBuilder $builder, $HALF_ANGLE_DEG)
+    public static function addHALF_ANGLE(FlatBufferBuilder $builder, $HALF_ANGLE)
     {
-        $builder->addDoubleX(5, $HALF_ANGLE_DEG, 0.0);
+        $builder->addDoubleX(5, $HALF_ANGLE, 0.0);
     }
 
     /**

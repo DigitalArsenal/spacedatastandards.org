@@ -45,7 +45,7 @@ class SCNGeodeticPoint extends Table
     /**
      * @return double
      */
-    public function getLATITUDE_DEG()
+    public function getLATITUDE()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -55,7 +55,7 @@ class SCNGeodeticPoint extends Table
     /**
      * @return double
      */
-    public function getLONGITUDE_DEG()
+    public function getLONGITUDE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -65,7 +65,7 @@ class SCNGeodeticPoint extends Table
     /**
      * @return double
      */
-    public function getALTITUDE_KM()
+    public function getALTITUDE()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -84,12 +84,12 @@ class SCNGeodeticPoint extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNGeodeticPoint
      */
-    public static function createSCNGeodeticPoint(FlatBufferBuilder $builder, $LATITUDE_DEG, $LONGITUDE_DEG, $ALTITUDE_KM)
+    public static function createSCNGeodeticPoint(FlatBufferBuilder $builder, $LATITUDE, $LONGITUDE, $ALTITUDE)
     {
         $builder->startObject(3);
-        self::addLATITUDE_DEG($builder, $LATITUDE_DEG);
-        self::addLONGITUDE_DEG($builder, $LONGITUDE_DEG);
-        self::addALTITUDE_KM($builder, $ALTITUDE_KM);
+        self::addLATITUDE($builder, $LATITUDE);
+        self::addLONGITUDE($builder, $LONGITUDE);
+        self::addALTITUDE($builder, $ALTITUDE);
         $o = $builder->endObject();
         return $o;
     }
@@ -99,9 +99,9 @@ class SCNGeodeticPoint extends Table
      * @param double
      * @return void
      */
-    public static function addLATITUDE_DEG(FlatBufferBuilder $builder, $LATITUDE_DEG)
+    public static function addLATITUDE(FlatBufferBuilder $builder, $LATITUDE)
     {
-        $builder->addDoubleX(0, $LATITUDE_DEG, 0.0);
+        $builder->addDoubleX(0, $LATITUDE, 0.0);
     }
 
     /**
@@ -109,9 +109,9 @@ class SCNGeodeticPoint extends Table
      * @param double
      * @return void
      */
-    public static function addLONGITUDE_DEG(FlatBufferBuilder $builder, $LONGITUDE_DEG)
+    public static function addLONGITUDE(FlatBufferBuilder $builder, $LONGITUDE)
     {
-        $builder->addDoubleX(1, $LONGITUDE_DEG, 0.0);
+        $builder->addDoubleX(1, $LONGITUDE, 0.0);
     }
 
     /**
@@ -119,9 +119,9 @@ class SCNGeodeticPoint extends Table
      * @param double
      * @return void
      */
-    public static function addALTITUDE_KM(FlatBufferBuilder $builder, $ALTITUDE_KM)
+    public static function addALTITUDE(FlatBufferBuilder $builder, $ALTITUDE)
     {
-        $builder->addDoubleX(2, $ALTITUDE_KM, 0.0);
+        $builder->addDoubleX(2, $ALTITUDE, 0.0);
     }
 
     /**

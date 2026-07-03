@@ -42,9 +42,9 @@ public struct SCNPointOfInterest : IFlatbufferObject
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(8); }
   /// Seconds before the epoch when highlighting begins.
-  public double HIGHLIGHT_BEFORE_SEC { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double HIGHLIGHT_BEFORE { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Seconds after the epoch when highlighting remains active.
-  public double HIGHLIGHT_AFTER_SEC { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double HIGHLIGHT_AFTER { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Display color token for the point of interest.
   public string COLOR { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -60,13 +60,13 @@ public struct SCNPointOfInterest : IFlatbufferObject
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset EPOCHOffset = default(StringOffset),
-      double HIGHLIGHT_BEFORE_SEC = 0.0,
-      double HIGHLIGHT_AFTER_SEC = 0.0,
+      double HIGHLIGHT_BEFORE = 0.0,
+      double HIGHLIGHT_AFTER = 0.0,
       StringOffset COLOROffset = default(StringOffset),
       Offset<SCNGeodeticPoint> POSITIONOffset = default(Offset<SCNGeodeticPoint>)) {
     builder.StartTable(7);
-    SCNPointOfInterest.AddHIGHLIGHT_AFTER_SEC(builder, HIGHLIGHT_AFTER_SEC);
-    SCNPointOfInterest.AddHIGHLIGHT_BEFORE_SEC(builder, HIGHLIGHT_BEFORE_SEC);
+    SCNPointOfInterest.AddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER);
+    SCNPointOfInterest.AddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE);
     SCNPointOfInterest.AddPOSITION(builder, POSITIONOffset);
     SCNPointOfInterest.AddCOLOR(builder, COLOROffset);
     SCNPointOfInterest.AddEPOCH(builder, EPOCHOffset);
@@ -79,8 +79,8 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(1, DESCRIPTIONOffset.Value, 0); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(2, EPOCHOffset.Value, 0); }
-  public static void AddHIGHLIGHT_BEFORE_SEC(FlatBufferBuilder builder, double HIGHLIGHT_BEFORE_SEC) { builder.AddDouble(3, HIGHLIGHT_BEFORE_SEC, 0.0); }
-  public static void AddHIGHLIGHT_AFTER_SEC(FlatBufferBuilder builder, double HIGHLIGHT_AFTER_SEC) { builder.AddDouble(4, HIGHLIGHT_AFTER_SEC, 0.0); }
+  public static void AddHIGHLIGHT_BEFORE(FlatBufferBuilder builder, double HIGHLIGHT_BEFORE) { builder.AddDouble(3, HIGHLIGHT_BEFORE, 0.0); }
+  public static void AddHIGHLIGHT_AFTER(FlatBufferBuilder builder, double HIGHLIGHT_AFTER) { builder.AddDouble(4, HIGHLIGHT_AFTER, 0.0); }
   public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(5, COLOROffset.Value, 0); }
   public static void AddPOSITION(FlatBufferBuilder builder, Offset<SCNGeodeticPoint> POSITIONOffset) { builder.AddOffset(6, POSITIONOffset.Value, 0); }
   public static Offset<SCNPointOfInterest> EndSCNPointOfInterest(FlatBufferBuilder builder) {
@@ -96,8 +96,8 @@ public struct SCNPointOfInterest : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.EPOCH = this.EPOCH;
-    _o.HIGHLIGHT_BEFORE_SEC = this.HIGHLIGHT_BEFORE_SEC;
-    _o.HIGHLIGHT_AFTER_SEC = this.HIGHLIGHT_AFTER_SEC;
+    _o.HIGHLIGHT_BEFORE = this.HIGHLIGHT_BEFORE;
+    _o.HIGHLIGHT_AFTER = this.HIGHLIGHT_AFTER;
     _o.COLOR = this.COLOR;
     _o.POSITION = this.POSITION.HasValue ? this.POSITION.Value.UnPack() : null;
   }
@@ -113,8 +113,8 @@ public struct SCNPointOfInterest : IFlatbufferObject
       _NAME,
       _DESCRIPTION,
       _EPOCH,
-      _o.HIGHLIGHT_BEFORE_SEC,
-      _o.HIGHLIGHT_AFTER_SEC,
+      _o.HIGHLIGHT_BEFORE,
+      _o.HIGHLIGHT_AFTER,
       _COLOR,
       _POSITION);
   }
@@ -125,8 +125,8 @@ public class SCNPointOfInterestT
   public string NAME { get; set; }
   public string DESCRIPTION { get; set; }
   public string EPOCH { get; set; }
-  public double HIGHLIGHT_BEFORE_SEC { get; set; }
-  public double HIGHLIGHT_AFTER_SEC { get; set; }
+  public double HIGHLIGHT_BEFORE { get; set; }
+  public double HIGHLIGHT_AFTER { get; set; }
   public string COLOR { get; set; }
   public SCNGeodeticPointT POSITION { get; set; }
 
@@ -134,8 +134,8 @@ public class SCNPointOfInterestT
     this.NAME = null;
     this.DESCRIPTION = null;
     this.EPOCH = null;
-    this.HIGHLIGHT_BEFORE_SEC = 0.0;
-    this.HIGHLIGHT_AFTER_SEC = 0.0;
+    this.HIGHLIGHT_BEFORE = 0.0;
+    this.HIGHLIGHT_AFTER = 0.0;
     this.COLOR = null;
     this.POSITION = null;
   }
@@ -150,8 +150,8 @@ static public class SCNPointOfInterestVerify
       && verifier.VerifyString(tablePos, 4 /*NAME*/, false)
       && verifier.VerifyString(tablePos, 6 /*DESCRIPTION*/, false)
       && verifier.VerifyString(tablePos, 8 /*EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 10 /*HIGHLIGHT_BEFORE_SEC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*HIGHLIGHT_AFTER_SEC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*HIGHLIGHT_BEFORE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*HIGHLIGHT_AFTER*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 14 /*COLOR*/, false)
       && verifier.VerifyTable(tablePos, 16 /*POSITION*/, SCNGeodeticPointVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);

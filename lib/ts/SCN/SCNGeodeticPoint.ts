@@ -30,7 +30,7 @@ static getSizePrefixedRootAsSCNGeodeticPoint(bb:flatbuffers.ByteBuffer, obj?:SCN
 /**
  * Latitude in degrees.
  */
-LATITUDE_DEG():number {
+LATITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -38,7 +38,7 @@ LATITUDE_DEG():number {
 /**
  * Longitude in degrees.
  */
-LONGITUDE_DEG():number {
+LONGITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -46,7 +46,7 @@ LONGITUDE_DEG():number {
 /**
  * Altitude above the reference ellipsoid in kilometers.
  */
-ALTITUDE_KM():number {
+ALTITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -55,16 +55,16 @@ static startSCNGeodeticPoint(builder:flatbuffers.Builder) {
   builder.startObject(3);
 }
 
-static addLatitudeDeg(builder:flatbuffers.Builder, LATITUDE_DEG:number) {
-  builder.addFieldFloat64(0, LATITUDE_DEG, 0.0);
+static addLatitude(builder:flatbuffers.Builder, LATITUDE:number) {
+  builder.addFieldFloat64(0, LATITUDE, 0.0);
 }
 
-static addLongitudeDeg(builder:flatbuffers.Builder, LONGITUDE_DEG:number) {
-  builder.addFieldFloat64(1, LONGITUDE_DEG, 0.0);
+static addLongitude(builder:flatbuffers.Builder, LONGITUDE:number) {
+  builder.addFieldFloat64(1, LONGITUDE, 0.0);
 }
 
-static addAltitudeKm(builder:flatbuffers.Builder, ALTITUDE_KM:number) {
-  builder.addFieldFloat64(2, ALTITUDE_KM, 0.0);
+static addAltitude(builder:flatbuffers.Builder, ALTITUDE:number) {
+  builder.addFieldFloat64(2, ALTITUDE, 0.0);
 }
 
 static endSCNGeodeticPoint(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -72,43 +72,43 @@ static endSCNGeodeticPoint(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createSCNGeodeticPoint(builder:flatbuffers.Builder, LATITUDE_DEG:number, LONGITUDE_DEG:number, ALTITUDE_KM:number):flatbuffers.Offset {
+static createSCNGeodeticPoint(builder:flatbuffers.Builder, LATITUDE:number, LONGITUDE:number, ALTITUDE:number):flatbuffers.Offset {
   SCNGeodeticPoint.startSCNGeodeticPoint(builder);
-  SCNGeodeticPoint.addLatitudeDeg(builder, LATITUDE_DEG);
-  SCNGeodeticPoint.addLongitudeDeg(builder, LONGITUDE_DEG);
-  SCNGeodeticPoint.addAltitudeKm(builder, ALTITUDE_KM);
+  SCNGeodeticPoint.addLatitude(builder, LATITUDE);
+  SCNGeodeticPoint.addLongitude(builder, LONGITUDE);
+  SCNGeodeticPoint.addAltitude(builder, ALTITUDE);
   return SCNGeodeticPoint.endSCNGeodeticPoint(builder);
 }
 
 unpack(): SCNGeodeticPointT {
   return new SCNGeodeticPointT(
-    this.LATITUDE_DEG(),
-    this.LONGITUDE_DEG(),
-    this.ALTITUDE_KM()
+    this.LATITUDE(),
+    this.LONGITUDE(),
+    this.ALTITUDE()
   );
 }
 
 
 unpackTo(_o: SCNGeodeticPointT): void {
-  _o.LATITUDE_DEG = this.LATITUDE_DEG();
-  _o.LONGITUDE_DEG = this.LONGITUDE_DEG();
-  _o.ALTITUDE_KM = this.ALTITUDE_KM();
+  _o.LATITUDE = this.LATITUDE();
+  _o.LONGITUDE = this.LONGITUDE();
+  _o.ALTITUDE = this.ALTITUDE();
 }
 }
 
 export class SCNGeodeticPointT implements flatbuffers.IGeneratedObject {
 constructor(
-  public LATITUDE_DEG: number = 0.0,
-  public LONGITUDE_DEG: number = 0.0,
-  public ALTITUDE_KM: number = 0.0
+  public LATITUDE: number = 0.0,
+  public LONGITUDE: number = 0.0,
+  public ALTITUDE: number = 0.0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return SCNGeodeticPoint.createSCNGeodeticPoint(builder,
-    this.LATITUDE_DEG,
-    this.LONGITUDE_DEG,
-    this.ALTITUDE_KM
+    this.LATITUDE,
+    this.LONGITUDE,
+    this.ALTITUDE
   );
 }
 }

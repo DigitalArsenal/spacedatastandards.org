@@ -43,7 +43,7 @@ func (rcv *SCNGeodeticPoint) Table() flatbuffers.Table {
 }
 
 /// Latitude in degrees.
-func (rcv *SCNGeodeticPoint) LATITUDE_DEG() float64 {
+func (rcv *SCNGeodeticPoint) LATITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -51,21 +51,21 @@ func (rcv *SCNGeodeticPoint) LATITUDE_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNGeodeticPoint) LatitudeDeg() float64 {
-	return rcv.LATITUDE_DEG()
+func (rcv *SCNGeodeticPoint) Latitude() float64 {
+	return rcv.LATITUDE()
 }
 
 /// Latitude in degrees.
-func (rcv *SCNGeodeticPoint) MutateLATITUDE_DEG(n float64) bool {
+func (rcv *SCNGeodeticPoint) MutateLATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
 
-func (rcv *SCNGeodeticPoint) MutateLatitudeDeg(n float64) bool {
-	return rcv.MutateLATITUDE_DEG(n)
+func (rcv *SCNGeodeticPoint) MutateLatitude(n float64) bool {
+	return rcv.MutateLATITUDE(n)
 }
 
 /// Longitude in degrees.
-func (rcv *SCNGeodeticPoint) LONGITUDE_DEG() float64 {
+func (rcv *SCNGeodeticPoint) LONGITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -73,21 +73,21 @@ func (rcv *SCNGeodeticPoint) LONGITUDE_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNGeodeticPoint) LongitudeDeg() float64 {
-	return rcv.LONGITUDE_DEG()
+func (rcv *SCNGeodeticPoint) Longitude() float64 {
+	return rcv.LONGITUDE()
 }
 
 /// Longitude in degrees.
-func (rcv *SCNGeodeticPoint) MutateLONGITUDE_DEG(n float64) bool {
+func (rcv *SCNGeodeticPoint) MutateLONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
-func (rcv *SCNGeodeticPoint) MutateLongitudeDeg(n float64) bool {
-	return rcv.MutateLONGITUDE_DEG(n)
+func (rcv *SCNGeodeticPoint) MutateLongitude(n float64) bool {
+	return rcv.MutateLONGITUDE(n)
 }
 
 /// Altitude above the reference ellipsoid in kilometers.
-func (rcv *SCNGeodeticPoint) ALTITUDE_KM() float64 {
+func (rcv *SCNGeodeticPoint) ALTITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -95,39 +95,39 @@ func (rcv *SCNGeodeticPoint) ALTITUDE_KM() float64 {
 	return 0.0
 }
 
-func (rcv *SCNGeodeticPoint) AltitudeKm() float64 {
-	return rcv.ALTITUDE_KM()
+func (rcv *SCNGeodeticPoint) Altitude() float64 {
+	return rcv.ALTITUDE()
 }
 
 /// Altitude above the reference ellipsoid in kilometers.
-func (rcv *SCNGeodeticPoint) MutateALTITUDE_KM(n float64) bool {
+func (rcv *SCNGeodeticPoint) MutateALTITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
-func (rcv *SCNGeodeticPoint) MutateAltitudeKm(n float64) bool {
-	return rcv.MutateALTITUDE_KM(n)
+func (rcv *SCNGeodeticPoint) MutateAltitude(n float64) bool {
+	return rcv.MutateALTITUDE(n)
 }
 
 func SCNGeodeticPointStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
-func SCNGeodeticPointAddLATITUDE_DEG(builder *flatbuffers.Builder, LATITUDE_DEG float64) {
-	builder.PrependFloat64Slot(0, LATITUDE_DEG, 0.0)
+func SCNGeodeticPointAddLATITUDE(builder *flatbuffers.Builder, LATITUDE float64) {
+	builder.PrependFloat64Slot(0, LATITUDE, 0.0)
 }
-func SCNGeodeticPointAddLatitudeDeg(builder *flatbuffers.Builder, LATITUDE_DEG float64) {
-	SCNGeodeticPointAddLATITUDE_DEG(builder, LATITUDE_DEG)
+func SCNGeodeticPointAddLatitude(builder *flatbuffers.Builder, LATITUDE float64) {
+	SCNGeodeticPointAddLATITUDE(builder, LATITUDE)
 }
-func SCNGeodeticPointAddLONGITUDE_DEG(builder *flatbuffers.Builder, LONGITUDE_DEG float64) {
-	builder.PrependFloat64Slot(1, LONGITUDE_DEG, 0.0)
+func SCNGeodeticPointAddLONGITUDE(builder *flatbuffers.Builder, LONGITUDE float64) {
+	builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
 }
-func SCNGeodeticPointAddLongitudeDeg(builder *flatbuffers.Builder, LONGITUDE_DEG float64) {
-	SCNGeodeticPointAddLONGITUDE_DEG(builder, LONGITUDE_DEG)
+func SCNGeodeticPointAddLongitude(builder *flatbuffers.Builder, LONGITUDE float64) {
+	SCNGeodeticPointAddLONGITUDE(builder, LONGITUDE)
 }
-func SCNGeodeticPointAddALTITUDE_KM(builder *flatbuffers.Builder, ALTITUDE_KM float64) {
-	builder.PrependFloat64Slot(2, ALTITUDE_KM, 0.0)
+func SCNGeodeticPointAddALTITUDE(builder *flatbuffers.Builder, ALTITUDE float64) {
+	builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
 }
-func SCNGeodeticPointAddAltitudeKm(builder *flatbuffers.Builder, ALTITUDE_KM float64) {
-	SCNGeodeticPointAddALTITUDE_KM(builder, ALTITUDE_KM)
+func SCNGeodeticPointAddAltitude(builder *flatbuffers.Builder, ALTITUDE float64) {
+	SCNGeodeticPointAddALTITUDE(builder, ALTITUDE)
 }
 func SCNGeodeticPointEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

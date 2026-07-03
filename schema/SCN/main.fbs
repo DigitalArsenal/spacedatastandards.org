@@ -1,5 +1,5 @@
-// Hash: 9b4035415cf10742d3c4dfac00481c7c3fab251eeac6a73b747d9f65e7ac657e
-// Version: 1.136.2
+// Hash: 5b1484a53023ac74a3ea304e7b9f1e879da2f38b1d5d6cd6ee5507225066caa2
+// Version: 1.136.4
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -34,24 +34,14 @@ enum scenarioActionCode : byte {
   RESET
 }
 
-/// Raw TLE lines retained as import provenance for scenario setup.
-table SCNTleLines {
-  /// First TLE line exactly as imported.
-  LINE1:string;
-  /// Second TLE line exactly as imported.
-  LINE2:string;
-  /// Source label or URI for the imported TLE.
-  SOURCE:string;
-}
-
 /// Geodetic point in latitude, longitude, altitude order.
 table SCNGeodeticPoint {
   /// Latitude in degrees.
-  LATITUDE_DEG:double;
+  LATITUDE:double;
   /// Longitude in degrees.
-  LONGITUDE_DEG:double;
+  LONGITUDE:double;
   /// Altitude above the reference ellipsoid in kilometers.
-  ALTITUDE_KM:double;
+  ALTITUDE:double;
 }
 
 /// Time-tagged point or annotation shown in a scenario.
@@ -63,9 +53,9 @@ table SCNPointOfInterest {
   /// UTC epoch associated with the point of interest.
   EPOCH:string;
   /// Seconds before the epoch when highlighting begins.
-  HIGHLIGHT_BEFORE_SEC:double;
+  HIGHLIGHT_BEFORE:double;
   /// Seconds after the epoch when highlighting remains active.
-  HIGHLIGHT_AFTER_SEC:double;
+  HIGHLIGHT_AFTER:double;
   /// Display color token for the point of interest.
   COLOR:string;
   /// Geodetic position for the point of interest.
@@ -75,17 +65,17 @@ table SCNPointOfInterest {
 /// Sensor or site view-cone overlay used by scenario tools.
 table SCNViewCone {
   /// Minimum elevation angle in degrees.
-  MIN_ELEVATION_DEG:double;
+  MIN_ELEVATION:double;
   /// Maximum elevation angle in degrees.
-  MAX_ELEVATION_DEG:double;
+  MAX_ELEVATION:double;
   /// Minimum azimuth angle in degrees.
-  MIN_AZIMUTH_DEG:double;
+  MIN_AZIMUTH:double;
   /// Maximum azimuth angle in degrees.
-  MAX_AZIMUTH_DEG:double;
+  MAX_AZIMUTH:double;
   /// Maximum view-cone range in kilometers.
-  MAX_RANGE_KM:double;
+  MAX_RANGE:double;
   /// Half angle in degrees for cone-style overlays.
-  HALF_ANGLE_DEG:double;
+  HALF_ANGLE:double;
   /// Dynamic range mode or expression used by the viewer.
   DYNAMIC_RANGE:string;
 }
@@ -138,8 +128,6 @@ table SCNReference {
   SOURCES:[string];
   /// Data-mode labels associated with this reference.
   DATA_MODES:[string];
-  /// TLE provenance and raw lines for satellite references.
-  TLES:[SCNTleLines];
   /// Mean orbital elements associated with this reference.
   MEAN_ELEMENTS:[OMM];
   /// State vectors associated with this reference.
@@ -155,9 +143,9 @@ table SCNReference {
   /// Sensor id for references that identify a sensor by id.
   SENSOR_ID:string;
   /// Ground-site latitude in degrees when no SIT record is available.
-  SITE_LATITUDE_DEG:double;
+  SITE_LATITUDE:double;
   /// Ground-site longitude in degrees when no SIT record is available.
-  SITE_LONGITUDE_DEG:double;
+  SITE_LONGITUDE:double;
   /// Scenario variable id for variable satellite references.
   VARIABLE_SATELLITE_ID:string;
   /// Scenario variable id for variable site references.

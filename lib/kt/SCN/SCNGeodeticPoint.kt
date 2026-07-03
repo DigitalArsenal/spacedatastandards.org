@@ -32,7 +32,7 @@ class SCNGeodeticPoint : Table() {
     /**
      * Latitude in degrees.
      */
-    val latitudeDeg : Double
+    val latitude : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class SCNGeodeticPoint : Table() {
     /**
      * Longitude in degrees.
      */
-    val longitudeDeg : Double
+    val longitude : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class SCNGeodeticPoint : Table() {
     /**
      * Altitude above the reference ellipsoid in kilometers.
      */
-    val altitudeKm : Double
+    val altitude : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -60,17 +60,17 @@ class SCNGeodeticPoint : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNGeodeticPoint(builder: FlatBufferBuilder, latitudeDeg: Double, longitudeDeg: Double, altitudeKm: Double) : Int {
+        fun createSCNGeodeticPoint(builder: FlatBufferBuilder, latitude: Double, longitude: Double, altitude: Double) : Int {
             builder.startTable(3)
-            addALTITUDEKM(builder, altitudeKm)
-            addLONGITUDEDEG(builder, longitudeDeg)
-            addLATITUDEDEG(builder, latitudeDeg)
+            addALTITUDE(builder, altitude)
+            addLONGITUDE(builder, longitude)
+            addLATITUDE(builder, latitude)
             return endSCNGeodeticPoint(builder)
         }
         fun startSCNGeodeticPoint(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addLATITUDEDEG(builder: FlatBufferBuilder, latitudeDeg: Double) = builder.addDouble(0, latitudeDeg, 0.0)
-        fun addLONGITUDEDEG(builder: FlatBufferBuilder, longitudeDeg: Double) = builder.addDouble(1, longitudeDeg, 0.0)
-        fun addALTITUDEKM(builder: FlatBufferBuilder, altitudeKm: Double) = builder.addDouble(2, altitudeKm, 0.0)
+        fun addLATITUDE(builder: FlatBufferBuilder, latitude: Double) = builder.addDouble(0, latitude, 0.0)
+        fun addLONGITUDE(builder: FlatBufferBuilder, longitude: Double) = builder.addDouble(1, longitude, 0.0)
+        fun addALTITUDE(builder: FlatBufferBuilder, altitude: Double) = builder.addDouble(2, altitude, 0.0)
         fun endSCNGeodeticPoint(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

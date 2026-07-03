@@ -33,7 +33,7 @@ class VSTCameraRotation : Table() {
     /**
      * Yaw angle in degrees for Euler-angle camera imports.
      */
-    val yawDeg : Double
+    val yaw : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -41,7 +41,7 @@ class VSTCameraRotation : Table() {
     /**
      * Pitch angle in degrees for Euler-angle camera imports.
      */
-    val pitchDeg : Double
+    val pitch : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -49,7 +49,7 @@ class VSTCameraRotation : Table() {
     /**
      * Roll angle in degrees for Euler-angle camera imports.
      */
-    val rollDeg : Double
+    val roll : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -101,22 +101,22 @@ class VSTCameraRotation : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVSTCameraRotation(builder: FlatBufferBuilder, yawDeg: Double, pitchDeg: Double, rollDeg: Double, quaternionX: Double, quaternionY: Double, quaternionZ: Double, quaternionW: Double, usesQuaternion: Boolean) : Int {
+        fun createVSTCameraRotation(builder: FlatBufferBuilder, yaw: Double, pitch: Double, roll: Double, quaternionX: Double, quaternionY: Double, quaternionZ: Double, quaternionW: Double, usesQuaternion: Boolean) : Int {
             builder.startTable(8)
             addQUATERNIONW(builder, quaternionW)
             addQUATERNIONZ(builder, quaternionZ)
             addQUATERNIONY(builder, quaternionY)
             addQUATERNIONX(builder, quaternionX)
-            addROLLDEG(builder, rollDeg)
-            addPITCHDEG(builder, pitchDeg)
-            addYAWDEG(builder, yawDeg)
+            addROLL(builder, roll)
+            addPITCH(builder, pitch)
+            addYAW(builder, yaw)
             addUSESQUATERNION(builder, usesQuaternion)
             return endVSTCameraRotation(builder)
         }
         fun startVSTCameraRotation(builder: FlatBufferBuilder) = builder.startTable(8)
-        fun addYAWDEG(builder: FlatBufferBuilder, yawDeg: Double) = builder.addDouble(0, yawDeg, 0.0)
-        fun addPITCHDEG(builder: FlatBufferBuilder, pitchDeg: Double) = builder.addDouble(1, pitchDeg, 0.0)
-        fun addROLLDEG(builder: FlatBufferBuilder, rollDeg: Double) = builder.addDouble(2, rollDeg, 0.0)
+        fun addYAW(builder: FlatBufferBuilder, yaw: Double) = builder.addDouble(0, yaw, 0.0)
+        fun addPITCH(builder: FlatBufferBuilder, pitch: Double) = builder.addDouble(1, pitch, 0.0)
+        fun addROLL(builder: FlatBufferBuilder, roll: Double) = builder.addDouble(2, roll, 0.0)
         fun addQUATERNIONX(builder: FlatBufferBuilder, quaternionX: Double) = builder.addDouble(3, quaternionX, 0.0)
         fun addQUATERNIONY(builder: FlatBufferBuilder, quaternionY: Double) = builder.addDouble(4, quaternionY, 0.0)
         fun addQUATERNIONZ(builder: FlatBufferBuilder, quaternionZ: Double) = builder.addDouble(5, quaternionZ, 0.0)

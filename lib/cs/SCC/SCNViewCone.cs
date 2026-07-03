@@ -18,17 +18,17 @@ public struct SCNViewCone : IFlatbufferObject
   public SCNViewCone __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Minimum elevation angle in degrees.
-  public double MIN_ELEVATION_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MIN_ELEVATION { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Maximum elevation angle in degrees.
-  public double MAX_ELEVATION_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MAX_ELEVATION { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Minimum azimuth angle in degrees.
-  public double MIN_AZIMUTH_DEG { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MIN_AZIMUTH { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Maximum azimuth angle in degrees.
-  public double MAX_AZIMUTH_DEG { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MAX_AZIMUTH { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Maximum view-cone range in kilometers.
-  public double MAX_RANGE_KM { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MAX_RANGE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Half angle in degrees for cone-style overlays.
-  public double HALF_ANGLE_DEG { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double HALF_ANGLE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Dynamic range mode or expression used by the viewer.
   public string DYNAMIC_RANGE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -39,31 +39,31 @@ public struct SCNViewCone : IFlatbufferObject
   public byte[] GetDYNAMIC_RANGEArray() { return __p.__vector_as_array<byte>(16); }
 
   public static Offset<SCNViewCone> CreateSCNViewCone(FlatBufferBuilder builder,
-      double MIN_ELEVATION_DEG = 0.0,
-      double MAX_ELEVATION_DEG = 0.0,
-      double MIN_AZIMUTH_DEG = 0.0,
-      double MAX_AZIMUTH_DEG = 0.0,
-      double MAX_RANGE_KM = 0.0,
-      double HALF_ANGLE_DEG = 0.0,
+      double MIN_ELEVATION = 0.0,
+      double MAX_ELEVATION = 0.0,
+      double MIN_AZIMUTH = 0.0,
+      double MAX_AZIMUTH = 0.0,
+      double MAX_RANGE = 0.0,
+      double HALF_ANGLE = 0.0,
       StringOffset DYNAMIC_RANGEOffset = default(StringOffset)) {
     builder.StartTable(7);
-    SCNViewCone.AddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG);
-    SCNViewCone.AddMAX_RANGE_KM(builder, MAX_RANGE_KM);
-    SCNViewCone.AddMAX_AZIMUTH_DEG(builder, MAX_AZIMUTH_DEG);
-    SCNViewCone.AddMIN_AZIMUTH_DEG(builder, MIN_AZIMUTH_DEG);
-    SCNViewCone.AddMAX_ELEVATION_DEG(builder, MAX_ELEVATION_DEG);
-    SCNViewCone.AddMIN_ELEVATION_DEG(builder, MIN_ELEVATION_DEG);
+    SCNViewCone.AddHALF_ANGLE(builder, HALF_ANGLE);
+    SCNViewCone.AddMAX_RANGE(builder, MAX_RANGE);
+    SCNViewCone.AddMAX_AZIMUTH(builder, MAX_AZIMUTH);
+    SCNViewCone.AddMIN_AZIMUTH(builder, MIN_AZIMUTH);
+    SCNViewCone.AddMAX_ELEVATION(builder, MAX_ELEVATION);
+    SCNViewCone.AddMIN_ELEVATION(builder, MIN_ELEVATION);
     SCNViewCone.AddDYNAMIC_RANGE(builder, DYNAMIC_RANGEOffset);
     return SCNViewCone.EndSCNViewCone(builder);
   }
 
   public static void StartSCNViewCone(FlatBufferBuilder builder) { builder.StartTable(7); }
-  public static void AddMIN_ELEVATION_DEG(FlatBufferBuilder builder, double MIN_ELEVATION_DEG) { builder.AddDouble(0, MIN_ELEVATION_DEG, 0.0); }
-  public static void AddMAX_ELEVATION_DEG(FlatBufferBuilder builder, double MAX_ELEVATION_DEG) { builder.AddDouble(1, MAX_ELEVATION_DEG, 0.0); }
-  public static void AddMIN_AZIMUTH_DEG(FlatBufferBuilder builder, double MIN_AZIMUTH_DEG) { builder.AddDouble(2, MIN_AZIMUTH_DEG, 0.0); }
-  public static void AddMAX_AZIMUTH_DEG(FlatBufferBuilder builder, double MAX_AZIMUTH_DEG) { builder.AddDouble(3, MAX_AZIMUTH_DEG, 0.0); }
-  public static void AddMAX_RANGE_KM(FlatBufferBuilder builder, double MAX_RANGE_KM) { builder.AddDouble(4, MAX_RANGE_KM, 0.0); }
-  public static void AddHALF_ANGLE_DEG(FlatBufferBuilder builder, double HALF_ANGLE_DEG) { builder.AddDouble(5, HALF_ANGLE_DEG, 0.0); }
+  public static void AddMIN_ELEVATION(FlatBufferBuilder builder, double MIN_ELEVATION) { builder.AddDouble(0, MIN_ELEVATION, 0.0); }
+  public static void AddMAX_ELEVATION(FlatBufferBuilder builder, double MAX_ELEVATION) { builder.AddDouble(1, MAX_ELEVATION, 0.0); }
+  public static void AddMIN_AZIMUTH(FlatBufferBuilder builder, double MIN_AZIMUTH) { builder.AddDouble(2, MIN_AZIMUTH, 0.0); }
+  public static void AddMAX_AZIMUTH(FlatBufferBuilder builder, double MAX_AZIMUTH) { builder.AddDouble(3, MAX_AZIMUTH, 0.0); }
+  public static void AddMAX_RANGE(FlatBufferBuilder builder, double MAX_RANGE) { builder.AddDouble(4, MAX_RANGE, 0.0); }
+  public static void AddHALF_ANGLE(FlatBufferBuilder builder, double HALF_ANGLE) { builder.AddDouble(5, HALF_ANGLE, 0.0); }
   public static void AddDYNAMIC_RANGE(FlatBufferBuilder builder, StringOffset DYNAMIC_RANGEOffset) { builder.AddOffset(6, DYNAMIC_RANGEOffset.Value, 0); }
   public static Offset<SCNViewCone> EndSCNViewCone(FlatBufferBuilder builder) {
     int o = builder.EndTable();
@@ -75,12 +75,12 @@ public struct SCNViewCone : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCNViewConeT _o) {
-    _o.MIN_ELEVATION_DEG = this.MIN_ELEVATION_DEG;
-    _o.MAX_ELEVATION_DEG = this.MAX_ELEVATION_DEG;
-    _o.MIN_AZIMUTH_DEG = this.MIN_AZIMUTH_DEG;
-    _o.MAX_AZIMUTH_DEG = this.MAX_AZIMUTH_DEG;
-    _o.MAX_RANGE_KM = this.MAX_RANGE_KM;
-    _o.HALF_ANGLE_DEG = this.HALF_ANGLE_DEG;
+    _o.MIN_ELEVATION = this.MIN_ELEVATION;
+    _o.MAX_ELEVATION = this.MAX_ELEVATION;
+    _o.MIN_AZIMUTH = this.MIN_AZIMUTH;
+    _o.MAX_AZIMUTH = this.MAX_AZIMUTH;
+    _o.MAX_RANGE = this.MAX_RANGE;
+    _o.HALF_ANGLE = this.HALF_ANGLE;
     _o.DYNAMIC_RANGE = this.DYNAMIC_RANGE;
   }
   public static Offset<SCNViewCone> Pack(FlatBufferBuilder builder, SCNViewConeT _o) {
@@ -88,33 +88,33 @@ public struct SCNViewCone : IFlatbufferObject
     var _DYNAMIC_RANGE = _o.DYNAMIC_RANGE == null ? default(StringOffset) : builder.CreateString(_o.DYNAMIC_RANGE);
     return CreateSCNViewCone(
       builder,
-      _o.MIN_ELEVATION_DEG,
-      _o.MAX_ELEVATION_DEG,
-      _o.MIN_AZIMUTH_DEG,
-      _o.MAX_AZIMUTH_DEG,
-      _o.MAX_RANGE_KM,
-      _o.HALF_ANGLE_DEG,
+      _o.MIN_ELEVATION,
+      _o.MAX_ELEVATION,
+      _o.MIN_AZIMUTH,
+      _o.MAX_AZIMUTH,
+      _o.MAX_RANGE,
+      _o.HALF_ANGLE,
       _DYNAMIC_RANGE);
   }
 }
 
 public class SCNViewConeT
 {
-  public double MIN_ELEVATION_DEG { get; set; }
-  public double MAX_ELEVATION_DEG { get; set; }
-  public double MIN_AZIMUTH_DEG { get; set; }
-  public double MAX_AZIMUTH_DEG { get; set; }
-  public double MAX_RANGE_KM { get; set; }
-  public double HALF_ANGLE_DEG { get; set; }
+  public double MIN_ELEVATION { get; set; }
+  public double MAX_ELEVATION { get; set; }
+  public double MIN_AZIMUTH { get; set; }
+  public double MAX_AZIMUTH { get; set; }
+  public double MAX_RANGE { get; set; }
+  public double HALF_ANGLE { get; set; }
   public string DYNAMIC_RANGE { get; set; }
 
   public SCNViewConeT() {
-    this.MIN_ELEVATION_DEG = 0.0;
-    this.MAX_ELEVATION_DEG = 0.0;
-    this.MIN_AZIMUTH_DEG = 0.0;
-    this.MAX_AZIMUTH_DEG = 0.0;
-    this.MAX_RANGE_KM = 0.0;
-    this.HALF_ANGLE_DEG = 0.0;
+    this.MIN_ELEVATION = 0.0;
+    this.MAX_ELEVATION = 0.0;
+    this.MIN_AZIMUTH = 0.0;
+    this.MAX_AZIMUTH = 0.0;
+    this.MAX_RANGE = 0.0;
+    this.HALF_ANGLE = 0.0;
     this.DYNAMIC_RANGE = null;
   }
 }
@@ -125,12 +125,12 @@ static public class SCNViewConeVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*MIN_ELEVATION_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 6 /*MAX_ELEVATION_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 8 /*MIN_AZIMUTH_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 10 /*MAX_AZIMUTH_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*MAX_RANGE_KM*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*HALF_ANGLE_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 4 /*MIN_ELEVATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*MAX_ELEVATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*MIN_AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*MAX_AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*MAX_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*HALF_ANGLE*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 16 /*DYNAMIC_RANGE*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }

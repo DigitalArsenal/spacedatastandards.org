@@ -79,112 +79,104 @@ public final class SCNReference extends com.google.flatbuffers.Table {
   public StringVector dataModesVector() { return dataModesVector(new StringVector()); }
   public StringVector dataModesVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * TLE provenance and raw lines for satellite references.
-   */
-  public SCNTleLines TLES(int j) { return TLES(new SCNTleLines(), j); }
-  public SCNTleLines TLES(SCNTleLines obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int TLESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
-  public SCNTleLines.Vector tlesVector() { return tlesVector(new SCNTleLines.Vector()); }
-  public SCNTleLines.Vector tlesVector(SCNTleLines.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  /**
    * Mean orbital elements associated with this reference.
    */
   public OMM MEAN_ELEMENTS(int j) { return MEAN_ELEMENTS(new OMM(), j); }
-  public OMM MEAN_ELEMENTS(OMM obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int MEAN_ELEMENTSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public OMM MEAN_ELEMENTS(OMM obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MEAN_ELEMENTSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
   public OMM.Vector meanElementsVector() { return meanElementsVector(new OMM.Vector()); }
-  public OMM.Vector meanElementsVector(OMM.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public OMM.Vector meanElementsVector(OMM.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * State vectors associated with this reference.
    */
   public STV STATES(int j) { return STATES(new STV(), j); }
-  public STV STATES(STV obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int STATESLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public STV STATES(STV obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int STATESLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
   public STV.Vector statesVector() { return statesVector(new STV.Vector()); }
-  public STV.Vector statesVector(STV.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public STV.Vector statesVector(STV.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Maneuver records associated with this reference.
    */
   public MNV MANEUVERS(int j) { return MANEUVERS(new MNV(), j); }
-  public MNV MANEUVERS(MNV obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int MANEUVERSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public MNV MANEUVERS(MNV obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MANEUVERSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public MNV.Vector maneuversVector() { return maneuversVector(new MNV.Vector()); }
-  public MNV.Vector maneuversVector(MNV.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public MNV.Vector maneuversVector(MNV.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Ground-site record associated with this reference.
    */
   public SIT SITE() { return SITE(new SIT()); }
-  public SIT SITE(SIT obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SIT SITE(SIT obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Sensor record associated with this reference.
    */
   public SEN SENSOR() { return SENSOR(new SEN()); }
-  public SEN SENSOR(SEN obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SEN SENSOR(SEN obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Sensor system id for references that identify a sensor by id.
    */
-  public String SENSOR_SYSTEM_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SENSOR_SYSTEM_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer SENSOR_SYSTEM_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String SENSOR_SYSTEM_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_SYSTEM_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer SENSOR_SYSTEM_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
   /**
    * Sensor id for references that identify a sensor by id.
    */
-  public String SENSOR_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public String SENSOR_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
   /**
    * Ground-site latitude in degrees when no SIT record is available.
    */
-  public double SITE_LATITUDE_DEG() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SITE_LATITUDE() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Ground-site longitude in degrees when no SIT record is available.
    */
-  public double SITE_LONGITUDE_DEG() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double SITE_LONGITUDE() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Scenario variable id for variable satellite references.
    */
-  public String VARIABLE_SATELLITE_ID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer VARIABLE_SATELLITE_IDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer VARIABLE_SATELLITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  public String VARIABLE_SATELLITE_ID() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VARIABLE_SATELLITE_IDAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer VARIABLE_SATELLITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
   /**
    * Scenario variable id for variable site references.
    */
-  public String VARIABLE_SITE_ID() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer VARIABLE_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer VARIABLE_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  public String VARIABLE_SITE_ID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VARIABLE_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer VARIABLE_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
   /**
    * Points of interest associated with this reference.
    */
   public SCNPointOfInterest POINTS(int j) { return POINTS(new SCNPointOfInterest(), j); }
-  public SCNPointOfInterest POINTS(SCNPointOfInterest obj, int j) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int POINTSLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public SCNPointOfInterest POINTS(SCNPointOfInterest obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int POINTSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
   public SCNPointOfInterest.Vector pointsVector() { return pointsVector(new SCNPointOfInterest.Vector()); }
-  public SCNPointOfInterest.Vector pointsVector(SCNPointOfInterest.Vector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public SCNPointOfInterest.Vector pointsVector(SCNPointOfInterest.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * View-cone overlay associated with this reference.
    */
   public SCNViewCone VIEW_CONE() { return VIEW_CONE(new SCNViewCone()); }
-  public SCNViewCone VIEW_CONE(SCNViewCone obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCNViewCone VIEW_CONE(SCNViewCone obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Sun-advantage target pairing for this reference.
    */
   public SCNSunAdvantageTarget SUN_ADVANTAGE_TARGET() { return SUN_ADVANTAGE_TARGET(new SCNSunAdvantageTarget()); }
-  public SCNSunAdvantageTarget SUN_ADVANTAGE_TARGET(SCNSunAdvantageTarget obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCNSunAdvantageTarget SUN_ADVANTAGE_TARGET(SCNSunAdvantageTarget obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Exclusion-zone geometry associated with this reference.
    */
   public SCNExclusionZone EXCLUSION_ZONE() { return EXCLUSION_ZONE(new SCNExclusionZone()); }
-  public SCNExclusionZone EXCLUSION_ZONE(SCNExclusionZone obj) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCNExclusionZone EXCLUSION_ZONE(SCNExclusionZone obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Electro-optical observation record associated with this reference.
    */
   public EOO OBSERVATION_EO() { return OBSERVATION_EO(new EOO()); }
-  public EOO OBSERVATION_EO(EOO obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public EOO OBSERVATION_EO(EOO obj) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Radar observation record associated with this reference.
    */
   public RDO OBSERVATION_RADAR() { return OBSERVATION_RADAR(new RDO()); }
-  public RDO OBSERVATION_RADAR(RDO obj) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public RDO OBSERVATION_RADAR(RDO obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCNReference(FlatBufferBuilder builder,
       int REFERENCE_IDOffset,
@@ -196,7 +188,6 @@ public final class SCNReference extends com.google.flatbuffers.Table {
       int COUNTRYOffset,
       int SOURCESOffset,
       int DATA_MODESOffset,
-      int TLESOffset,
       int MEAN_ELEMENTSOffset,
       int STATESOffset,
       int MANEUVERSOffset,
@@ -204,8 +195,8 @@ public final class SCNReference extends com.google.flatbuffers.Table {
       int SENSOROffset,
       int SENSOR_SYSTEM_IDOffset,
       int SENSOR_IDOffset,
-      double SITE_LATITUDE_DEG,
-      double SITE_LONGITUDE_DEG,
+      double SITE_LATITUDE,
+      double SITE_LONGITUDE,
       int VARIABLE_SATELLITE_IDOffset,
       int VARIABLE_SITE_IDOffset,
       int POINTSOffset,
@@ -214,9 +205,9 @@ public final class SCNReference extends com.google.flatbuffers.Table {
       int EXCLUSION_ZONEOffset,
       int OBSERVATION_EOOffset,
       int OBSERVATION_RADAROffset) {
-    builder.startTable(27);
-    SCNReference.addSiteLongitudeDeg(builder, SITE_LONGITUDE_DEG);
-    SCNReference.addSiteLatitudeDeg(builder, SITE_LATITUDE_DEG);
+    builder.startTable(26);
+    SCNReference.addSiteLongitude(builder, SITE_LONGITUDE);
+    SCNReference.addSiteLatitude(builder, SITE_LATITUDE);
     SCNReference.addObservationRadar(builder, OBSERVATION_RADAROffset);
     SCNReference.addObservationEo(builder, OBSERVATION_EOOffset);
     SCNReference.addExclusionZone(builder, EXCLUSION_ZONEOffset);
@@ -232,7 +223,6 @@ public final class SCNReference extends com.google.flatbuffers.Table {
     SCNReference.addManeuvers(builder, MANEUVERSOffset);
     SCNReference.addStates(builder, STATESOffset);
     SCNReference.addMeanElements(builder, MEAN_ELEMENTSOffset);
-    SCNReference.addTles(builder, TLESOffset);
     SCNReference.addDataModes(builder, DATA_MODESOffset);
     SCNReference.addSources(builder, SOURCESOffset);
     SCNReference.addCountry(builder, COUNTRYOffset);
@@ -245,7 +235,7 @@ public final class SCNReference extends com.google.flatbuffers.Table {
     return SCNReference.endSCNReference(builder);
   }
 
-  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(27); }
+  public static void startSCNReference(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addReferenceId(FlatBufferBuilder builder, int REFERENCE_IDOffset) { builder.addOffset(0, REFERENCE_IDOffset, 0); }
   public static void addDisplayName(FlatBufferBuilder builder, int DISPLAY_NAMEOffset) { builder.addOffset(1, DISPLAY_NAMEOffset, 0); }
   public static void addReferenceKind(FlatBufferBuilder builder, byte REFERENCE_KIND) { builder.addByte(2, REFERENCE_KIND, 0); }
@@ -259,34 +249,31 @@ public final class SCNReference extends com.google.flatbuffers.Table {
   public static void addDataModes(FlatBufferBuilder builder, int DATA_MODESOffset) { builder.addOffset(8, DATA_MODESOffset, 0); }
   public static int createDataModesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDataModesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addTles(FlatBufferBuilder builder, int TLESOffset) { builder.addOffset(9, TLESOffset, 0); }
-  public static int createTlesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startTlesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addMeanElements(FlatBufferBuilder builder, int MEAN_ELEMENTSOffset) { builder.addOffset(10, MEAN_ELEMENTSOffset, 0); }
+  public static void addMeanElements(FlatBufferBuilder builder, int MEAN_ELEMENTSOffset) { builder.addOffset(9, MEAN_ELEMENTSOffset, 0); }
   public static int createMeanElementsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMeanElementsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addStates(FlatBufferBuilder builder, int STATESOffset) { builder.addOffset(11, STATESOffset, 0); }
+  public static void addStates(FlatBufferBuilder builder, int STATESOffset) { builder.addOffset(10, STATESOffset, 0); }
   public static int createStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addManeuvers(FlatBufferBuilder builder, int MANEUVERSOffset) { builder.addOffset(12, MANEUVERSOffset, 0); }
+  public static void addManeuvers(FlatBufferBuilder builder, int MANEUVERSOffset) { builder.addOffset(11, MANEUVERSOffset, 0); }
   public static int createManeuversVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startManeuversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSite(FlatBufferBuilder builder, int SITEOffset) { builder.addOffset(13, SITEOffset, 0); }
-  public static void addSensor(FlatBufferBuilder builder, int SENSOROffset) { builder.addOffset(14, SENSOROffset, 0); }
-  public static void addSensorSystemId(FlatBufferBuilder builder, int SENSOR_SYSTEM_IDOffset) { builder.addOffset(15, SENSOR_SYSTEM_IDOffset, 0); }
-  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(16, SENSOR_IDOffset, 0); }
-  public static void addSiteLatitudeDeg(FlatBufferBuilder builder, double SITE_LATITUDE_DEG) { builder.addDouble(17, SITE_LATITUDE_DEG, 0.0); }
-  public static void addSiteLongitudeDeg(FlatBufferBuilder builder, double SITE_LONGITUDE_DEG) { builder.addDouble(18, SITE_LONGITUDE_DEG, 0.0); }
-  public static void addVariableSatelliteId(FlatBufferBuilder builder, int VARIABLE_SATELLITE_IDOffset) { builder.addOffset(19, VARIABLE_SATELLITE_IDOffset, 0); }
-  public static void addVariableSiteId(FlatBufferBuilder builder, int VARIABLE_SITE_IDOffset) { builder.addOffset(20, VARIABLE_SITE_IDOffset, 0); }
-  public static void addPoints(FlatBufferBuilder builder, int POINTSOffset) { builder.addOffset(21, POINTSOffset, 0); }
+  public static void addSite(FlatBufferBuilder builder, int SITEOffset) { builder.addOffset(12, SITEOffset, 0); }
+  public static void addSensor(FlatBufferBuilder builder, int SENSOROffset) { builder.addOffset(13, SENSOROffset, 0); }
+  public static void addSensorSystemId(FlatBufferBuilder builder, int SENSOR_SYSTEM_IDOffset) { builder.addOffset(14, SENSOR_SYSTEM_IDOffset, 0); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(15, SENSOR_IDOffset, 0); }
+  public static void addSiteLatitude(FlatBufferBuilder builder, double SITE_LATITUDE) { builder.addDouble(16, SITE_LATITUDE, 0.0); }
+  public static void addSiteLongitude(FlatBufferBuilder builder, double SITE_LONGITUDE) { builder.addDouble(17, SITE_LONGITUDE, 0.0); }
+  public static void addVariableSatelliteId(FlatBufferBuilder builder, int VARIABLE_SATELLITE_IDOffset) { builder.addOffset(18, VARIABLE_SATELLITE_IDOffset, 0); }
+  public static void addVariableSiteId(FlatBufferBuilder builder, int VARIABLE_SITE_IDOffset) { builder.addOffset(19, VARIABLE_SITE_IDOffset, 0); }
+  public static void addPoints(FlatBufferBuilder builder, int POINTSOffset) { builder.addOffset(20, POINTSOffset, 0); }
   public static int createPointsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPointsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addViewCone(FlatBufferBuilder builder, int VIEW_CONEOffset) { builder.addOffset(22, VIEW_CONEOffset, 0); }
-  public static void addSunAdvantageTarget(FlatBufferBuilder builder, int SUN_ADVANTAGE_TARGETOffset) { builder.addOffset(23, SUN_ADVANTAGE_TARGETOffset, 0); }
-  public static void addExclusionZone(FlatBufferBuilder builder, int EXCLUSION_ZONEOffset) { builder.addOffset(24, EXCLUSION_ZONEOffset, 0); }
-  public static void addObservationEo(FlatBufferBuilder builder, int OBSERVATION_EOOffset) { builder.addOffset(25, OBSERVATION_EOOffset, 0); }
-  public static void addObservationRadar(FlatBufferBuilder builder, int OBSERVATION_RADAROffset) { builder.addOffset(26, OBSERVATION_RADAROffset, 0); }
+  public static void addViewCone(FlatBufferBuilder builder, int VIEW_CONEOffset) { builder.addOffset(21, VIEW_CONEOffset, 0); }
+  public static void addSunAdvantageTarget(FlatBufferBuilder builder, int SUN_ADVANTAGE_TARGETOffset) { builder.addOffset(22, SUN_ADVANTAGE_TARGETOffset, 0); }
+  public static void addExclusionZone(FlatBufferBuilder builder, int EXCLUSION_ZONEOffset) { builder.addOffset(23, EXCLUSION_ZONEOffset, 0); }
+  public static void addObservationEo(FlatBufferBuilder builder, int OBSERVATION_EOOffset) { builder.addOffset(24, OBSERVATION_EOOffset, 0); }
+  public static void addObservationRadar(FlatBufferBuilder builder, int OBSERVATION_RADAROffset) { builder.addOffset(25, OBSERVATION_RADAROffset, 0); }
   public static int endSCNReference(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

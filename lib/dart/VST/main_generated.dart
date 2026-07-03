@@ -136,14 +136,11 @@ class VSTCameraRotation {
   final int _bcOffset;
 
   ///  Yaw angle in degrees for Euler-angle camera imports.
-  double get YAW_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get yawDeg => YAW_DEG;
+  double get YAW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
   ///  Pitch angle in degrees for Euler-angle camera imports.
-  double get PITCH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get pitchDeg => PITCH_DEG;
+  double get PITCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   ///  Roll angle in degrees for Euler-angle camera imports.
-  double get ROLL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get rollDeg => ROLL_DEG;
+  double get ROLL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   ///  Quaternion x component for camera orientation.
   double get QUATERNION_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get quaternionX => QUATERNION_X;
@@ -162,7 +159,7 @@ class VSTCameraRotation {
 
   @override
   String toString() {
-    return 'VSTCameraRotation{yawDeg: ${yawDeg}, pitchDeg: ${pitchDeg}, rollDeg: ${rollDeg}, quaternionX: ${quaternionX}, quaternionY: ${quaternionY}, quaternionZ: ${quaternionZ}, quaternionW: ${quaternionW}, usesQuaternion: ${usesQuaternion}}';
+    return 'VSTCameraRotation{YAW: ${YAW}, PITCH: ${PITCH}, ROLL: ${ROLL}, quaternionX: ${quaternionX}, quaternionY: ${quaternionY}, quaternionZ: ${quaternionZ}, quaternionW: ${quaternionW}, usesQuaternion: ${usesQuaternion}}';
   }
 }
 
@@ -183,16 +180,16 @@ class VSTCameraRotationBuilder {
     fbBuilder.startTable(8);
   }
 
-  int addYawDeg(double? YAW_DEG) {
-    fbBuilder.addFloat64(0, YAW_DEG);
+  int addYaw(double? YAW) {
+    fbBuilder.addFloat64(0, YAW);
     return fbBuilder.offset;
   }
-  int addPitchDeg(double? PITCH_DEG) {
-    fbBuilder.addFloat64(1, PITCH_DEG);
+  int addPitch(double? PITCH) {
+    fbBuilder.addFloat64(1, PITCH);
     return fbBuilder.offset;
   }
-  int addRollDeg(double? ROLL_DEG) {
-    fbBuilder.addFloat64(2, ROLL_DEG);
+  int addRoll(double? ROLL) {
+    fbBuilder.addFloat64(2, ROLL);
     return fbBuilder.offset;
   }
   int addQuaternionX(double? QUATERNION_X) {
@@ -222,9 +219,9 @@ class VSTCameraRotationBuilder {
 }
 
 class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
-  final double? _YAW_DEG;
-  final double? _PITCH_DEG;
-  final double? _ROLL_DEG;
+  final double? _YAW;
+  final double? _PITCH;
+  final double? _ROLL;
   final double? _QUATERNION_X;
   final double? _QUATERNION_Y;
   final double? _QUATERNION_Z;
@@ -232,12 +229,9 @@ class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
   final bool? _USES_QUATERNION;
 
   VSTCameraRotationObjectBuilder({
-    double? YAW_DEG,
-    double? yawDeg,
-    double? PITCH_DEG,
-    double? pitchDeg,
-    double? ROLL_DEG,
-    double? rollDeg,
+    double? YAW,
+    double? PITCH,
+    double? ROLL,
     double? QUATERNION_X,
     double? quaternionX,
     double? QUATERNION_Y,
@@ -249,9 +243,9 @@ class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
     bool? USES_QUATERNION,
     bool? usesQuaternion,
   })
-      : _YAW_DEG = yawDeg ?? YAW_DEG,
-        _PITCH_DEG = pitchDeg ?? PITCH_DEG,
-        _ROLL_DEG = rollDeg ?? ROLL_DEG,
+      : _YAW = YAW,
+        _PITCH = PITCH,
+        _ROLL = ROLL,
         _QUATERNION_X = quaternionX ?? QUATERNION_X,
         _QUATERNION_Y = quaternionY ?? QUATERNION_Y,
         _QUATERNION_Z = quaternionZ ?? QUATERNION_Z,
@@ -262,9 +256,9 @@ class VSTCameraRotationObjectBuilder extends fb.ObjectBuilder {
   @override
   int finish(fb.Builder fbBuilder) {
     fbBuilder.startTable(8);
-    fbBuilder.addFloat64(0, _YAW_DEG);
-    fbBuilder.addFloat64(1, _PITCH_DEG);
-    fbBuilder.addFloat64(2, _ROLL_DEG);
+    fbBuilder.addFloat64(0, _YAW);
+    fbBuilder.addFloat64(1, _PITCH);
+    fbBuilder.addFloat64(2, _ROLL);
     fbBuilder.addFloat64(3, _QUATERNION_X);
     fbBuilder.addFloat64(4, _QUATERNION_Y);
     fbBuilder.addFloat64(5, _QUATERNION_Z);
@@ -508,14 +502,14 @@ class VSTCameraOptions {
   viewerSatelliteAlignmentMode get SATELLITE_ALIGNMENT => viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   viewerSatelliteAlignmentMode get satelliteAlignment => SATELLITE_ALIGNMENT;
   ///  Camera distance from the current target in kilometers.
-  double get DISTANCE_FROM_TARGET_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get distanceFromTargetKm => DISTANCE_FROM_TARGET_KM;
+  double get DISTANCE_FROM_TARGET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get distanceFromTarget => DISTANCE_FROM_TARGET;
   ///  Camera orientation offset.
   VSTCameraRotation? get ROTATION => VSTCameraRotation.reader.vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
   String toString() {
-    return 'VSTCameraOptions{cameraFrameMode: ${cameraFrameMode}, satelliteAlignment: ${satelliteAlignment}, distanceFromTargetKm: ${distanceFromTargetKm}, ROTATION: ${ROTATION}}';
+    return 'VSTCameraOptions{cameraFrameMode: ${cameraFrameMode}, satelliteAlignment: ${satelliteAlignment}, distanceFromTarget: ${distanceFromTarget}, ROTATION: ${ROTATION}}';
   }
 }
 
@@ -544,8 +538,8 @@ class VSTCameraOptionsBuilder {
     fbBuilder.addInt8(1, SATELLITE_ALIGNMENT?.value);
     return fbBuilder.offset;
   }
-  int addDistanceFromTargetKm(double? DISTANCE_FROM_TARGET_KM) {
-    fbBuilder.addFloat64(2, DISTANCE_FROM_TARGET_KM);
+  int addDistanceFromTarget(double? DISTANCE_FROM_TARGET) {
+    fbBuilder.addFloat64(2, DISTANCE_FROM_TARGET);
     return fbBuilder.offset;
   }
   int addRotationOffset(int? offset) {
@@ -561,7 +555,7 @@ class VSTCameraOptionsBuilder {
 class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
   final viewerCameraFrameMode? _CAMERA_FRAME_MODE;
   final viewerSatelliteAlignmentMode? _SATELLITE_ALIGNMENT;
-  final double? _DISTANCE_FROM_TARGET_KM;
+  final double? _DISTANCE_FROM_TARGET;
   final VSTCameraRotationObjectBuilder? _ROTATION;
 
   VSTCameraOptionsObjectBuilder({
@@ -569,13 +563,13 @@ class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
     viewerCameraFrameMode? cameraFrameMode,
     viewerSatelliteAlignmentMode? SATELLITE_ALIGNMENT,
     viewerSatelliteAlignmentMode? satelliteAlignment,
-    double? DISTANCE_FROM_TARGET_KM,
-    double? distanceFromTargetKm,
+    double? DISTANCE_FROM_TARGET,
+    double? distanceFromTarget,
     VSTCameraRotationObjectBuilder? ROTATION,
   })
       : _CAMERA_FRAME_MODE = cameraFrameMode ?? CAMERA_FRAME_MODE,
         _SATELLITE_ALIGNMENT = satelliteAlignment ?? SATELLITE_ALIGNMENT,
-        _DISTANCE_FROM_TARGET_KM = distanceFromTargetKm ?? DISTANCE_FROM_TARGET_KM,
+        _DISTANCE_FROM_TARGET = distanceFromTarget ?? DISTANCE_FROM_TARGET,
         _ROTATION = ROTATION;
 
   /// Finish building, and store into the [fbBuilder].
@@ -585,7 +579,7 @@ class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.startTable(4);
     fbBuilder.addInt8(0, _CAMERA_FRAME_MODE?.value);
     fbBuilder.addInt8(1, _SATELLITE_ALIGNMENT?.value);
-    fbBuilder.addFloat64(2, _DISTANCE_FROM_TARGET_KM);
+    fbBuilder.addFloat64(2, _DISTANCE_FROM_TARGET);
     fbBuilder.addOffset(3, ROTATIONOffset);
     return fbBuilder.endTable();
   }

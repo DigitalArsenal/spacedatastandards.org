@@ -17,15 +17,15 @@
       "type" : "object",
       "description" : "Camera rotation offset. Quaternions are preferred when present; Euler\nangles are retained for import of older scenario JSON.",
       "properties" : {
-        "YAW_DEG" : {
+        "YAW" : {
                 "type" : "number",
                 "description" : "Yaw angle in degrees for Euler-angle camera imports."
               },
-        "PITCH_DEG" : {
+        "PITCH" : {
                 "type" : "number",
                 "description" : "Pitch angle in degrees for Euler-angle camera imports."
               },
-        "ROLL_DEG" : {
+        "ROLL" : {
                 "type" : "number",
                 "description" : "Roll angle in degrees for Euler-angle camera imports."
               },
@@ -119,7 +119,7 @@
                 "$ref" : "#/definitions/viewerSatelliteAlignmentMode",
                 "description" : "Satellite body alignment mode when focused on a satellite."
               },
-        "DISTANCE_FROM_TARGET_KM" : {
+        "DISTANCE_FROM_TARGET" : {
                 "type" : "number",
                 "description" : "Camera distance from the current target in kilometers."
               },

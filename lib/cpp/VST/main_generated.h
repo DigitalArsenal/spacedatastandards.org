@@ -138,9 +138,9 @@ inline const char *EnumNameviewerSatelliteAlignmentMode(viewerSatelliteAlignment
 struct VSTCameraRotation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VSTCameraRotationBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_YAW_DEG = 4,
-    VT_PITCH_DEG = 6,
-    VT_ROLL_DEG = 8,
+    VT_YAW = 4,
+    VT_PITCH = 6,
+    VT_ROLL = 8,
     VT_QUATERNION_X = 10,
     VT_QUATERNION_Y = 12,
     VT_QUATERNION_Z = 14,
@@ -148,16 +148,16 @@ struct VSTCameraRotation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_USES_QUATERNION = 18
   };
   /// Yaw angle in degrees for Euler-angle camera imports.
-  double YAW_DEG() const {
-    return GetField<double>(VT_YAW_DEG, 0.0);
+  double YAW() const {
+    return GetField<double>(VT_YAW, 0.0);
   }
   /// Pitch angle in degrees for Euler-angle camera imports.
-  double PITCH_DEG() const {
-    return GetField<double>(VT_PITCH_DEG, 0.0);
+  double PITCH() const {
+    return GetField<double>(VT_PITCH, 0.0);
   }
   /// Roll angle in degrees for Euler-angle camera imports.
-  double ROLL_DEG() const {
-    return GetField<double>(VT_ROLL_DEG, 0.0);
+  double ROLL() const {
+    return GetField<double>(VT_ROLL, 0.0);
   }
   /// Quaternion x component for camera orientation.
   double QUATERNION_X() const {
@@ -182,9 +182,9 @@ struct VSTCameraRotation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_YAW_DEG, 8) &&
-           VerifyField<double>(verifier, VT_PITCH_DEG, 8) &&
-           VerifyField<double>(verifier, VT_ROLL_DEG, 8) &&
+           VerifyField<double>(verifier, VT_YAW, 8) &&
+           VerifyField<double>(verifier, VT_PITCH, 8) &&
+           VerifyField<double>(verifier, VT_ROLL, 8) &&
            VerifyField<double>(verifier, VT_QUATERNION_X, 8) &&
            VerifyField<double>(verifier, VT_QUATERNION_Y, 8) &&
            VerifyField<double>(verifier, VT_QUATERNION_Z, 8) &&
@@ -198,14 +198,14 @@ struct VSTCameraRotationBuilder {
   typedef VSTCameraRotation Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_YAW_DEG(double YAW_DEG) {
-    fbb_.AddElement<double>(VSTCameraRotation::VT_YAW_DEG, YAW_DEG, 0.0);
+  void add_YAW(double YAW) {
+    fbb_.AddElement<double>(VSTCameraRotation::VT_YAW, YAW, 0.0);
   }
-  void add_PITCH_DEG(double PITCH_DEG) {
-    fbb_.AddElement<double>(VSTCameraRotation::VT_PITCH_DEG, PITCH_DEG, 0.0);
+  void add_PITCH(double PITCH) {
+    fbb_.AddElement<double>(VSTCameraRotation::VT_PITCH, PITCH, 0.0);
   }
-  void add_ROLL_DEG(double ROLL_DEG) {
-    fbb_.AddElement<double>(VSTCameraRotation::VT_ROLL_DEG, ROLL_DEG, 0.0);
+  void add_ROLL(double ROLL) {
+    fbb_.AddElement<double>(VSTCameraRotation::VT_ROLL, ROLL, 0.0);
   }
   void add_QUATERNION_X(double QUATERNION_X) {
     fbb_.AddElement<double>(VSTCameraRotation::VT_QUATERNION_X, QUATERNION_X, 0.0);
@@ -235,9 +235,9 @@ struct VSTCameraRotationBuilder {
 
 inline ::flatbuffers::Offset<VSTCameraRotation> CreateVSTCameraRotation(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double YAW_DEG = 0.0,
-    double PITCH_DEG = 0.0,
-    double ROLL_DEG = 0.0,
+    double YAW = 0.0,
+    double PITCH = 0.0,
+    double ROLL = 0.0,
     double QUATERNION_X = 0.0,
     double QUATERNION_Y = 0.0,
     double QUATERNION_Z = 0.0,
@@ -248,9 +248,9 @@ inline ::flatbuffers::Offset<VSTCameraRotation> CreateVSTCameraRotation(
   builder_.add_QUATERNION_Z(QUATERNION_Z);
   builder_.add_QUATERNION_Y(QUATERNION_Y);
   builder_.add_QUATERNION_X(QUATERNION_X);
-  builder_.add_ROLL_DEG(ROLL_DEG);
-  builder_.add_PITCH_DEG(PITCH_DEG);
-  builder_.add_YAW_DEG(YAW_DEG);
+  builder_.add_ROLL(ROLL);
+  builder_.add_PITCH(PITCH);
+  builder_.add_YAW(YAW);
   builder_.add_USES_QUATERNION(USES_QUATERNION);
   return builder_.Finish();
 }
@@ -426,7 +426,7 @@ struct VSTCameraOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_CAMERA_FRAME_MODE = 4,
     VT_SATELLITE_ALIGNMENT = 6,
-    VT_DISTANCE_FROM_TARGET_KM = 8,
+    VT_DISTANCE_FROM_TARGET = 8,
     VT_ROTATION = 10
   };
   /// Camera frame relative to the focused target or default scene.
@@ -438,8 +438,8 @@ struct VSTCameraOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return static_cast<viewerSatelliteAlignmentMode>(GetField<int8_t>(VT_SATELLITE_ALIGNMENT, 0));
   }
   /// Camera distance from the current target in kilometers.
-  double DISTANCE_FROM_TARGET_KM() const {
-    return GetField<double>(VT_DISTANCE_FROM_TARGET_KM, 0.0);
+  double DISTANCE_FROM_TARGET() const {
+    return GetField<double>(VT_DISTANCE_FROM_TARGET, 0.0);
   }
   /// Camera orientation offset.
   const VSTCameraRotation *ROTATION() const {
@@ -450,7 +450,7 @@ struct VSTCameraOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyField<int8_t>(verifier, VT_CAMERA_FRAME_MODE, 1) &&
            VerifyField<int8_t>(verifier, VT_SATELLITE_ALIGNMENT, 1) &&
-           VerifyField<double>(verifier, VT_DISTANCE_FROM_TARGET_KM, 8) &&
+           VerifyField<double>(verifier, VT_DISTANCE_FROM_TARGET, 8) &&
            VerifyOffset(verifier, VT_ROTATION) &&
            verifier.VerifyTable(ROTATION()) &&
            verifier.EndTable();
@@ -467,8 +467,8 @@ struct VSTCameraOptionsBuilder {
   void add_SATELLITE_ALIGNMENT(viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT) {
     fbb_.AddElement<int8_t>(VSTCameraOptions::VT_SATELLITE_ALIGNMENT, static_cast<int8_t>(SATELLITE_ALIGNMENT), 0);
   }
-  void add_DISTANCE_FROM_TARGET_KM(double DISTANCE_FROM_TARGET_KM) {
-    fbb_.AddElement<double>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET_KM, DISTANCE_FROM_TARGET_KM, 0.0);
+  void add_DISTANCE_FROM_TARGET(double DISTANCE_FROM_TARGET) {
+    fbb_.AddElement<double>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET, DISTANCE_FROM_TARGET, 0.0);
   }
   void add_ROTATION(::flatbuffers::Offset<VSTCameraRotation> ROTATION) {
     fbb_.AddOffset(VSTCameraOptions::VT_ROTATION, ROTATION);
@@ -488,10 +488,10 @@ inline ::flatbuffers::Offset<VSTCameraOptions> CreateVSTCameraOptions(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     viewerCameraFrameMode CAMERA_FRAME_MODE = viewerCameraFrameMode_DEFAULT,
     viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT = viewerSatelliteAlignmentMode_UNKNOWN,
-    double DISTANCE_FROM_TARGET_KM = 0.0,
+    double DISTANCE_FROM_TARGET = 0.0,
     ::flatbuffers::Offset<VSTCameraRotation> ROTATION = 0) {
   VSTCameraOptionsBuilder builder_(_fbb);
-  builder_.add_DISTANCE_FROM_TARGET_KM(DISTANCE_FROM_TARGET_KM);
+  builder_.add_DISTANCE_FROM_TARGET(DISTANCE_FROM_TARGET);
   builder_.add_ROTATION(ROTATION);
   builder_.add_SATELLITE_ALIGNMENT(SATELLITE_ALIGNMENT);
   builder_.add_CAMERA_FRAME_MODE(CAMERA_FRAME_MODE);

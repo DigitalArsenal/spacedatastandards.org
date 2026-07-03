@@ -30,27 +30,27 @@ public final class SCNViewCone extends com.google.flatbuffers.Table {
   /**
    * Minimum elevation angle in degrees.
    */
-  public double MIN_ELEVATION_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MIN_ELEVATION() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Maximum elevation angle in degrees.
    */
-  public double MAX_ELEVATION_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_ELEVATION() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Minimum azimuth angle in degrees.
    */
-  public double MIN_AZIMUTH_DEG() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MIN_AZIMUTH() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Maximum azimuth angle in degrees.
    */
-  public double MAX_AZIMUTH_DEG() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_AZIMUTH() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Maximum view-cone range in kilometers.
    */
-  public double MAX_RANGE_KM() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double MAX_RANGE() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Half angle in degrees for cone-style overlays.
    */
-  public double HALF_ANGLE_DEG() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double HALF_ANGLE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Dynamic range mode or expression used by the viewer.
    */
@@ -59,31 +59,31 @@ public final class SCNViewCone extends com.google.flatbuffers.Table {
   public ByteBuffer DYNAMIC_RANGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
 
   public static int createSCNViewCone(FlatBufferBuilder builder,
-      double MIN_ELEVATION_DEG,
-      double MAX_ELEVATION_DEG,
-      double MIN_AZIMUTH_DEG,
-      double MAX_AZIMUTH_DEG,
-      double MAX_RANGE_KM,
-      double HALF_ANGLE_DEG,
+      double MIN_ELEVATION,
+      double MAX_ELEVATION,
+      double MIN_AZIMUTH,
+      double MAX_AZIMUTH,
+      double MAX_RANGE,
+      double HALF_ANGLE,
       int DYNAMIC_RANGEOffset) {
     builder.startTable(7);
-    SCNViewCone.addHalfAngleDeg(builder, HALF_ANGLE_DEG);
-    SCNViewCone.addMaxRangeKm(builder, MAX_RANGE_KM);
-    SCNViewCone.addMaxAzimuthDeg(builder, MAX_AZIMUTH_DEG);
-    SCNViewCone.addMinAzimuthDeg(builder, MIN_AZIMUTH_DEG);
-    SCNViewCone.addMaxElevationDeg(builder, MAX_ELEVATION_DEG);
-    SCNViewCone.addMinElevationDeg(builder, MIN_ELEVATION_DEG);
+    SCNViewCone.addHalfAngle(builder, HALF_ANGLE);
+    SCNViewCone.addMaxRange(builder, MAX_RANGE);
+    SCNViewCone.addMaxAzimuth(builder, MAX_AZIMUTH);
+    SCNViewCone.addMinAzimuth(builder, MIN_AZIMUTH);
+    SCNViewCone.addMaxElevation(builder, MAX_ELEVATION);
+    SCNViewCone.addMinElevation(builder, MIN_ELEVATION);
     SCNViewCone.addDynamicRange(builder, DYNAMIC_RANGEOffset);
     return SCNViewCone.endSCNViewCone(builder);
   }
 
   public static void startSCNViewCone(FlatBufferBuilder builder) { builder.startTable(7); }
-  public static void addMinElevationDeg(FlatBufferBuilder builder, double MIN_ELEVATION_DEG) { builder.addDouble(0, MIN_ELEVATION_DEG, 0.0); }
-  public static void addMaxElevationDeg(FlatBufferBuilder builder, double MAX_ELEVATION_DEG) { builder.addDouble(1, MAX_ELEVATION_DEG, 0.0); }
-  public static void addMinAzimuthDeg(FlatBufferBuilder builder, double MIN_AZIMUTH_DEG) { builder.addDouble(2, MIN_AZIMUTH_DEG, 0.0); }
-  public static void addMaxAzimuthDeg(FlatBufferBuilder builder, double MAX_AZIMUTH_DEG) { builder.addDouble(3, MAX_AZIMUTH_DEG, 0.0); }
-  public static void addMaxRangeKm(FlatBufferBuilder builder, double MAX_RANGE_KM) { builder.addDouble(4, MAX_RANGE_KM, 0.0); }
-  public static void addHalfAngleDeg(FlatBufferBuilder builder, double HALF_ANGLE_DEG) { builder.addDouble(5, HALF_ANGLE_DEG, 0.0); }
+  public static void addMinElevation(FlatBufferBuilder builder, double MIN_ELEVATION) { builder.addDouble(0, MIN_ELEVATION, 0.0); }
+  public static void addMaxElevation(FlatBufferBuilder builder, double MAX_ELEVATION) { builder.addDouble(1, MAX_ELEVATION, 0.0); }
+  public static void addMinAzimuth(FlatBufferBuilder builder, double MIN_AZIMUTH) { builder.addDouble(2, MIN_AZIMUTH, 0.0); }
+  public static void addMaxAzimuth(FlatBufferBuilder builder, double MAX_AZIMUTH) { builder.addDouble(3, MAX_AZIMUTH, 0.0); }
+  public static void addMaxRange(FlatBufferBuilder builder, double MAX_RANGE) { builder.addDouble(4, MAX_RANGE, 0.0); }
+  public static void addHalfAngle(FlatBufferBuilder builder, double HALF_ANGLE) { builder.addDouble(5, HALF_ANGLE, 0.0); }
   public static void addDynamicRange(FlatBufferBuilder builder, int DYNAMIC_RANGEOffset) { builder.addOffset(6, DYNAMIC_RANGEOffset, 0); }
   public static int endSCNViewCone(FlatBufferBuilder builder) {
     int o = builder.endTable();

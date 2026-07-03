@@ -46,7 +46,7 @@ class VSTCameraRotation extends Table
     /**
      * @return double
      */
-    public function getYAW_DEG()
+    public function getYAW()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -56,7 +56,7 @@ class VSTCameraRotation extends Table
     /**
      * @return double
      */
-    public function getPITCH_DEG()
+    public function getPITCH()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -66,7 +66,7 @@ class VSTCameraRotation extends Table
     /**
      * @return double
      */
-    public function getROLL_DEG()
+    public function getROLL()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -135,12 +135,12 @@ class VSTCameraRotation extends Table
      * @param FlatBufferBuilder $builder
      * @return VSTCameraRotation
      */
-    public static function createVSTCameraRotation(FlatBufferBuilder $builder, $YAW_DEG, $PITCH_DEG, $ROLL_DEG, $QUATERNION_X, $QUATERNION_Y, $QUATERNION_Z, $QUATERNION_W, $USES_QUATERNION)
+    public static function createVSTCameraRotation(FlatBufferBuilder $builder, $YAW, $PITCH, $ROLL, $QUATERNION_X, $QUATERNION_Y, $QUATERNION_Z, $QUATERNION_W, $USES_QUATERNION)
     {
         $builder->startObject(8);
-        self::addYAW_DEG($builder, $YAW_DEG);
-        self::addPITCH_DEG($builder, $PITCH_DEG);
-        self::addROLL_DEG($builder, $ROLL_DEG);
+        self::addYAW($builder, $YAW);
+        self::addPITCH($builder, $PITCH);
+        self::addROLL($builder, $ROLL);
         self::addQUATERNION_X($builder, $QUATERNION_X);
         self::addQUATERNION_Y($builder, $QUATERNION_Y);
         self::addQUATERNION_Z($builder, $QUATERNION_Z);
@@ -155,9 +155,9 @@ class VSTCameraRotation extends Table
      * @param double
      * @return void
      */
-    public static function addYAW_DEG(FlatBufferBuilder $builder, $YAW_DEG)
+    public static function addYAW(FlatBufferBuilder $builder, $YAW)
     {
-        $builder->addDoubleX(0, $YAW_DEG, 0.0);
+        $builder->addDoubleX(0, $YAW, 0.0);
     }
 
     /**
@@ -165,9 +165,9 @@ class VSTCameraRotation extends Table
      * @param double
      * @return void
      */
-    public static function addPITCH_DEG(FlatBufferBuilder $builder, $PITCH_DEG)
+    public static function addPITCH(FlatBufferBuilder $builder, $PITCH)
     {
-        $builder->addDoubleX(1, $PITCH_DEG, 0.0);
+        $builder->addDoubleX(1, $PITCH, 0.0);
     }
 
     /**
@@ -175,9 +175,9 @@ class VSTCameraRotation extends Table
      * @param double
      * @return void
      */
-    public static function addROLL_DEG(FlatBufferBuilder $builder, $ROLL_DEG)
+    public static function addROLL(FlatBufferBuilder $builder, $ROLL)
     {
-        $builder->addDoubleX(2, $ROLL_DEG, 0.0);
+        $builder->addDoubleX(2, $ROLL, 0.0);
     }
 
     /**

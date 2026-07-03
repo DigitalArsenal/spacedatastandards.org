@@ -141,27 +141,11 @@ class SCNReference : Table() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * TLE provenance and raw lines for satellite references.
-     */
-    fun tles(j: Int) : SCNTleLines? = tles(SCNTleLines(), j)
-    fun tles(obj: SCNTleLines, j: Int) : SCNTleLines? {
-        val o = __offset(22)
-        return if (o != 0) {
-            obj.__assign(__indirect(__vector(o) + j * 4), bb)
-        } else {
-            null
-        }
-    }
-    val tlesLength : Int
-        get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
-        }
-    /**
      * Mean orbital elements associated with this reference.
      */
     fun meanElements(j: Int) : OMM? = meanElements(OMM(), j)
     fun meanElements(obj: OMM, j: Int) : OMM? {
-        val o = __offset(24)
+        val o = __offset(22)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -170,14 +154,14 @@ class SCNReference : Table() {
     }
     val meanElementsLength : Int
         get() {
-            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * State vectors associated with this reference.
      */
     fun states(j: Int) : STV? = states(STV(), j)
     fun states(obj: STV, j: Int) : STV? {
-        val o = __offset(26)
+        val o = __offset(24)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -186,14 +170,14 @@ class SCNReference : Table() {
     }
     val statesLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Maneuver records associated with this reference.
      */
     fun maneuvers(j: Int) : MNV? = maneuvers(MNV(), j)
     fun maneuvers(obj: MNV, j: Int) : MNV? {
-        val o = __offset(28)
+        val o = __offset(26)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -202,14 +186,14 @@ class SCNReference : Table() {
     }
     val maneuversLength : Int
         get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * Ground-site record associated with this reference.
      */
     val site : SIT? get() = site(SIT())
     fun site(obj: SIT) : SIT? {
-        val o = __offset(30)
+        val o = __offset(28)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -221,7 +205,7 @@ class SCNReference : Table() {
      */
     val sensor : SEN? get() = sensor(SEN())
     fun sensor(obj: SEN) : SEN? {
-        val o = __offset(32)
+        val o = __offset(30)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -233,6 +217,20 @@ class SCNReference : Table() {
      */
     val sensorSystemId : String?
         get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sensorSystemIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun sensorSystemIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Sensor id for references that identify a sensor by id.
+     */
+    val sensorId : String?
+        get() {
             val o = __offset(34)
             return if (o != 0) {
                 __string(o + bb_pos)
@@ -240,42 +238,42 @@ class SCNReference : Table() {
                 null
             }
         }
-    val sensorSystemIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
-    fun sensorSystemIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
-    /**
-     * Sensor id for references that identify a sensor by id.
-     */
-    val sensorId : String?
-        get() {
-            val o = __offset(36)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
-    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
     /**
      * Ground-site latitude in degrees when no SIT record is available.
      */
-    val siteLatitudeDeg : Double
+    val siteLatitude : Double
         get() {
-            val o = __offset(38)
+            val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
      * Ground-site longitude in degrees when no SIT record is available.
      */
-    val siteLongitudeDeg : Double
+    val siteLongitude : Double
         get() {
-            val o = __offset(40)
+            val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
      * Scenario variable id for variable satellite references.
      */
     val variableSatelliteId : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val variableSatelliteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun variableSatelliteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Scenario variable id for variable site references.
+     */
+    val variableSiteId : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -284,28 +282,14 @@ class SCNReference : Table() {
                 null
             }
         }
-    val variableSatelliteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
-    fun variableSatelliteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
-    /**
-     * Scenario variable id for variable site references.
-     */
-    val variableSiteId : String?
-        get() {
-            val o = __offset(44)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val variableSiteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
-    fun variableSiteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    val variableSiteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun variableSiteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     /**
      * Points of interest associated with this reference.
      */
     fun points(j: Int) : SCNPointOfInterest? = points(SCNPointOfInterest(), j)
     fun points(obj: SCNPointOfInterest, j: Int) : SCNPointOfInterest? {
-        val o = __offset(46)
+        val o = __offset(44)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -314,14 +298,14 @@ class SCNReference : Table() {
     }
     val pointsLength : Int
         get() {
-            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * View-cone overlay associated with this reference.
      */
     val viewCone : SCNViewCone? get() = viewCone(SCNViewCone())
     fun viewCone(obj: SCNViewCone) : SCNViewCone? {
-        val o = __offset(48)
+        val o = __offset(46)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -333,7 +317,7 @@ class SCNReference : Table() {
      */
     val sunAdvantageTarget : SCNSunAdvantageTarget? get() = sunAdvantageTarget(SCNSunAdvantageTarget())
     fun sunAdvantageTarget(obj: SCNSunAdvantageTarget) : SCNSunAdvantageTarget? {
-        val o = __offset(50)
+        val o = __offset(48)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -345,7 +329,7 @@ class SCNReference : Table() {
      */
     val exclusionZone : SCNExclusionZone? get() = exclusionZone(SCNExclusionZone())
     fun exclusionZone(obj: SCNExclusionZone) : SCNExclusionZone? {
-        val o = __offset(52)
+        val o = __offset(50)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -357,7 +341,7 @@ class SCNReference : Table() {
      */
     val observationEo : EOO? get() = observationEo(EOO())
     fun observationEo(obj: EOO) : EOO? {
-        val o = __offset(54)
+        val o = __offset(52)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -369,7 +353,7 @@ class SCNReference : Table() {
      */
     val observationRadar : RDO? get() = observationRadar(RDO())
     fun observationRadar(obj: RDO) : RDO? {
-        val o = __offset(56)
+        val o = __offset(54)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -383,10 +367,10 @@ class SCNReference : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNReference(builder: FlatBufferBuilder, referenceIdOffset: Int, displayNameOffset: Int, referenceKind: Byte, remove: Boolean, noradCatId: UInt, objectIdOffset: Int, countryOffset: Int, sourcesOffset: Int, dataModesOffset: Int, tlesOffset: Int, meanElementsOffset: Int, statesOffset: Int, maneuversOffset: Int, siteOffset: Int, sensorOffset: Int, sensorSystemIdOffset: Int, sensorIdOffset: Int, siteLatitudeDeg: Double, siteLongitudeDeg: Double, variableSatelliteIdOffset: Int, variableSiteIdOffset: Int, pointsOffset: Int, viewConeOffset: Int, sunAdvantageTargetOffset: Int, exclusionZoneOffset: Int, observationEoOffset: Int, observationRadarOffset: Int) : Int {
-            builder.startTable(27)
-            addSITELONGITUDEDEG(builder, siteLongitudeDeg)
-            addSITELATITUDEDEG(builder, siteLatitudeDeg)
+        fun createSCNReference(builder: FlatBufferBuilder, referenceIdOffset: Int, displayNameOffset: Int, referenceKind: Byte, remove: Boolean, noradCatId: UInt, objectIdOffset: Int, countryOffset: Int, sourcesOffset: Int, dataModesOffset: Int, meanElementsOffset: Int, statesOffset: Int, maneuversOffset: Int, siteOffset: Int, sensorOffset: Int, sensorSystemIdOffset: Int, sensorIdOffset: Int, siteLatitude: Double, siteLongitude: Double, variableSatelliteIdOffset: Int, variableSiteIdOffset: Int, pointsOffset: Int, viewConeOffset: Int, sunAdvantageTargetOffset: Int, exclusionZoneOffset: Int, observationEoOffset: Int, observationRadarOffset: Int) : Int {
+            builder.startTable(26)
+            addSITELONGITUDE(builder, siteLongitude)
+            addSITELATITUDE(builder, siteLatitude)
             addOBSERVATIONRADAR(builder, observationRadarOffset)
             addOBSERVATIONEO(builder, observationEoOffset)
             addEXCLUSIONZONE(builder, exclusionZoneOffset)
@@ -402,7 +386,6 @@ class SCNReference : Table() {
             addMANEUVERS(builder, maneuversOffset)
             addSTATES(builder, statesOffset)
             addMEANELEMENTS(builder, meanElementsOffset)
-            addTLES(builder, tlesOffset)
             addDATAMODES(builder, dataModesOffset)
             addSOURCES(builder, sourcesOffset)
             addCOUNTRY(builder, countryOffset)
@@ -414,7 +397,7 @@ class SCNReference : Table() {
             addREFERENCEKIND(builder, referenceKind)
             return endSCNReference(builder)
         }
-        fun startSCNReference(builder: FlatBufferBuilder) = builder.startTable(27)
+        fun startSCNReference(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addREFERENCEID(builder: FlatBufferBuilder, referenceId: Int) = builder.addOffset(0, referenceId, 0)
         fun addDISPLAYNAME(builder: FlatBufferBuilder, displayName: Int) = builder.addOffset(1, displayName, 0)
         fun addREFERENCEKIND(builder: FlatBufferBuilder, referenceKind: Byte) = builder.addByte(2, referenceKind, 0)
@@ -440,16 +423,7 @@ class SCNReference : Table() {
             return builder.endVector()
         }
         fun startDataModesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTLES(builder: FlatBufferBuilder, tles: Int) = builder.addOffset(9, tles, 0)
-        fun createTlesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startTlesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMEANELEMENTS(builder: FlatBufferBuilder, meanElements: Int) = builder.addOffset(10, meanElements, 0)
+        fun addMEANELEMENTS(builder: FlatBufferBuilder, meanElements: Int) = builder.addOffset(9, meanElements, 0)
         fun createMeanElementsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -458,7 +432,7 @@ class SCNReference : Table() {
             return builder.endVector()
         }
         fun startMeanElementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTATES(builder: FlatBufferBuilder, states: Int) = builder.addOffset(11, states, 0)
+        fun addSTATES(builder: FlatBufferBuilder, states: Int) = builder.addOffset(10, states, 0)
         fun createStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -467,7 +441,7 @@ class SCNReference : Table() {
             return builder.endVector()
         }
         fun startStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMANEUVERS(builder: FlatBufferBuilder, maneuvers: Int) = builder.addOffset(12, maneuvers, 0)
+        fun addMANEUVERS(builder: FlatBufferBuilder, maneuvers: Int) = builder.addOffset(11, maneuvers, 0)
         fun createManeuversVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -476,15 +450,15 @@ class SCNReference : Table() {
             return builder.endVector()
         }
         fun startManeuversVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSITE(builder: FlatBufferBuilder, site: Int) = builder.addOffset(13, site, 0)
-        fun addSENSOR(builder: FlatBufferBuilder, sensor: Int) = builder.addOffset(14, sensor, 0)
-        fun addSENSORSYSTEMID(builder: FlatBufferBuilder, sensorSystemId: Int) = builder.addOffset(15, sensorSystemId, 0)
-        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(16, sensorId, 0)
-        fun addSITELATITUDEDEG(builder: FlatBufferBuilder, siteLatitudeDeg: Double) = builder.addDouble(17, siteLatitudeDeg, 0.0)
-        fun addSITELONGITUDEDEG(builder: FlatBufferBuilder, siteLongitudeDeg: Double) = builder.addDouble(18, siteLongitudeDeg, 0.0)
-        fun addVARIABLESATELLITEID(builder: FlatBufferBuilder, variableSatelliteId: Int) = builder.addOffset(19, variableSatelliteId, 0)
-        fun addVARIABLESITEID(builder: FlatBufferBuilder, variableSiteId: Int) = builder.addOffset(20, variableSiteId, 0)
-        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(21, points, 0)
+        fun addSITE(builder: FlatBufferBuilder, site: Int) = builder.addOffset(12, site, 0)
+        fun addSENSOR(builder: FlatBufferBuilder, sensor: Int) = builder.addOffset(13, sensor, 0)
+        fun addSENSORSYSTEMID(builder: FlatBufferBuilder, sensorSystemId: Int) = builder.addOffset(14, sensorSystemId, 0)
+        fun addSENSORID(builder: FlatBufferBuilder, sensorId: Int) = builder.addOffset(15, sensorId, 0)
+        fun addSITELATITUDE(builder: FlatBufferBuilder, siteLatitude: Double) = builder.addDouble(16, siteLatitude, 0.0)
+        fun addSITELONGITUDE(builder: FlatBufferBuilder, siteLongitude: Double) = builder.addDouble(17, siteLongitude, 0.0)
+        fun addVARIABLESATELLITEID(builder: FlatBufferBuilder, variableSatelliteId: Int) = builder.addOffset(18, variableSatelliteId, 0)
+        fun addVARIABLESITEID(builder: FlatBufferBuilder, variableSiteId: Int) = builder.addOffset(19, variableSiteId, 0)
+        fun addPOINTS(builder: FlatBufferBuilder, points: Int) = builder.addOffset(20, points, 0)
         fun createPointsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -493,11 +467,11 @@ class SCNReference : Table() {
             return builder.endVector()
         }
         fun startPointsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addVIEWCONE(builder: FlatBufferBuilder, viewCone: Int) = builder.addOffset(22, viewCone, 0)
-        fun addSUNADVANTAGETARGET(builder: FlatBufferBuilder, sunAdvantageTarget: Int) = builder.addOffset(23, sunAdvantageTarget, 0)
-        fun addEXCLUSIONZONE(builder: FlatBufferBuilder, exclusionZone: Int) = builder.addOffset(24, exclusionZone, 0)
-        fun addOBSERVATIONEO(builder: FlatBufferBuilder, observationEo: Int) = builder.addOffset(25, observationEo, 0)
-        fun addOBSERVATIONRADAR(builder: FlatBufferBuilder, observationRadar: Int) = builder.addOffset(26, observationRadar, 0)
+        fun addVIEWCONE(builder: FlatBufferBuilder, viewCone: Int) = builder.addOffset(21, viewCone, 0)
+        fun addSUNADVANTAGETARGET(builder: FlatBufferBuilder, sunAdvantageTarget: Int) = builder.addOffset(22, sunAdvantageTarget, 0)
+        fun addEXCLUSIONZONE(builder: FlatBufferBuilder, exclusionZone: Int) = builder.addOffset(23, exclusionZone, 0)
+        fun addOBSERVATIONEO(builder: FlatBufferBuilder, observationEo: Int) = builder.addOffset(24, observationEo, 0)
+        fun addOBSERVATIONRADAR(builder: FlatBufferBuilder, observationRadar: Int) = builder.addOffset(25, observationRadar, 0)
         fun endSCNReference(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

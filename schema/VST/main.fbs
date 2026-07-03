@@ -1,5 +1,5 @@
-// Hash: 933c0e898412213b63e1a1c4460f698288453c3a7e50f0d601c7aefc7587e35a
-// Version: 1.136.1
+// Hash: 335b5ccbd87f226d6628c8055022a6973dc7f82e91339f25a3dfddfbe42a4731
+// Version: 1.136.2
 // -----------------------------------END_HEADER
 /// Viewer map style for scenario display.
 enum viewerMapMode : byte {
@@ -28,11 +28,11 @@ enum viewerSatelliteAlignmentMode : byte {
 /// angles are retained for import of older scenario JSON.
 table VSTCameraRotation {
   /// Yaw angle in degrees for Euler-angle camera imports.
-  YAW_DEG:double;
+  YAW:double;
   /// Pitch angle in degrees for Euler-angle camera imports.
-  PITCH_DEG:double;
+  PITCH:double;
   /// Roll angle in degrees for Euler-angle camera imports.
-  ROLL_DEG:double;
+  ROLL:double;
   /// Quaternion x component for camera orientation.
   QUATERNION_X:double;
   /// Quaternion y component for camera orientation.
@@ -80,7 +80,7 @@ table VSTCameraOptions {
   /// Satellite body alignment mode when focused on a satellite.
   SATELLITE_ALIGNMENT:viewerSatelliteAlignmentMode;
   /// Camera distance from the current target in kilometers.
-  DISTANCE_FROM_TARGET_KM:double;
+  DISTANCE_FROM_TARGET:double;
   /// Camera orientation offset.
   ROTATION:VSTCameraRotation;
 }

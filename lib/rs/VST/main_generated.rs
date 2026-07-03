@@ -296,9 +296,9 @@ impl<'a> ::flatbuffers::Follow<'a> for VSTCameraRotation<'a> {
 }
 
 impl<'a> VSTCameraRotation<'a> {
-  pub const VT_YAW_DEG: ::flatbuffers::VOffsetT = 4;
-  pub const VT_PITCH_DEG: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ROLL_DEG: ::flatbuffers::VOffsetT = 8;
+  pub const VT_YAW: ::flatbuffers::VOffsetT = 4;
+  pub const VT_PITCH: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ROLL: ::flatbuffers::VOffsetT = 8;
   pub const VT_QUATERNION_X: ::flatbuffers::VOffsetT = 10;
   pub const VT_QUATERNION_Y: ::flatbuffers::VOffsetT = 12;
   pub const VT_QUATERNION_Z: ::flatbuffers::VOffsetT = 14;
@@ -319,26 +319,26 @@ impl<'a> VSTCameraRotation<'a> {
     builder.add_QUATERNION_Z(args.QUATERNION_Z);
     builder.add_QUATERNION_Y(args.QUATERNION_Y);
     builder.add_QUATERNION_X(args.QUATERNION_X);
-    builder.add_ROLL_DEG(args.ROLL_DEG);
-    builder.add_PITCH_DEG(args.PITCH_DEG);
-    builder.add_YAW_DEG(args.YAW_DEG);
+    builder.add_ROLL(args.ROLL);
+    builder.add_PITCH(args.PITCH);
+    builder.add_YAW(args.YAW);
     builder.add_USES_QUATERNION(args.USES_QUATERNION);
     builder.finish()
   }
 
   pub fn unpack(&self) -> VSTCameraRotationT {
-    let YAW_DEG = self.YAW_DEG();
-    let PITCH_DEG = self.PITCH_DEG();
-    let ROLL_DEG = self.ROLL_DEG();
+    let YAW = self.YAW();
+    let PITCH = self.PITCH();
+    let ROLL = self.ROLL();
     let QUATERNION_X = self.QUATERNION_X();
     let QUATERNION_Y = self.QUATERNION_Y();
     let QUATERNION_Z = self.QUATERNION_Z();
     let QUATERNION_W = self.QUATERNION_W();
     let USES_QUATERNION = self.USES_QUATERNION();
     VSTCameraRotationT {
-      YAW_DEG,
-      PITCH_DEG,
-      ROLL_DEG,
+      YAW,
+      PITCH,
+      ROLL,
       QUATERNION_X,
       QUATERNION_Y,
       QUATERNION_Z,
@@ -349,27 +349,27 @@ impl<'a> VSTCameraRotation<'a> {
 
   /// Yaw angle in degrees for Euler-angle camera imports.
   #[inline]
-  pub fn YAW_DEG(&self) -> f64 {
+  pub fn YAW(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_YAW_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_YAW, Some(0.0)).unwrap()}
   }
   /// Pitch angle in degrees for Euler-angle camera imports.
   #[inline]
-  pub fn PITCH_DEG(&self) -> f64 {
+  pub fn PITCH(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_PITCH_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_PITCH, Some(0.0)).unwrap()}
   }
   /// Roll angle in degrees for Euler-angle camera imports.
   #[inline]
-  pub fn ROLL_DEG(&self) -> f64 {
+  pub fn ROLL(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_ROLL_DEG, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_ROLL, Some(0.0)).unwrap()}
   }
   /// Quaternion x component for camera orientation.
   #[inline]
@@ -419,9 +419,9 @@ impl ::flatbuffers::Verifiable for VSTCameraRotation<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<f64>("YAW_DEG", Self::VT_YAW_DEG, false)?
-     .visit_field::<f64>("PITCH_DEG", Self::VT_PITCH_DEG, false)?
-     .visit_field::<f64>("ROLL_DEG", Self::VT_ROLL_DEG, false)?
+     .visit_field::<f64>("YAW", Self::VT_YAW, false)?
+     .visit_field::<f64>("PITCH", Self::VT_PITCH, false)?
+     .visit_field::<f64>("ROLL", Self::VT_ROLL, false)?
      .visit_field::<f64>("QUATERNION_X", Self::VT_QUATERNION_X, false)?
      .visit_field::<f64>("QUATERNION_Y", Self::VT_QUATERNION_Y, false)?
      .visit_field::<f64>("QUATERNION_Z", Self::VT_QUATERNION_Z, false)?
@@ -432,9 +432,9 @@ impl ::flatbuffers::Verifiable for VSTCameraRotation<'_> {
   }
 }
 pub struct VSTCameraRotationArgs {
-    pub YAW_DEG: f64,
-    pub PITCH_DEG: f64,
-    pub ROLL_DEG: f64,
+    pub YAW: f64,
+    pub PITCH: f64,
+    pub ROLL: f64,
     pub QUATERNION_X: f64,
     pub QUATERNION_Y: f64,
     pub QUATERNION_Z: f64,
@@ -445,9 +445,9 @@ impl<'a> Default for VSTCameraRotationArgs {
   #[inline]
   fn default() -> Self {
     VSTCameraRotationArgs {
-      YAW_DEG: 0.0,
-      PITCH_DEG: 0.0,
-      ROLL_DEG: 0.0,
+      YAW: 0.0,
+      PITCH: 0.0,
+      ROLL: 0.0,
       QUATERNION_X: 0.0,
       QUATERNION_Y: 0.0,
       QUATERNION_Z: 0.0,
@@ -463,16 +463,16 @@ pub struct VSTCameraRotationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VSTCameraRotationBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_YAW_DEG(&mut self, YAW_DEG: f64) {
-    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_YAW_DEG, YAW_DEG, 0.0);
+  pub fn add_YAW(&mut self, YAW: f64) {
+    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_YAW, YAW, 0.0);
   }
   #[inline]
-  pub fn add_PITCH_DEG(&mut self, PITCH_DEG: f64) {
-    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_PITCH_DEG, PITCH_DEG, 0.0);
+  pub fn add_PITCH(&mut self, PITCH: f64) {
+    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_PITCH, PITCH, 0.0);
   }
   #[inline]
-  pub fn add_ROLL_DEG(&mut self, ROLL_DEG: f64) {
-    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_ROLL_DEG, ROLL_DEG, 0.0);
+  pub fn add_ROLL(&mut self, ROLL: f64) {
+    self.fbb_.push_slot::<f64>(VSTCameraRotation::VT_ROLL, ROLL, 0.0);
   }
   #[inline]
   pub fn add_QUATERNION_X(&mut self, QUATERNION_X: f64) {
@@ -512,9 +512,9 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VSTCameraRotationBuilder<'a, 
 impl ::core::fmt::Debug for VSTCameraRotation<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("VSTCameraRotation");
-      ds.field("YAW_DEG", &self.YAW_DEG());
-      ds.field("PITCH_DEG", &self.PITCH_DEG());
-      ds.field("ROLL_DEG", &self.ROLL_DEG());
+      ds.field("YAW", &self.YAW());
+      ds.field("PITCH", &self.PITCH());
+      ds.field("ROLL", &self.ROLL());
       ds.field("QUATERNION_X", &self.QUATERNION_X());
       ds.field("QUATERNION_Y", &self.QUATERNION_Y());
       ds.field("QUATERNION_Z", &self.QUATERNION_Z());
@@ -526,9 +526,9 @@ impl ::core::fmt::Debug for VSTCameraRotation<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct VSTCameraRotationT {
-  pub YAW_DEG: f64,
-  pub PITCH_DEG: f64,
-  pub ROLL_DEG: f64,
+  pub YAW: f64,
+  pub PITCH: f64,
+  pub ROLL: f64,
   pub QUATERNION_X: f64,
   pub QUATERNION_Y: f64,
   pub QUATERNION_Z: f64,
@@ -538,9 +538,9 @@ pub struct VSTCameraRotationT {
 impl Default for VSTCameraRotationT {
   fn default() -> Self {
     Self {
-      YAW_DEG: 0.0,
-      PITCH_DEG: 0.0,
-      ROLL_DEG: 0.0,
+      YAW: 0.0,
+      PITCH: 0.0,
+      ROLL: 0.0,
       QUATERNION_X: 0.0,
       QUATERNION_Y: 0.0,
       QUATERNION_Z: 0.0,
@@ -554,18 +554,18 @@ impl VSTCameraRotationT {
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<VSTCameraRotation<'b>> {
-    let YAW_DEG = self.YAW_DEG;
-    let PITCH_DEG = self.PITCH_DEG;
-    let ROLL_DEG = self.ROLL_DEG;
+    let YAW = self.YAW;
+    let PITCH = self.PITCH;
+    let ROLL = self.ROLL;
     let QUATERNION_X = self.QUATERNION_X;
     let QUATERNION_Y = self.QUATERNION_Y;
     let QUATERNION_Z = self.QUATERNION_Z;
     let QUATERNION_W = self.QUATERNION_W;
     let USES_QUATERNION = self.USES_QUATERNION;
     VSTCameraRotation::create(_fbb, &VSTCameraRotationArgs{
-      YAW_DEG,
-      PITCH_DEG,
-      ROLL_DEG,
+      YAW,
+      PITCH,
+      ROLL,
       QUATERNION_X,
       QUATERNION_Y,
       QUATERNION_Z,
@@ -984,7 +984,7 @@ impl<'a> ::flatbuffers::Follow<'a> for VSTCameraOptions<'a> {
 impl<'a> VSTCameraOptions<'a> {
   pub const VT_CAMERA_FRAME_MODE: ::flatbuffers::VOffsetT = 4;
   pub const VT_SATELLITE_ALIGNMENT: ::flatbuffers::VOffsetT = 6;
-  pub const VT_DISTANCE_FROM_TARGET_KM: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DISTANCE_FROM_TARGET: ::flatbuffers::VOffsetT = 8;
   pub const VT_ROTATION: ::flatbuffers::VOffsetT = 10;
 
   #[inline]
@@ -997,7 +997,7 @@ impl<'a> VSTCameraOptions<'a> {
     args: &'args VSTCameraOptionsArgs<'args>
   ) -> ::flatbuffers::WIPOffset<VSTCameraOptions<'bldr>> {
     let mut builder = VSTCameraOptionsBuilder::new(_fbb);
-    builder.add_DISTANCE_FROM_TARGET_KM(args.DISTANCE_FROM_TARGET_KM);
+    builder.add_DISTANCE_FROM_TARGET(args.DISTANCE_FROM_TARGET);
     if let Some(x) = args.ROTATION { builder.add_ROTATION(x); }
     builder.add_SATELLITE_ALIGNMENT(args.SATELLITE_ALIGNMENT);
     builder.add_CAMERA_FRAME_MODE(args.CAMERA_FRAME_MODE);
@@ -1007,14 +1007,14 @@ impl<'a> VSTCameraOptions<'a> {
   pub fn unpack(&self) -> VSTCameraOptionsT {
     let CAMERA_FRAME_MODE = self.CAMERA_FRAME_MODE();
     let SATELLITE_ALIGNMENT = self.SATELLITE_ALIGNMENT();
-    let DISTANCE_FROM_TARGET_KM = self.DISTANCE_FROM_TARGET_KM();
+    let DISTANCE_FROM_TARGET = self.DISTANCE_FROM_TARGET();
     let ROTATION = self.ROTATION().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
     VSTCameraOptionsT {
       CAMERA_FRAME_MODE,
       SATELLITE_ALIGNMENT,
-      DISTANCE_FROM_TARGET_KM,
+      DISTANCE_FROM_TARGET,
       ROTATION,
     }
   }
@@ -1037,11 +1037,11 @@ impl<'a> VSTCameraOptions<'a> {
   }
   /// Camera distance from the current target in kilometers.
   #[inline]
-  pub fn DISTANCE_FROM_TARGET_KM(&self) -> f64 {
+  pub fn DISTANCE_FROM_TARGET(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET_KM, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET, Some(0.0)).unwrap()}
   }
   /// Camera orientation offset.
   #[inline]
@@ -1061,7 +1061,7 @@ impl ::flatbuffers::Verifiable for VSTCameraOptions<'_> {
     v.visit_table(pos)?
      .visit_field::<viewerCameraFrameMode>("CAMERA_FRAME_MODE", Self::VT_CAMERA_FRAME_MODE, false)?
      .visit_field::<viewerSatelliteAlignmentMode>("SATELLITE_ALIGNMENT", Self::VT_SATELLITE_ALIGNMENT, false)?
-     .visit_field::<f64>("DISTANCE_FROM_TARGET_KM", Self::VT_DISTANCE_FROM_TARGET_KM, false)?
+     .visit_field::<f64>("DISTANCE_FROM_TARGET", Self::VT_DISTANCE_FROM_TARGET, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<VSTCameraRotation>>("ROTATION", Self::VT_ROTATION, false)?
      .finish();
     Ok(())
@@ -1070,7 +1070,7 @@ impl ::flatbuffers::Verifiable for VSTCameraOptions<'_> {
 pub struct VSTCameraOptionsArgs<'a> {
     pub CAMERA_FRAME_MODE: viewerCameraFrameMode,
     pub SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode,
-    pub DISTANCE_FROM_TARGET_KM: f64,
+    pub DISTANCE_FROM_TARGET: f64,
     pub ROTATION: Option<::flatbuffers::WIPOffset<VSTCameraRotation<'a>>>,
 }
 impl<'a> Default for VSTCameraOptionsArgs<'a> {
@@ -1079,7 +1079,7 @@ impl<'a> Default for VSTCameraOptionsArgs<'a> {
     VSTCameraOptionsArgs {
       CAMERA_FRAME_MODE: viewerCameraFrameMode::DEFAULT,
       SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode::UNKNOWN,
-      DISTANCE_FROM_TARGET_KM: 0.0,
+      DISTANCE_FROM_TARGET: 0.0,
       ROTATION: None,
     }
   }
@@ -1099,8 +1099,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VSTCameraOptionsBuilder<'a, '
     self.fbb_.push_slot::<viewerSatelliteAlignmentMode>(VSTCameraOptions::VT_SATELLITE_ALIGNMENT, SATELLITE_ALIGNMENT, viewerSatelliteAlignmentMode::UNKNOWN);
   }
   #[inline]
-  pub fn add_DISTANCE_FROM_TARGET_KM(&mut self, DISTANCE_FROM_TARGET_KM: f64) {
-    self.fbb_.push_slot::<f64>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET_KM, DISTANCE_FROM_TARGET_KM, 0.0);
+  pub fn add_DISTANCE_FROM_TARGET(&mut self, DISTANCE_FROM_TARGET: f64) {
+    self.fbb_.push_slot::<f64>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET, DISTANCE_FROM_TARGET, 0.0);
   }
   #[inline]
   pub fn add_ROTATION(&mut self, ROTATION: ::flatbuffers::WIPOffset<VSTCameraRotation<'b >>) {
@@ -1126,7 +1126,7 @@ impl ::core::fmt::Debug for VSTCameraOptions<'_> {
     let mut ds = f.debug_struct("VSTCameraOptions");
       ds.field("CAMERA_FRAME_MODE", &self.CAMERA_FRAME_MODE());
       ds.field("SATELLITE_ALIGNMENT", &self.SATELLITE_ALIGNMENT());
-      ds.field("DISTANCE_FROM_TARGET_KM", &self.DISTANCE_FROM_TARGET_KM());
+      ds.field("DISTANCE_FROM_TARGET", &self.DISTANCE_FROM_TARGET());
       ds.field("ROTATION", &self.ROTATION());
       ds.finish()
   }
@@ -1136,7 +1136,7 @@ impl ::core::fmt::Debug for VSTCameraOptions<'_> {
 pub struct VSTCameraOptionsT {
   pub CAMERA_FRAME_MODE: viewerCameraFrameMode,
   pub SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode,
-  pub DISTANCE_FROM_TARGET_KM: f64,
+  pub DISTANCE_FROM_TARGET: f64,
   pub ROTATION: Option<alloc::boxed::Box<VSTCameraRotationT>>,
 }
 impl Default for VSTCameraOptionsT {
@@ -1144,7 +1144,7 @@ impl Default for VSTCameraOptionsT {
     Self {
       CAMERA_FRAME_MODE: viewerCameraFrameMode::DEFAULT,
       SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode::UNKNOWN,
-      DISTANCE_FROM_TARGET_KM: 0.0,
+      DISTANCE_FROM_TARGET: 0.0,
       ROTATION: None,
     }
   }
@@ -1156,14 +1156,14 @@ impl VSTCameraOptionsT {
   ) -> ::flatbuffers::WIPOffset<VSTCameraOptions<'b>> {
     let CAMERA_FRAME_MODE = self.CAMERA_FRAME_MODE;
     let SATELLITE_ALIGNMENT = self.SATELLITE_ALIGNMENT;
-    let DISTANCE_FROM_TARGET_KM = self.DISTANCE_FROM_TARGET_KM;
+    let DISTANCE_FROM_TARGET = self.DISTANCE_FROM_TARGET;
     let ROTATION = self.ROTATION.as_ref().map(|x|{
       x.pack(_fbb)
     });
     VSTCameraOptions::create(_fbb, &VSTCameraOptionsArgs{
       CAMERA_FRAME_MODE,
       SATELLITE_ALIGNMENT,
-      DISTANCE_FROM_TARGET_KM,
+      DISTANCE_FROM_TARGET,
       ROTATION,
     })
   }

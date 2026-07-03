@@ -11,29 +11,29 @@ export declare class SCNGeodeticPoint implements flatbuffers.IUnpackableObject<S
     /**
      * Latitude in degrees.
      */
-    LATITUDE_DEG(): number;
+    LATITUDE(): number;
     /**
      * Longitude in degrees.
      */
-    LONGITUDE_DEG(): number;
+    LONGITUDE(): number;
     /**
      * Altitude above the reference ellipsoid in kilometers.
      */
-    ALTITUDE_KM(): number;
+    ALTITUDE(): number;
     static startSCNGeodeticPoint(builder: flatbuffers.Builder): void;
-    static addLatitudeDeg(builder: flatbuffers.Builder, LATITUDE_DEG: number): void;
-    static addLongitudeDeg(builder: flatbuffers.Builder, LONGITUDE_DEG: number): void;
-    static addAltitudeKm(builder: flatbuffers.Builder, ALTITUDE_KM: number): void;
+    static addLatitude(builder: flatbuffers.Builder, LATITUDE: number): void;
+    static addLongitude(builder: flatbuffers.Builder, LONGITUDE: number): void;
+    static addAltitude(builder: flatbuffers.Builder, ALTITUDE: number): void;
     static endSCNGeodeticPoint(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createSCNGeodeticPoint(builder: flatbuffers.Builder, LATITUDE_DEG: number, LONGITUDE_DEG: number, ALTITUDE_KM: number): flatbuffers.Offset;
+    static createSCNGeodeticPoint(builder: flatbuffers.Builder, LATITUDE: number, LONGITUDE: number, ALTITUDE: number): flatbuffers.Offset;
     unpack(): SCNGeodeticPointT;
     unpackTo(_o: SCNGeodeticPointT): void;
 }
 export declare class SCNGeodeticPointT implements flatbuffers.IGeneratedObject {
-    LATITUDE_DEG: number;
-    LONGITUDE_DEG: number;
-    ALTITUDE_KM: number;
-    constructor(LATITUDE_DEG?: number, LONGITUDE_DEG?: number, ALTITUDE_KM?: number);
+    LATITUDE: number;
+    LONGITUDE: number;
+    ALTITUDE: number;
+    constructor(LATITUDE?: number, LONGITUDE?: number, ALTITUDE?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNGeodeticPoint.d.ts.map

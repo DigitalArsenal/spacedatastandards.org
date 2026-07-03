@@ -31,7 +31,7 @@ static getSizePrefixedRootAsVSTCameraRotation(bb:flatbuffers.ByteBuffer, obj?:VS
 /**
  * Yaw angle in degrees for Euler-angle camera imports.
  */
-YAW_DEG():number {
+YAW():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -39,7 +39,7 @@ YAW_DEG():number {
 /**
  * Pitch angle in degrees for Euler-angle camera imports.
  */
-PITCH_DEG():number {
+PITCH():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -47,7 +47,7 @@ PITCH_DEG():number {
 /**
  * Roll angle in degrees for Euler-angle camera imports.
  */
-ROLL_DEG():number {
+ROLL():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -96,16 +96,16 @@ static startVSTCameraRotation(builder:flatbuffers.Builder) {
   builder.startObject(8);
 }
 
-static addYawDeg(builder:flatbuffers.Builder, YAW_DEG:number) {
-  builder.addFieldFloat64(0, YAW_DEG, 0.0);
+static addYaw(builder:flatbuffers.Builder, YAW:number) {
+  builder.addFieldFloat64(0, YAW, 0.0);
 }
 
-static addPitchDeg(builder:flatbuffers.Builder, PITCH_DEG:number) {
-  builder.addFieldFloat64(1, PITCH_DEG, 0.0);
+static addPitch(builder:flatbuffers.Builder, PITCH:number) {
+  builder.addFieldFloat64(1, PITCH, 0.0);
 }
 
-static addRollDeg(builder:flatbuffers.Builder, ROLL_DEG:number) {
-  builder.addFieldFloat64(2, ROLL_DEG, 0.0);
+static addRoll(builder:flatbuffers.Builder, ROLL:number) {
+  builder.addFieldFloat64(2, ROLL, 0.0);
 }
 
 static addQuaternionX(builder:flatbuffers.Builder, QUATERNION_X:number) {
@@ -133,11 +133,11 @@ static endVSTCameraRotation(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createVSTCameraRotation(builder:flatbuffers.Builder, YAW_DEG:number, PITCH_DEG:number, ROLL_DEG:number, QUATERNION_X:number, QUATERNION_Y:number, QUATERNION_Z:number, QUATERNION_W:number, USES_QUATERNION:boolean):flatbuffers.Offset {
+static createVSTCameraRotation(builder:flatbuffers.Builder, YAW:number, PITCH:number, ROLL:number, QUATERNION_X:number, QUATERNION_Y:number, QUATERNION_Z:number, QUATERNION_W:number, USES_QUATERNION:boolean):flatbuffers.Offset {
   VSTCameraRotation.startVSTCameraRotation(builder);
-  VSTCameraRotation.addYawDeg(builder, YAW_DEG);
-  VSTCameraRotation.addPitchDeg(builder, PITCH_DEG);
-  VSTCameraRotation.addRollDeg(builder, ROLL_DEG);
+  VSTCameraRotation.addYaw(builder, YAW);
+  VSTCameraRotation.addPitch(builder, PITCH);
+  VSTCameraRotation.addRoll(builder, ROLL);
   VSTCameraRotation.addQuaternionX(builder, QUATERNION_X);
   VSTCameraRotation.addQuaternionY(builder, QUATERNION_Y);
   VSTCameraRotation.addQuaternionZ(builder, QUATERNION_Z);
@@ -148,9 +148,9 @@ static createVSTCameraRotation(builder:flatbuffers.Builder, YAW_DEG:number, PITC
 
 unpack(): VSTCameraRotationT {
   return new VSTCameraRotationT(
-    this.YAW_DEG(),
-    this.PITCH_DEG(),
-    this.ROLL_DEG(),
+    this.YAW(),
+    this.PITCH(),
+    this.ROLL(),
     this.QUATERNION_X(),
     this.QUATERNION_Y(),
     this.QUATERNION_Z(),
@@ -161,9 +161,9 @@ unpack(): VSTCameraRotationT {
 
 
 unpackTo(_o: VSTCameraRotationT): void {
-  _o.YAW_DEG = this.YAW_DEG();
-  _o.PITCH_DEG = this.PITCH_DEG();
-  _o.ROLL_DEG = this.ROLL_DEG();
+  _o.YAW = this.YAW();
+  _o.PITCH = this.PITCH();
+  _o.ROLL = this.ROLL();
   _o.QUATERNION_X = this.QUATERNION_X();
   _o.QUATERNION_Y = this.QUATERNION_Y();
   _o.QUATERNION_Z = this.QUATERNION_Z();
@@ -174,9 +174,9 @@ unpackTo(_o: VSTCameraRotationT): void {
 
 export class VSTCameraRotationT implements flatbuffers.IGeneratedObject {
 constructor(
-  public YAW_DEG: number = 0.0,
-  public PITCH_DEG: number = 0.0,
-  public ROLL_DEG: number = 0.0,
+  public YAW: number = 0.0,
+  public PITCH: number = 0.0,
+  public ROLL: number = 0.0,
   public QUATERNION_X: number = 0.0,
   public QUATERNION_Y: number = 0.0,
   public QUATERNION_Z: number = 0.0,
@@ -187,9 +187,9 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   return VSTCameraRotation.createVSTCameraRotation(builder,
-    this.YAW_DEG,
-    this.PITCH_DEG,
-    this.ROLL_DEG,
+    this.YAW,
+    this.PITCH,
+    this.ROLL,
     this.QUATERNION_X,
     this.QUATERNION_Y,
     this.QUATERNION_Z,

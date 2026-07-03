@@ -33,13 +33,13 @@ class VST
 /// angles are retained for import of older scenario JSON.
 class VSTCameraRotation : flatbuffers.handle
     /// Yaw angle in degrees for Euler-angle camera imports.
-    def YAW_DEG() -> float:
+    def YAW() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
     /// Pitch angle in degrees for Euler-angle camera imports.
-    def PITCH_DEG() -> float:
+    def PITCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
     /// Roll angle in degrees for Euler-angle camera imports.
-    def ROLL_DEG() -> float:
+    def ROLL() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Quaternion x component for camera orientation.
     def QUATERNION_X() -> float:
@@ -64,14 +64,14 @@ struct VSTCameraRotationBuilder:
     def start():
         b_.StartObject(8)
         return this
-    def add_YAW_DEG(YAW_DEG:float):
-        b_.PrependFloat64Slot(0, YAW_DEG, 0.0)
+    def add_YAW(YAW:float):
+        b_.PrependFloat64Slot(0, YAW, 0.0)
         return this
-    def add_PITCH_DEG(PITCH_DEG:float):
-        b_.PrependFloat64Slot(1, PITCH_DEG, 0.0)
+    def add_PITCH(PITCH:float):
+        b_.PrependFloat64Slot(1, PITCH, 0.0)
         return this
-    def add_ROLL_DEG(ROLL_DEG:float):
-        b_.PrependFloat64Slot(2, ROLL_DEG, 0.0)
+    def add_ROLL(ROLL:float):
+        b_.PrependFloat64Slot(2, ROLL, 0.0)
         return this
     def add_QUATERNION_X(QUATERNION_X:float):
         b_.PrependFloat64Slot(3, QUATERNION_X, 0.0)
@@ -185,7 +185,7 @@ class VSTCameraOptions : flatbuffers.handle
     def SATELLITE_ALIGNMENT() -> viewerSatelliteAlignmentMode:
         return viewerSatelliteAlignmentMode(flatbuffers.field_int8(buf_, pos_, 6, 0))
     /// Camera distance from the current target in kilometers.
-    def DISTANCE_FROM_TARGET_KM() -> float:
+    def DISTANCE_FROM_TARGET() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
     /// Camera orientation offset.
     def ROTATION() -> VSTCameraRotation?:
@@ -205,8 +205,8 @@ struct VSTCameraOptionsBuilder:
     def add_SATELLITE_ALIGNMENT(SATELLITE_ALIGNMENT:viewerSatelliteAlignmentMode):
         b_.PrependInt8Slot(1, SATELLITE_ALIGNMENT, 0)
         return this
-    def add_DISTANCE_FROM_TARGET_KM(DISTANCE_FROM_TARGET_KM:float):
-        b_.PrependFloat64Slot(2, DISTANCE_FROM_TARGET_KM, 0.0)
+    def add_DISTANCE_FROM_TARGET(DISTANCE_FROM_TARGET:float):
+        b_.PrependFloat64Slot(2, DISTANCE_FROM_TARGET, 0.0)
         return this
     def add_ROTATION(ROTATION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, ROTATION)

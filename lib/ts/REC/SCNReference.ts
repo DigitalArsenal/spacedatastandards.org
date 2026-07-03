@@ -11,7 +11,6 @@ import { RDO, RDOT } from './RDO.js';
 import { SCNExclusionZone, SCNExclusionZoneT } from './SCNExclusionZone.js';
 import { SCNPointOfInterest, SCNPointOfInterestT } from './SCNPointOfInterest.js';
 import { SCNSunAdvantageTarget, SCNSunAdvantageTargetT } from './SCNSunAdvantageTarget.js';
-import { SCNTleLines, SCNTleLinesT } from './SCNTleLines.js';
 import { SCNViewCone, SCNViewConeT } from './SCNViewCone.js';
 import { SEN, SENT } from './SEN.js';
 import { SIT, SITT } from './SIT.js';
@@ -136,28 +135,15 @@ dataModesLength():number {
 }
 
 /**
- * TLE provenance and raw lines for satellite references.
- */
-TLES(index: number, obj?:SCNTleLines):SCNTleLines|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? (obj || new SCNTleLines()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
-}
-
-tlesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-/**
  * Mean orbital elements associated with this reference.
  */
 MEAN_ELEMENTS(index: number, obj?:OMM):OMM|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new OMM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 meanElementsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -165,12 +151,12 @@ meanElementsLength():number {
  * State vectors associated with this reference.
  */
 STATES(index: number, obj?:STV):STV|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new STV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 statesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -178,12 +164,12 @@ statesLength():number {
  * Maneuver records associated with this reference.
  */
 MANEUVERS(index: number, obj?:MNV):MNV|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new MNV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 maneuversLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -191,7 +177,7 @@ maneuversLength():number {
  * Ground-site record associated with this reference.
  */
 SITE(obj?:SIT):SIT|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new SIT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -199,7 +185,7 @@ SITE(obj?:SIT):SIT|null {
  * Sensor record associated with this reference.
  */
 SENSOR(obj?:SEN):SEN|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new SEN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -209,7 +195,7 @@ SENSOR(obj?:SEN):SEN|null {
 SENSOR_SYSTEM_ID():string|null
 SENSOR_SYSTEM_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -219,23 +205,23 @@ SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
 SENSOR_ID():string|null
 SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
  * Ground-site latitude in degrees when no SIT record is available.
  */
-SITE_LATITUDE_DEG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+SITE_LATITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
  * Ground-site longitude in degrees when no SIT record is available.
  */
-SITE_LONGITUDE_DEG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
+SITE_LONGITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
@@ -245,7 +231,7 @@ SITE_LONGITUDE_DEG():number {
 VARIABLE_SATELLITE_ID():string|null
 VARIABLE_SATELLITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 VARIABLE_SATELLITE_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
+  const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -255,7 +241,7 @@ VARIABLE_SATELLITE_ID(optionalEncoding?:any):string|Uint8Array|null {
 VARIABLE_SITE_ID():string|null
 VARIABLE_SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 VARIABLE_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -263,12 +249,12 @@ VARIABLE_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
  * Points of interest associated with this reference.
  */
 POINTS(index: number, obj?:SCNPointOfInterest):SCNPointOfInterest|null {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? (obj || new SCNPointOfInterest()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 pointsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -276,7 +262,7 @@ pointsLength():number {
  * View-cone overlay associated with this reference.
  */
 VIEW_CONE(obj?:SCNViewCone):SCNViewCone|null {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? (obj || new SCNViewCone()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -284,7 +270,7 @@ VIEW_CONE(obj?:SCNViewCone):SCNViewCone|null {
  * Sun-advantage target pairing for this reference.
  */
 SUN_ADVANTAGE_TARGET(obj?:SCNSunAdvantageTarget):SCNSunAdvantageTarget|null {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? (obj || new SCNSunAdvantageTarget()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -292,7 +278,7 @@ SUN_ADVANTAGE_TARGET(obj?:SCNSunAdvantageTarget):SCNSunAdvantageTarget|null {
  * Exclusion-zone geometry associated with this reference.
  */
 EXCLUSION_ZONE(obj?:SCNExclusionZone):SCNExclusionZone|null {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
+  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? (obj || new SCNExclusionZone()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -300,7 +286,7 @@ EXCLUSION_ZONE(obj?:SCNExclusionZone):SCNExclusionZone|null {
  * Electro-optical observation record associated with this reference.
  */
 OBSERVATION_EO(obj?:EOO):EOO|null {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? (obj || new EOO()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -308,12 +294,12 @@ OBSERVATION_EO(obj?:EOO):EOO|null {
  * Radar observation record associated with this reference.
  */
 OBSERVATION_RADAR(obj?:RDO):RDO|null {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
+  const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? (obj || new RDO()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 static startSCNReference(builder:flatbuffers.Builder) {
-  builder.startObject(27);
+  builder.startObject(26);
 }
 
 static addReferenceId(builder:flatbuffers.Builder, REFERENCE_IDOffset:flatbuffers.Offset) {
@@ -376,24 +362,8 @@ static startDataModesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addTles(builder:flatbuffers.Builder, TLESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, TLESOffset, 0);
-}
-
-static createTlesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startTlesVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
 static addMeanElements(builder:flatbuffers.Builder, MEAN_ELEMENTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, MEAN_ELEMENTSOffset, 0);
+  builder.addFieldOffset(9, MEAN_ELEMENTSOffset, 0);
 }
 
 static createMeanElementsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -409,7 +379,7 @@ static startMeanElementsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addStates(builder:flatbuffers.Builder, STATESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, STATESOffset, 0);
+  builder.addFieldOffset(10, STATESOffset, 0);
 }
 
 static createStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -425,7 +395,7 @@ static startStatesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addManeuvers(builder:flatbuffers.Builder, MANEUVERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, MANEUVERSOffset, 0);
+  builder.addFieldOffset(11, MANEUVERSOffset, 0);
 }
 
 static createManeuversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -441,39 +411,39 @@ static startManeuversVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSite(builder:flatbuffers.Builder, SITEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, SITEOffset, 0);
+  builder.addFieldOffset(12, SITEOffset, 0);
 }
 
 static addSensor(builder:flatbuffers.Builder, SENSOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, SENSOROffset, 0);
+  builder.addFieldOffset(13, SENSOROffset, 0);
 }
 
 static addSensorSystemId(builder:flatbuffers.Builder, SENSOR_SYSTEM_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, SENSOR_SYSTEM_IDOffset, 0);
+  builder.addFieldOffset(14, SENSOR_SYSTEM_IDOffset, 0);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, SENSOR_IDOffset, 0);
+  builder.addFieldOffset(15, SENSOR_IDOffset, 0);
 }
 
-static addSiteLatitudeDeg(builder:flatbuffers.Builder, SITE_LATITUDE_DEG:number) {
-  builder.addFieldFloat64(17, SITE_LATITUDE_DEG, 0.0);
+static addSiteLatitude(builder:flatbuffers.Builder, SITE_LATITUDE:number) {
+  builder.addFieldFloat64(16, SITE_LATITUDE, 0.0);
 }
 
-static addSiteLongitudeDeg(builder:flatbuffers.Builder, SITE_LONGITUDE_DEG:number) {
-  builder.addFieldFloat64(18, SITE_LONGITUDE_DEG, 0.0);
+static addSiteLongitude(builder:flatbuffers.Builder, SITE_LONGITUDE:number) {
+  builder.addFieldFloat64(17, SITE_LONGITUDE, 0.0);
 }
 
 static addVariableSatelliteId(builder:flatbuffers.Builder, VARIABLE_SATELLITE_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, VARIABLE_SATELLITE_IDOffset, 0);
+  builder.addFieldOffset(18, VARIABLE_SATELLITE_IDOffset, 0);
 }
 
 static addVariableSiteId(builder:flatbuffers.Builder, VARIABLE_SITE_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, VARIABLE_SITE_IDOffset, 0);
+  builder.addFieldOffset(19, VARIABLE_SITE_IDOffset, 0);
 }
 
 static addPoints(builder:flatbuffers.Builder, POINTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(21, POINTSOffset, 0);
+  builder.addFieldOffset(20, POINTSOffset, 0);
 }
 
 static createPointsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -489,23 +459,23 @@ static startPointsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addViewCone(builder:flatbuffers.Builder, VIEW_CONEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, VIEW_CONEOffset, 0);
+  builder.addFieldOffset(21, VIEW_CONEOffset, 0);
 }
 
 static addSunAdvantageTarget(builder:flatbuffers.Builder, SUN_ADVANTAGE_TARGETOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(23, SUN_ADVANTAGE_TARGETOffset, 0);
+  builder.addFieldOffset(22, SUN_ADVANTAGE_TARGETOffset, 0);
 }
 
 static addExclusionZone(builder:flatbuffers.Builder, EXCLUSION_ZONEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(24, EXCLUSION_ZONEOffset, 0);
+  builder.addFieldOffset(23, EXCLUSION_ZONEOffset, 0);
 }
 
 static addObservationEo(builder:flatbuffers.Builder, OBSERVATION_EOOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(25, OBSERVATION_EOOffset, 0);
+  builder.addFieldOffset(24, OBSERVATION_EOOffset, 0);
 }
 
 static addObservationRadar(builder:flatbuffers.Builder, OBSERVATION_RADAROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(26, OBSERVATION_RADAROffset, 0);
+  builder.addFieldOffset(25, OBSERVATION_RADAROffset, 0);
 }
 
 static endSCNReference(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -525,7 +495,6 @@ unpack(): SCNReferenceT {
     this.COUNTRY(),
     this.bb!.createScalarList<string>(this.SOURCES.bind(this), this.sourcesLength()),
     this.bb!.createScalarList<string>(this.DATA_MODES.bind(this), this.dataModesLength()),
-    this.bb!.createObjList<SCNTleLines, SCNTleLinesT>(this.TLES.bind(this), this.tlesLength()),
     this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength()),
     this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength()),
     this.bb!.createObjList<MNV, MNVT>(this.MANEUVERS.bind(this), this.maneuversLength()),
@@ -533,8 +502,8 @@ unpack(): SCNReferenceT {
     (this.SENSOR() !== null ? this.SENSOR()!.unpack() : null),
     this.SENSOR_SYSTEM_ID(),
     this.SENSOR_ID(),
-    this.SITE_LATITUDE_DEG(),
-    this.SITE_LONGITUDE_DEG(),
+    this.SITE_LATITUDE(),
+    this.SITE_LONGITUDE(),
     this.VARIABLE_SATELLITE_ID(),
     this.VARIABLE_SITE_ID(),
     this.bb!.createObjList<SCNPointOfInterest, SCNPointOfInterestT>(this.POINTS.bind(this), this.pointsLength()),
@@ -557,7 +526,6 @@ unpackTo(_o: SCNReferenceT): void {
   _o.COUNTRY = this.COUNTRY();
   _o.SOURCES = this.bb!.createScalarList<string>(this.SOURCES.bind(this), this.sourcesLength());
   _o.DATA_MODES = this.bb!.createScalarList<string>(this.DATA_MODES.bind(this), this.dataModesLength());
-  _o.TLES = this.bb!.createObjList<SCNTleLines, SCNTleLinesT>(this.TLES.bind(this), this.tlesLength());
   _o.MEAN_ELEMENTS = this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength());
   _o.STATES = this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength());
   _o.MANEUVERS = this.bb!.createObjList<MNV, MNVT>(this.MANEUVERS.bind(this), this.maneuversLength());
@@ -565,8 +533,8 @@ unpackTo(_o: SCNReferenceT): void {
   _o.SENSOR = (this.SENSOR() !== null ? this.SENSOR()!.unpack() : null);
   _o.SENSOR_SYSTEM_ID = this.SENSOR_SYSTEM_ID();
   _o.SENSOR_ID = this.SENSOR_ID();
-  _o.SITE_LATITUDE_DEG = this.SITE_LATITUDE_DEG();
-  _o.SITE_LONGITUDE_DEG = this.SITE_LONGITUDE_DEG();
+  _o.SITE_LATITUDE = this.SITE_LATITUDE();
+  _o.SITE_LONGITUDE = this.SITE_LONGITUDE();
   _o.VARIABLE_SATELLITE_ID = this.VARIABLE_SATELLITE_ID();
   _o.VARIABLE_SITE_ID = this.VARIABLE_SITE_ID();
   _o.POINTS = this.bb!.createObjList<SCNPointOfInterest, SCNPointOfInterestT>(this.POINTS.bind(this), this.pointsLength());
@@ -589,7 +557,6 @@ constructor(
   public COUNTRY: string|Uint8Array|null = null,
   public SOURCES: (string)[] = [],
   public DATA_MODES: (string)[] = [],
-  public TLES: (SCNTleLinesT)[] = [],
   public MEAN_ELEMENTS: (OMMT)[] = [],
   public STATES: (STVT)[] = [],
   public MANEUVERS: (MNVT)[] = [],
@@ -597,8 +564,8 @@ constructor(
   public SENSOR: SENT|null = null,
   public SENSOR_SYSTEM_ID: string|Uint8Array|null = null,
   public SENSOR_ID: string|Uint8Array|null = null,
-  public SITE_LATITUDE_DEG: number = 0.0,
-  public SITE_LONGITUDE_DEG: number = 0.0,
+  public SITE_LATITUDE: number = 0.0,
+  public SITE_LONGITUDE: number = 0.0,
   public VARIABLE_SATELLITE_ID: string|Uint8Array|null = null,
   public VARIABLE_SITE_ID: string|Uint8Array|null = null,
   public POINTS: (SCNPointOfInterestT)[] = [],
@@ -617,7 +584,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const COUNTRY = (this.COUNTRY !== null ? builder.createString(this.COUNTRY!) : 0);
   const SOURCES = SCNReference.createSourcesVector(builder, builder.createObjectOffsetList(this.SOURCES));
   const DATA_MODES = SCNReference.createDataModesVector(builder, builder.createObjectOffsetList(this.DATA_MODES));
-  const TLES = SCNReference.createTlesVector(builder, builder.createObjectOffsetList(this.TLES));
   const MEAN_ELEMENTS = SCNReference.createMeanElementsVector(builder, builder.createObjectOffsetList(this.MEAN_ELEMENTS));
   const STATES = SCNReference.createStatesVector(builder, builder.createObjectOffsetList(this.STATES));
   const MANEUVERS = SCNReference.createManeuversVector(builder, builder.createObjectOffsetList(this.MANEUVERS));
@@ -644,7 +610,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCNReference.addCountry(builder, COUNTRY);
   SCNReference.addSources(builder, SOURCES);
   SCNReference.addDataModes(builder, DATA_MODES);
-  SCNReference.addTles(builder, TLES);
   SCNReference.addMeanElements(builder, MEAN_ELEMENTS);
   SCNReference.addStates(builder, STATES);
   SCNReference.addManeuvers(builder, MANEUVERS);
@@ -652,8 +617,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCNReference.addSensor(builder, SENSOR);
   SCNReference.addSensorSystemId(builder, SENSOR_SYSTEM_ID);
   SCNReference.addSensorId(builder, SENSOR_ID);
-  SCNReference.addSiteLatitudeDeg(builder, this.SITE_LATITUDE_DEG);
-  SCNReference.addSiteLongitudeDeg(builder, this.SITE_LONGITUDE_DEG);
+  SCNReference.addSiteLatitude(builder, this.SITE_LATITUDE);
+  SCNReference.addSiteLongitude(builder, this.SITE_LONGITUDE);
   SCNReference.addVariableSatelliteId(builder, VARIABLE_SATELLITE_ID);
   SCNReference.addVariableSiteId(builder, VARIABLE_SITE_ID);
   SCNReference.addPoints(builder, POINTS);

@@ -85,7 +85,7 @@ func (rcv *SCNPointOfInterest) Epoch() []byte {
 
 /// UTC epoch associated with the point of interest.
 /// Seconds before the epoch when highlighting begins.
-func (rcv *SCNPointOfInterest) HIGHLIGHT_BEFORE_SEC() float64 {
+func (rcv *SCNPointOfInterest) HIGHLIGHT_BEFORE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -93,21 +93,21 @@ func (rcv *SCNPointOfInterest) HIGHLIGHT_BEFORE_SEC() float64 {
 	return 0.0
 }
 
-func (rcv *SCNPointOfInterest) HighlightBeforeSec() float64 {
-	return rcv.HIGHLIGHT_BEFORE_SEC()
+func (rcv *SCNPointOfInterest) HighlightBefore() float64 {
+	return rcv.HIGHLIGHT_BEFORE()
 }
 
 /// Seconds before the epoch when highlighting begins.
-func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_BEFORE_SEC(n float64) bool {
+func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_BEFORE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-func (rcv *SCNPointOfInterest) MutateHighlightBeforeSec(n float64) bool {
-	return rcv.MutateHIGHLIGHT_BEFORE_SEC(n)
+func (rcv *SCNPointOfInterest) MutateHighlightBefore(n float64) bool {
+	return rcv.MutateHIGHLIGHT_BEFORE(n)
 }
 
 /// Seconds after the epoch when highlighting remains active.
-func (rcv *SCNPointOfInterest) HIGHLIGHT_AFTER_SEC() float64 {
+func (rcv *SCNPointOfInterest) HIGHLIGHT_AFTER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -115,17 +115,17 @@ func (rcv *SCNPointOfInterest) HIGHLIGHT_AFTER_SEC() float64 {
 	return 0.0
 }
 
-func (rcv *SCNPointOfInterest) HighlightAfterSec() float64 {
-	return rcv.HIGHLIGHT_AFTER_SEC()
+func (rcv *SCNPointOfInterest) HighlightAfter() float64 {
+	return rcv.HIGHLIGHT_AFTER()
 }
 
 /// Seconds after the epoch when highlighting remains active.
-func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_AFTER_SEC(n float64) bool {
+func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_AFTER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
-func (rcv *SCNPointOfInterest) MutateHighlightAfterSec(n float64) bool {
-	return rcv.MutateHIGHLIGHT_AFTER_SEC(n)
+func (rcv *SCNPointOfInterest) MutateHighlightAfter(n float64) bool {
+	return rcv.MutateHIGHLIGHT_AFTER(n)
 }
 
 /// Display color token for the point of interest.
@@ -182,17 +182,17 @@ func SCNPointOfInterestAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.
 func SCNPointOfInterestAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	SCNPointOfInterestAddEPOCH(builder, EPOCH)
 }
-func SCNPointOfInterestAddHIGHLIGHT_BEFORE_SEC(builder *flatbuffers.Builder, HIGHLIGHT_BEFORE_SEC float64) {
-	builder.PrependFloat64Slot(3, HIGHLIGHT_BEFORE_SEC, 0.0)
+func SCNPointOfInterestAddHIGHLIGHT_BEFORE(builder *flatbuffers.Builder, HIGHLIGHT_BEFORE float64) {
+	builder.PrependFloat64Slot(3, HIGHLIGHT_BEFORE, 0.0)
 }
-func SCNPointOfInterestAddHighlightBeforeSec(builder *flatbuffers.Builder, HIGHLIGHT_BEFORE_SEC float64) {
-	SCNPointOfInterestAddHIGHLIGHT_BEFORE_SEC(builder, HIGHLIGHT_BEFORE_SEC)
+func SCNPointOfInterestAddHighlightBefore(builder *flatbuffers.Builder, HIGHLIGHT_BEFORE float64) {
+	SCNPointOfInterestAddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE)
 }
-func SCNPointOfInterestAddHIGHLIGHT_AFTER_SEC(builder *flatbuffers.Builder, HIGHLIGHT_AFTER_SEC float64) {
-	builder.PrependFloat64Slot(4, HIGHLIGHT_AFTER_SEC, 0.0)
+func SCNPointOfInterestAddHIGHLIGHT_AFTER(builder *flatbuffers.Builder, HIGHLIGHT_AFTER float64) {
+	builder.PrependFloat64Slot(4, HIGHLIGHT_AFTER, 0.0)
 }
-func SCNPointOfInterestAddHighlightAfterSec(builder *flatbuffers.Builder, HIGHLIGHT_AFTER_SEC float64) {
-	SCNPointOfInterestAddHIGHLIGHT_AFTER_SEC(builder, HIGHLIGHT_AFTER_SEC)
+func SCNPointOfInterestAddHighlightAfter(builder *flatbuffers.Builder, HIGHLIGHT_AFTER float64) {
+	SCNPointOfInterestAddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER)
 }
 func SCNPointOfInterestAddCOLOR(builder *flatbuffers.Builder, COLOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(COLOR), 0)

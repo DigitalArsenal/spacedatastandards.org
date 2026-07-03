@@ -48,11 +48,11 @@ public final class SCNPointOfInterest extends com.google.flatbuffers.Table {
   /**
    * Seconds before the epoch when highlighting begins.
    */
-  public double HIGHLIGHT_BEFORE_SEC() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double HIGHLIGHT_BEFORE() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Seconds after the epoch when highlighting remains active.
    */
-  public double HIGHLIGHT_AFTER_SEC() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double HIGHLIGHT_AFTER() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Display color token for the point of interest.
    */
@@ -69,13 +69,13 @@ public final class SCNPointOfInterest extends com.google.flatbuffers.Table {
       int NAMEOffset,
       int DESCRIPTIONOffset,
       int EPOCHOffset,
-      double HIGHLIGHT_BEFORE_SEC,
-      double HIGHLIGHT_AFTER_SEC,
+      double HIGHLIGHT_BEFORE,
+      double HIGHLIGHT_AFTER,
       int COLOROffset,
       int POSITIONOffset) {
     builder.startTable(7);
-    SCNPointOfInterest.addHighlightAfterSec(builder, HIGHLIGHT_AFTER_SEC);
-    SCNPointOfInterest.addHighlightBeforeSec(builder, HIGHLIGHT_BEFORE_SEC);
+    SCNPointOfInterest.addHighlightAfter(builder, HIGHLIGHT_AFTER);
+    SCNPointOfInterest.addHighlightBefore(builder, HIGHLIGHT_BEFORE);
     SCNPointOfInterest.addPosition(builder, POSITIONOffset);
     SCNPointOfInterest.addColor(builder, COLOROffset);
     SCNPointOfInterest.addEpoch(builder, EPOCHOffset);
@@ -88,8 +88,8 @@ public final class SCNPointOfInterest extends com.google.flatbuffers.Table {
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(1, DESCRIPTIONOffset, 0); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(2, EPOCHOffset, 0); }
-  public static void addHighlightBeforeSec(FlatBufferBuilder builder, double HIGHLIGHT_BEFORE_SEC) { builder.addDouble(3, HIGHLIGHT_BEFORE_SEC, 0.0); }
-  public static void addHighlightAfterSec(FlatBufferBuilder builder, double HIGHLIGHT_AFTER_SEC) { builder.addDouble(4, HIGHLIGHT_AFTER_SEC, 0.0); }
+  public static void addHighlightBefore(FlatBufferBuilder builder, double HIGHLIGHT_BEFORE) { builder.addDouble(3, HIGHLIGHT_BEFORE, 0.0); }
+  public static void addHighlightAfter(FlatBufferBuilder builder, double HIGHLIGHT_AFTER) { builder.addDouble(4, HIGHLIGHT_AFTER, 0.0); }
   public static void addColor(FlatBufferBuilder builder, int COLOROffset) { builder.addOffset(5, COLOROffset, 0); }
   public static void addPosition(FlatBufferBuilder builder, int POSITIONOffset) { builder.addOffset(6, POSITIONOffset, 0); }
   public static int endSCNPointOfInterest(FlatBufferBuilder builder) {

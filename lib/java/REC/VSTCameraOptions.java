@@ -38,7 +38,7 @@ public final class VSTCameraOptions extends com.google.flatbuffers.Table {
   /**
    * Camera distance from the current target in kilometers.
    */
-  public double DISTANCE_FROM_TARGET_KM() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double DISTANCE_FROM_TARGET() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Camera orientation offset.
    */
@@ -48,10 +48,10 @@ public final class VSTCameraOptions extends com.google.flatbuffers.Table {
   public static int createVSTCameraOptions(FlatBufferBuilder builder,
       byte CAMERA_FRAME_MODE,
       byte SATELLITE_ALIGNMENT,
-      double DISTANCE_FROM_TARGET_KM,
+      double DISTANCE_FROM_TARGET,
       int ROTATIONOffset) {
     builder.startTable(4);
-    VSTCameraOptions.addDistanceFromTargetKm(builder, DISTANCE_FROM_TARGET_KM);
+    VSTCameraOptions.addDistanceFromTarget(builder, DISTANCE_FROM_TARGET);
     VSTCameraOptions.addRotation(builder, ROTATIONOffset);
     VSTCameraOptions.addSatelliteAlignment(builder, SATELLITE_ALIGNMENT);
     VSTCameraOptions.addCameraFrameMode(builder, CAMERA_FRAME_MODE);
@@ -61,7 +61,7 @@ public final class VSTCameraOptions extends com.google.flatbuffers.Table {
   public static void startVSTCameraOptions(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addCameraFrameMode(FlatBufferBuilder builder, byte CAMERA_FRAME_MODE) { builder.addByte(0, CAMERA_FRAME_MODE, 0); }
   public static void addSatelliteAlignment(FlatBufferBuilder builder, byte SATELLITE_ALIGNMENT) { builder.addByte(1, SATELLITE_ALIGNMENT, 0); }
-  public static void addDistanceFromTargetKm(FlatBufferBuilder builder, double DISTANCE_FROM_TARGET_KM) { builder.addDouble(2, DISTANCE_FROM_TARGET_KM, 0.0); }
+  public static void addDistanceFromTarget(FlatBufferBuilder builder, double DISTANCE_FROM_TARGET) { builder.addDouble(2, DISTANCE_FROM_TARGET, 0.0); }
   public static void addRotation(FlatBufferBuilder builder, int ROTATIONOffset) { builder.addOffset(3, ROTATIONOffset, 0); }
   public static int endVSTCameraOptions(FlatBufferBuilder builder) {
     int o = builder.endTable();

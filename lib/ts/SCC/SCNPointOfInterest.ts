@@ -61,7 +61,7 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Seconds before the epoch when highlighting begins.
  */
-HIGHLIGHT_BEFORE_SEC():number {
+HIGHLIGHT_BEFORE():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -69,7 +69,7 @@ HIGHLIGHT_BEFORE_SEC():number {
 /**
  * Seconds after the epoch when highlighting remains active.
  */
-HIGHLIGHT_AFTER_SEC():number {
+HIGHLIGHT_AFTER():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -108,12 +108,12 @@ static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, EPOCHOffset, 0);
 }
 
-static addHighlightBeforeSec(builder:flatbuffers.Builder, HIGHLIGHT_BEFORE_SEC:number) {
-  builder.addFieldFloat64(3, HIGHLIGHT_BEFORE_SEC, 0.0);
+static addHighlightBefore(builder:flatbuffers.Builder, HIGHLIGHT_BEFORE:number) {
+  builder.addFieldFloat64(3, HIGHLIGHT_BEFORE, 0.0);
 }
 
-static addHighlightAfterSec(builder:flatbuffers.Builder, HIGHLIGHT_AFTER_SEC:number) {
-  builder.addFieldFloat64(4, HIGHLIGHT_AFTER_SEC, 0.0);
+static addHighlightAfter(builder:flatbuffers.Builder, HIGHLIGHT_AFTER:number) {
+  builder.addFieldFloat64(4, HIGHLIGHT_AFTER, 0.0);
 }
 
 static addColor(builder:flatbuffers.Builder, COLOROffset:flatbuffers.Offset) {
@@ -135,8 +135,8 @@ unpack(): SCNPointOfInterestT {
     this.NAME(),
     this.DESCRIPTION(),
     this.EPOCH(),
-    this.HIGHLIGHT_BEFORE_SEC(),
-    this.HIGHLIGHT_AFTER_SEC(),
+    this.HIGHLIGHT_BEFORE(),
+    this.HIGHLIGHT_AFTER(),
     this.COLOR(),
     (this.POSITION() !== null ? this.POSITION()!.unpack() : null)
   );
@@ -147,8 +147,8 @@ unpackTo(_o: SCNPointOfInterestT): void {
   _o.NAME = this.NAME();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.EPOCH = this.EPOCH();
-  _o.HIGHLIGHT_BEFORE_SEC = this.HIGHLIGHT_BEFORE_SEC();
-  _o.HIGHLIGHT_AFTER_SEC = this.HIGHLIGHT_AFTER_SEC();
+  _o.HIGHLIGHT_BEFORE = this.HIGHLIGHT_BEFORE();
+  _o.HIGHLIGHT_AFTER = this.HIGHLIGHT_AFTER();
   _o.COLOR = this.COLOR();
   _o.POSITION = (this.POSITION() !== null ? this.POSITION()!.unpack() : null);
 }
@@ -159,8 +159,8 @@ constructor(
   public NAME: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
   public EPOCH: string|Uint8Array|null = null,
-  public HIGHLIGHT_BEFORE_SEC: number = 0.0,
-  public HIGHLIGHT_AFTER_SEC: number = 0.0,
+  public HIGHLIGHT_BEFORE: number = 0.0,
+  public HIGHLIGHT_AFTER: number = 0.0,
   public COLOR: string|Uint8Array|null = null,
   public POSITION: SCNGeodeticPointT|null = null
 ){}
@@ -177,8 +177,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCNPointOfInterest.addName(builder, NAME);
   SCNPointOfInterest.addDescription(builder, DESCRIPTION);
   SCNPointOfInterest.addEpoch(builder, EPOCH);
-  SCNPointOfInterest.addHighlightBeforeSec(builder, this.HIGHLIGHT_BEFORE_SEC);
-  SCNPointOfInterest.addHighlightAfterSec(builder, this.HIGHLIGHT_AFTER_SEC);
+  SCNPointOfInterest.addHighlightBefore(builder, this.HIGHLIGHT_BEFORE);
+  SCNPointOfInterest.addHighlightAfter(builder, this.HIGHLIGHT_AFTER);
   SCNPointOfInterest.addColor(builder, COLOR);
   SCNPointOfInterest.addPosition(builder, POSITION);
 

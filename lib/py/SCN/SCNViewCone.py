@@ -31,7 +31,7 @@ class SCNViewCone(object):
 
     # Minimum elevation angle in degrees.
     # SCNViewCone
-    def MIN_ELEVATION_DEG(self):
+    def MIN_ELEVATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -39,7 +39,7 @@ class SCNViewCone(object):
 
     # Maximum elevation angle in degrees.
     # SCNViewCone
-    def MAX_ELEVATION_DEG(self):
+    def MAX_ELEVATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -47,7 +47,7 @@ class SCNViewCone(object):
 
     # Minimum azimuth angle in degrees.
     # SCNViewCone
-    def MIN_AZIMUTH_DEG(self):
+    def MIN_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -55,7 +55,7 @@ class SCNViewCone(object):
 
     # Maximum azimuth angle in degrees.
     # SCNViewCone
-    def MAX_AZIMUTH_DEG(self):
+    def MAX_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -63,7 +63,7 @@ class SCNViewCone(object):
 
     # Maximum view-cone range in kilometers.
     # SCNViewCone
-    def MAX_RANGE_KM(self):
+    def MAX_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -71,7 +71,7 @@ class SCNViewCone(object):
 
     # Half angle in degrees for cone-style overlays.
     # SCNViewCone
-    def HALF_ANGLE_DEG(self):
+    def HALF_ANGLE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -91,41 +91,41 @@ def SCNViewConeStart(builder):
 def Start(builder):
     SCNViewConeStart(builder)
 
-def SCNViewConeAddMIN_ELEVATION_DEG(builder, MIN_ELEVATION_DEG):
-    builder.PrependFloat64Slot(0, MIN_ELEVATION_DEG, 0.0)
+def SCNViewConeAddMIN_ELEVATION(builder, MIN_ELEVATION):
+    builder.PrependFloat64Slot(0, MIN_ELEVATION, 0.0)
 
-def AddMIN_ELEVATION_DEG(builder, MIN_ELEVATION_DEG):
-    SCNViewConeAddMIN_ELEVATION_DEG(builder, MIN_ELEVATION_DEG)
+def AddMIN_ELEVATION(builder, MIN_ELEVATION):
+    SCNViewConeAddMIN_ELEVATION(builder, MIN_ELEVATION)
 
-def SCNViewConeAddMAX_ELEVATION_DEG(builder, MAX_ELEVATION_DEG):
-    builder.PrependFloat64Slot(1, MAX_ELEVATION_DEG, 0.0)
+def SCNViewConeAddMAX_ELEVATION(builder, MAX_ELEVATION):
+    builder.PrependFloat64Slot(1, MAX_ELEVATION, 0.0)
 
-def AddMAX_ELEVATION_DEG(builder, MAX_ELEVATION_DEG):
-    SCNViewConeAddMAX_ELEVATION_DEG(builder, MAX_ELEVATION_DEG)
+def AddMAX_ELEVATION(builder, MAX_ELEVATION):
+    SCNViewConeAddMAX_ELEVATION(builder, MAX_ELEVATION)
 
-def SCNViewConeAddMIN_AZIMUTH_DEG(builder, MIN_AZIMUTH_DEG):
-    builder.PrependFloat64Slot(2, MIN_AZIMUTH_DEG, 0.0)
+def SCNViewConeAddMIN_AZIMUTH(builder, MIN_AZIMUTH):
+    builder.PrependFloat64Slot(2, MIN_AZIMUTH, 0.0)
 
-def AddMIN_AZIMUTH_DEG(builder, MIN_AZIMUTH_DEG):
-    SCNViewConeAddMIN_AZIMUTH_DEG(builder, MIN_AZIMUTH_DEG)
+def AddMIN_AZIMUTH(builder, MIN_AZIMUTH):
+    SCNViewConeAddMIN_AZIMUTH(builder, MIN_AZIMUTH)
 
-def SCNViewConeAddMAX_AZIMUTH_DEG(builder, MAX_AZIMUTH_DEG):
-    builder.PrependFloat64Slot(3, MAX_AZIMUTH_DEG, 0.0)
+def SCNViewConeAddMAX_AZIMUTH(builder, MAX_AZIMUTH):
+    builder.PrependFloat64Slot(3, MAX_AZIMUTH, 0.0)
 
-def AddMAX_AZIMUTH_DEG(builder, MAX_AZIMUTH_DEG):
-    SCNViewConeAddMAX_AZIMUTH_DEG(builder, MAX_AZIMUTH_DEG)
+def AddMAX_AZIMUTH(builder, MAX_AZIMUTH):
+    SCNViewConeAddMAX_AZIMUTH(builder, MAX_AZIMUTH)
 
-def SCNViewConeAddMAX_RANGE_KM(builder, MAX_RANGE_KM):
-    builder.PrependFloat64Slot(4, MAX_RANGE_KM, 0.0)
+def SCNViewConeAddMAX_RANGE(builder, MAX_RANGE):
+    builder.PrependFloat64Slot(4, MAX_RANGE, 0.0)
 
-def AddMAX_RANGE_KM(builder, MAX_RANGE_KM):
-    SCNViewConeAddMAX_RANGE_KM(builder, MAX_RANGE_KM)
+def AddMAX_RANGE(builder, MAX_RANGE):
+    SCNViewConeAddMAX_RANGE(builder, MAX_RANGE)
 
-def SCNViewConeAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG):
-    builder.PrependFloat64Slot(5, HALF_ANGLE_DEG, 0.0)
+def SCNViewConeAddHALF_ANGLE(builder, HALF_ANGLE):
+    builder.PrependFloat64Slot(5, HALF_ANGLE, 0.0)
 
-def AddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG):
-    SCNViewConeAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG)
+def AddHALF_ANGLE(builder, HALF_ANGLE):
+    SCNViewConeAddHALF_ANGLE(builder, HALF_ANGLE)
 
 def SCNViewConeAddDYNAMIC_RANGE(builder, DYNAMIC_RANGE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DYNAMIC_RANGE), 0)
@@ -145,20 +145,20 @@ class SCNViewConeT(object):
     # SCNViewConeT
     def __init__(
         self,
-        MIN_ELEVATION_DEG = 0.0,
-        MAX_ELEVATION_DEG = 0.0,
-        MIN_AZIMUTH_DEG = 0.0,
-        MAX_AZIMUTH_DEG = 0.0,
-        MAX_RANGE_KM = 0.0,
-        HALF_ANGLE_DEG = 0.0,
+        MIN_ELEVATION = 0.0,
+        MAX_ELEVATION = 0.0,
+        MIN_AZIMUTH = 0.0,
+        MAX_AZIMUTH = 0.0,
+        MAX_RANGE = 0.0,
+        HALF_ANGLE = 0.0,
         DYNAMIC_RANGE = None,
     ):
-        self.MIN_ELEVATION_DEG = MIN_ELEVATION_DEG  # type: float
-        self.MAX_ELEVATION_DEG = MAX_ELEVATION_DEG  # type: float
-        self.MIN_AZIMUTH_DEG = MIN_AZIMUTH_DEG  # type: float
-        self.MAX_AZIMUTH_DEG = MAX_AZIMUTH_DEG  # type: float
-        self.MAX_RANGE_KM = MAX_RANGE_KM  # type: float
-        self.HALF_ANGLE_DEG = HALF_ANGLE_DEG  # type: float
+        self.MIN_ELEVATION = MIN_ELEVATION  # type: float
+        self.MAX_ELEVATION = MAX_ELEVATION  # type: float
+        self.MIN_AZIMUTH = MIN_AZIMUTH  # type: float
+        self.MAX_AZIMUTH = MAX_AZIMUTH  # type: float
+        self.MAX_RANGE = MAX_RANGE  # type: float
+        self.HALF_ANGLE = HALF_ANGLE  # type: float
         self.DYNAMIC_RANGE = DYNAMIC_RANGE  # type: Optional[str]
 
     @classmethod
@@ -182,12 +182,12 @@ class SCNViewConeT(object):
     def _UnPack(self, SCNViewCone):
         if SCNViewCone is None:
             return
-        self.MIN_ELEVATION_DEG = SCNViewCone.MIN_ELEVATION_DEG()
-        self.MAX_ELEVATION_DEG = SCNViewCone.MAX_ELEVATION_DEG()
-        self.MIN_AZIMUTH_DEG = SCNViewCone.MIN_AZIMUTH_DEG()
-        self.MAX_AZIMUTH_DEG = SCNViewCone.MAX_AZIMUTH_DEG()
-        self.MAX_RANGE_KM = SCNViewCone.MAX_RANGE_KM()
-        self.HALF_ANGLE_DEG = SCNViewCone.HALF_ANGLE_DEG()
+        self.MIN_ELEVATION = SCNViewCone.MIN_ELEVATION()
+        self.MAX_ELEVATION = SCNViewCone.MAX_ELEVATION()
+        self.MIN_AZIMUTH = SCNViewCone.MIN_AZIMUTH()
+        self.MAX_AZIMUTH = SCNViewCone.MAX_AZIMUTH()
+        self.MAX_RANGE = SCNViewCone.MAX_RANGE()
+        self.HALF_ANGLE = SCNViewCone.HALF_ANGLE()
         self.DYNAMIC_RANGE = SCNViewCone.DYNAMIC_RANGE()
 
     # SCNViewConeT
@@ -195,12 +195,12 @@ class SCNViewConeT(object):
         if self.DYNAMIC_RANGE is not None:
             DYNAMIC_RANGE = builder.CreateString(self.DYNAMIC_RANGE)
         SCNViewConeStart(builder)
-        SCNViewConeAddMIN_ELEVATION_DEG(builder, self.MIN_ELEVATION_DEG)
-        SCNViewConeAddMAX_ELEVATION_DEG(builder, self.MAX_ELEVATION_DEG)
-        SCNViewConeAddMIN_AZIMUTH_DEG(builder, self.MIN_AZIMUTH_DEG)
-        SCNViewConeAddMAX_AZIMUTH_DEG(builder, self.MAX_AZIMUTH_DEG)
-        SCNViewConeAddMAX_RANGE_KM(builder, self.MAX_RANGE_KM)
-        SCNViewConeAddHALF_ANGLE_DEG(builder, self.HALF_ANGLE_DEG)
+        SCNViewConeAddMIN_ELEVATION(builder, self.MIN_ELEVATION)
+        SCNViewConeAddMAX_ELEVATION(builder, self.MAX_ELEVATION)
+        SCNViewConeAddMIN_AZIMUTH(builder, self.MIN_AZIMUTH)
+        SCNViewConeAddMAX_AZIMUTH(builder, self.MAX_AZIMUTH)
+        SCNViewConeAddMAX_RANGE(builder, self.MAX_RANGE)
+        SCNViewConeAddHALF_ANGLE(builder, self.HALF_ANGLE)
         if self.DYNAMIC_RANGE is not None:
             SCNViewConeAddDYNAMIC_RANGE(builder, DYNAMIC_RANGE)
         SCNViewCone = SCNViewConeEnd(builder)

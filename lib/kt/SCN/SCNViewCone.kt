@@ -32,7 +32,7 @@ class SCNViewCone : Table() {
     /**
      * Minimum elevation angle in degrees.
      */
-    val minElevationDeg : Double
+    val minElevation : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -40,7 +40,7 @@ class SCNViewCone : Table() {
     /**
      * Maximum elevation angle in degrees.
      */
-    val maxElevationDeg : Double
+    val maxElevation : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -48,7 +48,7 @@ class SCNViewCone : Table() {
     /**
      * Minimum azimuth angle in degrees.
      */
-    val minAzimuthDeg : Double
+    val minAzimuth : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -56,7 +56,7 @@ class SCNViewCone : Table() {
     /**
      * Maximum azimuth angle in degrees.
      */
-    val maxAzimuthDeg : Double
+    val maxAzimuth : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -64,7 +64,7 @@ class SCNViewCone : Table() {
     /**
      * Maximum view-cone range in kilometers.
      */
-    val maxRangeKm : Double
+    val maxRange : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -72,7 +72,7 @@ class SCNViewCone : Table() {
     /**
      * Half angle in degrees for cone-style overlays.
      */
-    val halfAngleDeg : Double
+    val halfAngle : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
@@ -98,24 +98,24 @@ class SCNViewCone : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNViewCone(builder: FlatBufferBuilder, minElevationDeg: Double, maxElevationDeg: Double, minAzimuthDeg: Double, maxAzimuthDeg: Double, maxRangeKm: Double, halfAngleDeg: Double, dynamicRangeOffset: Int) : Int {
+        fun createSCNViewCone(builder: FlatBufferBuilder, minElevation: Double, maxElevation: Double, minAzimuth: Double, maxAzimuth: Double, maxRange: Double, halfAngle: Double, dynamicRangeOffset: Int) : Int {
             builder.startTable(7)
-            addHALFANGLEDEG(builder, halfAngleDeg)
-            addMAXRANGEKM(builder, maxRangeKm)
-            addMAXAZIMUTHDEG(builder, maxAzimuthDeg)
-            addMINAZIMUTHDEG(builder, minAzimuthDeg)
-            addMAXELEVATIONDEG(builder, maxElevationDeg)
-            addMINELEVATIONDEG(builder, minElevationDeg)
+            addHALFANGLE(builder, halfAngle)
+            addMAXRANGE(builder, maxRange)
+            addMAXAZIMUTH(builder, maxAzimuth)
+            addMINAZIMUTH(builder, minAzimuth)
+            addMAXELEVATION(builder, maxElevation)
+            addMINELEVATION(builder, minElevation)
             addDYNAMICRANGE(builder, dynamicRangeOffset)
             return endSCNViewCone(builder)
         }
         fun startSCNViewCone(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addMINELEVATIONDEG(builder: FlatBufferBuilder, minElevationDeg: Double) = builder.addDouble(0, minElevationDeg, 0.0)
-        fun addMAXELEVATIONDEG(builder: FlatBufferBuilder, maxElevationDeg: Double) = builder.addDouble(1, maxElevationDeg, 0.0)
-        fun addMINAZIMUTHDEG(builder: FlatBufferBuilder, minAzimuthDeg: Double) = builder.addDouble(2, minAzimuthDeg, 0.0)
-        fun addMAXAZIMUTHDEG(builder: FlatBufferBuilder, maxAzimuthDeg: Double) = builder.addDouble(3, maxAzimuthDeg, 0.0)
-        fun addMAXRANGEKM(builder: FlatBufferBuilder, maxRangeKm: Double) = builder.addDouble(4, maxRangeKm, 0.0)
-        fun addHALFANGLEDEG(builder: FlatBufferBuilder, halfAngleDeg: Double) = builder.addDouble(5, halfAngleDeg, 0.0)
+        fun addMINELEVATION(builder: FlatBufferBuilder, minElevation: Double) = builder.addDouble(0, minElevation, 0.0)
+        fun addMAXELEVATION(builder: FlatBufferBuilder, maxElevation: Double) = builder.addDouble(1, maxElevation, 0.0)
+        fun addMINAZIMUTH(builder: FlatBufferBuilder, minAzimuth: Double) = builder.addDouble(2, minAzimuth, 0.0)
+        fun addMAXAZIMUTH(builder: FlatBufferBuilder, maxAzimuth: Double) = builder.addDouble(3, maxAzimuth, 0.0)
+        fun addMAXRANGE(builder: FlatBufferBuilder, maxRange: Double) = builder.addDouble(4, maxRange, 0.0)
+        fun addHALFANGLE(builder: FlatBufferBuilder, halfAngle: Double) = builder.addDouble(5, halfAngle, 0.0)
         fun addDYNAMICRANGE(builder: FlatBufferBuilder, dynamicRange: Int) = builder.addOffset(6, dynamicRange, 0)
         fun endSCNViewCone(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()

@@ -18,27 +18,27 @@ public struct SCNGeodeticPoint : IFlatbufferObject
   public SCNGeodeticPoint __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Latitude in degrees.
-  public double LATITUDE_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double LATITUDE { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Longitude in degrees.
-  public double LONGITUDE_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double LONGITUDE { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Altitude above the reference ellipsoid in kilometers.
-  public double ALTITUDE_KM { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double ALTITUDE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<SCNGeodeticPoint> CreateSCNGeodeticPoint(FlatBufferBuilder builder,
-      double LATITUDE_DEG = 0.0,
-      double LONGITUDE_DEG = 0.0,
-      double ALTITUDE_KM = 0.0) {
+      double LATITUDE = 0.0,
+      double LONGITUDE = 0.0,
+      double ALTITUDE = 0.0) {
     builder.StartTable(3);
-    SCNGeodeticPoint.AddALTITUDE_KM(builder, ALTITUDE_KM);
-    SCNGeodeticPoint.AddLONGITUDE_DEG(builder, LONGITUDE_DEG);
-    SCNGeodeticPoint.AddLATITUDE_DEG(builder, LATITUDE_DEG);
+    SCNGeodeticPoint.AddALTITUDE(builder, ALTITUDE);
+    SCNGeodeticPoint.AddLONGITUDE(builder, LONGITUDE);
+    SCNGeodeticPoint.AddLATITUDE(builder, LATITUDE);
     return SCNGeodeticPoint.EndSCNGeodeticPoint(builder);
   }
 
   public static void StartSCNGeodeticPoint(FlatBufferBuilder builder) { builder.StartTable(3); }
-  public static void AddLATITUDE_DEG(FlatBufferBuilder builder, double LATITUDE_DEG) { builder.AddDouble(0, LATITUDE_DEG, 0.0); }
-  public static void AddLONGITUDE_DEG(FlatBufferBuilder builder, double LONGITUDE_DEG) { builder.AddDouble(1, LONGITUDE_DEG, 0.0); }
-  public static void AddALTITUDE_KM(FlatBufferBuilder builder, double ALTITUDE_KM) { builder.AddDouble(2, ALTITUDE_KM, 0.0); }
+  public static void AddLATITUDE(FlatBufferBuilder builder, double LATITUDE) { builder.AddDouble(0, LATITUDE, 0.0); }
+  public static void AddLONGITUDE(FlatBufferBuilder builder, double LONGITUDE) { builder.AddDouble(1, LONGITUDE, 0.0); }
+  public static void AddALTITUDE(FlatBufferBuilder builder, double ALTITUDE) { builder.AddDouble(2, ALTITUDE, 0.0); }
   public static Offset<SCNGeodeticPoint> EndSCNGeodeticPoint(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCNGeodeticPoint>(o);
@@ -49,30 +49,30 @@ public struct SCNGeodeticPoint : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCNGeodeticPointT _o) {
-    _o.LATITUDE_DEG = this.LATITUDE_DEG;
-    _o.LONGITUDE_DEG = this.LONGITUDE_DEG;
-    _o.ALTITUDE_KM = this.ALTITUDE_KM;
+    _o.LATITUDE = this.LATITUDE;
+    _o.LONGITUDE = this.LONGITUDE;
+    _o.ALTITUDE = this.ALTITUDE;
   }
   public static Offset<SCNGeodeticPoint> Pack(FlatBufferBuilder builder, SCNGeodeticPointT _o) {
     if (_o == null) return default(Offset<SCNGeodeticPoint>);
     return CreateSCNGeodeticPoint(
       builder,
-      _o.LATITUDE_DEG,
-      _o.LONGITUDE_DEG,
-      _o.ALTITUDE_KM);
+      _o.LATITUDE,
+      _o.LONGITUDE,
+      _o.ALTITUDE);
   }
 }
 
 public class SCNGeodeticPointT
 {
-  public double LATITUDE_DEG { get; set; }
-  public double LONGITUDE_DEG { get; set; }
-  public double ALTITUDE_KM { get; set; }
+  public double LATITUDE { get; set; }
+  public double LONGITUDE { get; set; }
+  public double ALTITUDE { get; set; }
 
   public SCNGeodeticPointT() {
-    this.LATITUDE_DEG = 0.0;
-    this.LONGITUDE_DEG = 0.0;
-    this.ALTITUDE_KM = 0.0;
+    this.LATITUDE = 0.0;
+    this.LONGITUDE = 0.0;
+    this.ALTITUDE = 0.0;
   }
 }
 
@@ -82,9 +82,9 @@ static public class SCNGeodeticPointVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*LATITUDE_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 6 /*LONGITUDE_DEG*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 8 /*ALTITUDE_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 4 /*LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 8 /*ALTITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

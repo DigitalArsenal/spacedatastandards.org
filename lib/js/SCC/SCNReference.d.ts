@@ -6,7 +6,6 @@ import { RDO, RDOT } from './RDO.js';
 import { SCNExclusionZone, SCNExclusionZoneT } from './SCNExclusionZone.js';
 import { SCNPointOfInterest, SCNPointOfInterestT } from './SCNPointOfInterest.js';
 import { SCNSunAdvantageTarget, SCNSunAdvantageTargetT } from './SCNSunAdvantageTarget.js';
-import { SCNTleLines, SCNTleLinesT } from './SCNTleLines.js';
 import { SCNViewCone, SCNViewConeT } from './SCNViewCone.js';
 import { SEN, SENT } from './SEN.js';
 import { SIT, SITT } from './SIT.js';
@@ -67,11 +66,6 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     DATA_MODES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     dataModesLength(): number;
     /**
-     * TLE provenance and raw lines for satellite references.
-     */
-    TLES(index: number, obj?: SCNTleLines): SCNTleLines | null;
-    tlesLength(): number;
-    /**
      * Mean orbital elements associated with this reference.
      */
     MEAN_ELEMENTS(index: number, obj?: OMM): OMM | null;
@@ -107,11 +101,11 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     /**
      * Ground-site latitude in degrees when no SIT record is available.
      */
-    SITE_LATITUDE_DEG(): number;
+    SITE_LATITUDE(): number;
     /**
      * Ground-site longitude in degrees when no SIT record is available.
      */
-    SITE_LONGITUDE_DEG(): number;
+    SITE_LONGITUDE(): number;
     /**
      * Scenario variable id for variable satellite references.
      */
@@ -161,9 +155,6 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addDataModes(builder: flatbuffers.Builder, DATA_MODESOffset: flatbuffers.Offset): void;
     static createDataModesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startDataModesVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addTles(builder: flatbuffers.Builder, TLESOffset: flatbuffers.Offset): void;
-    static createTlesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startTlesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addMeanElements(builder: flatbuffers.Builder, MEAN_ELEMENTSOffset: flatbuffers.Offset): void;
     static createMeanElementsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMeanElementsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -177,8 +168,8 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addSensor(builder: flatbuffers.Builder, SENSOROffset: flatbuffers.Offset): void;
     static addSensorSystemId(builder: flatbuffers.Builder, SENSOR_SYSTEM_IDOffset: flatbuffers.Offset): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
-    static addSiteLatitudeDeg(builder: flatbuffers.Builder, SITE_LATITUDE_DEG: number): void;
-    static addSiteLongitudeDeg(builder: flatbuffers.Builder, SITE_LONGITUDE_DEG: number): void;
+    static addSiteLatitude(builder: flatbuffers.Builder, SITE_LATITUDE: number): void;
+    static addSiteLongitude(builder: flatbuffers.Builder, SITE_LONGITUDE: number): void;
     static addVariableSatelliteId(builder: flatbuffers.Builder, VARIABLE_SATELLITE_IDOffset: flatbuffers.Offset): void;
     static addVariableSiteId(builder: flatbuffers.Builder, VARIABLE_SITE_IDOffset: flatbuffers.Offset): void;
     static addPoints(builder: flatbuffers.Builder, POINTSOffset: flatbuffers.Offset): void;
@@ -203,7 +194,6 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     COUNTRY: string | Uint8Array | null;
     SOURCES: (string)[];
     DATA_MODES: (string)[];
-    TLES: (SCNTleLinesT)[];
     MEAN_ELEMENTS: (OMMT)[];
     STATES: (STVT)[];
     MANEUVERS: (MNVT)[];
@@ -211,8 +201,8 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     SENSOR: SENT | null;
     SENSOR_SYSTEM_ID: string | Uint8Array | null;
     SENSOR_ID: string | Uint8Array | null;
-    SITE_LATITUDE_DEG: number;
-    SITE_LONGITUDE_DEG: number;
+    SITE_LATITUDE: number;
+    SITE_LONGITUDE: number;
     VARIABLE_SATELLITE_ID: string | Uint8Array | null;
     VARIABLE_SITE_ID: string | Uint8Array | null;
     POINTS: (SCNPointOfInterestT)[];
@@ -221,7 +211,7 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     EXCLUSION_ZONE: SCNExclusionZoneT | null;
     OBSERVATION_EO: EOOT | null;
     OBSERVATION_RADAR: RDOT | null;
-    constructor(REFERENCE_ID?: string | Uint8Array | null, DISPLAY_NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], TLES?: (SCNTleLinesT)[], MEAN_ELEMENTS?: (OMMT)[], STATES?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_LATITUDE_DEG?: number, SITE_LONGITUDE_DEG?: number, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null);
+    constructor(REFERENCE_ID?: string | Uint8Array | null, DISPLAY_NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATES?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_LATITUDE?: number, SITE_LONGITUDE?: number, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNReference.d.ts.map

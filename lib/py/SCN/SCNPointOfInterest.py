@@ -55,7 +55,7 @@ class SCNPointOfInterest(object):
 
     # Seconds before the epoch when highlighting begins.
     # SCNPointOfInterest
-    def HIGHLIGHT_BEFORE_SEC(self):
+    def HIGHLIGHT_BEFORE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -63,7 +63,7 @@ class SCNPointOfInterest(object):
 
     # Seconds after the epoch when highlighting remains active.
     # SCNPointOfInterest
-    def HIGHLIGHT_AFTER_SEC(self):
+    def HIGHLIGHT_AFTER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -113,17 +113,17 @@ def SCNPointOfInterestAddEPOCH(builder, EPOCH):
 def AddEPOCH(builder, EPOCH):
     SCNPointOfInterestAddEPOCH(builder, EPOCH)
 
-def SCNPointOfInterestAddHIGHLIGHT_BEFORE_SEC(builder, HIGHLIGHT_BEFORE_SEC):
-    builder.PrependFloat64Slot(3, HIGHLIGHT_BEFORE_SEC, 0.0)
+def SCNPointOfInterestAddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE):
+    builder.PrependFloat64Slot(3, HIGHLIGHT_BEFORE, 0.0)
 
-def AddHIGHLIGHT_BEFORE_SEC(builder, HIGHLIGHT_BEFORE_SEC):
-    SCNPointOfInterestAddHIGHLIGHT_BEFORE_SEC(builder, HIGHLIGHT_BEFORE_SEC)
+def AddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE):
+    SCNPointOfInterestAddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE)
 
-def SCNPointOfInterestAddHIGHLIGHT_AFTER_SEC(builder, HIGHLIGHT_AFTER_SEC):
-    builder.PrependFloat64Slot(4, HIGHLIGHT_AFTER_SEC, 0.0)
+def SCNPointOfInterestAddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER):
+    builder.PrependFloat64Slot(4, HIGHLIGHT_AFTER, 0.0)
 
-def AddHIGHLIGHT_AFTER_SEC(builder, HIGHLIGHT_AFTER_SEC):
-    SCNPointOfInterestAddHIGHLIGHT_AFTER_SEC(builder, HIGHLIGHT_AFTER_SEC)
+def AddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER):
+    SCNPointOfInterestAddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER)
 
 def SCNPointOfInterestAddCOLOR(builder, COLOR):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COLOR), 0)
@@ -157,16 +157,16 @@ class SCNPointOfInterestT(object):
         NAME = None,
         DESCRIPTION = None,
         EPOCH = None,
-        HIGHLIGHT_BEFORE_SEC = 0.0,
-        HIGHLIGHT_AFTER_SEC = 0.0,
+        HIGHLIGHT_BEFORE = 0.0,
+        HIGHLIGHT_AFTER = 0.0,
         COLOR = None,
         POSITION = None,
     ):
         self.NAME = NAME  # type: Optional[str]
         self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
         self.EPOCH = EPOCH  # type: Optional[str]
-        self.HIGHLIGHT_BEFORE_SEC = HIGHLIGHT_BEFORE_SEC  # type: float
-        self.HIGHLIGHT_AFTER_SEC = HIGHLIGHT_AFTER_SEC  # type: float
+        self.HIGHLIGHT_BEFORE = HIGHLIGHT_BEFORE  # type: float
+        self.HIGHLIGHT_AFTER = HIGHLIGHT_AFTER  # type: float
         self.COLOR = COLOR  # type: Optional[str]
         self.POSITION = POSITION  # type: Optional[SCNGeodeticPoint.SCNGeodeticPointT]
 
@@ -194,8 +194,8 @@ class SCNPointOfInterestT(object):
         self.NAME = SCNPointOfInterest.NAME()
         self.DESCRIPTION = SCNPointOfInterest.DESCRIPTION()
         self.EPOCH = SCNPointOfInterest.EPOCH()
-        self.HIGHLIGHT_BEFORE_SEC = SCNPointOfInterest.HIGHLIGHT_BEFORE_SEC()
-        self.HIGHLIGHT_AFTER_SEC = SCNPointOfInterest.HIGHLIGHT_AFTER_SEC()
+        self.HIGHLIGHT_BEFORE = SCNPointOfInterest.HIGHLIGHT_BEFORE()
+        self.HIGHLIGHT_AFTER = SCNPointOfInterest.HIGHLIGHT_AFTER()
         self.COLOR = SCNPointOfInterest.COLOR()
         if SCNPointOfInterest.POSITION() is not None:
             self.POSITION = SCNGeodeticPoint.SCNGeodeticPointT.InitFromObj(SCNPointOfInterest.POSITION())
@@ -219,8 +219,8 @@ class SCNPointOfInterestT(object):
             SCNPointOfInterestAddDESCRIPTION(builder, DESCRIPTION)
         if self.EPOCH is not None:
             SCNPointOfInterestAddEPOCH(builder, EPOCH)
-        SCNPointOfInterestAddHIGHLIGHT_BEFORE_SEC(builder, self.HIGHLIGHT_BEFORE_SEC)
-        SCNPointOfInterestAddHIGHLIGHT_AFTER_SEC(builder, self.HIGHLIGHT_AFTER_SEC)
+        SCNPointOfInterestAddHIGHLIGHT_BEFORE(builder, self.HIGHLIGHT_BEFORE)
+        SCNPointOfInterestAddHIGHLIGHT_AFTER(builder, self.HIGHLIGHT_AFTER)
         if self.COLOR is not None:
             SCNPointOfInterestAddCOLOR(builder, COLOR)
         if self.POSITION is not None:

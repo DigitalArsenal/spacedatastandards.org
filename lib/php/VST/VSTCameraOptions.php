@@ -65,7 +65,7 @@ class VSTCameraOptions extends Table
     /**
      * @return double
      */
-    public function getDISTANCE_FROM_TARGET_KM()
+    public function getDISTANCE_FROM_TARGET()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
@@ -92,12 +92,12 @@ class VSTCameraOptions extends Table
      * @param FlatBufferBuilder $builder
      * @return VSTCameraOptions
      */
-    public static function createVSTCameraOptions(FlatBufferBuilder $builder, $CAMERA_FRAME_MODE, $SATELLITE_ALIGNMENT, $DISTANCE_FROM_TARGET_KM, $ROTATION)
+    public static function createVSTCameraOptions(FlatBufferBuilder $builder, $CAMERA_FRAME_MODE, $SATELLITE_ALIGNMENT, $DISTANCE_FROM_TARGET, $ROTATION)
     {
         $builder->startObject(4);
         self::addCAMERA_FRAME_MODE($builder, $CAMERA_FRAME_MODE);
         self::addSATELLITE_ALIGNMENT($builder, $SATELLITE_ALIGNMENT);
-        self::addDISTANCE_FROM_TARGET_KM($builder, $DISTANCE_FROM_TARGET_KM);
+        self::addDISTANCE_FROM_TARGET($builder, $DISTANCE_FROM_TARGET);
         self::addROTATION($builder, $ROTATION);
         $o = $builder->endObject();
         return $o;
@@ -128,9 +128,9 @@ class VSTCameraOptions extends Table
      * @param double
      * @return void
      */
-    public static function addDISTANCE_FROM_TARGET_KM(FlatBufferBuilder $builder, $DISTANCE_FROM_TARGET_KM)
+    public static function addDISTANCE_FROM_TARGET(FlatBufferBuilder $builder, $DISTANCE_FROM_TARGET)
     {
-        $builder->addDoubleX(2, $DISTANCE_FROM_TARGET_KM, 0.0);
+        $builder->addDoubleX(2, $DISTANCE_FROM_TARGET, 0.0);
     }
 
     /**

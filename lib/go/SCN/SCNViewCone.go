@@ -43,7 +43,7 @@ func (rcv *SCNViewCone) Table() flatbuffers.Table {
 }
 
 /// Minimum elevation angle in degrees.
-func (rcv *SCNViewCone) MIN_ELEVATION_DEG() float64 {
+func (rcv *SCNViewCone) MIN_ELEVATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -51,21 +51,21 @@ func (rcv *SCNViewCone) MIN_ELEVATION_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) MinElevationDeg() float64 {
-	return rcv.MIN_ELEVATION_DEG()
+func (rcv *SCNViewCone) MinElevation() float64 {
+	return rcv.MIN_ELEVATION()
 }
 
 /// Minimum elevation angle in degrees.
-func (rcv *SCNViewCone) MutateMIN_ELEVATION_DEG(n float64) bool {
+func (rcv *SCNViewCone) MutateMIN_ELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
 
-func (rcv *SCNViewCone) MutateMinElevationDeg(n float64) bool {
-	return rcv.MutateMIN_ELEVATION_DEG(n)
+func (rcv *SCNViewCone) MutateMinElevation(n float64) bool {
+	return rcv.MutateMIN_ELEVATION(n)
 }
 
 /// Maximum elevation angle in degrees.
-func (rcv *SCNViewCone) MAX_ELEVATION_DEG() float64 {
+func (rcv *SCNViewCone) MAX_ELEVATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -73,21 +73,21 @@ func (rcv *SCNViewCone) MAX_ELEVATION_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) MaxElevationDeg() float64 {
-	return rcv.MAX_ELEVATION_DEG()
+func (rcv *SCNViewCone) MaxElevation() float64 {
+	return rcv.MAX_ELEVATION()
 }
 
 /// Maximum elevation angle in degrees.
-func (rcv *SCNViewCone) MutateMAX_ELEVATION_DEG(n float64) bool {
+func (rcv *SCNViewCone) MutateMAX_ELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
 
-func (rcv *SCNViewCone) MutateMaxElevationDeg(n float64) bool {
-	return rcv.MutateMAX_ELEVATION_DEG(n)
+func (rcv *SCNViewCone) MutateMaxElevation(n float64) bool {
+	return rcv.MutateMAX_ELEVATION(n)
 }
 
 /// Minimum azimuth angle in degrees.
-func (rcv *SCNViewCone) MIN_AZIMUTH_DEG() float64 {
+func (rcv *SCNViewCone) MIN_AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -95,21 +95,21 @@ func (rcv *SCNViewCone) MIN_AZIMUTH_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) MinAzimuthDeg() float64 {
-	return rcv.MIN_AZIMUTH_DEG()
+func (rcv *SCNViewCone) MinAzimuth() float64 {
+	return rcv.MIN_AZIMUTH()
 }
 
 /// Minimum azimuth angle in degrees.
-func (rcv *SCNViewCone) MutateMIN_AZIMUTH_DEG(n float64) bool {
+func (rcv *SCNViewCone) MutateMIN_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
 
-func (rcv *SCNViewCone) MutateMinAzimuthDeg(n float64) bool {
-	return rcv.MutateMIN_AZIMUTH_DEG(n)
+func (rcv *SCNViewCone) MutateMinAzimuth(n float64) bool {
+	return rcv.MutateMIN_AZIMUTH(n)
 }
 
 /// Maximum azimuth angle in degrees.
-func (rcv *SCNViewCone) MAX_AZIMUTH_DEG() float64 {
+func (rcv *SCNViewCone) MAX_AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -117,21 +117,21 @@ func (rcv *SCNViewCone) MAX_AZIMUTH_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) MaxAzimuthDeg() float64 {
-	return rcv.MAX_AZIMUTH_DEG()
+func (rcv *SCNViewCone) MaxAzimuth() float64 {
+	return rcv.MAX_AZIMUTH()
 }
 
 /// Maximum azimuth angle in degrees.
-func (rcv *SCNViewCone) MutateMAX_AZIMUTH_DEG(n float64) bool {
+func (rcv *SCNViewCone) MutateMAX_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-func (rcv *SCNViewCone) MutateMaxAzimuthDeg(n float64) bool {
-	return rcv.MutateMAX_AZIMUTH_DEG(n)
+func (rcv *SCNViewCone) MutateMaxAzimuth(n float64) bool {
+	return rcv.MutateMAX_AZIMUTH(n)
 }
 
 /// Maximum view-cone range in kilometers.
-func (rcv *SCNViewCone) MAX_RANGE_KM() float64 {
+func (rcv *SCNViewCone) MAX_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -139,21 +139,21 @@ func (rcv *SCNViewCone) MAX_RANGE_KM() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) MaxRangeKm() float64 {
-	return rcv.MAX_RANGE_KM()
+func (rcv *SCNViewCone) MaxRange() float64 {
+	return rcv.MAX_RANGE()
 }
 
 /// Maximum view-cone range in kilometers.
-func (rcv *SCNViewCone) MutateMAX_RANGE_KM(n float64) bool {
+func (rcv *SCNViewCone) MutateMAX_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
 
-func (rcv *SCNViewCone) MutateMaxRangeKm(n float64) bool {
-	return rcv.MutateMAX_RANGE_KM(n)
+func (rcv *SCNViewCone) MutateMaxRange(n float64) bool {
+	return rcv.MutateMAX_RANGE(n)
 }
 
 /// Half angle in degrees for cone-style overlays.
-func (rcv *SCNViewCone) HALF_ANGLE_DEG() float64 {
+func (rcv *SCNViewCone) HALF_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -161,17 +161,17 @@ func (rcv *SCNViewCone) HALF_ANGLE_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNViewCone) HalfAngleDeg() float64 {
-	return rcv.HALF_ANGLE_DEG()
+func (rcv *SCNViewCone) HalfAngle() float64 {
+	return rcv.HALF_ANGLE()
 }
 
 /// Half angle in degrees for cone-style overlays.
-func (rcv *SCNViewCone) MutateHALF_ANGLE_DEG(n float64) bool {
+func (rcv *SCNViewCone) MutateHALF_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-func (rcv *SCNViewCone) MutateHalfAngleDeg(n float64) bool {
-	return rcv.MutateHALF_ANGLE_DEG(n)
+func (rcv *SCNViewCone) MutateHalfAngle(n float64) bool {
+	return rcv.MutateHALF_ANGLE(n)
 }
 
 /// Dynamic range mode or expression used by the viewer.
@@ -191,41 +191,41 @@ func (rcv *SCNViewCone) DynamicRange() []byte {
 func SCNViewConeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
-func SCNViewConeAddMIN_ELEVATION_DEG(builder *flatbuffers.Builder, MIN_ELEVATION_DEG float64) {
-	builder.PrependFloat64Slot(0, MIN_ELEVATION_DEG, 0.0)
+func SCNViewConeAddMIN_ELEVATION(builder *flatbuffers.Builder, MIN_ELEVATION float64) {
+	builder.PrependFloat64Slot(0, MIN_ELEVATION, 0.0)
 }
-func SCNViewConeAddMinElevationDeg(builder *flatbuffers.Builder, MIN_ELEVATION_DEG float64) {
-	SCNViewConeAddMIN_ELEVATION_DEG(builder, MIN_ELEVATION_DEG)
+func SCNViewConeAddMinElevation(builder *flatbuffers.Builder, MIN_ELEVATION float64) {
+	SCNViewConeAddMIN_ELEVATION(builder, MIN_ELEVATION)
 }
-func SCNViewConeAddMAX_ELEVATION_DEG(builder *flatbuffers.Builder, MAX_ELEVATION_DEG float64) {
-	builder.PrependFloat64Slot(1, MAX_ELEVATION_DEG, 0.0)
+func SCNViewConeAddMAX_ELEVATION(builder *flatbuffers.Builder, MAX_ELEVATION float64) {
+	builder.PrependFloat64Slot(1, MAX_ELEVATION, 0.0)
 }
-func SCNViewConeAddMaxElevationDeg(builder *flatbuffers.Builder, MAX_ELEVATION_DEG float64) {
-	SCNViewConeAddMAX_ELEVATION_DEG(builder, MAX_ELEVATION_DEG)
+func SCNViewConeAddMaxElevation(builder *flatbuffers.Builder, MAX_ELEVATION float64) {
+	SCNViewConeAddMAX_ELEVATION(builder, MAX_ELEVATION)
 }
-func SCNViewConeAddMIN_AZIMUTH_DEG(builder *flatbuffers.Builder, MIN_AZIMUTH_DEG float64) {
-	builder.PrependFloat64Slot(2, MIN_AZIMUTH_DEG, 0.0)
+func SCNViewConeAddMIN_AZIMUTH(builder *flatbuffers.Builder, MIN_AZIMUTH float64) {
+	builder.PrependFloat64Slot(2, MIN_AZIMUTH, 0.0)
 }
-func SCNViewConeAddMinAzimuthDeg(builder *flatbuffers.Builder, MIN_AZIMUTH_DEG float64) {
-	SCNViewConeAddMIN_AZIMUTH_DEG(builder, MIN_AZIMUTH_DEG)
+func SCNViewConeAddMinAzimuth(builder *flatbuffers.Builder, MIN_AZIMUTH float64) {
+	SCNViewConeAddMIN_AZIMUTH(builder, MIN_AZIMUTH)
 }
-func SCNViewConeAddMAX_AZIMUTH_DEG(builder *flatbuffers.Builder, MAX_AZIMUTH_DEG float64) {
-	builder.PrependFloat64Slot(3, MAX_AZIMUTH_DEG, 0.0)
+func SCNViewConeAddMAX_AZIMUTH(builder *flatbuffers.Builder, MAX_AZIMUTH float64) {
+	builder.PrependFloat64Slot(3, MAX_AZIMUTH, 0.0)
 }
-func SCNViewConeAddMaxAzimuthDeg(builder *flatbuffers.Builder, MAX_AZIMUTH_DEG float64) {
-	SCNViewConeAddMAX_AZIMUTH_DEG(builder, MAX_AZIMUTH_DEG)
+func SCNViewConeAddMaxAzimuth(builder *flatbuffers.Builder, MAX_AZIMUTH float64) {
+	SCNViewConeAddMAX_AZIMUTH(builder, MAX_AZIMUTH)
 }
-func SCNViewConeAddMAX_RANGE_KM(builder *flatbuffers.Builder, MAX_RANGE_KM float64) {
-	builder.PrependFloat64Slot(4, MAX_RANGE_KM, 0.0)
+func SCNViewConeAddMAX_RANGE(builder *flatbuffers.Builder, MAX_RANGE float64) {
+	builder.PrependFloat64Slot(4, MAX_RANGE, 0.0)
 }
-func SCNViewConeAddMaxRangeKm(builder *flatbuffers.Builder, MAX_RANGE_KM float64) {
-	SCNViewConeAddMAX_RANGE_KM(builder, MAX_RANGE_KM)
+func SCNViewConeAddMaxRange(builder *flatbuffers.Builder, MAX_RANGE float64) {
+	SCNViewConeAddMAX_RANGE(builder, MAX_RANGE)
 }
-func SCNViewConeAddHALF_ANGLE_DEG(builder *flatbuffers.Builder, HALF_ANGLE_DEG float64) {
-	builder.PrependFloat64Slot(5, HALF_ANGLE_DEG, 0.0)
+func SCNViewConeAddHALF_ANGLE(builder *flatbuffers.Builder, HALF_ANGLE float64) {
+	builder.PrependFloat64Slot(5, HALF_ANGLE, 0.0)
 }
-func SCNViewConeAddHalfAngleDeg(builder *flatbuffers.Builder, HALF_ANGLE_DEG float64) {
-	SCNViewConeAddHALF_ANGLE_DEG(builder, HALF_ANGLE_DEG)
+func SCNViewConeAddHalfAngle(builder *flatbuffers.Builder, HALF_ANGLE float64) {
+	SCNViewConeAddHALF_ANGLE(builder, HALF_ANGLE)
 }
 func SCNViewConeAddDYNAMIC_RANGE(builder *flatbuffers.Builder, DYNAMIC_RANGE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(DYNAMIC_RANGE), 0)

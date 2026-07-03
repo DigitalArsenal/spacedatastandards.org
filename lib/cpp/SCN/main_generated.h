@@ -24,9 +24,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 
-struct SCNTleLines;
-struct SCNTleLinesBuilder;
-
 struct SCNGeodeticPoint;
 struct SCNGeodeticPointBuilder;
 
@@ -142,116 +139,32 @@ inline const char *EnumNamescenarioActionCode(scenarioActionCode e) {
   return EnumNamesscenarioActionCode()[index];
 }
 
-/// Raw TLE lines retained as import provenance for scenario setup.
-struct SCNTleLines FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef SCNTleLinesBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LINE1 = 4,
-    VT_LINE2 = 6,
-    VT_SOURCE = 8
-  };
-  /// First TLE line exactly as imported.
-  const ::flatbuffers::String *LINE1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINE1);
-  }
-  /// Second TLE line exactly as imported.
-  const ::flatbuffers::String *LINE2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINE2);
-  }
-  /// Source label or URI for the imported TLE.
-  const ::flatbuffers::String *SOURCE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_LINE1) &&
-           verifier.VerifyString(LINE1()) &&
-           VerifyOffset(verifier, VT_LINE2) &&
-           verifier.VerifyString(LINE2()) &&
-           VerifyOffset(verifier, VT_SOURCE) &&
-           verifier.VerifyString(SOURCE()) &&
-           verifier.EndTable();
-  }
-};
-
-struct SCNTleLinesBuilder {
-  typedef SCNTleLines Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_LINE1(::flatbuffers::Offset<::flatbuffers::String> LINE1) {
-    fbb_.AddOffset(SCNTleLines::VT_LINE1, LINE1);
-  }
-  void add_LINE2(::flatbuffers::Offset<::flatbuffers::String> LINE2) {
-    fbb_.AddOffset(SCNTleLines::VT_LINE2, LINE2);
-  }
-  void add_SOURCE(::flatbuffers::Offset<::flatbuffers::String> SOURCE) {
-    fbb_.AddOffset(SCNTleLines::VT_SOURCE, SOURCE);
-  }
-  explicit SCNTleLinesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<SCNTleLines> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<SCNTleLines>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<SCNTleLines> CreateSCNTleLines(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> LINE1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINE2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SOURCE = 0) {
-  SCNTleLinesBuilder builder_(_fbb);
-  builder_.add_SOURCE(SOURCE);
-  builder_.add_LINE2(LINE2);
-  builder_.add_LINE1(LINE1);
-  return builder_.Finish();
-}
-
-inline ::flatbuffers::Offset<SCNTleLines> CreateSCNTleLinesDirect(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *LINE1 = nullptr,
-    const char *LINE2 = nullptr,
-    const char *SOURCE = nullptr) {
-  auto LINE1__ = LINE1 ? _fbb.CreateString(LINE1) : 0;
-  auto LINE2__ = LINE2 ? _fbb.CreateString(LINE2) : 0;
-  auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
-  return CreateSCNTleLines(
-      _fbb,
-      LINE1__,
-      LINE2__,
-      SOURCE__);
-}
-
 /// Geodetic point in latitude, longitude, altitude order.
 struct SCNGeodeticPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNGeodeticPointBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LATITUDE_DEG = 4,
-    VT_LONGITUDE_DEG = 6,
-    VT_ALTITUDE_KM = 8
+    VT_LATITUDE = 4,
+    VT_LONGITUDE = 6,
+    VT_ALTITUDE = 8
   };
   /// Latitude in degrees.
-  double LATITUDE_DEG() const {
-    return GetField<double>(VT_LATITUDE_DEG, 0.0);
+  double LATITUDE() const {
+    return GetField<double>(VT_LATITUDE, 0.0);
   }
   /// Longitude in degrees.
-  double LONGITUDE_DEG() const {
-    return GetField<double>(VT_LONGITUDE_DEG, 0.0);
+  double LONGITUDE() const {
+    return GetField<double>(VT_LONGITUDE, 0.0);
   }
   /// Altitude above the reference ellipsoid in kilometers.
-  double ALTITUDE_KM() const {
-    return GetField<double>(VT_ALTITUDE_KM, 0.0);
+  double ALTITUDE() const {
+    return GetField<double>(VT_ALTITUDE, 0.0);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_LATITUDE_DEG, 8) &&
-           VerifyField<double>(verifier, VT_LONGITUDE_DEG, 8) &&
-           VerifyField<double>(verifier, VT_ALTITUDE_KM, 8) &&
+           VerifyField<double>(verifier, VT_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_ALTITUDE, 8) &&
            verifier.EndTable();
   }
 };
@@ -260,14 +173,14 @@ struct SCNGeodeticPointBuilder {
   typedef SCNGeodeticPoint Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_LATITUDE_DEG(double LATITUDE_DEG) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LATITUDE_DEG, LATITUDE_DEG, 0.0);
+  void add_LATITUDE(double LATITUDE) {
+    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LATITUDE, LATITUDE, 0.0);
   }
-  void add_LONGITUDE_DEG(double LONGITUDE_DEG) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LONGITUDE_DEG, LONGITUDE_DEG, 0.0);
+  void add_LONGITUDE(double LONGITUDE) {
+    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LONGITUDE, LONGITUDE, 0.0);
   }
-  void add_ALTITUDE_KM(double ALTITUDE_KM) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_ALTITUDE_KM, ALTITUDE_KM, 0.0);
+  void add_ALTITUDE(double ALTITUDE) {
+    fbb_.AddElement<double>(SCNGeodeticPoint::VT_ALTITUDE, ALTITUDE, 0.0);
   }
   explicit SCNGeodeticPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -282,13 +195,13 @@ struct SCNGeodeticPointBuilder {
 
 inline ::flatbuffers::Offset<SCNGeodeticPoint> CreateSCNGeodeticPoint(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double LATITUDE_DEG = 0.0,
-    double LONGITUDE_DEG = 0.0,
-    double ALTITUDE_KM = 0.0) {
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double ALTITUDE = 0.0) {
   SCNGeodeticPointBuilder builder_(_fbb);
-  builder_.add_ALTITUDE_KM(ALTITUDE_KM);
-  builder_.add_LONGITUDE_DEG(LONGITUDE_DEG);
-  builder_.add_LATITUDE_DEG(LATITUDE_DEG);
+  builder_.add_ALTITUDE(ALTITUDE);
+  builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_LATITUDE(LATITUDE);
   return builder_.Finish();
 }
 
@@ -299,8 +212,8 @@ struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_NAME = 4,
     VT_DESCRIPTION = 6,
     VT_EPOCH = 8,
-    VT_HIGHLIGHT_BEFORE_SEC = 10,
-    VT_HIGHLIGHT_AFTER_SEC = 12,
+    VT_HIGHLIGHT_BEFORE = 10,
+    VT_HIGHLIGHT_AFTER = 12,
     VT_COLOR = 14,
     VT_POSITION = 16
   };
@@ -317,12 +230,12 @@ struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
   /// Seconds before the epoch when highlighting begins.
-  double HIGHLIGHT_BEFORE_SEC() const {
-    return GetField<double>(VT_HIGHLIGHT_BEFORE_SEC, 0.0);
+  double HIGHLIGHT_BEFORE() const {
+    return GetField<double>(VT_HIGHLIGHT_BEFORE, 0.0);
   }
   /// Seconds after the epoch when highlighting remains active.
-  double HIGHLIGHT_AFTER_SEC() const {
-    return GetField<double>(VT_HIGHLIGHT_AFTER_SEC, 0.0);
+  double HIGHLIGHT_AFTER() const {
+    return GetField<double>(VT_HIGHLIGHT_AFTER, 0.0);
   }
   /// Display color token for the point of interest.
   const ::flatbuffers::String *COLOR() const {
@@ -341,8 +254,8 @@ struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyString(DESCRIPTION()) &&
            VerifyOffset(verifier, VT_EPOCH) &&
            verifier.VerifyString(EPOCH()) &&
-           VerifyField<double>(verifier, VT_HIGHLIGHT_BEFORE_SEC, 8) &&
-           VerifyField<double>(verifier, VT_HIGHLIGHT_AFTER_SEC, 8) &&
+           VerifyField<double>(verifier, VT_HIGHLIGHT_BEFORE, 8) &&
+           VerifyField<double>(verifier, VT_HIGHLIGHT_AFTER, 8) &&
            VerifyOffset(verifier, VT_COLOR) &&
            verifier.VerifyString(COLOR()) &&
            VerifyOffset(verifier, VT_POSITION) &&
@@ -364,11 +277,11 @@ struct SCNPointOfInterestBuilder {
   void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
     fbb_.AddOffset(SCNPointOfInterest::VT_EPOCH, EPOCH);
   }
-  void add_HIGHLIGHT_BEFORE_SEC(double HIGHLIGHT_BEFORE_SEC) {
-    fbb_.AddElement<double>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE_SEC, HIGHLIGHT_BEFORE_SEC, 0.0);
+  void add_HIGHLIGHT_BEFORE(double HIGHLIGHT_BEFORE) {
+    fbb_.AddElement<double>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE, HIGHLIGHT_BEFORE, 0.0);
   }
-  void add_HIGHLIGHT_AFTER_SEC(double HIGHLIGHT_AFTER_SEC) {
-    fbb_.AddElement<double>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER_SEC, HIGHLIGHT_AFTER_SEC, 0.0);
+  void add_HIGHLIGHT_AFTER(double HIGHLIGHT_AFTER) {
+    fbb_.AddElement<double>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER, HIGHLIGHT_AFTER, 0.0);
   }
   void add_COLOR(::flatbuffers::Offset<::flatbuffers::String> COLOR) {
     fbb_.AddOffset(SCNPointOfInterest::VT_COLOR, COLOR);
@@ -392,13 +305,13 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterest(
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
-    double HIGHLIGHT_BEFORE_SEC = 0.0,
-    double HIGHLIGHT_AFTER_SEC = 0.0,
+    double HIGHLIGHT_BEFORE = 0.0,
+    double HIGHLIGHT_AFTER = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
     ::flatbuffers::Offset<SCNGeodeticPoint> POSITION = 0) {
   SCNPointOfInterestBuilder builder_(_fbb);
-  builder_.add_HIGHLIGHT_AFTER_SEC(HIGHLIGHT_AFTER_SEC);
-  builder_.add_HIGHLIGHT_BEFORE_SEC(HIGHLIGHT_BEFORE_SEC);
+  builder_.add_HIGHLIGHT_AFTER(HIGHLIGHT_AFTER);
+  builder_.add_HIGHLIGHT_BEFORE(HIGHLIGHT_BEFORE);
   builder_.add_POSITION(POSITION);
   builder_.add_COLOR(COLOR);
   builder_.add_EPOCH(EPOCH);
@@ -412,8 +325,8 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterestDirect(
     const char *NAME = nullptr,
     const char *DESCRIPTION = nullptr,
     const char *EPOCH = nullptr,
-    double HIGHLIGHT_BEFORE_SEC = 0.0,
-    double HIGHLIGHT_AFTER_SEC = 0.0,
+    double HIGHLIGHT_BEFORE = 0.0,
+    double HIGHLIGHT_AFTER = 0.0,
     const char *COLOR = nullptr,
     ::flatbuffers::Offset<SCNGeodeticPoint> POSITION = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
@@ -425,8 +338,8 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterestDirect(
       NAME__,
       DESCRIPTION__,
       EPOCH__,
-      HIGHLIGHT_BEFORE_SEC,
-      HIGHLIGHT_AFTER_SEC,
+      HIGHLIGHT_BEFORE,
+      HIGHLIGHT_AFTER,
       COLOR__,
       POSITION);
 }
@@ -435,37 +348,37 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterestDirect(
 struct SCNViewCone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNViewConeBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_MIN_ELEVATION_DEG = 4,
-    VT_MAX_ELEVATION_DEG = 6,
-    VT_MIN_AZIMUTH_DEG = 8,
-    VT_MAX_AZIMUTH_DEG = 10,
-    VT_MAX_RANGE_KM = 12,
-    VT_HALF_ANGLE_DEG = 14,
+    VT_MIN_ELEVATION = 4,
+    VT_MAX_ELEVATION = 6,
+    VT_MIN_AZIMUTH = 8,
+    VT_MAX_AZIMUTH = 10,
+    VT_MAX_RANGE = 12,
+    VT_HALF_ANGLE = 14,
     VT_DYNAMIC_RANGE = 16
   };
   /// Minimum elevation angle in degrees.
-  double MIN_ELEVATION_DEG() const {
-    return GetField<double>(VT_MIN_ELEVATION_DEG, 0.0);
+  double MIN_ELEVATION() const {
+    return GetField<double>(VT_MIN_ELEVATION, 0.0);
   }
   /// Maximum elevation angle in degrees.
-  double MAX_ELEVATION_DEG() const {
-    return GetField<double>(VT_MAX_ELEVATION_DEG, 0.0);
+  double MAX_ELEVATION() const {
+    return GetField<double>(VT_MAX_ELEVATION, 0.0);
   }
   /// Minimum azimuth angle in degrees.
-  double MIN_AZIMUTH_DEG() const {
-    return GetField<double>(VT_MIN_AZIMUTH_DEG, 0.0);
+  double MIN_AZIMUTH() const {
+    return GetField<double>(VT_MIN_AZIMUTH, 0.0);
   }
   /// Maximum azimuth angle in degrees.
-  double MAX_AZIMUTH_DEG() const {
-    return GetField<double>(VT_MAX_AZIMUTH_DEG, 0.0);
+  double MAX_AZIMUTH() const {
+    return GetField<double>(VT_MAX_AZIMUTH, 0.0);
   }
   /// Maximum view-cone range in kilometers.
-  double MAX_RANGE_KM() const {
-    return GetField<double>(VT_MAX_RANGE_KM, 0.0);
+  double MAX_RANGE() const {
+    return GetField<double>(VT_MAX_RANGE, 0.0);
   }
   /// Half angle in degrees for cone-style overlays.
-  double HALF_ANGLE_DEG() const {
-    return GetField<double>(VT_HALF_ANGLE_DEG, 0.0);
+  double HALF_ANGLE() const {
+    return GetField<double>(VT_HALF_ANGLE, 0.0);
   }
   /// Dynamic range mode or expression used by the viewer.
   const ::flatbuffers::String *DYNAMIC_RANGE() const {
@@ -474,12 +387,12 @@ struct SCNViewCone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_MIN_ELEVATION_DEG, 8) &&
-           VerifyField<double>(verifier, VT_MAX_ELEVATION_DEG, 8) &&
-           VerifyField<double>(verifier, VT_MIN_AZIMUTH_DEG, 8) &&
-           VerifyField<double>(verifier, VT_MAX_AZIMUTH_DEG, 8) &&
-           VerifyField<double>(verifier, VT_MAX_RANGE_KM, 8) &&
-           VerifyField<double>(verifier, VT_HALF_ANGLE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_MIN_ELEVATION, 8) &&
+           VerifyField<double>(verifier, VT_MAX_ELEVATION, 8) &&
+           VerifyField<double>(verifier, VT_MIN_AZIMUTH, 8) &&
+           VerifyField<double>(verifier, VT_MAX_AZIMUTH, 8) &&
+           VerifyField<double>(verifier, VT_MAX_RANGE, 8) &&
+           VerifyField<double>(verifier, VT_HALF_ANGLE, 8) &&
            VerifyOffset(verifier, VT_DYNAMIC_RANGE) &&
            verifier.VerifyString(DYNAMIC_RANGE()) &&
            verifier.EndTable();
@@ -490,23 +403,23 @@ struct SCNViewConeBuilder {
   typedef SCNViewCone Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_MIN_ELEVATION_DEG(double MIN_ELEVATION_DEG) {
-    fbb_.AddElement<double>(SCNViewCone::VT_MIN_ELEVATION_DEG, MIN_ELEVATION_DEG, 0.0);
+  void add_MIN_ELEVATION(double MIN_ELEVATION) {
+    fbb_.AddElement<double>(SCNViewCone::VT_MIN_ELEVATION, MIN_ELEVATION, 0.0);
   }
-  void add_MAX_ELEVATION_DEG(double MAX_ELEVATION_DEG) {
-    fbb_.AddElement<double>(SCNViewCone::VT_MAX_ELEVATION_DEG, MAX_ELEVATION_DEG, 0.0);
+  void add_MAX_ELEVATION(double MAX_ELEVATION) {
+    fbb_.AddElement<double>(SCNViewCone::VT_MAX_ELEVATION, MAX_ELEVATION, 0.0);
   }
-  void add_MIN_AZIMUTH_DEG(double MIN_AZIMUTH_DEG) {
-    fbb_.AddElement<double>(SCNViewCone::VT_MIN_AZIMUTH_DEG, MIN_AZIMUTH_DEG, 0.0);
+  void add_MIN_AZIMUTH(double MIN_AZIMUTH) {
+    fbb_.AddElement<double>(SCNViewCone::VT_MIN_AZIMUTH, MIN_AZIMUTH, 0.0);
   }
-  void add_MAX_AZIMUTH_DEG(double MAX_AZIMUTH_DEG) {
-    fbb_.AddElement<double>(SCNViewCone::VT_MAX_AZIMUTH_DEG, MAX_AZIMUTH_DEG, 0.0);
+  void add_MAX_AZIMUTH(double MAX_AZIMUTH) {
+    fbb_.AddElement<double>(SCNViewCone::VT_MAX_AZIMUTH, MAX_AZIMUTH, 0.0);
   }
-  void add_MAX_RANGE_KM(double MAX_RANGE_KM) {
-    fbb_.AddElement<double>(SCNViewCone::VT_MAX_RANGE_KM, MAX_RANGE_KM, 0.0);
+  void add_MAX_RANGE(double MAX_RANGE) {
+    fbb_.AddElement<double>(SCNViewCone::VT_MAX_RANGE, MAX_RANGE, 0.0);
   }
-  void add_HALF_ANGLE_DEG(double HALF_ANGLE_DEG) {
-    fbb_.AddElement<double>(SCNViewCone::VT_HALF_ANGLE_DEG, HALF_ANGLE_DEG, 0.0);
+  void add_HALF_ANGLE(double HALF_ANGLE) {
+    fbb_.AddElement<double>(SCNViewCone::VT_HALF_ANGLE, HALF_ANGLE, 0.0);
   }
   void add_DYNAMIC_RANGE(::flatbuffers::Offset<::flatbuffers::String> DYNAMIC_RANGE) {
     fbb_.AddOffset(SCNViewCone::VT_DYNAMIC_RANGE, DYNAMIC_RANGE);
@@ -524,42 +437,42 @@ struct SCNViewConeBuilder {
 
 inline ::flatbuffers::Offset<SCNViewCone> CreateSCNViewCone(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double MIN_ELEVATION_DEG = 0.0,
-    double MAX_ELEVATION_DEG = 0.0,
-    double MIN_AZIMUTH_DEG = 0.0,
-    double MAX_AZIMUTH_DEG = 0.0,
-    double MAX_RANGE_KM = 0.0,
-    double HALF_ANGLE_DEG = 0.0,
+    double MIN_ELEVATION = 0.0,
+    double MAX_ELEVATION = 0.0,
+    double MIN_AZIMUTH = 0.0,
+    double MAX_AZIMUTH = 0.0,
+    double MAX_RANGE = 0.0,
+    double HALF_ANGLE = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> DYNAMIC_RANGE = 0) {
   SCNViewConeBuilder builder_(_fbb);
-  builder_.add_HALF_ANGLE_DEG(HALF_ANGLE_DEG);
-  builder_.add_MAX_RANGE_KM(MAX_RANGE_KM);
-  builder_.add_MAX_AZIMUTH_DEG(MAX_AZIMUTH_DEG);
-  builder_.add_MIN_AZIMUTH_DEG(MIN_AZIMUTH_DEG);
-  builder_.add_MAX_ELEVATION_DEG(MAX_ELEVATION_DEG);
-  builder_.add_MIN_ELEVATION_DEG(MIN_ELEVATION_DEG);
+  builder_.add_HALF_ANGLE(HALF_ANGLE);
+  builder_.add_MAX_RANGE(MAX_RANGE);
+  builder_.add_MAX_AZIMUTH(MAX_AZIMUTH);
+  builder_.add_MIN_AZIMUTH(MIN_AZIMUTH);
+  builder_.add_MAX_ELEVATION(MAX_ELEVATION);
+  builder_.add_MIN_ELEVATION(MIN_ELEVATION);
   builder_.add_DYNAMIC_RANGE(DYNAMIC_RANGE);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<SCNViewCone> CreateSCNViewConeDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    double MIN_ELEVATION_DEG = 0.0,
-    double MAX_ELEVATION_DEG = 0.0,
-    double MIN_AZIMUTH_DEG = 0.0,
-    double MAX_AZIMUTH_DEG = 0.0,
-    double MAX_RANGE_KM = 0.0,
-    double HALF_ANGLE_DEG = 0.0,
+    double MIN_ELEVATION = 0.0,
+    double MAX_ELEVATION = 0.0,
+    double MIN_AZIMUTH = 0.0,
+    double MAX_AZIMUTH = 0.0,
+    double MAX_RANGE = 0.0,
+    double HALF_ANGLE = 0.0,
     const char *DYNAMIC_RANGE = nullptr) {
   auto DYNAMIC_RANGE__ = DYNAMIC_RANGE ? _fbb.CreateString(DYNAMIC_RANGE) : 0;
   return CreateSCNViewCone(
       _fbb,
-      MIN_ELEVATION_DEG,
-      MAX_ELEVATION_DEG,
-      MIN_AZIMUTH_DEG,
-      MAX_AZIMUTH_DEG,
-      MAX_RANGE_KM,
-      HALF_ANGLE_DEG,
+      MIN_ELEVATION,
+      MAX_ELEVATION,
+      MIN_AZIMUTH,
+      MAX_AZIMUTH,
+      MAX_RANGE,
+      HALF_ANGLE,
       DYNAMIC_RANGE__);
 }
 
@@ -787,24 +700,23 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COUNTRY = 16,
     VT_SOURCES = 18,
     VT_DATA_MODES = 20,
-    VT_TLES = 22,
-    VT_MEAN_ELEMENTS = 24,
-    VT_STATES = 26,
-    VT_MANEUVERS = 28,
-    VT_SITE = 30,
-    VT_SENSOR = 32,
-    VT_SENSOR_SYSTEM_ID = 34,
-    VT_SENSOR_ID = 36,
-    VT_SITE_LATITUDE_DEG = 38,
-    VT_SITE_LONGITUDE_DEG = 40,
-    VT_VARIABLE_SATELLITE_ID = 42,
-    VT_VARIABLE_SITE_ID = 44,
-    VT_POINTS = 46,
-    VT_VIEW_CONE = 48,
-    VT_SUN_ADVANTAGE_TARGET = 50,
-    VT_EXCLUSION_ZONE = 52,
-    VT_OBSERVATION_EO = 54,
-    VT_OBSERVATION_RADAR = 56
+    VT_MEAN_ELEMENTS = 22,
+    VT_STATES = 24,
+    VT_MANEUVERS = 26,
+    VT_SITE = 28,
+    VT_SENSOR = 30,
+    VT_SENSOR_SYSTEM_ID = 32,
+    VT_SENSOR_ID = 34,
+    VT_SITE_LATITUDE = 36,
+    VT_SITE_LONGITUDE = 38,
+    VT_VARIABLE_SATELLITE_ID = 40,
+    VT_VARIABLE_SITE_ID = 42,
+    VT_POINTS = 44,
+    VT_VIEW_CONE = 46,
+    VT_SUN_ADVANTAGE_TARGET = 48,
+    VT_EXCLUSION_ZONE = 50,
+    VT_OBSERVATION_EO = 52,
+    VT_OBSERVATION_RADAR = 54
   };
   /// Stable scenario-local id for this reference.
   const ::flatbuffers::String *REFERENCE_ID() const {
@@ -842,10 +754,6 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA_MODES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_DATA_MODES);
   }
-  /// TLE provenance and raw lines for satellite references.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>> *TLES() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>> *>(VT_TLES);
-  }
   /// Mean orbital elements associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_MEAN_ELEMENTS);
@@ -875,12 +783,12 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
   /// Ground-site latitude in degrees when no SIT record is available.
-  double SITE_LATITUDE_DEG() const {
-    return GetField<double>(VT_SITE_LATITUDE_DEG, 0.0);
+  double SITE_LATITUDE() const {
+    return GetField<double>(VT_SITE_LATITUDE, 0.0);
   }
   /// Ground-site longitude in degrees when no SIT record is available.
-  double SITE_LONGITUDE_DEG() const {
-    return GetField<double>(VT_SITE_LONGITUDE_DEG, 0.0);
+  double SITE_LONGITUDE() const {
+    return GetField<double>(VT_SITE_LONGITUDE, 0.0);
   }
   /// Scenario variable id for variable satellite references.
   const ::flatbuffers::String *VARIABLE_SATELLITE_ID() const {
@@ -934,9 +842,6 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_DATA_MODES) &&
            verifier.VerifyVector(DATA_MODES()) &&
            verifier.VerifyVectorOfStrings(DATA_MODES()) &&
-           VerifyOffset(verifier, VT_TLES) &&
-           verifier.VerifyVector(TLES()) &&
-           verifier.VerifyVectorOfTables(TLES()) &&
            VerifyOffset(verifier, VT_MEAN_ELEMENTS) &&
            verifier.VerifyVector(MEAN_ELEMENTS()) &&
            verifier.VerifyVectorOfTables(MEAN_ELEMENTS()) &&
@@ -954,8 +859,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SENSOR_SYSTEM_ID()) &&
            VerifyOffset(verifier, VT_SENSOR_ID) &&
            verifier.VerifyString(SENSOR_ID()) &&
-           VerifyField<double>(verifier, VT_SITE_LATITUDE_DEG, 8) &&
-           VerifyField<double>(verifier, VT_SITE_LONGITUDE_DEG, 8) &&
+           VerifyField<double>(verifier, VT_SITE_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_SITE_LONGITUDE, 8) &&
            VerifyOffset(verifier, VT_VARIABLE_SATELLITE_ID) &&
            verifier.VerifyString(VARIABLE_SATELLITE_ID()) &&
            VerifyOffset(verifier, VT_VARIABLE_SITE_ID) &&
@@ -1008,9 +913,6 @@ struct SCNReferenceBuilder {
   void add_DATA_MODES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DATA_MODES) {
     fbb_.AddOffset(SCNReference::VT_DATA_MODES, DATA_MODES);
   }
-  void add_TLES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>>> TLES) {
-    fbb_.AddOffset(SCNReference::VT_TLES, TLES);
-  }
   void add_MEAN_ELEMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS) {
     fbb_.AddOffset(SCNReference::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
@@ -1032,11 +934,11 @@ struct SCNReferenceBuilder {
   void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
     fbb_.AddOffset(SCNReference::VT_SENSOR_ID, SENSOR_ID);
   }
-  void add_SITE_LATITUDE_DEG(double SITE_LATITUDE_DEG) {
-    fbb_.AddElement<double>(SCNReference::VT_SITE_LATITUDE_DEG, SITE_LATITUDE_DEG, 0.0);
+  void add_SITE_LATITUDE(double SITE_LATITUDE) {
+    fbb_.AddElement<double>(SCNReference::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
   }
-  void add_SITE_LONGITUDE_DEG(double SITE_LONGITUDE_DEG) {
-    fbb_.AddElement<double>(SCNReference::VT_SITE_LONGITUDE_DEG, SITE_LONGITUDE_DEG, 0.0);
+  void add_SITE_LONGITUDE(double SITE_LONGITUDE) {
+    fbb_.AddElement<double>(SCNReference::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
   }
   void add_VARIABLE_SATELLITE_ID(::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SATELLITE_ID) {
     fbb_.AddOffset(SCNReference::VT_VARIABLE_SATELLITE_ID, VARIABLE_SATELLITE_ID);
@@ -1084,7 +986,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<::flatbuffers::String> COUNTRY = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DATA_MODES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>>> TLES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MNV>>> MANEUVERS = 0,
@@ -1092,8 +993,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<SEN> SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_SYSTEM_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
-    double SITE_LATITUDE_DEG = 0.0,
-    double SITE_LONGITUDE_DEG = 0.0,
+    double SITE_LATITUDE = 0.0,
+    double SITE_LONGITUDE = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SATELLITE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SITE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNPointOfInterest>>> POINTS = 0,
@@ -1103,8 +1004,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
     ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0) {
   SCNReferenceBuilder builder_(_fbb);
-  builder_.add_SITE_LONGITUDE_DEG(SITE_LONGITUDE_DEG);
-  builder_.add_SITE_LATITUDE_DEG(SITE_LATITUDE_DEG);
+  builder_.add_SITE_LONGITUDE(SITE_LONGITUDE);
+  builder_.add_SITE_LATITUDE(SITE_LATITUDE);
   builder_.add_OBSERVATION_RADAR(OBSERVATION_RADAR);
   builder_.add_OBSERVATION_EO(OBSERVATION_EO);
   builder_.add_EXCLUSION_ZONE(EXCLUSION_ZONE);
@@ -1120,7 +1021,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
   builder_.add_MANEUVERS(MANEUVERS);
   builder_.add_STATES(STATES);
   builder_.add_MEAN_ELEMENTS(MEAN_ELEMENTS);
-  builder_.add_TLES(TLES);
   builder_.add_DATA_MODES(DATA_MODES);
   builder_.add_SOURCES(SOURCES);
   builder_.add_COUNTRY(COUNTRY);
@@ -1144,7 +1044,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     const char *COUNTRY = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCES = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA_MODES = nullptr,
-    const std::vector<::flatbuffers::Offset<SCNTleLines>> *TLES = nullptr,
     const std::vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS = nullptr,
     const std::vector<::flatbuffers::Offset<STV>> *STATES = nullptr,
     const std::vector<::flatbuffers::Offset<MNV>> *MANEUVERS = nullptr,
@@ -1152,8 +1051,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     ::flatbuffers::Offset<SEN> SENSOR = 0,
     const char *SENSOR_SYSTEM_ID = nullptr,
     const char *SENSOR_ID = nullptr,
-    double SITE_LATITUDE_DEG = 0.0,
-    double SITE_LONGITUDE_DEG = 0.0,
+    double SITE_LATITUDE = 0.0,
+    double SITE_LONGITUDE = 0.0,
     const char *VARIABLE_SATELLITE_ID = nullptr,
     const char *VARIABLE_SITE_ID = nullptr,
     const std::vector<::flatbuffers::Offset<SCNPointOfInterest>> *POINTS = nullptr,
@@ -1168,7 +1067,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
   auto COUNTRY__ = COUNTRY ? _fbb.CreateString(COUNTRY) : 0;
   auto SOURCES__ = SOURCES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SOURCES) : 0;
   auto DATA_MODES__ = DATA_MODES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*DATA_MODES) : 0;
-  auto TLES__ = TLES ? _fbb.CreateVector<::flatbuffers::Offset<SCNTleLines>>(*TLES) : 0;
   auto MEAN_ELEMENTS__ = MEAN_ELEMENTS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*MEAN_ELEMENTS) : 0;
   auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<STV>>(*STATES) : 0;
   auto MANEUVERS__ = MANEUVERS ? _fbb.CreateVector<::flatbuffers::Offset<MNV>>(*MANEUVERS) : 0;
@@ -1188,7 +1086,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
       COUNTRY__,
       SOURCES__,
       DATA_MODES__,
-      TLES__,
       MEAN_ELEMENTS__,
       STATES__,
       MANEUVERS__,
@@ -1196,8 +1093,8 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
       SENSOR,
       SENSOR_SYSTEM_ID__,
       SENSOR_ID__,
-      SITE_LATITUDE_DEG,
-      SITE_LONGITUDE_DEG,
+      SITE_LATITUDE,
+      SITE_LONGITUDE,
       VARIABLE_SATELLITE_ID__,
       VARIABLE_SITE_ID__,
       POINTS__,

@@ -32,7 +32,7 @@ class VSTCameraRotation(object):
 
     # Yaw angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
-    def YAW_DEG(self):
+    def YAW(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -40,7 +40,7 @@ class VSTCameraRotation(object):
 
     # Pitch angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
-    def PITCH_DEG(self):
+    def PITCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -48,7 +48,7 @@ class VSTCameraRotation(object):
 
     # Roll angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
-    def ROLL_DEG(self):
+    def ROLL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -100,23 +100,23 @@ def VSTCameraRotationStart(builder):
 def Start(builder):
     VSTCameraRotationStart(builder)
 
-def VSTCameraRotationAddYAW_DEG(builder, YAW_DEG):
-    builder.PrependFloat64Slot(0, YAW_DEG, 0.0)
+def VSTCameraRotationAddYAW(builder, YAW):
+    builder.PrependFloat64Slot(0, YAW, 0.0)
 
-def AddYAW_DEG(builder, YAW_DEG):
-    VSTCameraRotationAddYAW_DEG(builder, YAW_DEG)
+def AddYAW(builder, YAW):
+    VSTCameraRotationAddYAW(builder, YAW)
 
-def VSTCameraRotationAddPITCH_DEG(builder, PITCH_DEG):
-    builder.PrependFloat64Slot(1, PITCH_DEG, 0.0)
+def VSTCameraRotationAddPITCH(builder, PITCH):
+    builder.PrependFloat64Slot(1, PITCH, 0.0)
 
-def AddPITCH_DEG(builder, PITCH_DEG):
-    VSTCameraRotationAddPITCH_DEG(builder, PITCH_DEG)
+def AddPITCH(builder, PITCH):
+    VSTCameraRotationAddPITCH(builder, PITCH)
 
-def VSTCameraRotationAddROLL_DEG(builder, ROLL_DEG):
-    builder.PrependFloat64Slot(2, ROLL_DEG, 0.0)
+def VSTCameraRotationAddROLL(builder, ROLL):
+    builder.PrependFloat64Slot(2, ROLL, 0.0)
 
-def AddROLL_DEG(builder, ROLL_DEG):
-    VSTCameraRotationAddROLL_DEG(builder, ROLL_DEG)
+def AddROLL(builder, ROLL):
+    VSTCameraRotationAddROLL(builder, ROLL)
 
 def VSTCameraRotationAddQUATERNION_X(builder, QUATERNION_X):
     builder.PrependFloat64Slot(3, QUATERNION_X, 0.0)
@@ -160,18 +160,18 @@ class VSTCameraRotationT(object):
     # VSTCameraRotationT
     def __init__(
         self,
-        YAW_DEG = 0.0,
-        PITCH_DEG = 0.0,
-        ROLL_DEG = 0.0,
+        YAW = 0.0,
+        PITCH = 0.0,
+        ROLL = 0.0,
         QUATERNION_X = 0.0,
         QUATERNION_Y = 0.0,
         QUATERNION_Z = 0.0,
         QUATERNION_W = 0.0,
         USES_QUATERNION = True,
     ):
-        self.YAW_DEG = YAW_DEG  # type: float
-        self.PITCH_DEG = PITCH_DEG  # type: float
-        self.ROLL_DEG = ROLL_DEG  # type: float
+        self.YAW = YAW  # type: float
+        self.PITCH = PITCH  # type: float
+        self.ROLL = ROLL  # type: float
         self.QUATERNION_X = QUATERNION_X  # type: float
         self.QUATERNION_Y = QUATERNION_Y  # type: float
         self.QUATERNION_Z = QUATERNION_Z  # type: float
@@ -199,9 +199,9 @@ class VSTCameraRotationT(object):
     def _UnPack(self, VSTCameraRotation):
         if VSTCameraRotation is None:
             return
-        self.YAW_DEG = VSTCameraRotation.YAW_DEG()
-        self.PITCH_DEG = VSTCameraRotation.PITCH_DEG()
-        self.ROLL_DEG = VSTCameraRotation.ROLL_DEG()
+        self.YAW = VSTCameraRotation.YAW()
+        self.PITCH = VSTCameraRotation.PITCH()
+        self.ROLL = VSTCameraRotation.ROLL()
         self.QUATERNION_X = VSTCameraRotation.QUATERNION_X()
         self.QUATERNION_Y = VSTCameraRotation.QUATERNION_Y()
         self.QUATERNION_Z = VSTCameraRotation.QUATERNION_Z()
@@ -211,9 +211,9 @@ class VSTCameraRotationT(object):
     # VSTCameraRotationT
     def Pack(self, builder):
         VSTCameraRotationStart(builder)
-        VSTCameraRotationAddYAW_DEG(builder, self.YAW_DEG)
-        VSTCameraRotationAddPITCH_DEG(builder, self.PITCH_DEG)
-        VSTCameraRotationAddROLL_DEG(builder, self.ROLL_DEG)
+        VSTCameraRotationAddYAW(builder, self.YAW)
+        VSTCameraRotationAddPITCH(builder, self.PITCH)
+        VSTCameraRotationAddROLL(builder, self.ROLL)
         VSTCameraRotationAddQUATERNION_X(builder, self.QUATERNION_X)
         VSTCameraRotationAddQUATERNION_Y(builder, self.QUATERNION_Y)
         VSTCameraRotationAddQUATERNION_Z(builder, self.QUATERNION_Z)

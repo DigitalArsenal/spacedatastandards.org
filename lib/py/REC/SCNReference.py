@@ -128,36 +128,10 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
-    # TLE provenance and raw lines for satellite references.
-    # SCNReference
-    def TLES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            x = self._tab.Vector(o)
-            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
-            x = self._tab.Indirect(x)
-            from SCNTleLines import SCNTleLines
-            obj = SCNTleLines()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # SCNReference
-    def TLESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # SCNReference
-    def TLESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        return o == 0
-
     # Mean orbital elements associated with this reference.
     # SCNReference
     def MEAN_ELEMENTS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -170,20 +144,20 @@ class SCNReference(object):
 
     # SCNReference
     def MEAN_ELEMENTSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNReference
     def MEAN_ELEMENTSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
     # State vectors associated with this reference.
     # SCNReference
     def STATES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -196,20 +170,20 @@ class SCNReference(object):
 
     # SCNReference
     def STATESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNReference
     def STATESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # Maneuver records associated with this reference.
     # SCNReference
     def MANEUVERS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -222,20 +196,20 @@ class SCNReference(object):
 
     # SCNReference
     def MANEUVERSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNReference
     def MANEUVERSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # Ground-site record associated with this reference.
     # SCNReference
     def SITE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SIT import SIT
@@ -247,7 +221,7 @@ class SCNReference(object):
     # Sensor record associated with this reference.
     # SCNReference
     def SENSOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SEN import SEN
@@ -259,7 +233,7 @@ class SCNReference(object):
     # Sensor system id for references that identify a sensor by id.
     # SCNReference
     def SENSOR_SYSTEM_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -267,23 +241,23 @@ class SCNReference(object):
     # Sensor id for references that identify a sensor by id.
     # SCNReference
     def SENSOR_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # Ground-site latitude in degrees when no SIT record is available.
     # SCNReference
-    def SITE_LATITUDE_DEG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+    def SITE_LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
     # Ground-site longitude in degrees when no SIT record is available.
     # SCNReference
-    def SITE_LONGITUDE_DEG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+    def SITE_LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
@@ -291,7 +265,7 @@ class SCNReference(object):
     # Scenario variable id for variable satellite references.
     # SCNReference
     def VARIABLE_SATELLITE_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -299,7 +273,7 @@ class SCNReference(object):
     # Scenario variable id for variable site references.
     # SCNReference
     def VARIABLE_SITE_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
@@ -307,7 +281,7 @@ class SCNReference(object):
     # Points of interest associated with this reference.
     # SCNReference
     def POINTS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -320,20 +294,20 @@ class SCNReference(object):
 
     # SCNReference
     def POINTSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNReference
     def POINTSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         return o == 0
 
     # View-cone overlay associated with this reference.
     # SCNReference
     def VIEW_CONE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCNViewCone import SCNViewCone
@@ -345,7 +319,7 @@ class SCNReference(object):
     # Sun-advantage target pairing for this reference.
     # SCNReference
     def SUN_ADVANTAGE_TARGET(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCNSunAdvantageTarget import SCNSunAdvantageTarget
@@ -357,7 +331,7 @@ class SCNReference(object):
     # Exclusion-zone geometry associated with this reference.
     # SCNReference
     def EXCLUSION_ZONE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from SCNExclusionZone import SCNExclusionZone
@@ -369,7 +343,7 @@ class SCNReference(object):
     # Electro-optical observation record associated with this reference.
     # SCNReference
     def OBSERVATION_EO(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from EOO import EOO
@@ -381,7 +355,7 @@ class SCNReference(object):
     # Radar observation record associated with this reference.
     # SCNReference
     def OBSERVATION_RADAR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
             from RDO import RDO
@@ -391,7 +365,7 @@ class SCNReference(object):
         return None
 
 def SCNReferenceStart(builder):
-    builder.StartObject(27)
+    builder.StartObject(26)
 
 def Start(builder):
     SCNReferenceStart(builder)
@@ -474,26 +448,8 @@ def SCNReferenceCreateDATA_MODESVector(builder, data):
 def CreateDATA_MODESVector(builder, data):
     SCNReferenceCreateDATA_MODESVector(builder, data)
 
-def SCNReferenceAddTLES(builder, TLES):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TLES), 0)
-
-def AddTLES(builder, TLES):
-    SCNReferenceAddTLES(builder, TLES)
-
-def SCNReferenceStartTLESVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartTLESVector(builder, numElems):
-    return SCNReferenceStartTLESVector(builder, numElems)
-
-def SCNReferenceCreateTLESVector(builder, data):
-    return builder.CreateVectorOfTables(data)
-
-def CreateTLESVector(builder, data):
-    SCNReferenceCreateTLESVector(builder, data)
-
 def SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENTS), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENTS), 0)
 
 def AddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
     SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
@@ -511,7 +467,7 @@ def CreateMEAN_ELEMENTSVector(builder, data):
     SCNReferenceCreateMEAN_ELEMENTSVector(builder, data)
 
 def SCNReferenceAddSTATES(builder, STATES):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
 
 def AddSTATES(builder, STATES):
     SCNReferenceAddSTATES(builder, STATES)
@@ -529,7 +485,7 @@ def CreateSTATESVector(builder, data):
     SCNReferenceCreateSTATESVector(builder, data)
 
 def SCNReferenceAddMANEUVERS(builder, MANEUVERS):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
 
 def AddMANEUVERS(builder, MANEUVERS):
     SCNReferenceAddMANEUVERS(builder, MANEUVERS)
@@ -547,55 +503,55 @@ def CreateMANEUVERSVector(builder, data):
     SCNReferenceCreateMANEUVERSVector(builder, data)
 
 def SCNReferenceAddSITE(builder, SITE):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SITE), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SITE), 0)
 
 def AddSITE(builder, SITE):
     SCNReferenceAddSITE(builder, SITE)
 
 def SCNReferenceAddSENSOR(builder, SENSOR):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR), 0)
 
 def AddSENSOR(builder, SENSOR):
     SCNReferenceAddSENSOR(builder, SENSOR)
 
 def SCNReferenceAddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_SYSTEM_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_SYSTEM_ID), 0)
 
 def AddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID):
     SCNReferenceAddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID)
 
 def SCNReferenceAddSENSOR_ID(builder, SENSOR_ID):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
 
 def AddSENSOR_ID(builder, SENSOR_ID):
     SCNReferenceAddSENSOR_ID(builder, SENSOR_ID)
 
-def SCNReferenceAddSITE_LATITUDE_DEG(builder, SITE_LATITUDE_DEG):
-    builder.PrependFloat64Slot(17, SITE_LATITUDE_DEG, 0.0)
+def SCNReferenceAddSITE_LATITUDE(builder, SITE_LATITUDE):
+    builder.PrependFloat64Slot(16, SITE_LATITUDE, 0.0)
 
-def AddSITE_LATITUDE_DEG(builder, SITE_LATITUDE_DEG):
-    SCNReferenceAddSITE_LATITUDE_DEG(builder, SITE_LATITUDE_DEG)
+def AddSITE_LATITUDE(builder, SITE_LATITUDE):
+    SCNReferenceAddSITE_LATITUDE(builder, SITE_LATITUDE)
 
-def SCNReferenceAddSITE_LONGITUDE_DEG(builder, SITE_LONGITUDE_DEG):
-    builder.PrependFloat64Slot(18, SITE_LONGITUDE_DEG, 0.0)
+def SCNReferenceAddSITE_LONGITUDE(builder, SITE_LONGITUDE):
+    builder.PrependFloat64Slot(17, SITE_LONGITUDE, 0.0)
 
-def AddSITE_LONGITUDE_DEG(builder, SITE_LONGITUDE_DEG):
-    SCNReferenceAddSITE_LONGITUDE_DEG(builder, SITE_LONGITUDE_DEG)
+def AddSITE_LONGITUDE(builder, SITE_LONGITUDE):
+    SCNReferenceAddSITE_LONGITUDE(builder, SITE_LONGITUDE)
 
 def SCNReferenceAddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_ID):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_SATELLITE_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_SATELLITE_ID), 0)
 
 def AddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_ID):
     SCNReferenceAddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_ID)
 
 def SCNReferenceAddVARIABLE_SITE_ID(builder, VARIABLE_SITE_ID):
-    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_SITE_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(VARIABLE_SITE_ID), 0)
 
 def AddVARIABLE_SITE_ID(builder, VARIABLE_SITE_ID):
     SCNReferenceAddVARIABLE_SITE_ID(builder, VARIABLE_SITE_ID)
 
 def SCNReferenceAddPOINTS(builder, POINTS):
-    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(POINTS), 0)
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(POINTS), 0)
 
 def AddPOINTS(builder, POINTS):
     SCNReferenceAddPOINTS(builder, POINTS)
@@ -613,31 +569,31 @@ def CreatePOINTSVector(builder, data):
     SCNReferenceCreatePOINTSVector(builder, data)
 
 def SCNReferenceAddVIEW_CONE(builder, VIEW_CONE):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_CONE), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_CONE), 0)
 
 def AddVIEW_CONE(builder, VIEW_CONE):
     SCNReferenceAddVIEW_CONE(builder, VIEW_CONE)
 
 def SCNReferenceAddSUN_ADVANTAGE_TARGET(builder, SUN_ADVANTAGE_TARGET):
-    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_ADVANTAGE_TARGET), 0)
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SUN_ADVANTAGE_TARGET), 0)
 
 def AddSUN_ADVANTAGE_TARGET(builder, SUN_ADVANTAGE_TARGET):
     SCNReferenceAddSUN_ADVANTAGE_TARGET(builder, SUN_ADVANTAGE_TARGET)
 
 def SCNReferenceAddEXCLUSION_ZONE(builder, EXCLUSION_ZONE):
-    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(EXCLUSION_ZONE), 0)
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(EXCLUSION_ZONE), 0)
 
 def AddEXCLUSION_ZONE(builder, EXCLUSION_ZONE):
     SCNReferenceAddEXCLUSION_ZONE(builder, EXCLUSION_ZONE)
 
 def SCNReferenceAddOBSERVATION_EO(builder, OBSERVATION_EO):
-    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_EO), 0)
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_EO), 0)
 
 def AddOBSERVATION_EO(builder, OBSERVATION_EO):
     SCNReferenceAddOBSERVATION_EO(builder, OBSERVATION_EO)
 
 def SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR):
-    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_RADAR), 0)
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_RADAR), 0)
 
 def AddOBSERVATION_RADAR(builder, OBSERVATION_RADAR):
     SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR)
@@ -655,7 +611,6 @@ import RDO
 import SCNExclusionZone
 import SCNPointOfInterest
 import SCNSunAdvantageTarget
-import SCNTleLines
 import SCNViewCone
 import SEN
 import SIT
@@ -679,7 +634,6 @@ class SCNReferenceT(object):
         COUNTRY = None,
         SOURCES = None,
         DATA_MODES = None,
-        TLES = None,
         MEAN_ELEMENTS = None,
         STATES = None,
         MANEUVERS = None,
@@ -687,8 +641,8 @@ class SCNReferenceT(object):
         SENSOR = None,
         SENSOR_SYSTEM_ID = None,
         SENSOR_ID = None,
-        SITE_LATITUDE_DEG = 0.0,
-        SITE_LONGITUDE_DEG = 0.0,
+        SITE_LATITUDE = 0.0,
+        SITE_LONGITUDE = 0.0,
         VARIABLE_SATELLITE_ID = None,
         VARIABLE_SITE_ID = None,
         POINTS = None,
@@ -707,7 +661,6 @@ class SCNReferenceT(object):
         self.COUNTRY = COUNTRY  # type: Optional[str]
         self.SOURCES = SOURCES  # type: Optional[List[Optional[str]]]
         self.DATA_MODES = DATA_MODES  # type: Optional[List[Optional[str]]]
-        self.TLES = TLES  # type: Optional[List[SCNTleLines.SCNTleLinesT]]
         self.MEAN_ELEMENTS = MEAN_ELEMENTS  # type: Optional[List[OMM.OMMT]]
         self.STATES = STATES  # type: Optional[List[STV.STVT]]
         self.MANEUVERS = MANEUVERS  # type: Optional[List[MNV.MNVT]]
@@ -715,8 +668,8 @@ class SCNReferenceT(object):
         self.SENSOR = SENSOR  # type: Optional[SEN.SENT]
         self.SENSOR_SYSTEM_ID = SENSOR_SYSTEM_ID  # type: Optional[str]
         self.SENSOR_ID = SENSOR_ID  # type: Optional[str]
-        self.SITE_LATITUDE_DEG = SITE_LATITUDE_DEG  # type: float
-        self.SITE_LONGITUDE_DEG = SITE_LONGITUDE_DEG  # type: float
+        self.SITE_LATITUDE = SITE_LATITUDE  # type: float
+        self.SITE_LONGITUDE = SITE_LONGITUDE  # type: float
         self.VARIABLE_SATELLITE_ID = VARIABLE_SATELLITE_ID  # type: Optional[str]
         self.VARIABLE_SITE_ID = VARIABLE_SITE_ID  # type: Optional[str]
         self.POINTS = POINTS  # type: Optional[List[SCNPointOfInterest.SCNPointOfInterestT]]
@@ -762,14 +715,6 @@ class SCNReferenceT(object):
             self.DATA_MODES = []
             for i in range(SCNReference.DATA_MODESLength()):
                 self.DATA_MODES.append(SCNReference.DATA_MODES(i))
-        if not SCNReference.TLESIsNone():
-            self.TLES = []
-            for i in range(SCNReference.TLESLength()):
-                if SCNReference.TLES(i) is None:
-                    self.TLES.append(None)
-                else:
-                    sCNTleLines_ = SCNTleLines.SCNTleLinesT.InitFromObj(SCNReference.TLES(i))
-                    self.TLES.append(sCNTleLines_)
         if not SCNReference.MEAN_ELEMENTSIsNone():
             self.MEAN_ELEMENTS = []
             for i in range(SCNReference.MEAN_ELEMENTSLength()):
@@ -800,8 +745,8 @@ class SCNReferenceT(object):
             self.SENSOR = SEN.SENT.InitFromObj(SCNReference.SENSOR())
         self.SENSOR_SYSTEM_ID = SCNReference.SENSOR_SYSTEM_ID()
         self.SENSOR_ID = SCNReference.SENSOR_ID()
-        self.SITE_LATITUDE_DEG = SCNReference.SITE_LATITUDE_DEG()
-        self.SITE_LONGITUDE_DEG = SCNReference.SITE_LONGITUDE_DEG()
+        self.SITE_LATITUDE = SCNReference.SITE_LATITUDE()
+        self.SITE_LONGITUDE = SCNReference.SITE_LONGITUDE()
         self.VARIABLE_SATELLITE_ID = SCNReference.VARIABLE_SATELLITE_ID()
         self.VARIABLE_SITE_ID = SCNReference.VARIABLE_SITE_ID()
         if not SCNReference.POINTSIsNone():
@@ -849,14 +794,6 @@ class SCNReferenceT(object):
             for i in reversed(range(len(self.DATA_MODES))):
                 builder.PrependUOffsetTRelative(DATA_MODESlist[i])
             DATA_MODES = builder.EndVector()
-        if self.TLES is not None:
-            TLESlist = []
-            for i in range(len(self.TLES)):
-                TLESlist.append(self.TLES[i].Pack(builder))
-            SCNReferenceStartTLESVector(builder, len(self.TLES))
-            for i in reversed(range(len(self.TLES))):
-                builder.PrependUOffsetTRelative(TLESlist[i])
-            TLES = builder.EndVector()
         if self.MEAN_ELEMENTS is not None:
             MEAN_ELEMENTSlist = []
             for i in range(len(self.MEAN_ELEMENTS)):
@@ -927,8 +864,6 @@ class SCNReferenceT(object):
             SCNReferenceAddSOURCES(builder, SOURCES)
         if self.DATA_MODES is not None:
             SCNReferenceAddDATA_MODES(builder, DATA_MODES)
-        if self.TLES is not None:
-            SCNReferenceAddTLES(builder, TLES)
         if self.MEAN_ELEMENTS is not None:
             SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
         if self.STATES is not None:
@@ -943,8 +878,8 @@ class SCNReferenceT(object):
             SCNReferenceAddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID)
         if self.SENSOR_ID is not None:
             SCNReferenceAddSENSOR_ID(builder, SENSOR_ID)
-        SCNReferenceAddSITE_LATITUDE_DEG(builder, self.SITE_LATITUDE_DEG)
-        SCNReferenceAddSITE_LONGITUDE_DEG(builder, self.SITE_LONGITUDE_DEG)
+        SCNReferenceAddSITE_LATITUDE(builder, self.SITE_LATITUDE)
+        SCNReferenceAddSITE_LONGITUDE(builder, self.SITE_LONGITUDE)
         if self.VARIABLE_SATELLITE_ID is not None:
             SCNReferenceAddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_ID)
         if self.VARIABLE_SITE_ID is not None:

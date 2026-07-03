@@ -31,15 +31,15 @@ public final class VSTCameraRotation extends com.google.flatbuffers.Table {
   /**
    * Yaw angle in degrees for Euler-angle camera imports.
    */
-  public double YAW_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double YAW() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Pitch angle in degrees for Euler-angle camera imports.
    */
-  public double PITCH_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double PITCH() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Roll angle in degrees for Euler-angle camera imports.
    */
-  public double ROLL_DEG() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ROLL() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
    * Quaternion x component for camera orientation.
    */
@@ -62,9 +62,9 @@ public final class VSTCameraRotation extends com.google.flatbuffers.Table {
   public boolean USES_QUATERNION() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
 
   public static int createVSTCameraRotation(FlatBufferBuilder builder,
-      double YAW_DEG,
-      double PITCH_DEG,
-      double ROLL_DEG,
+      double YAW,
+      double PITCH,
+      double ROLL,
       double QUATERNION_X,
       double QUATERNION_Y,
       double QUATERNION_Z,
@@ -75,17 +75,17 @@ public final class VSTCameraRotation extends com.google.flatbuffers.Table {
     VSTCameraRotation.addQuaternionZ(builder, QUATERNION_Z);
     VSTCameraRotation.addQuaternionY(builder, QUATERNION_Y);
     VSTCameraRotation.addQuaternionX(builder, QUATERNION_X);
-    VSTCameraRotation.addRollDeg(builder, ROLL_DEG);
-    VSTCameraRotation.addPitchDeg(builder, PITCH_DEG);
-    VSTCameraRotation.addYawDeg(builder, YAW_DEG);
+    VSTCameraRotation.addRoll(builder, ROLL);
+    VSTCameraRotation.addPitch(builder, PITCH);
+    VSTCameraRotation.addYaw(builder, YAW);
     VSTCameraRotation.addUsesQuaternion(builder, USES_QUATERNION);
     return VSTCameraRotation.endVSTCameraRotation(builder);
   }
 
   public static void startVSTCameraRotation(FlatBufferBuilder builder) { builder.startTable(8); }
-  public static void addYawDeg(FlatBufferBuilder builder, double YAW_DEG) { builder.addDouble(0, YAW_DEG, 0.0); }
-  public static void addPitchDeg(FlatBufferBuilder builder, double PITCH_DEG) { builder.addDouble(1, PITCH_DEG, 0.0); }
-  public static void addRollDeg(FlatBufferBuilder builder, double ROLL_DEG) { builder.addDouble(2, ROLL_DEG, 0.0); }
+  public static void addYaw(FlatBufferBuilder builder, double YAW) { builder.addDouble(0, YAW, 0.0); }
+  public static void addPitch(FlatBufferBuilder builder, double PITCH) { builder.addDouble(1, PITCH, 0.0); }
+  public static void addRoll(FlatBufferBuilder builder, double ROLL) { builder.addDouble(2, ROLL, 0.0); }
   public static void addQuaternionX(FlatBufferBuilder builder, double QUATERNION_X) { builder.addDouble(3, QUATERNION_X, 0.0); }
   public static void addQuaternionY(FlatBufferBuilder builder, double QUATERNION_Y) { builder.addDouble(4, QUATERNION_Y, 0.0); }
   public static void addQuaternionZ(FlatBufferBuilder builder, double QUATERNION_Z) { builder.addDouble(5, QUATERNION_Z, 0.0); }

@@ -27,11 +27,11 @@ export declare class SCNPointOfInterest implements flatbuffers.IUnpackableObject
     /**
      * Seconds before the epoch when highlighting begins.
      */
-    HIGHLIGHT_BEFORE_SEC(): number;
+    HIGHLIGHT_BEFORE(): number;
     /**
      * Seconds after the epoch when highlighting remains active.
      */
-    HIGHLIGHT_AFTER_SEC(): number;
+    HIGHLIGHT_AFTER(): number;
     /**
      * Display color token for the point of interest.
      */
@@ -45,8 +45,8 @@ export declare class SCNPointOfInterest implements flatbuffers.IUnpackableObject
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addDescription(builder: flatbuffers.Builder, DESCRIPTIONOffset: flatbuffers.Offset): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
-    static addHighlightBeforeSec(builder: flatbuffers.Builder, HIGHLIGHT_BEFORE_SEC: number): void;
-    static addHighlightAfterSec(builder: flatbuffers.Builder, HIGHLIGHT_AFTER_SEC: number): void;
+    static addHighlightBefore(builder: flatbuffers.Builder, HIGHLIGHT_BEFORE: number): void;
+    static addHighlightAfter(builder: flatbuffers.Builder, HIGHLIGHT_AFTER: number): void;
     static addColor(builder: flatbuffers.Builder, COLOROffset: flatbuffers.Offset): void;
     static addPosition(builder: flatbuffers.Builder, POSITIONOffset: flatbuffers.Offset): void;
     static endSCNPointOfInterest(builder: flatbuffers.Builder): flatbuffers.Offset;
@@ -57,11 +57,11 @@ export declare class SCNPointOfInterestT implements flatbuffers.IGeneratedObject
     NAME: string | Uint8Array | null;
     DESCRIPTION: string | Uint8Array | null;
     EPOCH: string | Uint8Array | null;
-    HIGHLIGHT_BEFORE_SEC: number;
-    HIGHLIGHT_AFTER_SEC: number;
+    HIGHLIGHT_BEFORE: number;
+    HIGHLIGHT_AFTER: number;
     COLOR: string | Uint8Array | null;
     POSITION: SCNGeodeticPointT | null;
-    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, HIGHLIGHT_BEFORE_SEC?: number, HIGHLIGHT_AFTER_SEC?: number, COLOR?: string | Uint8Array | null, POSITION?: SCNGeodeticPointT | null);
+    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, HIGHLIGHT_BEFORE?: number, HIGHLIGHT_AFTER?: number, COLOR?: string | Uint8Array | null, POSITION?: SCNGeodeticPointT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNPointOfInterest.d.ts.map

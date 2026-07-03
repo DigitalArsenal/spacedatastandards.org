@@ -30,7 +30,7 @@ static getSizePrefixedRootAsSCNViewCone(bb:flatbuffers.ByteBuffer, obj?:SCNViewC
 /**
  * Minimum elevation angle in degrees.
  */
-MIN_ELEVATION_DEG():number {
+MIN_ELEVATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -38,7 +38,7 @@ MIN_ELEVATION_DEG():number {
 /**
  * Maximum elevation angle in degrees.
  */
-MAX_ELEVATION_DEG():number {
+MAX_ELEVATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -46,7 +46,7 @@ MAX_ELEVATION_DEG():number {
 /**
  * Minimum azimuth angle in degrees.
  */
-MIN_AZIMUTH_DEG():number {
+MIN_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -54,7 +54,7 @@ MIN_AZIMUTH_DEG():number {
 /**
  * Maximum azimuth angle in degrees.
  */
-MAX_AZIMUTH_DEG():number {
+MAX_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -62,7 +62,7 @@ MAX_AZIMUTH_DEG():number {
 /**
  * Maximum view-cone range in kilometers.
  */
-MAX_RANGE_KM():number {
+MAX_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -70,7 +70,7 @@ MAX_RANGE_KM():number {
 /**
  * Half angle in degrees for cone-style overlays.
  */
-HALF_ANGLE_DEG():number {
+HALF_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -89,28 +89,28 @@ static startSCNViewCone(builder:flatbuffers.Builder) {
   builder.startObject(7);
 }
 
-static addMinElevationDeg(builder:flatbuffers.Builder, MIN_ELEVATION_DEG:number) {
-  builder.addFieldFloat64(0, MIN_ELEVATION_DEG, 0.0);
+static addMinElevation(builder:flatbuffers.Builder, MIN_ELEVATION:number) {
+  builder.addFieldFloat64(0, MIN_ELEVATION, 0.0);
 }
 
-static addMaxElevationDeg(builder:flatbuffers.Builder, MAX_ELEVATION_DEG:number) {
-  builder.addFieldFloat64(1, MAX_ELEVATION_DEG, 0.0);
+static addMaxElevation(builder:flatbuffers.Builder, MAX_ELEVATION:number) {
+  builder.addFieldFloat64(1, MAX_ELEVATION, 0.0);
 }
 
-static addMinAzimuthDeg(builder:flatbuffers.Builder, MIN_AZIMUTH_DEG:number) {
-  builder.addFieldFloat64(2, MIN_AZIMUTH_DEG, 0.0);
+static addMinAzimuth(builder:flatbuffers.Builder, MIN_AZIMUTH:number) {
+  builder.addFieldFloat64(2, MIN_AZIMUTH, 0.0);
 }
 
-static addMaxAzimuthDeg(builder:flatbuffers.Builder, MAX_AZIMUTH_DEG:number) {
-  builder.addFieldFloat64(3, MAX_AZIMUTH_DEG, 0.0);
+static addMaxAzimuth(builder:flatbuffers.Builder, MAX_AZIMUTH:number) {
+  builder.addFieldFloat64(3, MAX_AZIMUTH, 0.0);
 }
 
-static addMaxRangeKm(builder:flatbuffers.Builder, MAX_RANGE_KM:number) {
-  builder.addFieldFloat64(4, MAX_RANGE_KM, 0.0);
+static addMaxRange(builder:flatbuffers.Builder, MAX_RANGE:number) {
+  builder.addFieldFloat64(4, MAX_RANGE, 0.0);
 }
 
-static addHalfAngleDeg(builder:flatbuffers.Builder, HALF_ANGLE_DEG:number) {
-  builder.addFieldFloat64(5, HALF_ANGLE_DEG, 0.0);
+static addHalfAngle(builder:flatbuffers.Builder, HALF_ANGLE:number) {
+  builder.addFieldFloat64(5, HALF_ANGLE, 0.0);
 }
 
 static addDynamicRange(builder:flatbuffers.Builder, DYNAMIC_RANGEOffset:flatbuffers.Offset) {
@@ -122,50 +122,50 @@ static endSCNViewCone(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createSCNViewCone(builder:flatbuffers.Builder, MIN_ELEVATION_DEG:number, MAX_ELEVATION_DEG:number, MIN_AZIMUTH_DEG:number, MAX_AZIMUTH_DEG:number, MAX_RANGE_KM:number, HALF_ANGLE_DEG:number, DYNAMIC_RANGEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSCNViewCone(builder:flatbuffers.Builder, MIN_ELEVATION:number, MAX_ELEVATION:number, MIN_AZIMUTH:number, MAX_AZIMUTH:number, MAX_RANGE:number, HALF_ANGLE:number, DYNAMIC_RANGEOffset:flatbuffers.Offset):flatbuffers.Offset {
   SCNViewCone.startSCNViewCone(builder);
-  SCNViewCone.addMinElevationDeg(builder, MIN_ELEVATION_DEG);
-  SCNViewCone.addMaxElevationDeg(builder, MAX_ELEVATION_DEG);
-  SCNViewCone.addMinAzimuthDeg(builder, MIN_AZIMUTH_DEG);
-  SCNViewCone.addMaxAzimuthDeg(builder, MAX_AZIMUTH_DEG);
-  SCNViewCone.addMaxRangeKm(builder, MAX_RANGE_KM);
-  SCNViewCone.addHalfAngleDeg(builder, HALF_ANGLE_DEG);
+  SCNViewCone.addMinElevation(builder, MIN_ELEVATION);
+  SCNViewCone.addMaxElevation(builder, MAX_ELEVATION);
+  SCNViewCone.addMinAzimuth(builder, MIN_AZIMUTH);
+  SCNViewCone.addMaxAzimuth(builder, MAX_AZIMUTH);
+  SCNViewCone.addMaxRange(builder, MAX_RANGE);
+  SCNViewCone.addHalfAngle(builder, HALF_ANGLE);
   SCNViewCone.addDynamicRange(builder, DYNAMIC_RANGEOffset);
   return SCNViewCone.endSCNViewCone(builder);
 }
 
 unpack(): SCNViewConeT {
   return new SCNViewConeT(
-    this.MIN_ELEVATION_DEG(),
-    this.MAX_ELEVATION_DEG(),
-    this.MIN_AZIMUTH_DEG(),
-    this.MAX_AZIMUTH_DEG(),
-    this.MAX_RANGE_KM(),
-    this.HALF_ANGLE_DEG(),
+    this.MIN_ELEVATION(),
+    this.MAX_ELEVATION(),
+    this.MIN_AZIMUTH(),
+    this.MAX_AZIMUTH(),
+    this.MAX_RANGE(),
+    this.HALF_ANGLE(),
     this.DYNAMIC_RANGE()
   );
 }
 
 
 unpackTo(_o: SCNViewConeT): void {
-  _o.MIN_ELEVATION_DEG = this.MIN_ELEVATION_DEG();
-  _o.MAX_ELEVATION_DEG = this.MAX_ELEVATION_DEG();
-  _o.MIN_AZIMUTH_DEG = this.MIN_AZIMUTH_DEG();
-  _o.MAX_AZIMUTH_DEG = this.MAX_AZIMUTH_DEG();
-  _o.MAX_RANGE_KM = this.MAX_RANGE_KM();
-  _o.HALF_ANGLE_DEG = this.HALF_ANGLE_DEG();
+  _o.MIN_ELEVATION = this.MIN_ELEVATION();
+  _o.MAX_ELEVATION = this.MAX_ELEVATION();
+  _o.MIN_AZIMUTH = this.MIN_AZIMUTH();
+  _o.MAX_AZIMUTH = this.MAX_AZIMUTH();
+  _o.MAX_RANGE = this.MAX_RANGE();
+  _o.HALF_ANGLE = this.HALF_ANGLE();
   _o.DYNAMIC_RANGE = this.DYNAMIC_RANGE();
 }
 }
 
 export class SCNViewConeT implements flatbuffers.IGeneratedObject {
 constructor(
-  public MIN_ELEVATION_DEG: number = 0.0,
-  public MAX_ELEVATION_DEG: number = 0.0,
-  public MIN_AZIMUTH_DEG: number = 0.0,
-  public MAX_AZIMUTH_DEG: number = 0.0,
-  public MAX_RANGE_KM: number = 0.0,
-  public HALF_ANGLE_DEG: number = 0.0,
+  public MIN_ELEVATION: number = 0.0,
+  public MAX_ELEVATION: number = 0.0,
+  public MIN_AZIMUTH: number = 0.0,
+  public MAX_AZIMUTH: number = 0.0,
+  public MAX_RANGE: number = 0.0,
+  public HALF_ANGLE: number = 0.0,
   public DYNAMIC_RANGE: string|Uint8Array|null = null
 ){}
 
@@ -174,12 +174,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DYNAMIC_RANGE = (this.DYNAMIC_RANGE !== null ? builder.createString(this.DYNAMIC_RANGE!) : 0);
 
   return SCNViewCone.createSCNViewCone(builder,
-    this.MIN_ELEVATION_DEG,
-    this.MAX_ELEVATION_DEG,
-    this.MIN_AZIMUTH_DEG,
-    this.MAX_AZIMUTH_DEG,
-    this.MAX_RANGE_KM,
-    this.HALF_ANGLE_DEG,
+    this.MIN_ELEVATION,
+    this.MAX_ELEVATION,
+    this.MIN_AZIMUTH,
+    this.MAX_AZIMUTH,
+    this.MAX_RANGE,
+    this.HALF_ANGLE,
     DYNAMIC_RANGE
   );
 }

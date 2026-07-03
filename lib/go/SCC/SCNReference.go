@@ -219,42 +219,9 @@ func (rcv *SCNReference) DataModesLength() int {
 }
 
 /// Data-mode labels associated with this reference.
-/// TLE provenance and raw lines for satellite references.
-func (rcv *SCNReference) TLES(obj *SCNTleLines, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		if obj == nil {
-			obj = new(SCNTleLines)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return true
-	}
-	return false
-}
-
-func (rcv *SCNReference) Tles(obj *SCNTleLines, j int) bool {
-	return rcv.TLES(obj, j)
-}
-
-func (rcv *SCNReference) TLESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *SCNReference) TlesLength() int {
-	return rcv.TLESLength()
-}
-
-/// TLE provenance and raw lines for satellite references.
 /// Mean orbital elements associated with this reference.
 func (rcv *SCNReference) MEAN_ELEMENTS(obj *OMM, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -273,7 +240,7 @@ func (rcv *SCNReference) MeanElements(obj *OMM, j int) bool {
 }
 
 func (rcv *SCNReference) MEAN_ELEMENTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -287,7 +254,7 @@ func (rcv *SCNReference) MeanElementsLength() int {
 /// Mean orbital elements associated with this reference.
 /// State vectors associated with this reference.
 func (rcv *SCNReference) STATES(obj *STV, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -306,7 +273,7 @@ func (rcv *SCNReference) States(obj *STV, j int) bool {
 }
 
 func (rcv *SCNReference) STATESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -320,7 +287,7 @@ func (rcv *SCNReference) StatesLength() int {
 /// State vectors associated with this reference.
 /// Maneuver records associated with this reference.
 func (rcv *SCNReference) MANEUVERS(obj *MNV, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -339,7 +306,7 @@ func (rcv *SCNReference) Maneuvers(obj *MNV, j int) bool {
 }
 
 func (rcv *SCNReference) MANEUVERSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -353,7 +320,7 @@ func (rcv *SCNReference) ManeuversLength() int {
 /// Maneuver records associated with this reference.
 /// Ground-site record associated with this reference.
 func (rcv *SCNReference) SITE(obj *SIT) *SIT {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -372,7 +339,7 @@ func (rcv *SCNReference) Site(obj *SIT) *SIT {
 /// Ground-site record associated with this reference.
 /// Sensor record associated with this reference.
 func (rcv *SCNReference) SENSOR(obj *SEN) *SEN {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -391,7 +358,7 @@ func (rcv *SCNReference) Sensor(obj *SEN) *SEN {
 /// Sensor record associated with this reference.
 /// Sensor system id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_SYSTEM_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -405,7 +372,7 @@ func (rcv *SCNReference) SensorSystemId() []byte {
 /// Sensor system id for references that identify a sensor by id.
 /// Sensor id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -418,7 +385,29 @@ func (rcv *SCNReference) SensorId() []byte {
 
 /// Sensor id for references that identify a sensor by id.
 /// Ground-site latitude in degrees when no SIT record is available.
-func (rcv *SCNReference) SITE_LATITUDE_DEG() float64 {
+func (rcv *SCNReference) SITE_LATITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *SCNReference) SiteLatitude() float64 {
+	return rcv.SITE_LATITUDE()
+}
+
+/// Ground-site latitude in degrees when no SIT record is available.
+func (rcv *SCNReference) MutateSITE_LATITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+func (rcv *SCNReference) MutateSiteLatitude(n float64) bool {
+	return rcv.MutateSITE_LATITUDE(n)
+}
+
+/// Ground-site longitude in degrees when no SIT record is available.
+func (rcv *SCNReference) SITE_LONGITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -426,44 +415,22 @@ func (rcv *SCNReference) SITE_LATITUDE_DEG() float64 {
 	return 0.0
 }
 
-func (rcv *SCNReference) SiteLatitudeDeg() float64 {
-	return rcv.SITE_LATITUDE_DEG()
+func (rcv *SCNReference) SiteLongitude() float64 {
+	return rcv.SITE_LONGITUDE()
 }
 
-/// Ground-site latitude in degrees when no SIT record is available.
-func (rcv *SCNReference) MutateSITE_LATITUDE_DEG(n float64) bool {
+/// Ground-site longitude in degrees when no SIT record is available.
+func (rcv *SCNReference) MutateSITE_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-func (rcv *SCNReference) MutateSiteLatitudeDeg(n float64) bool {
-	return rcv.MutateSITE_LATITUDE_DEG(n)
-}
-
-/// Ground-site longitude in degrees when no SIT record is available.
-func (rcv *SCNReference) SITE_LONGITUDE_DEG() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCNReference) SiteLongitudeDeg() float64 {
-	return rcv.SITE_LONGITUDE_DEG()
-}
-
-/// Ground-site longitude in degrees when no SIT record is available.
-func (rcv *SCNReference) MutateSITE_LONGITUDE_DEG(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(40, n)
-}
-
-func (rcv *SCNReference) MutateSiteLongitudeDeg(n float64) bool {
-	return rcv.MutateSITE_LONGITUDE_DEG(n)
+func (rcv *SCNReference) MutateSiteLongitude(n float64) bool {
+	return rcv.MutateSITE_LONGITUDE(n)
 }
 
 /// Scenario variable id for variable satellite references.
 func (rcv *SCNReference) VARIABLE_SATELLITE_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -477,7 +444,7 @@ func (rcv *SCNReference) VariableSatelliteId() []byte {
 /// Scenario variable id for variable satellite references.
 /// Scenario variable id for variable site references.
 func (rcv *SCNReference) VARIABLE_SITE_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -491,7 +458,7 @@ func (rcv *SCNReference) VariableSiteId() []byte {
 /// Scenario variable id for variable site references.
 /// Points of interest associated with this reference.
 func (rcv *SCNReference) POINTS(obj *SCNPointOfInterest, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -510,7 +477,7 @@ func (rcv *SCNReference) Points(obj *SCNPointOfInterest, j int) bool {
 }
 
 func (rcv *SCNReference) POINTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -524,7 +491,7 @@ func (rcv *SCNReference) PointsLength() int {
 /// Points of interest associated with this reference.
 /// View-cone overlay associated with this reference.
 func (rcv *SCNReference) VIEW_CONE(obj *SCNViewCone) *SCNViewCone {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -543,7 +510,7 @@ func (rcv *SCNReference) ViewCone(obj *SCNViewCone) *SCNViewCone {
 /// View-cone overlay associated with this reference.
 /// Sun-advantage target pairing for this reference.
 func (rcv *SCNReference) SUN_ADVANTAGE_TARGET(obj *SCNSunAdvantageTarget) *SCNSunAdvantageTarget {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -562,7 +529,7 @@ func (rcv *SCNReference) SunAdvantageTarget(obj *SCNSunAdvantageTarget) *SCNSunA
 /// Sun-advantage target pairing for this reference.
 /// Exclusion-zone geometry associated with this reference.
 func (rcv *SCNReference) EXCLUSION_ZONE(obj *SCNExclusionZone) *SCNExclusionZone {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -581,7 +548,7 @@ func (rcv *SCNReference) ExclusionZone(obj *SCNExclusionZone) *SCNExclusionZone 
 /// Exclusion-zone geometry associated with this reference.
 /// Electro-optical observation record associated with this reference.
 func (rcv *SCNReference) OBSERVATION_EO(obj *EOO) *EOO {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -600,7 +567,7 @@ func (rcv *SCNReference) ObservationEo(obj *EOO) *EOO {
 /// Electro-optical observation record associated with this reference.
 /// Radar observation record associated with this reference.
 func (rcv *SCNReference) OBSERVATION_RADAR(obj *RDO) *RDO {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -618,7 +585,7 @@ func (rcv *SCNReference) ObservationRadar(obj *RDO) *RDO {
 
 /// Radar observation record associated with this reference.
 func SCNReferenceStart(builder *flatbuffers.Builder) {
-	builder.StartObject(27)
+	builder.StartObject(26)
 }
 func SCNReferenceAddREFERENCE_ID(builder *flatbuffers.Builder, REFERENCE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REFERENCE_ID), 0)
@@ -686,20 +653,8 @@ func SCNReferenceStartDATA_MODESVector(builder *flatbuffers.Builder, numElems in
 func SCNReferenceStartDataModesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCNReferenceStartDATA_MODESVector(builder, numElems)
 }
-func SCNReferenceAddTLES(builder *flatbuffers.Builder, TLES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TLES), 0)
-}
-func SCNReferenceAddTles(builder *flatbuffers.Builder, TLES flatbuffers.UOffsetT) {
-	SCNReferenceAddTLES(builder, TLES)
-}
-func SCNReferenceStartTLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func SCNReferenceStartTlesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCNReferenceStartTLESVector(builder, numElems)
-}
 func SCNReferenceAddMEAN_ELEMENTS(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
 }
 func SCNReferenceAddMeanElements(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
 	SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
@@ -711,7 +666,7 @@ func SCNReferenceStartMeanElementsVector(builder *flatbuffers.Builder, numElems 
 	return SCNReferenceStartMEAN_ELEMENTSVector(builder, numElems)
 }
 func SCNReferenceAddSTATES(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(STATES), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(STATES), 0)
 }
 func SCNReferenceAddStates(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
 	SCNReferenceAddSTATES(builder, STATES)
@@ -723,7 +678,7 @@ func SCNReferenceStartStatesVector(builder *flatbuffers.Builder, numElems int) f
 	return SCNReferenceStartSTATESVector(builder, numElems)
 }
 func SCNReferenceAddMANEUVERS(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(MANEUVERS), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MANEUVERS), 0)
 }
 func SCNReferenceAddManeuvers(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
 	SCNReferenceAddMANEUVERS(builder, MANEUVERS)
@@ -735,55 +690,55 @@ func SCNReferenceStartManeuversVector(builder *flatbuffers.Builder, numElems int
 	return SCNReferenceStartMANEUVERSVector(builder, numElems)
 }
 func SCNReferenceAddSITE(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SITE), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SITE), 0)
 }
 func SCNReferenceAddSite(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
 	SCNReferenceAddSITE(builder, SITE)
 }
 func SCNReferenceAddSENSOR(builder *flatbuffers.Builder, SENSOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SENSOR), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SENSOR), 0)
 }
 func SCNReferenceAddSensor(builder *flatbuffers.Builder, SENSOR flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR(builder, SENSOR)
 }
 func SCNReferenceAddSENSOR_SYSTEM_ID(builder *flatbuffers.Builder, SENSOR_SYSTEM_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENSOR_SYSTEM_ID), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SENSOR_SYSTEM_ID), 0)
 }
 func SCNReferenceAddSensorSystemId(builder *flatbuffers.Builder, SENSOR_SYSTEM_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID)
 }
 func SCNReferenceAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SENSOR_ID), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
 func SCNReferenceAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR_ID(builder, SENSOR_ID)
 }
-func SCNReferenceAddSITE_LATITUDE_DEG(builder *flatbuffers.Builder, SITE_LATITUDE_DEG float64) {
-	builder.PrependFloat64Slot(17, SITE_LATITUDE_DEG, 0.0)
+func SCNReferenceAddSITE_LATITUDE(builder *flatbuffers.Builder, SITE_LATITUDE float64) {
+	builder.PrependFloat64Slot(16, SITE_LATITUDE, 0.0)
 }
-func SCNReferenceAddSiteLatitudeDeg(builder *flatbuffers.Builder, SITE_LATITUDE_DEG float64) {
-	SCNReferenceAddSITE_LATITUDE_DEG(builder, SITE_LATITUDE_DEG)
+func SCNReferenceAddSiteLatitude(builder *flatbuffers.Builder, SITE_LATITUDE float64) {
+	SCNReferenceAddSITE_LATITUDE(builder, SITE_LATITUDE)
 }
-func SCNReferenceAddSITE_LONGITUDE_DEG(builder *flatbuffers.Builder, SITE_LONGITUDE_DEG float64) {
-	builder.PrependFloat64Slot(18, SITE_LONGITUDE_DEG, 0.0)
+func SCNReferenceAddSITE_LONGITUDE(builder *flatbuffers.Builder, SITE_LONGITUDE float64) {
+	builder.PrependFloat64Slot(17, SITE_LONGITUDE, 0.0)
 }
-func SCNReferenceAddSiteLongitudeDeg(builder *flatbuffers.Builder, SITE_LONGITUDE_DEG float64) {
-	SCNReferenceAddSITE_LONGITUDE_DEG(builder, SITE_LONGITUDE_DEG)
+func SCNReferenceAddSiteLongitude(builder *flatbuffers.Builder, SITE_LONGITUDE float64) {
+	SCNReferenceAddSITE_LONGITUDE(builder, SITE_LONGITUDE)
 }
 func SCNReferenceAddVARIABLE_SATELLITE_ID(builder *flatbuffers.Builder, VARIABLE_SATELLITE_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(VARIABLE_SATELLITE_ID), 0)
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(VARIABLE_SATELLITE_ID), 0)
 }
 func SCNReferenceAddVariableSatelliteId(builder *flatbuffers.Builder, VARIABLE_SATELLITE_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_ID)
 }
 func SCNReferenceAddVARIABLE_SITE_ID(builder *flatbuffers.Builder, VARIABLE_SITE_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(VARIABLE_SITE_ID), 0)
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(VARIABLE_SITE_ID), 0)
 }
 func SCNReferenceAddVariableSiteId(builder *flatbuffers.Builder, VARIABLE_SITE_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddVARIABLE_SITE_ID(builder, VARIABLE_SITE_ID)
 }
 func SCNReferenceAddPOINTS(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(POINTS), 0)
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(POINTS), 0)
 }
 func SCNReferenceAddPoints(builder *flatbuffers.Builder, POINTS flatbuffers.UOffsetT) {
 	SCNReferenceAddPOINTS(builder, POINTS)
@@ -795,31 +750,31 @@ func SCNReferenceStartPointsVector(builder *flatbuffers.Builder, numElems int) f
 	return SCNReferenceStartPOINTSVector(builder, numElems)
 }
 func SCNReferenceAddVIEW_CONE(builder *flatbuffers.Builder, VIEW_CONE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(VIEW_CONE), 0)
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(VIEW_CONE), 0)
 }
 func SCNReferenceAddViewCone(builder *flatbuffers.Builder, VIEW_CONE flatbuffers.UOffsetT) {
 	SCNReferenceAddVIEW_CONE(builder, VIEW_CONE)
 }
 func SCNReferenceAddSUN_ADVANTAGE_TARGET(builder *flatbuffers.Builder, SUN_ADVANTAGE_TARGET flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(SUN_ADVANTAGE_TARGET), 0)
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SUN_ADVANTAGE_TARGET), 0)
 }
 func SCNReferenceAddSunAdvantageTarget(builder *flatbuffers.Builder, SUN_ADVANTAGE_TARGET flatbuffers.UOffsetT) {
 	SCNReferenceAddSUN_ADVANTAGE_TARGET(builder, SUN_ADVANTAGE_TARGET)
 }
 func SCNReferenceAddEXCLUSION_ZONE(builder *flatbuffers.Builder, EXCLUSION_ZONE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(EXCLUSION_ZONE), 0)
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(EXCLUSION_ZONE), 0)
 }
 func SCNReferenceAddExclusionZone(builder *flatbuffers.Builder, EXCLUSION_ZONE flatbuffers.UOffsetT) {
 	SCNReferenceAddEXCLUSION_ZONE(builder, EXCLUSION_ZONE)
 }
 func SCNReferenceAddOBSERVATION_EO(builder *flatbuffers.Builder, OBSERVATION_EO flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OBSERVATION_EO), 0)
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(OBSERVATION_EO), 0)
 }
 func SCNReferenceAddObservationEo(builder *flatbuffers.Builder, OBSERVATION_EO flatbuffers.UOffsetT) {
 	SCNReferenceAddOBSERVATION_EO(builder, OBSERVATION_EO)
 }
 func SCNReferenceAddOBSERVATION_RADAR(builder *flatbuffers.Builder, OBSERVATION_RADAR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(OBSERVATION_RADAR), 0)
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(OBSERVATION_RADAR), 0)
 }
 func SCNReferenceAddObservationRadar(builder *flatbuffers.Builder, OBSERVATION_RADAR flatbuffers.UOffsetT) {
 	SCNReferenceAddOBSERVATION_RADAR(builder, OBSERVATION_RADAR)

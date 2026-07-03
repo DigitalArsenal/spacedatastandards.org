@@ -31,7 +31,7 @@ class SCNGeodeticPoint(object):
 
     # Latitude in degrees.
     # SCNGeodeticPoint
-    def LATITUDE_DEG(self):
+    def LATITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -39,7 +39,7 @@ class SCNGeodeticPoint(object):
 
     # Longitude in degrees.
     # SCNGeodeticPoint
-    def LONGITUDE_DEG(self):
+    def LONGITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -47,7 +47,7 @@ class SCNGeodeticPoint(object):
 
     # Altitude above the reference ellipsoid in kilometers.
     # SCNGeodeticPoint
-    def ALTITUDE_KM(self):
+    def ALTITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
@@ -59,23 +59,23 @@ def SCNGeodeticPointStart(builder):
 def Start(builder):
     SCNGeodeticPointStart(builder)
 
-def SCNGeodeticPointAddLATITUDE_DEG(builder, LATITUDE_DEG):
-    builder.PrependFloat64Slot(0, LATITUDE_DEG, 0.0)
+def SCNGeodeticPointAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(0, LATITUDE, 0.0)
 
-def AddLATITUDE_DEG(builder, LATITUDE_DEG):
-    SCNGeodeticPointAddLATITUDE_DEG(builder, LATITUDE_DEG)
+def AddLATITUDE(builder, LATITUDE):
+    SCNGeodeticPointAddLATITUDE(builder, LATITUDE)
 
-def SCNGeodeticPointAddLONGITUDE_DEG(builder, LONGITUDE_DEG):
-    builder.PrependFloat64Slot(1, LONGITUDE_DEG, 0.0)
+def SCNGeodeticPointAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(1, LONGITUDE, 0.0)
 
-def AddLONGITUDE_DEG(builder, LONGITUDE_DEG):
-    SCNGeodeticPointAddLONGITUDE_DEG(builder, LONGITUDE_DEG)
+def AddLONGITUDE(builder, LONGITUDE):
+    SCNGeodeticPointAddLONGITUDE(builder, LONGITUDE)
 
-def SCNGeodeticPointAddALTITUDE_KM(builder, ALTITUDE_KM):
-    builder.PrependFloat64Slot(2, ALTITUDE_KM, 0.0)
+def SCNGeodeticPointAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat64Slot(2, ALTITUDE, 0.0)
 
-def AddALTITUDE_KM(builder, ALTITUDE_KM):
-    SCNGeodeticPointAddALTITUDE_KM(builder, ALTITUDE_KM)
+def AddALTITUDE(builder, ALTITUDE):
+    SCNGeodeticPointAddALTITUDE(builder, ALTITUDE)
 
 def SCNGeodeticPointEnd(builder):
     return builder.EndObject()
@@ -89,13 +89,13 @@ class SCNGeodeticPointT(object):
     # SCNGeodeticPointT
     def __init__(
         self,
-        LATITUDE_DEG = 0.0,
-        LONGITUDE_DEG = 0.0,
-        ALTITUDE_KM = 0.0,
+        LATITUDE = 0.0,
+        LONGITUDE = 0.0,
+        ALTITUDE = 0.0,
     ):
-        self.LATITUDE_DEG = LATITUDE_DEG  # type: float
-        self.LONGITUDE_DEG = LONGITUDE_DEG  # type: float
-        self.ALTITUDE_KM = ALTITUDE_KM  # type: float
+        self.LATITUDE = LATITUDE  # type: float
+        self.LONGITUDE = LONGITUDE  # type: float
+        self.ALTITUDE = ALTITUDE  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -118,15 +118,15 @@ class SCNGeodeticPointT(object):
     def _UnPack(self, SCNGeodeticPoint):
         if SCNGeodeticPoint is None:
             return
-        self.LATITUDE_DEG = SCNGeodeticPoint.LATITUDE_DEG()
-        self.LONGITUDE_DEG = SCNGeodeticPoint.LONGITUDE_DEG()
-        self.ALTITUDE_KM = SCNGeodeticPoint.ALTITUDE_KM()
+        self.LATITUDE = SCNGeodeticPoint.LATITUDE()
+        self.LONGITUDE = SCNGeodeticPoint.LONGITUDE()
+        self.ALTITUDE = SCNGeodeticPoint.ALTITUDE()
 
     # SCNGeodeticPointT
     def Pack(self, builder):
         SCNGeodeticPointStart(builder)
-        SCNGeodeticPointAddLATITUDE_DEG(builder, self.LATITUDE_DEG)
-        SCNGeodeticPointAddLONGITUDE_DEG(builder, self.LONGITUDE_DEG)
-        SCNGeodeticPointAddALTITUDE_KM(builder, self.ALTITUDE_KM)
+        SCNGeodeticPointAddLATITUDE(builder, self.LATITUDE)
+        SCNGeodeticPointAddLONGITUDE(builder, self.LONGITUDE)
+        SCNGeodeticPointAddALTITUDE(builder, self.ALTITUDE)
         SCNGeodeticPoint = SCNGeodeticPointEnd(builder)
         return SCNGeodeticPoint

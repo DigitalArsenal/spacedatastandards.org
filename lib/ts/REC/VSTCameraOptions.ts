@@ -49,7 +49,7 @@ SATELLITE_ALIGNMENT():viewerSatelliteAlignmentMode {
 /**
  * Camera distance from the current target in kilometers.
  */
-DISTANCE_FROM_TARGET_KM():number {
+DISTANCE_FROM_TARGET():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
@@ -74,8 +74,8 @@ static addSatelliteAlignment(builder:flatbuffers.Builder, SATELLITE_ALIGNMENT:vi
   builder.addFieldInt8(1, SATELLITE_ALIGNMENT, viewerSatelliteAlignmentMode.UNKNOWN);
 }
 
-static addDistanceFromTargetKm(builder:flatbuffers.Builder, DISTANCE_FROM_TARGET_KM:number) {
-  builder.addFieldFloat64(2, DISTANCE_FROM_TARGET_KM, 0.0);
+static addDistanceFromTarget(builder:flatbuffers.Builder, DISTANCE_FROM_TARGET:number) {
+  builder.addFieldFloat64(2, DISTANCE_FROM_TARGET, 0.0);
 }
 
 static addRotation(builder:flatbuffers.Builder, ROTATIONOffset:flatbuffers.Offset) {
@@ -92,7 +92,7 @@ unpack(): VSTCameraOptionsT {
   return new VSTCameraOptionsT(
     this.CAMERA_FRAME_MODE(),
     this.SATELLITE_ALIGNMENT(),
-    this.DISTANCE_FROM_TARGET_KM(),
+    this.DISTANCE_FROM_TARGET(),
     (this.ROTATION() !== null ? this.ROTATION()!.unpack() : null)
   );
 }
@@ -101,7 +101,7 @@ unpack(): VSTCameraOptionsT {
 unpackTo(_o: VSTCameraOptionsT): void {
   _o.CAMERA_FRAME_MODE = this.CAMERA_FRAME_MODE();
   _o.SATELLITE_ALIGNMENT = this.SATELLITE_ALIGNMENT();
-  _o.DISTANCE_FROM_TARGET_KM = this.DISTANCE_FROM_TARGET_KM();
+  _o.DISTANCE_FROM_TARGET = this.DISTANCE_FROM_TARGET();
   _o.ROTATION = (this.ROTATION() !== null ? this.ROTATION()!.unpack() : null);
 }
 }
@@ -110,7 +110,7 @@ export class VSTCameraOptionsT implements flatbuffers.IGeneratedObject {
 constructor(
   public CAMERA_FRAME_MODE: viewerCameraFrameMode = viewerCameraFrameMode.DEFAULT,
   public SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode = viewerSatelliteAlignmentMode.UNKNOWN,
-  public DISTANCE_FROM_TARGET_KM: number = 0.0,
+  public DISTANCE_FROM_TARGET: number = 0.0,
   public ROTATION: VSTCameraRotationT|null = null
 ){}
 
@@ -121,7 +121,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   VSTCameraOptions.startVSTCameraOptions(builder);
   VSTCameraOptions.addCameraFrameMode(builder, this.CAMERA_FRAME_MODE);
   VSTCameraOptions.addSatelliteAlignment(builder, this.SATELLITE_ALIGNMENT);
-  VSTCameraOptions.addDistanceFromTargetKm(builder, this.DISTANCE_FROM_TARGET_KM);
+  VSTCameraOptions.addDistanceFromTarget(builder, this.DISTANCE_FROM_TARGET);
   VSTCameraOptions.addRotation(builder, ROTATION);
 
   return VSTCameraOptions.endVSTCameraOptions(builder);
