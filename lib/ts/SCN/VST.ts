@@ -9,7 +9,7 @@ import { VSTDisplaySettings, VSTDisplaySettingsT } from './VSTDisplaySettings.js
 
 
 /**
- * Viewer State — display and camera state associated with a scenario.
+ * Viewer State - display and camera state associated with a scenario.
  */
 export class VST implements flatbuffers.IUnpackableObject<VSTT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -33,16 +33,25 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$VST');
 }
 
+/**
+ * Camera settings for the current viewer state.
+ */
 CAMERA(obj?:VSTCameraOptions):VSTCameraOptions|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new VSTCameraOptions()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Display toggles and map style for the current viewer state.
+ */
 DISPLAY_SETTINGS(obj?:VSTDisplaySettings):VSTDisplaySettings|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new VSTDisplaySettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Reference id of the currently focused scenario object.
+ */
 FOCUSED_REFERENCE_ID():string|null
 FOCUSED_REFERENCE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FOCUSED_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -50,6 +59,9 @@ FOCUSED_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Zero-based focused reference index, or -1 when no index is focused.
+ */
 FOCUSED_REFERENCE_INDEX():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;

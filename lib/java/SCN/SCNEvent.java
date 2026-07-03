@@ -27,24 +27,39 @@ public final class SCNEvent extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNEvent __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Stable id for the imported scenario event.
+   */
   public String EVENT_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EVENT_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer EVENT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Element sets associated with the event.
+   */
   public OMM ELSETS(int j) { return ELSETS(new OMM(), j); }
   public OMM ELSETS(OMM obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int ELSETSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public OMM.Vector elsetsVector() { return elsetsVector(new OMM.Vector()); }
   public OMM.Vector elsetsVector(OMM.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * State vectors associated with the event.
+   */
   public STV STATES(int j) { return STATES(new STV(), j); }
   public STV STATES(STV obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int STATESLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public STV.Vector statesVector() { return statesVector(new STV.Vector()); }
   public STV.Vector statesVector(STV.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Electro-optical observations associated with the event.
+   */
   public EOO EO_OBSERVATIONS(int j) { return EO_OBSERVATIONS(new EOO(), j); }
   public EOO EO_OBSERVATIONS(EOO obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int EO_OBSERVATIONSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
   public EOO.Vector eoObservationsVector() { return eoObservationsVector(new EOO.Vector()); }
   public EOO.Vector eoObservationsVector(EOO.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Radar observations associated with the event.
+   */
   public RDO RADAR_OBSERVATIONS(int j) { return RADAR_OBSERVATIONS(new RDO(), j); }
   public RDO RADAR_OBSERVATIONS(RDO obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int RADAR_OBSERVATIONSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }

@@ -42,6 +42,7 @@ func (rcv *SCNGeodeticPoint) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Latitude in degrees.
 func (rcv *SCNGeodeticPoint) LATITUDE_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,7 @@ func (rcv *SCNGeodeticPoint) LatitudeDeg() float64 {
 	return rcv.LATITUDE_DEG()
 }
 
+/// Latitude in degrees.
 func (rcv *SCNGeodeticPoint) MutateLATITUDE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
@@ -62,6 +64,7 @@ func (rcv *SCNGeodeticPoint) MutateLatitudeDeg(n float64) bool {
 	return rcv.MutateLATITUDE_DEG(n)
 }
 
+/// Longitude in degrees.
 func (rcv *SCNGeodeticPoint) LONGITUDE_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -74,6 +77,7 @@ func (rcv *SCNGeodeticPoint) LongitudeDeg() float64 {
 	return rcv.LONGITUDE_DEG()
 }
 
+/// Longitude in degrees.
 func (rcv *SCNGeodeticPoint) MutateLONGITUDE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -82,6 +86,7 @@ func (rcv *SCNGeodeticPoint) MutateLongitudeDeg(n float64) bool {
 	return rcv.MutateLONGITUDE_DEG(n)
 }
 
+/// Altitude above the reference ellipsoid in kilometers.
 func (rcv *SCNGeodeticPoint) ALTITUDE_KM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -94,6 +99,7 @@ func (rcv *SCNGeodeticPoint) AltitudeKm() float64 {
 	return rcv.ALTITUDE_KM()
 }
 
+/// Altitude above the reference ellipsoid in kilometers.
 func (rcv *SCNGeodeticPoint) MutateALTITUDE_KM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }

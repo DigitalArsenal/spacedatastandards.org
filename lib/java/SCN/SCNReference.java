@@ -28,80 +28,161 @@ public final class SCNReference extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNReference __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Stable scenario-local id for this reference.
+   */
   public String REFERENCE_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Human-readable display name for the reference.
+   */
   public String DISPLAY_NAME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DISPLAY_NAMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer DISPLAY_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Category of object or annotation represented by this reference.
+   */
   public byte REFERENCE_KIND() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * True when this reference represents a removal request.
+   */
   public boolean REMOVE() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * NORAD catalog id for satellite references when available.
+   */
   public long NORAD_CAT_ID() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator or provider object id when available.
+   */
   public String OBJECT_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Country or owner label associated with the reference.
+   */
   public String COUNTRY() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COUNTRYAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer COUNTRYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Source labels or URIs that produced this reference.
+   */
   public String SOURCES(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SOURCESLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
   public StringVector sourcesVector() { return sourcesVector(new StringVector()); }
   public StringVector sourcesVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Data-mode labels associated with this reference.
+   */
   public String DATA_MODES(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int DATA_MODESLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public StringVector dataModesVector() { return dataModesVector(new StringVector()); }
   public StringVector dataModesVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * TLE provenance and raw lines for satellite references.
+   */
   public SCNTleLines TLES(int j) { return TLES(new SCNTleLines(), j); }
   public SCNTleLines TLES(SCNTleLines obj, int j) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int TLESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
   public SCNTleLines.Vector tlesVector() { return tlesVector(new SCNTleLines.Vector()); }
   public SCNTleLines.Vector tlesVector(SCNTleLines.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Mean orbital elements associated with this reference.
+   */
   public OMM MEAN_ELEMENTS(int j) { return MEAN_ELEMENTS(new OMM(), j); }
   public OMM MEAN_ELEMENTS(OMM obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int MEAN_ELEMENTSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
   public OMM.Vector meanElementsVector() { return meanElementsVector(new OMM.Vector()); }
   public OMM.Vector meanElementsVector(OMM.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * State vectors associated with this reference.
+   */
   public STV STATES(int j) { return STATES(new STV(), j); }
   public STV STATES(STV obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int STATESLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public STV.Vector statesVector() { return statesVector(new STV.Vector()); }
   public STV.Vector statesVector(STV.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maneuver records associated with this reference.
+   */
   public MNV MANEUVERS(int j) { return MANEUVERS(new MNV(), j); }
   public MNV MANEUVERS(MNV obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int MANEUVERSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public MNV.Vector maneuversVector() { return maneuversVector(new MNV.Vector()); }
   public MNV.Vector maneuversVector(MNV.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ground-site record associated with this reference.
+   */
   public SIT SITE() { return SITE(new SIT()); }
   public SIT SITE(SIT obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Sensor record associated with this reference.
+   */
   public SEN SENSOR() { return SENSOR(new SEN()); }
   public SEN SENSOR(SEN obj) { int o = __offset(32); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Sensor system id for references that identify a sensor by id.
+   */
   public String SENSOR_SYSTEM_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SENSOR_SYSTEM_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer SENSOR_SYSTEM_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Sensor id for references that identify a sensor by id.
+   */
   public String SENSOR_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Ground-site latitude in degrees when no SIT record is available.
+   */
   public double SITE_LATITUDE_DEG() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Ground-site longitude in degrees when no SIT record is available.
+   */
   public double SITE_LONGITUDE_DEG() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Scenario variable id for variable satellite references.
+   */
   public String VARIABLE_SATELLITE_ID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer VARIABLE_SATELLITE_IDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer VARIABLE_SATELLITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Scenario variable id for variable site references.
+   */
   public String VARIABLE_SITE_ID() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer VARIABLE_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
   public ByteBuffer VARIABLE_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Points of interest associated with this reference.
+   */
   public SCNPointOfInterest POINTS(int j) { return POINTS(new SCNPointOfInterest(), j); }
   public SCNPointOfInterest POINTS(SCNPointOfInterest obj, int j) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int POINTSLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
   public SCNPointOfInterest.Vector pointsVector() { return pointsVector(new SCNPointOfInterest.Vector()); }
   public SCNPointOfInterest.Vector pointsVector(SCNPointOfInterest.Vector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * View-cone overlay associated with this reference.
+   */
   public SCNViewCone VIEW_CONE() { return VIEW_CONE(new SCNViewCone()); }
   public SCNViewCone VIEW_CONE(SCNViewCone obj) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Sun-advantage target pairing for this reference.
+   */
   public SCNSunAdvantageTarget SUN_ADVANTAGE_TARGET() { return SUN_ADVANTAGE_TARGET(new SCNSunAdvantageTarget()); }
   public SCNSunAdvantageTarget SUN_ADVANTAGE_TARGET(SCNSunAdvantageTarget obj) { int o = __offset(50); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Exclusion-zone geometry associated with this reference.
+   */
   public SCNExclusionZone EXCLUSION_ZONE() { return EXCLUSION_ZONE(new SCNExclusionZone()); }
   public SCNExclusionZone EXCLUSION_ZONE(SCNExclusionZone obj) { int o = __offset(52); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Electro-optical observation record associated with this reference.
+   */
   public EOO OBSERVATION_EO() { return OBSERVATION_EO(new EOO()); }
   public EOO OBSERVATION_EO(EOO obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Radar observation record associated with this reference.
+   */
   public RDO OBSERVATION_RADAR() { return OBSERVATION_RADAR(new RDO()); }
   public RDO OBSERVATION_RADAR(RDO obj) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

@@ -16,15 +16,39 @@ export declare class SCC implements flatbuffers.IUnpackableObject<SCCT> {
     static getRootAsSCC(bb: flatbuffers.ByteBuffer, obj?: SCC): SCC;
     static getSizePrefixedRootAsSCC(bb: flatbuffers.ByteBuffer, obj?: SCC): SCC;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * Payload discriminator for the message carried by this envelope.
+     */
     MESSAGE_KIND(): controlMessageKind;
+    /**
+     * Optional trace id for correlating messages across systems.
+     */
     TRACE_ID(): string | null;
     TRACE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Scenario list carried by setup or selection messages.
+     */
     SCENARIOS(index: number, obj?: SCN): SCN | null;
     scenariosLength(): number;
+    /**
+     * Single scenario payload carried by setup or state messages.
+     */
     SCENARIO(obj?: SCN): SCN | null;
+    /**
+     * Request-current-state payload.
+     */
     REQUEST_STATE(obj?: SCCRequestState): SCCRequestState | null;
+    /**
+     * Current-state response payload.
+     */
     STATE_RESPONSE(obj?: SCCStateResponse): SCCStateResponse | null;
+    /**
+     * Asset-picker request or acknowledgement payload.
+     */
     ASSET_PICKER(obj?: SCCAssetPicker): SCCAssetPicker | null;
+    /**
+     * Startup readiness payload.
+     */
     READY(obj?: SCCReady): SCCReady | null;
     static startSCC(builder: flatbuffers.Builder): void;
     static addMessageKind(builder: flatbuffers.Builder, MESSAGE_KIND: controlMessageKind): void;

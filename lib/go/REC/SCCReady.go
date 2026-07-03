@@ -42,6 +42,7 @@ func (rcv *SCCReady) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// True when the scenario controls surface is ready for messages.
 func (rcv *SCCReady) READY() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,7 @@ func (rcv *SCCReady) Ready() bool {
 	return rcv.READY()
 }
 
+/// True when the scenario controls surface is ready for messages.
 func (rcv *SCCReady) MutateREADY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(4, n)
 }

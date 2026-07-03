@@ -28,41 +28,65 @@ static getSizePrefixedRootAsVSTCameraRotation(bb:flatbuffers.ByteBuffer, obj?:VS
   return (obj || new VSTCameraRotation()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Yaw angle in degrees for Euler-angle camera imports.
+ */
 YAW_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Pitch angle in degrees for Euler-angle camera imports.
+ */
 PITCH_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Roll angle in degrees for Euler-angle camera imports.
+ */
 ROLL_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Quaternion x component for camera orientation.
+ */
 QUATERNION_X():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Quaternion y component for camera orientation.
+ */
 QUATERNION_Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Quaternion z component for camera orientation.
+ */
 QUATERNION_Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Quaternion w component for camera orientation.
+ */
 QUATERNION_W():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True when quaternion fields define the authoritative rotation.
+ */
 USES_QUATERNION():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;

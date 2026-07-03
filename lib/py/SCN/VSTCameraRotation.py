@@ -30,6 +30,7 @@ class VSTCameraRotation(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Yaw angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
     def YAW_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,6 +38,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pitch angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
     def PITCH_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -44,6 +46,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Roll angle in degrees for Euler-angle camera imports.
     # VSTCameraRotation
     def ROLL_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -51,6 +54,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Quaternion x component for camera orientation.
     # VSTCameraRotation
     def QUATERNION_X(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -58,6 +62,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Quaternion y component for camera orientation.
     # VSTCameraRotation
     def QUATERNION_Y(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -65,6 +70,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Quaternion z component for camera orientation.
     # VSTCameraRotation
     def QUATERNION_Z(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -72,6 +78,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Quaternion w component for camera orientation.
     # VSTCameraRotation
     def QUATERNION_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -79,6 +86,7 @@ class VSTCameraRotation(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True when quaternion fields define the authoritative rotation.
     # VSTCameraRotation
     def USES_QUATERNION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))

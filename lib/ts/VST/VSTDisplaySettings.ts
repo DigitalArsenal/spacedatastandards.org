@@ -28,61 +28,97 @@ static getSizePrefixedRootAsVSTDisplaySettings(bb:flatbuffers.ByteBuffer, obj?:V
   return (obj || new VSTDisplaySettings()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Active map rendering mode for the scenario viewer.
+ */
 MAP_MODE():viewerMapMode {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : viewerMapMode.UNKNOWN;
 }
 
+/**
+ * Show geosynchronous belt reference markers.
+ */
 SHOW_GEO_BELT_MARKERS():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show cislunar reference content.
+ */
 SHOW_CIS_LUNAR():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show the equator overlay.
+ */
 SHOW_EQUATOR():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show latitude grid lines.
+ */
 SHOW_LATITUDE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show longitude grid lines.
+ */
 SHOW_LONGITUDE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show body shadow-cone overlays.
+ */
 SHOW_SHADOW_CONES():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show animated capture or GIF export controls.
+ */
 SHOW_GIF_CONTROLS():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Render the atmospheric shell around the central body.
+ */
 SHOW_ATMOSPHERE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Show the sun-direction indicator overlay.
+ */
 SHOW_SUN_DIRECTION_INDICATOR():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Render the starfield background.
+ */
 USE_STARFIELD():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Render orbits as stitched continuous paths.
+ */
 USE_STITCHED_ORBIT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;

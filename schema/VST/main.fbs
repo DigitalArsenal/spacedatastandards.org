@@ -1,5 +1,5 @@
-// Hash: 96cbbc6c34ea6c46b73c2a344331bf5df2f96c82ddc0eb1bb01c61110b5c7d65
-// Version: 1.136.0
+// Hash: 933c0e898412213b63e1a1c4460f698288453c3a7e50f0d601c7aefc7587e35a
+// Version: 1.136.1
 // -----------------------------------END_HEADER
 /// Viewer map style for scenario display.
 enum viewerMapMode : byte {
@@ -27,45 +27,73 @@ enum viewerSatelliteAlignmentMode : byte {
 /// Camera rotation offset. Quaternions are preferred when present; Euler
 /// angles are retained for import of older scenario JSON.
 table VSTCameraRotation {
+  /// Yaw angle in degrees for Euler-angle camera imports.
   YAW_DEG:double;
+  /// Pitch angle in degrees for Euler-angle camera imports.
   PITCH_DEG:double;
+  /// Roll angle in degrees for Euler-angle camera imports.
   ROLL_DEG:double;
+  /// Quaternion x component for camera orientation.
   QUATERNION_X:double;
+  /// Quaternion y component for camera orientation.
   QUATERNION_Y:double;
+  /// Quaternion z component for camera orientation.
   QUATERNION_Z:double;
+  /// Quaternion w component for camera orientation.
   QUATERNION_W:double;
+  /// True when quaternion fields define the authoritative rotation.
   USES_QUATERNION:bool = true;
 }
 
 /// App display toggles for a scenario viewer.
 table VSTDisplaySettings {
+  /// Active map rendering mode for the scenario viewer.
   MAP_MODE:viewerMapMode;
+  /// Show geosynchronous belt reference markers.
   SHOW_GEO_BELT_MARKERS:bool;
+  /// Show cislunar reference content.
   SHOW_CIS_LUNAR:bool;
+  /// Show the equator overlay.
   SHOW_EQUATOR:bool;
+  /// Show latitude grid lines.
   SHOW_LATITUDE:bool;
+  /// Show longitude grid lines.
   SHOW_LONGITUDE:bool;
+  /// Show body shadow-cone overlays.
   SHOW_SHADOW_CONES:bool;
+  /// Show animated capture or GIF export controls.
   SHOW_GIF_CONTROLS:bool;
+  /// Render the atmospheric shell around the central body.
   SHOW_ATMOSPHERE:bool;
+  /// Show the sun-direction indicator overlay.
   SHOW_SUN_DIRECTION_INDICATOR:bool;
+  /// Render the starfield background.
   USE_STARFIELD:bool;
+  /// Render orbits as stitched continuous paths.
   USE_STITCHED_ORBIT:bool;
 }
 
 /// Camera options for a space-domain scenario viewer.
 table VSTCameraOptions {
+  /// Camera frame relative to the focused target or default scene.
   CAMERA_FRAME_MODE:viewerCameraFrameMode;
+  /// Satellite body alignment mode when focused on a satellite.
   SATELLITE_ALIGNMENT:viewerSatelliteAlignmentMode;
+  /// Camera distance from the current target in kilometers.
   DISTANCE_FROM_TARGET_KM:double;
+  /// Camera orientation offset.
   ROTATION:VSTCameraRotation;
 }
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 table VST {
+  /// Camera settings for the current viewer state.
   CAMERA:VSTCameraOptions;
+  /// Display toggles and map style for the current viewer state.
   DISPLAY_SETTINGS:VSTDisplaySettings;
+  /// Reference id of the currently focused scenario object.
   FOCUSED_REFERENCE_ID:string;
+  /// Zero-based focused reference index, or -1 when no index is focused.
   FOCUSED_REFERENCE_INDEX:int = -1;
 }
 

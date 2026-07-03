@@ -41,6 +41,7 @@ class SCNGeodeticPoint extends Table
         return $this;
     }
 
+    /// Latitude in degrees.
     /**
      * @return double
      */
@@ -50,6 +51,7 @@ class SCNGeodeticPoint extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Longitude in degrees.
     /**
      * @return double
      */
@@ -59,6 +61,7 @@ class SCNGeodeticPoint extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Altitude above the reference ellipsoid in kilometers.
     /**
      * @return double
      */

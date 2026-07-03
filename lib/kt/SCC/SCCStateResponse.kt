@@ -30,6 +30,9 @@ class SCCStateResponse : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Request correlation id from the matching state request.
+     */
     val requestId : String?
         get() {
             val o = __offset(4)
@@ -41,11 +44,17 @@ class SCCStateResponse : Table() {
         }
     val requestIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun requestIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * State payload represented by this response.
+     */
     val requestKind : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Full scenario state for scenario-state responses.
+     */
     val scenario : SCN? get() = scenario(SCN())
     fun scenario(obj: SCN) : SCN? {
         val o = __offset(8)
@@ -55,6 +64,9 @@ class SCCStateResponse : Table() {
             null
         }
     }
+    /**
+     * Reference-list payload for reference-only responses.
+     */
     fun references(j: Int) : SCNReference? = references(SCNReference(), j)
     fun references(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(10)
@@ -68,11 +80,17 @@ class SCCStateResponse : Table() {
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     val focusedReferenceIndex : Int
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos) else -1
         }
+    /**
+     * Human-readable error message when state cannot be returned.
+     */
     val errorMessage : String?
         get() {
             val o = __offset(14)

@@ -147,27 +147,35 @@ struct VSTCameraRotation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_QUATERNION_W = 16,
     VT_USES_QUATERNION = 18
   };
+  /// Yaw angle in degrees for Euler-angle camera imports.
   double YAW_DEG() const {
     return GetField<double>(VT_YAW_DEG, 0.0);
   }
+  /// Pitch angle in degrees for Euler-angle camera imports.
   double PITCH_DEG() const {
     return GetField<double>(VT_PITCH_DEG, 0.0);
   }
+  /// Roll angle in degrees for Euler-angle camera imports.
   double ROLL_DEG() const {
     return GetField<double>(VT_ROLL_DEG, 0.0);
   }
+  /// Quaternion x component for camera orientation.
   double QUATERNION_X() const {
     return GetField<double>(VT_QUATERNION_X, 0.0);
   }
+  /// Quaternion y component for camera orientation.
   double QUATERNION_Y() const {
     return GetField<double>(VT_QUATERNION_Y, 0.0);
   }
+  /// Quaternion z component for camera orientation.
   double QUATERNION_Z() const {
     return GetField<double>(VT_QUATERNION_Z, 0.0);
   }
+  /// Quaternion w component for camera orientation.
   double QUATERNION_W() const {
     return GetField<double>(VT_QUATERNION_W, 0.0);
   }
+  /// True when quaternion fields define the authoritative rotation.
   bool USES_QUATERNION() const {
     return GetField<uint8_t>(VT_USES_QUATERNION, 1) != 0;
   }
@@ -264,39 +272,51 @@ struct VSTDisplaySettings FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_USE_STARFIELD = 24,
     VT_USE_STITCHED_ORBIT = 26
   };
+  /// Active map rendering mode for the scenario viewer.
   viewerMapMode MAP_MODE() const {
     return static_cast<viewerMapMode>(GetField<int8_t>(VT_MAP_MODE, 0));
   }
+  /// Show geosynchronous belt reference markers.
   bool SHOW_GEO_BELT_MARKERS() const {
     return GetField<uint8_t>(VT_SHOW_GEO_BELT_MARKERS, 0) != 0;
   }
+  /// Show cislunar reference content.
   bool SHOW_CIS_LUNAR() const {
     return GetField<uint8_t>(VT_SHOW_CIS_LUNAR, 0) != 0;
   }
+  /// Show the equator overlay.
   bool SHOW_EQUATOR() const {
     return GetField<uint8_t>(VT_SHOW_EQUATOR, 0) != 0;
   }
+  /// Show latitude grid lines.
   bool SHOW_LATITUDE() const {
     return GetField<uint8_t>(VT_SHOW_LATITUDE, 0) != 0;
   }
+  /// Show longitude grid lines.
   bool SHOW_LONGITUDE() const {
     return GetField<uint8_t>(VT_SHOW_LONGITUDE, 0) != 0;
   }
+  /// Show body shadow-cone overlays.
   bool SHOW_SHADOW_CONES() const {
     return GetField<uint8_t>(VT_SHOW_SHADOW_CONES, 0) != 0;
   }
+  /// Show animated capture or GIF export controls.
   bool SHOW_GIF_CONTROLS() const {
     return GetField<uint8_t>(VT_SHOW_GIF_CONTROLS, 0) != 0;
   }
+  /// Render the atmospheric shell around the central body.
   bool SHOW_ATMOSPHERE() const {
     return GetField<uint8_t>(VT_SHOW_ATMOSPHERE, 0) != 0;
   }
+  /// Show the sun-direction indicator overlay.
   bool SHOW_SUN_DIRECTION_INDICATOR() const {
     return GetField<uint8_t>(VT_SHOW_SUN_DIRECTION_INDICATOR, 0) != 0;
   }
+  /// Render the starfield background.
   bool USE_STARFIELD() const {
     return GetField<uint8_t>(VT_USE_STARFIELD, 0) != 0;
   }
+  /// Render orbits as stitched continuous paths.
   bool USE_STITCHED_ORBIT() const {
     return GetField<uint8_t>(VT_USE_STITCHED_ORBIT, 0) != 0;
   }
@@ -409,15 +429,19 @@ struct VSTCameraOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DISTANCE_FROM_TARGET_KM = 8,
     VT_ROTATION = 10
   };
+  /// Camera frame relative to the focused target or default scene.
   viewerCameraFrameMode CAMERA_FRAME_MODE() const {
     return static_cast<viewerCameraFrameMode>(GetField<int8_t>(VT_CAMERA_FRAME_MODE, 0));
   }
+  /// Satellite body alignment mode when focused on a satellite.
   viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT() const {
     return static_cast<viewerSatelliteAlignmentMode>(GetField<int8_t>(VT_SATELLITE_ALIGNMENT, 0));
   }
+  /// Camera distance from the current target in kilometers.
   double DISTANCE_FROM_TARGET_KM() const {
     return GetField<double>(VT_DISTANCE_FROM_TARGET_KM, 0.0);
   }
+  /// Camera orientation offset.
   const VSTCameraRotation *ROTATION() const {
     return GetPointer<const VSTCameraRotation *>(VT_ROTATION);
   }
@@ -474,7 +498,7 @@ inline ::flatbuffers::Offset<VSTCameraOptions> CreateVSTCameraOptions(
   return builder_.Finish();
 }
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 struct VST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VSTBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -483,15 +507,19 @@ struct VST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FOCUSED_REFERENCE_ID = 8,
     VT_FOCUSED_REFERENCE_INDEX = 10
   };
+  /// Camera settings for the current viewer state.
   const VSTCameraOptions *CAMERA() const {
     return GetPointer<const VSTCameraOptions *>(VT_CAMERA);
   }
+  /// Display toggles and map style for the current viewer state.
   const VSTDisplaySettings *DISPLAY_SETTINGS() const {
     return GetPointer<const VSTDisplaySettings *>(VT_DISPLAY_SETTINGS);
   }
+  /// Reference id of the currently focused scenario object.
   const ::flatbuffers::String *FOCUSED_REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FOCUSED_REFERENCE_ID);
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   int32_t FOCUSED_REFERENCE_INDEX() const {
     return GetField<int32_t>(VT_FOCUSED_REFERENCE_INDEX, -1);
   }

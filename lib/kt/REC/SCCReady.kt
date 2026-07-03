@@ -29,6 +29,9 @@ class SCCReady : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * True when the scenario controls surface is ready for messages.
+     */
     val ready : Boolean
         get() {
             val o = __offset(4)

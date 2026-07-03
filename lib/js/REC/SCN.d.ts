@@ -6,7 +6,7 @@ import { SCNReference, SCNReferenceT } from './SCNReference.js';
 import { VST, VSTT } from './VST.js';
 import { scenarioActionCode } from './scenarioActionCode.js';
 /**
- * Scenario — canonical scene composition and simulation state for external
+ * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
  */
@@ -17,21 +17,57 @@ export declare class SCN implements flatbuffers.IUnpackableObject<SCNT> {
     static getRootAsSCN(bb: flatbuffers.ByteBuffer, obj?: SCN): SCN;
     static getSizePrefixedRootAsSCN(bb: flatbuffers.ByteBuffer, obj?: SCN): SCN;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * Stable id for the scenario.
+     */
     SCENARIO_ID(): string | null;
     SCENARIO_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Objects, annotations, and variables included in the scenario.
+     */
     REFERENCES(index: number, obj?: SCNReference): SCNReference | null;
     referencesLength(): number;
+    /**
+     * Imported event payload associated with the scenario.
+     */
     EVENT(obj?: SCNEvent): SCNEvent | null;
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     FOCUSED_REFERENCE_INDEX(): number;
+    /**
+     * Reference id of the currently focused scenario object.
+     */
     FOCUSED_REFERENCE_ID(): string | null;
     FOCUSED_REFERENCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Current simulation time as an ISO-8601 UTC timestamp.
+     */
     SIM_TIME(): string | null;
     SIM_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Simulation time-rate multiplier.
+     */
     SIM_SPEED(): number;
+    /**
+     * True when the viewer should use an Earth-centered Earth-fixed frame.
+     */
     USE_ECEF_FRAME(): boolean;
+    /**
+     * Reference frame used for scenario propagation and display.
+     */
     REFERENCE_FRAME(obj?: RFM): RFM | null;
+    /**
+     * Command action requested for the scenario.
+     */
     ACTION(): scenarioActionCode;
+    /**
+     * Viewer camera and display state for the scenario.
+     */
     VIEW_STATE(obj?: VST): VST | null;
+    /**
+     * Asset-change notification payload for the scenario.
+     */
     ASSETS_CHANGED(obj?: SCNAssetsChanged): SCNAssetsChanged | null;
     static startSCN(builder: flatbuffers.Builder): void;
     static addScenarioId(builder: flatbuffers.Builder, SCENARIO_IDOffset: flatbuffers.Offset): void;

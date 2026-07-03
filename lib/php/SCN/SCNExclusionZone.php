@@ -42,24 +42,28 @@ class SCNExclusionZone extends Table
         return $this;
     }
 
+    /// Display label for the exclusion zone.
     public function getLABEL()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Fill color token for the exclusion zone.
     public function getFILL_COLOR()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Label color token for the exclusion zone.
     public function getLABEL_COLOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// True when the exclusion-zone polygon should be filled.
     /**
      * @return bool
      */
@@ -69,6 +73,7 @@ class SCNExclusionZone extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Simple geodetic polygon points for imported zones.
     /**
      * @returnVectorOffset
      */
@@ -88,6 +93,7 @@ class SCNExclusionZone extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Canonical GeoJSON geometry for the exclusion zone.
     public function getBOUNDARY()
     {
         $obj = new GJNGeometry();

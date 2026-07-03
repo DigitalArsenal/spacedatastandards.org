@@ -38,11 +38,17 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SCC');
 }
 
+/**
+ * Payload discriminator for the message carried by this envelope.
+ */
 MESSAGE_KIND():controlMessageKind {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : controlMessageKind.UNKNOWN;
 }
 
+/**
+ * Optional trace id for correlating messages across systems.
+ */
 TRACE_ID():string|null
 TRACE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -50,6 +56,9 @@ TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Scenario list carried by setup or selection messages.
+ */
 SCENARIOS(index: number, obj?:SCN):SCN|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new SCN()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -60,26 +69,41 @@ scenariosLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Single scenario payload carried by setup or state messages.
+ */
 SCENARIO(obj?:SCN):SCN|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? (obj || new SCN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Request-current-state payload.
+ */
 REQUEST_STATE(obj?:SCCRequestState):SCCRequestState|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? (obj || new SCCRequestState()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Current-state response payload.
+ */
 STATE_RESPONSE(obj?:SCCStateResponse):SCCStateResponse|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new SCCStateResponse()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Asset-picker request or acknowledgement payload.
+ */
 ASSET_PICKER(obj?:SCCAssetPicker):SCCAssetPicker|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new SCCAssetPicker()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Startup readiness payload.
+ */
 READY(obj?:SCCReady):SCCReady|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new SCCReady()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

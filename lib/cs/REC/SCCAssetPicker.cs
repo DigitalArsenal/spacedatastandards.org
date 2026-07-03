@@ -17,6 +17,7 @@ public struct SCCAssetPicker : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCCAssetPicker __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Request correlation id for the asset-picker exchange.
   public string REQUEST_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetREQUEST_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -24,7 +25,9 @@ public struct SCCAssetPicker : IFlatbufferObject
   public ArraySegment<byte>? GetREQUEST_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetREQUEST_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Initial catalog tab to display in the asset picker.
   public assetCatalogTab CATALOG_TAB { get { int o = __p.__offset(6); return o != 0 ? (assetCatalogTab)__p.bb.GetSbyte(o + __p.bb_pos) : assetCatalogTab.UNKNOWN; } }
+  /// True when the receiver accepted or completed the picker request.
   public bool ACKNOWLEDGED { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<SCCAssetPicker> CreateSCCAssetPicker(FlatBufferBuilder builder,

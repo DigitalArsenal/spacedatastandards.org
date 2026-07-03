@@ -2,7 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { VSTCameraOptions, VSTCameraOptionsT } from './VSTCameraOptions.js';
 import { VSTDisplaySettings, VSTDisplaySettingsT } from './VSTDisplaySettings.js';
 /**
- * Viewer State — display and camera state associated with a scenario.
+ * Viewer State - display and camera state associated with a scenario.
  */
 export declare class VST implements flatbuffers.IUnpackableObject<VSTT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -11,10 +11,22 @@ export declare class VST implements flatbuffers.IUnpackableObject<VSTT> {
     static getRootAsVST(bb: flatbuffers.ByteBuffer, obj?: VST): VST;
     static getSizePrefixedRootAsVST(bb: flatbuffers.ByteBuffer, obj?: VST): VST;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * Camera settings for the current viewer state.
+     */
     CAMERA(obj?: VSTCameraOptions): VSTCameraOptions | null;
+    /**
+     * Display toggles and map style for the current viewer state.
+     */
     DISPLAY_SETTINGS(obj?: VSTDisplaySettings): VSTDisplaySettings | null;
+    /**
+     * Reference id of the currently focused scenario object.
+     */
     FOCUSED_REFERENCE_ID(): string | null;
     FOCUSED_REFERENCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     FOCUSED_REFERENCE_INDEX(): number;
     static startVST(builder: flatbuffers.Builder): void;
     static addCamera(builder: flatbuffers.Builder, CAMERAOffset: flatbuffers.Offset): void;

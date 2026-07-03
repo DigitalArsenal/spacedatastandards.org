@@ -18,6 +18,7 @@ public struct SCCStateResponse : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCCStateResponse __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Request correlation id from the matching state request.
   public string REQUEST_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetREQUEST_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -25,11 +26,16 @@ public struct SCCStateResponse : IFlatbufferObject
   public ArraySegment<byte>? GetREQUEST_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetREQUEST_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// State payload represented by this response.
   public stateRequestKind REQUEST_KIND { get { int o = __p.__offset(6); return o != 0 ? (stateRequestKind)__p.bb.GetSbyte(o + __p.bb_pos) : stateRequestKind.UNKNOWN; } }
+  /// Full scenario state for scenario-state responses.
   public SCN? SCENARIO { get { int o = __p.__offset(8); return o != 0 ? (SCN?)(new SCN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Reference-list payload for reference-only responses.
   public SCNReference? REFERENCES(int j) { int o = __p.__offset(10); return o != 0 ? (SCNReference?)(new SCNReference()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int REFERENCESLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   public int FOCUSED_REFERENCE_INDEX { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
+  /// Human-readable error message when state cannot be returned.
   public string ERROR_MESSAGE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetERROR_MESSAGEBytes() { return __p.__vector_as_span<byte>(14, 1); }

@@ -30,6 +30,7 @@ class SCNExclusionZone(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Display label for the exclusion zone.
     # SCNExclusionZone
     def LABEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,6 +38,7 @@ class SCNExclusionZone(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Fill color token for the exclusion zone.
     # SCNExclusionZone
     def FILL_COLOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -44,6 +46,7 @@ class SCNExclusionZone(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Label color token for the exclusion zone.
     # SCNExclusionZone
     def LABEL_COLOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -51,6 +54,7 @@ class SCNExclusionZone(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True when the exclusion-zone polygon should be filled.
     # SCNExclusionZone
     def IS_FILLED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -58,6 +62,7 @@ class SCNExclusionZone(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Simple geodetic polygon points for imported zones.
     # SCNExclusionZone
     def POINTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -83,6 +88,7 @@ class SCNExclusionZone(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
+    # Canonical GeoJSON geometry for the exclusion zone.
     # SCNExclusionZone
     def BOUNDARY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

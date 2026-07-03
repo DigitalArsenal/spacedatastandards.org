@@ -9,8 +9,14 @@ export declare class SCCRequestState implements flatbuffers.IUnpackableObject<SC
     __init(i: number, bb: flatbuffers.ByteBuffer): SCCRequestState;
     static getRootAsSCCRequestState(bb: flatbuffers.ByteBuffer, obj?: SCCRequestState): SCCRequestState;
     static getSizePrefixedRootAsSCCRequestState(bb: flatbuffers.ByteBuffer, obj?: SCCRequestState): SCCRequestState;
+    /**
+     * Request correlation id echoed by the matching state response.
+     */
     REQUEST_ID(): string | null;
     REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * State payload requested by the caller.
+     */
     REQUEST_KIND(): stateRequestKind;
     static startSCCRequestState(builder: flatbuffers.Builder): void;
     static addRequestId(builder: flatbuffers.Builder, REQUEST_IDOffset: flatbuffers.Offset): void;

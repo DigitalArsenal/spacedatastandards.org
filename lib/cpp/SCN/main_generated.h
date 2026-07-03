@@ -150,12 +150,15 @@ struct SCNTleLines FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LINE2 = 6,
     VT_SOURCE = 8
   };
+  /// First TLE line exactly as imported.
   const ::flatbuffers::String *LINE1() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LINE1);
   }
+  /// Second TLE line exactly as imported.
   const ::flatbuffers::String *LINE2() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LINE2);
   }
+  /// Source label or URI for the imported TLE.
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
@@ -231,12 +234,15 @@ struct SCNGeodeticPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LONGITUDE_DEG = 6,
     VT_ALTITUDE_KM = 8
   };
+  /// Latitude in degrees.
   double LATITUDE_DEG() const {
     return GetField<double>(VT_LATITUDE_DEG, 0.0);
   }
+  /// Longitude in degrees.
   double LONGITUDE_DEG() const {
     return GetField<double>(VT_LONGITUDE_DEG, 0.0);
   }
+  /// Altitude above the reference ellipsoid in kilometers.
   double ALTITUDE_KM() const {
     return GetField<double>(VT_ALTITUDE_KM, 0.0);
   }
@@ -298,24 +304,31 @@ struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_COLOR = 14,
     VT_POSITION = 16
   };
+  /// Display name for the point of interest.
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
+  /// Optional detail text shown with the point of interest.
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// UTC epoch associated with the point of interest.
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
+  /// Seconds before the epoch when highlighting begins.
   double HIGHLIGHT_BEFORE_SEC() const {
     return GetField<double>(VT_HIGHLIGHT_BEFORE_SEC, 0.0);
   }
+  /// Seconds after the epoch when highlighting remains active.
   double HIGHLIGHT_AFTER_SEC() const {
     return GetField<double>(VT_HIGHLIGHT_AFTER_SEC, 0.0);
   }
+  /// Display color token for the point of interest.
   const ::flatbuffers::String *COLOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLOR);
   }
+  /// Geodetic position for the point of interest.
   const SCNGeodeticPoint *POSITION() const {
     return GetPointer<const SCNGeodeticPoint *>(VT_POSITION);
   }
@@ -430,24 +443,31 @@ struct SCNViewCone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_HALF_ANGLE_DEG = 14,
     VT_DYNAMIC_RANGE = 16
   };
+  /// Minimum elevation angle in degrees.
   double MIN_ELEVATION_DEG() const {
     return GetField<double>(VT_MIN_ELEVATION_DEG, 0.0);
   }
+  /// Maximum elevation angle in degrees.
   double MAX_ELEVATION_DEG() const {
     return GetField<double>(VT_MAX_ELEVATION_DEG, 0.0);
   }
+  /// Minimum azimuth angle in degrees.
   double MIN_AZIMUTH_DEG() const {
     return GetField<double>(VT_MIN_AZIMUTH_DEG, 0.0);
   }
+  /// Maximum azimuth angle in degrees.
   double MAX_AZIMUTH_DEG() const {
     return GetField<double>(VT_MAX_AZIMUTH_DEG, 0.0);
   }
+  /// Maximum view-cone range in kilometers.
   double MAX_RANGE_KM() const {
     return GetField<double>(VT_MAX_RANGE_KM, 0.0);
   }
+  /// Half angle in degrees for cone-style overlays.
   double HALF_ANGLE_DEG() const {
     return GetField<double>(VT_HALF_ANGLE_DEG, 0.0);
   }
+  /// Dynamic range mode or expression used by the viewer.
   const ::flatbuffers::String *DYNAMIC_RANGE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DYNAMIC_RANGE);
   }
@@ -551,12 +571,15 @@ struct SCNSunAdvantageTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Ta
     VT_TARGET_NORAD_CAT_ID = 6,
     VT_GROUND_SITE_ID = 8
   };
+  /// Scenario reference id of the target object.
   const ::flatbuffers::String *TARGET_REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TARGET_REFERENCE_ID);
   }
+  /// NORAD catalog id of the target satellite when available.
   uint32_t TARGET_NORAD_CAT_ID() const {
     return GetField<uint32_t>(VT_TARGET_NORAD_CAT_ID, 0);
   }
+  /// Ground site id associated with the target pairing.
   const ::flatbuffers::String *GROUND_SITE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_GROUND_SITE_ID);
   }
@@ -634,21 +657,27 @@ struct SCNExclusionZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_POINTS = 12,
     VT_BOUNDARY = 14
   };
+  /// Display label for the exclusion zone.
   const ::flatbuffers::String *LABEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LABEL);
   }
+  /// Fill color token for the exclusion zone.
   const ::flatbuffers::String *FILL_COLOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILL_COLOR);
   }
+  /// Label color token for the exclusion zone.
   const ::flatbuffers::String *LABEL_COLOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LABEL_COLOR);
   }
+  /// True when the exclusion-zone polygon should be filled.
   bool IS_FILLED() const {
     return GetField<uint8_t>(VT_IS_FILLED, 0) != 0;
   }
+  /// Simple geodetic polygon points for imported zones.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>> *POINTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>> *>(VT_POINTS);
   }
+  /// Canonical GeoJSON geometry for the exclusion zone.
   const GJNGeometry *BOUNDARY() const {
     return GetPointer<const GJNGeometry *>(VT_BOUNDARY);
   }
@@ -777,84 +806,111 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OBSERVATION_EO = 54,
     VT_OBSERVATION_RADAR = 56
   };
+  /// Stable scenario-local id for this reference.
   const ::flatbuffers::String *REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_ID);
   }
+  /// Human-readable display name for the reference.
   const ::flatbuffers::String *DISPLAY_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
   }
+  /// Category of object or annotation represented by this reference.
   scenarioReferenceKind REFERENCE_KIND() const {
     return static_cast<scenarioReferenceKind>(GetField<int8_t>(VT_REFERENCE_KIND, 0));
   }
+  /// True when this reference represents a removal request.
   bool REMOVE() const {
     return GetField<uint8_t>(VT_REMOVE, 0) != 0;
   }
+  /// NORAD catalog id for satellite references when available.
   uint32_t NORAD_CAT_ID() const {
     return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
   }
+  /// International designator or provider object id when available.
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
+  /// Country or owner label associated with the reference.
   const ::flatbuffers::String *COUNTRY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY);
   }
+  /// Source labels or URIs that produced this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SOURCES);
   }
+  /// Data-mode labels associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA_MODES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_DATA_MODES);
   }
+  /// TLE provenance and raw lines for satellite references.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>> *TLES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNTleLines>> *>(VT_TLES);
   }
+  /// Mean orbital elements associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_MEAN_ELEMENTS);
   }
+  /// State vectors associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATES);
   }
+  /// Maneuver records associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<MNV>> *MANEUVERS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MNV>> *>(VT_MANEUVERS);
   }
+  /// Ground-site record associated with this reference.
   const SIT *SITE() const {
     return GetPointer<const SIT *>(VT_SITE);
   }
+  /// Sensor record associated with this reference.
   const SEN *SENSOR() const {
     return GetPointer<const SEN *>(VT_SENSOR);
   }
+  /// Sensor system id for references that identify a sensor by id.
   const ::flatbuffers::String *SENSOR_SYSTEM_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_SYSTEM_ID);
   }
+  /// Sensor id for references that identify a sensor by id.
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
+  /// Ground-site latitude in degrees when no SIT record is available.
   double SITE_LATITUDE_DEG() const {
     return GetField<double>(VT_SITE_LATITUDE_DEG, 0.0);
   }
+  /// Ground-site longitude in degrees when no SIT record is available.
   double SITE_LONGITUDE_DEG() const {
     return GetField<double>(VT_SITE_LONGITUDE_DEG, 0.0);
   }
+  /// Scenario variable id for variable satellite references.
   const ::flatbuffers::String *VARIABLE_SATELLITE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VARIABLE_SATELLITE_ID);
   }
+  /// Scenario variable id for variable site references.
   const ::flatbuffers::String *VARIABLE_SITE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VARIABLE_SITE_ID);
   }
+  /// Points of interest associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNPointOfInterest>> *POINTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNPointOfInterest>> *>(VT_POINTS);
   }
+  /// View-cone overlay associated with this reference.
   const SCNViewCone *VIEW_CONE() const {
     return GetPointer<const SCNViewCone *>(VT_VIEW_CONE);
   }
+  /// Sun-advantage target pairing for this reference.
   const SCNSunAdvantageTarget *SUN_ADVANTAGE_TARGET() const {
     return GetPointer<const SCNSunAdvantageTarget *>(VT_SUN_ADVANTAGE_TARGET);
   }
+  /// Exclusion-zone geometry associated with this reference.
   const SCNExclusionZone *EXCLUSION_ZONE() const {
     return GetPointer<const SCNExclusionZone *>(VT_EXCLUSION_ZONE);
   }
+  /// Electro-optical observation record associated with this reference.
   const EOO *OBSERVATION_EO() const {
     return GetPointer<const EOO *>(VT_OBSERVATION_EO);
   }
+  /// Radar observation record associated with this reference.
   const RDO *OBSERVATION_RADAR() const {
     return GetPointer<const RDO *>(VT_OBSERVATION_RADAR);
   }
@@ -1162,18 +1218,23 @@ struct SCNEvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EO_OBSERVATIONS = 10,
     VT_RADAR_OBSERVATIONS = 12
   };
+  /// Stable id for the imported scenario event.
   const ::flatbuffers::String *EVENT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
   }
+  /// Element sets associated with the event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *ELSETS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_ELSETS);
   }
+  /// State vectors associated with the event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATES);
   }
+  /// Electro-optical observations associated with the event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<EOO>> *EO_OBSERVATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<EOO>> *>(VT_EO_OBSERVATIONS);
   }
+  /// Radar observations associated with the event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<RDO>> *RADAR_OBSERVATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<RDO>> *>(VT_RADAR_OBSERVATIONS);
   }
@@ -1277,24 +1338,31 @@ struct SCNAssetsChanged FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GROUND_SITES = 14,
     VT_REFERENCES = 16
   };
+  /// Satellite references added by the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *ADDED_SATELLITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_ADDED_SATELLITES);
   }
+  /// Ground-site references added by the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *ADDED_GROUND_SITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_ADDED_GROUND_SITES);
   }
+  /// Satellite references removed by the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *REMOVED_SATELLITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_REMOVED_SATELLITES);
   }
+  /// Ground-site references removed by the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *REMOVED_GROUND_SITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_REMOVED_GROUND_SITES);
   }
+  /// Current satellite references after the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *SATELLITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_SATELLITES);
   }
+  /// Current ground-site references after the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *GROUND_SITES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_GROUND_SITES);
   }
+  /// Current full reference set after the asset-change event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *REFERENCES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_REFERENCES);
   }
@@ -1409,7 +1477,7 @@ inline ::flatbuffers::Offset<SCNAssetsChanged> CreateSCNAssetsChangedDirect(
       REFERENCES__);
 }
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -1428,39 +1496,51 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_VIEW_STATE = 24,
     VT_ASSETS_CHANGED = 26
   };
+  /// Stable id for the scenario.
   const ::flatbuffers::String *SCENARIO_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SCENARIO_ID);
   }
+  /// Objects, annotations, and variables included in the scenario.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *REFERENCES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_REFERENCES);
   }
+  /// Imported event payload associated with the scenario.
   const SCNEvent *EVENT() const {
     return GetPointer<const SCNEvent *>(VT_EVENT);
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   int32_t FOCUSED_REFERENCE_INDEX() const {
     return GetField<int32_t>(VT_FOCUSED_REFERENCE_INDEX, -1);
   }
+  /// Reference id of the currently focused scenario object.
   const ::flatbuffers::String *FOCUSED_REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FOCUSED_REFERENCE_ID);
   }
+  /// Current simulation time as an ISO-8601 UTC timestamp.
   const ::flatbuffers::String *SIM_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SIM_TIME);
   }
+  /// Simulation time-rate multiplier.
   double SIM_SPEED() const {
     return GetField<double>(VT_SIM_SPEED, 0.0);
   }
+  /// True when the viewer should use an Earth-centered Earth-fixed frame.
   bool USE_ECEF_FRAME() const {
     return GetField<uint8_t>(VT_USE_ECEF_FRAME, 0) != 0;
   }
+  /// Reference frame used for scenario propagation and display.
   const RFM *REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
+  /// Command action requested for the scenario.
   scenarioActionCode ACTION() const {
     return static_cast<scenarioActionCode>(GetField<int8_t>(VT_ACTION, 0));
   }
+  /// Viewer camera and display state for the scenario.
   const VST *VIEW_STATE() const {
     return GetPointer<const VST *>(VT_VIEW_STATE);
   }
+  /// Asset-change notification payload for the scenario.
   const SCNAssetsChanged *ASSETS_CHANGED() const {
     return GetPointer<const SCNAssetsChanged *>(VT_ASSETS_CHANGED);
   }

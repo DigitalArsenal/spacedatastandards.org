@@ -31,6 +31,9 @@ static getSizePrefixedRootAsSCCStateResponse(bb:flatbuffers.ByteBuffer, obj?:SCC
   return (obj || new SCCStateResponse()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Request correlation id from the matching state request.
+ */
 REQUEST_ID():string|null
 REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,16 +41,25 @@ REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * State payload represented by this response.
+ */
 REQUEST_KIND():stateRequestKind {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : stateRequestKind.UNKNOWN;
 }
 
+/**
+ * Full scenario state for scenario-state responses.
+ */
 SCENARIO(obj?:SCN):SCN|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new SCN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Reference-list payload for reference-only responses.
+ */
 REFERENCES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -58,11 +70,17 @@ referencesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Zero-based focused reference index, or -1 when no index is focused.
+ */
 FOCUSED_REFERENCE_INDEX():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
 }
 
+/**
+ * Human-readable error message when state cannot be returned.
+ */
 ERROR_MESSAGE():string|null
 ERROR_MESSAGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ERROR_MESSAGE(optionalEncoding?:any):string|Uint8Array|null {

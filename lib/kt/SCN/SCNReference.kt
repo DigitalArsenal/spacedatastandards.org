@@ -30,6 +30,9 @@ class SCNReference : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Stable scenario-local id for this reference.
+     */
     val referenceId : String?
         get() {
             val o = __offset(4)
@@ -41,6 +44,9 @@ class SCNReference : Table() {
         }
     val referenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun referenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Human-readable display name for the reference.
+     */
     val displayName : String?
         get() {
             val o = __offset(6)
@@ -52,21 +58,33 @@ class SCNReference : Table() {
         }
     val displayNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun displayNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Category of object or annotation represented by this reference.
+     */
     val referenceKind : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * True when this reference represents a removal request.
+     */
     val remove : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * NORAD catalog id for satellite references when available.
+     */
     val noradCatId : UInt
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * International designator or provider object id when available.
+     */
     val objectId : String?
         get() {
             val o = __offset(14)
@@ -78,6 +96,9 @@ class SCNReference : Table() {
         }
     val objectIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun objectIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Country or owner label associated with the reference.
+     */
     val country : String?
         get() {
             val o = __offset(16)
@@ -89,6 +110,9 @@ class SCNReference : Table() {
         }
     val countryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun countryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Source labels or URIs that produced this reference.
+     */
     fun sources(j: Int) : String? {
         val o = __offset(18)
         return if (o != 0) {
@@ -101,6 +125,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Data-mode labels associated with this reference.
+     */
     fun dataModes(j: Int) : String? {
         val o = __offset(20)
         return if (o != 0) {
@@ -113,6 +140,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * TLE provenance and raw lines for satellite references.
+     */
     fun tles(j: Int) : SCNTleLines? = tles(SCNTleLines(), j)
     fun tles(obj: SCNTleLines, j: Int) : SCNTleLines? {
         val o = __offset(22)
@@ -126,6 +156,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Mean orbital elements associated with this reference.
+     */
     fun meanElements(j: Int) : OMM? = meanElements(OMM(), j)
     fun meanElements(obj: OMM, j: Int) : OMM? {
         val o = __offset(24)
@@ -139,6 +172,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * State vectors associated with this reference.
+     */
     fun states(j: Int) : STV? = states(STV(), j)
     fun states(obj: STV, j: Int) : STV? {
         val o = __offset(26)
@@ -152,6 +188,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Maneuver records associated with this reference.
+     */
     fun maneuvers(j: Int) : MNV? = maneuvers(MNV(), j)
     fun maneuvers(obj: MNV, j: Int) : MNV? {
         val o = __offset(28)
@@ -165,6 +204,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Ground-site record associated with this reference.
+     */
     val site : SIT? get() = site(SIT())
     fun site(obj: SIT) : SIT? {
         val o = __offset(30)
@@ -174,6 +216,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Sensor record associated with this reference.
+     */
     val sensor : SEN? get() = sensor(SEN())
     fun sensor(obj: SEN) : SEN? {
         val o = __offset(32)
@@ -183,6 +228,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Sensor system id for references that identify a sensor by id.
+     */
     val sensorSystemId : String?
         get() {
             val o = __offset(34)
@@ -194,6 +242,9 @@ class SCNReference : Table() {
         }
     val sensorSystemIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun sensorSystemIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Sensor id for references that identify a sensor by id.
+     */
     val sensorId : String?
         get() {
             val o = __offset(36)
@@ -205,16 +256,25 @@ class SCNReference : Table() {
         }
     val sensorIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
     fun sensorIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Ground-site latitude in degrees when no SIT record is available.
+     */
     val siteLatitudeDeg : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Ground-site longitude in degrees when no SIT record is available.
+     */
     val siteLongitudeDeg : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Scenario variable id for variable satellite references.
+     */
     val variableSatelliteId : String?
         get() {
             val o = __offset(42)
@@ -226,6 +286,9 @@ class SCNReference : Table() {
         }
     val variableSatelliteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
     fun variableSatelliteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Scenario variable id for variable site references.
+     */
     val variableSiteId : String?
         get() {
             val o = __offset(44)
@@ -237,6 +300,9 @@ class SCNReference : Table() {
         }
     val variableSiteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
     fun variableSiteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Points of interest associated with this reference.
+     */
     fun points(j: Int) : SCNPointOfInterest? = points(SCNPointOfInterest(), j)
     fun points(obj: SCNPointOfInterest, j: Int) : SCNPointOfInterest? {
         val o = __offset(46)
@@ -250,6 +316,9 @@ class SCNReference : Table() {
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * View-cone overlay associated with this reference.
+     */
     val viewCone : SCNViewCone? get() = viewCone(SCNViewCone())
     fun viewCone(obj: SCNViewCone) : SCNViewCone? {
         val o = __offset(48)
@@ -259,6 +328,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Sun-advantage target pairing for this reference.
+     */
     val sunAdvantageTarget : SCNSunAdvantageTarget? get() = sunAdvantageTarget(SCNSunAdvantageTarget())
     fun sunAdvantageTarget(obj: SCNSunAdvantageTarget) : SCNSunAdvantageTarget? {
         val o = __offset(50)
@@ -268,6 +340,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Exclusion-zone geometry associated with this reference.
+     */
     val exclusionZone : SCNExclusionZone? get() = exclusionZone(SCNExclusionZone())
     fun exclusionZone(obj: SCNExclusionZone) : SCNExclusionZone? {
         val o = __offset(52)
@@ -277,6 +352,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Electro-optical observation record associated with this reference.
+     */
     val observationEo : EOO? get() = observationEo(EOO())
     fun observationEo(obj: EOO) : EOO? {
         val o = __offset(54)
@@ -286,6 +364,9 @@ class SCNReference : Table() {
             null
         }
     }
+    /**
+     * Radar observation record associated with this reference.
+     */
     val observationRadar : RDO? get() = observationRadar(RDO())
     fun observationRadar(obj: RDO) : RDO? {
         val o = __offset(56)

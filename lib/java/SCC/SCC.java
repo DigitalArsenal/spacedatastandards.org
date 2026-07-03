@@ -29,23 +29,47 @@ public final class SCC extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Payload discriminator for the message carried by this envelope.
+   */
   public byte MESSAGE_KIND() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Optional trace id for correlating messages across systems.
+   */
   public String TRACE_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACE_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer TRACE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Scenario list carried by setup or selection messages.
+   */
   public SCN SCENARIOS(int j) { return SCENARIOS(new SCN(), j); }
   public SCN SCENARIOS(SCN obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int SCENARIOSLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public SCN.Vector scenariosVector() { return scenariosVector(new SCN.Vector()); }
   public SCN.Vector scenariosVector(SCN.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Single scenario payload carried by setup or state messages.
+   */
   public SCN SCENARIO() { return SCENARIO(new SCN()); }
   public SCN SCENARIO(SCN obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Request-current-state payload.
+   */
   public SCCRequestState REQUEST_STATE() { return REQUEST_STATE(new SCCRequestState()); }
   public SCCRequestState REQUEST_STATE(SCCRequestState obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Current-state response payload.
+   */
   public SCCStateResponse STATE_RESPONSE() { return STATE_RESPONSE(new SCCStateResponse()); }
   public SCCStateResponse STATE_RESPONSE(SCCStateResponse obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Asset-picker request or acknowledgement payload.
+   */
   public SCCAssetPicker ASSET_PICKER() { return ASSET_PICKER(new SCCAssetPicker()); }
   public SCCAssetPicker ASSET_PICKER(SCCAssetPicker obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Startup readiness payload.
+   */
   public SCCReady READY() { return READY(new SCCReady()); }
   public SCCReady READY(SCCReady obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

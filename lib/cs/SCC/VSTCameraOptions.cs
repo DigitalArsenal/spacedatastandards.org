@@ -17,9 +17,13 @@ public struct VSTCameraOptions : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VSTCameraOptions __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Camera frame relative to the focused target or default scene.
   public viewerCameraFrameMode CAMERA_FRAME_MODE { get { int o = __p.__offset(4); return o != 0 ? (viewerCameraFrameMode)__p.bb.GetSbyte(o + __p.bb_pos) : viewerCameraFrameMode.DEFAULT; } }
+  /// Satellite body alignment mode when focused on a satellite.
   public viewerSatelliteAlignmentMode SATELLITE_ALIGNMENT { get { int o = __p.__offset(6); return o != 0 ? (viewerSatelliteAlignmentMode)__p.bb.GetSbyte(o + __p.bb_pos) : viewerSatelliteAlignmentMode.UNKNOWN; } }
+  /// Camera distance from the current target in kilometers.
   public double DISTANCE_FROM_TARGET_KM { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Camera orientation offset.
   public VSTCameraRotation? ROTATION { get { int o = __p.__offset(10); return o != 0 ? (VSTCameraRotation?)(new VSTCameraRotation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<VSTCameraOptions> CreateVSTCameraOptions(FlatBufferBuilder builder,

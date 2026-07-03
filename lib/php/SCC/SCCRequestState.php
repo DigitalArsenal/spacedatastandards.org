@@ -41,12 +41,14 @@ class SCCRequestState extends Table
         return $this;
     }
 
+    /// Request correlation id echoed by the matching state response.
     public function getREQUEST_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// State payload requested by the caller.
     /**
      * @return sbyte
      */

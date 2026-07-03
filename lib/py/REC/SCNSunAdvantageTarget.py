@@ -29,6 +29,7 @@ class SCNSunAdvantageTarget(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Scenario reference id of the target object.
     # SCNSunAdvantageTarget
     def TARGET_REFERENCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNSunAdvantageTarget(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # NORAD catalog id of the target satellite when available.
     # SCNSunAdvantageTarget
     def TARGET_NORAD_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCNSunAdvantageTarget(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Ground site id associated with the target pairing.
     # SCNSunAdvantageTarget
     def GROUND_SITE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

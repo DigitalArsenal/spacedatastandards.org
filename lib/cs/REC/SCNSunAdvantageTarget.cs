@@ -17,6 +17,7 @@ public struct SCNSunAdvantageTarget : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNSunAdvantageTarget __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Scenario reference id of the target object.
   public string TARGET_REFERENCE_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTARGET_REFERENCE_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -24,7 +25,9 @@ public struct SCNSunAdvantageTarget : IFlatbufferObject
   public ArraySegment<byte>? GetTARGET_REFERENCE_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetTARGET_REFERENCE_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// NORAD catalog id of the target satellite when available.
   public uint TARGET_NORAD_CAT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Ground site id associated with the target pairing.
   public string GROUND_SITE_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetGROUND_SITE_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }

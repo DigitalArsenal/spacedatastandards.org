@@ -27,6 +27,9 @@ static getSizePrefixedRootAsSCCReady(bb:flatbuffers.ByteBuffer, obj?:SCCReady):S
   return (obj || new SCCReady()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * True when the scenario controls surface is ready for messages.
+ */
 READY():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;

@@ -41,12 +41,14 @@ class SCCAssetPicker extends Table
         return $this;
     }
 
+    /// Request correlation id for the asset-picker exchange.
     public function getREQUEST_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Initial catalog tab to display in the asset picker.
     /**
      * @return sbyte
      */
@@ -56,6 +58,7 @@ class SCCAssetPicker extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \assetCatalogTab::UNKNOWN;
     }
 
+    /// True when the receiver accepted or completed the picker request.
     /**
      * @return bool
      */

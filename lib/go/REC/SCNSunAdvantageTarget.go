@@ -42,6 +42,7 @@ func (rcv *SCNSunAdvantageTarget) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Scenario reference id of the target object.
 func (rcv *SCNSunAdvantageTarget) TARGET_REFERENCE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCNSunAdvantageTarget) TargetReferenceId() []byte {
 	return rcv.TARGET_REFERENCE_ID()
 }
 
+/// Scenario reference id of the target object.
+/// NORAD catalog id of the target satellite when available.
 func (rcv *SCNSunAdvantageTarget) TARGET_NORAD_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -66,6 +69,7 @@ func (rcv *SCNSunAdvantageTarget) TargetNoradCatId() uint32 {
 	return rcv.TARGET_NORAD_CAT_ID()
 }
 
+/// NORAD catalog id of the target satellite when available.
 func (rcv *SCNSunAdvantageTarget) MutateTARGET_NORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
 }
@@ -74,6 +78,7 @@ func (rcv *SCNSunAdvantageTarget) MutateTargetNoradCatId(n uint32) bool {
 	return rcv.MutateTARGET_NORAD_CAT_ID(n)
 }
 
+/// Ground site id associated with the target pairing.
 func (rcv *SCNSunAdvantageTarget) GROUND_SITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -86,6 +91,7 @@ func (rcv *SCNSunAdvantageTarget) GroundSiteId() []byte {
 	return rcv.GROUND_SITE_ID()
 }
 
+/// Ground site id associated with the target pairing.
 func SCNSunAdvantageTargetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }

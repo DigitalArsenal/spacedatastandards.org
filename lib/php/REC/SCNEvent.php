@@ -41,12 +41,14 @@ class SCNEvent extends Table
         return $this;
     }
 
+    /// Stable id for the imported scenario event.
     public function getEVENT_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Element sets associated with the event.
     /**
      * @returnVectorOffset
      */
@@ -66,6 +68,7 @@ class SCNEvent extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// State vectors associated with the event.
     /**
      * @returnVectorOffset
      */
@@ -85,6 +88,7 @@ class SCNEvent extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Electro-optical observations associated with the event.
     /**
      * @returnVectorOffset
      */
@@ -104,6 +108,7 @@ class SCNEvent extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Radar observations associated with the event.
     /**
      * @returnVectorOffset
      */

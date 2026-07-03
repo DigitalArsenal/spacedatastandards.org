@@ -29,6 +29,7 @@ class SCNAssetsChanged(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Satellite references added by the asset-change event.
     # SCNAssetsChanged
     def ADDED_SATELLITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -54,6 +55,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         return o == 0
 
+    # Ground-site references added by the asset-change event.
     # SCNAssetsChanged
     def ADDED_GROUND_SITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -79,6 +81,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
+    # Satellite references removed by the asset-change event.
     # SCNAssetsChanged
     def REMOVED_SATELLITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -104,6 +107,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
+    # Ground-site references removed by the asset-change event.
     # SCNAssetsChanged
     def REMOVED_GROUND_SITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -129,6 +133,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
+    # Current satellite references after the asset-change event.
     # SCNAssetsChanged
     def SATELLITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -154,6 +159,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
+    # Current ground-site references after the asset-change event.
     # SCNAssetsChanged
     def GROUND_SITES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -179,6 +185,7 @@ class SCNAssetsChanged(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
+    # Current full reference set after the asset-change event.
     # SCNAssetsChanged
     def REFERENCES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))

@@ -27,10 +27,19 @@ public final class SCNSunAdvantageTarget extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNSunAdvantageTarget __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Scenario reference id of the target object.
+   */
   public String TARGET_REFERENCE_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TARGET_REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer TARGET_REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * NORAD catalog id of the target satellite when available.
+   */
   public long TARGET_NORAD_CAT_ID() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Ground site id associated with the target pairing.
+   */
   public String GROUND_SITE_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer GROUND_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer GROUND_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }

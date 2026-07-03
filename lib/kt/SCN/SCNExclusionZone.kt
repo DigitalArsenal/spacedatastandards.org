@@ -30,6 +30,9 @@ class SCNExclusionZone : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Display label for the exclusion zone.
+     */
     val label : String?
         get() {
             val o = __offset(4)
@@ -41,6 +44,9 @@ class SCNExclusionZone : Table() {
         }
     val labelAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun labelInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Fill color token for the exclusion zone.
+     */
     val fillColor : String?
         get() {
             val o = __offset(6)
@@ -52,6 +58,9 @@ class SCNExclusionZone : Table() {
         }
     val fillColorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun fillColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Label color token for the exclusion zone.
+     */
     val labelColor : String?
         get() {
             val o = __offset(8)
@@ -63,11 +72,17 @@ class SCNExclusionZone : Table() {
         }
     val labelColorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun labelColorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * True when the exclusion-zone polygon should be filled.
+     */
     val isFilled : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Simple geodetic polygon points for imported zones.
+     */
     fun points(j: Int) : SCNGeodeticPoint? = points(SCNGeodeticPoint(), j)
     fun points(obj: SCNGeodeticPoint, j: Int) : SCNGeodeticPoint? {
         val o = __offset(12)
@@ -81,6 +96,9 @@ class SCNExclusionZone : Table() {
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Canonical GeoJSON geometry for the exclusion zone.
+     */
     val boundary : GJNGeometry? get() = boundary(GJNGeometry())
     fun boundary(obj: GJNGeometry) : GJNGeometry? {
         val o = __offset(14)

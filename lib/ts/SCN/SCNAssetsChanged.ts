@@ -28,6 +28,9 @@ static getSizePrefixedRootAsSCNAssetsChanged(bb:flatbuffers.ByteBuffer, obj?:SCN
   return (obj || new SCNAssetsChanged()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Satellite references added by the asset-change event.
+ */
 ADDED_SATELLITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -38,6 +41,9 @@ addedSatellitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ground-site references added by the asset-change event.
+ */
 ADDED_GROUND_SITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -48,6 +54,9 @@ addedGroundSitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Satellite references removed by the asset-change event.
+ */
 REMOVED_SATELLITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -58,6 +67,9 @@ removedSatellitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ground-site references removed by the asset-change event.
+ */
 REMOVED_GROUND_SITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -68,6 +80,9 @@ removedGroundSitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Current satellite references after the asset-change event.
+ */
 SATELLITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -78,6 +93,9 @@ satellitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Current ground-site references after the asset-change event.
+ */
 GROUND_SITES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -88,6 +106,9 @@ groundSitesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Current full reference set after the asset-change event.
+ */
 REFERENCES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;

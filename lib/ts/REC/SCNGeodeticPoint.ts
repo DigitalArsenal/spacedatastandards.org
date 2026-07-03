@@ -27,16 +27,25 @@ static getSizePrefixedRootAsSCNGeodeticPoint(bb:flatbuffers.ByteBuffer, obj?:SCN
   return (obj || new SCNGeodeticPoint()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Latitude in degrees.
+ */
 LATITUDE_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Longitude in degrees.
+ */
 LONGITUDE_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Altitude above the reference ellipsoid in kilometers.
+ */
 ALTITUDE_KM():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;

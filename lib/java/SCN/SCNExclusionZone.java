@@ -28,21 +28,39 @@ public final class SCNExclusionZone extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNExclusionZone __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Display label for the exclusion zone.
+   */
   public String LABEL() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LABELAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer LABELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Fill color token for the exclusion zone.
+   */
   public String FILL_COLOR() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FILL_COLORAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer FILL_COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Label color token for the exclusion zone.
+   */
   public String LABEL_COLOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LABEL_COLORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer LABEL_COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * True when the exclusion-zone polygon should be filled.
+   */
   public boolean IS_FILLED() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Simple geodetic polygon points for imported zones.
+   */
   public SCNGeodeticPoint POINTS(int j) { return POINTS(new SCNGeodeticPoint(), j); }
   public SCNGeodeticPoint POINTS(SCNGeodeticPoint obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int POINTSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
   public SCNGeodeticPoint.Vector pointsVector() { return pointsVector(new SCNGeodeticPoint.Vector()); }
   public SCNGeodeticPoint.Vector pointsVector(SCNGeodeticPoint.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Canonical GeoJSON geometry for the exclusion zone.
+   */
   public GJNGeometry BOUNDARY() { return BOUNDARY(new GJNGeometry()); }
   public GJNGeometry BOUNDARY(GJNGeometry obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

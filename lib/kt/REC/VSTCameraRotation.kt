@@ -30,41 +30,65 @@ class VSTCameraRotation : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Yaw angle in degrees for Euler-angle camera imports.
+     */
     val yawDeg : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Pitch angle in degrees for Euler-angle camera imports.
+     */
     val pitchDeg : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Roll angle in degrees for Euler-angle camera imports.
+     */
     val rollDeg : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Quaternion x component for camera orientation.
+     */
     val quaternionX : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Quaternion y component for camera orientation.
+     */
     val quaternionY : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Quaternion z component for camera orientation.
+     */
     val quaternionZ : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Quaternion w component for camera orientation.
+     */
     val quaternionW : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True when quaternion fields define the authoritative rotation.
+     */
     val usesQuaternion : Boolean
         get() {
             val o = __offset(18)

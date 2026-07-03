@@ -30,6 +30,7 @@ class SCCStateResponse(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Request correlation id from the matching state request.
     # SCCStateResponse
     def REQUEST_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,6 +38,7 @@ class SCCStateResponse(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # State payload represented by this response.
     # SCCStateResponse
     def REQUEST_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -44,6 +46,7 @@ class SCCStateResponse(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Full scenario state for scenario-state responses.
     # SCCStateResponse
     def SCENARIO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -55,6 +58,7 @@ class SCCStateResponse(object):
             return obj
         return None
 
+    # Reference-list payload for reference-only responses.
     # SCCStateResponse
     def REFERENCES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -80,6 +84,7 @@ class SCCStateResponse(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
+    # Zero-based focused reference index, or -1 when no index is focused.
     # SCCStateResponse
     def FOCUSED_REFERENCE_INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -87,6 +92,7 @@ class SCCStateResponse(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return -1
 
+    # Human-readable error message when state cannot be returned.
     # SCCStateResponse
     def ERROR_MESSAGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

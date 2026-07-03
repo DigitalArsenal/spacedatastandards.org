@@ -42,18 +42,21 @@ class SCNReference extends Table
         return $this;
     }
 
+    /// Stable scenario-local id for this reference.
     public function getREFERENCE_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Human-readable display name for the reference.
     public function getDISPLAY_NAME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Category of object or annotation represented by this reference.
     /**
      * @return sbyte
      */
@@ -63,6 +66,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \scenarioReferenceKind::UNKNOWN;
     }
 
+    /// True when this reference represents a removal request.
     /**
      * @return bool
      */
@@ -72,6 +76,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// NORAD catalog id for satellite references when available.
     /**
      * @return uint
      */
@@ -81,18 +86,21 @@ class SCNReference extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// International designator or provider object id when available.
     public function getOBJECT_ID()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Country or owner label associated with the reference.
     public function getCOUNTRY()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Source labels or URIs that produced this reference.
     /**
      * @param int offset
      * @return string
@@ -112,6 +120,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Data-mode labels associated with this reference.
     /**
      * @param int offset
      * @return string
@@ -131,6 +140,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// TLE provenance and raw lines for satellite references.
     /**
      * @returnVectorOffset
      */
@@ -150,6 +160,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Mean orbital elements associated with this reference.
     /**
      * @returnVectorOffset
      */
@@ -169,6 +180,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// State vectors associated with this reference.
     /**
      * @returnVectorOffset
      */
@@ -188,6 +200,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Maneuver records associated with this reference.
     /**
      * @returnVectorOffset
      */
@@ -207,6 +220,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ground-site record associated with this reference.
     public function getSITE()
     {
         $obj = new SIT();
@@ -214,6 +228,7 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Sensor record associated with this reference.
     public function getSENSOR()
     {
         $obj = new SEN();
@@ -221,18 +236,21 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Sensor system id for references that identify a sensor by id.
     public function getSENSOR_SYSTEM_ID()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor id for references that identify a sensor by id.
     public function getSENSOR_ID()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Ground-site latitude in degrees when no SIT record is available.
     /**
      * @return double
      */
@@ -242,6 +260,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Ground-site longitude in degrees when no SIT record is available.
     /**
      * @return double
      */
@@ -251,18 +270,21 @@ class SCNReference extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Scenario variable id for variable satellite references.
     public function getVARIABLE_SATELLITE_ID()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Scenario variable id for variable site references.
     public function getVARIABLE_SITE_ID()
     {
         $o = $this->__offset(44);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Points of interest associated with this reference.
     /**
      * @returnVectorOffset
      */
@@ -282,6 +304,7 @@ class SCNReference extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// View-cone overlay associated with this reference.
     public function getVIEW_CONE()
     {
         $obj = new SCNViewCone();
@@ -289,6 +312,7 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Sun-advantage target pairing for this reference.
     public function getSUN_ADVANTAGE_TARGET()
     {
         $obj = new SCNSunAdvantageTarget();
@@ -296,6 +320,7 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Exclusion-zone geometry associated with this reference.
     public function getEXCLUSION_ZONE()
     {
         $obj = new SCNExclusionZone();
@@ -303,6 +328,7 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Electro-optical observation record associated with this reference.
     public function getOBSERVATION_EO()
     {
         $obj = new EOO();
@@ -310,6 +336,7 @@ class SCNReference extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Radar observation record associated with this reference.
     public function getOBSERVATION_RADAR()
     {
         $obj = new RDO();

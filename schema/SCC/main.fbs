@@ -1,5 +1,5 @@
-// Hash: 33514c1101072c2485b1168bf8110c78fee9f3c6209114bc132a089868e2e843
-// Version: 1.136.1
+// Hash: d0cded4df6be8c22ae401067b43fb86d425b9768ba754a51769bdf9e945eb03b
+// Version: 1.136.2
 // -----------------------------------END_HEADER
 include "../SCN/main.fbs";
 
@@ -31,43 +31,63 @@ enum assetCatalogTab : byte {
 
 /// Request current state from a scenario controls host.
 table SCCRequestState {
+  /// Request correlation id echoed by the matching state response.
   REQUEST_ID:string;
+  /// State payload requested by the caller.
   REQUEST_KIND:stateRequestKind;
 }
 
 /// State response. SCENARIO carries full scenario state; REFERENCES can carry
 /// the lighter reference-list response for reference-only requests.
 table SCCStateResponse {
+  /// Request correlation id from the matching state request.
   REQUEST_ID:string;
+  /// State payload represented by this response.
   REQUEST_KIND:stateRequestKind;
+  /// Full scenario state for scenario-state responses.
   SCENARIO:SCN;
+  /// Reference-list payload for reference-only responses.
   REFERENCES:[SCNReference];
+  /// Zero-based focused reference index, or -1 when no index is focused.
   FOCUSED_REFERENCE_INDEX:int = -1;
+  /// Human-readable error message when state cannot be returned.
   ERROR_MESSAGE:string;
 }
 
 /// Asset-picker request or acknowledgement.
 table SCCAssetPicker {
+  /// Request correlation id for the asset-picker exchange.
   REQUEST_ID:string;
+  /// Initial catalog tab to display in the asset picker.
   CATALOG_TAB:assetCatalogTab;
+  /// True when the receiver accepted or completed the picker request.
   ACKNOWLEDGED:bool;
 }
 
 /// Startup readiness message.
 table SCCReady {
+  /// True when the scenario controls surface is ready for messages.
   READY:bool = true;
 }
 
 /// Scenario Controls - message-bus envelope for scenario setup, state
 /// requests/responses, startup readiness, and asset-picker delegation.
 table SCC {
+  /// Payload discriminator for the message carried by this envelope.
   MESSAGE_KIND:controlMessageKind;
+  /// Optional trace id for correlating messages across systems.
   TRACE_ID:string;
+  /// Scenario list carried by setup or selection messages.
   SCENARIOS:[SCN];
+  /// Single scenario payload carried by setup or state messages.
   SCENARIO:SCN;
+  /// Request-current-state payload.
   REQUEST_STATE:SCCRequestState;
+  /// Current-state response payload.
   STATE_RESPONSE:SCCStateResponse;
+  /// Asset-picker request or acknowledgement payload.
   ASSET_PICKER:SCCAssetPicker;
+  /// Startup readiness payload.
   READY:SCCReady;
 }
 

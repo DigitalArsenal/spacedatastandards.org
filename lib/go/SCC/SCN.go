@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 type SCN struct {
@@ -56,6 +56,7 @@ func (rcv *SCN) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Stable id for the scenario.
 func (rcv *SCN) SCENARIO_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -68,6 +69,8 @@ func (rcv *SCN) ScenarioId() []byte {
 	return rcv.SCENARIO_ID()
 }
 
+/// Stable id for the scenario.
+/// Objects, annotations, and variables included in the scenario.
 func (rcv *SCN) REFERENCES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -99,6 +102,8 @@ func (rcv *SCN) ReferencesLength() int {
 	return rcv.REFERENCESLength()
 }
 
+/// Objects, annotations, and variables included in the scenario.
+/// Imported event payload associated with the scenario.
 func (rcv *SCN) EVENT(obj *SCNEvent) *SCNEvent {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -116,6 +121,8 @@ func (rcv *SCN) Event(obj *SCNEvent) *SCNEvent {
 	return rcv.EVENT(obj)
 }
 
+/// Imported event payload associated with the scenario.
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *SCN) FOCUSED_REFERENCE_INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -128,6 +135,7 @@ func (rcv *SCN) FocusedReferenceIndex() int32 {
 	return rcv.FOCUSED_REFERENCE_INDEX()
 }
 
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *SCN) MutateFOCUSED_REFERENCE_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
 }
@@ -136,6 +144,7 @@ func (rcv *SCN) MutateFocusedReferenceIndex(n int32) bool {
 	return rcv.MutateFOCUSED_REFERENCE_INDEX(n)
 }
 
+/// Reference id of the currently focused scenario object.
 func (rcv *SCN) FOCUSED_REFERENCE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -148,6 +157,8 @@ func (rcv *SCN) FocusedReferenceId() []byte {
 	return rcv.FOCUSED_REFERENCE_ID()
 }
 
+/// Reference id of the currently focused scenario object.
+/// Current simulation time as an ISO-8601 UTC timestamp.
 func (rcv *SCN) SIM_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -160,6 +171,8 @@ func (rcv *SCN) SimTime() []byte {
 	return rcv.SIM_TIME()
 }
 
+/// Current simulation time as an ISO-8601 UTC timestamp.
+/// Simulation time-rate multiplier.
 func (rcv *SCN) SIM_SPEED() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -172,6 +185,7 @@ func (rcv *SCN) SimSpeed() float64 {
 	return rcv.SIM_SPEED()
 }
 
+/// Simulation time-rate multiplier.
 func (rcv *SCN) MutateSIM_SPEED(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
@@ -180,6 +194,7 @@ func (rcv *SCN) MutateSimSpeed(n float64) bool {
 	return rcv.MutateSIM_SPEED(n)
 }
 
+/// True when the viewer should use an Earth-centered Earth-fixed frame.
 func (rcv *SCN) USE_ECEF_FRAME() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -192,6 +207,7 @@ func (rcv *SCN) UseEcefFrame() bool {
 	return rcv.USE_ECEF_FRAME()
 }
 
+/// True when the viewer should use an Earth-centered Earth-fixed frame.
 func (rcv *SCN) MutateUSE_ECEF_FRAME(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
 }
@@ -200,6 +216,7 @@ func (rcv *SCN) MutateUseEcefFrame(n bool) bool {
 	return rcv.MutateUSE_ECEF_FRAME(n)
 }
 
+/// Reference frame used for scenario propagation and display.
 func (rcv *SCN) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -217,6 +234,8 @@ func (rcv *SCN) ReferenceFrame(obj *RFM) *RFM {
 	return rcv.REFERENCE_FRAME(obj)
 }
 
+/// Reference frame used for scenario propagation and display.
+/// Command action requested for the scenario.
 func (rcv *SCN) ACTION() scenarioActionCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -229,6 +248,7 @@ func (rcv *SCN) Action() scenarioActionCode {
 	return rcv.ACTION()
 }
 
+/// Command action requested for the scenario.
 func (rcv *SCN) MutateACTION(n scenarioActionCode) bool {
 	return rcv._tab.MutateInt8Slot(22, int8(n))
 }
@@ -237,6 +257,7 @@ func (rcv *SCN) MutateAction(n scenarioActionCode) bool {
 	return rcv.MutateACTION(n)
 }
 
+/// Viewer camera and display state for the scenario.
 func (rcv *SCN) VIEW_STATE(obj *VST) *VST {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -254,6 +275,8 @@ func (rcv *SCN) ViewState(obj *VST) *VST {
 	return rcv.VIEW_STATE(obj)
 }
 
+/// Viewer camera and display state for the scenario.
+/// Asset-change notification payload for the scenario.
 func (rcv *SCN) ASSETS_CHANGED(obj *SCNAssetsChanged) *SCNAssetsChanged {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -271,6 +294,7 @@ func (rcv *SCN) AssetsChanged(obj *SCNAssetsChanged) *SCNAssetsChanged {
 	return rcv.ASSETS_CHANGED(obj)
 }
 
+/// Asset-change notification payload for the scenario.
 func SCNStart(builder *flatbuffers.Builder) {
 	builder.StartObject(12)
 }

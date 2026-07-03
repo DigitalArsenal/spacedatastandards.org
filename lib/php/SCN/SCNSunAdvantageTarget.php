@@ -41,12 +41,14 @@ class SCNSunAdvantageTarget extends Table
         return $this;
     }
 
+    /// Scenario reference id of the target object.
     public function getTARGET_REFERENCE_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// NORAD catalog id of the target satellite when available.
     /**
      * @return uint
      */
@@ -56,6 +58,7 @@ class SCNSunAdvantageTarget extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Ground site id associated with the target pairing.
     public function getGROUND_SITE_ID()
     {
         $o = $this->__offset(8);

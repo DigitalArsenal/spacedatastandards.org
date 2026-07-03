@@ -154,9 +154,11 @@ struct SCCRequestState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_REQUEST_ID = 4,
     VT_REQUEST_KIND = 6
   };
+  /// Request correlation id echoed by the matching state response.
   const ::flatbuffers::String *REQUEST_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REQUEST_ID);
   }
+  /// State payload requested by the caller.
   stateRequestKind REQUEST_KIND() const {
     return static_cast<stateRequestKind>(GetField<int8_t>(VT_REQUEST_KIND, 0));
   }
@@ -224,21 +226,27 @@ struct SCCStateResponse FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FOCUSED_REFERENCE_INDEX = 12,
     VT_ERROR_MESSAGE = 14
   };
+  /// Request correlation id from the matching state request.
   const ::flatbuffers::String *REQUEST_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REQUEST_ID);
   }
+  /// State payload represented by this response.
   stateRequestKind REQUEST_KIND() const {
     return static_cast<stateRequestKind>(GetField<int8_t>(VT_REQUEST_KIND, 0));
   }
+  /// Full scenario state for scenario-state responses.
   const SCN *SCENARIO() const {
     return GetPointer<const SCN *>(VT_SCENARIO);
   }
+  /// Reference-list payload for reference-only responses.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *REFERENCES() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNReference>> *>(VT_REFERENCES);
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   int32_t FOCUSED_REFERENCE_INDEX() const {
     return GetField<int32_t>(VT_FOCUSED_REFERENCE_INDEX, -1);
   }
+  /// Human-readable error message when state cannot be returned.
   const ::flatbuffers::String *ERROR_MESSAGE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ERROR_MESSAGE);
   }
@@ -340,12 +348,15 @@ struct SCCAssetPicker FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CATALOG_TAB = 6,
     VT_ACKNOWLEDGED = 8
   };
+  /// Request correlation id for the asset-picker exchange.
   const ::flatbuffers::String *REQUEST_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REQUEST_ID);
   }
+  /// Initial catalog tab to display in the asset picker.
   assetCatalogTab CATALOG_TAB() const {
     return static_cast<assetCatalogTab>(GetField<int8_t>(VT_CATALOG_TAB, 0));
   }
+  /// True when the receiver accepted or completed the picker request.
   bool ACKNOWLEDGED() const {
     return GetField<uint8_t>(VT_ACKNOWLEDGED, 0) != 0;
   }
@@ -415,6 +426,7 @@ struct SCCReady FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_READY = 4
   };
+  /// True when the scenario controls surface is ready for messages.
   bool READY() const {
     return GetField<uint8_t>(VT_READY, 1) != 0;
   }
@@ -466,27 +478,35 @@ struct SCC FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ASSET_PICKER = 16,
     VT_READY = 18
   };
+  /// Payload discriminator for the message carried by this envelope.
   controlMessageKind MESSAGE_KIND() const {
     return static_cast<controlMessageKind>(GetField<int8_t>(VT_MESSAGE_KIND, 0));
   }
+  /// Optional trace id for correlating messages across systems.
   const ::flatbuffers::String *TRACE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACE_ID);
   }
+  /// Scenario list carried by setup or selection messages.
   const ::flatbuffers::Vector<::flatbuffers::Offset<SCN>> *SCENARIOS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCN>> *>(VT_SCENARIOS);
   }
+  /// Single scenario payload carried by setup or state messages.
   const SCN *SCENARIO() const {
     return GetPointer<const SCN *>(VT_SCENARIO);
   }
+  /// Request-current-state payload.
   const SCCRequestState *REQUEST_STATE() const {
     return GetPointer<const SCCRequestState *>(VT_REQUEST_STATE);
   }
+  /// Current-state response payload.
   const SCCStateResponse *STATE_RESPONSE() const {
     return GetPointer<const SCCStateResponse *>(VT_STATE_RESPONSE);
   }
+  /// Asset-picker request or acknowledgement payload.
   const SCCAssetPicker *ASSET_PICKER() const {
     return GetPointer<const SCCAssetPicker *>(VT_ASSET_PICKER);
   }
+  /// Startup readiness payload.
   const SCCReady *READY() const {
     return GetPointer<const SCCReady *>(VT_READY);
   }

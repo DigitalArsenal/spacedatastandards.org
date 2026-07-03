@@ -28,6 +28,9 @@ static getSizePrefixedRootAsSCCRequestState(bb:flatbuffers.ByteBuffer, obj?:SCCR
   return (obj || new SCCRequestState()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Request correlation id echoed by the matching state response.
+ */
 REQUEST_ID():string|null
 REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -35,6 +38,9 @@ REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * State payload requested by the caller.
+ */
 REQUEST_KIND():stateRequestKind {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : stateRequestKind.UNKNOWN;

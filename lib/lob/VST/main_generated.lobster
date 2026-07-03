@@ -32,20 +32,28 @@ class VST
 /// Camera rotation offset. Quaternions are preferred when present; Euler
 /// angles are retained for import of older scenario JSON.
 class VSTCameraRotation : flatbuffers.handle
+    /// Yaw angle in degrees for Euler-angle camera imports.
     def YAW_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// Pitch angle in degrees for Euler-angle camera imports.
     def PITCH_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Roll angle in degrees for Euler-angle camera imports.
     def ROLL_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Quaternion x component for camera orientation.
     def QUATERNION_X() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Quaternion y component for camera orientation.
     def QUATERNION_Y() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Quaternion z component for camera orientation.
     def QUATERNION_Z() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Quaternion w component for camera orientation.
     def QUATERNION_W() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// True when quaternion fields define the authoritative rotation.
     def USES_QUATERNION() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 18, 1))
 
@@ -85,28 +93,40 @@ struct VSTCameraRotationBuilder:
 
 /// App display toggles for a scenario viewer.
 class VSTDisplaySettings : flatbuffers.handle
+    /// Active map rendering mode for the scenario viewer.
     def MAP_MODE() -> viewerMapMode:
         return viewerMapMode(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Show geosynchronous belt reference markers.
     def SHOW_GEO_BELT_MARKERS() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Show cislunar reference content.
     def SHOW_CIS_LUNAR() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    /// Show the equator overlay.
     def SHOW_EQUATOR() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+    /// Show latitude grid lines.
     def SHOW_LATITUDE() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
+    /// Show longitude grid lines.
     def SHOW_LONGITUDE() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
+    /// Show body shadow-cone overlays.
     def SHOW_SHADOW_CONES() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// Show animated capture or GIF export controls.
     def SHOW_GIF_CONTROLS() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 18, 0))
+    /// Render the atmospheric shell around the central body.
     def SHOW_ATMOSPHERE() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
+    /// Show the sun-direction indicator overlay.
     def SHOW_SUN_DIRECTION_INDICATOR() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Render the starfield background.
     def USE_STARFIELD() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
+    /// Render orbits as stitched continuous paths.
     def USE_STITCHED_ORBIT() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
 
@@ -158,12 +178,16 @@ struct VSTDisplaySettingsBuilder:
 
 /// Camera options for a space-domain scenario viewer.
 class VSTCameraOptions : flatbuffers.handle
+    /// Camera frame relative to the focused target or default scene.
     def CAMERA_FRAME_MODE() -> viewerCameraFrameMode:
         return viewerCameraFrameMode(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Satellite body alignment mode when focused on a satellite.
     def SATELLITE_ALIGNMENT() -> viewerSatelliteAlignmentMode:
         return viewerSatelliteAlignmentMode(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    /// Camera distance from the current target in kilometers.
     def DISTANCE_FROM_TARGET_KM() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// Camera orientation offset.
     def ROTATION() -> VSTCameraRotation?:
         let o = flatbuffers.field_table(buf_, pos_, 10)
         return if o: VSTCameraRotation { buf_, o } else: nil
@@ -190,16 +214,20 @@ struct VSTCameraOptionsBuilder:
     def end():
         return b_.EndObject()
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 class VST : flatbuffers.handle
+    /// Camera settings for the current viewer state.
     def CAMERA() -> VSTCameraOptions?:
         let o = flatbuffers.field_table(buf_, pos_, 4)
         return if o: VSTCameraOptions { buf_, o } else: nil
+    /// Display toggles and map style for the current viewer state.
     def DISPLAY_SETTINGS() -> VSTDisplaySettings?:
         let o = flatbuffers.field_table(buf_, pos_, 6)
         return if o: VSTDisplaySettings { buf_, o } else: nil
+    /// Reference id of the currently focused scenario object.
     def FOCUSED_REFERENCE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Zero-based focused reference index, or -1 when no index is focused.
     def FOCUSED_REFERENCE_INDEX() -> int:
         return flatbuffers.field_int32(buf_, pos_, 10, -1)
 

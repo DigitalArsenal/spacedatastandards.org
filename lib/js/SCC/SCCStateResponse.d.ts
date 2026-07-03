@@ -12,13 +12,31 @@ export declare class SCCStateResponse implements flatbuffers.IUnpackableObject<S
     __init(i: number, bb: flatbuffers.ByteBuffer): SCCStateResponse;
     static getRootAsSCCStateResponse(bb: flatbuffers.ByteBuffer, obj?: SCCStateResponse): SCCStateResponse;
     static getSizePrefixedRootAsSCCStateResponse(bb: flatbuffers.ByteBuffer, obj?: SCCStateResponse): SCCStateResponse;
+    /**
+     * Request correlation id from the matching state request.
+     */
     REQUEST_ID(): string | null;
     REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * State payload represented by this response.
+     */
     REQUEST_KIND(): stateRequestKind;
+    /**
+     * Full scenario state for scenario-state responses.
+     */
     SCENARIO(obj?: SCN): SCN | null;
+    /**
+     * Reference-list payload for reference-only responses.
+     */
     REFERENCES(index: number, obj?: SCNReference): SCNReference | null;
     referencesLength(): number;
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     FOCUSED_REFERENCE_INDEX(): number;
+    /**
+     * Human-readable error message when state cannot be returned.
+     */
     ERROR_MESSAGE(): string | null;
     ERROR_MESSAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSCCStateResponse(builder: flatbuffers.Builder): void;

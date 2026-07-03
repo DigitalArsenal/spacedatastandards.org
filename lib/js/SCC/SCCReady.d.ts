@@ -8,6 +8,9 @@ export declare class SCCReady implements flatbuffers.IUnpackableObject<SCCReadyT
     __init(i: number, bb: flatbuffers.ByteBuffer): SCCReady;
     static getRootAsSCCReady(bb: flatbuffers.ByteBuffer, obj?: SCCReady): SCCReady;
     static getSizePrefixedRootAsSCCReady(bb: flatbuffers.ByteBuffer, obj?: SCCReady): SCCReady;
+    /**
+     * True when the scenario controls surface is ready for messages.
+     */
     READY(): boolean;
     static startSCCReady(builder: flatbuffers.Builder): void;
     static addReady(builder: flatbuffers.Builder, READY: boolean): void;

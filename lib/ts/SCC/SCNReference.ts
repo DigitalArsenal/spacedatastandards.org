@@ -41,6 +41,9 @@ static getSizePrefixedRootAsSCNReference(bb:flatbuffers.ByteBuffer, obj?:SCNRefe
   return (obj || new SCNReference()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Stable scenario-local id for this reference.
+ */
 REFERENCE_ID():string|null
 REFERENCE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -48,6 +51,9 @@ REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Human-readable display name for the reference.
+ */
 DISPLAY_NAME():string|null
 DISPLAY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DISPLAY_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -55,21 +61,33 @@ DISPLAY_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Category of object or annotation represented by this reference.
+ */
 REFERENCE_KIND():scenarioReferenceKind {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : scenarioReferenceKind.UNKNOWN;
 }
 
+/**
+ * True when this reference represents a removal request.
+ */
 REMOVE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * NORAD catalog id for satellite references when available.
+ */
 NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * International designator or provider object id when available.
+ */
 OBJECT_ID():string|null
 OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -77,6 +95,9 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Country or owner label associated with the reference.
+ */
 COUNTRY():string|null
 COUNTRY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COUNTRY(optionalEncoding?:any):string|Uint8Array|null {
@@ -84,6 +105,9 @@ COUNTRY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Source labels or URIs that produced this reference.
+ */
 SOURCES(index: number):string
 SOURCES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SOURCES(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -96,6 +120,9 @@ sourcesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Data-mode labels associated with this reference.
+ */
 DATA_MODES(index: number):string
 DATA_MODES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 DATA_MODES(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -108,6 +135,9 @@ dataModesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * TLE provenance and raw lines for satellite references.
+ */
 TLES(index: number, obj?:SCNTleLines):SCNTleLines|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? (obj || new SCNTleLines()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -118,6 +148,9 @@ tlesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mean orbital elements associated with this reference.
+ */
 MEAN_ELEMENTS(index: number, obj?:OMM):OMM|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new OMM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -128,6 +161,9 @@ meanElementsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * State vectors associated with this reference.
+ */
 STATES(index: number, obj?:STV):STV|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new STV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -138,6 +174,9 @@ statesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Maneuver records associated with this reference.
+ */
 MANEUVERS(index: number, obj?:MNV):MNV|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new MNV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -148,16 +187,25 @@ maneuversLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ground-site record associated with this reference.
+ */
 SITE(obj?:SIT):SIT|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new SIT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Sensor record associated with this reference.
+ */
 SENSOR(obj?:SEN):SEN|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new SEN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Sensor system id for references that identify a sensor by id.
+ */
 SENSOR_SYSTEM_ID():string|null
 SENSOR_SYSTEM_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -165,6 +213,9 @@ SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor id for references that identify a sensor by id.
+ */
 SENSOR_ID():string|null
 SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -172,16 +223,25 @@ SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Ground-site latitude in degrees when no SIT record is available.
+ */
 SITE_LATITUDE_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Ground-site longitude in degrees when no SIT record is available.
+ */
 SITE_LONGITUDE_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Scenario variable id for variable satellite references.
+ */
 VARIABLE_SATELLITE_ID():string|null
 VARIABLE_SATELLITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 VARIABLE_SATELLITE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -189,6 +249,9 @@ VARIABLE_SATELLITE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Scenario variable id for variable site references.
+ */
 VARIABLE_SITE_ID():string|null
 VARIABLE_SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 VARIABLE_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -196,6 +259,9 @@ VARIABLE_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Points of interest associated with this reference.
+ */
 POINTS(index: number, obj?:SCNPointOfInterest):SCNPointOfInterest|null {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? (obj || new SCNPointOfInterest()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -206,26 +272,41 @@ pointsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * View-cone overlay associated with this reference.
+ */
 VIEW_CONE(obj?:SCNViewCone):SCNViewCone|null {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? (obj || new SCNViewCone()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Sun-advantage target pairing for this reference.
+ */
 SUN_ADVANTAGE_TARGET(obj?:SCNSunAdvantageTarget):SCNSunAdvantageTarget|null {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? (obj || new SCNSunAdvantageTarget()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Exclusion-zone geometry associated with this reference.
+ */
 EXCLUSION_ZONE(obj?:SCNExclusionZone):SCNExclusionZone|null {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? (obj || new SCNExclusionZone()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Electro-optical observation record associated with this reference.
+ */
 OBSERVATION_EO(obj?:EOO):EOO|null {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? (obj || new EOO()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Radar observation record associated with this reference.
+ */
 OBSERVATION_RADAR(obj?:RDO):RDO|null {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? (obj || new RDO()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

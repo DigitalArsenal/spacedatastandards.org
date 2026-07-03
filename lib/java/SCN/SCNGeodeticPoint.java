@@ -27,8 +27,17 @@ public final class SCNGeodeticPoint extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNGeodeticPoint __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Latitude in degrees.
+   */
   public double LATITUDE_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude in degrees.
+   */
   public double LONGITUDE_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Altitude above the reference ellipsoid in kilometers.
+   */
   public double ALTITUDE_KM() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createSCNGeodeticPoint(FlatBufferBuilder builder,

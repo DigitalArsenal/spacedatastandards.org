@@ -28,6 +28,9 @@ static getSizePrefixedRootAsSCNPointOfInterest(bb:flatbuffers.ByteBuffer, obj?:S
   return (obj || new SCNPointOfInterest()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Display name for the point of interest.
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -35,6 +38,9 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Optional detail text shown with the point of interest.
+ */
 DESCRIPTION():string|null
 DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
@@ -42,6 +48,9 @@ DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * UTC epoch associated with the point of interest.
+ */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EPOCH(optionalEncoding?:any):string|Uint8Array|null {
@@ -49,16 +58,25 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Seconds before the epoch when highlighting begins.
+ */
 HIGHLIGHT_BEFORE_SEC():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Seconds after the epoch when highlighting remains active.
+ */
 HIGHLIGHT_AFTER_SEC():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Display color token for the point of interest.
+ */
 COLOR():string|null
 COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COLOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,6 +84,9 @@ COLOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Geodetic position for the point of interest.
+ */
 POSITION(obj?:SCNGeodeticPoint):SCNGeodeticPoint|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new SCNGeodeticPoint()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

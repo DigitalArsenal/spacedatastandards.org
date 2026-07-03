@@ -17,6 +17,7 @@ public struct SCCReady : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCCReady __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// True when the scenario controls surface is ready for messages.
   public bool READY { get { int o = __p.__offset(4); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
 
   public static Offset<SCCReady> CreateSCCReady(FlatBufferBuilder builder,

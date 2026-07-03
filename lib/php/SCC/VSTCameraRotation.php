@@ -42,6 +42,7 @@ class VSTCameraRotation extends Table
         return $this;
     }
 
+    /// Yaw angle in degrees for Euler-angle camera imports.
     /**
      * @return double
      */
@@ -51,6 +52,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pitch angle in degrees for Euler-angle camera imports.
     /**
      * @return double
      */
@@ -60,6 +62,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Roll angle in degrees for Euler-angle camera imports.
     /**
      * @return double
      */
@@ -69,6 +72,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Quaternion x component for camera orientation.
     /**
      * @return double
      */
@@ -78,6 +82,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Quaternion y component for camera orientation.
     /**
      * @return double
      */
@@ -87,6 +92,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Quaternion z component for camera orientation.
     /**
      * @return double
      */
@@ -96,6 +102,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Quaternion w component for camera orientation.
     /**
      * @return double
      */
@@ -105,6 +112,7 @@ class VSTCameraRotation extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True when quaternion fields define the authoritative rotation.
     /**
      * @return bool
      */

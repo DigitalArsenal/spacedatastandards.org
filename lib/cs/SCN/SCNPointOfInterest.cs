@@ -17,6 +17,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNPointOfInterest __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Display name for the point of interest.
   public string NAME { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -24,6 +25,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(4); }
+  /// Optional detail text shown with the point of interest.
   public string DESCRIPTION { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -31,6 +33,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(6); }
+  /// UTC epoch associated with the point of interest.
   public string EPOCH { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -38,8 +41,11 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(8); }
+  /// Seconds before the epoch when highlighting begins.
   public double HIGHLIGHT_BEFORE_SEC { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Seconds after the epoch when highlighting remains active.
   public double HIGHLIGHT_AFTER_SEC { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Display color token for the point of interest.
   public string COLOR { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOLORBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -47,6 +53,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public ArraySegment<byte>? GetCOLORBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(14); }
+  /// Geodetic position for the point of interest.
   public SCNGeodeticPoint? POSITION { get { int o = __p.__offset(16); return o != 0 ? (SCNGeodeticPoint?)(new SCNGeodeticPoint()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCNPointOfInterest> CreateSCNPointOfInterest(FlatBufferBuilder builder,

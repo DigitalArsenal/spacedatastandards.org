@@ -30,6 +30,9 @@ static getSizePrefixedRootAsSCNExclusionZone(bb:flatbuffers.ByteBuffer, obj?:SCN
   return (obj || new SCNExclusionZone()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Display label for the exclusion zone.
+ */
 LABEL():string|null
 LABEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LABEL(optionalEncoding?:any):string|Uint8Array|null {
@@ -37,6 +40,9 @@ LABEL(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Fill color token for the exclusion zone.
+ */
 FILL_COLOR():string|null
 FILL_COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FILL_COLOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -44,6 +50,9 @@ FILL_COLOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Label color token for the exclusion zone.
+ */
 LABEL_COLOR():string|null
 LABEL_COLOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LABEL_COLOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -51,11 +60,17 @@ LABEL_COLOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True when the exclusion-zone polygon should be filled.
+ */
 IS_FILLED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Simple geodetic polygon points for imported zones.
+ */
 POINTS(index: number, obj?:SCNGeodeticPoint):SCNGeodeticPoint|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? (obj || new SCNGeodeticPoint()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -66,6 +81,9 @@ pointsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Canonical GeoJSON geometry for the exclusion zone.
+ */
 BOUNDARY(obj?:GJNGeometry):GJNGeometry|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new GJNGeometry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

@@ -29,16 +29,25 @@ class SCNGeodeticPoint : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Latitude in degrees.
+     */
     val latitudeDeg : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Longitude in degrees.
+     */
     val longitudeDeg : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Altitude above the reference ellipsoid in kilometers.
+     */
     val altitudeKm : Double
         get() {
             val o = __offset(8)

@@ -13,7 +13,7 @@ import { scenarioActionCode } from './scenarioActionCode.js';
 
 
 /**
- * Scenario — canonical scene composition and simulation state for external
+ * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
  */
@@ -39,6 +39,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SCN');
 }
 
+/**
+ * Stable id for the scenario.
+ */
 SCENARIO_ID():string|null
 SCENARIO_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SCENARIO_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -46,6 +49,9 @@ SCENARIO_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Objects, annotations, and variables included in the scenario.
+ */
 REFERENCES(index: number, obj?:SCNReference):SCNReference|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new SCNReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -56,16 +62,25 @@ referencesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Imported event payload associated with the scenario.
+ */
 EVENT(obj?:SCNEvent):SCNEvent|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new SCNEvent()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Zero-based focused reference index, or -1 when no index is focused.
+ */
 FOCUSED_REFERENCE_INDEX():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
 }
 
+/**
+ * Reference id of the currently focused scenario object.
+ */
 FOCUSED_REFERENCE_ID():string|null
 FOCUSED_REFERENCE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FOCUSED_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,6 +88,9 @@ FOCUSED_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Current simulation time as an ISO-8601 UTC timestamp.
+ */
 SIM_TIME():string|null
 SIM_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SIM_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -80,31 +98,49 @@ SIM_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Simulation time-rate multiplier.
+ */
 SIM_SPEED():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True when the viewer should use an Earth-centered Earth-fixed frame.
+ */
 USE_ECEF_FRAME():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Reference frame used for scenario propagation and display.
+ */
 REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Command action requested for the scenario.
+ */
 ACTION():scenarioActionCode {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : scenarioActionCode.NONE;
 }
 
+/**
+ * Viewer camera and display state for the scenario.
+ */
 VIEW_STATE(obj?:VST):VST|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new VST()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Asset-change notification payload for the scenario.
+ */
 ASSETS_CHANGED(obj?:SCNAssetsChanged):SCNAssetsChanged|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new SCNAssetsChanged()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

@@ -78,34 +78,42 @@
       "properties": {
         "YAW_DEG": {
           "type": "number",
+          "description": "Yaw angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "PITCH_DEG": {
           "type": "number",
+          "description": "Pitch angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "ROLL_DEG": {
           "type": "number",
+          "description": "Roll angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_X": {
           "type": "number",
+          "description": "Quaternion x component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_Y": {
           "type": "number",
+          "description": "Quaternion y component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_Z": {
           "type": "number",
+          "description": "Quaternion z component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_W": {
           "type": "number",
+          "description": "Quaternion w component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "USES_QUATERNION": {
           "type": "boolean",
+          "description": "True when quaternion fields define the authoritative rotation.",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "true"
         }
@@ -118,6 +126,7 @@
       "properties": {
         "MAP_MODE": {
           "$ref": "#/definitions/viewerMapMode",
+          "description": "Active map rendering mode for the scenario viewer.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -137,46 +146,57 @@
         },
         "SHOW_GEO_BELT_MARKERS": {
           "type": "boolean",
+          "description": "Show geosynchronous belt reference markers.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_CIS_LUNAR": {
           "type": "boolean",
+          "description": "Show cislunar reference content.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_EQUATOR": {
           "type": "boolean",
+          "description": "Show the equator overlay.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_LATITUDE": {
           "type": "boolean",
+          "description": "Show latitude grid lines.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_LONGITUDE": {
           "type": "boolean",
+          "description": "Show longitude grid lines.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_SHADOW_CONES": {
           "type": "boolean",
+          "description": "Show body shadow-cone overlays.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_GIF_CONTROLS": {
           "type": "boolean",
+          "description": "Show animated capture or GIF export controls.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_ATMOSPHERE": {
           "type": "boolean",
+          "description": "Render the atmospheric shell around the central body.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_SUN_DIRECTION_INDICATOR": {
           "type": "boolean",
+          "description": "Show the sun-direction indicator overlay.",
           "x-flatbuffer-type": "bool"
         },
         "USE_STARFIELD": {
           "type": "boolean",
+          "description": "Render the starfield background.",
           "x-flatbuffer-type": "bool"
         },
         "USE_STITCHED_ORBIT": {
           "type": "boolean",
+          "description": "Render orbits as stitched continuous paths.",
           "x-flatbuffer-type": "bool"
         }
       },
@@ -188,6 +208,7 @@
       "properties": {
         "CAMERA_FRAME_MODE": {
           "$ref": "#/definitions/viewerCameraFrameMode",
+          "description": "Camera frame relative to the focused target or default scene.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -207,6 +228,7 @@
         },
         "SATELLITE_ALIGNMENT": {
           "$ref": "#/definitions/viewerSatelliteAlignmentMode",
+          "description": "Satellite body alignment mode when focused on a satellite.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -223,10 +245,12 @@
         },
         "DISTANCE_FROM_TARGET_KM": {
           "type": "number",
+          "description": "Camera distance from the current target in kilometers.",
           "x-flatbuffer-type": "double"
         },
         "ROTATION": {
           "$ref": "#/definitions/VSTCameraRotation",
+          "description": "Camera orientation offset.",
           "x-flatbuffer-type": "VSTCameraRotation"
         }
       },
@@ -234,24 +258,28 @@
     },
     "VST": {
       "type": "object",
-      "description": "Viewer State \u2014 display and camera state associated with a scenario.",
+      "description": "Viewer State - display and camera state associated with a scenario.",
       "properties": {
         "CAMERA": {
           "$ref": "#/definitions/VSTCameraOptions",
+          "description": "Camera settings for the current viewer state.",
           "x-flatbuffer-type": "VSTCameraOptions"
         },
         "DISPLAY_SETTINGS": {
           "$ref": "#/definitions/VSTDisplaySettings",
+          "description": "Display toggles and map style for the current viewer state.",
           "x-flatbuffer-type": "VSTDisplaySettings"
         },
         "FOCUSED_REFERENCE_ID": {
           "type": "string",
+          "description": "Reference id of the currently focused scenario object.",
           "x-flatbuffer-type": "string"
         },
         "FOCUSED_REFERENCE_INDEX": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "Zero-based focused reference index, or -1 when no index is focused.",
           "x-flatbuffer-type": "int",
           "x-flatbuffer-default": "-1"
         }

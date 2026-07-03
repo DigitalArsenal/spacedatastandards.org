@@ -42,6 +42,7 @@ func (rcv *SCNEvent) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Stable id for the imported scenario event.
 func (rcv *SCNEvent) EVENT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCNEvent) EventId() []byte {
 	return rcv.EVENT_ID()
 }
 
+/// Stable id for the imported scenario event.
+/// Element sets associated with the event.
 func (rcv *SCNEvent) ELSETS(obj *OMM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -85,6 +88,8 @@ func (rcv *SCNEvent) ElsetsLength() int {
 	return rcv.ELSETSLength()
 }
 
+/// Element sets associated with the event.
+/// State vectors associated with the event.
 func (rcv *SCNEvent) STATES(obj *STV, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -116,6 +121,8 @@ func (rcv *SCNEvent) StatesLength() int {
 	return rcv.STATESLength()
 }
 
+/// State vectors associated with the event.
+/// Electro-optical observations associated with the event.
 func (rcv *SCNEvent) EO_OBSERVATIONS(obj *EOO, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -147,6 +154,8 @@ func (rcv *SCNEvent) EoObservationsLength() int {
 	return rcv.EO_OBSERVATIONSLength()
 }
 
+/// Electro-optical observations associated with the event.
+/// Radar observations associated with the event.
 func (rcv *SCNEvent) RADAR_OBSERVATIONS(obj *RDO, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -178,6 +187,7 @@ func (rcv *SCNEvent) RadarObservationsLength() int {
 	return rcv.RADAR_OBSERVATIONSLength()
 }
 
+/// Radar observations associated with the event.
 func SCNEventStart(builder *flatbuffers.Builder) {
 	builder.StartObject(5)
 }

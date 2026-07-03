@@ -18,6 +18,7 @@ public struct SCNExclusionZone : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNExclusionZone __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Display label for the exclusion zone.
   public string LABEL { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLABELBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -25,6 +26,7 @@ public struct SCNExclusionZone : IFlatbufferObject
   public ArraySegment<byte>? GetLABELBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetLABELArray() { return __p.__vector_as_array<byte>(4); }
+  /// Fill color token for the exclusion zone.
   public string FILL_COLOR { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFILL_COLORBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -32,6 +34,7 @@ public struct SCNExclusionZone : IFlatbufferObject
   public ArraySegment<byte>? GetFILL_COLORBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetFILL_COLORArray() { return __p.__vector_as_array<byte>(6); }
+  /// Label color token for the exclusion zone.
   public string LABEL_COLOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLABEL_COLORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -39,9 +42,12 @@ public struct SCNExclusionZone : IFlatbufferObject
   public ArraySegment<byte>? GetLABEL_COLORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetLABEL_COLORArray() { return __p.__vector_as_array<byte>(8); }
+  /// True when the exclusion-zone polygon should be filled.
   public bool IS_FILLED { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Simple geodetic polygon points for imported zones.
   public SCNGeodeticPoint? POINTS(int j) { int o = __p.__offset(12); return o != 0 ? (SCNGeodeticPoint?)(new SCNGeodeticPoint()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int POINTSLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Canonical GeoJSON geometry for the exclusion zone.
   public GJNGeometry? BOUNDARY { get { int o = __p.__offset(14); return o != 0 ? (GJNGeometry?)(new GJNGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCNExclusionZone> CreateSCNExclusionZone(FlatBufferBuilder builder,

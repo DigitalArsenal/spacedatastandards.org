@@ -17,6 +17,7 @@ public struct SCNEvent : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNEvent __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Stable id for the imported scenario event.
   public string EVENT_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEVENT_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -24,12 +25,16 @@ public struct SCNEvent : IFlatbufferObject
   public ArraySegment<byte>? GetEVENT_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetEVENT_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Element sets associated with the event.
   public OMM? ELSETS(int j) { int o = __p.__offset(6); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ELSETSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// State vectors associated with the event.
   public STV? STATES(int j) { int o = __p.__offset(8); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int STATESLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Electro-optical observations associated with the event.
   public EOO? EO_OBSERVATIONS(int j) { int o = __p.__offset(10); return o != 0 ? (EOO?)(new EOO()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EO_OBSERVATIONSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Radar observations associated with the event.
   public RDO? RADAR_OBSERVATIONS(int j) { int o = __p.__offset(12); return o != 0 ? (RDO?)(new RDO()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int RADAR_OBSERVATIONSLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
 

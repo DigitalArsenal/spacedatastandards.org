@@ -29,6 +29,7 @@ class SCNTleLines(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # First TLE line exactly as imported.
     # SCNTleLines
     def LINE1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNTleLines(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Second TLE line exactly as imported.
     # SCNTleLines
     def LINE2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCNTleLines(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Source label or URI for the imported TLE.
     # SCNTleLines
     def SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

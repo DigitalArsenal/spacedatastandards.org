@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 type VST struct {
 	_tab flatbuffers.Table
 }
@@ -54,6 +54,7 @@ func (rcv *VST) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Camera settings for the current viewer state.
 func (rcv *VST) CAMERA(obj *VSTCameraOptions) *VSTCameraOptions {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -71,6 +72,8 @@ func (rcv *VST) Camera(obj *VSTCameraOptions) *VSTCameraOptions {
 	return rcv.CAMERA(obj)
 }
 
+/// Camera settings for the current viewer state.
+/// Display toggles and map style for the current viewer state.
 func (rcv *VST) DISPLAY_SETTINGS(obj *VSTDisplaySettings) *VSTDisplaySettings {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -88,6 +91,8 @@ func (rcv *VST) DisplaySettings(obj *VSTDisplaySettings) *VSTDisplaySettings {
 	return rcv.DISPLAY_SETTINGS(obj)
 }
 
+/// Display toggles and map style for the current viewer state.
+/// Reference id of the currently focused scenario object.
 func (rcv *VST) FOCUSED_REFERENCE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -100,6 +105,8 @@ func (rcv *VST) FocusedReferenceId() []byte {
 	return rcv.FOCUSED_REFERENCE_ID()
 }
 
+/// Reference id of the currently focused scenario object.
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *VST) FOCUSED_REFERENCE_INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -112,6 +119,7 @@ func (rcv *VST) FocusedReferenceIndex() int32 {
 	return rcv.FOCUSED_REFERENCE_INDEX()
 }
 
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *VST) MutateFOCUSED_REFERENCE_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(10, n)
 }

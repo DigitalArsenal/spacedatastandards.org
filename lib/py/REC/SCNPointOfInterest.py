@@ -29,6 +29,7 @@ class SCNPointOfInterest(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Display name for the point of interest.
     # SCNPointOfInterest
     def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNPointOfInterest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Optional detail text shown with the point of interest.
     # SCNPointOfInterest
     def DESCRIPTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCNPointOfInterest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # UTC epoch associated with the point of interest.
     # SCNPointOfInterest
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class SCNPointOfInterest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Seconds before the epoch when highlighting begins.
     # SCNPointOfInterest
     def HIGHLIGHT_BEFORE_SEC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class SCNPointOfInterest(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Seconds after the epoch when highlighting remains active.
     # SCNPointOfInterest
     def HIGHLIGHT_AFTER_SEC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class SCNPointOfInterest(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Display color token for the point of interest.
     # SCNPointOfInterest
     def COLOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class SCNPointOfInterest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Geodetic position for the point of interest.
     # SCNPointOfInterest
     def POSITION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))

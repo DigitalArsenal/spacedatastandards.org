@@ -29,6 +29,7 @@ class VSTCameraOptions(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Camera frame relative to the focused target or default scene.
     # VSTCameraOptions
     def CAMERA_FRAME_MODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class VSTCameraOptions(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Satellite body alignment mode when focused on a satellite.
     # VSTCameraOptions
     def SATELLITE_ALIGNMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class VSTCameraOptions(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Camera distance from the current target in kilometers.
     # VSTCameraOptions
     def DISTANCE_FROM_TARGET_KM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class VSTCameraOptions(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Camera orientation offset.
     # VSTCameraOptions
     def ROTATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

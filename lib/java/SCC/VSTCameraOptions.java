@@ -27,9 +27,21 @@ public final class VSTCameraOptions extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VSTCameraOptions __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Camera frame relative to the focused target or default scene.
+   */
   public byte CAMERA_FRAME_MODE() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Satellite body alignment mode when focused on a satellite.
+   */
   public byte SATELLITE_ALIGNMENT() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Camera distance from the current target in kilometers.
+   */
   public double DISTANCE_FROM_TARGET_KM() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Camera orientation offset.
+   */
   public VSTCameraRotation ROTATION() { return ROTATION(new VSTCameraRotation()); }
   public VSTCameraRotation ROTATION(VSTCameraRotation obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

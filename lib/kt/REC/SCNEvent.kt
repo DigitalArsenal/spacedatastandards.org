@@ -29,6 +29,9 @@ class SCNEvent : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Stable id for the imported scenario event.
+     */
     val eventId : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SCNEvent : Table() {
         }
     val eventIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun eventIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Element sets associated with the event.
+     */
     fun elsets(j: Int) : OMM? = elsets(OMM(), j)
     fun elsets(obj: OMM, j: Int) : OMM? {
         val o = __offset(6)
@@ -53,6 +59,9 @@ class SCNEvent : Table() {
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * State vectors associated with the event.
+     */
     fun states(j: Int) : STV? = states(STV(), j)
     fun states(obj: STV, j: Int) : STV? {
         val o = __offset(8)
@@ -66,6 +75,9 @@ class SCNEvent : Table() {
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Electro-optical observations associated with the event.
+     */
     fun eoObservations(j: Int) : EOO? = eoObservations(EOO(), j)
     fun eoObservations(obj: EOO, j: Int) : EOO? {
         val o = __offset(10)
@@ -79,6 +91,9 @@ class SCNEvent : Table() {
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Radar observations associated with the event.
+     */
     fun radarObservations(j: Int) : RDO? = radarObservations(RDO(), j)
     fun radarObservations(obj: RDO, j: Int) : RDO? {
         val o = __offset(12)

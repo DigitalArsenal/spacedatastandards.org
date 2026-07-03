@@ -30,6 +30,7 @@ class SCC(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Payload discriminator for the message carried by this envelope.
     # SCC
     def MESSAGE_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,6 +38,7 @@ class SCC(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Optional trace id for correlating messages across systems.
     # SCC
     def TRACE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -44,6 +46,7 @@ class SCC(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Scenario list carried by setup or selection messages.
     # SCC
     def SCENARIOS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -69,6 +72,7 @@ class SCC(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
+    # Single scenario payload carried by setup or state messages.
     # SCC
     def SCENARIO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -80,6 +84,7 @@ class SCC(object):
             return obj
         return None
 
+    # Request-current-state payload.
     # SCC
     def REQUEST_STATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -91,6 +96,7 @@ class SCC(object):
             return obj
         return None
 
+    # Current-state response payload.
     # SCC
     def STATE_RESPONSE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -102,6 +108,7 @@ class SCC(object):
             return obj
         return None
 
+    # Asset-picker request or acknowledgement payload.
     # SCC
     def ASSET_PICKER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -113,6 +120,7 @@ class SCC(object):
             return obj
         return None
 
+    # Startup readiness payload.
     # SCC
     def READY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))

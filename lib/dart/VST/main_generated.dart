@@ -135,20 +135,28 @@ class VSTCameraRotation {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Yaw angle in degrees for Euler-angle camera imports.
   double get YAW_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
   double get yawDeg => YAW_DEG;
+  ///  Pitch angle in degrees for Euler-angle camera imports.
   double get PITCH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get pitchDeg => PITCH_DEG;
+  ///  Roll angle in degrees for Euler-angle camera imports.
   double get ROLL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   double get rollDeg => ROLL_DEG;
+  ///  Quaternion x component for camera orientation.
   double get QUATERNION_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get quaternionX => QUATERNION_X;
+  ///  Quaternion y component for camera orientation.
   double get QUATERNION_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get quaternionY => QUATERNION_Y;
+  ///  Quaternion z component for camera orientation.
   double get QUATERNION_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get quaternionZ => QUATERNION_Z;
+  ///  Quaternion w component for camera orientation.
   double get QUATERNION_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
   double get quaternionW => QUATERNION_W;
+  ///  True when quaternion fields define the authoritative rotation.
   bool get USES_QUATERNION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, true);
   bool get usesQuaternion => USES_QUATERNION;
 
@@ -286,28 +294,40 @@ class VSTDisplaySettings {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Active map rendering mode for the scenario viewer.
   viewerMapMode get MAP_MODE => viewerMapMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
   viewerMapMode get mapMode => MAP_MODE;
+  ///  Show geosynchronous belt reference markers.
   bool get SHOW_GEO_BELT_MARKERS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
   bool get showGeoBeltMarkers => SHOW_GEO_BELT_MARKERS;
+  ///  Show cislunar reference content.
   bool get SHOW_CIS_LUNAR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
   bool get showCisLunar => SHOW_CIS_LUNAR;
+  ///  Show the equator overlay.
   bool get SHOW_EQUATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
   bool get showEquator => SHOW_EQUATOR;
+  ///  Show latitude grid lines.
   bool get SHOW_LATITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
   bool get showLatitude => SHOW_LATITUDE;
+  ///  Show longitude grid lines.
   bool get SHOW_LONGITUDE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
   bool get showLongitude => SHOW_LONGITUDE;
+  ///  Show body shadow-cone overlays.
   bool get SHOW_SHADOW_CONES => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
   bool get showShadowCones => SHOW_SHADOW_CONES;
+  ///  Show animated capture or GIF export controls.
   bool get SHOW_GIF_CONTROLS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
   bool get showGifControls => SHOW_GIF_CONTROLS;
+  ///  Render the atmospheric shell around the central body.
   bool get SHOW_ATMOSPHERE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
   bool get showAtmosphere => SHOW_ATMOSPHERE;
+  ///  Show the sun-direction indicator overlay.
   bool get SHOW_SUN_DIRECTION_INDICATOR => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
   bool get showSunDirectionIndicator => SHOW_SUN_DIRECTION_INDICATOR;
+  ///  Render the starfield background.
   bool get USE_STARFIELD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
   bool get useStarfield => USE_STARFIELD;
+  ///  Render orbits as stitched continuous paths.
   bool get USE_STITCHED_ORBIT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
   bool get useStitchedOrbit => USE_STITCHED_ORBIT;
 
@@ -481,12 +501,16 @@ class VSTCameraOptions {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Camera frame relative to the focused target or default scene.
   viewerCameraFrameMode get CAMERA_FRAME_MODE => viewerCameraFrameMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
   viewerCameraFrameMode get cameraFrameMode => CAMERA_FRAME_MODE;
+  ///  Satellite body alignment mode when focused on a satellite.
   viewerSatelliteAlignmentMode get SATELLITE_ALIGNMENT => viewerSatelliteAlignmentMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
   viewerSatelliteAlignmentMode get satelliteAlignment => SATELLITE_ALIGNMENT;
+  ///  Camera distance from the current target in kilometers.
   double get DISTANCE_FROM_TARGET_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   double get distanceFromTargetKm => DISTANCE_FROM_TARGET_KM;
+  ///  Camera orientation offset.
   VSTCameraRotation? get ROTATION => VSTCameraRotation.reader.vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
@@ -574,7 +598,7 @@ class VSTCameraOptionsObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Viewer State — display and camera state associated with a scenario.
+///  Viewer State - display and camera state associated with a scenario.
 class VST {
   VST._(this._bc, this._bcOffset);
   factory VST(List<int> bytes) {
@@ -587,11 +611,15 @@ class VST {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Camera settings for the current viewer state.
   VSTCameraOptions? get CAMERA => VSTCameraOptions.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Display toggles and map style for the current viewer state.
   VSTDisplaySettings? get DISPLAY_SETTINGS => VSTDisplaySettings.reader.vTableGetNullable(_bc, _bcOffset, 6);
   VSTDisplaySettings? get displaySettings => DISPLAY_SETTINGS;
+  ///  Reference id of the currently focused scenario object.
   String? get FOCUSED_REFERENCE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get focusedReferenceId => FOCUSED_REFERENCE_ID;
+  ///  Zero-based focused reference index, or -1 when no index is focused.
   int get FOCUSED_REFERENCE_INDEX => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, -1);
   int get focusedReferenceIndex => FOCUSED_REFERENCE_INDEX;
 

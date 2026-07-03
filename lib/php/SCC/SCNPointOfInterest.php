@@ -41,24 +41,28 @@ class SCNPointOfInterest extends Table
         return $this;
     }
 
+    /// Display name for the point of interest.
     public function getNAME()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Optional detail text shown with the point of interest.
     public function getDESCRIPTION()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// UTC epoch associated with the point of interest.
     public function getEPOCH()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Seconds before the epoch when highlighting begins.
     /**
      * @return double
      */
@@ -68,6 +72,7 @@ class SCNPointOfInterest extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Seconds after the epoch when highlighting remains active.
     /**
      * @return double
      */
@@ -77,12 +82,14 @@ class SCNPointOfInterest extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Display color token for the point of interest.
     public function getCOLOR()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Geodetic position for the point of interest.
     public function getPOSITION()
     {
         $obj = new SCNGeodeticPoint();

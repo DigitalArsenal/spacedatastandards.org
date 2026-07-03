@@ -27,6 +27,9 @@ static getSizePrefixedRootAsSCNSunAdvantageTarget(bb:flatbuffers.ByteBuffer, obj
   return (obj || new SCNSunAdvantageTarget()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Scenario reference id of the target object.
+ */
 TARGET_REFERENCE_ID():string|null
 TARGET_REFERENCE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TARGET_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -34,11 +37,17 @@ TARGET_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * NORAD catalog id of the target satellite when available.
+ */
 TARGET_NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Ground site id associated with the target pairing.
+ */
 GROUND_SITE_ID():string|null
 GROUND_SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 GROUND_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {

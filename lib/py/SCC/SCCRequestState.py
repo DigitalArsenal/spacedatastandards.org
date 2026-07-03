@@ -29,6 +29,7 @@ class SCCRequestState(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Request correlation id echoed by the matching state response.
     # SCCRequestState
     def REQUEST_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCCRequestState(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # State payload requested by the caller.
     # SCCRequestState
     def REQUEST_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))

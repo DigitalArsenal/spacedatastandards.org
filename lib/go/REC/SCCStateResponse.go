@@ -43,6 +43,7 @@ func (rcv *SCCStateResponse) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Request correlation id from the matching state request.
 func (rcv *SCCStateResponse) REQUEST_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,6 +56,8 @@ func (rcv *SCCStateResponse) RequestId() []byte {
 	return rcv.REQUEST_ID()
 }
 
+/// Request correlation id from the matching state request.
+/// State payload represented by this response.
 func (rcv *SCCStateResponse) REQUEST_KIND() stateRequestKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -67,6 +70,7 @@ func (rcv *SCCStateResponse) RequestKind() stateRequestKind {
 	return rcv.REQUEST_KIND()
 }
 
+/// State payload represented by this response.
 func (rcv *SCCStateResponse) MutateREQUEST_KIND(n stateRequestKind) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
@@ -75,6 +79,7 @@ func (rcv *SCCStateResponse) MutateRequestKind(n stateRequestKind) bool {
 	return rcv.MutateREQUEST_KIND(n)
 }
 
+/// Full scenario state for scenario-state responses.
 func (rcv *SCCStateResponse) SCENARIO(obj *SCN) *SCN {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -92,6 +97,8 @@ func (rcv *SCCStateResponse) Scenario(obj *SCN) *SCN {
 	return rcv.SCENARIO(obj)
 }
 
+/// Full scenario state for scenario-state responses.
+/// Reference-list payload for reference-only responses.
 func (rcv *SCCStateResponse) REFERENCES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -123,6 +130,8 @@ func (rcv *SCCStateResponse) ReferencesLength() int {
 	return rcv.REFERENCESLength()
 }
 
+/// Reference-list payload for reference-only responses.
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *SCCStateResponse) FOCUSED_REFERENCE_INDEX() int32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -135,6 +144,7 @@ func (rcv *SCCStateResponse) FocusedReferenceIndex() int32 {
 	return rcv.FOCUSED_REFERENCE_INDEX()
 }
 
+/// Zero-based focused reference index, or -1 when no index is focused.
 func (rcv *SCCStateResponse) MutateFOCUSED_REFERENCE_INDEX(n int32) bool {
 	return rcv._tab.MutateInt32Slot(12, n)
 }
@@ -143,6 +153,7 @@ func (rcv *SCCStateResponse) MutateFocusedReferenceIndex(n int32) bool {
 	return rcv.MutateFOCUSED_REFERENCE_INDEX(n)
 }
 
+/// Human-readable error message when state cannot be returned.
 func (rcv *SCCStateResponse) ERROR_MESSAGE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -155,6 +166,7 @@ func (rcv *SCCStateResponse) ErrorMessage() []byte {
 	return rcv.ERROR_MESSAGE()
 }
 
+/// Human-readable error message when state cannot be returned.
 func SCCStateResponseStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }

@@ -347,6 +347,7 @@ impl<'a> VSTCameraRotation<'a> {
     }
   }
 
+  /// Yaw angle in degrees for Euler-angle camera imports.
   #[inline]
   pub fn YAW_DEG(&self) -> f64 {
     // Safety:
@@ -354,6 +355,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_YAW_DEG, Some(0.0)).unwrap()}
   }
+  /// Pitch angle in degrees for Euler-angle camera imports.
   #[inline]
   pub fn PITCH_DEG(&self) -> f64 {
     // Safety:
@@ -361,6 +363,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_PITCH_DEG, Some(0.0)).unwrap()}
   }
+  /// Roll angle in degrees for Euler-angle camera imports.
   #[inline]
   pub fn ROLL_DEG(&self) -> f64 {
     // Safety:
@@ -368,6 +371,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_ROLL_DEG, Some(0.0)).unwrap()}
   }
+  /// Quaternion x component for camera orientation.
   #[inline]
   pub fn QUATERNION_X(&self) -> f64 {
     // Safety:
@@ -375,6 +379,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_QUATERNION_X, Some(0.0)).unwrap()}
   }
+  /// Quaternion y component for camera orientation.
   #[inline]
   pub fn QUATERNION_Y(&self) -> f64 {
     // Safety:
@@ -382,6 +387,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_QUATERNION_Y, Some(0.0)).unwrap()}
   }
+  /// Quaternion z component for camera orientation.
   #[inline]
   pub fn QUATERNION_Z(&self) -> f64 {
     // Safety:
@@ -389,6 +395,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_QUATERNION_Z, Some(0.0)).unwrap()}
   }
+  /// Quaternion w component for camera orientation.
   #[inline]
   pub fn QUATERNION_W(&self) -> f64 {
     // Safety:
@@ -396,6 +403,7 @@ impl<'a> VSTCameraRotation<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraRotation::VT_QUATERNION_W, Some(0.0)).unwrap()}
   }
+  /// True when quaternion fields define the authoritative rotation.
   #[inline]
   pub fn USES_QUATERNION(&self) -> bool {
     // Safety:
@@ -650,6 +658,7 @@ impl<'a> VSTDisplaySettings<'a> {
     }
   }
 
+  /// Active map rendering mode for the scenario viewer.
   #[inline]
   pub fn MAP_MODE(&self) -> viewerMapMode {
     // Safety:
@@ -657,6 +666,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<viewerMapMode>(VSTDisplaySettings::VT_MAP_MODE, Some(viewerMapMode::UNKNOWN)).unwrap()}
   }
+  /// Show geosynchronous belt reference markers.
   #[inline]
   pub fn SHOW_GEO_BELT_MARKERS(&self) -> bool {
     // Safety:
@@ -664,6 +674,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_GEO_BELT_MARKERS, Some(false)).unwrap()}
   }
+  /// Show cislunar reference content.
   #[inline]
   pub fn SHOW_CIS_LUNAR(&self) -> bool {
     // Safety:
@@ -671,6 +682,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_CIS_LUNAR, Some(false)).unwrap()}
   }
+  /// Show the equator overlay.
   #[inline]
   pub fn SHOW_EQUATOR(&self) -> bool {
     // Safety:
@@ -678,6 +690,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_EQUATOR, Some(false)).unwrap()}
   }
+  /// Show latitude grid lines.
   #[inline]
   pub fn SHOW_LATITUDE(&self) -> bool {
     // Safety:
@@ -685,6 +698,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_LATITUDE, Some(false)).unwrap()}
   }
+  /// Show longitude grid lines.
   #[inline]
   pub fn SHOW_LONGITUDE(&self) -> bool {
     // Safety:
@@ -692,6 +706,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_LONGITUDE, Some(false)).unwrap()}
   }
+  /// Show body shadow-cone overlays.
   #[inline]
   pub fn SHOW_SHADOW_CONES(&self) -> bool {
     // Safety:
@@ -699,6 +714,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_SHADOW_CONES, Some(false)).unwrap()}
   }
+  /// Show animated capture or GIF export controls.
   #[inline]
   pub fn SHOW_GIF_CONTROLS(&self) -> bool {
     // Safety:
@@ -706,6 +722,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_GIF_CONTROLS, Some(false)).unwrap()}
   }
+  /// Render the atmospheric shell around the central body.
   #[inline]
   pub fn SHOW_ATMOSPHERE(&self) -> bool {
     // Safety:
@@ -713,6 +730,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_ATMOSPHERE, Some(false)).unwrap()}
   }
+  /// Show the sun-direction indicator overlay.
   #[inline]
   pub fn SHOW_SUN_DIRECTION_INDICATOR(&self) -> bool {
     // Safety:
@@ -720,6 +738,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_SHOW_SUN_DIRECTION_INDICATOR, Some(false)).unwrap()}
   }
+  /// Render the starfield background.
   #[inline]
   pub fn USE_STARFIELD(&self) -> bool {
     // Safety:
@@ -727,6 +746,7 @@ impl<'a> VSTDisplaySettings<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(VSTDisplaySettings::VT_USE_STARFIELD, Some(false)).unwrap()}
   }
+  /// Render orbits as stitched continuous paths.
   #[inline]
   pub fn USE_STITCHED_ORBIT(&self) -> bool {
     // Safety:
@@ -999,6 +1019,7 @@ impl<'a> VSTCameraOptions<'a> {
     }
   }
 
+  /// Camera frame relative to the focused target or default scene.
   #[inline]
   pub fn CAMERA_FRAME_MODE(&self) -> viewerCameraFrameMode {
     // Safety:
@@ -1006,6 +1027,7 @@ impl<'a> VSTCameraOptions<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<viewerCameraFrameMode>(VSTCameraOptions::VT_CAMERA_FRAME_MODE, Some(viewerCameraFrameMode::DEFAULT)).unwrap()}
   }
+  /// Satellite body alignment mode when focused on a satellite.
   #[inline]
   pub fn SATELLITE_ALIGNMENT(&self) -> viewerSatelliteAlignmentMode {
     // Safety:
@@ -1013,6 +1035,7 @@ impl<'a> VSTCameraOptions<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<viewerSatelliteAlignmentMode>(VSTCameraOptions::VT_SATELLITE_ALIGNMENT, Some(viewerSatelliteAlignmentMode::UNKNOWN)).unwrap()}
   }
+  /// Camera distance from the current target in kilometers.
   #[inline]
   pub fn DISTANCE_FROM_TARGET_KM(&self) -> f64 {
     // Safety:
@@ -1020,6 +1043,7 @@ impl<'a> VSTCameraOptions<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(VSTCameraOptions::VT_DISTANCE_FROM_TARGET_KM, Some(0.0)).unwrap()}
   }
+  /// Camera orientation offset.
   #[inline]
   pub fn ROTATION(&self) -> Option<VSTCameraRotation<'a>> {
     // Safety:
@@ -1147,7 +1171,7 @@ impl VSTCameraOptionsT {
 pub enum VSTOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 pub struct VST<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -1202,6 +1226,7 @@ impl<'a> VST<'a> {
     }
   }
 
+  /// Camera settings for the current viewer state.
   #[inline]
   pub fn CAMERA(&self) -> Option<VSTCameraOptions<'a>> {
     // Safety:
@@ -1209,6 +1234,7 @@ impl<'a> VST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VSTCameraOptions>>(VST::VT_CAMERA, None)}
   }
+  /// Display toggles and map style for the current viewer state.
   #[inline]
   pub fn DISPLAY_SETTINGS(&self) -> Option<VSTDisplaySettings<'a>> {
     // Safety:
@@ -1216,6 +1242,7 @@ impl<'a> VST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VSTDisplaySettings>>(VST::VT_DISPLAY_SETTINGS, None)}
   }
+  /// Reference id of the currently focused scenario object.
   #[inline]
   pub fn FOCUSED_REFERENCE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1223,6 +1250,7 @@ impl<'a> VST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VST::VT_FOCUSED_REFERENCE_ID, None)}
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   #[inline]
   pub fn FOCUSED_REFERENCE_INDEX(&self) -> i32 {
     // Safety:

@@ -29,6 +29,9 @@ class SCCRequestState : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Request correlation id echoed by the matching state response.
+     */
     val requestId : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SCCRequestState : Table() {
         }
     val requestIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun requestIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * State payload requested by the caller.
+     */
     val requestKind : Byte
         get() {
             val o = __offset(6)

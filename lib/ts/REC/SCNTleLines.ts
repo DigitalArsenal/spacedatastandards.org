@@ -27,6 +27,9 @@ static getSizePrefixedRootAsSCNTleLines(bb:flatbuffers.ByteBuffer, obj?:SCNTleLi
   return (obj || new SCNTleLines()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * First TLE line exactly as imported.
+ */
 LINE1():string|null
 LINE1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LINE1(optionalEncoding?:any):string|Uint8Array|null {
@@ -34,6 +37,9 @@ LINE1(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Second TLE line exactly as imported.
+ */
 LINE2():string|null
 LINE2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LINE2(optionalEncoding?:any):string|Uint8Array|null {
@@ -41,6 +47,9 @@ LINE2(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Source label or URI for the imported TLE.
+ */
 SOURCE():string|null
 SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SOURCE(optionalEncoding?:any):string|Uint8Array|null {

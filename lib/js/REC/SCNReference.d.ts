@@ -22,49 +22,130 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNReference;
     static getRootAsSCNReference(bb: flatbuffers.ByteBuffer, obj?: SCNReference): SCNReference;
     static getSizePrefixedRootAsSCNReference(bb: flatbuffers.ByteBuffer, obj?: SCNReference): SCNReference;
+    /**
+     * Stable scenario-local id for this reference.
+     */
     REFERENCE_ID(): string | null;
     REFERENCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Human-readable display name for the reference.
+     */
     DISPLAY_NAME(): string | null;
     DISPLAY_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Category of object or annotation represented by this reference.
+     */
     REFERENCE_KIND(): scenarioReferenceKind;
+    /**
+     * True when this reference represents a removal request.
+     */
     REMOVE(): boolean;
+    /**
+     * NORAD catalog id for satellite references when available.
+     */
     NORAD_CAT_ID(): number;
+    /**
+     * International designator or provider object id when available.
+     */
     OBJECT_ID(): string | null;
     OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Country or owner label associated with the reference.
+     */
     COUNTRY(): string | null;
     COUNTRY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Source labels or URIs that produced this reference.
+     */
     SOURCES(index: number): string;
     SOURCES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     sourcesLength(): number;
+    /**
+     * Data-mode labels associated with this reference.
+     */
     DATA_MODES(index: number): string;
     DATA_MODES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     dataModesLength(): number;
+    /**
+     * TLE provenance and raw lines for satellite references.
+     */
     TLES(index: number, obj?: SCNTleLines): SCNTleLines | null;
     tlesLength(): number;
+    /**
+     * Mean orbital elements associated with this reference.
+     */
     MEAN_ELEMENTS(index: number, obj?: OMM): OMM | null;
     meanElementsLength(): number;
+    /**
+     * State vectors associated with this reference.
+     */
     STATES(index: number, obj?: STV): STV | null;
     statesLength(): number;
+    /**
+     * Maneuver records associated with this reference.
+     */
     MANEUVERS(index: number, obj?: MNV): MNV | null;
     maneuversLength(): number;
+    /**
+     * Ground-site record associated with this reference.
+     */
     SITE(obj?: SIT): SIT | null;
+    /**
+     * Sensor record associated with this reference.
+     */
     SENSOR(obj?: SEN): SEN | null;
+    /**
+     * Sensor system id for references that identify a sensor by id.
+     */
     SENSOR_SYSTEM_ID(): string | null;
     SENSOR_SYSTEM_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Sensor id for references that identify a sensor by id.
+     */
     SENSOR_ID(): string | null;
     SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Ground-site latitude in degrees when no SIT record is available.
+     */
     SITE_LATITUDE_DEG(): number;
+    /**
+     * Ground-site longitude in degrees when no SIT record is available.
+     */
     SITE_LONGITUDE_DEG(): number;
+    /**
+     * Scenario variable id for variable satellite references.
+     */
     VARIABLE_SATELLITE_ID(): string | null;
     VARIABLE_SATELLITE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Scenario variable id for variable site references.
+     */
     VARIABLE_SITE_ID(): string | null;
     VARIABLE_SITE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Points of interest associated with this reference.
+     */
     POINTS(index: number, obj?: SCNPointOfInterest): SCNPointOfInterest | null;
     pointsLength(): number;
+    /**
+     * View-cone overlay associated with this reference.
+     */
     VIEW_CONE(obj?: SCNViewCone): SCNViewCone | null;
+    /**
+     * Sun-advantage target pairing for this reference.
+     */
     SUN_ADVANTAGE_TARGET(obj?: SCNSunAdvantageTarget): SCNSunAdvantageTarget | null;
+    /**
+     * Exclusion-zone geometry associated with this reference.
+     */
     EXCLUSION_ZONE(obj?: SCNExclusionZone): SCNExclusionZone | null;
+    /**
+     * Electro-optical observation record associated with this reference.
+     */
     OBSERVATION_EO(obj?: EOO): EOO | null;
+    /**
+     * Radar observation record associated with this reference.
+     */
     OBSERVATION_RADAR(obj?: RDO): RDO | null;
     static startSCNReference(builder: flatbuffers.Builder): void;
     static addReferenceId(builder: flatbuffers.Builder, REFERENCE_IDOffset: flatbuffers.Offset): void;

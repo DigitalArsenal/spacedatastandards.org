@@ -9,18 +9,39 @@ export declare class SCNAssetsChanged implements flatbuffers.IUnpackableObject<S
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNAssetsChanged;
     static getRootAsSCNAssetsChanged(bb: flatbuffers.ByteBuffer, obj?: SCNAssetsChanged): SCNAssetsChanged;
     static getSizePrefixedRootAsSCNAssetsChanged(bb: flatbuffers.ByteBuffer, obj?: SCNAssetsChanged): SCNAssetsChanged;
+    /**
+     * Satellite references added by the asset-change event.
+     */
     ADDED_SATELLITES(index: number, obj?: SCNReference): SCNReference | null;
     addedSatellitesLength(): number;
+    /**
+     * Ground-site references added by the asset-change event.
+     */
     ADDED_GROUND_SITES(index: number, obj?: SCNReference): SCNReference | null;
     addedGroundSitesLength(): number;
+    /**
+     * Satellite references removed by the asset-change event.
+     */
     REMOVED_SATELLITES(index: number, obj?: SCNReference): SCNReference | null;
     removedSatellitesLength(): number;
+    /**
+     * Ground-site references removed by the asset-change event.
+     */
     REMOVED_GROUND_SITES(index: number, obj?: SCNReference): SCNReference | null;
     removedGroundSitesLength(): number;
+    /**
+     * Current satellite references after the asset-change event.
+     */
     SATELLITES(index: number, obj?: SCNReference): SCNReference | null;
     satellitesLength(): number;
+    /**
+     * Current ground-site references after the asset-change event.
+     */
     GROUND_SITES(index: number, obj?: SCNReference): SCNReference | null;
     groundSitesLength(): number;
+    /**
+     * Current full reference set after the asset-change event.
+     */
     REFERENCES(index: number, obj?: SCNReference): SCNReference | null;
     referencesLength(): number;
     static startSCNAssetsChanged(builder: flatbuffers.Builder): void;

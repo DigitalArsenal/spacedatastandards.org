@@ -20,7 +20,9 @@ public struct SCC : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Payload discriminator for the message carried by this envelope.
   public controlMessageKind MESSAGE_KIND { get { int o = __p.__offset(4); return o != 0 ? (controlMessageKind)__p.bb.GetSbyte(o + __p.bb_pos) : controlMessageKind.UNKNOWN; } }
+  /// Optional trace id for correlating messages across systems.
   public string TRACE_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRACE_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -28,12 +30,18 @@ public struct SCC : IFlatbufferObject
   public ArraySegment<byte>? GetTRACE_IDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetTRACE_IDArray() { return __p.__vector_as_array<byte>(6); }
+  /// Scenario list carried by setup or selection messages.
   public SCN? SCENARIOS(int j) { int o = __p.__offset(8); return o != 0 ? (SCN?)(new SCN()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int SCENARIOSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Single scenario payload carried by setup or state messages.
   public SCN? SCENARIO { get { int o = __p.__offset(10); return o != 0 ? (SCN?)(new SCN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Request-current-state payload.
   public SCCRequestState? REQUEST_STATE { get { int o = __p.__offset(12); return o != 0 ? (SCCRequestState?)(new SCCRequestState()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Current-state response payload.
   public SCCStateResponse? STATE_RESPONSE { get { int o = __p.__offset(14); return o != 0 ? (SCCStateResponse?)(new SCCStateResponse()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Asset-picker request or acknowledgement payload.
   public SCCAssetPicker? ASSET_PICKER { get { int o = __p.__offset(16); return o != 0 ? (SCCAssetPicker?)(new SCCAssetPicker()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Startup readiness payload.
   public SCCReady? READY { get { int o = __p.__offset(18); return o != 0 ? (SCCReady?)(new SCCReady()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCC> CreateSCC(FlatBufferBuilder builder,

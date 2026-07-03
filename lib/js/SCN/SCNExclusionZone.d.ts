@@ -11,15 +11,33 @@ export declare class SCNExclusionZone implements flatbuffers.IUnpackableObject<S
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNExclusionZone;
     static getRootAsSCNExclusionZone(bb: flatbuffers.ByteBuffer, obj?: SCNExclusionZone): SCNExclusionZone;
     static getSizePrefixedRootAsSCNExclusionZone(bb: flatbuffers.ByteBuffer, obj?: SCNExclusionZone): SCNExclusionZone;
+    /**
+     * Display label for the exclusion zone.
+     */
     LABEL(): string | null;
     LABEL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Fill color token for the exclusion zone.
+     */
     FILL_COLOR(): string | null;
     FILL_COLOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Label color token for the exclusion zone.
+     */
     LABEL_COLOR(): string | null;
     LABEL_COLOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * True when the exclusion-zone polygon should be filled.
+     */
     IS_FILLED(): boolean;
+    /**
+     * Simple geodetic polygon points for imported zones.
+     */
     POINTS(index: number, obj?: SCNGeodeticPoint): SCNGeodeticPoint | null;
     pointsLength(): number;
+    /**
+     * Canonical GeoJSON geometry for the exclusion zone.
+     */
     BOUNDARY(obj?: GJNGeometry): GJNGeometry | null;
     static startSCNExclusionZone(builder: flatbuffers.Builder): void;
     static addLabel(builder: flatbuffers.Builder, LABELOffset: flatbuffers.Offset): void;

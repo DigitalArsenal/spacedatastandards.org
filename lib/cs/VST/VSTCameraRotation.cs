@@ -18,13 +18,21 @@ public struct VSTCameraRotation : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VSTCameraRotation __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Yaw angle in degrees for Euler-angle camera imports.
   public double YAW_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Pitch angle in degrees for Euler-angle camera imports.
   public double PITCH_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Roll angle in degrees for Euler-angle camera imports.
   public double ROLL_DEG { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion x component for camera orientation.
   public double QUATERNION_X { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion y component for camera orientation.
   public double QUATERNION_Y { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion z component for camera orientation.
   public double QUATERNION_Z { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion w component for camera orientation.
   public double QUATERNION_W { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when quaternion fields define the authoritative rotation.
   public bool USES_QUATERNION { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
 
   public static Offset<VSTCameraRotation> CreateVSTCameraRotation(FlatBufferBuilder builder,

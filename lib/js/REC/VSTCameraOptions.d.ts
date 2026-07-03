@@ -11,9 +11,21 @@ export declare class VSTCameraOptions implements flatbuffers.IUnpackableObject<V
     __init(i: number, bb: flatbuffers.ByteBuffer): VSTCameraOptions;
     static getRootAsVSTCameraOptions(bb: flatbuffers.ByteBuffer, obj?: VSTCameraOptions): VSTCameraOptions;
     static getSizePrefixedRootAsVSTCameraOptions(bb: flatbuffers.ByteBuffer, obj?: VSTCameraOptions): VSTCameraOptions;
+    /**
+     * Camera frame relative to the focused target or default scene.
+     */
     CAMERA_FRAME_MODE(): viewerCameraFrameMode;
+    /**
+     * Satellite body alignment mode when focused on a satellite.
+     */
     SATELLITE_ALIGNMENT(): viewerSatelliteAlignmentMode;
+    /**
+     * Camera distance from the current target in kilometers.
+     */
     DISTANCE_FROM_TARGET_KM(): number;
+    /**
+     * Camera orientation offset.
+     */
     ROTATION(obj?: VSTCameraRotation): VSTCameraRotation | null;
     static startVSTCameraOptions(builder: flatbuffers.Builder): void;
     static addCameraFrameMode(builder: flatbuffers.Builder, CAMERA_FRAME_MODE: viewerCameraFrameMode): void;

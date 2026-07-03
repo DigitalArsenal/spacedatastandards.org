@@ -1,5 +1,5 @@
-// Hash: 54437fe58a8d83be05f4f54b1d3fb034ccfbb8dadfdaf1b019df009e60c41e31
-// Version: 1.136.1
+// Hash: 9b4035415cf10742d3c4dfac00481c7c3fab251eeac6a73b747d9f65e7ac657e
+// Version: 1.136.2
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -36,125 +36,205 @@ enum scenarioActionCode : byte {
 
 /// Raw TLE lines retained as import provenance for scenario setup.
 table SCNTleLines {
+  /// First TLE line exactly as imported.
   LINE1:string;
+  /// Second TLE line exactly as imported.
   LINE2:string;
+  /// Source label or URI for the imported TLE.
   SOURCE:string;
 }
 
 /// Geodetic point in latitude, longitude, altitude order.
 table SCNGeodeticPoint {
+  /// Latitude in degrees.
   LATITUDE_DEG:double;
+  /// Longitude in degrees.
   LONGITUDE_DEG:double;
+  /// Altitude above the reference ellipsoid in kilometers.
   ALTITUDE_KM:double;
 }
 
 /// Time-tagged point or annotation shown in a scenario.
 table SCNPointOfInterest {
+  /// Display name for the point of interest.
   NAME:string;
+  /// Optional detail text shown with the point of interest.
   DESCRIPTION:string;
+  /// UTC epoch associated with the point of interest.
   EPOCH:string;
+  /// Seconds before the epoch when highlighting begins.
   HIGHLIGHT_BEFORE_SEC:double;
+  /// Seconds after the epoch when highlighting remains active.
   HIGHLIGHT_AFTER_SEC:double;
+  /// Display color token for the point of interest.
   COLOR:string;
+  /// Geodetic position for the point of interest.
   POSITION:SCNGeodeticPoint;
 }
 
 /// Sensor or site view-cone overlay used by scenario tools.
 table SCNViewCone {
+  /// Minimum elevation angle in degrees.
   MIN_ELEVATION_DEG:double;
+  /// Maximum elevation angle in degrees.
   MAX_ELEVATION_DEG:double;
+  /// Minimum azimuth angle in degrees.
   MIN_AZIMUTH_DEG:double;
+  /// Maximum azimuth angle in degrees.
   MAX_AZIMUTH_DEG:double;
+  /// Maximum view-cone range in kilometers.
   MAX_RANGE_KM:double;
+  /// Half angle in degrees for cone-style overlays.
   HALF_ANGLE_DEG:double;
+  /// Dynamic range mode or expression used by the viewer.
   DYNAMIC_RANGE:string;
 }
 
 /// Target pairing for sun-advantage visualization.
 table SCNSunAdvantageTarget {
+  /// Scenario reference id of the target object.
   TARGET_REFERENCE_ID:string;
+  /// NORAD catalog id of the target satellite when available.
   TARGET_NORAD_CAT_ID:uint32;
+  /// Ground site id associated with the target pairing.
   GROUND_SITE_ID:string;
 }
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
 /// when available; POINTS preserves simple LLA polygon imports.
 table SCNExclusionZone {
+  /// Display label for the exclusion zone.
   LABEL:string;
+  /// Fill color token for the exclusion zone.
   FILL_COLOR:string;
+  /// Label color token for the exclusion zone.
   LABEL_COLOR:string;
+  /// True when the exclusion-zone polygon should be filled.
   IS_FILLED:bool;
+  /// Simple geodetic polygon points for imported zones.
   POINTS:[SCNGeodeticPoint];
+  /// Canonical GeoJSON geometry for the exclusion zone.
   BOUNDARY:GJNGeometry;
 }
 
 /// Scene reference that binds viewer-scene state to existing SDS domain
 /// records without duplicating those records.
 table SCNReference {
+  /// Stable scenario-local id for this reference.
   REFERENCE_ID:string;
+  /// Human-readable display name for the reference.
   DISPLAY_NAME:string;
+  /// Category of object or annotation represented by this reference.
   REFERENCE_KIND:scenarioReferenceKind;
+  /// True when this reference represents a removal request.
   REMOVE:bool;
+  /// NORAD catalog id for satellite references when available.
   NORAD_CAT_ID:uint32;
+  /// International designator or provider object id when available.
   OBJECT_ID:string;
+  /// Country or owner label associated with the reference.
   COUNTRY:string;
+  /// Source labels or URIs that produced this reference.
   SOURCES:[string];
+  /// Data-mode labels associated with this reference.
   DATA_MODES:[string];
+  /// TLE provenance and raw lines for satellite references.
   TLES:[SCNTleLines];
+  /// Mean orbital elements associated with this reference.
   MEAN_ELEMENTS:[OMM];
+  /// State vectors associated with this reference.
   STATES:[STV];
+  /// Maneuver records associated with this reference.
   MANEUVERS:[MNV];
+  /// Ground-site record associated with this reference.
   SITE:SIT;
+  /// Sensor record associated with this reference.
   SENSOR:SEN;
+  /// Sensor system id for references that identify a sensor by id.
   SENSOR_SYSTEM_ID:string;
+  /// Sensor id for references that identify a sensor by id.
   SENSOR_ID:string;
+  /// Ground-site latitude in degrees when no SIT record is available.
   SITE_LATITUDE_DEG:double;
+  /// Ground-site longitude in degrees when no SIT record is available.
   SITE_LONGITUDE_DEG:double;
+  /// Scenario variable id for variable satellite references.
   VARIABLE_SATELLITE_ID:string;
+  /// Scenario variable id for variable site references.
   VARIABLE_SITE_ID:string;
+  /// Points of interest associated with this reference.
   POINTS:[SCNPointOfInterest];
+  /// View-cone overlay associated with this reference.
   VIEW_CONE:SCNViewCone;
+  /// Sun-advantage target pairing for this reference.
   SUN_ADVANTAGE_TARGET:SCNSunAdvantageTarget;
+  /// Exclusion-zone geometry associated with this reference.
   EXCLUSION_ZONE:SCNExclusionZone;
+  /// Electro-optical observation record associated with this reference.
   OBSERVATION_EO:EOO;
+  /// Radar observation record associated with this reference.
   OBSERVATION_RADAR:RDO;
 }
 
 /// Imported scenario event payload composed from existing SDS records.
 table SCNEvent {
+  /// Stable id for the imported scenario event.
   EVENT_ID:string;
+  /// Element sets associated with the event.
   ELSETS:[OMM];
+  /// State vectors associated with the event.
   STATES:[STV];
+  /// Electro-optical observations associated with the event.
   EO_OBSERVATIONS:[EOO];
+  /// Radar observations associated with the event.
   RADAR_OBSERVATIONS:[RDO];
 }
 
 /// Scenario asset-change notification payload.
 table SCNAssetsChanged {
+  /// Satellite references added by the asset-change event.
   ADDED_SATELLITES:[SCNReference];
+  /// Ground-site references added by the asset-change event.
   ADDED_GROUND_SITES:[SCNReference];
+  /// Satellite references removed by the asset-change event.
   REMOVED_SATELLITES:[SCNReference];
+  /// Ground-site references removed by the asset-change event.
   REMOVED_GROUND_SITES:[SCNReference];
+  /// Current satellite references after the asset-change event.
   SATELLITES:[SCNReference];
+  /// Current ground-site references after the asset-change event.
   GROUND_SITES:[SCNReference];
+  /// Current full reference set after the asset-change event.
   REFERENCES:[SCNReference];
 }
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 table SCN {
+  /// Stable id for the scenario.
   SCENARIO_ID:string;
+  /// Objects, annotations, and variables included in the scenario.
   REFERENCES:[SCNReference];
+  /// Imported event payload associated with the scenario.
   EVENT:SCNEvent;
+  /// Zero-based focused reference index, or -1 when no index is focused.
   FOCUSED_REFERENCE_INDEX:int = -1;
+  /// Reference id of the currently focused scenario object.
   FOCUSED_REFERENCE_ID:string;
+  /// Current simulation time as an ISO-8601 UTC timestamp.
   SIM_TIME:string;
+  /// Simulation time-rate multiplier.
   SIM_SPEED:double;
+  /// True when the viewer should use an Earth-centered Earth-fixed frame.
   USE_ECEF_FRAME:bool;
+  /// Reference frame used for scenario propagation and display.
   REFERENCE_FRAME:RFM;
+  /// Command action requested for the scenario.
   ACTION:scenarioActionCode;
+  /// Viewer camera and display state for the scenario.
   VIEW_STATE:VST;
+  /// Asset-change notification payload for the scenario.
   ASSETS_CHANGED:SCNAssetsChanged;
 }
 

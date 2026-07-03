@@ -29,6 +29,7 @@ class SCNViewCone(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Minimum elevation angle in degrees.
     # SCNViewCone
     def MIN_ELEVATION_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Maximum elevation angle in degrees.
     # SCNViewCone
     def MAX_ELEVATION_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Minimum azimuth angle in degrees.
     # SCNViewCone
     def MIN_AZIMUTH_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Maximum azimuth angle in degrees.
     # SCNViewCone
     def MAX_AZIMUTH_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Maximum view-cone range in kilometers.
     # SCNViewCone
     def MAX_RANGE_KM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Half angle in degrees for cone-style overlays.
     # SCNViewCone
     def HALF_ANGLE_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class SCNViewCone(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Dynamic range mode or expression used by the viewer.
     # SCNViewCone
     def DYNAMIC_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))

@@ -41,18 +41,21 @@ class SCNTleLines extends Table
         return $this;
     }
 
+    /// First TLE line exactly as imported.
     public function getLINE1()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Second TLE line exactly as imported.
     public function getLINE2()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Source label or URI for the imported TLE.
     public function getSOURCE()
     {
         $o = $this->__offset(8);

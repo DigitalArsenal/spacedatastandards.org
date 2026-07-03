@@ -29,36 +29,57 @@ class SCNViewCone : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Minimum elevation angle in degrees.
+     */
     val minElevationDeg : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Maximum elevation angle in degrees.
+     */
     val maxElevationDeg : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Minimum azimuth angle in degrees.
+     */
     val minAzimuthDeg : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Maximum azimuth angle in degrees.
+     */
     val maxAzimuthDeg : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Maximum view-cone range in kilometers.
+     */
     val maxRangeKm : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Half angle in degrees for cone-style overlays.
+     */
     val halfAngleDeg : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Dynamic range mode or expression used by the viewer.
+     */
     val dynamicRange : String?
         get() {
             val o = __offset(16)

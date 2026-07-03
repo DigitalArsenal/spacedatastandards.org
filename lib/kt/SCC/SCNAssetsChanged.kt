@@ -29,6 +29,9 @@ class SCNAssetsChanged : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Satellite references added by the asset-change event.
+     */
     fun addedSatellites(j: Int) : SCNReference? = addedSatellites(SCNReference(), j)
     fun addedSatellites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(4)
@@ -42,6 +45,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(4); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Ground-site references added by the asset-change event.
+     */
     fun addedGroundSites(j: Int) : SCNReference? = addedGroundSites(SCNReference(), j)
     fun addedGroundSites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(6)
@@ -55,6 +61,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Satellite references removed by the asset-change event.
+     */
     fun removedSatellites(j: Int) : SCNReference? = removedSatellites(SCNReference(), j)
     fun removedSatellites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(8)
@@ -68,6 +77,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Ground-site references removed by the asset-change event.
+     */
     fun removedGroundSites(j: Int) : SCNReference? = removedGroundSites(SCNReference(), j)
     fun removedGroundSites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(10)
@@ -81,6 +93,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(10); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Current satellite references after the asset-change event.
+     */
     fun satellites(j: Int) : SCNReference? = satellites(SCNReference(), j)
     fun satellites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(12)
@@ -94,6 +109,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(12); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Current ground-site references after the asset-change event.
+     */
     fun groundSites(j: Int) : SCNReference? = groundSites(SCNReference(), j)
     fun groundSites(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(14)
@@ -107,6 +125,9 @@ class SCNAssetsChanged : Table() {
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Current full reference set after the asset-change event.
+     */
     fun references(j: Int) : SCNReference? = references(SCNReference(), j)
     fun references(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(16)

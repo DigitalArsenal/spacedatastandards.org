@@ -76,13 +76,21 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
     static let USES_QUATERNION: VOffset = 18
   }
 
+  ///  Yaw angle in degrees for Euler-angle camera imports.
   public var YAW_DEG: Double { let o = _accessor.offset(VT.YAW_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pitch angle in degrees for Euler-angle camera imports.
   public var PITCH_DEG: Double { let o = _accessor.offset(VT.PITCH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Roll angle in degrees for Euler-angle camera imports.
   public var ROLL_DEG: Double { let o = _accessor.offset(VT.ROLL_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion x component for camera orientation.
   public var QUATERNION_X: Double { let o = _accessor.offset(VT.QUATERNION_X); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion y component for camera orientation.
   public var QUATERNION_Y: Double { let o = _accessor.offset(VT.QUATERNION_Y); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion z component for camera orientation.
   public var QUATERNION_Z: Double { let o = _accessor.offset(VT.QUATERNION_Z); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion w component for camera orientation.
   public var QUATERNION_W: Double { let o = _accessor.offset(VT.QUATERNION_W); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when quaternion fields define the authoritative rotation.
   public var USES_QUATERNION: Bool { let o = _accessor.offset(VT.USES_QUATERNION); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startVSTCameraRotation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(YAW_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: YAW_DEG, def: 0.0, at: VT.YAW_DEG) }
@@ -159,17 +167,29 @@ public struct VSTDisplaySettings: FlatBufferTable, FlatbuffersVectorInitializabl
     static let USE_STITCHED_ORBIT: VOffset = 26
   }
 
+  ///  Active map rendering mode for the scenario viewer.
   public var MAP_MODE: viewerMapMode { let o = _accessor.offset(VT.MAP_MODE); return o == 0 ? .unknown : viewerMapMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Show geosynchronous belt reference markers.
   public var SHOW_GEO_BELT_MARKERS: Bool { let o = _accessor.offset(VT.SHOW_GEO_BELT_MARKERS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show cislunar reference content.
   public var SHOW_CIS_LUNAR: Bool { let o = _accessor.offset(VT.SHOW_CIS_LUNAR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show the equator overlay.
   public var SHOW_EQUATOR: Bool { let o = _accessor.offset(VT.SHOW_EQUATOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show latitude grid lines.
   public var SHOW_LATITUDE: Bool { let o = _accessor.offset(VT.SHOW_LATITUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show longitude grid lines.
   public var SHOW_LONGITUDE: Bool { let o = _accessor.offset(VT.SHOW_LONGITUDE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show body shadow-cone overlays.
   public var SHOW_SHADOW_CONES: Bool { let o = _accessor.offset(VT.SHOW_SHADOW_CONES); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show animated capture or GIF export controls.
   public var SHOW_GIF_CONTROLS: Bool { let o = _accessor.offset(VT.SHOW_GIF_CONTROLS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Render the atmospheric shell around the central body.
   public var SHOW_ATMOSPHERE: Bool { let o = _accessor.offset(VT.SHOW_ATMOSPHERE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Show the sun-direction indicator overlay.
   public var SHOW_SUN_DIRECTION_INDICATOR: Bool { let o = _accessor.offset(VT.SHOW_SUN_DIRECTION_INDICATOR); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Render the starfield background.
   public var USE_STARFIELD: Bool { let o = _accessor.offset(VT.USE_STARFIELD); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Render orbits as stitched continuous paths.
   public var USE_STITCHED_ORBIT: Bool { let o = _accessor.offset(VT.USE_STITCHED_ORBIT); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   public static func startVSTDisplaySettings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(MAP_MODE: viewerMapMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAP_MODE.rawValue, def: 0, at: VT.MAP_MODE) }
@@ -264,9 +284,13 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
     static let ROTATION: VOffset = 10
   }
 
+  ///  Camera frame relative to the focused target or default scene.
   public var CAMERA_FRAME_MODE: viewerCameraFrameMode { let o = _accessor.offset(VT.CAMERA_FRAME_MODE); return o == 0 ? .default_ : viewerCameraFrameMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .default_ }
+  ///  Satellite body alignment mode when focused on a satellite.
   public var SATELLITE_ALIGNMENT: viewerSatelliteAlignmentMode { let o = _accessor.offset(VT.SATELLITE_ALIGNMENT); return o == 0 ? .unknown : viewerSatelliteAlignmentMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  Camera distance from the current target in kilometers.
   public var DISTANCE_FROM_TARGET_KM: Double { let o = _accessor.offset(VT.DISTANCE_FROM_TARGET_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Camera orientation offset.
   public var ROTATION: VSTCameraRotation? { let o = _accessor.offset(VT.ROTATION); return o == 0 ? nil : VSTCameraRotation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public static func startVSTCameraOptions(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(CAMERA_FRAME_MODE: viewerCameraFrameMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAMERA_FRAME_MODE.rawValue, def: 0, at: VT.CAMERA_FRAME_MODE) }
@@ -299,7 +323,7 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
-///  Viewer State — display and camera state associated with a scenario.
+///  Viewer State - display and camera state associated with a scenario.
 public struct VST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -318,10 +342,14 @@ public struct VST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let FOCUSED_REFERENCE_INDEX: VOffset = 10
   }
 
+  ///  Camera settings for the current viewer state.
   public var CAMERA: VSTCameraOptions? { let o = _accessor.offset(VT.CAMERA); return o == 0 ? nil : VSTCameraOptions(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Display toggles and map style for the current viewer state.
   public var DISPLAY_SETTINGS: VSTDisplaySettings? { let o = _accessor.offset(VT.DISPLAY_SETTINGS); return o == 0 ? nil : VSTDisplaySettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Reference id of the currently focused scenario object.
   public var FOCUSED_REFERENCE_ID: String? { let o = _accessor.offset(VT.FOCUSED_REFERENCE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FOCUSED_REFERENCE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FOCUSED_REFERENCE_ID) }
+  ///  Zero-based focused reference index, or -1 when no index is focused.
   public var FOCUSED_REFERENCE_INDEX: Int32 { let o = _accessor.offset(VT.FOCUSED_REFERENCE_INDEX); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startVST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(CAMERA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAMERA, at: VT.CAMERA) }

@@ -42,6 +42,7 @@ class SCC extends Table
         return $this;
     }
 
+    /// Payload discriminator for the message carried by this envelope.
     /**
      * @return sbyte
      */
@@ -51,12 +52,14 @@ class SCC extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \controlMessageKind::UNKNOWN;
     }
 
+    /// Optional trace id for correlating messages across systems.
     public function getTRACE_ID()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Scenario list carried by setup or selection messages.
     /**
      * @returnVectorOffset
      */
@@ -76,6 +79,7 @@ class SCC extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Single scenario payload carried by setup or state messages.
     public function getSCENARIO()
     {
         $obj = new SCN();
@@ -83,6 +87,7 @@ class SCC extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Request-current-state payload.
     public function getREQUEST_STATE()
     {
         $obj = new SCCRequestState();
@@ -90,6 +95,7 @@ class SCC extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Current-state response payload.
     public function getSTATE_RESPONSE()
     {
         $obj = new SCCStateResponse();
@@ -97,6 +103,7 @@ class SCC extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Asset-picker request or acknowledgement payload.
     public function getASSET_PICKER()
     {
         $obj = new SCCAssetPicker();
@@ -104,6 +111,7 @@ class SCC extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Startup readiness payload.
     public function getREADY()
     {
         $obj = new SCCReady();

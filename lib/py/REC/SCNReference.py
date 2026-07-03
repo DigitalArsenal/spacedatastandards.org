@@ -30,6 +30,7 @@ class SCNReference(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Stable scenario-local id for this reference.
     # SCNReference
     def REFERENCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -37,6 +38,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Human-readable display name for the reference.
     # SCNReference
     def DISPLAY_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -44,6 +46,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Category of object or annotation represented by this reference.
     # SCNReference
     def REFERENCE_KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -51,6 +54,7 @@ class SCNReference(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # True when this reference represents a removal request.
     # SCNReference
     def REMOVE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -58,6 +62,7 @@ class SCNReference(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # NORAD catalog id for satellite references when available.
     # SCNReference
     def NORAD_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -65,6 +70,7 @@ class SCNReference(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator or provider object id when available.
     # SCNReference
     def OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -72,6 +78,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Country or owner label associated with the reference.
     # SCNReference
     def COUNTRY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -79,6 +86,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Source labels or URIs that produced this reference.
     # SCNReference
     def SOURCES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -99,6 +107,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
+    # Data-mode labels associated with this reference.
     # SCNReference
     def DATA_MODES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -119,6 +128,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
+    # TLE provenance and raw lines for satellite references.
     # SCNReference
     def TLES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -144,6 +154,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
+    # Mean orbital elements associated with this reference.
     # SCNReference
     def MEAN_ELEMENTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -169,6 +180,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
+    # State vectors associated with this reference.
     # SCNReference
     def STATES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -194,6 +206,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
+    # Maneuver records associated with this reference.
     # SCNReference
     def MANEUVERS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -219,6 +232,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Ground-site record associated with this reference.
     # SCNReference
     def SITE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -230,6 +244,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Sensor record associated with this reference.
     # SCNReference
     def SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -241,6 +256,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Sensor system id for references that identify a sensor by id.
     # SCNReference
     def SENSOR_SYSTEM_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -248,6 +264,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor id for references that identify a sensor by id.
     # SCNReference
     def SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -255,6 +272,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Ground-site latitude in degrees when no SIT record is available.
     # SCNReference
     def SITE_LATITUDE_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -262,6 +280,7 @@ class SCNReference(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Ground-site longitude in degrees when no SIT record is available.
     # SCNReference
     def SITE_LONGITUDE_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -269,6 +288,7 @@ class SCNReference(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Scenario variable id for variable satellite references.
     # SCNReference
     def VARIABLE_SATELLITE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -276,6 +296,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Scenario variable id for variable site references.
     # SCNReference
     def VARIABLE_SITE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -283,6 +304,7 @@ class SCNReference(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Points of interest associated with this reference.
     # SCNReference
     def POINTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -308,6 +330,7 @@ class SCNReference(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
+    # View-cone overlay associated with this reference.
     # SCNReference
     def VIEW_CONE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -319,6 +342,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Sun-advantage target pairing for this reference.
     # SCNReference
     def SUN_ADVANTAGE_TARGET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
@@ -330,6 +354,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Exclusion-zone geometry associated with this reference.
     # SCNReference
     def EXCLUSION_ZONE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
@@ -341,6 +366,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Electro-optical observation record associated with this reference.
     # SCNReference
     def OBSERVATION_EO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -352,6 +378,7 @@ class SCNReference(object):
             return obj
         return None
 
+    # Radar observation record associated with this reference.
     # SCNReference
     def OBSERVATION_RADAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))

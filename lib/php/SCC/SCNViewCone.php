@@ -41,6 +41,7 @@ class SCNViewCone extends Table
         return $this;
     }
 
+    /// Minimum elevation angle in degrees.
     /**
      * @return double
      */
@@ -50,6 +51,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Maximum elevation angle in degrees.
     /**
      * @return double
      */
@@ -59,6 +61,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Minimum azimuth angle in degrees.
     /**
      * @return double
      */
@@ -68,6 +71,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Maximum azimuth angle in degrees.
     /**
      * @return double
      */
@@ -77,6 +81,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Maximum view-cone range in kilometers.
     /**
      * @return double
      */
@@ -86,6 +91,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Half angle in degrees for cone-style overlays.
     /**
      * @return double
      */
@@ -95,6 +101,7 @@ class SCNViewCone extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Dynamic range mode or expression used by the viewer.
     public function getDYNAMIC_RANGE()
     {
         $o = $this->__offset(16);

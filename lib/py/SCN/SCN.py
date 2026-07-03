@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Scenario — canonical scene composition and simulation state for external
+# Scenario - canonical scene composition and simulation state for external
 # scenario controls integrations. Domain records remain in their native SDS
 # schemas and are referenced or embedded here only as scenario content.
 class SCN(object):
@@ -31,6 +31,7 @@ class SCN(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Stable id for the scenario.
     # SCN
     def SCENARIO_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -38,6 +39,7 @@ class SCN(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Objects, annotations, and variables included in the scenario.
     # SCN
     def REFERENCES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -63,6 +65,7 @@ class SCN(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
+    # Imported event payload associated with the scenario.
     # SCN
     def EVENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -74,6 +77,7 @@ class SCN(object):
             return obj
         return None
 
+    # Zero-based focused reference index, or -1 when no index is focused.
     # SCN
     def FOCUSED_REFERENCE_INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -81,6 +85,7 @@ class SCN(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return -1
 
+    # Reference id of the currently focused scenario object.
     # SCN
     def FOCUSED_REFERENCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -88,6 +93,7 @@ class SCN(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Current simulation time as an ISO-8601 UTC timestamp.
     # SCN
     def SIM_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -95,6 +101,7 @@ class SCN(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Simulation time-rate multiplier.
     # SCN
     def SIM_SPEED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -102,6 +109,7 @@ class SCN(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True when the viewer should use an Earth-centered Earth-fixed frame.
     # SCN
     def USE_ECEF_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -109,6 +117,7 @@ class SCN(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Reference frame used for scenario propagation and display.
     # SCN
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -120,6 +129,7 @@ class SCN(object):
             return obj
         return None
 
+    # Command action requested for the scenario.
     # SCN
     def ACTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -127,6 +137,7 @@ class SCN(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Viewer camera and display state for the scenario.
     # SCN
     def VIEW_STATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -138,6 +149,7 @@ class SCN(object):
             return obj
         return None
 
+    # Asset-change notification payload for the scenario.
     # SCN
     def ASSETS_CHANGED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))

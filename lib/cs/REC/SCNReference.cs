@@ -18,6 +18,7 @@ public struct SCNReference : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNReference __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Stable scenario-local id for this reference.
   public string REFERENCE_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetREFERENCE_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -25,6 +26,7 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetREFERENCE_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetREFERENCE_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Human-readable display name for the reference.
   public string DISPLAY_NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDISPLAY_NAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -32,9 +34,13 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetDISPLAY_NAMEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetDISPLAY_NAMEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Category of object or annotation represented by this reference.
   public scenarioReferenceKind REFERENCE_KIND { get { int o = __p.__offset(8); return o != 0 ? (scenarioReferenceKind)__p.bb.GetSbyte(o + __p.bb_pos) : scenarioReferenceKind.UNKNOWN; } }
+  /// True when this reference represents a removal request.
   public bool REMOVE { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// NORAD catalog id for satellite references when available.
   public uint NORAD_CAT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator or provider object id when available.
   public string OBJECT_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJECT_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -42,6 +48,7 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// Country or owner label associated with the reference.
   public string COUNTRY { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOUNTRYBytes() { return __p.__vector_as_span<byte>(16, 1); }
@@ -49,20 +56,29 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetCOUNTRYBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetCOUNTRYArray() { return __p.__vector_as_array<byte>(16); }
+  /// Source labels or URIs that produced this reference.
   public string SOURCES(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SOURCESLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Data-mode labels associated with this reference.
   public string DATA_MODES(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int DATA_MODESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// TLE provenance and raw lines for satellite references.
   public SCNTleLines? TLES(int j) { int o = __p.__offset(22); return o != 0 ? (SCNTleLines?)(new SCNTleLines()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int TLESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Mean orbital elements associated with this reference.
   public OMM? MEAN_ELEMENTS(int j) { int o = __p.__offset(24); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int MEAN_ELEMENTSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// State vectors associated with this reference.
   public STV? STATES(int j) { int o = __p.__offset(26); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int STATESLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Maneuver records associated with this reference.
   public MNV? MANEUVERS(int j) { int o = __p.__offset(28); return o != 0 ? (MNV?)(new MNV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int MANEUVERSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Ground-site record associated with this reference.
   public SIT? SITE { get { int o = __p.__offset(30); return o != 0 ? (SIT?)(new SIT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Sensor record associated with this reference.
   public SEN? SENSOR { get { int o = __p.__offset(32); return o != 0 ? (SEN?)(new SEN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Sensor system id for references that identify a sensor by id.
   public string SENSOR_SYSTEM_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -70,6 +86,7 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetSENSOR_SYSTEM_IDArray() { return __p.__vector_as_array<byte>(34); }
+  /// Sensor id for references that identify a sensor by id.
   public string SENSOR_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
@@ -77,8 +94,11 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(36); }
+  /// Ground-site latitude in degrees when no SIT record is available.
   public double SITE_LATITUDE_DEG { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Ground-site longitude in degrees when no SIT record is available.
   public double SITE_LONGITUDE_DEG { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Scenario variable id for variable satellite references.
   public string VARIABLE_SATELLITE_ID { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVARIABLE_SATELLITE_IDBytes() { return __p.__vector_as_span<byte>(42, 1); }
@@ -86,6 +106,7 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetVARIABLE_SATELLITE_IDBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetVARIABLE_SATELLITE_IDArray() { return __p.__vector_as_array<byte>(42); }
+  /// Scenario variable id for variable site references.
   public string VARIABLE_SITE_ID { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVARIABLE_SITE_IDBytes() { return __p.__vector_as_span<byte>(44, 1); }
@@ -93,12 +114,18 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetVARIABLE_SITE_IDBytes() { return __p.__vector_as_arraysegment(44); }
 #endif
   public byte[] GetVARIABLE_SITE_IDArray() { return __p.__vector_as_array<byte>(44); }
+  /// Points of interest associated with this reference.
   public SCNPointOfInterest? POINTS(int j) { int o = __p.__offset(46); return o != 0 ? (SCNPointOfInterest?)(new SCNPointOfInterest()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int POINTSLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// View-cone overlay associated with this reference.
   public SCNViewCone? VIEW_CONE { get { int o = __p.__offset(48); return o != 0 ? (SCNViewCone?)(new SCNViewCone()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Sun-advantage target pairing for this reference.
   public SCNSunAdvantageTarget? SUN_ADVANTAGE_TARGET { get { int o = __p.__offset(50); return o != 0 ? (SCNSunAdvantageTarget?)(new SCNSunAdvantageTarget()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Exclusion-zone geometry associated with this reference.
   public SCNExclusionZone? EXCLUSION_ZONE { get { int o = __p.__offset(52); return o != 0 ? (SCNExclusionZone?)(new SCNExclusionZone()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Electro-optical observation record associated with this reference.
   public EOO? OBSERVATION_EO { get { int o = __p.__offset(54); return o != 0 ? (EOO?)(new EOO()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Radar observation record associated with this reference.
   public RDO? OBSERVATION_RADAR { get { int o = __p.__offset(56); return o != 0 ? (RDO?)(new RDO()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCNReference> CreateSCNReference(FlatBufferBuilder builder,

@@ -41,6 +41,7 @@ class VSTCameraOptions extends Table
         return $this;
     }
 
+    /// Camera frame relative to the focused target or default scene.
     /**
      * @return sbyte
      */
@@ -50,6 +51,7 @@ class VSTCameraOptions extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \viewerCameraFrameMode::DEFAULT;
     }
 
+    /// Satellite body alignment mode when focused on a satellite.
     /**
      * @return sbyte
      */
@@ -59,6 +61,7 @@ class VSTCameraOptions extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \viewerSatelliteAlignmentMode::UNKNOWN;
     }
 
+    /// Camera distance from the current target in kilometers.
     /**
      * @return double
      */
@@ -68,6 +71,7 @@ class VSTCameraOptions extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Camera orientation offset.
     public function getROTATION()
     {
         $obj = new VSTCameraRotation();

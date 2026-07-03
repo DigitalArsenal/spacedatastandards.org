@@ -8,12 +8,33 @@ export declare class SCNViewCone implements flatbuffers.IUnpackableObject<SCNVie
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNViewCone;
     static getRootAsSCNViewCone(bb: flatbuffers.ByteBuffer, obj?: SCNViewCone): SCNViewCone;
     static getSizePrefixedRootAsSCNViewCone(bb: flatbuffers.ByteBuffer, obj?: SCNViewCone): SCNViewCone;
+    /**
+     * Minimum elevation angle in degrees.
+     */
     MIN_ELEVATION_DEG(): number;
+    /**
+     * Maximum elevation angle in degrees.
+     */
     MAX_ELEVATION_DEG(): number;
+    /**
+     * Minimum azimuth angle in degrees.
+     */
     MIN_AZIMUTH_DEG(): number;
+    /**
+     * Maximum azimuth angle in degrees.
+     */
     MAX_AZIMUTH_DEG(): number;
+    /**
+     * Maximum view-cone range in kilometers.
+     */
     MAX_RANGE_KM(): number;
+    /**
+     * Half angle in degrees for cone-style overlays.
+     */
     HALF_ANGLE_DEG(): number;
+    /**
+     * Dynamic range mode or expression used by the viewer.
+     */
     DYNAMIC_RANGE(): string | null;
     DYNAMIC_RANGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSCNViewCone(builder: flatbuffers.Builder): void;

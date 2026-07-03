@@ -55,6 +55,7 @@ func (rcv *SCC) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Payload discriminator for the message carried by this envelope.
 func (rcv *SCC) MESSAGE_KIND() controlMessageKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -67,6 +68,7 @@ func (rcv *SCC) MessageKind() controlMessageKind {
 	return rcv.MESSAGE_KIND()
 }
 
+/// Payload discriminator for the message carried by this envelope.
 func (rcv *SCC) MutateMESSAGE_KIND(n controlMessageKind) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
@@ -75,6 +77,7 @@ func (rcv *SCC) MutateMessageKind(n controlMessageKind) bool {
 	return rcv.MutateMESSAGE_KIND(n)
 }
 
+/// Optional trace id for correlating messages across systems.
 func (rcv *SCC) TRACE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -87,6 +90,8 @@ func (rcv *SCC) TraceId() []byte {
 	return rcv.TRACE_ID()
 }
 
+/// Optional trace id for correlating messages across systems.
+/// Scenario list carried by setup or selection messages.
 func (rcv *SCC) SCENARIOS(obj *SCN, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -118,6 +123,8 @@ func (rcv *SCC) ScenariosLength() int {
 	return rcv.SCENARIOSLength()
 }
 
+/// Scenario list carried by setup or selection messages.
+/// Single scenario payload carried by setup or state messages.
 func (rcv *SCC) SCENARIO(obj *SCN) *SCN {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -135,6 +142,8 @@ func (rcv *SCC) Scenario(obj *SCN) *SCN {
 	return rcv.SCENARIO(obj)
 }
 
+/// Single scenario payload carried by setup or state messages.
+/// Request-current-state payload.
 func (rcv *SCC) REQUEST_STATE(obj *SCCRequestState) *SCCRequestState {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -152,6 +161,8 @@ func (rcv *SCC) RequestState(obj *SCCRequestState) *SCCRequestState {
 	return rcv.REQUEST_STATE(obj)
 }
 
+/// Request-current-state payload.
+/// Current-state response payload.
 func (rcv *SCC) STATE_RESPONSE(obj *SCCStateResponse) *SCCStateResponse {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -169,6 +180,8 @@ func (rcv *SCC) StateResponse(obj *SCCStateResponse) *SCCStateResponse {
 	return rcv.STATE_RESPONSE(obj)
 }
 
+/// Current-state response payload.
+/// Asset-picker request or acknowledgement payload.
 func (rcv *SCC) ASSET_PICKER(obj *SCCAssetPicker) *SCCAssetPicker {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -186,6 +199,8 @@ func (rcv *SCC) AssetPicker(obj *SCCAssetPicker) *SCCAssetPicker {
 	return rcv.ASSET_PICKER(obj)
 }
 
+/// Asset-picker request or acknowledgement payload.
+/// Startup readiness payload.
 func (rcv *SCC) READY(obj *SCCReady) *SCCReady {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -203,6 +218,7 @@ func (rcv *SCC) Ready(obj *SCCReady) *SCCReady {
 	return rcv.READY(obj)
 }
 
+/// Startup readiness payload.
 func SCCStart(builder *flatbuffers.Builder) {
 	builder.StartObject(8)
 }

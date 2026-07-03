@@ -27,20 +27,41 @@ public final class SCNPointOfInterest extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNPointOfInterest __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Display name for the point of interest.
+   */
   public String NAME() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Optional detail text shown with the point of interest.
+   */
   public String DESCRIPTION() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * UTC epoch associated with the point of interest.
+   */
   public String EPOCH() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Seconds before the epoch when highlighting begins.
+   */
   public double HIGHLIGHT_BEFORE_SEC() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Seconds after the epoch when highlighting remains active.
+   */
   public double HIGHLIGHT_AFTER_SEC() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Display color token for the point of interest.
+   */
   public String COLOR() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COLORAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Geodetic position for the point of interest.
+   */
   public SCNGeodeticPoint POSITION() { return POSITION(new SCNGeodeticPoint()); }
   public SCNGeodeticPoint POSITION(SCNGeodeticPoint obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

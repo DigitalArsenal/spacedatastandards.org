@@ -42,6 +42,7 @@ func (rcv *SCNViewCone) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Minimum elevation angle in degrees.
 func (rcv *SCNViewCone) MIN_ELEVATION_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,7 @@ func (rcv *SCNViewCone) MinElevationDeg() float64 {
 	return rcv.MIN_ELEVATION_DEG()
 }
 
+/// Minimum elevation angle in degrees.
 func (rcv *SCNViewCone) MutateMIN_ELEVATION_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
@@ -62,6 +64,7 @@ func (rcv *SCNViewCone) MutateMinElevationDeg(n float64) bool {
 	return rcv.MutateMIN_ELEVATION_DEG(n)
 }
 
+/// Maximum elevation angle in degrees.
 func (rcv *SCNViewCone) MAX_ELEVATION_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -74,6 +77,7 @@ func (rcv *SCNViewCone) MaxElevationDeg() float64 {
 	return rcv.MAX_ELEVATION_DEG()
 }
 
+/// Maximum elevation angle in degrees.
 func (rcv *SCNViewCone) MutateMAX_ELEVATION_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -82,6 +86,7 @@ func (rcv *SCNViewCone) MutateMaxElevationDeg(n float64) bool {
 	return rcv.MutateMAX_ELEVATION_DEG(n)
 }
 
+/// Minimum azimuth angle in degrees.
 func (rcv *SCNViewCone) MIN_AZIMUTH_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -94,6 +99,7 @@ func (rcv *SCNViewCone) MinAzimuthDeg() float64 {
 	return rcv.MIN_AZIMUTH_DEG()
 }
 
+/// Minimum azimuth angle in degrees.
 func (rcv *SCNViewCone) MutateMIN_AZIMUTH_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -102,6 +108,7 @@ func (rcv *SCNViewCone) MutateMinAzimuthDeg(n float64) bool {
 	return rcv.MutateMIN_AZIMUTH_DEG(n)
 }
 
+/// Maximum azimuth angle in degrees.
 func (rcv *SCNViewCone) MAX_AZIMUTH_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -114,6 +121,7 @@ func (rcv *SCNViewCone) MaxAzimuthDeg() float64 {
 	return rcv.MAX_AZIMUTH_DEG()
 }
 
+/// Maximum azimuth angle in degrees.
 func (rcv *SCNViewCone) MutateMAX_AZIMUTH_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -122,6 +130,7 @@ func (rcv *SCNViewCone) MutateMaxAzimuthDeg(n float64) bool {
 	return rcv.MutateMAX_AZIMUTH_DEG(n)
 }
 
+/// Maximum view-cone range in kilometers.
 func (rcv *SCNViewCone) MAX_RANGE_KM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -134,6 +143,7 @@ func (rcv *SCNViewCone) MaxRangeKm() float64 {
 	return rcv.MAX_RANGE_KM()
 }
 
+/// Maximum view-cone range in kilometers.
 func (rcv *SCNViewCone) MutateMAX_RANGE_KM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -142,6 +152,7 @@ func (rcv *SCNViewCone) MutateMaxRangeKm(n float64) bool {
 	return rcv.MutateMAX_RANGE_KM(n)
 }
 
+/// Half angle in degrees for cone-style overlays.
 func (rcv *SCNViewCone) HALF_ANGLE_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -154,6 +165,7 @@ func (rcv *SCNViewCone) HalfAngleDeg() float64 {
 	return rcv.HALF_ANGLE_DEG()
 }
 
+/// Half angle in degrees for cone-style overlays.
 func (rcv *SCNViewCone) MutateHALF_ANGLE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -162,6 +174,7 @@ func (rcv *SCNViewCone) MutateHalfAngleDeg(n float64) bool {
 	return rcv.MutateHALF_ANGLE_DEG(n)
 }
 
+/// Dynamic range mode or expression used by the viewer.
 func (rcv *SCNViewCone) DYNAMIC_RANGE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -174,6 +187,7 @@ func (rcv *SCNViewCone) DynamicRange() []byte {
 	return rcv.DYNAMIC_RANGE()
 }
 
+/// Dynamic range mode or expression used by the viewer.
 func SCNViewConeStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }

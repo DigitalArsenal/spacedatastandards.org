@@ -27,9 +27,15 @@ public final class SCCRequestState extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCCRequestState __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Request correlation id echoed by the matching state response.
+   */
   public String REQUEST_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REQUEST_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer REQUEST_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * State payload requested by the caller.
+   */
   public byte REQUEST_KIND() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
 
   public static int createSCCRequestState(FlatBufferBuilder builder,

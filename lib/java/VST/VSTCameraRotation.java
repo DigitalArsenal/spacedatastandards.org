@@ -28,13 +28,37 @@ public final class VSTCameraRotation extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VSTCameraRotation __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Yaw angle in degrees for Euler-angle camera imports.
+   */
   public double YAW_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pitch angle in degrees for Euler-angle camera imports.
+   */
   public double PITCH_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Roll angle in degrees for Euler-angle camera imports.
+   */
   public double ROLL_DEG() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion x component for camera orientation.
+   */
   public double QUATERNION_X() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion y component for camera orientation.
+   */
   public double QUATERNION_Y() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion z component for camera orientation.
+   */
   public double QUATERNION_Z() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion w component for camera orientation.
+   */
   public double QUATERNION_W() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when quaternion fields define the authoritative rotation.
+   */
   public boolean USES_QUATERNION() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
 
   public static int createVSTCameraRotation(FlatBufferBuilder builder,

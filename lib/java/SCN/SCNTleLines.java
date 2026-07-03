@@ -27,12 +27,21 @@ public final class SCNTleLines extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNTleLines __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * First TLE line exactly as imported.
+   */
   public String LINE1() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LINE1AsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer LINE1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Second TLE line exactly as imported.
+   */
   public String LINE2() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LINE2AsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer LINE2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Source label or URI for the imported TLE.
+   */
   public String SOURCE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }

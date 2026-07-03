@@ -29,61 +29,97 @@ class VSTDisplaySettings : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Active map rendering mode for the scenario viewer.
+     */
     val mapMode : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Show geosynchronous belt reference markers.
+     */
     val showGeoBeltMarkers : Boolean
         get() {
             val o = __offset(6)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show cislunar reference content.
+     */
     val showCisLunar : Boolean
         get() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show the equator overlay.
+     */
     val showEquator : Boolean
         get() {
             val o = __offset(10)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show latitude grid lines.
+     */
     val showLatitude : Boolean
         get() {
             val o = __offset(12)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show longitude grid lines.
+     */
     val showLongitude : Boolean
         get() {
             val o = __offset(14)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show body shadow-cone overlays.
+     */
     val showShadowCones : Boolean
         get() {
             val o = __offset(16)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show animated capture or GIF export controls.
+     */
     val showGifControls : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Render the atmospheric shell around the central body.
+     */
     val showAtmosphere : Boolean
         get() {
             val o = __offset(20)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Show the sun-direction indicator overlay.
+     */
     val showSunDirectionIndicator : Boolean
         get() {
             val o = __offset(22)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Render the starfield background.
+     */
     val useStarfield : Boolean
         get() {
             val o = __offset(24)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Render orbits as stitched continuous paths.
+     */
     val useStitchedOrbit : Boolean
         get() {
             val o = __offset(26)

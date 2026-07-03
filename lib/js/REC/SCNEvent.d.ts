@@ -12,14 +12,29 @@ export declare class SCNEvent implements flatbuffers.IUnpackableObject<SCNEventT
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNEvent;
     static getRootAsSCNEvent(bb: flatbuffers.ByteBuffer, obj?: SCNEvent): SCNEvent;
     static getSizePrefixedRootAsSCNEvent(bb: flatbuffers.ByteBuffer, obj?: SCNEvent): SCNEvent;
+    /**
+     * Stable id for the imported scenario event.
+     */
     EVENT_ID(): string | null;
     EVENT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Element sets associated with the event.
+     */
     ELSETS(index: number, obj?: OMM): OMM | null;
     elsetsLength(): number;
+    /**
+     * State vectors associated with the event.
+     */
     STATES(index: number, obj?: STV): STV | null;
     statesLength(): number;
+    /**
+     * Electro-optical observations associated with the event.
+     */
     EO_OBSERVATIONS(index: number, obj?: EOO): EOO | null;
     eoObservationsLength(): number;
+    /**
+     * Radar observations associated with the event.
+     */
     RADAR_OBSERVATIONS(index: number, obj?: RDO): RDO | null;
     radarObservationsLength(): number;
     static startSCNEvent(builder: flatbuffers.Builder): void;

@@ -30,11 +30,17 @@ class SCC : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Payload discriminator for the message carried by this envelope.
+     */
     val messageKind : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Optional trace id for correlating messages across systems.
+     */
     val traceId : String?
         get() {
             val o = __offset(6)
@@ -46,6 +52,9 @@ class SCC : Table() {
         }
     val traceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun traceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Scenario list carried by setup or selection messages.
+     */
     fun scenarios(j: Int) : SCN? = scenarios(SCN(), j)
     fun scenarios(obj: SCN, j: Int) : SCN? {
         val o = __offset(8)
@@ -59,6 +68,9 @@ class SCC : Table() {
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Single scenario payload carried by setup or state messages.
+     */
     val scenario : SCN? get() = scenario(SCN())
     fun scenario(obj: SCN) : SCN? {
         val o = __offset(10)
@@ -68,6 +80,9 @@ class SCC : Table() {
             null
         }
     }
+    /**
+     * Request-current-state payload.
+     */
     val requestState : SCCRequestState? get() = requestState(SCCRequestState())
     fun requestState(obj: SCCRequestState) : SCCRequestState? {
         val o = __offset(12)
@@ -77,6 +92,9 @@ class SCC : Table() {
             null
         }
     }
+    /**
+     * Current-state response payload.
+     */
     val stateResponse : SCCStateResponse? get() = stateResponse(SCCStateResponse())
     fun stateResponse(obj: SCCStateResponse) : SCCStateResponse? {
         val o = __offset(14)
@@ -86,6 +104,9 @@ class SCC : Table() {
             null
         }
     }
+    /**
+     * Asset-picker request or acknowledgement payload.
+     */
     val assetPicker : SCCAssetPicker? get() = assetPicker(SCCAssetPicker())
     fun assetPicker(obj: SCCAssetPicker) : SCCAssetPicker? {
         val o = __offset(16)
@@ -95,6 +116,9 @@ class SCC : Table() {
             null
         }
     }
+    /**
+     * Startup readiness payload.
+     */
     val ready : SCCReady? get() = ready(SCCReady())
     fun ready(obj: SCCReady) : SCCReady? {
         val o = __offset(18)

@@ -42,6 +42,7 @@ func (rcv *SCNTleLines) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// First TLE line exactly as imported.
 func (rcv *SCNTleLines) LINE1() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCNTleLines) Line1() []byte {
 	return rcv.LINE1()
 }
 
+/// First TLE line exactly as imported.
+/// Second TLE line exactly as imported.
 func (rcv *SCNTleLines) LINE2() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -66,6 +69,8 @@ func (rcv *SCNTleLines) Line2() []byte {
 	return rcv.LINE2()
 }
 
+/// Second TLE line exactly as imported.
+/// Source label or URI for the imported TLE.
 func (rcv *SCNTleLines) SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,7 @@ func (rcv *SCNTleLines) Source() []byte {
 	return rcv.SOURCE()
 }
 
+/// Source label or URI for the imported TLE.
 func SCNTleLinesStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }

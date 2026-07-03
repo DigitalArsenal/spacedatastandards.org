@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 class VST extends Table
 {
     /**
@@ -41,6 +41,7 @@ class VST extends Table
         return $this;
     }
 
+    /// Camera settings for the current viewer state.
     public function getCAMERA()
     {
         $obj = new VSTCameraOptions();
@@ -48,6 +49,7 @@ class VST extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Display toggles and map style for the current viewer state.
     public function getDISPLAY_SETTINGS()
     {
         $obj = new VSTDisplaySettings();
@@ -55,12 +57,14 @@ class VST extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Reference id of the currently focused scenario object.
     public function getFOCUSED_REFERENCE_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Zero-based focused reference index, or -1 when no index is focused.
     /**
      * @return int
      */

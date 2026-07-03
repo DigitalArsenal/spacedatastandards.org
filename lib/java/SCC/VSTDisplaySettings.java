@@ -27,17 +27,53 @@ public final class VSTDisplaySettings extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VSTDisplaySettings __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Active map rendering mode for the scenario viewer.
+   */
   public byte MAP_MODE() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Show geosynchronous belt reference markers.
+   */
   public boolean SHOW_GEO_BELT_MARKERS() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show cislunar reference content.
+   */
   public boolean SHOW_CIS_LUNAR() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show the equator overlay.
+   */
   public boolean SHOW_EQUATOR() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show latitude grid lines.
+   */
   public boolean SHOW_LATITUDE() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show longitude grid lines.
+   */
   public boolean SHOW_LONGITUDE() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show body shadow-cone overlays.
+   */
   public boolean SHOW_SHADOW_CONES() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show animated capture or GIF export controls.
+   */
   public boolean SHOW_GIF_CONTROLS() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Render the atmospheric shell around the central body.
+   */
   public boolean SHOW_ATMOSPHERE() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Show the sun-direction indicator overlay.
+   */
   public boolean SHOW_SUN_DIRECTION_INDICATOR() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Render the starfield background.
+   */
   public boolean USE_STARFIELD() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Render orbits as stitched continuous paths.
+   */
   public boolean USE_STITCHED_ORBIT() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createVSTDisplaySettings(FlatBufferBuilder builder,

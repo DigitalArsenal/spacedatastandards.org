@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Scenario — canonical scene composition and simulation state for external
+ * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
  */
@@ -30,30 +30,66 @@ public final class SCN extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCN __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Stable id for the scenario.
+   */
   public String SCENARIO_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SCENARIO_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer SCENARIO_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Objects, annotations, and variables included in the scenario.
+   */
   public SCNReference REFERENCES(int j) { return REFERENCES(new SCNReference(), j); }
   public SCNReference REFERENCES(SCNReference obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int REFERENCESLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector referencesVector() { return referencesVector(new SCNReference.Vector()); }
   public SCNReference.Vector referencesVector(SCNReference.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Imported event payload associated with the scenario.
+   */
   public SCNEvent EVENT() { return EVENT(new SCNEvent()); }
   public SCNEvent EVENT(SCNEvent obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Zero-based focused reference index, or -1 when no index is focused.
+   */
   public int FOCUSED_REFERENCE_INDEX() { int o = __offset(10); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Reference id of the currently focused scenario object.
+   */
   public String FOCUSED_REFERENCE_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FOCUSED_REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer FOCUSED_REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Current simulation time as an ISO-8601 UTC timestamp.
+   */
   public String SIM_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SIM_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer SIM_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Simulation time-rate multiplier.
+   */
   public double SIM_SPEED() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when the viewer should use an Earth-centered Earth-fixed frame.
+   */
   public boolean USE_ECEF_FRAME() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Reference frame used for scenario propagation and display.
+   */
   public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
   public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Command action requested for the scenario.
+   */
   public byte ACTION() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Viewer camera and display state for the scenario.
+   */
   public VST VIEW_STATE() { return VIEW_STATE(new VST()); }
   public VST VIEW_STATE(VST obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Asset-change notification payload for the scenario.
+   */
   public SCNAssetsChanged ASSETS_CHANGED() { return ASSETS_CHANGED(new SCNAssetsChanged()); }
   public SCNAssetsChanged ASSETS_CHANGED(SCNAssetsChanged obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 

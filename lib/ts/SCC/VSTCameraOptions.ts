@@ -30,21 +30,33 @@ static getSizePrefixedRootAsVSTCameraOptions(bb:flatbuffers.ByteBuffer, obj?:VST
   return (obj || new VSTCameraOptions()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Camera frame relative to the focused target or default scene.
+ */
 CAMERA_FRAME_MODE():viewerCameraFrameMode {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : viewerCameraFrameMode.DEFAULT;
 }
 
+/**
+ * Satellite body alignment mode when focused on a satellite.
+ */
 SATELLITE_ALIGNMENT():viewerSatelliteAlignmentMode {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : viewerSatelliteAlignmentMode.UNKNOWN;
 }
 
+/**
+ * Camera distance from the current target in kilometers.
+ */
 DISTANCE_FROM_TARGET_KM():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Camera orientation offset.
+ */
 ROTATION(obj?:VSTCameraRotation):VSTCameraRotation|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? (obj || new VSTCameraRotation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;

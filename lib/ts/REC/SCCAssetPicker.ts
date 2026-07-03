@@ -28,6 +28,9 @@ static getSizePrefixedRootAsSCCAssetPicker(bb:flatbuffers.ByteBuffer, obj?:SCCAs
   return (obj || new SCCAssetPicker()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Request correlation id for the asset-picker exchange.
+ */
 REQUEST_ID():string|null
 REQUEST_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -35,11 +38,17 @@ REQUEST_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Initial catalog tab to display in the asset picker.
+ */
 CATALOG_TAB():assetCatalogTab {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : assetCatalogTab.UNKNOWN;
 }
 
+/**
+ * True when the receiver accepted or completed the picker request.
+ */
 ACKNOWLEDGED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;

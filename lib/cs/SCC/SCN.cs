@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 public struct SCN : IFlatbufferObject
@@ -21,6 +21,7 @@ public struct SCN : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCN __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Stable id for the scenario.
   public string SCENARIO_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSCENARIO_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -28,10 +29,14 @@ public struct SCN : IFlatbufferObject
   public ArraySegment<byte>? GetSCENARIO_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetSCENARIO_IDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Objects, annotations, and variables included in the scenario.
   public SCNReference? REFERENCES(int j) { int o = __p.__offset(6); return o != 0 ? (SCNReference?)(new SCNReference()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int REFERENCESLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Imported event payload associated with the scenario.
   public SCNEvent? EVENT { get { int o = __p.__offset(8); return o != 0 ? (SCNEvent?)(new SCNEvent()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   public int FOCUSED_REFERENCE_INDEX { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
+  /// Reference id of the currently focused scenario object.
   public string FOCUSED_REFERENCE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFOCUSED_REFERENCE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -39,6 +44,7 @@ public struct SCN : IFlatbufferObject
   public ArraySegment<byte>? GetFOCUSED_REFERENCE_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetFOCUSED_REFERENCE_IDArray() { return __p.__vector_as_array<byte>(12); }
+  /// Current simulation time as an ISO-8601 UTC timestamp.
   public string SIM_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSIM_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -46,11 +52,17 @@ public struct SCN : IFlatbufferObject
   public ArraySegment<byte>? GetSIM_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetSIM_TIMEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Simulation time-rate multiplier.
   public double SIM_SPEED { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when the viewer should use an Earth-centered Earth-fixed frame.
   public bool USE_ECEF_FRAME { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Reference frame used for scenario propagation and display.
   public RFM? REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Command action requested for the scenario.
   public scenarioActionCode ACTION { get { int o = __p.__offset(22); return o != 0 ? (scenarioActionCode)__p.bb.GetSbyte(o + __p.bb_pos) : scenarioActionCode.NONE; } }
+  /// Viewer camera and display state for the scenario.
   public VST? VIEW_STATE { get { int o = __p.__offset(24); return o != 0 ? (VST?)(new VST()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Asset-change notification payload for the scenario.
   public SCNAssetsChanged? ASSETS_CHANGED { get { int o = __p.__offset(26); return o != 0 ? (SCNAssetsChanged?)(new SCNAssetsChanged()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCN> CreateSCN(FlatBufferBuilder builder,

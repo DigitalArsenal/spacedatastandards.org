@@ -17,17 +17,29 @@ public struct VSTDisplaySettings : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VSTDisplaySettings __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Active map rendering mode for the scenario viewer.
   public viewerMapMode MAP_MODE { get { int o = __p.__offset(4); return o != 0 ? (viewerMapMode)__p.bb.GetSbyte(o + __p.bb_pos) : viewerMapMode.UNKNOWN; } }
+  /// Show geosynchronous belt reference markers.
   public bool SHOW_GEO_BELT_MARKERS { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show cislunar reference content.
   public bool SHOW_CIS_LUNAR { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show the equator overlay.
   public bool SHOW_EQUATOR { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show latitude grid lines.
   public bool SHOW_LATITUDE { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show longitude grid lines.
   public bool SHOW_LONGITUDE { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show body shadow-cone overlays.
   public bool SHOW_SHADOW_CONES { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show animated capture or GIF export controls.
   public bool SHOW_GIF_CONTROLS { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Render the atmospheric shell around the central body.
   public bool SHOW_ATMOSPHERE { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Show the sun-direction indicator overlay.
   public bool SHOW_SUN_DIRECTION_INDICATOR { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Render the starfield background.
   public bool USE_STARFIELD { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Render orbits as stitched continuous paths.
   public bool USE_STITCHED_ORBIT { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<VSTDisplaySettings> CreateVSTDisplaySettings(FlatBufferBuilder builder,

@@ -29,6 +29,9 @@ class SCNTleLines : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * First TLE line exactly as imported.
+     */
     val line1 : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SCNTleLines : Table() {
         }
     val line1AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun line1InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Second TLE line exactly as imported.
+     */
     val line2 : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class SCNTleLines : Table() {
         }
     val line2AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun line2InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Source label or URI for the imported TLE.
+     */
     val source : String?
         get() {
             val o = __offset(8)

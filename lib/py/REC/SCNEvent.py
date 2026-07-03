@@ -29,6 +29,7 @@ class SCNEvent(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Stable id for the imported scenario event.
     # SCNEvent
     def EVENT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNEvent(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Element sets associated with the event.
     # SCNEvent
     def ELSETS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -61,6 +63,7 @@ class SCNEvent(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
+    # State vectors associated with the event.
     # SCNEvent
     def STATES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -86,6 +89,7 @@ class SCNEvent(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
+    # Electro-optical observations associated with the event.
     # SCNEvent
     def EO_OBSERVATIONS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -111,6 +115,7 @@ class SCNEvent(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
+    # Radar observations associated with the event.
     # SCNEvent
     def RADAR_OBSERVATIONS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))

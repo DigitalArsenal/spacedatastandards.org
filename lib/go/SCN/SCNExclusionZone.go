@@ -43,6 +43,7 @@ func (rcv *SCNExclusionZone) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Display label for the exclusion zone.
 func (rcv *SCNExclusionZone) LABEL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,6 +56,8 @@ func (rcv *SCNExclusionZone) Label() []byte {
 	return rcv.LABEL()
 }
 
+/// Display label for the exclusion zone.
+/// Fill color token for the exclusion zone.
 func (rcv *SCNExclusionZone) FILL_COLOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -67,6 +70,8 @@ func (rcv *SCNExclusionZone) FillColor() []byte {
 	return rcv.FILL_COLOR()
 }
 
+/// Fill color token for the exclusion zone.
+/// Label color token for the exclusion zone.
 func (rcv *SCNExclusionZone) LABEL_COLOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -79,6 +84,8 @@ func (rcv *SCNExclusionZone) LabelColor() []byte {
 	return rcv.LABEL_COLOR()
 }
 
+/// Label color token for the exclusion zone.
+/// True when the exclusion-zone polygon should be filled.
 func (rcv *SCNExclusionZone) IS_FILLED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -91,6 +98,7 @@ func (rcv *SCNExclusionZone) IsFilled() bool {
 	return rcv.IS_FILLED()
 }
 
+/// True when the exclusion-zone polygon should be filled.
 func (rcv *SCNExclusionZone) MutateIS_FILLED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
@@ -99,6 +107,7 @@ func (rcv *SCNExclusionZone) MutateIsFilled(n bool) bool {
 	return rcv.MutateIS_FILLED(n)
 }
 
+/// Simple geodetic polygon points for imported zones.
 func (rcv *SCNExclusionZone) POINTS(obj *SCNGeodeticPoint, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -130,6 +139,8 @@ func (rcv *SCNExclusionZone) PointsLength() int {
 	return rcv.POINTSLength()
 }
 
+/// Simple geodetic polygon points for imported zones.
+/// Canonical GeoJSON geometry for the exclusion zone.
 func (rcv *SCNExclusionZone) BOUNDARY(obj *GJNGeometry) *GJNGeometry {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -147,6 +158,7 @@ func (rcv *SCNExclusionZone) Boundary(obj *GJNGeometry) *GJNGeometry {
 	return rcv.BOUNDARY(obj)
 }
 
+/// Canonical GeoJSON geometry for the exclusion zone.
 func SCNExclusionZoneStart(builder *flatbuffers.Builder) {
 	builder.StartObject(6)
 }

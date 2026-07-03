@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Viewer State — display and camera state associated with a scenario.
+# Viewer State - display and camera state associated with a scenario.
 class VST(object):
     __slots__ = ['_tab']
 
@@ -29,6 +29,7 @@ class VST(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Camera settings for the current viewer state.
     # VST
     def CAMERA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -40,6 +41,7 @@ class VST(object):
             return obj
         return None
 
+    # Display toggles and map style for the current viewer state.
     # VST
     def DISPLAY_SETTINGS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -51,6 +53,7 @@ class VST(object):
             return obj
         return None
 
+    # Reference id of the currently focused scenario object.
     # VST
     def FOCUSED_REFERENCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -58,6 +61,7 @@ class VST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Zero-based focused reference index, or -1 when no index is focused.
     # VST
     def FOCUSED_REFERENCE_INDEX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

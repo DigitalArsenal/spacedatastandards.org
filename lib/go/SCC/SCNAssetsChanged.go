@@ -42,6 +42,7 @@ func (rcv *SCNAssetsChanged) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Satellite references added by the asset-change event.
 func (rcv *SCNAssetsChanged) ADDED_SATELLITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -73,6 +74,8 @@ func (rcv *SCNAssetsChanged) AddedSatellitesLength() int {
 	return rcv.ADDED_SATELLITESLength()
 }
 
+/// Satellite references added by the asset-change event.
+/// Ground-site references added by the asset-change event.
 func (rcv *SCNAssetsChanged) ADDED_GROUND_SITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -104,6 +107,8 @@ func (rcv *SCNAssetsChanged) AddedGroundSitesLength() int {
 	return rcv.ADDED_GROUND_SITESLength()
 }
 
+/// Ground-site references added by the asset-change event.
+/// Satellite references removed by the asset-change event.
 func (rcv *SCNAssetsChanged) REMOVED_SATELLITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -135,6 +140,8 @@ func (rcv *SCNAssetsChanged) RemovedSatellitesLength() int {
 	return rcv.REMOVED_SATELLITESLength()
 }
 
+/// Satellite references removed by the asset-change event.
+/// Ground-site references removed by the asset-change event.
 func (rcv *SCNAssetsChanged) REMOVED_GROUND_SITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -166,6 +173,8 @@ func (rcv *SCNAssetsChanged) RemovedGroundSitesLength() int {
 	return rcv.REMOVED_GROUND_SITESLength()
 }
 
+/// Ground-site references removed by the asset-change event.
+/// Current satellite references after the asset-change event.
 func (rcv *SCNAssetsChanged) SATELLITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -197,6 +206,8 @@ func (rcv *SCNAssetsChanged) SatellitesLength() int {
 	return rcv.SATELLITESLength()
 }
 
+/// Current satellite references after the asset-change event.
+/// Current ground-site references after the asset-change event.
 func (rcv *SCNAssetsChanged) GROUND_SITES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -228,6 +239,8 @@ func (rcv *SCNAssetsChanged) GroundSitesLength() int {
 	return rcv.GROUND_SITESLength()
 }
 
+/// Current ground-site references after the asset-change event.
+/// Current full reference set after the asset-change event.
 func (rcv *SCNAssetsChanged) REFERENCES(obj *SCNReference, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -259,6 +272,7 @@ func (rcv *SCNAssetsChanged) ReferencesLength() int {
 	return rcv.REFERENCESLength()
 }
 
+/// Current full reference set after the asset-change event.
 func SCNAssetsChangedStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }

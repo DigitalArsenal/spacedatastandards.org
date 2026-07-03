@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Viewer State — display and camera state associated with a scenario.
+/// Viewer State - display and camera state associated with a scenario.
 public struct VST : IFlatbufferObject
 {
   private Table __p;
@@ -19,8 +19,11 @@ public struct VST : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public VST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Camera settings for the current viewer state.
   public VSTCameraOptions? CAMERA { get { int o = __p.__offset(4); return o != 0 ? (VSTCameraOptions?)(new VSTCameraOptions()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Display toggles and map style for the current viewer state.
   public VSTDisplaySettings? DISPLAY_SETTINGS { get { int o = __p.__offset(6); return o != 0 ? (VSTDisplaySettings?)(new VSTDisplaySettings()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Reference id of the currently focused scenario object.
   public string FOCUSED_REFERENCE_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFOCUSED_REFERENCE_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -28,6 +31,7 @@ public struct VST : IFlatbufferObject
   public ArraySegment<byte>? GetFOCUSED_REFERENCE_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetFOCUSED_REFERENCE_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   public int FOCUSED_REFERENCE_INDEX { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
 
   public static Offset<VST> CreateVST(FlatBufferBuilder builder,

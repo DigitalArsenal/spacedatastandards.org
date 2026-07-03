@@ -43,6 +43,7 @@ func (rcv *SCNReference) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Stable scenario-local id for this reference.
 func (rcv *SCNReference) REFERENCE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,6 +56,8 @@ func (rcv *SCNReference) ReferenceId() []byte {
 	return rcv.REFERENCE_ID()
 }
 
+/// Stable scenario-local id for this reference.
+/// Human-readable display name for the reference.
 func (rcv *SCNReference) DISPLAY_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -67,6 +70,8 @@ func (rcv *SCNReference) DisplayName() []byte {
 	return rcv.DISPLAY_NAME()
 }
 
+/// Human-readable display name for the reference.
+/// Category of object or annotation represented by this reference.
 func (rcv *SCNReference) REFERENCE_KIND() scenarioReferenceKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -79,6 +84,7 @@ func (rcv *SCNReference) ReferenceKind() scenarioReferenceKind {
 	return rcv.REFERENCE_KIND()
 }
 
+/// Category of object or annotation represented by this reference.
 func (rcv *SCNReference) MutateREFERENCE_KIND(n scenarioReferenceKind) bool {
 	return rcv._tab.MutateInt8Slot(8, int8(n))
 }
@@ -87,6 +93,7 @@ func (rcv *SCNReference) MutateReferenceKind(n scenarioReferenceKind) bool {
 	return rcv.MutateREFERENCE_KIND(n)
 }
 
+/// True when this reference represents a removal request.
 func (rcv *SCNReference) REMOVE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -99,6 +106,7 @@ func (rcv *SCNReference) Remove() bool {
 	return rcv.REMOVE()
 }
 
+/// True when this reference represents a removal request.
 func (rcv *SCNReference) MutateREMOVE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
@@ -107,6 +115,7 @@ func (rcv *SCNReference) MutateRemove(n bool) bool {
 	return rcv.MutateREMOVE(n)
 }
 
+/// NORAD catalog id for satellite references when available.
 func (rcv *SCNReference) NORAD_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -119,6 +128,7 @@ func (rcv *SCNReference) NoradCatId() uint32 {
 	return rcv.NORAD_CAT_ID()
 }
 
+/// NORAD catalog id for satellite references when available.
 func (rcv *SCNReference) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
 }
@@ -127,6 +137,7 @@ func (rcv *SCNReference) MutateNoradCatId(n uint32) bool {
 	return rcv.MutateNORAD_CAT_ID(n)
 }
 
+/// International designator or provider object id when available.
 func (rcv *SCNReference) OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -139,6 +150,8 @@ func (rcv *SCNReference) ObjectId() []byte {
 	return rcv.OBJECT_ID()
 }
 
+/// International designator or provider object id when available.
+/// Country or owner label associated with the reference.
 func (rcv *SCNReference) COUNTRY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -151,6 +164,8 @@ func (rcv *SCNReference) Country() []byte {
 	return rcv.COUNTRY()
 }
 
+/// Country or owner label associated with the reference.
+/// Source labels or URIs that produced this reference.
 func (rcv *SCNReference) SOURCES(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -176,6 +191,8 @@ func (rcv *SCNReference) SourcesLength() int {
 	return rcv.SOURCESLength()
 }
 
+/// Source labels or URIs that produced this reference.
+/// Data-mode labels associated with this reference.
 func (rcv *SCNReference) DATA_MODES(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -201,6 +218,8 @@ func (rcv *SCNReference) DataModesLength() int {
 	return rcv.DATA_MODESLength()
 }
 
+/// Data-mode labels associated with this reference.
+/// TLE provenance and raw lines for satellite references.
 func (rcv *SCNReference) TLES(obj *SCNTleLines, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -232,6 +251,8 @@ func (rcv *SCNReference) TlesLength() int {
 	return rcv.TLESLength()
 }
 
+/// TLE provenance and raw lines for satellite references.
+/// Mean orbital elements associated with this reference.
 func (rcv *SCNReference) MEAN_ELEMENTS(obj *OMM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -263,6 +284,8 @@ func (rcv *SCNReference) MeanElementsLength() int {
 	return rcv.MEAN_ELEMENTSLength()
 }
 
+/// Mean orbital elements associated with this reference.
+/// State vectors associated with this reference.
 func (rcv *SCNReference) STATES(obj *STV, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -294,6 +317,8 @@ func (rcv *SCNReference) StatesLength() int {
 	return rcv.STATESLength()
 }
 
+/// State vectors associated with this reference.
+/// Maneuver records associated with this reference.
 func (rcv *SCNReference) MANEUVERS(obj *MNV, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -325,6 +350,8 @@ func (rcv *SCNReference) ManeuversLength() int {
 	return rcv.MANEUVERSLength()
 }
 
+/// Maneuver records associated with this reference.
+/// Ground-site record associated with this reference.
 func (rcv *SCNReference) SITE(obj *SIT) *SIT {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -342,6 +369,8 @@ func (rcv *SCNReference) Site(obj *SIT) *SIT {
 	return rcv.SITE(obj)
 }
 
+/// Ground-site record associated with this reference.
+/// Sensor record associated with this reference.
 func (rcv *SCNReference) SENSOR(obj *SEN) *SEN {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -359,6 +388,8 @@ func (rcv *SCNReference) Sensor(obj *SEN) *SEN {
 	return rcv.SENSOR(obj)
 }
 
+/// Sensor record associated with this reference.
+/// Sensor system id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_SYSTEM_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -371,6 +402,8 @@ func (rcv *SCNReference) SensorSystemId() []byte {
 	return rcv.SENSOR_SYSTEM_ID()
 }
 
+/// Sensor system id for references that identify a sensor by id.
+/// Sensor id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -383,6 +416,8 @@ func (rcv *SCNReference) SensorId() []byte {
 	return rcv.SENSOR_ID()
 }
 
+/// Sensor id for references that identify a sensor by id.
+/// Ground-site latitude in degrees when no SIT record is available.
 func (rcv *SCNReference) SITE_LATITUDE_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -395,6 +430,7 @@ func (rcv *SCNReference) SiteLatitudeDeg() float64 {
 	return rcv.SITE_LATITUDE_DEG()
 }
 
+/// Ground-site latitude in degrees when no SIT record is available.
 func (rcv *SCNReference) MutateSITE_LATITUDE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
@@ -403,6 +439,7 @@ func (rcv *SCNReference) MutateSiteLatitudeDeg(n float64) bool {
 	return rcv.MutateSITE_LATITUDE_DEG(n)
 }
 
+/// Ground-site longitude in degrees when no SIT record is available.
 func (rcv *SCNReference) SITE_LONGITUDE_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -415,6 +452,7 @@ func (rcv *SCNReference) SiteLongitudeDeg() float64 {
 	return rcv.SITE_LONGITUDE_DEG()
 }
 
+/// Ground-site longitude in degrees when no SIT record is available.
 func (rcv *SCNReference) MutateSITE_LONGITUDE_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
@@ -423,6 +461,7 @@ func (rcv *SCNReference) MutateSiteLongitudeDeg(n float64) bool {
 	return rcv.MutateSITE_LONGITUDE_DEG(n)
 }
 
+/// Scenario variable id for variable satellite references.
 func (rcv *SCNReference) VARIABLE_SATELLITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -435,6 +474,8 @@ func (rcv *SCNReference) VariableSatelliteId() []byte {
 	return rcv.VARIABLE_SATELLITE_ID()
 }
 
+/// Scenario variable id for variable satellite references.
+/// Scenario variable id for variable site references.
 func (rcv *SCNReference) VARIABLE_SITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -447,6 +488,8 @@ func (rcv *SCNReference) VariableSiteId() []byte {
 	return rcv.VARIABLE_SITE_ID()
 }
 
+/// Scenario variable id for variable site references.
+/// Points of interest associated with this reference.
 func (rcv *SCNReference) POINTS(obj *SCNPointOfInterest, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -478,6 +521,8 @@ func (rcv *SCNReference) PointsLength() int {
 	return rcv.POINTSLength()
 }
 
+/// Points of interest associated with this reference.
+/// View-cone overlay associated with this reference.
 func (rcv *SCNReference) VIEW_CONE(obj *SCNViewCone) *SCNViewCone {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -495,6 +540,8 @@ func (rcv *SCNReference) ViewCone(obj *SCNViewCone) *SCNViewCone {
 	return rcv.VIEW_CONE(obj)
 }
 
+/// View-cone overlay associated with this reference.
+/// Sun-advantage target pairing for this reference.
 func (rcv *SCNReference) SUN_ADVANTAGE_TARGET(obj *SCNSunAdvantageTarget) *SCNSunAdvantageTarget {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -512,6 +559,8 @@ func (rcv *SCNReference) SunAdvantageTarget(obj *SCNSunAdvantageTarget) *SCNSunA
 	return rcv.SUN_ADVANTAGE_TARGET(obj)
 }
 
+/// Sun-advantage target pairing for this reference.
+/// Exclusion-zone geometry associated with this reference.
 func (rcv *SCNReference) EXCLUSION_ZONE(obj *SCNExclusionZone) *SCNExclusionZone {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -529,6 +578,8 @@ func (rcv *SCNReference) ExclusionZone(obj *SCNExclusionZone) *SCNExclusionZone 
 	return rcv.EXCLUSION_ZONE(obj)
 }
 
+/// Exclusion-zone geometry associated with this reference.
+/// Electro-optical observation record associated with this reference.
 func (rcv *SCNReference) OBSERVATION_EO(obj *EOO) *EOO {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -546,6 +597,8 @@ func (rcv *SCNReference) ObservationEo(obj *EOO) *EOO {
 	return rcv.OBSERVATION_EO(obj)
 }
 
+/// Electro-optical observation record associated with this reference.
+/// Radar observation record associated with this reference.
 func (rcv *SCNReference) OBSERVATION_RADAR(obj *RDO) *RDO {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -563,6 +616,7 @@ func (rcv *SCNReference) ObservationRadar(obj *RDO) *RDO {
 	return rcv.OBSERVATION_RADAR(obj)
 }
 
+/// Radar observation record associated with this reference.
 func SCNReferenceStart(builder *flatbuffers.Builder) {
 	builder.StartObject(27)
 }

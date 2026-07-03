@@ -78,34 +78,42 @@
       "properties": {
         "YAW_DEG": {
           "type": "number",
+          "description": "Yaw angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "PITCH_DEG": {
           "type": "number",
+          "description": "Pitch angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "ROLL_DEG": {
           "type": "number",
+          "description": "Roll angle in degrees for Euler-angle camera imports.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_X": {
           "type": "number",
+          "description": "Quaternion x component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_Y": {
           "type": "number",
+          "description": "Quaternion y component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_Z": {
           "type": "number",
+          "description": "Quaternion z component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "QUATERNION_W": {
           "type": "number",
+          "description": "Quaternion w component for camera orientation.",
           "x-flatbuffer-type": "double"
         },
         "USES_QUATERNION": {
           "type": "boolean",
+          "description": "True when quaternion fields define the authoritative rotation.",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "true"
         }
@@ -118,6 +126,7 @@
       "properties": {
         "MAP_MODE": {
           "$ref": "#/definitions/viewerMapMode",
+          "description": "Active map rendering mode for the scenario viewer.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -137,46 +146,57 @@
         },
         "SHOW_GEO_BELT_MARKERS": {
           "type": "boolean",
+          "description": "Show geosynchronous belt reference markers.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_CIS_LUNAR": {
           "type": "boolean",
+          "description": "Show cislunar reference content.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_EQUATOR": {
           "type": "boolean",
+          "description": "Show the equator overlay.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_LATITUDE": {
           "type": "boolean",
+          "description": "Show latitude grid lines.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_LONGITUDE": {
           "type": "boolean",
+          "description": "Show longitude grid lines.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_SHADOW_CONES": {
           "type": "boolean",
+          "description": "Show body shadow-cone overlays.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_GIF_CONTROLS": {
           "type": "boolean",
+          "description": "Show animated capture or GIF export controls.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_ATMOSPHERE": {
           "type": "boolean",
+          "description": "Render the atmospheric shell around the central body.",
           "x-flatbuffer-type": "bool"
         },
         "SHOW_SUN_DIRECTION_INDICATOR": {
           "type": "boolean",
+          "description": "Show the sun-direction indicator overlay.",
           "x-flatbuffer-type": "bool"
         },
         "USE_STARFIELD": {
           "type": "boolean",
+          "description": "Render the starfield background.",
           "x-flatbuffer-type": "bool"
         },
         "USE_STITCHED_ORBIT": {
           "type": "boolean",
+          "description": "Render orbits as stitched continuous paths.",
           "x-flatbuffer-type": "bool"
         }
       },
@@ -188,6 +208,7 @@
       "properties": {
         "CAMERA_FRAME_MODE": {
           "$ref": "#/definitions/viewerCameraFrameMode",
+          "description": "Camera frame relative to the focused target or default scene.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -207,6 +228,7 @@
         },
         "SATELLITE_ALIGNMENT": {
           "$ref": "#/definitions/viewerSatelliteAlignmentMode",
+          "description": "Satellite body alignment mode when focused on a satellite.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -223,10 +245,12 @@
         },
         "DISTANCE_FROM_TARGET_KM": {
           "type": "number",
+          "description": "Camera distance from the current target in kilometers.",
           "x-flatbuffer-type": "double"
         },
         "ROTATION": {
           "$ref": "#/definitions/VSTCameraRotation",
+          "description": "Camera orientation offset.",
           "x-flatbuffer-type": "VSTCameraRotation"
         }
       },
@@ -234,24 +258,28 @@
     },
     "VST": {
       "type": "object",
-      "description": "Viewer State \u2014 display and camera state associated with a scenario.",
+      "description": "Viewer State - display and camera state associated with a scenario.",
       "properties": {
         "CAMERA": {
           "$ref": "#/definitions/VSTCameraOptions",
+          "description": "Camera settings for the current viewer state.",
           "x-flatbuffer-type": "VSTCameraOptions"
         },
         "DISPLAY_SETTINGS": {
           "$ref": "#/definitions/VSTDisplaySettings",
+          "description": "Display toggles and map style for the current viewer state.",
           "x-flatbuffer-type": "VSTDisplaySettings"
         },
         "FOCUSED_REFERENCE_ID": {
           "type": "string",
+          "description": "Reference id of the currently focused scenario object.",
           "x-flatbuffer-type": "string"
         },
         "FOCUSED_REFERENCE_INDEX": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "Zero-based focused reference index, or -1 when no index is focused.",
           "x-flatbuffer-type": "int",
           "x-flatbuffer-default": "-1"
         }
@@ -5968,14 +5996,17 @@
       "properties": {
         "LINE1": {
           "type": "string",
+          "description": "First TLE line exactly as imported.",
           "x-flatbuffer-type": "string"
         },
         "LINE2": {
           "type": "string",
+          "description": "Second TLE line exactly as imported.",
           "x-flatbuffer-type": "string"
         },
         "SOURCE": {
           "type": "string",
+          "description": "Source label or URI for the imported TLE.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -5987,14 +6018,17 @@
       "properties": {
         "LATITUDE_DEG": {
           "type": "number",
+          "description": "Latitude in degrees.",
           "x-flatbuffer-type": "double"
         },
         "LONGITUDE_DEG": {
           "type": "number",
+          "description": "Longitude in degrees.",
           "x-flatbuffer-type": "double"
         },
         "ALTITUDE_KM": {
           "type": "number",
+          "description": "Altitude above the reference ellipsoid in kilometers.",
           "x-flatbuffer-type": "double"
         }
       },
@@ -6006,30 +6040,37 @@
       "properties": {
         "NAME": {
           "type": "string",
+          "description": "Display name for the point of interest.",
           "x-flatbuffer-type": "string"
         },
         "DESCRIPTION": {
           "type": "string",
+          "description": "Optional detail text shown with the point of interest.",
           "x-flatbuffer-type": "string"
         },
         "EPOCH": {
           "type": "string",
+          "description": "UTC epoch associated with the point of interest.",
           "x-flatbuffer-type": "string"
         },
         "HIGHLIGHT_BEFORE_SEC": {
           "type": "number",
+          "description": "Seconds before the epoch when highlighting begins.",
           "x-flatbuffer-type": "double"
         },
         "HIGHLIGHT_AFTER_SEC": {
           "type": "number",
+          "description": "Seconds after the epoch when highlighting remains active.",
           "x-flatbuffer-type": "double"
         },
         "COLOR": {
           "type": "string",
+          "description": "Display color token for the point of interest.",
           "x-flatbuffer-type": "string"
         },
         "POSITION": {
           "$ref": "#/definitions/SCNGeodeticPoint",
+          "description": "Geodetic position for the point of interest.",
           "x-flatbuffer-type": "SCNGeodeticPoint"
         }
       },
@@ -6041,30 +6082,37 @@
       "properties": {
         "MIN_ELEVATION_DEG": {
           "type": "number",
+          "description": "Minimum elevation angle in degrees.",
           "x-flatbuffer-type": "double"
         },
         "MAX_ELEVATION_DEG": {
           "type": "number",
+          "description": "Maximum elevation angle in degrees.",
           "x-flatbuffer-type": "double"
         },
         "MIN_AZIMUTH_DEG": {
           "type": "number",
+          "description": "Minimum azimuth angle in degrees.",
           "x-flatbuffer-type": "double"
         },
         "MAX_AZIMUTH_DEG": {
           "type": "number",
+          "description": "Maximum azimuth angle in degrees.",
           "x-flatbuffer-type": "double"
         },
         "MAX_RANGE_KM": {
           "type": "number",
+          "description": "Maximum view-cone range in kilometers.",
           "x-flatbuffer-type": "double"
         },
         "HALF_ANGLE_DEG": {
           "type": "number",
+          "description": "Half angle in degrees for cone-style overlays.",
           "x-flatbuffer-type": "double"
         },
         "DYNAMIC_RANGE": {
           "type": "string",
+          "description": "Dynamic range mode or expression used by the viewer.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -6076,14 +6124,17 @@
       "properties": {
         "TARGET_REFERENCE_ID": {
           "type": "string",
+          "description": "Scenario reference id of the target object.",
           "x-flatbuffer-type": "string"
         },
         "TARGET_NORAD_CAT_ID": {
           "type": "integer",
+          "description": "NORAD catalog id of the target satellite when available.",
           "x-flatbuffer-type": "uint32"
         },
         "GROUND_SITE_ID": {
           "type": "string",
+          "description": "Ground site id associated with the target pairing.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -6095,18 +6146,22 @@
       "properties": {
         "LABEL": {
           "type": "string",
+          "description": "Display label for the exclusion zone.",
           "x-flatbuffer-type": "string"
         },
         "FILL_COLOR": {
           "type": "string",
+          "description": "Fill color token for the exclusion zone.",
           "x-flatbuffer-type": "string"
         },
         "LABEL_COLOR": {
           "type": "string",
+          "description": "Label color token for the exclusion zone.",
           "x-flatbuffer-type": "string"
         },
         "IS_FILLED": {
           "type": "boolean",
+          "description": "True when the exclusion-zone polygon should be filled.",
           "x-flatbuffer-type": "bool"
         },
         "POINTS": {
@@ -6114,10 +6169,12 @@
           "items": {
             "$ref": "#/definitions/SCNGeodeticPoint"
           },
+          "description": "Simple geodetic polygon points for imported zones.",
           "x-flatbuffer-type": "[SCNGeodeticPoint]"
         },
         "BOUNDARY": {
           "$ref": "#/definitions/GJNGeometry",
+          "description": "Canonical GeoJSON geometry for the exclusion zone.",
           "x-flatbuffer-type": "GJNGeometry"
         }
       },
@@ -6129,14 +6186,17 @@
       "properties": {
         "REFERENCE_ID": {
           "type": "string",
+          "description": "Stable scenario-local id for this reference.",
           "x-flatbuffer-type": "string"
         },
         "DISPLAY_NAME": {
           "type": "string",
+          "description": "Human-readable display name for the reference.",
           "x-flatbuffer-type": "string"
         },
         "REFERENCE_KIND": {
           "$ref": "#/definitions/scenarioReferenceKind",
+          "description": "Category of object or annotation represented by this reference.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -6171,18 +6231,22 @@
         },
         "REMOVE": {
           "type": "boolean",
+          "description": "True when this reference represents a removal request.",
           "x-flatbuffer-type": "bool"
         },
         "NORAD_CAT_ID": {
           "type": "integer",
+          "description": "NORAD catalog id for satellite references when available.",
           "x-flatbuffer-type": "uint32"
         },
         "OBJECT_ID": {
           "type": "string",
+          "description": "International designator or provider object id when available.",
           "x-flatbuffer-type": "string"
         },
         "COUNTRY": {
           "type": "string",
+          "description": "Country or owner label associated with the reference.",
           "x-flatbuffer-type": "string"
         },
         "SOURCES": {
@@ -6190,6 +6254,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source labels or URIs that produced this reference.",
           "x-flatbuffer-type": "[string]"
         },
         "DATA_MODES": {
@@ -6197,6 +6262,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Data-mode labels associated with this reference.",
           "x-flatbuffer-type": "[string]"
         },
         "TLES": {
@@ -6204,6 +6270,7 @@
           "items": {
             "$ref": "#/definitions/SCNTleLines"
           },
+          "description": "TLE provenance and raw lines for satellite references.",
           "x-flatbuffer-type": "[SCNTleLines]"
         },
         "MEAN_ELEMENTS": {
@@ -6211,6 +6278,7 @@
           "items": {
             "$ref": "#/definitions/OMM"
           },
+          "description": "Mean orbital elements associated with this reference.",
           "x-flatbuffer-type": "[OMM]"
         },
         "STATES": {
@@ -6218,6 +6286,7 @@
           "items": {
             "$ref": "#/definitions/STV"
           },
+          "description": "State vectors associated with this reference.",
           "x-flatbuffer-type": "[STV]"
         },
         "MANEUVERS": {
@@ -6225,38 +6294,47 @@
           "items": {
             "$ref": "#/definitions/MNV"
           },
+          "description": "Maneuver records associated with this reference.",
           "x-flatbuffer-type": "[MNV]"
         },
         "SITE": {
           "$ref": "#/definitions/SIT",
+          "description": "Ground-site record associated with this reference.",
           "x-flatbuffer-type": "SIT"
         },
         "SENSOR": {
           "$ref": "#/definitions/SEN",
+          "description": "Sensor record associated with this reference.",
           "x-flatbuffer-type": "SEN"
         },
         "SENSOR_SYSTEM_ID": {
           "type": "string",
+          "description": "Sensor system id for references that identify a sensor by id.",
           "x-flatbuffer-type": "string"
         },
         "SENSOR_ID": {
           "type": "string",
+          "description": "Sensor id for references that identify a sensor by id.",
           "x-flatbuffer-type": "string"
         },
         "SITE_LATITUDE_DEG": {
           "type": "number",
+          "description": "Ground-site latitude in degrees when no SIT record is available.",
           "x-flatbuffer-type": "double"
         },
         "SITE_LONGITUDE_DEG": {
           "type": "number",
+          "description": "Ground-site longitude in degrees when no SIT record is available.",
           "x-flatbuffer-type": "double"
         },
         "VARIABLE_SATELLITE_ID": {
           "type": "string",
+          "description": "Scenario variable id for variable satellite references.",
           "x-flatbuffer-type": "string"
         },
         "VARIABLE_SITE_ID": {
           "type": "string",
+          "description": "Scenario variable id for variable site references.",
           "x-flatbuffer-type": "string"
         },
         "POINTS": {
@@ -6264,26 +6342,32 @@
           "items": {
             "$ref": "#/definitions/SCNPointOfInterest"
           },
+          "description": "Points of interest associated with this reference.",
           "x-flatbuffer-type": "[SCNPointOfInterest]"
         },
         "VIEW_CONE": {
           "$ref": "#/definitions/SCNViewCone",
+          "description": "View-cone overlay associated with this reference.",
           "x-flatbuffer-type": "SCNViewCone"
         },
         "SUN_ADVANTAGE_TARGET": {
           "$ref": "#/definitions/SCNSunAdvantageTarget",
+          "description": "Sun-advantage target pairing for this reference.",
           "x-flatbuffer-type": "SCNSunAdvantageTarget"
         },
         "EXCLUSION_ZONE": {
           "$ref": "#/definitions/SCNExclusionZone",
+          "description": "Exclusion-zone geometry associated with this reference.",
           "x-flatbuffer-type": "SCNExclusionZone"
         },
         "OBSERVATION_EO": {
           "$ref": "#/definitions/EOO",
+          "description": "Electro-optical observation record associated with this reference.",
           "x-flatbuffer-type": "EOO"
         },
         "OBSERVATION_RADAR": {
           "$ref": "#/definitions/RDO",
+          "description": "Radar observation record associated with this reference.",
           "x-flatbuffer-type": "RDO"
         }
       },
@@ -6295,6 +6379,7 @@
       "properties": {
         "EVENT_ID": {
           "type": "string",
+          "description": "Stable id for the imported scenario event.",
           "x-flatbuffer-type": "string"
         },
         "ELSETS": {
@@ -6302,6 +6387,7 @@
           "items": {
             "$ref": "#/definitions/OMM"
           },
+          "description": "Element sets associated with the event.",
           "x-flatbuffer-type": "[OMM]"
         },
         "STATES": {
@@ -6309,6 +6395,7 @@
           "items": {
             "$ref": "#/definitions/STV"
           },
+          "description": "State vectors associated with the event.",
           "x-flatbuffer-type": "[STV]"
         },
         "EO_OBSERVATIONS": {
@@ -6316,6 +6403,7 @@
           "items": {
             "$ref": "#/definitions/EOO"
           },
+          "description": "Electro-optical observations associated with the event.",
           "x-flatbuffer-type": "[EOO]"
         },
         "RADAR_OBSERVATIONS": {
@@ -6323,6 +6411,7 @@
           "items": {
             "$ref": "#/definitions/RDO"
           },
+          "description": "Radar observations associated with the event.",
           "x-flatbuffer-type": "[RDO]"
         }
       },
@@ -6337,6 +6426,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Satellite references added by the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "ADDED_GROUND_SITES": {
@@ -6344,6 +6434,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Ground-site references added by the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "REMOVED_SATELLITES": {
@@ -6351,6 +6442,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Satellite references removed by the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "REMOVED_GROUND_SITES": {
@@ -6358,6 +6450,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Ground-site references removed by the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "SATELLITES": {
@@ -6365,6 +6458,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Current satellite references after the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "GROUND_SITES": {
@@ -6372,6 +6466,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Current ground-site references after the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "REFERENCES": {
@@ -6379,6 +6474,7 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Current full reference set after the asset-change event.",
           "x-flatbuffer-type": "[SCNReference]"
         }
       },
@@ -6390,6 +6486,7 @@
       "properties": {
         "SCENARIO_ID": {
           "type": "string",
+          "description": "Stable id for the scenario.",
           "x-flatbuffer-type": "string"
         },
         "REFERENCES": {
@@ -6397,39 +6494,48 @@
           "items": {
             "$ref": "#/definitions/SCNReference"
           },
+          "description": "Objects, annotations, and variables included in the scenario.",
           "x-flatbuffer-type": "[SCNReference]"
         },
         "EVENT": {
           "$ref": "#/definitions/SCNEvent",
+          "description": "Imported event payload associated with the scenario.",
           "x-flatbuffer-type": "SCNEvent"
         },
         "FOCUSED_REFERENCE_INDEX": {
           "type": "integer",
+          "description": "Zero-based focused reference index, or -1 when no index is focused.",
           "x-flatbuffer-type": "int",
           "x-flatbuffer-default": "-1"
         },
         "FOCUSED_REFERENCE_ID": {
           "type": "string",
+          "description": "Reference id of the currently focused scenario object.",
           "x-flatbuffer-type": "string"
         },
         "SIM_TIME": {
           "type": "string",
+          "description": "Current simulation time as an ISO-8601 UTC timestamp.",
           "x-flatbuffer-type": "string"
         },
         "SIM_SPEED": {
           "type": "number",
+          "description": "Simulation time-rate multiplier.",
           "x-flatbuffer-type": "double"
         },
         "USE_ECEF_FRAME": {
           "type": "boolean",
+          "description": "True when the viewer should use an Earth-centered Earth-fixed frame.",
           "x-flatbuffer-type": "bool"
         },
         "REFERENCE_FRAME": {
           "$ref": "#/definitions/RFM",
+          "description": "Reference frame used for scenario propagation and display.",
           "x-flatbuffer-type": "RFM"
         },
         "ACTION": {
           "$ref": "#/definitions/scenarioActionCode",
+          "description": "Command action requested for the scenario.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -6446,14 +6552,16 @@
         },
         "VIEW_STATE": {
           "$ref": "#/definitions/VST",
+          "description": "Viewer camera and display state for the scenario.",
           "x-flatbuffer-type": "VST"
         },
         "ASSETS_CHANGED": {
           "$ref": "#/definitions/SCNAssetsChanged",
+          "description": "Asset-change notification payload for the scenario.",
           "x-flatbuffer-type": "SCNAssetsChanged"
         }
       },
-      "description": "Scenario \u2014 canonical scene composition and simulation state for external scenario controls integrations. Domain records remain in their native SDS schemas and are referenced or embedded here only as scenario content."
+      "description": "Scenario - canonical scene composition and simulation state for external scenario controls integrations. Domain records remain in their native SDS schemas and are referenced or embedded here only as scenario content."
     }
   },
   "$ref": "#/definitions/SCN",

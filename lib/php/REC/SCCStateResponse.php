@@ -42,12 +42,14 @@ class SCCStateResponse extends Table
         return $this;
     }
 
+    /// Request correlation id from the matching state request.
     public function getREQUEST_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// State payload represented by this response.
     /**
      * @return sbyte
      */
@@ -57,6 +59,7 @@ class SCCStateResponse extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \stateRequestKind::UNKNOWN;
     }
 
+    /// Full scenario state for scenario-state responses.
     public function getSCENARIO()
     {
         $obj = new SCN();
@@ -64,6 +67,7 @@ class SCCStateResponse extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Reference-list payload for reference-only responses.
     /**
      * @returnVectorOffset
      */
@@ -83,6 +87,7 @@ class SCCStateResponse extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Zero-based focused reference index, or -1 when no index is focused.
     /**
      * @return int
      */
@@ -92,6 +97,7 @@ class SCCStateResponse extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
     }
 
+    /// Human-readable error message when state cannot be returned.
     public function getERROR_MESSAGE()
     {
         $o = $this->__offset(14);

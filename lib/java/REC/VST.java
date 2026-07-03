@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Viewer State — display and camera state associated with a scenario.
+ * Viewer State - display and camera state associated with a scenario.
  */
 @SuppressWarnings("unused")
 public final class VST extends com.google.flatbuffers.Table {
@@ -28,13 +28,25 @@ public final class VST extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public VST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Camera settings for the current viewer state.
+   */
   public VSTCameraOptions CAMERA() { return CAMERA(new VSTCameraOptions()); }
   public VSTCameraOptions CAMERA(VSTCameraOptions obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Display toggles and map style for the current viewer state.
+   */
   public VSTDisplaySettings DISPLAY_SETTINGS() { return DISPLAY_SETTINGS(new VSTDisplaySettings()); }
   public VSTDisplaySettings DISPLAY_SETTINGS(VSTDisplaySettings obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Reference id of the currently focused scenario object.
+   */
   public String FOCUSED_REFERENCE_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FOCUSED_REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer FOCUSED_REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Zero-based focused reference index, or -1 when no index is focused.
+   */
   public int FOCUSED_REFERENCE_INDEX() { int o = __offset(10); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
 
   public static int createVST(FlatBufferBuilder builder,

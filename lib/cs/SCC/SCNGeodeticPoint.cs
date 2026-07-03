@@ -17,8 +17,11 @@ public struct SCNGeodeticPoint : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNGeodeticPoint __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Latitude in degrees.
   public double LATITUDE_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude in degrees.
   public double LONGITUDE_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Altitude above the reference ellipsoid in kilometers.
   public double ALTITUDE_KM { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<SCNGeodeticPoint> CreateSCNGeodeticPoint(FlatBufferBuilder builder,

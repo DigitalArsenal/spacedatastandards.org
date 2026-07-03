@@ -27,36 +27,57 @@ public final class SCNAssetsChanged extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNAssetsChanged __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Satellite references added by the asset-change event.
+   */
   public SCNReference ADDED_SATELLITES(int j) { return ADDED_SATELLITES(new SCNReference(), j); }
   public SCNReference ADDED_SATELLITES(SCNReference obj, int j) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int ADDED_SATELLITESLength() { int o = __offset(4); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector addedSatellitesVector() { return addedSatellitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector addedSatellitesVector(SCNReference.Vector obj) { int o = __offset(4); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ground-site references added by the asset-change event.
+   */
   public SCNReference ADDED_GROUND_SITES(int j) { return ADDED_GROUND_SITES(new SCNReference(), j); }
   public SCNReference ADDED_GROUND_SITES(SCNReference obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int ADDED_GROUND_SITESLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector addedGroundSitesVector() { return addedGroundSitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector addedGroundSitesVector(SCNReference.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Satellite references removed by the asset-change event.
+   */
   public SCNReference REMOVED_SATELLITES(int j) { return REMOVED_SATELLITES(new SCNReference(), j); }
   public SCNReference REMOVED_SATELLITES(SCNReference obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int REMOVED_SATELLITESLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector removedSatellitesVector() { return removedSatellitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector removedSatellitesVector(SCNReference.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Ground-site references removed by the asset-change event.
+   */
   public SCNReference REMOVED_GROUND_SITES(int j) { return REMOVED_GROUND_SITES(new SCNReference(), j); }
   public SCNReference REMOVED_GROUND_SITES(SCNReference obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int REMOVED_GROUND_SITESLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector removedGroundSitesVector() { return removedGroundSitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector removedGroundSitesVector(SCNReference.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Current satellite references after the asset-change event.
+   */
   public SCNReference SATELLITES(int j) { return SATELLITES(new SCNReference(), j); }
   public SCNReference SATELLITES(SCNReference obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int SATELLITESLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector satellitesVector() { return satellitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector satellitesVector(SCNReference.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Current ground-site references after the asset-change event.
+   */
   public SCNReference GROUND_SITES(int j) { return GROUND_SITES(new SCNReference(), j); }
   public SCNReference GROUND_SITES(SCNReference obj, int j) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int GROUND_SITESLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector groundSitesVector() { return groundSitesVector(new SCNReference.Vector()); }
   public SCNReference.Vector groundSitesVector(SCNReference.Vector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Current full reference set after the asset-change event.
+   */
   public SCNReference REFERENCES(int j) { return REFERENCES(new SCNReference(), j); }
   public SCNReference REFERENCES(SCNReference obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int REFERENCESLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }

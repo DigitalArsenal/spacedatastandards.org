@@ -17,12 +17,19 @@ public struct SCNViewCone : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNViewCone __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Minimum elevation angle in degrees.
   public double MIN_ELEVATION_DEG { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum elevation angle in degrees.
   public double MAX_ELEVATION_DEG { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Minimum azimuth angle in degrees.
   public double MIN_AZIMUTH_DEG { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum azimuth angle in degrees.
   public double MAX_AZIMUTH_DEG { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum view-cone range in kilometers.
   public double MAX_RANGE_KM { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Half angle in degrees for cone-style overlays.
   public double HALF_ANGLE_DEG { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Dynamic range mode or expression used by the viewer.
   public string DYNAMIC_RANGE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDYNAMIC_RANGEBytes() { return __p.__vector_as_span<byte>(16, 1); }

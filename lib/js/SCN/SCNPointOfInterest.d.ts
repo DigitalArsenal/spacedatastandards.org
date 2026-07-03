@@ -9,16 +9,37 @@ export declare class SCNPointOfInterest implements flatbuffers.IUnpackableObject
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNPointOfInterest;
     static getRootAsSCNPointOfInterest(bb: flatbuffers.ByteBuffer, obj?: SCNPointOfInterest): SCNPointOfInterest;
     static getSizePrefixedRootAsSCNPointOfInterest(bb: flatbuffers.ByteBuffer, obj?: SCNPointOfInterest): SCNPointOfInterest;
+    /**
+     * Display name for the point of interest.
+     */
     NAME(): string | null;
     NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Optional detail text shown with the point of interest.
+     */
     DESCRIPTION(): string | null;
     DESCRIPTION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * UTC epoch associated with the point of interest.
+     */
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Seconds before the epoch when highlighting begins.
+     */
     HIGHLIGHT_BEFORE_SEC(): number;
+    /**
+     * Seconds after the epoch when highlighting remains active.
+     */
     HIGHLIGHT_AFTER_SEC(): number;
+    /**
+     * Display color token for the point of interest.
+     */
     COLOR(): string | null;
     COLOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Geodetic position for the point of interest.
+     */
     POSITION(obj?: SCNGeodeticPoint): SCNGeodeticPoint | null;
     static startSCNPointOfInterest(builder: flatbuffers.Builder): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;

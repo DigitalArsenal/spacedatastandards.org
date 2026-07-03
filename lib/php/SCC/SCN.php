@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 class SCN extends Table
@@ -43,12 +43,14 @@ class SCN extends Table
         return $this;
     }
 
+    /// Stable id for the scenario.
     public function getSCENARIO_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Objects, annotations, and variables included in the scenario.
     /**
      * @returnVectorOffset
      */
@@ -68,6 +70,7 @@ class SCN extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Imported event payload associated with the scenario.
     public function getEVENT()
     {
         $obj = new SCNEvent();
@@ -75,6 +78,7 @@ class SCN extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Zero-based focused reference index, or -1 when no index is focused.
     /**
      * @return int
      */
@@ -84,18 +88,21 @@ class SCN extends Table
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
     }
 
+    /// Reference id of the currently focused scenario object.
     public function getFOCUSED_REFERENCE_ID()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Current simulation time as an ISO-8601 UTC timestamp.
     public function getSIM_TIME()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Simulation time-rate multiplier.
     /**
      * @return double
      */
@@ -105,6 +112,7 @@ class SCN extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True when the viewer should use an Earth-centered Earth-fixed frame.
     /**
      * @return bool
      */
@@ -114,6 +122,7 @@ class SCN extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Reference frame used for scenario propagation and display.
     public function getREFERENCE_FRAME()
     {
         $obj = new RFM();
@@ -121,6 +130,7 @@ class SCN extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Command action requested for the scenario.
     /**
      * @return sbyte
      */
@@ -130,6 +140,7 @@ class SCN extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \scenarioActionCode::NONE;
     }
 
+    /// Viewer camera and display state for the scenario.
     public function getVIEW_STATE()
     {
         $obj = new VST();
@@ -137,6 +148,7 @@ class SCN extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Asset-change notification payload for the scenario.
     public function getASSETS_CHANGED()
     {
         $obj = new SCNAssetsChanged();

@@ -274,6 +274,7 @@ impl<'a> SCNTleLines<'a> {
     }
   }
 
+  /// First TLE line exactly as imported.
   #[inline]
   pub fn LINE1(&self) -> Option<&'a str> {
     // Safety:
@@ -281,6 +282,7 @@ impl<'a> SCNTleLines<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNTleLines::VT_LINE1, None)}
   }
+  /// Second TLE line exactly as imported.
   #[inline]
   pub fn LINE2(&self) -> Option<&'a str> {
     // Safety:
@@ -288,6 +290,7 @@ impl<'a> SCNTleLines<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNTleLines::VT_LINE2, None)}
   }
+  /// Source label or URI for the imported TLE.
   #[inline]
   pub fn SOURCE(&self) -> Option<&'a str> {
     // Safety:
@@ -452,6 +455,7 @@ impl<'a> SCNGeodeticPoint<'a> {
     }
   }
 
+  /// Latitude in degrees.
   #[inline]
   pub fn LATITUDE_DEG(&self) -> f64 {
     // Safety:
@@ -459,6 +463,7 @@ impl<'a> SCNGeodeticPoint<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LATITUDE_DEG, Some(0.0)).unwrap()}
   }
+  /// Longitude in degrees.
   #[inline]
   pub fn LONGITUDE_DEG(&self) -> f64 {
     // Safety:
@@ -466,6 +471,7 @@ impl<'a> SCNGeodeticPoint<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LONGITUDE_DEG, Some(0.0)).unwrap()}
   }
+  /// Altitude above the reference ellipsoid in kilometers.
   #[inline]
   pub fn ALTITUDE_KM(&self) -> f64 {
     // Safety:
@@ -650,6 +656,7 @@ impl<'a> SCNPointOfInterest<'a> {
     }
   }
 
+  /// Display name for the point of interest.
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -657,6 +664,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPointOfInterest::VT_NAME, None)}
   }
+  /// Optional detail text shown with the point of interest.
   #[inline]
   pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
@@ -664,6 +672,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPointOfInterest::VT_DESCRIPTION, None)}
   }
+  /// UTC epoch associated with the point of interest.
   #[inline]
   pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
@@ -671,6 +680,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPointOfInterest::VT_EPOCH, None)}
   }
+  /// Seconds before the epoch when highlighting begins.
   #[inline]
   pub fn HIGHLIGHT_BEFORE_SEC(&self) -> f64 {
     // Safety:
@@ -678,6 +688,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_BEFORE_SEC, Some(0.0)).unwrap()}
   }
+  /// Seconds after the epoch when highlighting remains active.
   #[inline]
   pub fn HIGHLIGHT_AFTER_SEC(&self) -> f64 {
     // Safety:
@@ -685,6 +696,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNPointOfInterest::VT_HIGHLIGHT_AFTER_SEC, Some(0.0)).unwrap()}
   }
+  /// Display color token for the point of interest.
   #[inline]
   pub fn COLOR(&self) -> Option<&'a str> {
     // Safety:
@@ -692,6 +704,7 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPointOfInterest::VT_COLOR, None)}
   }
+  /// Geodetic position for the point of interest.
   #[inline]
   pub fn POSITION(&self) -> Option<SCNGeodeticPoint<'a>> {
     // Safety:
@@ -926,6 +939,7 @@ impl<'a> SCNViewCone<'a> {
     }
   }
 
+  /// Minimum elevation angle in degrees.
   #[inline]
   pub fn MIN_ELEVATION_DEG(&self) -> f64 {
     // Safety:
@@ -933,6 +947,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_ELEVATION_DEG, Some(0.0)).unwrap()}
   }
+  /// Maximum elevation angle in degrees.
   #[inline]
   pub fn MAX_ELEVATION_DEG(&self) -> f64 {
     // Safety:
@@ -940,6 +955,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_ELEVATION_DEG, Some(0.0)).unwrap()}
   }
+  /// Minimum azimuth angle in degrees.
   #[inline]
   pub fn MIN_AZIMUTH_DEG(&self) -> f64 {
     // Safety:
@@ -947,6 +963,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_MIN_AZIMUTH_DEG, Some(0.0)).unwrap()}
   }
+  /// Maximum azimuth angle in degrees.
   #[inline]
   pub fn MAX_AZIMUTH_DEG(&self) -> f64 {
     // Safety:
@@ -954,6 +971,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_AZIMUTH_DEG, Some(0.0)).unwrap()}
   }
+  /// Maximum view-cone range in kilometers.
   #[inline]
   pub fn MAX_RANGE_KM(&self) -> f64 {
     // Safety:
@@ -961,6 +979,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_MAX_RANGE_KM, Some(0.0)).unwrap()}
   }
+  /// Half angle in degrees for cone-style overlays.
   #[inline]
   pub fn HALF_ANGLE_DEG(&self) -> f64 {
     // Safety:
@@ -968,6 +987,7 @@ impl<'a> SCNViewCone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNViewCone::VT_HALF_ANGLE_DEG, Some(0.0)).unwrap()}
   }
+  /// Dynamic range mode or expression used by the viewer.
   #[inline]
   pub fn DYNAMIC_RANGE(&self) -> Option<&'a str> {
     // Safety:
@@ -1180,6 +1200,7 @@ impl<'a> SCNSunAdvantageTarget<'a> {
     }
   }
 
+  /// Scenario reference id of the target object.
   #[inline]
   pub fn TARGET_REFERENCE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1187,6 +1208,7 @@ impl<'a> SCNSunAdvantageTarget<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNSunAdvantageTarget::VT_TARGET_REFERENCE_ID, None)}
   }
+  /// NORAD catalog id of the target satellite when available.
   #[inline]
   pub fn TARGET_NORAD_CAT_ID(&self) -> u32 {
     // Safety:
@@ -1194,6 +1216,7 @@ impl<'a> SCNSunAdvantageTarget<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(SCNSunAdvantageTarget::VT_TARGET_NORAD_CAT_ID, Some(0)).unwrap()}
   }
+  /// Ground site id associated with the target pairing.
   #[inline]
   pub fn GROUND_SITE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1379,6 +1402,7 @@ impl<'a> SCNExclusionZone<'a> {
     }
   }
 
+  /// Display label for the exclusion zone.
   #[inline]
   pub fn LABEL(&self) -> Option<&'a str> {
     // Safety:
@@ -1386,6 +1410,7 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNExclusionZone::VT_LABEL, None)}
   }
+  /// Fill color token for the exclusion zone.
   #[inline]
   pub fn FILL_COLOR(&self) -> Option<&'a str> {
     // Safety:
@@ -1393,6 +1418,7 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNExclusionZone::VT_FILL_COLOR, None)}
   }
+  /// Label color token for the exclusion zone.
   #[inline]
   pub fn LABEL_COLOR(&self) -> Option<&'a str> {
     // Safety:
@@ -1400,6 +1426,7 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNExclusionZone::VT_LABEL_COLOR, None)}
   }
+  /// True when the exclusion-zone polygon should be filled.
   #[inline]
   pub fn IS_FILLED(&self) -> bool {
     // Safety:
@@ -1407,6 +1434,7 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SCNExclusionZone::VT_IS_FILLED, Some(false)).unwrap()}
   }
+  /// Simple geodetic polygon points for imported zones.
   #[inline]
   pub fn POINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint<'a>>>> {
     // Safety:
@@ -1414,6 +1442,7 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>>>(SCNExclusionZone::VT_POINTS, None)}
   }
+  /// Canonical GeoJSON geometry for the exclusion zone.
   #[inline]
   pub fn BOUNDARY(&self) -> Option<GJNGeometry<'a>> {
     // Safety:
@@ -1759,6 +1788,7 @@ impl<'a> SCNReference<'a> {
     }
   }
 
+  /// Stable scenario-local id for this reference.
   #[inline]
   pub fn REFERENCE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1766,6 +1796,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_REFERENCE_ID, None)}
   }
+  /// Human-readable display name for the reference.
   #[inline]
   pub fn DISPLAY_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -1773,6 +1804,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_DISPLAY_NAME, None)}
   }
+  /// Category of object or annotation represented by this reference.
   #[inline]
   pub fn REFERENCE_KIND(&self) -> scenarioReferenceKind {
     // Safety:
@@ -1780,6 +1812,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<scenarioReferenceKind>(SCNReference::VT_REFERENCE_KIND, Some(scenarioReferenceKind::UNKNOWN)).unwrap()}
   }
+  /// True when this reference represents a removal request.
   #[inline]
   pub fn REMOVE(&self) -> bool {
     // Safety:
@@ -1787,6 +1820,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SCNReference::VT_REMOVE, Some(false)).unwrap()}
   }
+  /// NORAD catalog id for satellite references when available.
   #[inline]
   pub fn NORAD_CAT_ID(&self) -> u32 {
     // Safety:
@@ -1794,6 +1828,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(SCNReference::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
+  /// International designator or provider object id when available.
   #[inline]
   pub fn OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1801,6 +1836,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_OBJECT_ID, None)}
   }
+  /// Country or owner label associated with the reference.
   #[inline]
   pub fn COUNTRY(&self) -> Option<&'a str> {
     // Safety:
@@ -1808,6 +1844,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_COUNTRY, None)}
   }
+  /// Source labels or URIs that produced this reference.
   #[inline]
   pub fn SOURCES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -1815,6 +1852,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNReference::VT_SOURCES, None)}
   }
+  /// Data-mode labels associated with this reference.
   #[inline]
   pub fn DATA_MODES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -1822,6 +1860,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SCNReference::VT_DATA_MODES, None)}
   }
+  /// TLE provenance and raw lines for satellite references.
   #[inline]
   pub fn TLES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNTleLines<'a>>>> {
     // Safety:
@@ -1829,6 +1868,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNTleLines>>>>(SCNReference::VT_TLES, None)}
   }
+  /// Mean orbital elements associated with this reference.
   #[inline]
   pub fn MEAN_ELEMENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>> {
     // Safety:
@@ -1836,6 +1876,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM>>>>(SCNReference::VT_MEAN_ELEMENTS, None)}
   }
+  /// State vectors associated with this reference.
   #[inline]
   pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
     // Safety:
@@ -1843,6 +1884,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNReference::VT_STATES, None)}
   }
+  /// Maneuver records associated with this reference.
   #[inline]
   pub fn MANEUVERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MNV<'a>>>> {
     // Safety:
@@ -1850,6 +1892,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MNV>>>>(SCNReference::VT_MANEUVERS, None)}
   }
+  /// Ground-site record associated with this reference.
   #[inline]
   pub fn SITE(&self) -> Option<SIT<'a>> {
     // Safety:
@@ -1857,6 +1900,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SIT>>(SCNReference::VT_SITE, None)}
   }
+  /// Sensor record associated with this reference.
   #[inline]
   pub fn SENSOR(&self) -> Option<SEN<'a>> {
     // Safety:
@@ -1864,6 +1908,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SEN>>(SCNReference::VT_SENSOR, None)}
   }
+  /// Sensor system id for references that identify a sensor by id.
   #[inline]
   pub fn SENSOR_SYSTEM_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1871,6 +1916,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_SENSOR_SYSTEM_ID, None)}
   }
+  /// Sensor id for references that identify a sensor by id.
   #[inline]
   pub fn SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1878,6 +1924,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_SENSOR_ID, None)}
   }
+  /// Ground-site latitude in degrees when no SIT record is available.
   #[inline]
   pub fn SITE_LATITUDE_DEG(&self) -> f64 {
     // Safety:
@@ -1885,6 +1932,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LATITUDE_DEG, Some(0.0)).unwrap()}
   }
+  /// Ground-site longitude in degrees when no SIT record is available.
   #[inline]
   pub fn SITE_LONGITUDE_DEG(&self) -> f64 {
     // Safety:
@@ -1892,6 +1940,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LONGITUDE_DEG, Some(0.0)).unwrap()}
   }
+  /// Scenario variable id for variable satellite references.
   #[inline]
   pub fn VARIABLE_SATELLITE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1899,6 +1948,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_VARIABLE_SATELLITE_ID, None)}
   }
+  /// Scenario variable id for variable site references.
   #[inline]
   pub fn VARIABLE_SITE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1906,6 +1956,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_VARIABLE_SITE_ID, None)}
   }
+  /// Points of interest associated with this reference.
   #[inline]
   pub fn POINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest<'a>>>> {
     // Safety:
@@ -1913,6 +1964,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest>>>>(SCNReference::VT_POINTS, None)}
   }
+  /// View-cone overlay associated with this reference.
   #[inline]
   pub fn VIEW_CONE(&self) -> Option<SCNViewCone<'a>> {
     // Safety:
@@ -1920,6 +1972,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNViewCone>>(SCNReference::VT_VIEW_CONE, None)}
   }
+  /// Sun-advantage target pairing for this reference.
   #[inline]
   pub fn SUN_ADVANTAGE_TARGET(&self) -> Option<SCNSunAdvantageTarget<'a>> {
     // Safety:
@@ -1927,6 +1980,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNSunAdvantageTarget>>(SCNReference::VT_SUN_ADVANTAGE_TARGET, None)}
   }
+  /// Exclusion-zone geometry associated with this reference.
   #[inline]
   pub fn EXCLUSION_ZONE(&self) -> Option<SCNExclusionZone<'a>> {
     // Safety:
@@ -1934,6 +1988,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNExclusionZone>>(SCNReference::VT_EXCLUSION_ZONE, None)}
   }
+  /// Electro-optical observation record associated with this reference.
   #[inline]
   pub fn OBSERVATION_EO(&self) -> Option<EOO<'a>> {
     // Safety:
@@ -1941,6 +1996,7 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EOO>>(SCNReference::VT_OBSERVATION_EO, None)}
   }
+  /// Radar observation record associated with this reference.
   #[inline]
   pub fn OBSERVATION_RADAR(&self) -> Option<RDO<'a>> {
     // Safety:
@@ -2449,6 +2505,7 @@ impl<'a> SCNEvent<'a> {
     }
   }
 
+  /// Stable id for the imported scenario event.
   #[inline]
   pub fn EVENT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -2456,6 +2513,7 @@ impl<'a> SCNEvent<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNEvent::VT_EVENT_ID, None)}
   }
+  /// Element sets associated with the event.
   #[inline]
   pub fn ELSETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>> {
     // Safety:
@@ -2463,6 +2521,7 @@ impl<'a> SCNEvent<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM>>>>(SCNEvent::VT_ELSETS, None)}
   }
+  /// State vectors associated with the event.
   #[inline]
   pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
     // Safety:
@@ -2470,6 +2529,7 @@ impl<'a> SCNEvent<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNEvent::VT_STATES, None)}
   }
+  /// Electro-optical observations associated with the event.
   #[inline]
   pub fn EO_OBSERVATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOO<'a>>>> {
     // Safety:
@@ -2477,6 +2537,7 @@ impl<'a> SCNEvent<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOO>>>>(SCNEvent::VT_EO_OBSERVATIONS, None)}
   }
+  /// Radar observations associated with the event.
   #[inline]
   pub fn RADAR_OBSERVATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RDO<'a>>>> {
     // Safety:
@@ -2699,6 +2760,7 @@ impl<'a> SCNAssetsChanged<'a> {
     }
   }
 
+  /// Satellite references added by the asset-change event.
   #[inline]
   pub fn ADDED_SATELLITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2706,6 +2768,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_ADDED_SATELLITES, None)}
   }
+  /// Ground-site references added by the asset-change event.
   #[inline]
   pub fn ADDED_GROUND_SITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2713,6 +2776,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_ADDED_GROUND_SITES, None)}
   }
+  /// Satellite references removed by the asset-change event.
   #[inline]
   pub fn REMOVED_SATELLITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2720,6 +2784,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_REMOVED_SATELLITES, None)}
   }
+  /// Ground-site references removed by the asset-change event.
   #[inline]
   pub fn REMOVED_GROUND_SITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2727,6 +2792,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_REMOVED_GROUND_SITES, None)}
   }
+  /// Current satellite references after the asset-change event.
   #[inline]
   pub fn SATELLITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2734,6 +2800,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_SATELLITES, None)}
   }
+  /// Current ground-site references after the asset-change event.
   #[inline]
   pub fn GROUND_SITES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2741,6 +2808,7 @@ impl<'a> SCNAssetsChanged<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCNAssetsChanged::VT_GROUND_SITES, None)}
   }
+  /// Current full reference set after the asset-change event.
   #[inline]
   pub fn REFERENCES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -2916,7 +2984,7 @@ impl SCNAssetsChangedT {
 pub enum SCNOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Scenario — canonical scene composition and simulation state for external
+/// Scenario - canonical scene composition and simulation state for external
 /// scenario controls integrations. Domain records remain in their native SDS
 /// schemas and are referenced or embedded here only as scenario content.
 pub struct SCN<'a> {
@@ -3015,6 +3083,7 @@ impl<'a> SCN<'a> {
     }
   }
 
+  /// Stable id for the scenario.
   #[inline]
   pub fn SCENARIO_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -3022,6 +3091,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_SCENARIO_ID, None)}
   }
+  /// Objects, annotations, and variables included in the scenario.
   #[inline]
   pub fn REFERENCES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -3029,6 +3099,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCN::VT_REFERENCES, None)}
   }
+  /// Imported event payload associated with the scenario.
   #[inline]
   pub fn EVENT(&self) -> Option<SCNEvent<'a>> {
     // Safety:
@@ -3036,6 +3107,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNEvent>>(SCN::VT_EVENT, None)}
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   #[inline]
   pub fn FOCUSED_REFERENCE_INDEX(&self) -> i32 {
     // Safety:
@@ -3043,6 +3115,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(SCN::VT_FOCUSED_REFERENCE_INDEX, Some(-1)).unwrap()}
   }
+  /// Reference id of the currently focused scenario object.
   #[inline]
   pub fn FOCUSED_REFERENCE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -3050,6 +3123,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_FOCUSED_REFERENCE_ID, None)}
   }
+  /// Current simulation time as an ISO-8601 UTC timestamp.
   #[inline]
   pub fn SIM_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -3057,6 +3131,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_SIM_TIME, None)}
   }
+  /// Simulation time-rate multiplier.
   #[inline]
   pub fn SIM_SPEED(&self) -> f64 {
     // Safety:
@@ -3064,6 +3139,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCN::VT_SIM_SPEED, Some(0.0)).unwrap()}
   }
+  /// True when the viewer should use an Earth-centered Earth-fixed frame.
   #[inline]
   pub fn USE_ECEF_FRAME(&self) -> bool {
     // Safety:
@@ -3071,6 +3147,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SCN::VT_USE_ECEF_FRAME, Some(false)).unwrap()}
   }
+  /// Reference frame used for scenario propagation and display.
   #[inline]
   pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
@@ -3078,6 +3155,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(SCN::VT_REFERENCE_FRAME, None)}
   }
+  /// Command action requested for the scenario.
   #[inline]
   pub fn ACTION(&self) -> scenarioActionCode {
     // Safety:
@@ -3085,6 +3163,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<scenarioActionCode>(SCN::VT_ACTION, Some(scenarioActionCode::NONE)).unwrap()}
   }
+  /// Viewer camera and display state for the scenario.
   #[inline]
   pub fn VIEW_STATE(&self) -> Option<VST<'a>> {
     // Safety:
@@ -3092,6 +3171,7 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VST>>(SCN::VT_VIEW_STATE, None)}
   }
+  /// Asset-change notification payload for the scenario.
   #[inline]
   pub fn ASSETS_CHANGED(&self) -> Option<SCNAssetsChanged<'a>> {
     // Safety:

@@ -42,6 +42,7 @@ func (rcv *VSTDisplaySettings) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Active map rendering mode for the scenario viewer.
 func (rcv *VSTDisplaySettings) MAP_MODE() viewerMapMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,7 @@ func (rcv *VSTDisplaySettings) MapMode() viewerMapMode {
 	return rcv.MAP_MODE()
 }
 
+/// Active map rendering mode for the scenario viewer.
 func (rcv *VSTDisplaySettings) MutateMAP_MODE(n viewerMapMode) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
@@ -62,6 +64,7 @@ func (rcv *VSTDisplaySettings) MutateMapMode(n viewerMapMode) bool {
 	return rcv.MutateMAP_MODE(n)
 }
 
+/// Show geosynchronous belt reference markers.
 func (rcv *VSTDisplaySettings) SHOW_GEO_BELT_MARKERS() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -74,6 +77,7 @@ func (rcv *VSTDisplaySettings) ShowGeoBeltMarkers() bool {
 	return rcv.SHOW_GEO_BELT_MARKERS()
 }
 
+/// Show geosynchronous belt reference markers.
 func (rcv *VSTDisplaySettings) MutateSHOW_GEO_BELT_MARKERS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(6, n)
 }
@@ -82,6 +86,7 @@ func (rcv *VSTDisplaySettings) MutateShowGeoBeltMarkers(n bool) bool {
 	return rcv.MutateSHOW_GEO_BELT_MARKERS(n)
 }
 
+/// Show cislunar reference content.
 func (rcv *VSTDisplaySettings) SHOW_CIS_LUNAR() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -94,6 +99,7 @@ func (rcv *VSTDisplaySettings) ShowCisLunar() bool {
 	return rcv.SHOW_CIS_LUNAR()
 }
 
+/// Show cislunar reference content.
 func (rcv *VSTDisplaySettings) MutateSHOW_CIS_LUNAR(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }
@@ -102,6 +108,7 @@ func (rcv *VSTDisplaySettings) MutateShowCisLunar(n bool) bool {
 	return rcv.MutateSHOW_CIS_LUNAR(n)
 }
 
+/// Show the equator overlay.
 func (rcv *VSTDisplaySettings) SHOW_EQUATOR() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -114,6 +121,7 @@ func (rcv *VSTDisplaySettings) ShowEquator() bool {
 	return rcv.SHOW_EQUATOR()
 }
 
+/// Show the equator overlay.
 func (rcv *VSTDisplaySettings) MutateSHOW_EQUATOR(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
@@ -122,6 +130,7 @@ func (rcv *VSTDisplaySettings) MutateShowEquator(n bool) bool {
 	return rcv.MutateSHOW_EQUATOR(n)
 }
 
+/// Show latitude grid lines.
 func (rcv *VSTDisplaySettings) SHOW_LATITUDE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -134,6 +143,7 @@ func (rcv *VSTDisplaySettings) ShowLatitude() bool {
 	return rcv.SHOW_LATITUDE()
 }
 
+/// Show latitude grid lines.
 func (rcv *VSTDisplaySettings) MutateSHOW_LATITUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(12, n)
 }
@@ -142,6 +152,7 @@ func (rcv *VSTDisplaySettings) MutateShowLatitude(n bool) bool {
 	return rcv.MutateSHOW_LATITUDE(n)
 }
 
+/// Show longitude grid lines.
 func (rcv *VSTDisplaySettings) SHOW_LONGITUDE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -154,6 +165,7 @@ func (rcv *VSTDisplaySettings) ShowLongitude() bool {
 	return rcv.SHOW_LONGITUDE()
 }
 
+/// Show longitude grid lines.
 func (rcv *VSTDisplaySettings) MutateSHOW_LONGITUDE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(14, n)
 }
@@ -162,6 +174,7 @@ func (rcv *VSTDisplaySettings) MutateShowLongitude(n bool) bool {
 	return rcv.MutateSHOW_LONGITUDE(n)
 }
 
+/// Show body shadow-cone overlays.
 func (rcv *VSTDisplaySettings) SHOW_SHADOW_CONES() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -174,6 +187,7 @@ func (rcv *VSTDisplaySettings) ShowShadowCones() bool {
 	return rcv.SHOW_SHADOW_CONES()
 }
 
+/// Show body shadow-cone overlays.
 func (rcv *VSTDisplaySettings) MutateSHOW_SHADOW_CONES(n bool) bool {
 	return rcv._tab.MutateBoolSlot(16, n)
 }
@@ -182,6 +196,7 @@ func (rcv *VSTDisplaySettings) MutateShowShadowCones(n bool) bool {
 	return rcv.MutateSHOW_SHADOW_CONES(n)
 }
 
+/// Show animated capture or GIF export controls.
 func (rcv *VSTDisplaySettings) SHOW_GIF_CONTROLS() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -194,6 +209,7 @@ func (rcv *VSTDisplaySettings) ShowGifControls() bool {
 	return rcv.SHOW_GIF_CONTROLS()
 }
 
+/// Show animated capture or GIF export controls.
 func (rcv *VSTDisplaySettings) MutateSHOW_GIF_CONTROLS(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
 }
@@ -202,6 +218,7 @@ func (rcv *VSTDisplaySettings) MutateShowGifControls(n bool) bool {
 	return rcv.MutateSHOW_GIF_CONTROLS(n)
 }
 
+/// Render the atmospheric shell around the central body.
 func (rcv *VSTDisplaySettings) SHOW_ATMOSPHERE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -214,6 +231,7 @@ func (rcv *VSTDisplaySettings) ShowAtmosphere() bool {
 	return rcv.SHOW_ATMOSPHERE()
 }
 
+/// Render the atmospheric shell around the central body.
 func (rcv *VSTDisplaySettings) MutateSHOW_ATMOSPHERE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(20, n)
 }
@@ -222,6 +240,7 @@ func (rcv *VSTDisplaySettings) MutateShowAtmosphere(n bool) bool {
 	return rcv.MutateSHOW_ATMOSPHERE(n)
 }
 
+/// Show the sun-direction indicator overlay.
 func (rcv *VSTDisplaySettings) SHOW_SUN_DIRECTION_INDICATOR() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -234,6 +253,7 @@ func (rcv *VSTDisplaySettings) ShowSunDirectionIndicator() bool {
 	return rcv.SHOW_SUN_DIRECTION_INDICATOR()
 }
 
+/// Show the sun-direction indicator overlay.
 func (rcv *VSTDisplaySettings) MutateSHOW_SUN_DIRECTION_INDICATOR(n bool) bool {
 	return rcv._tab.MutateBoolSlot(22, n)
 }
@@ -242,6 +262,7 @@ func (rcv *VSTDisplaySettings) MutateShowSunDirectionIndicator(n bool) bool {
 	return rcv.MutateSHOW_SUN_DIRECTION_INDICATOR(n)
 }
 
+/// Render the starfield background.
 func (rcv *VSTDisplaySettings) USE_STARFIELD() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -254,6 +275,7 @@ func (rcv *VSTDisplaySettings) UseStarfield() bool {
 	return rcv.USE_STARFIELD()
 }
 
+/// Render the starfield background.
 func (rcv *VSTDisplaySettings) MutateUSE_STARFIELD(n bool) bool {
 	return rcv._tab.MutateBoolSlot(24, n)
 }
@@ -262,6 +284,7 @@ func (rcv *VSTDisplaySettings) MutateUseStarfield(n bool) bool {
 	return rcv.MutateUSE_STARFIELD(n)
 }
 
+/// Render orbits as stitched continuous paths.
 func (rcv *VSTDisplaySettings) USE_STITCHED_ORBIT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -274,6 +297,7 @@ func (rcv *VSTDisplaySettings) UseStitchedOrbit() bool {
 	return rcv.USE_STITCHED_ORBIT()
 }
 
+/// Render orbits as stitched continuous paths.
 func (rcv *VSTDisplaySettings) MutateUSE_STITCHED_ORBIT(n bool) bool {
 	return rcv._tab.MutateBoolSlot(26, n)
 }

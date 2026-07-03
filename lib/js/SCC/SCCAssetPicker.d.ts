@@ -9,9 +9,18 @@ export declare class SCCAssetPicker implements flatbuffers.IUnpackableObject<SCC
     __init(i: number, bb: flatbuffers.ByteBuffer): SCCAssetPicker;
     static getRootAsSCCAssetPicker(bb: flatbuffers.ByteBuffer, obj?: SCCAssetPicker): SCCAssetPicker;
     static getSizePrefixedRootAsSCCAssetPicker(bb: flatbuffers.ByteBuffer, obj?: SCCAssetPicker): SCCAssetPicker;
+    /**
+     * Request correlation id for the asset-picker exchange.
+     */
     REQUEST_ID(): string | null;
     REQUEST_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Initial catalog tab to display in the asset picker.
+     */
     CATALOG_TAB(): assetCatalogTab;
+    /**
+     * True when the receiver accepted or completed the picker request.
+     */
     ACKNOWLEDGED(): boolean;
     static startSCCAssetPicker(builder: flatbuffers.Builder): void;
     static addRequestId(builder: flatbuffers.Builder, REQUEST_IDOffset: flatbuffers.Offset): void;

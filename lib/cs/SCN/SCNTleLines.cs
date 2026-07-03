@@ -17,6 +17,7 @@ public struct SCNTleLines : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNTleLines __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// First TLE line exactly as imported.
   public string LINE1 { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLINE1Bytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -24,6 +25,7 @@ public struct SCNTleLines : IFlatbufferObject
   public ArraySegment<byte>? GetLINE1Bytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetLINE1Array() { return __p.__vector_as_array<byte>(4); }
+  /// Second TLE line exactly as imported.
   public string LINE2 { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLINE2Bytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -31,6 +33,7 @@ public struct SCNTleLines : IFlatbufferObject
   public ArraySegment<byte>? GetLINE2Bytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetLINE2Array() { return __p.__vector_as_array<byte>(6); }
+  /// Source label or URI for the imported TLE.
   public string SOURCE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(8, 1); }

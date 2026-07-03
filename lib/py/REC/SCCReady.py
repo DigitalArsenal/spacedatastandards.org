@@ -29,6 +29,7 @@ class SCCReady(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # True when the scenario controls surface is ready for messages.
     # SCCReady
     def READY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))

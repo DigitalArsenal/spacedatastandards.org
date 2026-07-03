@@ -27,36 +27,57 @@ static getSizePrefixedRootAsSCNViewCone(bb:flatbuffers.ByteBuffer, obj?:SCNViewC
   return (obj || new SCNViewCone()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Minimum elevation angle in degrees.
+ */
 MIN_ELEVATION_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Maximum elevation angle in degrees.
+ */
 MAX_ELEVATION_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Minimum azimuth angle in degrees.
+ */
 MIN_AZIMUTH_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Maximum azimuth angle in degrees.
+ */
 MAX_AZIMUTH_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Maximum view-cone range in kilometers.
+ */
 MAX_RANGE_KM():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Half angle in degrees for cone-style overlays.
+ */
 HALF_ANGLE_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Dynamic range mode or expression used by the viewer.
+ */
 DYNAMIC_RANGE():string|null
 DYNAMIC_RANGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DYNAMIC_RANGE(optionalEncoding?:any):string|Uint8Array|null {

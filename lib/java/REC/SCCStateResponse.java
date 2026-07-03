@@ -28,18 +28,36 @@ public final class SCCStateResponse extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCCStateResponse __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Request correlation id from the matching state request.
+   */
   public String REQUEST_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REQUEST_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer REQUEST_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * State payload represented by this response.
+   */
   public byte REQUEST_KIND() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Full scenario state for scenario-state responses.
+   */
   public SCN SCENARIO() { return SCENARIO(new SCN()); }
   public SCN SCENARIO(SCN obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Reference-list payload for reference-only responses.
+   */
   public SCNReference REFERENCES(int j) { return REFERENCES(new SCNReference(), j); }
   public SCNReference REFERENCES(SCNReference obj, int j) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int REFERENCESLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
   public SCNReference.Vector referencesVector() { return referencesVector(new SCNReference.Vector()); }
   public SCNReference.Vector referencesVector(SCNReference.Vector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Zero-based focused reference index, or -1 when no index is focused.
+   */
   public int FOCUSED_REFERENCE_INDEX() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
+  /**
+   * Human-readable error message when state cannot be returned.
+   */
   public String ERROR_MESSAGE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ERROR_MESSAGEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer ERROR_MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }

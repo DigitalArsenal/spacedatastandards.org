@@ -18,28 +18,36 @@
       "description" : "Camera rotation offset. Quaternions are preferred when present; Euler\nangles are retained for import of older scenario JSON.",
       "properties" : {
         "YAW_DEG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Yaw angle in degrees for Euler-angle camera imports."
               },
         "PITCH_DEG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Pitch angle in degrees for Euler-angle camera imports."
               },
         "ROLL_DEG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Roll angle in degrees for Euler-angle camera imports."
               },
         "QUATERNION_X" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion x component for camera orientation."
               },
         "QUATERNION_Y" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion y component for camera orientation."
               },
         "QUATERNION_Z" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion z component for camera orientation."
               },
         "QUATERNION_W" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion w component for camera orientation."
               },
         "USES_QUATERNION" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True when quaternion fields define the authoritative rotation."
               }
       },
       "additionalProperties" : false
@@ -49,40 +57,52 @@
       "description" : "App display toggles for a scenario viewer.",
       "properties" : {
         "MAP_MODE" : {
-                "$ref" : "#/definitions/viewerMapMode"
+                "$ref" : "#/definitions/viewerMapMode",
+                "description" : "Active map rendering mode for the scenario viewer."
               },
         "SHOW_GEO_BELT_MARKERS" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show geosynchronous belt reference markers."
               },
         "SHOW_CIS_LUNAR" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show cislunar reference content."
               },
         "SHOW_EQUATOR" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show the equator overlay."
               },
         "SHOW_LATITUDE" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show latitude grid lines."
               },
         "SHOW_LONGITUDE" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show longitude grid lines."
               },
         "SHOW_SHADOW_CONES" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show body shadow-cone overlays."
               },
         "SHOW_GIF_CONTROLS" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show animated capture or GIF export controls."
               },
         "SHOW_ATMOSPHERE" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Render the atmospheric shell around the central body."
               },
         "SHOW_SUN_DIRECTION_INDICATOR" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Show the sun-direction indicator overlay."
               },
         "USE_STARFIELD" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Render the starfield background."
               },
         "USE_STITCHED_ORBIT" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "Render orbits as stitched continuous paths."
               }
       },
       "additionalProperties" : false
@@ -92,35 +112,43 @@
       "description" : "Camera options for a space-domain scenario viewer.",
       "properties" : {
         "CAMERA_FRAME_MODE" : {
-                "$ref" : "#/definitions/viewerCameraFrameMode"
+                "$ref" : "#/definitions/viewerCameraFrameMode",
+                "description" : "Camera frame relative to the focused target or default scene."
               },
         "SATELLITE_ALIGNMENT" : {
-                "$ref" : "#/definitions/viewerSatelliteAlignmentMode"
+                "$ref" : "#/definitions/viewerSatelliteAlignmentMode",
+                "description" : "Satellite body alignment mode when focused on a satellite."
               },
         "DISTANCE_FROM_TARGET_KM" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Camera distance from the current target in kilometers."
               },
         "ROTATION" : {
-                "$ref" : "#/definitions/VSTCameraRotation"
+                "$ref" : "#/definitions/VSTCameraRotation",
+                "description" : "Camera orientation offset."
               }
       },
       "additionalProperties" : false
     },
     "VST" : {
       "type" : "object",
-      "description" : "Viewer State — display and camera state associated with a scenario.",
+      "description" : "Viewer State - display and camera state associated with a scenario.",
       "properties" : {
         "CAMERA" : {
-                "$ref" : "#/definitions/VSTCameraOptions"
+                "$ref" : "#/definitions/VSTCameraOptions",
+                "description" : "Camera settings for the current viewer state."
               },
         "DISPLAY_SETTINGS" : {
-                "$ref" : "#/definitions/VSTDisplaySettings"
+                "$ref" : "#/definitions/VSTDisplaySettings",
+                "description" : "Display toggles and map style for the current viewer state."
               },
         "FOCUSED_REFERENCE_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Reference id of the currently focused scenario object."
               },
         "FOCUSED_REFERENCE_INDEX" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Zero-based focused reference index, or -1 when no index is focused."
               }
       },
       "additionalProperties" : false

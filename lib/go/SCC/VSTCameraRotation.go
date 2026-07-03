@@ -43,6 +43,7 @@ func (rcv *VSTCameraRotation) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Yaw angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) YAW_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,6 +56,7 @@ func (rcv *VSTCameraRotation) YawDeg() float64 {
 	return rcv.YAW_DEG()
 }
 
+/// Yaw angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) MutateYAW_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
@@ -63,6 +65,7 @@ func (rcv *VSTCameraRotation) MutateYawDeg(n float64) bool {
 	return rcv.MutateYAW_DEG(n)
 }
 
+/// Pitch angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) PITCH_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -75,6 +78,7 @@ func (rcv *VSTCameraRotation) PitchDeg() float64 {
 	return rcv.PITCH_DEG()
 }
 
+/// Pitch angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) MutatePITCH_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -83,6 +87,7 @@ func (rcv *VSTCameraRotation) MutatePitchDeg(n float64) bool {
 	return rcv.MutatePITCH_DEG(n)
 }
 
+/// Roll angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) ROLL_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -95,6 +100,7 @@ func (rcv *VSTCameraRotation) RollDeg() float64 {
 	return rcv.ROLL_DEG()
 }
 
+/// Roll angle in degrees for Euler-angle camera imports.
 func (rcv *VSTCameraRotation) MutateROLL_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -103,6 +109,7 @@ func (rcv *VSTCameraRotation) MutateRollDeg(n float64) bool {
 	return rcv.MutateROLL_DEG(n)
 }
 
+/// Quaternion x component for camera orientation.
 func (rcv *VSTCameraRotation) QUATERNION_X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -115,6 +122,7 @@ func (rcv *VSTCameraRotation) QuaternionX() float64 {
 	return rcv.QUATERNION_X()
 }
 
+/// Quaternion x component for camera orientation.
 func (rcv *VSTCameraRotation) MutateQUATERNION_X(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -123,6 +131,7 @@ func (rcv *VSTCameraRotation) MutateQuaternionX(n float64) bool {
 	return rcv.MutateQUATERNION_X(n)
 }
 
+/// Quaternion y component for camera orientation.
 func (rcv *VSTCameraRotation) QUATERNION_Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -135,6 +144,7 @@ func (rcv *VSTCameraRotation) QuaternionY() float64 {
 	return rcv.QUATERNION_Y()
 }
 
+/// Quaternion y component for camera orientation.
 func (rcv *VSTCameraRotation) MutateQUATERNION_Y(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -143,6 +153,7 @@ func (rcv *VSTCameraRotation) MutateQuaternionY(n float64) bool {
 	return rcv.MutateQUATERNION_Y(n)
 }
 
+/// Quaternion z component for camera orientation.
 func (rcv *VSTCameraRotation) QUATERNION_Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -155,6 +166,7 @@ func (rcv *VSTCameraRotation) QuaternionZ() float64 {
 	return rcv.QUATERNION_Z()
 }
 
+/// Quaternion z component for camera orientation.
 func (rcv *VSTCameraRotation) MutateQUATERNION_Z(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -163,6 +175,7 @@ func (rcv *VSTCameraRotation) MutateQuaternionZ(n float64) bool {
 	return rcv.MutateQUATERNION_Z(n)
 }
 
+/// Quaternion w component for camera orientation.
 func (rcv *VSTCameraRotation) QUATERNION_W() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -175,6 +188,7 @@ func (rcv *VSTCameraRotation) QuaternionW() float64 {
 	return rcv.QUATERNION_W()
 }
 
+/// Quaternion w component for camera orientation.
 func (rcv *VSTCameraRotation) MutateQUATERNION_W(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
@@ -183,6 +197,7 @@ func (rcv *VSTCameraRotation) MutateQuaternionW(n float64) bool {
 	return rcv.MutateQUATERNION_W(n)
 }
 
+/// True when quaternion fields define the authoritative rotation.
 func (rcv *VSTCameraRotation) USES_QUATERNION() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -195,6 +210,7 @@ func (rcv *VSTCameraRotation) UsesQuaternion() bool {
 	return rcv.USES_QUATERNION()
 }
 
+/// True when quaternion fields define the authoritative rotation.
 func (rcv *VSTCameraRotation) MutateUSES_QUATERNION(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
 }

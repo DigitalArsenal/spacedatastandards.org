@@ -8,8 +8,17 @@ export declare class SCNGeodeticPoint implements flatbuffers.IUnpackableObject<S
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNGeodeticPoint;
     static getRootAsSCNGeodeticPoint(bb: flatbuffers.ByteBuffer, obj?: SCNGeodeticPoint): SCNGeodeticPoint;
     static getSizePrefixedRootAsSCNGeodeticPoint(bb: flatbuffers.ByteBuffer, obj?: SCNGeodeticPoint): SCNGeodeticPoint;
+    /**
+     * Latitude in degrees.
+     */
     LATITUDE_DEG(): number;
+    /**
+     * Longitude in degrees.
+     */
     LONGITUDE_DEG(): number;
+    /**
+     * Altitude above the reference ellipsoid in kilometers.
+     */
     ALTITUDE_KM(): number;
     static startSCNGeodeticPoint(builder: flatbuffers.Builder): void;
     static addLatitudeDeg(builder: flatbuffers.Builder, LATITUDE_DEG: number): void;

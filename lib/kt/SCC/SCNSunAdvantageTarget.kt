@@ -29,6 +29,9 @@ class SCNSunAdvantageTarget : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Scenario reference id of the target object.
+     */
     val targetReferenceId : String?
         get() {
             val o = __offset(4)
@@ -40,11 +43,17 @@ class SCNSunAdvantageTarget : Table() {
         }
     val targetReferenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun targetReferenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * NORAD catalog id of the target satellite when available.
+     */
     val targetNoradCatId : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Ground site id associated with the target pairing.
+     */
     val groundSiteId : String?
         get() {
             val o = __offset(8)

@@ -350,6 +350,7 @@ impl<'a> SCCRequestState<'a> {
     }
   }
 
+  /// Request correlation id echoed by the matching state response.
   #[inline]
   pub fn REQUEST_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -357,6 +358,7 @@ impl<'a> SCCRequestState<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCCRequestState::VT_REQUEST_ID, None)}
   }
+  /// State payload requested by the caller.
   #[inline]
   pub fn REQUEST_KIND(&self) -> stateRequestKind {
     // Safety:
@@ -526,6 +528,7 @@ impl<'a> SCCStateResponse<'a> {
     }
   }
 
+  /// Request correlation id from the matching state request.
   #[inline]
   pub fn REQUEST_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -533,6 +536,7 @@ impl<'a> SCCStateResponse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCCStateResponse::VT_REQUEST_ID, None)}
   }
+  /// State payload represented by this response.
   #[inline]
   pub fn REQUEST_KIND(&self) -> stateRequestKind {
     // Safety:
@@ -540,6 +544,7 @@ impl<'a> SCCStateResponse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<stateRequestKind>(SCCStateResponse::VT_REQUEST_KIND, Some(stateRequestKind::UNKNOWN)).unwrap()}
   }
+  /// Full scenario state for scenario-state responses.
   #[inline]
   pub fn SCENARIO(&self) -> Option<SCN<'a>> {
     // Safety:
@@ -547,6 +552,7 @@ impl<'a> SCCStateResponse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCN>>(SCCStateResponse::VT_SCENARIO, None)}
   }
+  /// Reference-list payload for reference-only responses.
   #[inline]
   pub fn REFERENCES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference<'a>>>> {
     // Safety:
@@ -554,6 +560,7 @@ impl<'a> SCCStateResponse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNReference>>>>(SCCStateResponse::VT_REFERENCES, None)}
   }
+  /// Zero-based focused reference index, or -1 when no index is focused.
   #[inline]
   pub fn FOCUSED_REFERENCE_INDEX(&self) -> i32 {
     // Safety:
@@ -561,6 +568,7 @@ impl<'a> SCCStateResponse<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i32>(SCCStateResponse::VT_FOCUSED_REFERENCE_INDEX, Some(-1)).unwrap()}
   }
+  /// Human-readable error message when state cannot be returned.
   #[inline]
   pub fn ERROR_MESSAGE(&self) -> Option<&'a str> {
     // Safety:
@@ -765,6 +773,7 @@ impl<'a> SCCAssetPicker<'a> {
     }
   }
 
+  /// Request correlation id for the asset-picker exchange.
   #[inline]
   pub fn REQUEST_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -772,6 +781,7 @@ impl<'a> SCCAssetPicker<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCCAssetPicker::VT_REQUEST_ID, None)}
   }
+  /// Initial catalog tab to display in the asset picker.
   #[inline]
   pub fn CATALOG_TAB(&self) -> assetCatalogTab {
     // Safety:
@@ -779,6 +789,7 @@ impl<'a> SCCAssetPicker<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<assetCatalogTab>(SCCAssetPicker::VT_CATALOG_TAB, Some(assetCatalogTab::UNKNOWN)).unwrap()}
   }
+  /// True when the receiver accepted or completed the picker request.
   #[inline]
   pub fn ACKNOWLEDGED(&self) -> bool {
     // Safety:
@@ -931,6 +942,7 @@ impl<'a> SCCReady<'a> {
     }
   }
 
+  /// True when the scenario controls surface is ready for messages.
   #[inline]
   pub fn READY(&self) -> bool {
     // Safety:
@@ -1100,6 +1112,7 @@ impl<'a> SCC<'a> {
     }
   }
 
+  /// Payload discriminator for the message carried by this envelope.
   #[inline]
   pub fn MESSAGE_KIND(&self) -> controlMessageKind {
     // Safety:
@@ -1107,6 +1120,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<controlMessageKind>(SCC::VT_MESSAGE_KIND, Some(controlMessageKind::UNKNOWN)).unwrap()}
   }
+  /// Optional trace id for correlating messages across systems.
   #[inline]
   pub fn TRACE_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1114,6 +1128,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCC::VT_TRACE_ID, None)}
   }
+  /// Scenario list carried by setup or selection messages.
   #[inline]
   pub fn SCENARIOS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCN<'a>>>> {
     // Safety:
@@ -1121,6 +1136,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCN>>>>(SCC::VT_SCENARIOS, None)}
   }
+  /// Single scenario payload carried by setup or state messages.
   #[inline]
   pub fn SCENARIO(&self) -> Option<SCN<'a>> {
     // Safety:
@@ -1128,6 +1144,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCN>>(SCC::VT_SCENARIO, None)}
   }
+  /// Request-current-state payload.
   #[inline]
   pub fn REQUEST_STATE(&self) -> Option<SCCRequestState<'a>> {
     // Safety:
@@ -1135,6 +1152,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCCRequestState>>(SCC::VT_REQUEST_STATE, None)}
   }
+  /// Current-state response payload.
   #[inline]
   pub fn STATE_RESPONSE(&self) -> Option<SCCStateResponse<'a>> {
     // Safety:
@@ -1142,6 +1160,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCCStateResponse>>(SCC::VT_STATE_RESPONSE, None)}
   }
+  /// Asset-picker request or acknowledgement payload.
   #[inline]
   pub fn ASSET_PICKER(&self) -> Option<SCCAssetPicker<'a>> {
     // Safety:
@@ -1149,6 +1168,7 @@ impl<'a> SCC<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCCAssetPicker>>(SCC::VT_ASSET_PICKER, None)}
   }
+  /// Startup readiness payload.
   #[inline]
   pub fn READY(&self) -> Option<SCCReady<'a>> {
     // Safety:

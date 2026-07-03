@@ -41,6 +41,7 @@ class SCCReady extends Table
         return $this;
     }
 
+    /// True when the scenario controls surface is ready for messages.
     /**
      * @return bool
      */

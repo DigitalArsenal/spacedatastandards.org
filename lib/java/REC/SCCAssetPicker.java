@@ -27,10 +27,19 @@ public final class SCCAssetPicker extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCCAssetPicker __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Request correlation id for the asset-picker exchange.
+   */
   public String REQUEST_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REQUEST_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer REQUEST_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Initial catalog tab to display in the asset picker.
+   */
   public byte CATALOG_TAB() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * True when the receiver accepted or completed the picker request.
+   */
   public boolean ACKNOWLEDGED() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createSCCAssetPicker(FlatBufferBuilder builder,

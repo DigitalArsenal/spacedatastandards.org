@@ -8,10 +8,19 @@ export declare class SCNTleLines implements flatbuffers.IUnpackableObject<SCNTle
     __init(i: number, bb: flatbuffers.ByteBuffer): SCNTleLines;
     static getRootAsSCNTleLines(bb: flatbuffers.ByteBuffer, obj?: SCNTleLines): SCNTleLines;
     static getSizePrefixedRootAsSCNTleLines(bb: flatbuffers.ByteBuffer, obj?: SCNTleLines): SCNTleLines;
+    /**
+     * First TLE line exactly as imported.
+     */
     LINE1(): string | null;
     LINE1(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Second TLE line exactly as imported.
+     */
     LINE2(): string | null;
     LINE2(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Source label or URI for the imported TLE.
+     */
     SOURCE(): string | null;
     SOURCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSCNTleLines(builder: flatbuffers.Builder): void;

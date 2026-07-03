@@ -42,6 +42,7 @@ func (rcv *VSTCameraOptions) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Camera frame relative to the focused target or default scene.
 func (rcv *VSTCameraOptions) CAMERA_FRAME_MODE() viewerCameraFrameMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,7 @@ func (rcv *VSTCameraOptions) CameraFrameMode() viewerCameraFrameMode {
 	return rcv.CAMERA_FRAME_MODE()
 }
 
+/// Camera frame relative to the focused target or default scene.
 func (rcv *VSTCameraOptions) MutateCAMERA_FRAME_MODE(n viewerCameraFrameMode) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
@@ -62,6 +64,7 @@ func (rcv *VSTCameraOptions) MutateCameraFrameMode(n viewerCameraFrameMode) bool
 	return rcv.MutateCAMERA_FRAME_MODE(n)
 }
 
+/// Satellite body alignment mode when focused on a satellite.
 func (rcv *VSTCameraOptions) SATELLITE_ALIGNMENT() viewerSatelliteAlignmentMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -74,6 +77,7 @@ func (rcv *VSTCameraOptions) SatelliteAlignment() viewerSatelliteAlignmentMode {
 	return rcv.SATELLITE_ALIGNMENT()
 }
 
+/// Satellite body alignment mode when focused on a satellite.
 func (rcv *VSTCameraOptions) MutateSATELLITE_ALIGNMENT(n viewerSatelliteAlignmentMode) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
@@ -82,6 +86,7 @@ func (rcv *VSTCameraOptions) MutateSatelliteAlignment(n viewerSatelliteAlignment
 	return rcv.MutateSATELLITE_ALIGNMENT(n)
 }
 
+/// Camera distance from the current target in kilometers.
 func (rcv *VSTCameraOptions) DISTANCE_FROM_TARGET_KM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -94,6 +99,7 @@ func (rcv *VSTCameraOptions) DistanceFromTargetKm() float64 {
 	return rcv.DISTANCE_FROM_TARGET_KM()
 }
 
+/// Camera distance from the current target in kilometers.
 func (rcv *VSTCameraOptions) MutateDISTANCE_FROM_TARGET_KM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -102,6 +108,7 @@ func (rcv *VSTCameraOptions) MutateDistanceFromTargetKm(n float64) bool {
 	return rcv.MutateDISTANCE_FROM_TARGET_KM(n)
 }
 
+/// Camera orientation offset.
 func (rcv *VSTCameraOptions) ROTATION(obj *VSTCameraRotation) *VSTCameraRotation {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -119,6 +126,7 @@ func (rcv *VSTCameraOptions) Rotation(obj *VSTCameraRotation) *VSTCameraRotation
 	return rcv.ROTATION(obj)
 }
 
+/// Camera orientation offset.
 func VSTCameraOptionsStart(builder *flatbuffers.Builder) {
 	builder.StartObject(4)
 }

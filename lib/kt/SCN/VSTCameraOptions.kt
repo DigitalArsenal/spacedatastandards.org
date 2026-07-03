@@ -29,21 +29,33 @@ class VSTCameraOptions : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Camera frame relative to the focused target or default scene.
+     */
     val cameraFrameMode : Byte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Satellite body alignment mode when focused on a satellite.
+     */
     val satelliteAlignment : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Camera distance from the current target in kilometers.
+     */
     val distanceFromTargetKm : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Camera orientation offset.
+     */
     val rotation : VSTCameraRotation? get() = rotation(VSTCameraRotation())
     fun rotation(obj: VSTCameraRotation) : VSTCameraRotation? {
         val o = __offset(10)

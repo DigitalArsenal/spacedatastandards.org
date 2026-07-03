@@ -29,6 +29,7 @@ class SCCAssetPicker(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Request correlation id for the asset-picker exchange.
     # SCCAssetPicker
     def REQUEST_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCCAssetPicker(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Initial catalog tab to display in the asset picker.
     # SCCAssetPicker
     def CATALOG_TAB(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCCAssetPicker(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # True when the receiver accepted or completed the picker request.
     # SCCAssetPicker
     def ACKNOWLEDGED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

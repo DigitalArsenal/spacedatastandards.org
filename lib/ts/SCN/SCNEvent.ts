@@ -31,6 +31,9 @@ static getSizePrefixedRootAsSCNEvent(bb:flatbuffers.ByteBuffer, obj?:SCNEvent):S
   return (obj || new SCNEvent()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
+/**
+ * Stable id for the imported scenario event.
+ */
 EVENT_ID():string|null
 EVENT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EVENT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +41,9 @@ EVENT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Element sets associated with the event.
+ */
 ELSETS(index: number, obj?:OMM):OMM|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new OMM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -48,6 +54,9 @@ elsetsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * State vectors associated with the event.
+ */
 STATES(index: number, obj?:STV):STV|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new STV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -58,6 +67,9 @@ statesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Electro-optical observations associated with the event.
+ */
 EO_OBSERVATIONS(index: number, obj?:EOO):EOO|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? (obj || new EOO()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -68,6 +80,9 @@ eoObservationsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Radar observations associated with the event.
+ */
 RADAR_OBSERVATIONS(index: number, obj?:RDO):RDO|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? (obj || new RDO()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;

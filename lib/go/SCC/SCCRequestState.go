@@ -42,6 +42,7 @@ func (rcv *SCCRequestState) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Request correlation id echoed by the matching state response.
 func (rcv *SCCRequestState) REQUEST_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCCRequestState) RequestId() []byte {
 	return rcv.REQUEST_ID()
 }
 
+/// Request correlation id echoed by the matching state response.
+/// State payload requested by the caller.
 func (rcv *SCCRequestState) REQUEST_KIND() stateRequestKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -66,6 +69,7 @@ func (rcv *SCCRequestState) RequestKind() stateRequestKind {
 	return rcv.REQUEST_KIND()
 }
 
+/// State payload requested by the caller.
 func (rcv *SCCRequestState) MutateREQUEST_KIND(n stateRequestKind) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }

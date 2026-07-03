@@ -29,6 +29,9 @@ class SCNPointOfInterest : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Display name for the point of interest.
+     */
     val name : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SCNPointOfInterest : Table() {
         }
     val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Optional detail text shown with the point of interest.
+     */
     val description : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class SCNPointOfInterest : Table() {
         }
     val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * UTC epoch associated with the point of interest.
+     */
     val epoch : String?
         get() {
             val o = __offset(8)
@@ -62,16 +71,25 @@ class SCNPointOfInterest : Table() {
         }
     val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Seconds before the epoch when highlighting begins.
+     */
     val highlightBeforeSec : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Seconds after the epoch when highlighting remains active.
+     */
     val highlightAfterSec : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Display color token for the point of interest.
+     */
     val color : String?
         get() {
             val o = __offset(14)
@@ -83,6 +101,9 @@ class SCNPointOfInterest : Table() {
         }
     val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Geodetic position for the point of interest.
+     */
     val position : SCNGeodeticPoint? get() = position(SCNGeodeticPoint())
     fun position(obj: SCNGeodeticPoint) : SCNGeodeticPoint? {
         val o = __offset(16)

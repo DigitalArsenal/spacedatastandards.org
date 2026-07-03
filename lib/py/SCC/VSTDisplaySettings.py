@@ -29,6 +29,7 @@ class VSTDisplaySettings(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Active map rendering mode for the scenario viewer.
     # VSTDisplaySettings
     def MAP_MODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class VSTDisplaySettings(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Show geosynchronous belt reference markers.
     # VSTDisplaySettings
     def SHOW_GEO_BELT_MARKERS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show cislunar reference content.
     # VSTDisplaySettings
     def SHOW_CIS_LUNAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show the equator overlay.
     # VSTDisplaySettings
     def SHOW_EQUATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show latitude grid lines.
     # VSTDisplaySettings
     def SHOW_LATITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show longitude grid lines.
     # VSTDisplaySettings
     def SHOW_LONGITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show body shadow-cone overlays.
     # VSTDisplaySettings
     def SHOW_SHADOW_CONES(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +85,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show animated capture or GIF export controls.
     # VSTDisplaySettings
     def SHOW_GIF_CONTROLS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,6 +93,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Render the atmospheric shell around the central body.
     # VSTDisplaySettings
     def SHOW_ATMOSPHERE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -92,6 +101,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Show the sun-direction indicator overlay.
     # VSTDisplaySettings
     def SHOW_SUN_DIRECTION_INDICATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -99,6 +109,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Render the starfield background.
     # VSTDisplaySettings
     def USE_STARFIELD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -106,6 +117,7 @@ class VSTDisplaySettings(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Render orbits as stitched continuous paths.
     # VSTDisplaySettings
     def USE_STITCHED_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))

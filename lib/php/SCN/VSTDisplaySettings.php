@@ -41,6 +41,7 @@ class VSTDisplaySettings extends Table
         return $this;
     }
 
+    /// Active map rendering mode for the scenario viewer.
     /**
      * @return sbyte
      */
@@ -50,6 +51,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \viewerMapMode::UNKNOWN;
     }
 
+    /// Show geosynchronous belt reference markers.
     /**
      * @return bool
      */
@@ -59,6 +61,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show cislunar reference content.
     /**
      * @return bool
      */
@@ -68,6 +71,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show the equator overlay.
     /**
      * @return bool
      */
@@ -77,6 +81,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show latitude grid lines.
     /**
      * @return bool
      */
@@ -86,6 +91,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show longitude grid lines.
     /**
      * @return bool
      */
@@ -95,6 +101,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show body shadow-cone overlays.
     /**
      * @return bool
      */
@@ -104,6 +111,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show animated capture or GIF export controls.
     /**
      * @return bool
      */
@@ -113,6 +121,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Render the atmospheric shell around the central body.
     /**
      * @return bool
      */
@@ -122,6 +131,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Show the sun-direction indicator overlay.
     /**
      * @return bool
      */
@@ -131,6 +141,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Render the starfield background.
     /**
      * @return bool
      */
@@ -140,6 +151,7 @@ class VSTDisplaySettings extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Render orbits as stitched continuous paths.
     /**
      * @return bool
      */

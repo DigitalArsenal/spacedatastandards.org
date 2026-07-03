@@ -27,12 +27,33 @@ public final class SCNViewCone extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCNViewCone __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Minimum elevation angle in degrees.
+   */
   public double MIN_ELEVATION_DEG() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum elevation angle in degrees.
+   */
   public double MAX_ELEVATION_DEG() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Minimum azimuth angle in degrees.
+   */
   public double MIN_AZIMUTH_DEG() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum azimuth angle in degrees.
+   */
   public double MAX_AZIMUTH_DEG() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum view-cone range in kilometers.
+   */
   public double MAX_RANGE_KM() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Half angle in degrees for cone-style overlays.
+   */
   public double HALF_ANGLE_DEG() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Dynamic range mode or expression used by the viewer.
+   */
   public String DYNAMIC_RANGE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DYNAMIC_RANGEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer DYNAMIC_RANGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }

@@ -9,13 +9,37 @@ export declare class VSTCameraRotation implements flatbuffers.IUnpackableObject<
     __init(i: number, bb: flatbuffers.ByteBuffer): VSTCameraRotation;
     static getRootAsVSTCameraRotation(bb: flatbuffers.ByteBuffer, obj?: VSTCameraRotation): VSTCameraRotation;
     static getSizePrefixedRootAsVSTCameraRotation(bb: flatbuffers.ByteBuffer, obj?: VSTCameraRotation): VSTCameraRotation;
+    /**
+     * Yaw angle in degrees for Euler-angle camera imports.
+     */
     YAW_DEG(): number;
+    /**
+     * Pitch angle in degrees for Euler-angle camera imports.
+     */
     PITCH_DEG(): number;
+    /**
+     * Roll angle in degrees for Euler-angle camera imports.
+     */
     ROLL_DEG(): number;
+    /**
+     * Quaternion x component for camera orientation.
+     */
     QUATERNION_X(): number;
+    /**
+     * Quaternion y component for camera orientation.
+     */
     QUATERNION_Y(): number;
+    /**
+     * Quaternion z component for camera orientation.
+     */
     QUATERNION_Z(): number;
+    /**
+     * Quaternion w component for camera orientation.
+     */
     QUATERNION_W(): number;
+    /**
+     * True when quaternion fields define the authoritative rotation.
+     */
     USES_QUATERNION(): boolean;
     static startVSTCameraRotation(builder: flatbuffers.Builder): void;
     static addYawDeg(builder: flatbuffers.Builder, YAW_DEG: number): void;

@@ -27,6 +27,9 @@ public final class SCCReady extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SCCReady __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * True when the scenario controls surface is ready for messages.
+   */
   public boolean READY() { int o = __offset(4); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
 
   public static int createSCCReady(FlatBufferBuilder builder,

@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Viewer State — display and camera state associated with a scenario.
+ * Viewer State - display and camera state associated with a scenario.
  */
 @Suppress("unused")
 class VST : Table() {
@@ -29,6 +29,9 @@ class VST : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Camera settings for the current viewer state.
+     */
     val camera : VSTCameraOptions? get() = camera(VSTCameraOptions())
     fun camera(obj: VSTCameraOptions) : VSTCameraOptions? {
         val o = __offset(4)
@@ -38,6 +41,9 @@ class VST : Table() {
             null
         }
     }
+    /**
+     * Display toggles and map style for the current viewer state.
+     */
     val displaySettings : VSTDisplaySettings? get() = displaySettings(VSTDisplaySettings())
     fun displaySettings(obj: VSTDisplaySettings) : VSTDisplaySettings? {
         val o = __offset(6)
@@ -47,6 +53,9 @@ class VST : Table() {
             null
         }
     }
+    /**
+     * Reference id of the currently focused scenario object.
+     */
     val focusedReferenceId : String?
         get() {
             val o = __offset(8)
@@ -58,6 +67,9 @@ class VST : Table() {
         }
     val focusedReferenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun focusedReferenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     val focusedReferenceIndex : Int
         get() {
             val o = __offset(10)

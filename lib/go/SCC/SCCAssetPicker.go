@@ -42,6 +42,7 @@ func (rcv *SCCAssetPicker) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Request correlation id for the asset-picker exchange.
 func (rcv *SCCAssetPicker) REQUEST_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCCAssetPicker) RequestId() []byte {
 	return rcv.REQUEST_ID()
 }
 
+/// Request correlation id for the asset-picker exchange.
+/// Initial catalog tab to display in the asset picker.
 func (rcv *SCCAssetPicker) CATALOG_TAB() assetCatalogTab {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -66,6 +69,7 @@ func (rcv *SCCAssetPicker) CatalogTab() assetCatalogTab {
 	return rcv.CATALOG_TAB()
 }
 
+/// Initial catalog tab to display in the asset picker.
 func (rcv *SCCAssetPicker) MutateCATALOG_TAB(n assetCatalogTab) bool {
 	return rcv._tab.MutateInt8Slot(6, int8(n))
 }
@@ -74,6 +78,7 @@ func (rcv *SCCAssetPicker) MutateCatalogTab(n assetCatalogTab) bool {
 	return rcv.MutateCATALOG_TAB(n)
 }
 
+/// True when the receiver accepted or completed the picker request.
 func (rcv *SCCAssetPicker) ACKNOWLEDGED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -86,6 +91,7 @@ func (rcv *SCCAssetPicker) Acknowledged() bool {
 	return rcv.ACKNOWLEDGED()
 }
 
+/// True when the receiver accepted or completed the picker request.
 func (rcv *SCCAssetPicker) MutateACKNOWLEDGED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(8, n)
 }

@@ -42,6 +42,7 @@ func (rcv *SCNPointOfInterest) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Display name for the point of interest.
 func (rcv *SCNPointOfInterest) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -54,6 +55,8 @@ func (rcv *SCNPointOfInterest) Name() []byte {
 	return rcv.NAME()
 }
 
+/// Display name for the point of interest.
+/// Optional detail text shown with the point of interest.
 func (rcv *SCNPointOfInterest) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -66,6 +69,8 @@ func (rcv *SCNPointOfInterest) Description() []byte {
 	return rcv.DESCRIPTION()
 }
 
+/// Optional detail text shown with the point of interest.
+/// UTC epoch associated with the point of interest.
 func (rcv *SCNPointOfInterest) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *SCNPointOfInterest) Epoch() []byte {
 	return rcv.EPOCH()
 }
 
+/// UTC epoch associated with the point of interest.
+/// Seconds before the epoch when highlighting begins.
 func (rcv *SCNPointOfInterest) HIGHLIGHT_BEFORE_SEC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -90,6 +97,7 @@ func (rcv *SCNPointOfInterest) HighlightBeforeSec() float64 {
 	return rcv.HIGHLIGHT_BEFORE_SEC()
 }
 
+/// Seconds before the epoch when highlighting begins.
 func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_BEFORE_SEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -98,6 +106,7 @@ func (rcv *SCNPointOfInterest) MutateHighlightBeforeSec(n float64) bool {
 	return rcv.MutateHIGHLIGHT_BEFORE_SEC(n)
 }
 
+/// Seconds after the epoch when highlighting remains active.
 func (rcv *SCNPointOfInterest) HIGHLIGHT_AFTER_SEC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -110,6 +119,7 @@ func (rcv *SCNPointOfInterest) HighlightAfterSec() float64 {
 	return rcv.HIGHLIGHT_AFTER_SEC()
 }
 
+/// Seconds after the epoch when highlighting remains active.
 func (rcv *SCNPointOfInterest) MutateHIGHLIGHT_AFTER_SEC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -118,6 +128,7 @@ func (rcv *SCNPointOfInterest) MutateHighlightAfterSec(n float64) bool {
 	return rcv.MutateHIGHLIGHT_AFTER_SEC(n)
 }
 
+/// Display color token for the point of interest.
 func (rcv *SCNPointOfInterest) COLOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -130,6 +141,8 @@ func (rcv *SCNPointOfInterest) Color() []byte {
 	return rcv.COLOR()
 }
 
+/// Display color token for the point of interest.
+/// Geodetic position for the point of interest.
 func (rcv *SCNPointOfInterest) POSITION(obj *SCNGeodeticPoint) *SCNGeodeticPoint {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -147,6 +160,7 @@ func (rcv *SCNPointOfInterest) Position(obj *SCNGeodeticPoint) *SCNGeodeticPoint
 	return rcv.POSITION(obj)
 }
 
+/// Geodetic position for the point of interest.
 func SCNPointOfInterestStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }

@@ -41,6 +41,7 @@ class SCNAssetsChanged extends Table
         return $this;
     }
 
+    /// Satellite references added by the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -60,6 +61,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ground-site references added by the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -79,6 +81,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Satellite references removed by the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -98,6 +101,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ground-site references removed by the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -117,6 +121,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Current satellite references after the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -136,6 +141,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Current ground-site references after the asset-change event.
     /**
      * @returnVectorOffset
      */
@@ -155,6 +161,7 @@ class SCNAssetsChanged extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Current full reference set after the asset-change event.
     /**
      * @returnVectorOffset
      */

@@ -9,8 +9,31 @@ async function readUtf8(relativePath) {
   return fs.readFile(path.join(repoRoot, relativePath), "utf8");
 }
 
+async function readJson(relativePath) {
+  return JSON.parse(await readUtf8(relativePath));
+}
+
 function escapedTokenRegex(token) {
   return new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+}
+
+function assertFieldDescriptions(schema, definitionNames) {
+  for (const definitionName of definitionNames) {
+    const properties = schema.definitions?.[definitionName]?.properties;
+    assert.ok(properties, `missing generated definition for ${definitionName}`);
+
+    for (const [fieldName, fieldSchema] of Object.entries(properties)) {
+      assert.equal(
+        typeof fieldSchema.description,
+        "string",
+        `${definitionName}.${fieldName} should include a generated field description`,
+      );
+      assert.ok(
+        fieldSchema.description.trim().length > 0,
+        `${definitionName}.${fieldName} should include a non-empty generated field description`,
+      );
+    }
+  }
 }
 
 describe("scenario controls schema consolidation", () => {
@@ -210,5 +233,39 @@ describe("scenario controls schema consolidation", () => {
     ]) {
       assert.match(combined, escapedTokenRegex(token));
     }
+  });
+
+  it("generates Field Explorer descriptions for scenario controls fields", async () => {
+    const [vstSchema, scnSchema, sccSchema] = await Promise.all([
+      readJson("lib/fbjson/VST/main.fb.schema.json"),
+      readJson("lib/fbjson/SCN/main.fb.schema.json"),
+      readJson("lib/fbjson/SCC/main.fb.schema.json"),
+    ]);
+
+    assertFieldDescriptions(vstSchema, [
+      "VSTCameraRotation",
+      "VSTDisplaySettings",
+      "VSTCameraOptions",
+      "VST",
+    ]);
+    assertFieldDescriptions(scnSchema, [
+      "SCNTleLines",
+      "SCNGeodeticPoint",
+      "SCNPointOfInterest",
+      "SCNViewCone",
+      "SCNSunAdvantageTarget",
+      "SCNExclusionZone",
+      "SCNReference",
+      "SCNEvent",
+      "SCNAssetsChanged",
+      "SCN",
+    ]);
+    assertFieldDescriptions(sccSchema, [
+      "SCCRequestState",
+      "SCCStateResponse",
+      "SCCAssetPicker",
+      "SCCReady",
+      "SCC",
+    ]);
   });
 });

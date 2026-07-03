@@ -29,6 +29,9 @@ class SCCAssetPicker : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Request correlation id for the asset-picker exchange.
+     */
     val requestId : String?
         get() {
             val o = __offset(4)
@@ -40,11 +43,17 @@ class SCCAssetPicker : Table() {
         }
     val requestIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun requestIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Initial catalog tab to display in the asset picker.
+     */
     val catalogTab : Byte
         get() {
             val o = __offset(6)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * True when the receiver accepted or completed the picker request.
+     */
     val acknowledged : Boolean
         get() {
             val o = __offset(8)

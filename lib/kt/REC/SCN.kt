@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Scenario — canonical scene composition and simulation state for external
+ * Scenario - canonical scene composition and simulation state for external
  * scenario controls integrations. Domain records remain in their native SDS
  * schemas and are referenced or embedded here only as scenario content.
  */
@@ -31,6 +31,9 @@ class SCN : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Stable id for the scenario.
+     */
     val scenarioId : String?
         get() {
             val o = __offset(4)
@@ -42,6 +45,9 @@ class SCN : Table() {
         }
     val scenarioIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun scenarioIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Objects, annotations, and variables included in the scenario.
+     */
     fun references(j: Int) : SCNReference? = references(SCNReference(), j)
     fun references(obj: SCNReference, j: Int) : SCNReference? {
         val o = __offset(6)
@@ -55,6 +61,9 @@ class SCN : Table() {
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Imported event payload associated with the scenario.
+     */
     val event : SCNEvent? get() = event(SCNEvent())
     fun event(obj: SCNEvent) : SCNEvent? {
         val o = __offset(8)
@@ -64,11 +73,17 @@ class SCN : Table() {
             null
         }
     }
+    /**
+     * Zero-based focused reference index, or -1 when no index is focused.
+     */
     val focusedReferenceIndex : Int
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos) else -1
         }
+    /**
+     * Reference id of the currently focused scenario object.
+     */
     val focusedReferenceId : String?
         get() {
             val o = __offset(12)
@@ -80,6 +95,9 @@ class SCN : Table() {
         }
     val focusedReferenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun focusedReferenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Current simulation time as an ISO-8601 UTC timestamp.
+     */
     val simTime : String?
         get() {
             val o = __offset(14)
@@ -91,16 +109,25 @@ class SCN : Table() {
         }
     val simTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun simTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Simulation time-rate multiplier.
+     */
     val simSpeed : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True when the viewer should use an Earth-centered Earth-fixed frame.
+     */
     val useEcefFrame : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Reference frame used for scenario propagation and display.
+     */
     val referenceFrame : RFM? get() = referenceFrame(RFM())
     fun referenceFrame(obj: RFM) : RFM? {
         val o = __offset(20)
@@ -110,11 +137,17 @@ class SCN : Table() {
             null
         }
     }
+    /**
+     * Command action requested for the scenario.
+     */
     val action : Byte
         get() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Viewer camera and display state for the scenario.
+     */
     val viewState : VST? get() = viewState(VST())
     fun viewState(obj: VST) : VST? {
         val o = __offset(24)
@@ -124,6 +157,9 @@ class SCN : Table() {
             null
         }
     }
+    /**
+     * Asset-change notification payload for the scenario.
+     */
     val assetsChanged : SCNAssetsChanged? get() = assetsChanged(SCNAssetsChanged())
     fun assetsChanged(obj: SCNAssetsChanged) : SCNAssetsChanged? {
         val o = __offset(26)

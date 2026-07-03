@@ -29,6 +29,7 @@ class SCNGeodeticPoint(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Latitude in degrees.
     # SCNGeodeticPoint
     def LATITUDE_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SCNGeodeticPoint(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Longitude in degrees.
     # SCNGeodeticPoint
     def LONGITUDE_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SCNGeodeticPoint(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Altitude above the reference ellipsoid in kilometers.
     # SCNGeodeticPoint
     def ALTITUDE_KM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
