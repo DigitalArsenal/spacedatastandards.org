@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "entitlementLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["Active", "Cancelled", "PastDue", "Suspended", "Expired"]
+    },
+    "ENT" : {
+      "type" : "object",
+      "description" : "Entitlement - Provider subscription or account entitlement state.\n\nThis is durable operational state for a provider account, not a plugin\nlicense key. It records the current authoritative entitlement for an SDN\naccount identity and can be projected into subscription, billing, and\naccess-control surfaces.",
+      "properties" : {
+        "ENTITLEMENT_ID" : {
+                "type" : "string",
+                "description" : "Stable entitlement identifier."
+              },
+        "XPUB" : {
+                "type" : "string",
+                "description" : "Account identity or wallet xpub."
+              },
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Current SDN peer ID bound to the entitlement."
+              },
+        "PLAN" : {
+                "type" : "string",
+                "description" : "Provider plan code, e.g. \"free\", \"explorer\", or \"enterprise\"."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/entitlementLifecycleStatus",
+                "description" : "Structured entitlement lifecycle status."
+              },
+        "STATUS_TEXT" : {
+                "type" : "string",
+                "description" : "Original provider status string when finer detail is needed."
+              },
+        "STRIPE_CUSTOMER_ID" : {
+                "type" : "string",
+                "description" : "Fiat processor customer identifier."
+              },
+        "STRIPE_SUBSCRIPTION_ID" : {
+                "type" : "string",
+                "description" : "Fiat processor subscription identifier."
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the entitlement expires (0 = no expiry)."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the entitlement was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the entitlement was last updated."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the entitlement issuer/provider."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the entitlement record."
+              }
+      },
+      "required" : ["XPUB"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ENT"
+}

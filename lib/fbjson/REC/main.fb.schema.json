@@ -8155,6 +8155,36 @@
         }
       }
     },
+    "entitlementLifecycleStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Entitlement lifecycle status tracked by a provider.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0
+        },
+        "Cancelled": {
+          "value": 1
+        },
+        "PastDue": {
+          "value": 2
+        },
+        "Suspended": {
+          "value": 3
+        },
+        "Expired": {
+          "value": 4
+        }
+      }
+    },
     "AtmosphereModel": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -28112,6 +28142,103 @@
       "required": [
         "EPHEMERAL_PUBLIC_KEY",
         "NONCE_START"
+      ]
+    },
+    "ENT": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ENTITLEMENT_ID": {
+          "type": "string",
+          "description": "Stable entitlement identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Account identity or wallet xpub.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PEER_ID": {
+          "type": "string",
+          "description": "Current SDN peer ID bound to the entitlement.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLAN": {
+          "type": "string",
+          "description": "Provider plan code, e.g. \"free\", \"explorer\", or \"enterprise\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/entitlementLifecycleStatus",
+          "description": "Structured entitlement lifecycle status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0
+            },
+            "Cancelled": {
+              "value": 1
+            },
+            "PastDue": {
+              "value": 2
+            },
+            "Suspended": {
+              "value": 3
+            },
+            "Expired": {
+              "value": 4
+            }
+          }
+        },
+        "STATUS_TEXT": {
+          "type": "string",
+          "description": "Original provider status string when finer detail is needed.",
+          "x-flatbuffer-type": "string"
+        },
+        "STRIPE_CUSTOMER_ID": {
+          "type": "string",
+          "description": "Fiat processor customer identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "STRIPE_SUBSCRIPTION_ID": {
+          "type": "string",
+          "description": "Fiat processor subscription identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the entitlement expires (0 = no expiry).",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the entitlement was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the entitlement was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the entitlement issuer/provider.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Provider signature over the entitlement record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Entitlement - Provider subscription or account entitlement state.  This is durable operational state for a provider account, not a plugin license key. It records the current authoritative entitlement for an SDN account identity and can be projected into subscription, billing, and access-control surfaces.",
+      "required": [
+        "XPUB"
       ]
     },
     "ENV": {

@@ -1,0 +1,49 @@
+// Hash: 6c1d4301ebeec9fd68e96565d418df784d4e92aaef4213c5522e86a85b93b221
+// Version: 1.143.0
+// -----------------------------------END_HEADER
+/// Entitlement lifecycle status tracked by a provider.
+enum entitlementLifecycleStatus : byte {
+  Active,
+  Cancelled,
+  PastDue,
+  Suspended,
+  Expired
+}
+
+/// Entitlement - Provider subscription or account entitlement state.
+///
+/// This is durable operational state for a provider account, not a plugin
+/// license key. It records the current authoritative entitlement for an SDN
+/// account identity and can be projected into subscription, billing, and
+/// access-control surfaces.
+table ENT {
+  /// Stable entitlement identifier.
+  ENTITLEMENT_ID: string;
+  /// Account identity or wallet xpub.
+  XPUB: string (required);
+  /// Current SDN peer ID bound to the entitlement.
+  PEER_ID: string;
+  /// Provider plan code, e.g. "free", "explorer", or "enterprise".
+  PLAN: string;
+  /// Structured entitlement lifecycle status.
+  STATUS: entitlementLifecycleStatus;
+  /// Original provider status string when finer detail is needed.
+  STATUS_TEXT: string;
+  /// Fiat processor customer identifier.
+  STRIPE_CUSTOMER_ID: string;
+  /// Fiat processor subscription identifier.
+  STRIPE_SUBSCRIPTION_ID: string;
+  /// Unix timestamp when the entitlement expires (0 = no expiry).
+  EXPIRES_AT: uint64;
+  /// Unix timestamp when the entitlement was created.
+  CREATED_AT: uint64;
+  /// Unix timestamp when the entitlement was last updated.
+  UPDATED_AT: uint64;
+  /// Peer ID of the entitlement issuer/provider.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the entitlement record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type ENT;
+file_identifier "$ENT";

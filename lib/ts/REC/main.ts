@@ -251,6 +251,8 @@ export * from './encryptionType.js';
 export * from './ENGINE_TYPE.js';
 export * from './ENGINE.js';
 export * from './EngineType.js';
+export * from './ENT.js';
+export * from './entitlementLifecycleStatus.js';
 export * from './entityKind.js';
 export * from './EntityType.js';
 export * from './EntryFunction.js';

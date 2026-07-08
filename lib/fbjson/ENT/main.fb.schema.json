@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "entitlementLifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Cancelled",
+        "PastDue",
+        "Suspended",
+        "Expired"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0
+        },
+        "Cancelled": {
+          "value": 1
+        },
+        "PastDue": {
+          "value": 2
+        },
+        "Suspended": {
+          "value": 3
+        },
+        "Expired": {
+          "value": 4
+        }
+      }
+    },
+    "ENT": {
+      "type": "object",
+      "description": "Entitlement - Provider subscription or account entitlement state.\n\nThis is durable operational state for a provider account, not a plugin\nlicense key. It records the current authoritative entitlement for an SDN\naccount identity and can be projected into subscription, billing, and\naccess-control surfaces.",
+      "properties": {
+        "ENTITLEMENT_ID": {
+          "type": "string",
+          "description": "Stable entitlement identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Account identity or wallet xpub.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PEER_ID": {
+          "type": "string",
+          "description": "Current SDN peer ID bound to the entitlement.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLAN": {
+          "type": "string",
+          "description": "Provider plan code, e.g. \"free\", \"explorer\", or \"enterprise\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/entitlementLifecycleStatus",
+          "description": "Structured entitlement lifecycle status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0
+            },
+            "Cancelled": {
+              "value": 1
+            },
+            "PastDue": {
+              "value": 2
+            },
+            "Suspended": {
+              "value": 3
+            },
+            "Expired": {
+              "value": 4
+            }
+          }
+        },
+        "STATUS_TEXT": {
+          "type": "string",
+          "description": "Original provider status string when finer detail is needed.",
+          "x-flatbuffer-type": "string"
+        },
+        "STRIPE_CUSTOMER_ID": {
+          "type": "string",
+          "description": "Fiat processor customer identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "STRIPE_SUBSCRIPTION_ID": {
+          "type": "string",
+          "description": "Fiat processor subscription identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the entitlement expires (0 = no expiry).",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the entitlement was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the entitlement was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the entitlement issuer/provider.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the entitlement record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "XPUB"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ENT",
+  "x-flatbuffer-root-type": "ENT",
+  "x-flatbuffer-file-identifier": "$ENT"
+}

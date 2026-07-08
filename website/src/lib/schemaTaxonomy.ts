@@ -307,7 +307,7 @@ export const landingFeatureCategories: LandingFeatureCategory[] = [
     icon: "store",
     iconClass: "icon-gold",
     title: "Data Exchange",
-    description: "STF, PUR, REV, ACL - storefronts, purchases, reviews, and access grants for data commerce",
-    schemas: ["STF", "PUR", "REV", "ACL"],
+    description: "STF, PUR, REV, ACL, ENT - storefronts, purchases, reviews, access grants, and provider entitlements for data commerce",
+    schemas: ["STF", "PUR", "REV", "ACL", "ENT"],
   },
 ];
