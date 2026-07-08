@@ -128,6 +128,7 @@ public struct Record : IFlatbufferObject
   public OSM valueAsOSM() { return value<OSM>().Value; }
   public PCF valueAsPCF() { return value<PCF>().Value; }
   public PHY valueAsPHY() { return value<PHY>().Value; }
+  public PGM valueAsPGM() { return value<PGM>().Value; }
   public PIV valueAsPIV() { return value<PIV>().Value; }
   public PLD valueAsPLD() { return value<PLD>().Value; }
   public PLG valueAsPLG() { return value<PLG>().Value; }
@@ -135,6 +136,7 @@ public struct Record : IFlatbufferObject
   public PNM valueAsPNM() { return value<PNM>().Value; }
   public PPE valueAsPPE() { return value<PPE>().Value; }
   public PRG valueAsPRG() { return value<PRG>().Value; }
+  public PRR valueAsPRR() { return value<PRR>().Value; }
   public PRW valueAsPRW() { return value<PRW>().Value; }
   public PUR valueAsPUR() { return value<PUR>().Value; }
   public RAF valueAsRAF() { return value<RAF>().Value; }
@@ -556,6 +558,9 @@ public struct Record : IFlatbufferObject
       case RecordType.PHY:
         _o.value.Value = this.value<PHY>().HasValue ? this.value<PHY>().Value.UnPack() : null;
         break;
+      case RecordType.PGM:
+        _o.value.Value = this.value<PGM>().HasValue ? this.value<PGM>().Value.UnPack() : null;
+        break;
       case RecordType.PIV:
         _o.value.Value = this.value<PIV>().HasValue ? this.value<PIV>().Value.UnPack() : null;
         break;
@@ -576,6 +581,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.PRG:
         _o.value.Value = this.value<PRG>().HasValue ? this.value<PRG>().Value.UnPack() : null;
+        break;
+      case RecordType.PRR:
+        _o.value.Value = this.value<PRR>().HasValue ? this.value<PRR>().Value.UnPack() : null;
         break;
       case RecordType.PRW:
         _o.value.Value = this.value<PRW>().HasValue ? this.value<PRW>().Value.UnPack() : null;

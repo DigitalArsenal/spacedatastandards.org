@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "peerGroupTrustCategory" : {
+      "type" : "string",
+      "enum": ["Untrusted", "Limited", "Standard", "Trusted", "Admin"]
+    },
+    "PGMMetadataEntry" : {
+      "type" : "object",
+      "description" : "String metadata key/value attached to a peer group.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "Metadata key."
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Metadata value."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PGM" : {
+      "type" : "object",
+      "properties" : {
+        "GROUP_NAME" : {
+                "type" : "string",
+                "description" : "Unique peer group name."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Optional group description."
+              },
+        "DEFAULT_TRUST_LEVEL" : {
+                "$ref" : "#/definitions/peerGroupTrustCategory",
+                "description" : "Default trust level for peers in this group."
+              },
+        "MEMBERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "libp2p peer IDs that belong to this group."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this group was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this group record was last updated."
+              },
+        "METADATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PGMMetadataEntry"},
+                "description" : "Additional group metadata as string key/value entries."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True when this record tombstones the group from the current registry."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the node/provider that issued this group record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the peer group record."
+              }
+      },
+      "required" : ["GROUP_NAME"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PGM"
+}

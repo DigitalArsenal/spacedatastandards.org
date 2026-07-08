@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "peerRegistryTrustCategory" : {
+      "type" : "string",
+      "enum": ["Untrusted", "Limited", "Standard", "Trusted", "Admin"]
+    },
+    "PRRMetadataEntry" : {
+      "type" : "object",
+      "description" : "String metadata key/value attached to a peer registry entry.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "Metadata key."
+              },
+        "VALUE" : {
+                "type" : "string",
+                "description" : "Metadata value."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PRR" : {
+      "type" : "object",
+      "properties" : {
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "libp2p peer ID."
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Known libp2p/IPFS multiaddresses for this peer."
+              },
+        "TRUST_LEVEL" : {
+                "$ref" : "#/definitions/peerRegistryTrustCategory",
+                "description" : "Trust level assigned to this peer by the local registry."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Optional display name."
+              },
+        "ORGANIZATION" : {
+                "type" : "string",
+                "description" : "Optional organization name."
+              },
+        "GROUPS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Peer group names this peer belongs to."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Operator notes for this peer."
+              },
+        "ADDED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer was added."
+              },
+        "LAST_SEEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer was last observed."
+              },
+        "LAST_CONNECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this peer last connected."
+              },
+        "CONNECTION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of successful connections observed by this node."
+              },
+        "MESSAGES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of messages received from this peer."
+              },
+        "MESSAGES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of messages sent to this peer."
+              },
+        "BYTES_RECEIVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of bytes received from this peer."
+              },
+        "BYTES_SENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of bytes sent to this peer."
+              },
+        "EPM_DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional EPM.fbs bytes for the peer identity profile."
+              },
+        "VCARD_DATA" : {
+                "type" : "string",
+                "description" : "Optional vCard projection for compatibility views."
+              },
+        "METADATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRRMetadataEntry"},
+                "description" : "Additional peer metadata as string key/value entries."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this registry record was last updated."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True when this record tombstones the peer from the current registry."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the node/provider that issued this registry record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the peer registry record."
+              }
+      },
+      "required" : ["PEER_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PRR"
+}

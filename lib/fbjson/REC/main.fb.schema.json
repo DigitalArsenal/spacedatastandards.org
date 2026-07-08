@@ -12712,6 +12712,36 @@
         }
       }
     },
+    "peerGroupTrustCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "by GROUP_NAME, with deleted records acting as tombstones.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Untrusted": {
+          "value": 0
+        },
+        "Limited": {
+          "value": 1
+        },
+        "Standard": {
+          "value": 2
+        },
+        "Trusted": {
+          "value": 3
+        },
+        "Admin": {
+          "value": 4
+        }
+      }
+    },
     "IntegrationMethod": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -12975,6 +13005,36 @@
         "Internal": {
           "value": 5,
           "description": "Internal OrbPro default plugins"
+        }
+      }
+    },
+    "peerRegistryTrustCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "with deleted records acting as tombstones.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Untrusted": {
+          "value": 0
+        },
+        "Limited": {
+          "value": 1
+        },
+        "Standard": {
+          "value": 2
+        },
+        "Trusted": {
+          "value": 3
+        },
+        "Admin": {
+          "value": 4
         }
       }
     },
@@ -46170,6 +46230,111 @@
       },
       "description": "Propagator Configuration"
     },
+    "PGMMetadataEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Metadata key.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Metadata value.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "String metadata key/value attached to a peer group."
+    },
+    "PGM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Unique peer group name.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Optional group description.",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFAULT_TRUST_LEVEL": {
+          "$ref": "#/definitions/peerGroupTrustCategory",
+          "description": "Default trust level for peers in this group.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Standard",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Untrusted": {
+              "value": 0
+            },
+            "Limited": {
+              "value": 1
+            },
+            "Standard": {
+              "value": 2
+            },
+            "Trusted": {
+              "value": 3
+            },
+            "Admin": {
+              "value": 4
+            }
+          }
+        },
+        "MEMBERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "libp2p peer IDs that belong to this group.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this group was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this group record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "METADATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PGMMetadataEntry"
+          },
+          "description": "Additional group metadata as string key/value entries.",
+          "x-flatbuffer-type": "[PGMMetadataEntry]"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the group from the current registry.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this group record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Provider signature over the peer group record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "GROUP_NAME"
+      ]
+    },
     "PHY": {
       "type": "object",
       "additionalProperties": false,
@@ -46558,6 +46723,177 @@
           "x-flatbuffer-type": "[string]"
         }
       }
+    },
+    "PRRMetadataEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Metadata key.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Metadata value.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "String metadata key/value attached to a peer registry entry."
+    },
+    "PRR": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PEER_ID": {
+          "type": "string",
+          "description": "libp2p peer ID.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Known libp2p/IPFS multiaddresses for this peer.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "TRUST_LEVEL": {
+          "$ref": "#/definitions/peerRegistryTrustCategory",
+          "description": "Trust level assigned to this peer by the local registry.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "Standard",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Untrusted": {
+              "value": 0
+            },
+            "Limited": {
+              "value": 1
+            },
+            "Standard": {
+              "value": 2
+            },
+            "Trusted": {
+              "value": 3
+            },
+            "Admin": {
+              "value": 4
+            }
+          }
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Optional display name.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORGANIZATION": {
+          "type": "string",
+          "description": "Optional organization name.",
+          "x-flatbuffer-type": "string"
+        },
+        "GROUPS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Peer group names this peer belongs to.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Operator notes for this peer.",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this peer was added.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_SEEN": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this peer was last observed.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_CONNECTED": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this peer last connected.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CONNECTION_COUNT": {
+          "type": "integer",
+          "description": "Number of successful connections observed by this node.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MESSAGES_RECEIVED": {
+          "type": "integer",
+          "description": "Number of messages received from this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MESSAGES_SENT": {
+          "type": "integer",
+          "description": "Number of messages sent to this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTES_RECEIVED": {
+          "type": "integer",
+          "description": "Number of bytes received from this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTES_SENT": {
+          "type": "integer",
+          "description": "Number of bytes sent to this peer.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "EPM_DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Optional EPM.fbs bytes for the peer identity profile.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "VCARD_DATA": {
+          "type": "string",
+          "description": "Optional vCard projection for compatibility views.",
+          "x-flatbuffer-type": "string"
+        },
+        "METADATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRRMetadataEntry"
+          },
+          "description": "Additional peer metadata as string key/value entries.",
+          "x-flatbuffer-type": "[PRRMetadataEntry]"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this registry record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the peer from the current registry.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this registry record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Provider signature over the peer registry record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "PEER_ID"
+      ]
     },
     "PRWInit": {
       "type": "object",

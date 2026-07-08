@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "peerGroupTrustCategory": {
+      "type": "string",
+      "enum": [
+        "Untrusted",
+        "Limited",
+        "Standard",
+        "Trusted",
+        "Admin"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Untrusted": {
+          "value": 0
+        },
+        "Limited": {
+          "value": 1
+        },
+        "Standard": {
+          "value": 2
+        },
+        "Trusted": {
+          "value": 3
+        },
+        "Admin": {
+          "value": 4
+        }
+      }
+    },
+    "PGMMetadataEntry": {
+      "type": "object",
+      "description": "String metadata key/value attached to a peer group.",
+      "properties": {
+        "KEY": {
+          "type": "string",
+          "description": "Metadata key.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Metadata value.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PGM": {
+      "type": "object",
+      "properties": {
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Unique peer group name.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Optional group description.",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFAULT_TRUST_LEVEL": {
+          "$ref": "#/definitions/peerGroupTrustCategory",
+          "description": "Default trust level for peers in this group.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Untrusted": {
+              "value": 0
+            },
+            "Limited": {
+              "value": 1
+            },
+            "Standard": {
+              "value": 2
+            },
+            "Trusted": {
+              "value": 3
+            },
+            "Admin": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "Standard"
+        },
+        "MEMBERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "libp2p peer IDs that belong to this group.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this group was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this group record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "METADATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PGMMetadataEntry"
+          },
+          "description": "Additional group metadata as string key/value entries.",
+          "x-flatbuffer-type": "[PGMMetadataEntry]"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the group from the current registry.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this group record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the peer group record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "GROUP_NAME"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PGM",
+  "x-flatbuffer-root-type": "PGM",
+  "x-flatbuffer-file-identifier": "$PGM"
+}

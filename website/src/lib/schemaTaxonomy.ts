@@ -314,7 +314,7 @@ export const landingFeatureCategories: LandingFeatureCategory[] = [
     icon: "network",
     iconClass: "icon-blue",
     title: "Network Operations",
-    description: "TNR, TRE - trust graph node state and directed trust assertions for SDN operational state",
-    schemas: ["TNR", "TRE"],
+    description: "PGM, PRR, TNR, TRE - peer registry state, peer groups, and trust graph assertions for SDN operational state",
+    schemas: ["PGM", "PRR", "TNR", "TRE"],
   },
 ];

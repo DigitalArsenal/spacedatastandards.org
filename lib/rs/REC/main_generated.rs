@@ -175,6 +175,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -309,10 +311,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 174;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 176;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 175] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 177] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -422,6 +424,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 175] = [
   RecordType::OSM,
   RecordType::PCF,
   RecordType::PHY,
+  RecordType::PGM,
   RecordType::PIV,
   RecordType::PLD,
   RecordType::PLG,
@@ -429,6 +432,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 175] = [
   RecordType::PNM,
   RecordType::PPE,
   RecordType::PRG,
+  RecordType::PRR,
   RecordType::PRW,
   RecordType::PUR,
   RecordType::RAF,
@@ -604,75 +608,77 @@ impl RecordType {
   pub const OSM: Self = Self(106);
   pub const PCF: Self = Self(107);
   pub const PHY: Self = Self(108);
-  pub const PIV: Self = Self(109);
-  pub const PLD: Self = Self(110);
-  pub const PLG: Self = Self(111);
-  pub const PLK: Self = Self(112);
-  pub const PNM: Self = Self(113);
-  pub const PPE: Self = Self(114);
-  pub const PRG: Self = Self(115);
-  pub const PRW: Self = Self(116);
-  pub const PUR: Self = Self(117);
-  pub const RAF: Self = Self(118);
-  pub const RBK: Self = Self(119);
-  pub const RCF: Self = Self(120);
-  pub const RDM: Self = Self(121);
-  pub const RDO: Self = Self(122);
-  pub const REM: Self = Self(123);
-  pub const REV: Self = Self(124);
-  pub const RFB: Self = Self(125);
-  pub const RFE: Self = Self(126);
-  pub const RFM: Self = Self(127);
-  pub const RFO: Self = Self(128);
-  pub const ROC: Self = Self(129);
-  pub const SAR: Self = Self(130);
-  pub const SCM: Self = Self(131);
-  pub const SDF: Self = Self(132);
-  pub const SDL: Self = Self(133);
-  pub const SDR: Self = Self(134);
-  pub const SEN: Self = Self(135);
-  pub const SEO: Self = Self(136);
-  pub const SEV: Self = Self(137);
-  pub const SHW: Self = Self(138);
-  pub const SIT: Self = Self(139);
-  pub const SKI: Self = Self(140);
-  pub const SNR: Self = Self(141);
-  pub const SNW: Self = Self(142);
-  pub const SOI: Self = Self(143);
-  pub const SON: Self = Self(144);
-  pub const SPP: Self = Self(145);
-  pub const SPW: Self = Self(146);
-  pub const SRI: Self = Self(147);
-  pub const STF: Self = Self(148);
-  pub const STR: Self = Self(149);
-  pub const STV: Self = Self(150);
-  pub const SWR: Self = Self(151);
-  pub const TAB: Self = Self(152);
-  pub const TCF: Self = Self(153);
-  pub const TDM: Self = Self(154);
-  pub const TIM: Self = Self(155);
-  pub const TKG: Self = Self(156);
-  pub const TME: Self = Self(157);
-  pub const TMF: Self = Self(158);
-  pub const TNR: Self = Self(159);
-  pub const TPN: Self = Self(160);
-  pub const TRE: Self = Self(161);
-  pub const TRK: Self = Self(162);
-  pub const TRN: Self = Self(163);
-  pub const VCM: Self = Self(164);
-  pub const WPN: Self = Self(165);
-  pub const WTH: Self = Self(166);
-  pub const XTC: Self = Self(167);
-  pub const SCV: Self = Self(168);
-  pub const FSM: Self = Self(169);
-  pub const FSP: Self = Self(170);
-  pub const SCC: Self = Self(171);
-  pub const SCN: Self = Self(172);
-  pub const VST: Self = Self(173);
-  pub const ENT: Self = Self(174);
+  pub const PGM: Self = Self(109);
+  pub const PIV: Self = Self(110);
+  pub const PLD: Self = Self(111);
+  pub const PLG: Self = Self(112);
+  pub const PLK: Self = Self(113);
+  pub const PNM: Self = Self(114);
+  pub const PPE: Self = Self(115);
+  pub const PRG: Self = Self(116);
+  pub const PRR: Self = Self(117);
+  pub const PRW: Self = Self(118);
+  pub const PUR: Self = Self(119);
+  pub const RAF: Self = Self(120);
+  pub const RBK: Self = Self(121);
+  pub const RCF: Self = Self(122);
+  pub const RDM: Self = Self(123);
+  pub const RDO: Self = Self(124);
+  pub const REM: Self = Self(125);
+  pub const REV: Self = Self(126);
+  pub const RFB: Self = Self(127);
+  pub const RFE: Self = Self(128);
+  pub const RFM: Self = Self(129);
+  pub const RFO: Self = Self(130);
+  pub const ROC: Self = Self(131);
+  pub const SAR: Self = Self(132);
+  pub const SCM: Self = Self(133);
+  pub const SDF: Self = Self(134);
+  pub const SDL: Self = Self(135);
+  pub const SDR: Self = Self(136);
+  pub const SEN: Self = Self(137);
+  pub const SEO: Self = Self(138);
+  pub const SEV: Self = Self(139);
+  pub const SHW: Self = Self(140);
+  pub const SIT: Self = Self(141);
+  pub const SKI: Self = Self(142);
+  pub const SNR: Self = Self(143);
+  pub const SNW: Self = Self(144);
+  pub const SOI: Self = Self(145);
+  pub const SON: Self = Self(146);
+  pub const SPP: Self = Self(147);
+  pub const SPW: Self = Self(148);
+  pub const SRI: Self = Self(149);
+  pub const STF: Self = Self(150);
+  pub const STR: Self = Self(151);
+  pub const STV: Self = Self(152);
+  pub const SWR: Self = Self(153);
+  pub const TAB: Self = Self(154);
+  pub const TCF: Self = Self(155);
+  pub const TDM: Self = Self(156);
+  pub const TIM: Self = Self(157);
+  pub const TKG: Self = Self(158);
+  pub const TME: Self = Self(159);
+  pub const TMF: Self = Self(160);
+  pub const TNR: Self = Self(161);
+  pub const TPN: Self = Self(162);
+  pub const TRE: Self = Self(163);
+  pub const TRK: Self = Self(164);
+  pub const TRN: Self = Self(165);
+  pub const VCM: Self = Self(166);
+  pub const WPN: Self = Self(167);
+  pub const WTH: Self = Self(168);
+  pub const XTC: Self = Self(169);
+  pub const SCV: Self = Self(170);
+  pub const FSM: Self = Self(171);
+  pub const FSP: Self = Self(172);
+  pub const SCC: Self = Self(173);
+  pub const SCN: Self = Self(174);
+  pub const VST: Self = Self(175);
+  pub const ENT: Self = Self(176);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 174;
+  pub const ENUM_MAX: u8 = 176;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -783,6 +789,7 @@ impl RecordType {
     Self::OSM,
     Self::PCF,
     Self::PHY,
+    Self::PGM,
     Self::PIV,
     Self::PLD,
     Self::PLG,
@@ -790,6 +797,7 @@ impl RecordType {
     Self::PNM,
     Self::PPE,
     Self::PRG,
+    Self::PRR,
     Self::PRW,
     Self::PUR,
     Self::RAF,
@@ -962,6 +970,7 @@ impl RecordType {
       Self::OSM => Some("OSM"),
       Self::PCF => Some("PCF"),
       Self::PHY => Some("PHY"),
+      Self::PGM => Some("PGM"),
       Self::PIV => Some("PIV"),
       Self::PLD => Some("PLD"),
       Self::PLG => Some("PLG"),
@@ -969,6 +978,7 @@ impl RecordType {
       Self::PNM => Some("PNM"),
       Self::PPE => Some("PPE"),
       Self::PRG => Some("PRG"),
+      Self::PRR => Some("PRR"),
       Self::PRW => Some("PRW"),
       Self::PUR => Some("PUR"),
       Self::RAF => Some("RAF"),
@@ -1197,6 +1207,7 @@ pub enum RecordTypeT {
   OSM(alloc::boxed::Box<OSMT>),
   PCF(alloc::boxed::Box<PCFT>),
   PHY(alloc::boxed::Box<PHYT>),
+  PGM(alloc::boxed::Box<PGMT>),
   PIV(alloc::boxed::Box<PIVT>),
   PLD(alloc::boxed::Box<PLDT>),
   PLG(alloc::boxed::Box<PLGT>),
@@ -1204,6 +1215,7 @@ pub enum RecordTypeT {
   PNM(alloc::boxed::Box<PNMT>),
   PPE(alloc::boxed::Box<PPET>),
   PRG(alloc::boxed::Box<PRGT>),
+  PRR(alloc::boxed::Box<PRRT>),
   PRW(alloc::boxed::Box<PRWT>),
   PUR(alloc::boxed::Box<PURT>),
   RAF(alloc::boxed::Box<RAFT>),
@@ -1381,6 +1393,7 @@ impl RecordTypeT {
       Self::OSM(_) => RecordType::OSM,
       Self::PCF(_) => RecordType::PCF,
       Self::PHY(_) => RecordType::PHY,
+      Self::PGM(_) => RecordType::PGM,
       Self::PIV(_) => RecordType::PIV,
       Self::PLD(_) => RecordType::PLD,
       Self::PLG(_) => RecordType::PLG,
@@ -1388,6 +1401,7 @@ impl RecordTypeT {
       Self::PNM(_) => RecordType::PNM,
       Self::PPE(_) => RecordType::PPE,
       Self::PRG(_) => RecordType::PRG,
+      Self::PRR(_) => RecordType::PRR,
       Self::PRW(_) => RecordType::PRW,
       Self::PUR(_) => RecordType::PUR,
       Self::RAF(_) => RecordType::RAF,
@@ -1560,6 +1574,7 @@ impl RecordTypeT {
       Self::OSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PCF(v) => Some(v.pack(fbb).as_union_value()),
       Self::PHY(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PGM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PIV(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLD(v) => Some(v.pack(fbb).as_union_value()),
       Self::PLG(v) => Some(v.pack(fbb).as_union_value()),
@@ -1567,6 +1582,7 @@ impl RecordTypeT {
       Self::PNM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PPE(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRG(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PRR(v) => Some(v.pack(fbb).as_union_value()),
       Self::PRW(v) => Some(v.pack(fbb).as_union_value()),
       Self::PUR(v) => Some(v.pack(fbb).as_union_value()),
       Self::RAF(v) => Some(v.pack(fbb).as_union_value()),
@@ -3896,6 +3912,27 @@ impl RecordTypeT {
   pub fn as_phy_mut(&mut self) -> Option<&mut PHYT> {
     if let Self::PHY(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned PGMT, setting the union to NONE.
+  pub fn take_pgm(&mut self) -> Option<alloc::boxed::Box<PGMT>> {
+    if let Self::PGM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PGM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PGMT.
+  pub fn as_pgm(&self) -> Option<&PGMT> {
+    if let Self::PGM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PGMT.
+  pub fn as_pgm_mut(&mut self) -> Option<&mut PGMT> {
+    if let Self::PGM(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned PIVT, setting the union to NONE.
   pub fn take_piv(&mut self) -> Option<alloc::boxed::Box<PIVT>> {
     if let Self::PIV(_) = self {
@@ -4042,6 +4079,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the PRGT.
   pub fn as_prg_mut(&mut self) -> Option<&mut PRGT> {
     if let Self::PRG(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PRRT, setting the union to NONE.
+  pub fn take_prr(&mut self) -> Option<alloc::boxed::Box<PRRT>> {
+    if let Self::PRR(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PRR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PRRT.
+  pub fn as_prr(&self) -> Option<&PRRT> {
+    if let Self::PRR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PRRT.
+  pub fn as_prr_mut(&mut self) -> Option<&mut PRRT> {
+    if let Self::PRR(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned PRWT, setting the union to NONE.
   pub fn take_prw(&mut self) -> Option<alloc::boxed::Box<PRWT>> {
@@ -5863,6 +5921,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::PHY`.")
             .unpack()
       )),
+      RecordType::PGM => RecordTypeT::PGM(alloc::boxed::Box::new(
+        self.value_as_pgm()
+            .expect("Invalid union table, expected `RecordType::PGM`.")
+            .unpack()
+      )),
       RecordType::PIV => RecordTypeT::PIV(alloc::boxed::Box::new(
         self.value_as_piv()
             .expect("Invalid union table, expected `RecordType::PIV`.")
@@ -5896,6 +5959,11 @@ impl<'a> Record<'a> {
       RecordType::PRG => RecordTypeT::PRG(alloc::boxed::Box::new(
         self.value_as_prg()
             .expect("Invalid union table, expected `RecordType::PRG`.")
+            .unpack()
+      )),
+      RecordType::PRR => RecordTypeT::PRR(alloc::boxed::Box::new(
+        self.value_as_prr()
+            .expect("Invalid union table, expected `RecordType::PRR`.")
             .unpack()
       )),
       RecordType::PRW => RecordTypeT::PRW(alloc::boxed::Box::new(
@@ -7849,6 +7917,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_pgm(&self) -> Option<PGM<'a>> {
+    if self.value_type() == RecordType::PGM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PGM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_piv(&self) -> Option<PIV<'a>> {
     if self.value_type() == RecordType::PIV {
       self.value().map(|t| {
@@ -7946,6 +8029,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { PRG::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_prr(&self) -> Option<PRR<'a>> {
+    if self.value_type() == RecordType::PRR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PRR::init_from_table(t) }
      })
     } else {
       None
@@ -8955,6 +9053,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::OSM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<OSM>>("RecordType::OSM", pos),
           RecordType::PCF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PCF>>("RecordType::PCF", pos),
           RecordType::PHY => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PHY>>("RecordType::PHY", pos),
+          RecordType::PGM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PGM>>("RecordType::PGM", pos),
           RecordType::PIV => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PIV>>("RecordType::PIV", pos),
           RecordType::PLD => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PLD>>("RecordType::PLD", pos),
           RecordType::PLG => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PLG>>("RecordType::PLG", pos),
@@ -8962,6 +9061,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::PNM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PNM>>("RecordType::PNM", pos),
           RecordType::PPE => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PPE>>("RecordType::PPE", pos),
           RecordType::PRG => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PRG>>("RecordType::PRG", pos),
+          RecordType::PRR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PRR>>("RecordType::PRR", pos),
           RecordType::PRW => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PRW>>("RecordType::PRW", pos),
           RecordType::PUR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PUR>>("RecordType::PUR", pos),
           RecordType::RAF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RAF>>("RecordType::RAF", pos),
@@ -9838,6 +9938,13 @@ impl ::core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::PGM => {
+          if let Some(x) = self.value_as_pgm() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::PIV => {
           if let Some(x) = self.value_as_piv() {
             ds.field("value", &x)
@@ -9882,6 +9989,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::PRG => {
           if let Some(x) = self.value_as_prg() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PRR => {
+          if let Some(x) = self.value_as_prr() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

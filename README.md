@@ -70,7 +70,7 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 ### Network Operations
 
-**TNR, TRE** — Trust graph node state and directed trust edge assertions for SDN operational state
+**PGM, PRR, TNR, TRE** — Peer group membership, trusted peer registry state, trust graph node state, and directed trust edge assertions for SDN operational state
 
 ### Geospatial
 

@@ -112,72 +112,74 @@ class RecordType(object):
     OSM = 106
     PCF = 107
     PHY = 108
-    PIV = 109
-    PLD = 110
-    PLG = 111
-    PLK = 112
-    PNM = 113
-    PPE = 114
-    PRG = 115
-    PRW = 116
-    PUR = 117
-    RAF = 118
-    RBK = 119
-    RCF = 120
-    RDM = 121
-    RDO = 122
-    REM = 123
-    REV = 124
-    RFB = 125
-    RFE = 126
-    RFM = 127
-    RFO = 128
-    ROC = 129
-    SAR = 130
-    SCM = 131
-    SDF = 132
-    SDL = 133
-    SDR = 134
-    SEN = 135
-    SEO = 136
-    SEV = 137
-    SHW = 138
-    SIT = 139
-    SKI = 140
-    SNR = 141
-    SNW = 142
-    SOI = 143
-    SON = 144
-    SPP = 145
-    SPW = 146
-    SRI = 147
-    STF = 148
-    STR = 149
-    STV = 150
-    SWR = 151
-    TAB = 152
-    TCF = 153
-    TDM = 154
-    TIM = 155
-    TKG = 156
-    TME = 157
-    TMF = 158
-    TNR = 159
-    TPN = 160
-    TRE = 161
-    TRK = 162
-    TRN = 163
-    VCM = 164
-    WPN = 165
-    WTH = 166
-    XTC = 167
-    SCV = 168
-    FSM = 169
-    FSP = 170
-    SCC = 171
-    SCN = 172
-    VST = 173
-    ENT = 174
+    PGM = 109
+    PIV = 110
+    PLD = 111
+    PLG = 112
+    PLK = 113
+    PNM = 114
+    PPE = 115
+    PRG = 116
+    PRR = 117
+    PRW = 118
+    PUR = 119
+    RAF = 120
+    RBK = 121
+    RCF = 122
+    RDM = 123
+    RDO = 124
+    REM = 125
+    REV = 126
+    RFB = 127
+    RFE = 128
+    RFM = 129
+    RFO = 130
+    ROC = 131
+    SAR = 132
+    SCM = 133
+    SDF = 134
+    SDL = 135
+    SDR = 136
+    SEN = 137
+    SEO = 138
+    SEV = 139
+    SHW = 140
+    SIT = 141
+    SKI = 142
+    SNR = 143
+    SNW = 144
+    SOI = 145
+    SON = 146
+    SPP = 147
+    SPW = 148
+    SRI = 149
+    STF = 150
+    STR = 151
+    STV = 152
+    SWR = 153
+    TAB = 154
+    TCF = 155
+    TDM = 156
+    TIM = 157
+    TKG = 158
+    TME = 159
+    TMF = 160
+    TNR = 161
+    TPN = 162
+    TRE = 163
+    TRK = 164
+    TRN = 165
+    VCM = 166
+    WPN = 167
+    WTH = 168
+    XTC = 169
+    SCV = 170
+    FSM = 171
+    FSP = 172
+    SCC = 173
+    SCN = 174
+    VST = 175
+    ENT = 176
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -507,6 +509,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PHY:
         import PHY
         return PHY.PHYT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PGM:
+        import PGM
+        return PGM.PGMT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PIV:
         import PIV
         return PIV.PIVT.InitFromBuf(table.Bytes, table.Pos)
@@ -528,6 +533,9 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PRG:
         import PRG
         return PRG.PRGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PRR:
+        import PRR
+        return PRR.PRRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.PRW:
         import PRW
         return PRW.PRWT.InitFromBuf(table.Bytes, table.Pos)
