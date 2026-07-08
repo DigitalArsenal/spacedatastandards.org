@@ -6,7 +6,25 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Dataset Publication Manifest
+///  Dataset Publication Manifest.
+///
+///  A DPM is the immutable, signed manifest for one dataset publication. A
+///  provider creates it after ingesting source data, normalizing records into
+///  SDS FlatBuffers, and deciding which exact product is authoritative for that
+///  publication window. The DPM is the retrieval and verification contract for
+///  that product: it binds the provider identity, dataset/update identifiers,
+///  canonical FILE_ID, source batch provenance, published assets, byte lengths,
+///  byte hashes, schema hashes, query replay metadata, completeness roots,
+///  optional encryption metadata, and provider signature into one object.
+///
+///  For content-addressed publications, the DPM lists the data shard, query
+///  index, manifest, and auxiliary assets by CID or multiformat address. For
+///  provider-mediated publications, it records the signed query protocol and
+///  Merkle/completeness roots that returned records must prove against before a
+///  subscriber imports them. The DPM is not the network notification itself:
+///  subscribers usually discover it from a signed PNM whose CID points at the
+///  DPM or a compact DPM digest, then fetch and verify the DPM before resolving
+///  any listed asset or accepting any provider response.
 ///  Published artifact role within a dataset update.
 enum publicationAssetKind {
   DATA_SHARD(0),
@@ -1067,9 +1085,15 @@ class DPMEncryptionBindingObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Dataset Publication Manifest binding data/index CIDs, query replay,
-///  source hashes, schema hashes, encryption metadata, provider-mediated query
-///  protocols, completeness roots, and provider signature.
+///  Immutable signed publication contract for one dataset update. DPM records
+///  are the authoritative product manifests consumed by subscribers, pinning
+///  nodes, archive nodes, and query gateways. A valid DPM answers: who published
+///  this update, which dataset and FILE_ID it represents, which source batches
+///  produced it, which exact bytes or provider-mediated query responses are
+///  authorized, how those bytes are addressed, how records and indexes are
+///  hashed, whether content-key metadata applies, and which provider signature
+///  commits to the manifest. PNM announces the current DPM; DPM defines what
+///  must be fetched, verified, imported, pinned, or archived.
 class DPM {
   DPM._(this._bc, this._bcOffset);
   factory DPM(List<int> bytes) {

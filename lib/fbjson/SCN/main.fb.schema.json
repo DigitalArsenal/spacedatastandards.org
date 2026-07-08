@@ -5990,28 +5990,6 @@
       },
       "description": "GeoJSON FeatureCollection"
     },
-    "SCNGeodeticPoint": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "LATITUDE": {
-          "type": "number",
-          "description": "Latitude in degrees.",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE": {
-          "type": "number",
-          "description": "Longitude in degrees.",
-          "x-flatbuffer-type": "double"
-        },
-        "ALTITUDE": {
-          "type": "number",
-          "description": "Altitude above the reference ellipsoid in kilometers.",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "description": "Geodetic point in latitude, longitude, altitude order."
-    },
     "SCNPointOfInterest": {
       "type": "object",
       "additionalProperties": false,
@@ -6047,9 +6025,9 @@
           "x-flatbuffer-type": "string"
         },
         "POSITION": {
-          "$ref": "#/definitions/SCNGeodeticPoint",
-          "description": "Geodetic position for the point of interest.",
-          "x-flatbuffer-type": "SCNGeodeticPoint"
+          "$ref": "#/definitions/GJNPosition",
+          "description": "WGS84 geodetic position for the point of interest.",
+          "x-flatbuffer-type": "GJNPosition"
         }
       },
       "description": "Time-tagged point or annotation shown in a scenario."
@@ -6100,19 +6078,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "TARGET_REFERENCE_ID": {
+        "TARGET_ID": {
           "type": "string",
-          "description": "Scenario reference id of the target object.",
+          "description": "Target identifier for the paired object.",
           "x-flatbuffer-type": "string"
         },
-        "TARGET_NORAD_CAT_ID": {
+        "NORAD_CAT_ID": {
           "type": "integer",
           "description": "NORAD catalog id of the target satellite when available.",
           "x-flatbuffer-type": "uint32"
         },
-        "GROUND_SITE_ID": {
+        "SITE_ID": {
           "type": "string",
-          "description": "Ground site id associated with the target pairing.",
+          "description": "Site id associated with the target pairing.",
           "x-flatbuffer-type": "string"
         }
       },
@@ -6145,10 +6123,10 @@
         "POINTS": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SCNGeodeticPoint"
+            "$ref": "#/definitions/GJNPosition"
           },
-          "description": "Simple geodetic polygon points for imported zones.",
-          "x-flatbuffer-type": "[SCNGeodeticPoint]"
+          "description": "Simple WGS84 polygon points for imported zones.",
+          "x-flatbuffer-type": "[GJNPosition]"
         },
         "BOUNDARY": {
           "$ref": "#/definitions/GJNGeometry",
@@ -6156,7 +6134,7 @@
           "x-flatbuffer-type": "GJNGeometry"
         }
       },
-      "description": "Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape when available; POINTS preserves simple LLA polygon imports."
+      "description": "Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape when available; POINTS preserves simple WGS84 polygon imports."
     },
     "SCNReference": {
       "type": "object",
@@ -6167,9 +6145,9 @@
           "description": "Stable scenario-local id for this reference.",
           "x-flatbuffer-type": "string"
         },
-        "DISPLAY_NAME": {
+        "NAME": {
           "type": "string",
-          "description": "Human-readable display name for the reference.",
+          "description": "Human-readable name for the reference.",
           "x-flatbuffer-type": "string"
         },
         "REFERENCE_KIND": {
@@ -6224,7 +6202,12 @@
         },
         "COUNTRY": {
           "type": "string",
-          "description": "Country or owner label associated with the reference.",
+          "description": "Country associated with the reference.",
+          "x-flatbuffer-type": "string"
+        },
+        "OWNER": {
+          "type": "string",
+          "description": "Owner or operator label associated with the reference.",
           "x-flatbuffer-type": "string"
         },
         "SOURCES": {
@@ -6251,7 +6234,7 @@
           "description": "Mean orbital elements associated with this reference.",
           "x-flatbuffer-type": "[OMM]"
         },
-        "STATES": {
+        "STATE_VECTORS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/STV"
@@ -6287,15 +6270,10 @@
           "description": "Sensor id for references that identify a sensor by id.",
           "x-flatbuffer-type": "string"
         },
-        "SITE_LATITUDE": {
-          "type": "number",
-          "description": "Ground-site latitude in degrees when no SIT record is available.",
-          "x-flatbuffer-type": "double"
-        },
-        "SITE_LONGITUDE": {
-          "type": "number",
-          "description": "Ground-site longitude in degrees when no SIT record is available.",
-          "x-flatbuffer-type": "double"
+        "SITE_POSITION": {
+          "$ref": "#/definitions/GJNPosition",
+          "description": "WGS84 site position when no SIT or SEN record is available.",
+          "x-flatbuffer-type": "GJNPosition"
         },
         "VARIABLE_SATELLITE_ID": {
           "type": "string",
@@ -6352,15 +6330,15 @@
           "description": "Stable id for the imported scenario event.",
           "x-flatbuffer-type": "string"
         },
-        "ELSETS": {
+        "MEAN_ELEMENTS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/OMM"
           },
-          "description": "Element sets associated with the event.",
+          "description": "Mean orbital elements associated with the event.",
           "x-flatbuffer-type": "[OMM]"
         },
-        "STATES": {
+        "STATE_VECTORS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/STV"
@@ -6483,9 +6461,9 @@
           "description": "Reference id of the currently focused scenario object.",
           "x-flatbuffer-type": "string"
         },
-        "SIM_TIME": {
+        "EPOCH": {
           "type": "string",
-          "description": "Current simulation time as an ISO-8601 UTC timestamp.",
+          "description": "Current scenario epoch as an ISO-8601 UTC timestamp.",
           "x-flatbuffer-type": "string"
         },
         "SIM_SPEED": {
@@ -6493,14 +6471,14 @@
           "description": "Simulation time-rate multiplier.",
           "x-flatbuffer-type": "double"
         },
-        "USE_ECEF_FRAME": {
+        "USE_BODY_FIXED_FRAME": {
           "type": "boolean",
-          "description": "True when the viewer should use an Earth-centered Earth-fixed frame.",
+          "description": "True when the viewer should use a body-fixed display frame.",
           "x-flatbuffer-type": "bool"
         },
         "REFERENCE_FRAME": {
           "$ref": "#/definitions/RFM",
-          "description": "Reference frame used for scenario propagation and display.",
+          "description": "Authoritative reference frame used for scenario propagation and display.",
           "x-flatbuffer-type": "RFM"
         },
         "ACTION": {

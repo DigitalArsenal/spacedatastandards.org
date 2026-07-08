@@ -4,7 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { SCNGeodeticPoint, SCNGeodeticPointT } from './SCNGeodeticPoint.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 
 
 /**
@@ -85,11 +85,11 @@ COLOR(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Geodetic position for the point of interest.
+ * WGS84 geodetic position for the point of interest.
  */
-POSITION(obj?:SCNGeodeticPoint):SCNGeodeticPoint|null {
+POSITION(obj?:GJNPosition):GJNPosition|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? (obj || new SCNGeodeticPoint()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new GJNPosition()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 static startSCNPointOfInterest(builder:flatbuffers.Builder) {
@@ -162,7 +162,7 @@ constructor(
   public HIGHLIGHT_BEFORE: number = 0.0,
   public HIGHLIGHT_AFTER: number = 0.0,
   public COLOR: string|Uint8Array|null = null,
-  public POSITION: SCNGeodeticPointT|null = null
+  public POSITION: GJNPositionT|null = null
 ){}
 
 

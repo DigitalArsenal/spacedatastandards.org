@@ -1,5 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
-import { SCNGeodeticPoint, SCNGeodeticPointT } from './SCNGeodeticPoint.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 /**
  * Time-tagged point or annotation shown in a scenario.
  */
@@ -38,9 +38,9 @@ export declare class SCNPointOfInterest implements flatbuffers.IUnpackableObject
     COLOR(): string | null;
     COLOR(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Geodetic position for the point of interest.
+     * WGS84 geodetic position for the point of interest.
      */
-    POSITION(obj?: SCNGeodeticPoint): SCNGeodeticPoint | null;
+    POSITION(obj?: GJNPosition): GJNPosition | null;
     static startSCNPointOfInterest(builder: flatbuffers.Builder): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addDescription(builder: flatbuffers.Builder, DESCRIPTIONOffset: flatbuffers.Offset): void;
@@ -60,8 +60,8 @@ export declare class SCNPointOfInterestT implements flatbuffers.IGeneratedObject
     HIGHLIGHT_BEFORE: number;
     HIGHLIGHT_AFTER: number;
     COLOR: string | Uint8Array | null;
-    POSITION: SCNGeodeticPointT | null;
-    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, HIGHLIGHT_BEFORE?: number, HIGHLIGHT_AFTER?: number, COLOR?: string | Uint8Array | null, POSITION?: SCNGeodeticPointT | null);
+    POSITION: GJNPositionT | null;
+    constructor(NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, HIGHLIGHT_BEFORE?: number, HIGHLIGHT_AFTER?: number, COLOR?: string | Uint8Array | null, POSITION?: GJNPositionT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNPointOfInterest.d.ts.map

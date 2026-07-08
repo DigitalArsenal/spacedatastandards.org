@@ -30,9 +30,9 @@ class SCNSunAdvantageTarget : Table() {
         return this
     }
     /**
-     * Scenario reference id of the target object.
+     * Target identifier for the paired object.
      */
-    val targetReferenceId : String?
+    val targetId : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -41,20 +41,20 @@ class SCNSunAdvantageTarget : Table() {
                 null
             }
         }
-    val targetReferenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
-    fun targetReferenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val targetIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun targetIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * NORAD catalog id of the target satellite when available.
      */
-    val targetNoradCatId : UInt
+    val noradCatId : UInt
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Ground site id associated with the target pairing.
+     * Site id associated with the target pairing.
      */
-    val groundSiteId : String?
+    val siteId : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -63,8 +63,8 @@ class SCNSunAdvantageTarget : Table() {
                 null
             }
         }
-    val groundSiteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
-    fun groundSiteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    val siteIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
+    fun siteIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCNSunAdvantageTarget(_bb: ByteBuffer): SCNSunAdvantageTarget = getRootAsSCNSunAdvantageTarget(_bb, SCNSunAdvantageTarget())
@@ -72,17 +72,17 @@ class SCNSunAdvantageTarget : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNSunAdvantageTarget(builder: FlatBufferBuilder, targetReferenceIdOffset: Int, targetNoradCatId: UInt, groundSiteIdOffset: Int) : Int {
+        fun createSCNSunAdvantageTarget(builder: FlatBufferBuilder, targetIdOffset: Int, noradCatId: UInt, siteIdOffset: Int) : Int {
             builder.startTable(3)
-            addGROUNDSITEID(builder, groundSiteIdOffset)
-            addTARGETNORADCATID(builder, targetNoradCatId)
-            addTARGETREFERENCEID(builder, targetReferenceIdOffset)
+            addSITEID(builder, siteIdOffset)
+            addNORADCATID(builder, noradCatId)
+            addTARGETID(builder, targetIdOffset)
             return endSCNSunAdvantageTarget(builder)
         }
         fun startSCNSunAdvantageTarget(builder: FlatBufferBuilder) = builder.startTable(3)
-        fun addTARGETREFERENCEID(builder: FlatBufferBuilder, targetReferenceId: Int) = builder.addOffset(0, targetReferenceId, 0)
-        fun addTARGETNORADCATID(builder: FlatBufferBuilder, targetNoradCatId: UInt) = builder.addInt(1, targetNoradCatId.toInt(), 0)
-        fun addGROUNDSITEID(builder: FlatBufferBuilder, groundSiteId: Int) = builder.addOffset(2, groundSiteId, 0)
+        fun addTARGETID(builder: FlatBufferBuilder, targetId: Int) = builder.addOffset(0, targetId, 0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(1, noradCatId.toInt(), 0)
+        fun addSITEID(builder: FlatBufferBuilder, siteId: Int) = builder.addOffset(2, siteId, 0)
         fun endSCNSunAdvantageTarget(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

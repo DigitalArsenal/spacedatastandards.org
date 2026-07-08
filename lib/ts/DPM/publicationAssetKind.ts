@@ -3,7 +3,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 /**
- * Dataset Publication Manifest
+ * Dataset Publication Manifest.
+ *
+ * A DPM is the immutable, signed manifest for one dataset publication. A
+ * provider creates it after ingesting source data, normalizing records into
+ * SDS FlatBuffers, and deciding which exact product is authoritative for that
+ * publication window. The DPM is the retrieval and verification contract for
+ * that product: it binds the provider identity, dataset/update identifiers,
+ * canonical FILE_ID, source batch provenance, published assets, byte lengths,
+ * byte hashes, schema hashes, query replay metadata, completeness roots,
+ * optional encryption metadata, and provider signature into one object.
+ *
+ * For content-addressed publications, the DPM lists the data shard, query
+ * index, manifest, and auxiliary assets by CID or multiformat address. For
+ * provider-mediated publications, it records the signed query protocol and
+ * Merkle/completeness roots that returned records must prove against before a
+ * subscriber imports them. The DPM is not the network notification itself:
+ * subscribers usually discover it from a signed PNM whose CID points at the
+ * DPM or a compact DPM digest, then fetch and verify the DPM before resolving
+ * any listed asset or accepting any provider response.
  * Published artifact role within a dataset update.
  */
 export enum publicationAssetKind {

@@ -17,40 +17,40 @@ public struct SCNSunAdvantageTarget : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SCNSunAdvantageTarget __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Scenario reference id of the target object.
-  public string TARGET_REFERENCE_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Target identifier for the paired object.
+  public string TARGET_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTARGET_REFERENCE_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetTARGET_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetTARGET_REFERENCE_IDBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetTARGET_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetTARGET_REFERENCE_IDArray() { return __p.__vector_as_array<byte>(4); }
+  public byte[] GetTARGET_IDArray() { return __p.__vector_as_array<byte>(4); }
   /// NORAD catalog id of the target satellite when available.
-  public uint TARGET_NORAD_CAT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Ground site id associated with the target pairing.
-  public string GROUND_SITE_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Site id associated with the target pairing.
+  public string SITE_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetGROUND_SITE_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetSITE_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetGROUND_SITE_IDBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetSITE_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetGROUND_SITE_IDArray() { return __p.__vector_as_array<byte>(8); }
+  public byte[] GetSITE_IDArray() { return __p.__vector_as_array<byte>(8); }
 
   public static Offset<SCNSunAdvantageTarget> CreateSCNSunAdvantageTarget(FlatBufferBuilder builder,
-      StringOffset TARGET_REFERENCE_IDOffset = default(StringOffset),
-      uint TARGET_NORAD_CAT_ID = 0,
-      StringOffset GROUND_SITE_IDOffset = default(StringOffset)) {
+      StringOffset TARGET_IDOffset = default(StringOffset),
+      uint NORAD_CAT_ID = 0,
+      StringOffset SITE_IDOffset = default(StringOffset)) {
     builder.StartTable(3);
-    SCNSunAdvantageTarget.AddGROUND_SITE_ID(builder, GROUND_SITE_IDOffset);
-    SCNSunAdvantageTarget.AddTARGET_NORAD_CAT_ID(builder, TARGET_NORAD_CAT_ID);
-    SCNSunAdvantageTarget.AddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_IDOffset);
+    SCNSunAdvantageTarget.AddSITE_ID(builder, SITE_IDOffset);
+    SCNSunAdvantageTarget.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
+    SCNSunAdvantageTarget.AddTARGET_ID(builder, TARGET_IDOffset);
     return SCNSunAdvantageTarget.EndSCNSunAdvantageTarget(builder);
   }
 
   public static void StartSCNSunAdvantageTarget(FlatBufferBuilder builder) { builder.StartTable(3); }
-  public static void AddTARGET_REFERENCE_ID(FlatBufferBuilder builder, StringOffset TARGET_REFERENCE_IDOffset) { builder.AddOffset(0, TARGET_REFERENCE_IDOffset.Value, 0); }
-  public static void AddTARGET_NORAD_CAT_ID(FlatBufferBuilder builder, uint TARGET_NORAD_CAT_ID) { builder.AddUint(1, TARGET_NORAD_CAT_ID, 0); }
-  public static void AddGROUND_SITE_ID(FlatBufferBuilder builder, StringOffset GROUND_SITE_IDOffset) { builder.AddOffset(2, GROUND_SITE_IDOffset.Value, 0); }
+  public static void AddTARGET_ID(FlatBufferBuilder builder, StringOffset TARGET_IDOffset) { builder.AddOffset(0, TARGET_IDOffset.Value, 0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(1, NORAD_CAT_ID, 0); }
+  public static void AddSITE_ID(FlatBufferBuilder builder, StringOffset SITE_IDOffset) { builder.AddOffset(2, SITE_IDOffset.Value, 0); }
   public static Offset<SCNSunAdvantageTarget> EndSCNSunAdvantageTarget(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCNSunAdvantageTarget>(o);
@@ -61,32 +61,32 @@ public struct SCNSunAdvantageTarget : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(SCNSunAdvantageTargetT _o) {
-    _o.TARGET_REFERENCE_ID = this.TARGET_REFERENCE_ID;
-    _o.TARGET_NORAD_CAT_ID = this.TARGET_NORAD_CAT_ID;
-    _o.GROUND_SITE_ID = this.GROUND_SITE_ID;
+    _o.TARGET_ID = this.TARGET_ID;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
+    _o.SITE_ID = this.SITE_ID;
   }
   public static Offset<SCNSunAdvantageTarget> Pack(FlatBufferBuilder builder, SCNSunAdvantageTargetT _o) {
     if (_o == null) return default(Offset<SCNSunAdvantageTarget>);
-    var _TARGET_REFERENCE_ID = _o.TARGET_REFERENCE_ID == null ? default(StringOffset) : builder.CreateString(_o.TARGET_REFERENCE_ID);
-    var _GROUND_SITE_ID = _o.GROUND_SITE_ID == null ? default(StringOffset) : builder.CreateString(_o.GROUND_SITE_ID);
+    var _TARGET_ID = _o.TARGET_ID == null ? default(StringOffset) : builder.CreateString(_o.TARGET_ID);
+    var _SITE_ID = _o.SITE_ID == null ? default(StringOffset) : builder.CreateString(_o.SITE_ID);
     return CreateSCNSunAdvantageTarget(
       builder,
-      _TARGET_REFERENCE_ID,
-      _o.TARGET_NORAD_CAT_ID,
-      _GROUND_SITE_ID);
+      _TARGET_ID,
+      _o.NORAD_CAT_ID,
+      _SITE_ID);
   }
 }
 
 public class SCNSunAdvantageTargetT
 {
-  public string TARGET_REFERENCE_ID { get; set; }
-  public uint TARGET_NORAD_CAT_ID { get; set; }
-  public string GROUND_SITE_ID { get; set; }
+  public string TARGET_ID { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
+  public string SITE_ID { get; set; }
 
   public SCNSunAdvantageTargetT() {
-    this.TARGET_REFERENCE_ID = null;
-    this.TARGET_NORAD_CAT_ID = 0;
-    this.GROUND_SITE_ID = null;
+    this.TARGET_ID = null;
+    this.NORAD_CAT_ID = 0;
+    this.SITE_ID = null;
   }
 }
 
@@ -96,9 +96,9 @@ static public class SCNSunAdvantageTargetVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*TARGET_REFERENCE_ID*/, false)
-      && verifier.VerifyField(tablePos, 6 /*TARGET_NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyString(tablePos, 8 /*GROUND_SITE_ID*/, false)
+      && verifier.VerifyString(tablePos, 4 /*TARGET_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*SITE_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

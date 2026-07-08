@@ -197,13 +197,11 @@ describe("scenario controls schema consolidation", () => {
       'include "../VST/main.fbs";',
       "enum scenarioReferenceKind : byte",
       "enum scenarioActionCode : byte",
+      "POSITION:GJNPosition",
       "table SCNPointOfInterest",
       "table SCNViewCone",
       "table SCNExclusionZone",
       "table SCNReference",
-      "LATITUDE:double",
-      "LONGITUDE:double",
-      "ALTITUDE:double",
       "HIGHLIGHT_BEFORE:double",
       "HIGHLIGHT_AFTER:double",
       "MIN_ELEVATION:double",
@@ -213,27 +211,49 @@ describe("scenario controls schema consolidation", () => {
       "MAX_RANGE:double",
       "HALF_ANGLE:double",
       "MEAN_ELEMENTS:[OMM]",
-      "STATES:[STV]",
+      "STATE_VECTORS:[STV]",
       "MANEUVERS:[MNV]",
       "SITE:SIT",
       "SENSOR:SEN",
       "SENSOR_SYSTEM_ID:string",
-      "SITE_LATITUDE:double",
-      "SITE_LONGITUDE:double",
+      "SITE_POSITION:GJNPosition",
+      "TARGET_ID:string",
+      "SITE_ID:string",
       "OBSERVATION_EO:EOO",
       "OBSERVATION_RADAR:RDO",
       "EXCLUSION_ZONE:SCNExclusionZone",
       "table SCNEvent",
+      "MEAN_ELEMENTS:[OMM]",
+      "STATE_VECTORS:[STV]",
       "EO_OBSERVATIONS:[EOO]",
       "RADAR_OBSERVATIONS:[RDO]",
       "table SCNAssetsChanged",
       "table SCN",
       "REFERENCES:[SCNReference]",
+      "EPOCH:string",
+      "USE_BODY_FIXED_FRAME:bool",
       "VIEW_STATE:VST",
       "root_type SCN;",
       'file_identifier "$SCN";',
     ]) {
       assert.match(scnSource, escapedTokenRegex(token));
+    }
+
+    for (const prohibitedToken of [
+      "table SCNGeodeticPoint",
+      "POSITION:SCNGeodeticPoint",
+      "POINTS:[SCNGeodeticPoint]",
+      "DISPLAY_NAME:string",
+      "TARGET_REFERENCE_ID:string",
+      "TARGET_NORAD_CAT_ID:uint32",
+      "GROUND_SITE_ID:string",
+      "SITE_LATITUDE:double",
+      "SITE_LONGITUDE:double",
+      "ELSETS:[OMM]",
+      "SIM_TIME:string",
+      "USE_ECEF_FRAME:bool",
+    ]) {
+      assert.doesNotMatch(scnSource, escapedTokenRegex(prohibitedToken));
     }
 
     for (const token of [
@@ -279,9 +299,7 @@ describe("scenario controls schema consolidation", () => {
     }
 
     for (const token of [
-      "LATITUDE:double",
-      "LONGITUDE:double",
-      "ALTITUDE:double",
+      "POSITION:GJNPosition",
       "HIGHLIGHT_BEFORE:double",
       "HIGHLIGHT_AFTER:double",
       "MIN_ELEVATION:double",
@@ -290,8 +308,7 @@ describe("scenario controls schema consolidation", () => {
       "MAX_AZIMUTH:double",
       "MAX_RANGE:double",
       "HALF_ANGLE:double",
-      "SITE_LATITUDE:double",
-      "SITE_LONGITUDE:double",
+      "SITE_POSITION:GJNPosition",
     ]) {
       assert.match(scnSource, escapedTokenRegex(token));
     }
@@ -355,6 +372,7 @@ describe("scenario controls schema consolidation", () => {
     ]);
 
     assert.match(sources[0], escapedTokenRegex("MEAN_ELEMENTS:[OMM]"));
+    assert.doesNotMatch(sources[0], escapedTokenRegex("ELSETS:[OMM]"));
 
     for (const [index, source] of sources.entries()) {
       assertNoLineElementSetSurface(`scenario schema artifact ${index}`, source);
@@ -375,7 +393,7 @@ describe("scenario controls schema consolidation", () => {
       "VST",
     ]);
     assertFieldDescriptions(scnSchema, [
-      "SCNGeodeticPoint",
+      "GJNPosition",
       "SCNPointOfInterest",
       "SCNViewCone",
       "SCNSunAdvantageTarget",

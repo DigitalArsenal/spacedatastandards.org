@@ -89,10 +89,10 @@ class SCNPointOfInterest extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Geodetic position for the point of interest.
+    /// WGS84 geodetic position for the point of interest.
     public function getPOSITION()
     {
-        $obj = new SCNGeodeticPoint();
+        $obj = new GJNPosition();
         $o = $this->__offset(16);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }

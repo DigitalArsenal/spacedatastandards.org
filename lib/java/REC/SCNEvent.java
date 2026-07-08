@@ -34,21 +34,21 @@ public final class SCNEvent extends com.google.flatbuffers.Table {
   public ByteBuffer EVENT_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer EVENT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Element sets associated with the event.
+   * Mean orbital elements associated with the event.
    */
-  public OMM ELSETS(int j) { return ELSETS(new OMM(), j); }
-  public OMM ELSETS(OMM obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int ELSETSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
-  public OMM.Vector elsetsVector() { return elsetsVector(new OMM.Vector()); }
-  public OMM.Vector elsetsVector(OMM.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public OMM MEAN_ELEMENTS(int j) { return MEAN_ELEMENTS(new OMM(), j); }
+  public OMM MEAN_ELEMENTS(OMM obj, int j) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MEAN_ELEMENTSLength() { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; }
+  public OMM.Vector meanElementsVector() { return meanElementsVector(new OMM.Vector()); }
+  public OMM.Vector meanElementsVector(OMM.Vector obj) { int o = __offset(6); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * State vectors associated with the event.
    */
-  public STV STATES(int j) { return STATES(new STV(), j); }
-  public STV STATES(STV obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int STATESLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
-  public STV.Vector statesVector() { return statesVector(new STV.Vector()); }
-  public STV.Vector statesVector(STV.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public STV STATE_VECTORS(int j) { return STATE_VECTORS(new STV(), j); }
+  public STV STATE_VECTORS(STV obj, int j) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int STATE_VECTORSLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
+  public STV.Vector stateVectorsVector() { return stateVectorsVector(new STV.Vector()); }
+  public STV.Vector stateVectorsVector(STV.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Electro-optical observations associated with the event.
    */
@@ -68,27 +68,27 @@ public final class SCNEvent extends com.google.flatbuffers.Table {
 
   public static int createSCNEvent(FlatBufferBuilder builder,
       int EVENT_IDOffset,
-      int ELSETSOffset,
-      int STATESOffset,
+      int MEAN_ELEMENTSOffset,
+      int STATE_VECTORSOffset,
       int EO_OBSERVATIONSOffset,
       int RADAR_OBSERVATIONSOffset) {
     builder.startTable(5);
     SCNEvent.addRadarObservations(builder, RADAR_OBSERVATIONSOffset);
     SCNEvent.addEoObservations(builder, EO_OBSERVATIONSOffset);
-    SCNEvent.addStates(builder, STATESOffset);
-    SCNEvent.addElsets(builder, ELSETSOffset);
+    SCNEvent.addStateVectors(builder, STATE_VECTORSOffset);
+    SCNEvent.addMeanElements(builder, MEAN_ELEMENTSOffset);
     SCNEvent.addEventId(builder, EVENT_IDOffset);
     return SCNEvent.endSCNEvent(builder);
   }
 
   public static void startSCNEvent(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addEventId(FlatBufferBuilder builder, int EVENT_IDOffset) { builder.addOffset(0, EVENT_IDOffset, 0); }
-  public static void addElsets(FlatBufferBuilder builder, int ELSETSOffset) { builder.addOffset(1, ELSETSOffset, 0); }
-  public static int createElsetsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startElsetsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addStates(FlatBufferBuilder builder, int STATESOffset) { builder.addOffset(2, STATESOffset, 0); }
-  public static int createStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMeanElements(FlatBufferBuilder builder, int MEAN_ELEMENTSOffset) { builder.addOffset(1, MEAN_ELEMENTSOffset, 0); }
+  public static int createMeanElementsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startMeanElementsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStateVectors(FlatBufferBuilder builder, int STATE_VECTORSOffset) { builder.addOffset(2, STATE_VECTORSOffset, 0); }
+  public static int createStateVectorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStateVectorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addEoObservations(FlatBufferBuilder builder, int EO_OBSERVATIONSOffset) { builder.addOffset(3, EO_OBSERVATIONSOffset, 0); }
   public static int createEoObservationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startEoObservationsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

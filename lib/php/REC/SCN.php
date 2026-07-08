@@ -95,8 +95,8 @@ class SCN extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Current simulation time as an ISO-8601 UTC timestamp.
-    public function getSIM_TIME()
+    /// Current scenario epoch as an ISO-8601 UTC timestamp.
+    public function getEPOCH()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -112,17 +112,17 @@ class SCN extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// True when the viewer should use an Earth-centered Earth-fixed frame.
+    /// True when the viewer should use a body-fixed display frame.
     /**
      * @return bool
      */
-    public function getUSE_ECEF_FRAME()
+    public function getUSE_BODY_FIXED_FRAME()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Reference frame used for scenario propagation and display.
+    /// Authoritative reference frame used for scenario propagation and display.
     public function getREFERENCE_FRAME()
     {
         $obj = new RFM();
@@ -169,7 +169,7 @@ class SCN extends Table
      * @param FlatBufferBuilder $builder
      * @return SCN
      */
-    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $SIM_TIME, $SIM_SPEED, $USE_ECEF_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED)
+    public static function createSCN(FlatBufferBuilder $builder, $SCENARIO_ID, $REFERENCES, $EVENT, $FOCUSED_REFERENCE_INDEX, $FOCUSED_REFERENCE_ID, $EPOCH, $SIM_SPEED, $USE_BODY_FIXED_FRAME, $REFERENCE_FRAME, $ACTION, $VIEW_STATE, $ASSETS_CHANGED)
     {
         $builder->startObject(12);
         self::addSCENARIO_ID($builder, $SCENARIO_ID);
@@ -177,9 +177,9 @@ class SCN extends Table
         self::addEVENT($builder, $EVENT);
         self::addFOCUSED_REFERENCE_INDEX($builder, $FOCUSED_REFERENCE_INDEX);
         self::addFOCUSED_REFERENCE_ID($builder, $FOCUSED_REFERENCE_ID);
-        self::addSIM_TIME($builder, $SIM_TIME);
+        self::addEPOCH($builder, $EPOCH);
         self::addSIM_SPEED($builder, $SIM_SPEED);
-        self::addUSE_ECEF_FRAME($builder, $USE_ECEF_FRAME);
+        self::addUSE_BODY_FIXED_FRAME($builder, $USE_BODY_FIXED_FRAME);
         self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
         self::addACTION($builder, $ACTION);
         self::addVIEW_STATE($builder, $VIEW_STATE);
@@ -267,9 +267,9 @@ class SCN extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSIM_TIME(FlatBufferBuilder $builder, $SIM_TIME)
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
     {
-        $builder->addOffsetX(5, $SIM_TIME, 0);
+        $builder->addOffsetX(5, $EPOCH, 0);
     }
 
     /**
@@ -287,9 +287,9 @@ class SCN extends Table
      * @param bool
      * @return void
      */
-    public static function addUSE_ECEF_FRAME(FlatBufferBuilder $builder, $USE_ECEF_FRAME)
+    public static function addUSE_BODY_FIXED_FRAME(FlatBufferBuilder $builder, $USE_BODY_FIXED_FRAME)
     {
-        $builder->addBoolX(7, $USE_ECEF_FRAME, false);
+        $builder->addBoolX(7, $USE_BODY_FIXED_FRAME, false);
     }
 
     /**

@@ -7,7 +7,7 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 class SCNExclusionZone extends Table
 {
     /**
@@ -73,14 +73,14 @@ class SCNExclusionZone extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Simple geodetic polygon points for imported zones.
+    /// Simple WGS84 polygon points for imported zones.
     /**
      * @returnVectorOffset
      */
     public function getPOINTS($j)
     {
         $o = $this->__offset(12);
-        $obj = new SCNGeodeticPoint();
+        $obj = new GJNPosition();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 

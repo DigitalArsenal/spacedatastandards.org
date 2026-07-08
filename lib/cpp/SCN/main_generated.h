@@ -24,9 +24,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 
-struct SCNGeodeticPoint;
-struct SCNGeodeticPointBuilder;
-
 struct SCNPointOfInterest;
 struct SCNPointOfInterestBuilder;
 
@@ -139,72 +136,6 @@ inline const char *EnumNamescenarioActionCode(scenarioActionCode e) {
   return EnumNamesscenarioActionCode()[index];
 }
 
-/// Geodetic point in latitude, longitude, altitude order.
-struct SCNGeodeticPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef SCNGeodeticPointBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_LATITUDE = 4,
-    VT_LONGITUDE = 6,
-    VT_ALTITUDE = 8
-  };
-  /// Latitude in degrees.
-  double LATITUDE() const {
-    return GetField<double>(VT_LATITUDE, 0.0);
-  }
-  /// Longitude in degrees.
-  double LONGITUDE() const {
-    return GetField<double>(VT_LONGITUDE, 0.0);
-  }
-  /// Altitude above the reference ellipsoid in kilometers.
-  double ALTITUDE() const {
-    return GetField<double>(VT_ALTITUDE, 0.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_LATITUDE, 8) &&
-           VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
-           VerifyField<double>(verifier, VT_ALTITUDE, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct SCNGeodeticPointBuilder {
-  typedef SCNGeodeticPoint Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_LATITUDE(double LATITUDE) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LATITUDE, LATITUDE, 0.0);
-  }
-  void add_LONGITUDE(double LONGITUDE) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_LONGITUDE, LONGITUDE, 0.0);
-  }
-  void add_ALTITUDE(double ALTITUDE) {
-    fbb_.AddElement<double>(SCNGeodeticPoint::VT_ALTITUDE, ALTITUDE, 0.0);
-  }
-  explicit SCNGeodeticPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<SCNGeodeticPoint> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<SCNGeodeticPoint>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<SCNGeodeticPoint> CreateSCNGeodeticPoint(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double LATITUDE = 0.0,
-    double LONGITUDE = 0.0,
-    double ALTITUDE = 0.0) {
-  SCNGeodeticPointBuilder builder_(_fbb);
-  builder_.add_ALTITUDE(ALTITUDE);
-  builder_.add_LONGITUDE(LONGITUDE);
-  builder_.add_LATITUDE(LATITUDE);
-  return builder_.Finish();
-}
-
 /// Time-tagged point or annotation shown in a scenario.
 struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNPointOfInterestBuilder Builder;
@@ -241,9 +172,9 @@ struct SCNPointOfInterest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *COLOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLOR);
   }
-  /// Geodetic position for the point of interest.
-  const SCNGeodeticPoint *POSITION() const {
-    return GetPointer<const SCNGeodeticPoint *>(VT_POSITION);
+  /// WGS84 geodetic position for the point of interest.
+  const GJNPosition *POSITION() const {
+    return GetPointer<const GJNPosition *>(VT_POSITION);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -286,7 +217,7 @@ struct SCNPointOfInterestBuilder {
   void add_COLOR(::flatbuffers::Offset<::flatbuffers::String> COLOR) {
     fbb_.AddOffset(SCNPointOfInterest::VT_COLOR, COLOR);
   }
-  void add_POSITION(::flatbuffers::Offset<SCNGeodeticPoint> POSITION) {
+  void add_POSITION(::flatbuffers::Offset<GJNPosition> POSITION) {
     fbb_.AddOffset(SCNPointOfInterest::VT_POSITION, POSITION);
   }
   explicit SCNPointOfInterestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
@@ -308,7 +239,7 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterest(
     double HIGHLIGHT_BEFORE = 0.0,
     double HIGHLIGHT_AFTER = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> COLOR = 0,
-    ::flatbuffers::Offset<SCNGeodeticPoint> POSITION = 0) {
+    ::flatbuffers::Offset<GJNPosition> POSITION = 0) {
   SCNPointOfInterestBuilder builder_(_fbb);
   builder_.add_HIGHLIGHT_AFTER(HIGHLIGHT_AFTER);
   builder_.add_HIGHLIGHT_BEFORE(HIGHLIGHT_BEFORE);
@@ -328,7 +259,7 @@ inline ::flatbuffers::Offset<SCNPointOfInterest> CreateSCNPointOfInterestDirect(
     double HIGHLIGHT_BEFORE = 0.0,
     double HIGHLIGHT_AFTER = 0.0,
     const char *COLOR = nullptr,
-    ::flatbuffers::Offset<SCNGeodeticPoint> POSITION = 0) {
+    ::flatbuffers::Offset<GJNPosition> POSITION = 0) {
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
@@ -480,30 +411,30 @@ inline ::flatbuffers::Offset<SCNViewCone> CreateSCNViewConeDirect(
 struct SCNSunAdvantageTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNSunAdvantageTargetBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_TARGET_REFERENCE_ID = 4,
-    VT_TARGET_NORAD_CAT_ID = 6,
-    VT_GROUND_SITE_ID = 8
+    VT_TARGET_ID = 4,
+    VT_NORAD_CAT_ID = 6,
+    VT_SITE_ID = 8
   };
-  /// Scenario reference id of the target object.
-  const ::flatbuffers::String *TARGET_REFERENCE_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_REFERENCE_ID);
+  /// Target identifier for the paired object.
+  const ::flatbuffers::String *TARGET_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_ID);
   }
   /// NORAD catalog id of the target satellite when available.
-  uint32_t TARGET_NORAD_CAT_ID() const {
-    return GetField<uint32_t>(VT_TARGET_NORAD_CAT_ID, 0);
+  uint32_t NORAD_CAT_ID() const {
+    return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
   }
-  /// Ground site id associated with the target pairing.
-  const ::flatbuffers::String *GROUND_SITE_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_GROUND_SITE_ID);
+  /// Site id associated with the target pairing.
+  const ::flatbuffers::String *SITE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SITE_ID);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_TARGET_REFERENCE_ID) &&
-           verifier.VerifyString(TARGET_REFERENCE_ID()) &&
-           VerifyField<uint32_t>(verifier, VT_TARGET_NORAD_CAT_ID, 4) &&
-           VerifyOffset(verifier, VT_GROUND_SITE_ID) &&
-           verifier.VerifyString(GROUND_SITE_ID()) &&
+           VerifyOffset(verifier, VT_TARGET_ID) &&
+           verifier.VerifyString(TARGET_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
+           VerifyOffset(verifier, VT_SITE_ID) &&
+           verifier.VerifyString(SITE_ID()) &&
            verifier.EndTable();
   }
 };
@@ -512,14 +443,14 @@ struct SCNSunAdvantageTargetBuilder {
   typedef SCNSunAdvantageTarget Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_TARGET_REFERENCE_ID(::flatbuffers::Offset<::flatbuffers::String> TARGET_REFERENCE_ID) {
-    fbb_.AddOffset(SCNSunAdvantageTarget::VT_TARGET_REFERENCE_ID, TARGET_REFERENCE_ID);
+  void add_TARGET_ID(::flatbuffers::Offset<::flatbuffers::String> TARGET_ID) {
+    fbb_.AddOffset(SCNSunAdvantageTarget::VT_TARGET_ID, TARGET_ID);
   }
-  void add_TARGET_NORAD_CAT_ID(uint32_t TARGET_NORAD_CAT_ID) {
-    fbb_.AddElement<uint32_t>(SCNSunAdvantageTarget::VT_TARGET_NORAD_CAT_ID, TARGET_NORAD_CAT_ID, 0);
+  void add_NORAD_CAT_ID(uint32_t NORAD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(SCNSunAdvantageTarget::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
   }
-  void add_GROUND_SITE_ID(::flatbuffers::Offset<::flatbuffers::String> GROUND_SITE_ID) {
-    fbb_.AddOffset(SCNSunAdvantageTarget::VT_GROUND_SITE_ID, GROUND_SITE_ID);
+  void add_SITE_ID(::flatbuffers::Offset<::flatbuffers::String> SITE_ID) {
+    fbb_.AddOffset(SCNSunAdvantageTarget::VT_SITE_ID, SITE_ID);
   }
   explicit SCNSunAdvantageTargetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -534,32 +465,32 @@ struct SCNSunAdvantageTargetBuilder {
 
 inline ::flatbuffers::Offset<SCNSunAdvantageTarget> CreateSCNSunAdvantageTarget(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> TARGET_REFERENCE_ID = 0,
-    uint32_t TARGET_NORAD_CAT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> GROUND_SITE_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET_ID = 0,
+    uint32_t NORAD_CAT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SITE_ID = 0) {
   SCNSunAdvantageTargetBuilder builder_(_fbb);
-  builder_.add_GROUND_SITE_ID(GROUND_SITE_ID);
-  builder_.add_TARGET_NORAD_CAT_ID(TARGET_NORAD_CAT_ID);
-  builder_.add_TARGET_REFERENCE_ID(TARGET_REFERENCE_ID);
+  builder_.add_SITE_ID(SITE_ID);
+  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
+  builder_.add_TARGET_ID(TARGET_ID);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<SCNSunAdvantageTarget> CreateSCNSunAdvantageTargetDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *TARGET_REFERENCE_ID = nullptr,
-    uint32_t TARGET_NORAD_CAT_ID = 0,
-    const char *GROUND_SITE_ID = nullptr) {
-  auto TARGET_REFERENCE_ID__ = TARGET_REFERENCE_ID ? _fbb.CreateString(TARGET_REFERENCE_ID) : 0;
-  auto GROUND_SITE_ID__ = GROUND_SITE_ID ? _fbb.CreateString(GROUND_SITE_ID) : 0;
+    const char *TARGET_ID = nullptr,
+    uint32_t NORAD_CAT_ID = 0,
+    const char *SITE_ID = nullptr) {
+  auto TARGET_ID__ = TARGET_ID ? _fbb.CreateString(TARGET_ID) : 0;
+  auto SITE_ID__ = SITE_ID ? _fbb.CreateString(SITE_ID) : 0;
   return CreateSCNSunAdvantageTarget(
       _fbb,
-      TARGET_REFERENCE_ID__,
-      TARGET_NORAD_CAT_ID,
-      GROUND_SITE_ID__);
+      TARGET_ID__,
+      NORAD_CAT_ID,
+      SITE_ID__);
 }
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 struct SCNExclusionZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNExclusionZoneBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -586,9 +517,9 @@ struct SCNExclusionZone FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool IS_FILLED() const {
     return GetField<uint8_t>(VT_IS_FILLED, 0) != 0;
   }
-  /// Simple geodetic polygon points for imported zones.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>> *POINTS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>> *>(VT_POINTS);
+  /// Simple WGS84 polygon points for imported zones.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>> *POINTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>> *>(VT_POINTS);
   }
   /// Canonical GeoJSON geometry for the exclusion zone.
   const GJNGeometry *BOUNDARY() const {
@@ -629,7 +560,7 @@ struct SCNExclusionZoneBuilder {
   void add_IS_FILLED(bool IS_FILLED) {
     fbb_.AddElement<uint8_t>(SCNExclusionZone::VT_IS_FILLED, static_cast<uint8_t>(IS_FILLED), 0);
   }
-  void add_POINTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>>> POINTS) {
+  void add_POINTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>>> POINTS) {
     fbb_.AddOffset(SCNExclusionZone::VT_POINTS, POINTS);
   }
   void add_BOUNDARY(::flatbuffers::Offset<GJNGeometry> BOUNDARY) {
@@ -652,7 +583,7 @@ inline ::flatbuffers::Offset<SCNExclusionZone> CreateSCNExclusionZone(
     ::flatbuffers::Offset<::flatbuffers::String> FILL_COLOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LABEL_COLOR = 0,
     bool IS_FILLED = false,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNGeodeticPoint>>> POINTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<GJNPosition>>> POINTS = 0,
     ::flatbuffers::Offset<GJNGeometry> BOUNDARY = 0) {
   SCNExclusionZoneBuilder builder_(_fbb);
   builder_.add_BOUNDARY(BOUNDARY);
@@ -670,12 +601,12 @@ inline ::flatbuffers::Offset<SCNExclusionZone> CreateSCNExclusionZoneDirect(
     const char *FILL_COLOR = nullptr,
     const char *LABEL_COLOR = nullptr,
     bool IS_FILLED = false,
-    const std::vector<::flatbuffers::Offset<SCNGeodeticPoint>> *POINTS = nullptr,
+    const std::vector<::flatbuffers::Offset<GJNPosition>> *POINTS = nullptr,
     ::flatbuffers::Offset<GJNGeometry> BOUNDARY = 0) {
   auto LABEL__ = LABEL ? _fbb.CreateString(LABEL) : 0;
   auto FILL_COLOR__ = FILL_COLOR ? _fbb.CreateString(FILL_COLOR) : 0;
   auto LABEL_COLOR__ = LABEL_COLOR ? _fbb.CreateString(LABEL_COLOR) : 0;
-  auto POINTS__ = POINTS ? _fbb.CreateVector<::flatbuffers::Offset<SCNGeodeticPoint>>(*POINTS) : 0;
+  auto POINTS__ = POINTS ? _fbb.CreateVector<::flatbuffers::Offset<GJNPosition>>(*POINTS) : 0;
   return CreateSCNExclusionZone(
       _fbb,
       LABEL__,
@@ -692,23 +623,23 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNReferenceBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_REFERENCE_ID = 4,
-    VT_DISPLAY_NAME = 6,
+    VT_NAME = 6,
     VT_REFERENCE_KIND = 8,
     VT_REMOVE = 10,
     VT_NORAD_CAT_ID = 12,
     VT_OBJECT_ID = 14,
     VT_COUNTRY = 16,
-    VT_SOURCES = 18,
-    VT_DATA_MODES = 20,
-    VT_MEAN_ELEMENTS = 22,
-    VT_STATES = 24,
-    VT_MANEUVERS = 26,
-    VT_SITE = 28,
-    VT_SENSOR = 30,
-    VT_SENSOR_SYSTEM_ID = 32,
-    VT_SENSOR_ID = 34,
-    VT_SITE_LATITUDE = 36,
-    VT_SITE_LONGITUDE = 38,
+    VT_OWNER = 18,
+    VT_SOURCES = 20,
+    VT_DATA_MODES = 22,
+    VT_MEAN_ELEMENTS = 24,
+    VT_STATE_VECTORS = 26,
+    VT_MANEUVERS = 28,
+    VT_SITE = 30,
+    VT_SENSOR = 32,
+    VT_SENSOR_SYSTEM_ID = 34,
+    VT_SENSOR_ID = 36,
+    VT_SITE_POSITION = 38,
     VT_VARIABLE_SATELLITE_ID = 40,
     VT_VARIABLE_SITE_ID = 42,
     VT_POINTS = 44,
@@ -722,9 +653,9 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_ID);
   }
-  /// Human-readable display name for the reference.
-  const ::flatbuffers::String *DISPLAY_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DISPLAY_NAME);
+  /// Human-readable name for the reference.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
   /// Category of object or annotation represented by this reference.
   scenarioReferenceKind REFERENCE_KIND() const {
@@ -742,9 +673,13 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
-  /// Country or owner label associated with the reference.
+  /// Country associated with the reference.
   const ::flatbuffers::String *COUNTRY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY);
+  }
+  /// Owner or operator label associated with the reference.
+  const ::flatbuffers::String *OWNER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OWNER);
   }
   /// Source labels or URIs that produced this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCES() const {
@@ -759,8 +694,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_MEAN_ELEMENTS);
   }
   /// State vectors associated with this reference.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATES() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATES);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATE_VECTORS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATE_VECTORS);
   }
   /// Maneuver records associated with this reference.
   const ::flatbuffers::Vector<::flatbuffers::Offset<MNV>> *MANEUVERS() const {
@@ -782,13 +717,9 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
-  /// Ground-site latitude in degrees when no SIT record is available.
-  double SITE_LATITUDE() const {
-    return GetField<double>(VT_SITE_LATITUDE, 0.0);
-  }
-  /// Ground-site longitude in degrees when no SIT record is available.
-  double SITE_LONGITUDE() const {
-    return GetField<double>(VT_SITE_LONGITUDE, 0.0);
+  /// WGS84 site position when no SIT or SEN record is available.
+  const GJNPosition *SITE_POSITION() const {
+    return GetPointer<const GJNPosition *>(VT_SITE_POSITION);
   }
   /// Scenario variable id for variable satellite references.
   const ::flatbuffers::String *VARIABLE_SATELLITE_ID() const {
@@ -827,8 +758,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_REFERENCE_ID) &&
            verifier.VerifyString(REFERENCE_ID()) &&
-           VerifyOffset(verifier, VT_DISPLAY_NAME) &&
-           verifier.VerifyString(DISPLAY_NAME()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
            VerifyField<int8_t>(verifier, VT_REFERENCE_KIND, 1) &&
            VerifyField<uint8_t>(verifier, VT_REMOVE, 1) &&
            VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
@@ -836,6 +767,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OBJECT_ID()) &&
            VerifyOffset(verifier, VT_COUNTRY) &&
            verifier.VerifyString(COUNTRY()) &&
+           VerifyOffset(verifier, VT_OWNER) &&
+           verifier.VerifyString(OWNER()) &&
            VerifyOffset(verifier, VT_SOURCES) &&
            verifier.VerifyVector(SOURCES()) &&
            verifier.VerifyVectorOfStrings(SOURCES()) &&
@@ -845,9 +778,9 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_MEAN_ELEMENTS) &&
            verifier.VerifyVector(MEAN_ELEMENTS()) &&
            verifier.VerifyVectorOfTables(MEAN_ELEMENTS()) &&
-           VerifyOffset(verifier, VT_STATES) &&
-           verifier.VerifyVector(STATES()) &&
-           verifier.VerifyVectorOfTables(STATES()) &&
+           VerifyOffset(verifier, VT_STATE_VECTORS) &&
+           verifier.VerifyVector(STATE_VECTORS()) &&
+           verifier.VerifyVectorOfTables(STATE_VECTORS()) &&
            VerifyOffset(verifier, VT_MANEUVERS) &&
            verifier.VerifyVector(MANEUVERS()) &&
            verifier.VerifyVectorOfTables(MANEUVERS()) &&
@@ -859,8 +792,8 @@ struct SCNReference FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SENSOR_SYSTEM_ID()) &&
            VerifyOffset(verifier, VT_SENSOR_ID) &&
            verifier.VerifyString(SENSOR_ID()) &&
-           VerifyField<double>(verifier, VT_SITE_LATITUDE, 8) &&
-           VerifyField<double>(verifier, VT_SITE_LONGITUDE, 8) &&
+           VerifyOffset(verifier, VT_SITE_POSITION) &&
+           verifier.VerifyTable(SITE_POSITION()) &&
            VerifyOffset(verifier, VT_VARIABLE_SATELLITE_ID) &&
            verifier.VerifyString(VARIABLE_SATELLITE_ID()) &&
            VerifyOffset(verifier, VT_VARIABLE_SITE_ID) &&
@@ -889,8 +822,8 @@ struct SCNReferenceBuilder {
   void add_REFERENCE_ID(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_ID) {
     fbb_.AddOffset(SCNReference::VT_REFERENCE_ID, REFERENCE_ID);
   }
-  void add_DISPLAY_NAME(::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME) {
-    fbb_.AddOffset(SCNReference::VT_DISPLAY_NAME, DISPLAY_NAME);
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(SCNReference::VT_NAME, NAME);
   }
   void add_REFERENCE_KIND(scenarioReferenceKind REFERENCE_KIND) {
     fbb_.AddElement<int8_t>(SCNReference::VT_REFERENCE_KIND, static_cast<int8_t>(REFERENCE_KIND), 0);
@@ -907,6 +840,9 @@ struct SCNReferenceBuilder {
   void add_COUNTRY(::flatbuffers::Offset<::flatbuffers::String> COUNTRY) {
     fbb_.AddOffset(SCNReference::VT_COUNTRY, COUNTRY);
   }
+  void add_OWNER(::flatbuffers::Offset<::flatbuffers::String> OWNER) {
+    fbb_.AddOffset(SCNReference::VT_OWNER, OWNER);
+  }
   void add_SOURCES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCES) {
     fbb_.AddOffset(SCNReference::VT_SOURCES, SOURCES);
   }
@@ -916,8 +852,8 @@ struct SCNReferenceBuilder {
   void add_MEAN_ELEMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS) {
     fbb_.AddOffset(SCNReference::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
-  void add_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATES) {
-    fbb_.AddOffset(SCNReference::VT_STATES, STATES);
+  void add_STATE_VECTORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATE_VECTORS) {
+    fbb_.AddOffset(SCNReference::VT_STATE_VECTORS, STATE_VECTORS);
   }
   void add_MANEUVERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MNV>>> MANEUVERS) {
     fbb_.AddOffset(SCNReference::VT_MANEUVERS, MANEUVERS);
@@ -934,11 +870,8 @@ struct SCNReferenceBuilder {
   void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
     fbb_.AddOffset(SCNReference::VT_SENSOR_ID, SENSOR_ID);
   }
-  void add_SITE_LATITUDE(double SITE_LATITUDE) {
-    fbb_.AddElement<double>(SCNReference::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
-  }
-  void add_SITE_LONGITUDE(double SITE_LONGITUDE) {
-    fbb_.AddElement<double>(SCNReference::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
+  void add_SITE_POSITION(::flatbuffers::Offset<GJNPosition> SITE_POSITION) {
+    fbb_.AddOffset(SCNReference::VT_SITE_POSITION, SITE_POSITION);
   }
   void add_VARIABLE_SATELLITE_ID(::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SATELLITE_ID) {
     fbb_.AddOffset(SCNReference::VT_VARIABLE_SATELLITE_ID, VARIABLE_SATELLITE_ID);
@@ -978,23 +911,23 @@ struct SCNReferenceBuilder {
 inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DISPLAY_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     scenarioReferenceKind REFERENCE_KIND = scenarioReferenceKind_UNKNOWN,
     bool REMOVE = false,
     uint32_t NORAD_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> COUNTRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OWNER = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DATA_MODES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATE_VECTORS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MNV>>> MANEUVERS = 0,
     ::flatbuffers::Offset<SIT> SITE = 0,
     ::flatbuffers::Offset<SEN> SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_SYSTEM_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
-    double SITE_LATITUDE = 0.0,
-    double SITE_LONGITUDE = 0.0,
+    ::flatbuffers::Offset<GJNPosition> SITE_POSITION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SATELLITE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> VARIABLE_SITE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCNPointOfInterest>>> POINTS = 0,
@@ -1004,8 +937,6 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
     ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0) {
   SCNReferenceBuilder builder_(_fbb);
-  builder_.add_SITE_LONGITUDE(SITE_LONGITUDE);
-  builder_.add_SITE_LATITUDE(SITE_LATITUDE);
   builder_.add_OBSERVATION_RADAR(OBSERVATION_RADAR);
   builder_.add_OBSERVATION_EO(OBSERVATION_EO);
   builder_.add_EXCLUSION_ZONE(EXCLUSION_ZONE);
@@ -1014,19 +945,21 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
   builder_.add_POINTS(POINTS);
   builder_.add_VARIABLE_SITE_ID(VARIABLE_SITE_ID);
   builder_.add_VARIABLE_SATELLITE_ID(VARIABLE_SATELLITE_ID);
+  builder_.add_SITE_POSITION(SITE_POSITION);
   builder_.add_SENSOR_ID(SENSOR_ID);
   builder_.add_SENSOR_SYSTEM_ID(SENSOR_SYSTEM_ID);
   builder_.add_SENSOR(SENSOR);
   builder_.add_SITE(SITE);
   builder_.add_MANEUVERS(MANEUVERS);
-  builder_.add_STATES(STATES);
+  builder_.add_STATE_VECTORS(STATE_VECTORS);
   builder_.add_MEAN_ELEMENTS(MEAN_ELEMENTS);
   builder_.add_DATA_MODES(DATA_MODES);
   builder_.add_SOURCES(SOURCES);
+  builder_.add_OWNER(OWNER);
   builder_.add_COUNTRY(COUNTRY);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
-  builder_.add_DISPLAY_NAME(DISPLAY_NAME);
+  builder_.add_NAME(NAME);
   builder_.add_REFERENCE_ID(REFERENCE_ID);
   builder_.add_REMOVE(REMOVE);
   builder_.add_REFERENCE_KIND(REFERENCE_KIND);
@@ -1036,23 +969,23 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReference(
 inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *REFERENCE_ID = nullptr,
-    const char *DISPLAY_NAME = nullptr,
+    const char *NAME = nullptr,
     scenarioReferenceKind REFERENCE_KIND = scenarioReferenceKind_UNKNOWN,
     bool REMOVE = false,
     uint32_t NORAD_CAT_ID = 0,
     const char *OBJECT_ID = nullptr,
     const char *COUNTRY = nullptr,
+    const char *OWNER = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCES = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DATA_MODES = nullptr,
     const std::vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS = nullptr,
-    const std::vector<::flatbuffers::Offset<STV>> *STATES = nullptr,
+    const std::vector<::flatbuffers::Offset<STV>> *STATE_VECTORS = nullptr,
     const std::vector<::flatbuffers::Offset<MNV>> *MANEUVERS = nullptr,
     ::flatbuffers::Offset<SIT> SITE = 0,
     ::flatbuffers::Offset<SEN> SENSOR = 0,
     const char *SENSOR_SYSTEM_ID = nullptr,
     const char *SENSOR_ID = nullptr,
-    double SITE_LATITUDE = 0.0,
-    double SITE_LONGITUDE = 0.0,
+    ::flatbuffers::Offset<GJNPosition> SITE_POSITION = 0,
     const char *VARIABLE_SATELLITE_ID = nullptr,
     const char *VARIABLE_SITE_ID = nullptr,
     const std::vector<::flatbuffers::Offset<SCNPointOfInterest>> *POINTS = nullptr,
@@ -1062,13 +995,14 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
     ::flatbuffers::Offset<EOO> OBSERVATION_EO = 0,
     ::flatbuffers::Offset<RDO> OBSERVATION_RADAR = 0) {
   auto REFERENCE_ID__ = REFERENCE_ID ? _fbb.CreateString(REFERENCE_ID) : 0;
-  auto DISPLAY_NAME__ = DISPLAY_NAME ? _fbb.CreateString(DISPLAY_NAME) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto COUNTRY__ = COUNTRY ? _fbb.CreateString(COUNTRY) : 0;
+  auto OWNER__ = OWNER ? _fbb.CreateString(OWNER) : 0;
   auto SOURCES__ = SOURCES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SOURCES) : 0;
   auto DATA_MODES__ = DATA_MODES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*DATA_MODES) : 0;
   auto MEAN_ELEMENTS__ = MEAN_ELEMENTS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*MEAN_ELEMENTS) : 0;
-  auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<STV>>(*STATES) : 0;
+  auto STATE_VECTORS__ = STATE_VECTORS ? _fbb.CreateVector<::flatbuffers::Offset<STV>>(*STATE_VECTORS) : 0;
   auto MANEUVERS__ = MANEUVERS ? _fbb.CreateVector<::flatbuffers::Offset<MNV>>(*MANEUVERS) : 0;
   auto SENSOR_SYSTEM_ID__ = SENSOR_SYSTEM_ID ? _fbb.CreateString(SENSOR_SYSTEM_ID) : 0;
   auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
@@ -1078,23 +1012,23 @@ inline ::flatbuffers::Offset<SCNReference> CreateSCNReferenceDirect(
   return CreateSCNReference(
       _fbb,
       REFERENCE_ID__,
-      DISPLAY_NAME__,
+      NAME__,
       REFERENCE_KIND,
       REMOVE,
       NORAD_CAT_ID,
       OBJECT_ID__,
       COUNTRY__,
+      OWNER__,
       SOURCES__,
       DATA_MODES__,
       MEAN_ELEMENTS__,
-      STATES__,
+      STATE_VECTORS__,
       MANEUVERS__,
       SITE,
       SENSOR,
       SENSOR_SYSTEM_ID__,
       SENSOR_ID__,
-      SITE_LATITUDE,
-      SITE_LONGITUDE,
+      SITE_POSITION,
       VARIABLE_SATELLITE_ID__,
       VARIABLE_SITE_ID__,
       POINTS__,
@@ -1110,8 +1044,8 @@ struct SCNEvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCNEventBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_EVENT_ID = 4,
-    VT_ELSETS = 6,
-    VT_STATES = 8,
+    VT_MEAN_ELEMENTS = 6,
+    VT_STATE_VECTORS = 8,
     VT_EO_OBSERVATIONS = 10,
     VT_RADAR_OBSERVATIONS = 12
   };
@@ -1119,13 +1053,13 @@ struct SCNEvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *EVENT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
   }
-  /// Element sets associated with the event.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *ELSETS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_ELSETS);
+  /// Mean orbital elements associated with the event.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<OMM>> *>(VT_MEAN_ELEMENTS);
   }
   /// State vectors associated with the event.
-  const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATES() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATES);
+  const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *STATE_VECTORS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<STV>> *>(VT_STATE_VECTORS);
   }
   /// Electro-optical observations associated with the event.
   const ::flatbuffers::Vector<::flatbuffers::Offset<EOO>> *EO_OBSERVATIONS() const {
@@ -1140,12 +1074,12 @@ struct SCNEvent FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_EVENT_ID) &&
            verifier.VerifyString(EVENT_ID()) &&
-           VerifyOffset(verifier, VT_ELSETS) &&
-           verifier.VerifyVector(ELSETS()) &&
-           verifier.VerifyVectorOfTables(ELSETS()) &&
-           VerifyOffset(verifier, VT_STATES) &&
-           verifier.VerifyVector(STATES()) &&
-           verifier.VerifyVectorOfTables(STATES()) &&
+           VerifyOffset(verifier, VT_MEAN_ELEMENTS) &&
+           verifier.VerifyVector(MEAN_ELEMENTS()) &&
+           verifier.VerifyVectorOfTables(MEAN_ELEMENTS()) &&
+           VerifyOffset(verifier, VT_STATE_VECTORS) &&
+           verifier.VerifyVector(STATE_VECTORS()) &&
+           verifier.VerifyVectorOfTables(STATE_VECTORS()) &&
            VerifyOffset(verifier, VT_EO_OBSERVATIONS) &&
            verifier.VerifyVector(EO_OBSERVATIONS()) &&
            verifier.VerifyVectorOfTables(EO_OBSERVATIONS()) &&
@@ -1163,11 +1097,11 @@ struct SCNEventBuilder {
   void add_EVENT_ID(::flatbuffers::Offset<::flatbuffers::String> EVENT_ID) {
     fbb_.AddOffset(SCNEvent::VT_EVENT_ID, EVENT_ID);
   }
-  void add_ELSETS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> ELSETS) {
-    fbb_.AddOffset(SCNEvent::VT_ELSETS, ELSETS);
+  void add_MEAN_ELEMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS) {
+    fbb_.AddOffset(SCNEvent::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
-  void add_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATES) {
-    fbb_.AddOffset(SCNEvent::VT_STATES, STATES);
+  void add_STATE_VECTORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATE_VECTORS) {
+    fbb_.AddOffset(SCNEvent::VT_STATE_VECTORS, STATE_VECTORS);
   }
   void add_EO_OBSERVATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOO>>> EO_OBSERVATIONS) {
     fbb_.AddOffset(SCNEvent::VT_EO_OBSERVATIONS, EO_OBSERVATIONS);
@@ -1189,15 +1123,15 @@ struct SCNEventBuilder {
 inline ::flatbuffers::Offset<SCNEvent> CreateSCNEvent(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> EVENT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> ELSETS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<OMM>>> MEAN_ELEMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<STV>>> STATE_VECTORS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<EOO>>> EO_OBSERVATIONS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<RDO>>> RADAR_OBSERVATIONS = 0) {
   SCNEventBuilder builder_(_fbb);
   builder_.add_RADAR_OBSERVATIONS(RADAR_OBSERVATIONS);
   builder_.add_EO_OBSERVATIONS(EO_OBSERVATIONS);
-  builder_.add_STATES(STATES);
-  builder_.add_ELSETS(ELSETS);
+  builder_.add_STATE_VECTORS(STATE_VECTORS);
+  builder_.add_MEAN_ELEMENTS(MEAN_ELEMENTS);
   builder_.add_EVENT_ID(EVENT_ID);
   return builder_.Finish();
 }
@@ -1205,20 +1139,20 @@ inline ::flatbuffers::Offset<SCNEvent> CreateSCNEvent(
 inline ::flatbuffers::Offset<SCNEvent> CreateSCNEventDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *EVENT_ID = nullptr,
-    const std::vector<::flatbuffers::Offset<OMM>> *ELSETS = nullptr,
-    const std::vector<::flatbuffers::Offset<STV>> *STATES = nullptr,
+    const std::vector<::flatbuffers::Offset<OMM>> *MEAN_ELEMENTS = nullptr,
+    const std::vector<::flatbuffers::Offset<STV>> *STATE_VECTORS = nullptr,
     const std::vector<::flatbuffers::Offset<EOO>> *EO_OBSERVATIONS = nullptr,
     const std::vector<::flatbuffers::Offset<RDO>> *RADAR_OBSERVATIONS = nullptr) {
   auto EVENT_ID__ = EVENT_ID ? _fbb.CreateString(EVENT_ID) : 0;
-  auto ELSETS__ = ELSETS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*ELSETS) : 0;
-  auto STATES__ = STATES ? _fbb.CreateVector<::flatbuffers::Offset<STV>>(*STATES) : 0;
+  auto MEAN_ELEMENTS__ = MEAN_ELEMENTS ? _fbb.CreateVector<::flatbuffers::Offset<OMM>>(*MEAN_ELEMENTS) : 0;
+  auto STATE_VECTORS__ = STATE_VECTORS ? _fbb.CreateVector<::flatbuffers::Offset<STV>>(*STATE_VECTORS) : 0;
   auto EO_OBSERVATIONS__ = EO_OBSERVATIONS ? _fbb.CreateVector<::flatbuffers::Offset<EOO>>(*EO_OBSERVATIONS) : 0;
   auto RADAR_OBSERVATIONS__ = RADAR_OBSERVATIONS ? _fbb.CreateVector<::flatbuffers::Offset<RDO>>(*RADAR_OBSERVATIONS) : 0;
   return CreateSCNEvent(
       _fbb,
       EVENT_ID__,
-      ELSETS__,
-      STATES__,
+      MEAN_ELEMENTS__,
+      STATE_VECTORS__,
       EO_OBSERVATIONS__,
       RADAR_OBSERVATIONS__);
 }
@@ -1385,9 +1319,9 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EVENT = 8,
     VT_FOCUSED_REFERENCE_INDEX = 10,
     VT_FOCUSED_REFERENCE_ID = 12,
-    VT_SIM_TIME = 14,
+    VT_EPOCH = 14,
     VT_SIM_SPEED = 16,
-    VT_USE_ECEF_FRAME = 18,
+    VT_USE_BODY_FIXED_FRAME = 18,
     VT_REFERENCE_FRAME = 20,
     VT_ACTION = 22,
     VT_VIEW_STATE = 24,
@@ -1413,19 +1347,19 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *FOCUSED_REFERENCE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FOCUSED_REFERENCE_ID);
   }
-  /// Current simulation time as an ISO-8601 UTC timestamp.
-  const ::flatbuffers::String *SIM_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SIM_TIME);
+  /// Current scenario epoch as an ISO-8601 UTC timestamp.
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
   /// Simulation time-rate multiplier.
   double SIM_SPEED() const {
     return GetField<double>(VT_SIM_SPEED, 0.0);
   }
-  /// True when the viewer should use an Earth-centered Earth-fixed frame.
-  bool USE_ECEF_FRAME() const {
-    return GetField<uint8_t>(VT_USE_ECEF_FRAME, 0) != 0;
+  /// True when the viewer should use a body-fixed display frame.
+  bool USE_BODY_FIXED_FRAME() const {
+    return GetField<uint8_t>(VT_USE_BODY_FIXED_FRAME, 0) != 0;
   }
-  /// Reference frame used for scenario propagation and display.
+  /// Authoritative reference frame used for scenario propagation and display.
   const RFM *REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
@@ -1454,10 +1388,10 @@ struct SCN FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int32_t>(verifier, VT_FOCUSED_REFERENCE_INDEX, 4) &&
            VerifyOffset(verifier, VT_FOCUSED_REFERENCE_ID) &&
            verifier.VerifyString(FOCUSED_REFERENCE_ID()) &&
-           VerifyOffset(verifier, VT_SIM_TIME) &&
-           verifier.VerifyString(SIM_TIME()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
            VerifyField<double>(verifier, VT_SIM_SPEED, 8) &&
-           VerifyField<uint8_t>(verifier, VT_USE_ECEF_FRAME, 1) &&
+           VerifyField<uint8_t>(verifier, VT_USE_BODY_FIXED_FRAME, 1) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
            verifier.VerifyTable(REFERENCE_FRAME()) &&
            VerifyField<int8_t>(verifier, VT_ACTION, 1) &&
@@ -1488,14 +1422,14 @@ struct SCNBuilder {
   void add_FOCUSED_REFERENCE_ID(::flatbuffers::Offset<::flatbuffers::String> FOCUSED_REFERENCE_ID) {
     fbb_.AddOffset(SCN::VT_FOCUSED_REFERENCE_ID, FOCUSED_REFERENCE_ID);
   }
-  void add_SIM_TIME(::flatbuffers::Offset<::flatbuffers::String> SIM_TIME) {
-    fbb_.AddOffset(SCN::VT_SIM_TIME, SIM_TIME);
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(SCN::VT_EPOCH, EPOCH);
   }
   void add_SIM_SPEED(double SIM_SPEED) {
     fbb_.AddElement<double>(SCN::VT_SIM_SPEED, SIM_SPEED, 0.0);
   }
-  void add_USE_ECEF_FRAME(bool USE_ECEF_FRAME) {
-    fbb_.AddElement<uint8_t>(SCN::VT_USE_ECEF_FRAME, static_cast<uint8_t>(USE_ECEF_FRAME), 0);
+  void add_USE_BODY_FIXED_FRAME(bool USE_BODY_FIXED_FRAME) {
+    fbb_.AddElement<uint8_t>(SCN::VT_USE_BODY_FIXED_FRAME, static_cast<uint8_t>(USE_BODY_FIXED_FRAME), 0);
   }
   void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
     fbb_.AddOffset(SCN::VT_REFERENCE_FRAME, REFERENCE_FRAME);
@@ -1527,9 +1461,9 @@ inline ::flatbuffers::Offset<SCN> CreateSCN(
     ::flatbuffers::Offset<SCNEvent> EVENT = 0,
     int32_t FOCUSED_REFERENCE_INDEX = -1,
     ::flatbuffers::Offset<::flatbuffers::String> FOCUSED_REFERENCE_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SIM_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
     double SIM_SPEED = 0.0,
-    bool USE_ECEF_FRAME = false,
+    bool USE_BODY_FIXED_FRAME = false,
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     scenarioActionCode ACTION = scenarioActionCode_NONE,
     ::flatbuffers::Offset<VST> VIEW_STATE = 0,
@@ -1539,14 +1473,14 @@ inline ::flatbuffers::Offset<SCN> CreateSCN(
   builder_.add_ASSETS_CHANGED(ASSETS_CHANGED);
   builder_.add_VIEW_STATE(VIEW_STATE);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
-  builder_.add_SIM_TIME(SIM_TIME);
+  builder_.add_EPOCH(EPOCH);
   builder_.add_FOCUSED_REFERENCE_ID(FOCUSED_REFERENCE_ID);
   builder_.add_FOCUSED_REFERENCE_INDEX(FOCUSED_REFERENCE_INDEX);
   builder_.add_EVENT(EVENT);
   builder_.add_REFERENCES(REFERENCES);
   builder_.add_SCENARIO_ID(SCENARIO_ID);
   builder_.add_ACTION(ACTION);
-  builder_.add_USE_ECEF_FRAME(USE_ECEF_FRAME);
+  builder_.add_USE_BODY_FIXED_FRAME(USE_BODY_FIXED_FRAME);
   return builder_.Finish();
 }
 
@@ -1557,9 +1491,9 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
     ::flatbuffers::Offset<SCNEvent> EVENT = 0,
     int32_t FOCUSED_REFERENCE_INDEX = -1,
     const char *FOCUSED_REFERENCE_ID = nullptr,
-    const char *SIM_TIME = nullptr,
+    const char *EPOCH = nullptr,
     double SIM_SPEED = 0.0,
-    bool USE_ECEF_FRAME = false,
+    bool USE_BODY_FIXED_FRAME = false,
     ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
     scenarioActionCode ACTION = scenarioActionCode_NONE,
     ::flatbuffers::Offset<VST> VIEW_STATE = 0,
@@ -1567,7 +1501,7 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
   auto SCENARIO_ID__ = SCENARIO_ID ? _fbb.CreateString(SCENARIO_ID) : 0;
   auto REFERENCES__ = REFERENCES ? _fbb.CreateVector<::flatbuffers::Offset<SCNReference>>(*REFERENCES) : 0;
   auto FOCUSED_REFERENCE_ID__ = FOCUSED_REFERENCE_ID ? _fbb.CreateString(FOCUSED_REFERENCE_ID) : 0;
-  auto SIM_TIME__ = SIM_TIME ? _fbb.CreateString(SIM_TIME) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
   return CreateSCN(
       _fbb,
       SCENARIO_ID__,
@@ -1575,9 +1509,9 @@ inline ::flatbuffers::Offset<SCN> CreateSCNDirect(
       EVENT,
       FOCUSED_REFERENCE_INDEX,
       FOCUSED_REFERENCE_ID__,
-      SIM_TIME__,
+      EPOCH__,
       SIM_SPEED,
-      USE_ECEF_FRAME,
+      USE_BODY_FIXED_FRAME,
       REFERENCE_FRAME,
       ACTION,
       VIEW_STATE,

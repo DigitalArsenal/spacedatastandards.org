@@ -42,14 +42,14 @@ EVENT_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Element sets associated with the event.
+ * Mean orbital elements associated with the event.
  */
-ELSETS(index: number, obj?:OMM):OMM|null {
+MEAN_ELEMENTS(index: number, obj?:OMM):OMM|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? (obj || new OMM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
-elsetsLength():number {
+meanElementsLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
@@ -57,12 +57,12 @@ elsetsLength():number {
 /**
  * State vectors associated with the event.
  */
-STATES(index: number, obj?:STV):STV|null {
+STATE_VECTORS(index: number, obj?:STV):STV|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? (obj || new STV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
-statesLength():number {
+stateVectorsLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
@@ -101,11 +101,11 @@ static addEventId(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(0, EVENT_IDOffset, 0);
 }
 
-static addElsets(builder:flatbuffers.Builder, ELSETSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, ELSETSOffset, 0);
+static addMeanElements(builder:flatbuffers.Builder, MEAN_ELEMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, MEAN_ELEMENTSOffset, 0);
 }
 
-static createElsetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+static createMeanElementsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
   builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]!);
@@ -113,15 +113,15 @@ static createElsetsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]
   return builder.endVector();
 }
 
-static startElsetsVector(builder:flatbuffers.Builder, numElems:number) {
+static startMeanElementsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addStates(builder:flatbuffers.Builder, STATESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, STATESOffset, 0);
+static addStateVectors(builder:flatbuffers.Builder, STATE_VECTORSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, STATE_VECTORSOffset, 0);
 }
 
-static createStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+static createStateVectorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
   builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]!);
@@ -129,7 +129,7 @@ static createStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]
   return builder.endVector();
 }
 
-static startStatesVector(builder:flatbuffers.Builder, numElems:number) {
+static startStateVectorsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
@@ -170,11 +170,11 @@ static endSCNEvent(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createSCNEvent(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset, ELSETSOffset:flatbuffers.Offset, STATESOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset, RADAR_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSCNEvent(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset, MEAN_ELEMENTSOffset:flatbuffers.Offset, STATE_VECTORSOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset, RADAR_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SCNEvent.startSCNEvent(builder);
   SCNEvent.addEventId(builder, EVENT_IDOffset);
-  SCNEvent.addElsets(builder, ELSETSOffset);
-  SCNEvent.addStates(builder, STATESOffset);
+  SCNEvent.addMeanElements(builder, MEAN_ELEMENTSOffset);
+  SCNEvent.addStateVectors(builder, STATE_VECTORSOffset);
   SCNEvent.addEoObservations(builder, EO_OBSERVATIONSOffset);
   SCNEvent.addRadarObservations(builder, RADAR_OBSERVATIONSOffset);
   return SCNEvent.endSCNEvent(builder);
@@ -183,8 +183,8 @@ static createSCNEvent(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Of
 unpack(): SCNEventT {
   return new SCNEventT(
     this.EVENT_ID(),
-    this.bb!.createObjList<OMM, OMMT>(this.ELSETS.bind(this), this.elsetsLength()),
-    this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength()),
+    this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength()),
+    this.bb!.createObjList<STV, STVT>(this.STATE_VECTORS.bind(this), this.stateVectorsLength()),
     this.bb!.createObjList<EOO, EOOT>(this.EO_OBSERVATIONS.bind(this), this.eoObservationsLength()),
     this.bb!.createObjList<RDO, RDOT>(this.RADAR_OBSERVATIONS.bind(this), this.radarObservationsLength())
   );
@@ -193,8 +193,8 @@ unpack(): SCNEventT {
 
 unpackTo(_o: SCNEventT): void {
   _o.EVENT_ID = this.EVENT_ID();
-  _o.ELSETS = this.bb!.createObjList<OMM, OMMT>(this.ELSETS.bind(this), this.elsetsLength());
-  _o.STATES = this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength());
+  _o.MEAN_ELEMENTS = this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength());
+  _o.STATE_VECTORS = this.bb!.createObjList<STV, STVT>(this.STATE_VECTORS.bind(this), this.stateVectorsLength());
   _o.EO_OBSERVATIONS = this.bb!.createObjList<EOO, EOOT>(this.EO_OBSERVATIONS.bind(this), this.eoObservationsLength());
   _o.RADAR_OBSERVATIONS = this.bb!.createObjList<RDO, RDOT>(this.RADAR_OBSERVATIONS.bind(this), this.radarObservationsLength());
 }
@@ -203,8 +203,8 @@ unpackTo(_o: SCNEventT): void {
 export class SCNEventT implements flatbuffers.IGeneratedObject {
 constructor(
   public EVENT_ID: string|Uint8Array|null = null,
-  public ELSETS: (OMMT)[] = [],
-  public STATES: (STVT)[] = [],
+  public MEAN_ELEMENTS: (OMMT)[] = [],
+  public STATE_VECTORS: (STVT)[] = [],
   public EO_OBSERVATIONS: (EOOT)[] = [],
   public RADAR_OBSERVATIONS: (RDOT)[] = []
 ){}
@@ -212,15 +212,15 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EVENT_ID = (this.EVENT_ID !== null ? builder.createString(this.EVENT_ID!) : 0);
-  const ELSETS = SCNEvent.createElsetsVector(builder, builder.createObjectOffsetList(this.ELSETS));
-  const STATES = SCNEvent.createStatesVector(builder, builder.createObjectOffsetList(this.STATES));
+  const MEAN_ELEMENTS = SCNEvent.createMeanElementsVector(builder, builder.createObjectOffsetList(this.MEAN_ELEMENTS));
+  const STATE_VECTORS = SCNEvent.createStateVectorsVector(builder, builder.createObjectOffsetList(this.STATE_VECTORS));
   const EO_OBSERVATIONS = SCNEvent.createEoObservationsVector(builder, builder.createObjectOffsetList(this.EO_OBSERVATIONS));
   const RADAR_OBSERVATIONS = SCNEvent.createRadarObservationsVector(builder, builder.createObjectOffsetList(this.RADAR_OBSERVATIONS));
 
   return SCNEvent.createSCNEvent(builder,
     EVENT_ID,
-    ELSETS,
-    STATES,
+    MEAN_ELEMENTS,
+    STATE_VECTORS,
     EO_OBSERVATIONS,
     RADAR_OBSERVATIONS
   );

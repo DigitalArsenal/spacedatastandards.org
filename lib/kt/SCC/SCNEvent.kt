@@ -44,10 +44,10 @@ class SCNEvent : Table() {
     val eventIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun eventIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Element sets associated with the event.
+     * Mean orbital elements associated with the event.
      */
-    fun elsets(j: Int) : OMM? = elsets(OMM(), j)
-    fun elsets(obj: OMM, j: Int) : OMM? {
+    fun meanElements(j: Int) : OMM? = meanElements(OMM(), j)
+    fun meanElements(obj: OMM, j: Int) : OMM? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -55,15 +55,15 @@ class SCNEvent : Table() {
             null
         }
     }
-    val elsetsLength : Int
+    val meanElementsLength : Int
         get() {
             val o = __offset(6); return if (o != 0) __vector_len(o) else 0
         }
     /**
      * State vectors associated with the event.
      */
-    fun states(j: Int) : STV? = states(STV(), j)
-    fun states(obj: STV, j: Int) : STV? {
+    fun stateVectors(j: Int) : STV? = stateVectors(STV(), j)
+    fun stateVectors(obj: STV, j: Int) : STV? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
@@ -71,7 +71,7 @@ class SCNEvent : Table() {
             null
         }
     }
-    val statesLength : Int
+    val stateVectorsLength : Int
         get() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
@@ -114,35 +114,35 @@ class SCNEvent : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCNEvent(builder: FlatBufferBuilder, eventIdOffset: Int, elsetsOffset: Int, statesOffset: Int, eoObservationsOffset: Int, radarObservationsOffset: Int) : Int {
+        fun createSCNEvent(builder: FlatBufferBuilder, eventIdOffset: Int, meanElementsOffset: Int, stateVectorsOffset: Int, eoObservationsOffset: Int, radarObservationsOffset: Int) : Int {
             builder.startTable(5)
             addRADAROBSERVATIONS(builder, radarObservationsOffset)
             addEOOBSERVATIONS(builder, eoObservationsOffset)
-            addSTATES(builder, statesOffset)
-            addELSETS(builder, elsetsOffset)
+            addSTATEVECTORS(builder, stateVectorsOffset)
+            addMEANELEMENTS(builder, meanElementsOffset)
             addEVENTID(builder, eventIdOffset)
             return endSCNEvent(builder)
         }
         fun startSCNEvent(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addEVENTID(builder: FlatBufferBuilder, eventId: Int) = builder.addOffset(0, eventId, 0)
-        fun addELSETS(builder: FlatBufferBuilder, elsets: Int) = builder.addOffset(1, elsets, 0)
-        fun createElsetsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun addMEANELEMENTS(builder: FlatBufferBuilder, meanElements: Int) = builder.addOffset(1, meanElements, 0)
+        fun createMeanElementsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startElsetsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSTATES(builder: FlatBufferBuilder, states: Int) = builder.addOffset(2, states, 0)
-        fun createStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+        fun startMeanElementsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSTATEVECTORS(builder: FlatBufferBuilder, stateVectors: Int) = builder.addOffset(2, stateVectors, 0)
+        fun createStateVectorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
                 builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startStateVectorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addEOOBSERVATIONS(builder: FlatBufferBuilder, eoObservations: Int) = builder.addOffset(3, eoObservations, 0)
         fun createEoObservationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)

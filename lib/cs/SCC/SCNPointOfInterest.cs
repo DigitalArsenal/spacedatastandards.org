@@ -53,8 +53,8 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public ArraySegment<byte>? GetCOLORBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetCOLORArray() { return __p.__vector_as_array<byte>(14); }
-  /// Geodetic position for the point of interest.
-  public SCNGeodeticPoint? POSITION { get { int o = __p.__offset(16); return o != 0 ? (SCNGeodeticPoint?)(new SCNGeodeticPoint()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// WGS84 geodetic position for the point of interest.
+  public GJNPosition? POSITION { get { int o = __p.__offset(16); return o != 0 ? (GJNPosition?)(new GJNPosition()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SCNPointOfInterest> CreateSCNPointOfInterest(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -63,7 +63,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
       double HIGHLIGHT_BEFORE = 0.0,
       double HIGHLIGHT_AFTER = 0.0,
       StringOffset COLOROffset = default(StringOffset),
-      Offset<SCNGeodeticPoint> POSITIONOffset = default(Offset<SCNGeodeticPoint>)) {
+      Offset<GJNPosition> POSITIONOffset = default(Offset<GJNPosition>)) {
     builder.StartTable(7);
     SCNPointOfInterest.AddHIGHLIGHT_AFTER(builder, HIGHLIGHT_AFTER);
     SCNPointOfInterest.AddHIGHLIGHT_BEFORE(builder, HIGHLIGHT_BEFORE);
@@ -82,7 +82,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
   public static void AddHIGHLIGHT_BEFORE(FlatBufferBuilder builder, double HIGHLIGHT_BEFORE) { builder.AddDouble(3, HIGHLIGHT_BEFORE, 0.0); }
   public static void AddHIGHLIGHT_AFTER(FlatBufferBuilder builder, double HIGHLIGHT_AFTER) { builder.AddDouble(4, HIGHLIGHT_AFTER, 0.0); }
   public static void AddCOLOR(FlatBufferBuilder builder, StringOffset COLOROffset) { builder.AddOffset(5, COLOROffset.Value, 0); }
-  public static void AddPOSITION(FlatBufferBuilder builder, Offset<SCNGeodeticPoint> POSITIONOffset) { builder.AddOffset(6, POSITIONOffset.Value, 0); }
+  public static void AddPOSITION(FlatBufferBuilder builder, Offset<GJNPosition> POSITIONOffset) { builder.AddOffset(6, POSITIONOffset.Value, 0); }
   public static Offset<SCNPointOfInterest> EndSCNPointOfInterest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCNPointOfInterest>(o);
@@ -107,7 +107,7 @@ public struct SCNPointOfInterest : IFlatbufferObject
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     var _COLOR = _o.COLOR == null ? default(StringOffset) : builder.CreateString(_o.COLOR);
-    var _POSITION = _o.POSITION == null ? default(Offset<SCNGeodeticPoint>) : SCNGeodeticPoint.Pack(builder, _o.POSITION);
+    var _POSITION = _o.POSITION == null ? default(Offset<GJNPosition>) : GJNPosition.Pack(builder, _o.POSITION);
     return CreateSCNPointOfInterest(
       builder,
       _NAME,
@@ -128,7 +128,7 @@ public class SCNPointOfInterestT
   public double HIGHLIGHT_BEFORE { get; set; }
   public double HIGHLIGHT_AFTER { get; set; }
   public string COLOR { get; set; }
-  public SCNGeodeticPointT POSITION { get; set; }
+  public GJNPositionT POSITION { get; set; }
 
   public SCNPointOfInterestT() {
     this.NAME = null;
@@ -153,7 +153,7 @@ static public class SCNPointOfInterestVerify
       && verifier.VerifyField(tablePos, 10 /*HIGHLIGHT_BEFORE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*HIGHLIGHT_AFTER*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 14 /*COLOR*/, false)
-      && verifier.VerifyTable(tablePos, 16 /*POSITION*/, SCNGeodeticPointVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 16 /*POSITION*/, GJNPositionVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

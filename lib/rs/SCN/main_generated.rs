@@ -220,181 +220,6 @@ impl<'a> ::flatbuffers::Verifiable for scenarioActionCode {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scenarioActionCode {}
-pub enum SCNGeodeticPointOffset {}
-#[derive(Copy, Clone, PartialEq)]
-
-/// Geodetic point in latitude, longitude, altitude order.
-pub struct SCNGeodeticPoint<'a> {
-  pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for SCNGeodeticPoint<'a> {
-  type Inner = SCNGeodeticPoint<'a>;
-  #[inline]
-  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-  }
-}
-
-impl<'a> SCNGeodeticPoint<'a> {
-  pub const VT_LATITUDE: ::flatbuffers::VOffsetT = 4;
-  pub const VT_LONGITUDE: ::flatbuffers::VOffsetT = 6;
-  pub const VT_ALTITUDE: ::flatbuffers::VOffsetT = 8;
-
-  #[inline]
-  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-    SCNGeodeticPoint { _tab: table }
-  }
-  #[allow(unused_mut)]
-  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-    args: &'args SCNGeodeticPointArgs
-  ) -> ::flatbuffers::WIPOffset<SCNGeodeticPoint<'bldr>> {
-    let mut builder = SCNGeodeticPointBuilder::new(_fbb);
-    builder.add_ALTITUDE(args.ALTITUDE);
-    builder.add_LONGITUDE(args.LONGITUDE);
-    builder.add_LATITUDE(args.LATITUDE);
-    builder.finish()
-  }
-
-  pub fn unpack(&self) -> SCNGeodeticPointT {
-    let LATITUDE = self.LATITUDE();
-    let LONGITUDE = self.LONGITUDE();
-    let ALTITUDE = self.ALTITUDE();
-    SCNGeodeticPointT {
-      LATITUDE,
-      LONGITUDE,
-      ALTITUDE,
-    }
-  }
-
-  /// Latitude in degrees.
-  #[inline]
-  pub fn LATITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LATITUDE, Some(0.0)).unwrap()}
-  }
-  /// Longitude in degrees.
-  #[inline]
-  pub fn LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_LONGITUDE, Some(0.0)).unwrap()}
-  }
-  /// Altitude above the reference ellipsoid in kilometers.
-  #[inline]
-  pub fn ALTITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNGeodeticPoint::VT_ALTITUDE, Some(0.0)).unwrap()}
-  }
-}
-
-impl ::flatbuffers::Verifiable for SCNGeodeticPoint<'_> {
-  #[inline]
-  fn run_verifier(
-    v: &mut ::flatbuffers::Verifier, pos: usize
-  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-    v.visit_table(pos)?
-     .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
-     .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
-     .visit_field::<f64>("ALTITUDE", Self::VT_ALTITUDE, false)?
-     .finish();
-    Ok(())
-  }
-}
-pub struct SCNGeodeticPointArgs {
-    pub LATITUDE: f64,
-    pub LONGITUDE: f64,
-    pub ALTITUDE: f64,
-}
-impl<'a> Default for SCNGeodeticPointArgs {
-  #[inline]
-  fn default() -> Self {
-    SCNGeodeticPointArgs {
-      LATITUDE: 0.0,
-      LONGITUDE: 0.0,
-      ALTITUDE: 0.0,
-    }
-  }
-}
-
-pub struct SCNGeodeticPointBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNGeodeticPointBuilder<'a, 'b, A> {
-  #[inline]
-  pub fn add_LATITUDE(&mut self, LATITUDE: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LATITUDE, LATITUDE, 0.0);
-  }
-  #[inline]
-  pub fn add_LONGITUDE(&mut self, LONGITUDE: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_LONGITUDE, LONGITUDE, 0.0);
-  }
-  #[inline]
-  pub fn add_ALTITUDE(&mut self, ALTITUDE: f64) {
-    self.fbb_.push_slot::<f64>(SCNGeodeticPoint::VT_ALTITUDE, ALTITUDE, 0.0);
-  }
-  #[inline]
-  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNGeodeticPointBuilder<'a, 'b, A> {
-    let start = _fbb.start_table();
-    SCNGeodeticPointBuilder {
-      fbb_: _fbb,
-      start_: start,
-    }
-  }
-  #[inline]
-  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCNGeodeticPoint<'a>> {
-    let o = self.fbb_.end_table(self.start_);
-    ::flatbuffers::WIPOffset::new(o.value())
-  }
-}
-
-impl ::core::fmt::Debug for SCNGeodeticPoint<'_> {
-  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-    let mut ds = f.debug_struct("SCNGeodeticPoint");
-      ds.field("LATITUDE", &self.LATITUDE());
-      ds.field("LONGITUDE", &self.LONGITUDE());
-      ds.field("ALTITUDE", &self.ALTITUDE());
-      ds.finish()
-  }
-}
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct SCNGeodeticPointT {
-  pub LATITUDE: f64,
-  pub LONGITUDE: f64,
-  pub ALTITUDE: f64,
-}
-impl Default for SCNGeodeticPointT {
-  fn default() -> Self {
-    Self {
-      LATITUDE: 0.0,
-      LONGITUDE: 0.0,
-      ALTITUDE: 0.0,
-    }
-  }
-}
-impl SCNGeodeticPointT {
-  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-    &self,
-    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-  ) -> ::flatbuffers::WIPOffset<SCNGeodeticPoint<'b>> {
-    let LATITUDE = self.LATITUDE;
-    let LONGITUDE = self.LONGITUDE;
-    let ALTITUDE = self.ALTITUDE;
-    SCNGeodeticPoint::create(_fbb, &SCNGeodeticPointArgs{
-      LATITUDE,
-      LONGITUDE,
-      ALTITUDE,
-    })
-  }
-}
 pub enum SCNPointOfInterestOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -517,13 +342,13 @@ impl<'a> SCNPointOfInterest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNPointOfInterest::VT_COLOR, None)}
   }
-  /// Geodetic position for the point of interest.
+  /// WGS84 geodetic position for the point of interest.
   #[inline]
-  pub fn POSITION(&self) -> Option<SCNGeodeticPoint<'a>> {
+  pub fn POSITION(&self) -> Option<GJNPosition<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>(SCNPointOfInterest::VT_POSITION, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<GJNPosition>>(SCNPointOfInterest::VT_POSITION, None)}
   }
 }
 
@@ -539,7 +364,7 @@ impl ::flatbuffers::Verifiable for SCNPointOfInterest<'_> {
      .visit_field::<f64>("HIGHLIGHT_BEFORE", Self::VT_HIGHLIGHT_BEFORE, false)?
      .visit_field::<f64>("HIGHLIGHT_AFTER", Self::VT_HIGHLIGHT_AFTER, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COLOR", Self::VT_COLOR, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>("POSITION", Self::VT_POSITION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<GJNPosition>>("POSITION", Self::VT_POSITION, false)?
      .finish();
     Ok(())
   }
@@ -551,7 +376,7 @@ pub struct SCNPointOfInterestArgs<'a> {
     pub HIGHLIGHT_BEFORE: f64,
     pub HIGHLIGHT_AFTER: f64,
     pub COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub POSITION: Option<::flatbuffers::WIPOffset<SCNGeodeticPoint<'a>>>,
+    pub POSITION: Option<::flatbuffers::WIPOffset<GJNPosition<'a>>>,
 }
 impl<'a> Default for SCNPointOfInterestArgs<'a> {
   #[inline]
@@ -598,8 +423,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNPointOfInterestBuilder<'a,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNPointOfInterest::VT_COLOR, COLOR);
   }
   #[inline]
-  pub fn add_POSITION(&mut self, POSITION: ::flatbuffers::WIPOffset<SCNGeodeticPoint<'b >>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCNGeodeticPoint>>(SCNPointOfInterest::VT_POSITION, POSITION);
+  pub fn add_POSITION(&mut self, POSITION: ::flatbuffers::WIPOffset<GJNPosition<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<GJNPosition>>(SCNPointOfInterest::VT_POSITION, POSITION);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNPointOfInterestBuilder<'a, 'b, A> {
@@ -638,7 +463,7 @@ pub struct SCNPointOfInterestT {
   pub HIGHLIGHT_BEFORE: f64,
   pub HIGHLIGHT_AFTER: f64,
   pub COLOR: Option<alloc::string::String>,
-  pub POSITION: Option<alloc::boxed::Box<SCNGeodeticPointT>>,
+  pub POSITION: Option<alloc::boxed::Box<GJNPositionT>>,
 }
 impl Default for SCNPointOfInterestT {
   fn default() -> Self {
@@ -978,9 +803,9 @@ impl<'a> ::flatbuffers::Follow<'a> for SCNSunAdvantageTarget<'a> {
 }
 
 impl<'a> SCNSunAdvantageTarget<'a> {
-  pub const VT_TARGET_REFERENCE_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_TARGET_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 6;
-  pub const VT_GROUND_SITE_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TARGET_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_SITE_ID: ::flatbuffers::VOffsetT = 8;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -992,50 +817,50 @@ impl<'a> SCNSunAdvantageTarget<'a> {
     args: &'args SCNSunAdvantageTargetArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCNSunAdvantageTarget<'bldr>> {
     let mut builder = SCNSunAdvantageTargetBuilder::new(_fbb);
-    if let Some(x) = args.GROUND_SITE_ID { builder.add_GROUND_SITE_ID(x); }
-    builder.add_TARGET_NORAD_CAT_ID(args.TARGET_NORAD_CAT_ID);
-    if let Some(x) = args.TARGET_REFERENCE_ID { builder.add_TARGET_REFERENCE_ID(x); }
+    if let Some(x) = args.SITE_ID { builder.add_SITE_ID(x); }
+    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
+    if let Some(x) = args.TARGET_ID { builder.add_TARGET_ID(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> SCNSunAdvantageTargetT {
-    let TARGET_REFERENCE_ID = self.TARGET_REFERENCE_ID().map(|x| {
+    let TARGET_ID = self.TARGET_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let TARGET_NORAD_CAT_ID = self.TARGET_NORAD_CAT_ID();
-    let GROUND_SITE_ID = self.GROUND_SITE_ID().map(|x| {
+    let NORAD_CAT_ID = self.NORAD_CAT_ID();
+    let SITE_ID = self.SITE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     SCNSunAdvantageTargetT {
-      TARGET_REFERENCE_ID,
-      TARGET_NORAD_CAT_ID,
-      GROUND_SITE_ID,
+      TARGET_ID,
+      NORAD_CAT_ID,
+      SITE_ID,
     }
   }
 
-  /// Scenario reference id of the target object.
+  /// Target identifier for the paired object.
   #[inline]
-  pub fn TARGET_REFERENCE_ID(&self) -> Option<&'a str> {
+  pub fn TARGET_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNSunAdvantageTarget::VT_TARGET_REFERENCE_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNSunAdvantageTarget::VT_TARGET_ID, None)}
   }
   /// NORAD catalog id of the target satellite when available.
   #[inline]
-  pub fn TARGET_NORAD_CAT_ID(&self) -> u32 {
+  pub fn NORAD_CAT_ID(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<u32>(SCNSunAdvantageTarget::VT_TARGET_NORAD_CAT_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(SCNSunAdvantageTarget::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
-  /// Ground site id associated with the target pairing.
+  /// Site id associated with the target pairing.
   #[inline]
-  pub fn GROUND_SITE_ID(&self) -> Option<&'a str> {
+  pub fn SITE_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNSunAdvantageTarget::VT_GROUND_SITE_ID, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNSunAdvantageTarget::VT_SITE_ID, None)}
   }
 }
 
@@ -1045,25 +870,25 @@ impl ::flatbuffers::Verifiable for SCNSunAdvantageTarget<'_> {
     v: &mut ::flatbuffers::Verifier, pos: usize
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET_REFERENCE_ID", Self::VT_TARGET_REFERENCE_ID, false)?
-     .visit_field::<u32>("TARGET_NORAD_CAT_ID", Self::VT_TARGET_NORAD_CAT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GROUND_SITE_ID", Self::VT_GROUND_SITE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET_ID", Self::VT_TARGET_ID, false)?
+     .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SITE_ID", Self::VT_SITE_ID, false)?
      .finish();
     Ok(())
   }
 }
 pub struct SCNSunAdvantageTargetArgs<'a> {
-    pub TARGET_REFERENCE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub TARGET_NORAD_CAT_ID: u32,
-    pub GROUND_SITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NORAD_CAT_ID: u32,
+    pub SITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for SCNSunAdvantageTargetArgs<'a> {
   #[inline]
   fn default() -> Self {
     SCNSunAdvantageTargetArgs {
-      TARGET_REFERENCE_ID: None,
-      TARGET_NORAD_CAT_ID: 0,
-      GROUND_SITE_ID: None,
+      TARGET_ID: None,
+      NORAD_CAT_ID: 0,
+      SITE_ID: None,
     }
   }
 }
@@ -1074,16 +899,16 @@ pub struct SCNSunAdvantageTargetBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator 
 }
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNSunAdvantageTargetBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_TARGET_REFERENCE_ID(&mut self, TARGET_REFERENCE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNSunAdvantageTarget::VT_TARGET_REFERENCE_ID, TARGET_REFERENCE_ID);
+  pub fn add_TARGET_ID(&mut self, TARGET_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNSunAdvantageTarget::VT_TARGET_ID, TARGET_ID);
   }
   #[inline]
-  pub fn add_TARGET_NORAD_CAT_ID(&mut self, TARGET_NORAD_CAT_ID: u32) {
-    self.fbb_.push_slot::<u32>(SCNSunAdvantageTarget::VT_TARGET_NORAD_CAT_ID, TARGET_NORAD_CAT_ID, 0);
+  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(SCNSunAdvantageTarget::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
   }
   #[inline]
-  pub fn add_GROUND_SITE_ID(&mut self, GROUND_SITE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNSunAdvantageTarget::VT_GROUND_SITE_ID, GROUND_SITE_ID);
+  pub fn add_SITE_ID(&mut self, SITE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNSunAdvantageTarget::VT_SITE_ID, SITE_ID);
   }
   #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCNSunAdvantageTargetBuilder<'a, 'b, A> {
@@ -1103,25 +928,25 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNSunAdvantageTargetBuilder<
 impl ::core::fmt::Debug for SCNSunAdvantageTarget<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCNSunAdvantageTarget");
-      ds.field("TARGET_REFERENCE_ID", &self.TARGET_REFERENCE_ID());
-      ds.field("TARGET_NORAD_CAT_ID", &self.TARGET_NORAD_CAT_ID());
-      ds.field("GROUND_SITE_ID", &self.GROUND_SITE_ID());
+      ds.field("TARGET_ID", &self.TARGET_ID());
+      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+      ds.field("SITE_ID", &self.SITE_ID());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCNSunAdvantageTargetT {
-  pub TARGET_REFERENCE_ID: Option<alloc::string::String>,
-  pub TARGET_NORAD_CAT_ID: u32,
-  pub GROUND_SITE_ID: Option<alloc::string::String>,
+  pub TARGET_ID: Option<alloc::string::String>,
+  pub NORAD_CAT_ID: u32,
+  pub SITE_ID: Option<alloc::string::String>,
 }
 impl Default for SCNSunAdvantageTargetT {
   fn default() -> Self {
     Self {
-      TARGET_REFERENCE_ID: None,
-      TARGET_NORAD_CAT_ID: 0,
-      GROUND_SITE_ID: None,
+      TARGET_ID: None,
+      NORAD_CAT_ID: 0,
+      SITE_ID: None,
     }
   }
 }
@@ -1130,17 +955,17 @@ impl SCNSunAdvantageTargetT {
     &self,
     _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
   ) -> ::flatbuffers::WIPOffset<SCNSunAdvantageTarget<'b>> {
-    let TARGET_REFERENCE_ID = self.TARGET_REFERENCE_ID.as_ref().map(|x|{
+    let TARGET_ID = self.TARGET_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TARGET_NORAD_CAT_ID = self.TARGET_NORAD_CAT_ID;
-    let GROUND_SITE_ID = self.GROUND_SITE_ID.as_ref().map(|x|{
+    let NORAD_CAT_ID = self.NORAD_CAT_ID;
+    let SITE_ID = self.SITE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     SCNSunAdvantageTarget::create(_fbb, &SCNSunAdvantageTargetArgs{
-      TARGET_REFERENCE_ID,
-      TARGET_NORAD_CAT_ID,
-      GROUND_SITE_ID,
+      TARGET_ID,
+      NORAD_CAT_ID,
+      SITE_ID,
     })
   }
 }
@@ -1148,7 +973,7 @@ pub enum SCNExclusionZoneOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 pub struct SCNExclusionZone<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -1247,13 +1072,13 @@ impl<'a> SCNExclusionZone<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SCNExclusionZone::VT_IS_FILLED, Some(false)).unwrap()}
   }
-  /// Simple geodetic polygon points for imported zones.
+  /// Simple WGS84 polygon points for imported zones.
   #[inline]
-  pub fn POINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint<'a>>>> {
+  pub fn POINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<GJNPosition<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>>>(SCNExclusionZone::VT_POINTS, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<GJNPosition>>>>(SCNExclusionZone::VT_POINTS, None)}
   }
   /// Canonical GeoJSON geometry for the exclusion zone.
   #[inline]
@@ -1275,7 +1100,7 @@ impl ::flatbuffers::Verifiable for SCNExclusionZone<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FILL_COLOR", Self::VT_FILL_COLOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LABEL_COLOR", Self::VT_LABEL_COLOR, false)?
      .visit_field::<bool>("IS_FILLED", Self::VT_IS_FILLED, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint>>>>("POINTS", Self::VT_POINTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<GJNPosition>>>>("POINTS", Self::VT_POINTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<GJNGeometry>>("BOUNDARY", Self::VT_BOUNDARY, false)?
      .finish();
     Ok(())
@@ -1286,7 +1111,7 @@ pub struct SCNExclusionZoneArgs<'a> {
     pub FILL_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LABEL_COLOR: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub IS_FILLED: bool,
-    pub POINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint<'a>>>>>,
+    pub POINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<GJNPosition<'a>>>>>,
     pub BOUNDARY: Option<::flatbuffers::WIPOffset<GJNGeometry<'a>>>,
 }
 impl<'a> Default for SCNExclusionZoneArgs<'a> {
@@ -1325,7 +1150,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNExclusionZoneBuilder<'a, '
     self.fbb_.push_slot::<bool>(SCNExclusionZone::VT_IS_FILLED, IS_FILLED, false);
   }
   #[inline]
-  pub fn add_POINTS(&mut self, POINTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCNGeodeticPoint<'b >>>>) {
+  pub fn add_POINTS(&mut self, POINTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<GJNPosition<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNExclusionZone::VT_POINTS, POINTS);
   }
   #[inline]
@@ -1366,7 +1191,7 @@ pub struct SCNExclusionZoneT {
   pub FILL_COLOR: Option<alloc::string::String>,
   pub LABEL_COLOR: Option<alloc::string::String>,
   pub IS_FILLED: bool,
-  pub POINTS: Option<alloc::vec::Vec<SCNGeodeticPointT>>,
+  pub POINTS: Option<alloc::vec::Vec<GJNPositionT>>,
   pub BOUNDARY: Option<alloc::boxed::Box<GJNGeometryT>>,
 }
 impl Default for SCNExclusionZoneT {
@@ -1431,23 +1256,23 @@ impl<'a> ::flatbuffers::Follow<'a> for SCNReference<'a> {
 
 impl<'a> SCNReference<'a> {
   pub const VT_REFERENCE_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_DISPLAY_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
   pub const VT_REFERENCE_KIND: ::flatbuffers::VOffsetT = 8;
   pub const VT_REMOVE: ::flatbuffers::VOffsetT = 10;
   pub const VT_NORAD_CAT_ID: ::flatbuffers::VOffsetT = 12;
   pub const VT_OBJECT_ID: ::flatbuffers::VOffsetT = 14;
   pub const VT_COUNTRY: ::flatbuffers::VOffsetT = 16;
-  pub const VT_SOURCES: ::flatbuffers::VOffsetT = 18;
-  pub const VT_DATA_MODES: ::flatbuffers::VOffsetT = 20;
-  pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 22;
-  pub const VT_STATES: ::flatbuffers::VOffsetT = 24;
-  pub const VT_MANEUVERS: ::flatbuffers::VOffsetT = 26;
-  pub const VT_SITE: ::flatbuffers::VOffsetT = 28;
-  pub const VT_SENSOR: ::flatbuffers::VOffsetT = 30;
-  pub const VT_SENSOR_SYSTEM_ID: ::flatbuffers::VOffsetT = 32;
-  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 34;
-  pub const VT_SITE_LATITUDE: ::flatbuffers::VOffsetT = 36;
-  pub const VT_SITE_LONGITUDE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_OWNER: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SOURCES: ::flatbuffers::VOffsetT = 20;
+  pub const VT_DATA_MODES: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 24;
+  pub const VT_STATE_VECTORS: ::flatbuffers::VOffsetT = 26;
+  pub const VT_MANEUVERS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_SITE: ::flatbuffers::VOffsetT = 30;
+  pub const VT_SENSOR: ::flatbuffers::VOffsetT = 32;
+  pub const VT_SENSOR_SYSTEM_ID: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SENSOR_ID: ::flatbuffers::VOffsetT = 36;
+  pub const VT_SITE_POSITION: ::flatbuffers::VOffsetT = 38;
   pub const VT_VARIABLE_SATELLITE_ID: ::flatbuffers::VOffsetT = 40;
   pub const VT_VARIABLE_SITE_ID: ::flatbuffers::VOffsetT = 42;
   pub const VT_POINTS: ::flatbuffers::VOffsetT = 44;
@@ -1467,8 +1292,6 @@ impl<'a> SCNReference<'a> {
     args: &'args SCNReferenceArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCNReference<'bldr>> {
     let mut builder = SCNReferenceBuilder::new(_fbb);
-    builder.add_SITE_LONGITUDE(args.SITE_LONGITUDE);
-    builder.add_SITE_LATITUDE(args.SITE_LATITUDE);
     if let Some(x) = args.OBSERVATION_RADAR { builder.add_OBSERVATION_RADAR(x); }
     if let Some(x) = args.OBSERVATION_EO { builder.add_OBSERVATION_EO(x); }
     if let Some(x) = args.EXCLUSION_ZONE { builder.add_EXCLUSION_ZONE(x); }
@@ -1477,19 +1300,21 @@ impl<'a> SCNReference<'a> {
     if let Some(x) = args.POINTS { builder.add_POINTS(x); }
     if let Some(x) = args.VARIABLE_SITE_ID { builder.add_VARIABLE_SITE_ID(x); }
     if let Some(x) = args.VARIABLE_SATELLITE_ID { builder.add_VARIABLE_SATELLITE_ID(x); }
+    if let Some(x) = args.SITE_POSITION { builder.add_SITE_POSITION(x); }
     if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
     if let Some(x) = args.SENSOR_SYSTEM_ID { builder.add_SENSOR_SYSTEM_ID(x); }
     if let Some(x) = args.SENSOR { builder.add_SENSOR(x); }
     if let Some(x) = args.SITE { builder.add_SITE(x); }
     if let Some(x) = args.MANEUVERS { builder.add_MANEUVERS(x); }
-    if let Some(x) = args.STATES { builder.add_STATES(x); }
+    if let Some(x) = args.STATE_VECTORS { builder.add_STATE_VECTORS(x); }
     if let Some(x) = args.MEAN_ELEMENTS { builder.add_MEAN_ELEMENTS(x); }
     if let Some(x) = args.DATA_MODES { builder.add_DATA_MODES(x); }
     if let Some(x) = args.SOURCES { builder.add_SOURCES(x); }
+    if let Some(x) = args.OWNER { builder.add_OWNER(x); }
     if let Some(x) = args.COUNTRY { builder.add_COUNTRY(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
-    if let Some(x) = args.DISPLAY_NAME { builder.add_DISPLAY_NAME(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.REFERENCE_ID { builder.add_REFERENCE_ID(x); }
     builder.add_REMOVE(args.REMOVE);
     builder.add_REFERENCE_KIND(args.REFERENCE_KIND);
@@ -1500,7 +1325,7 @@ impl<'a> SCNReference<'a> {
     let REFERENCE_ID = self.REFERENCE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let DISPLAY_NAME = self.DISPLAY_NAME().map(|x| {
+    let NAME = self.NAME().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let REFERENCE_KIND = self.REFERENCE_KIND();
@@ -1512,6 +1337,9 @@ impl<'a> SCNReference<'a> {
     let COUNTRY = self.COUNTRY().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let OWNER = self.OWNER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     let SOURCES = self.SOURCES().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
@@ -1521,7 +1349,7 @@ impl<'a> SCNReference<'a> {
     let MEAN_ELEMENTS = self.MEAN_ELEMENTS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
-    let STATES = self.STATES().map(|x| {
+    let STATE_VECTORS = self.STATE_VECTORS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
     let MANEUVERS = self.MANEUVERS().map(|x| {
@@ -1539,8 +1367,9 @@ impl<'a> SCNReference<'a> {
     let SENSOR_ID = self.SENSOR_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SITE_LATITUDE = self.SITE_LATITUDE();
-    let SITE_LONGITUDE = self.SITE_LONGITUDE();
+    let SITE_POSITION = self.SITE_POSITION().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     let VARIABLE_SATELLITE_ID = self.VARIABLE_SATELLITE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
@@ -1567,23 +1396,23 @@ impl<'a> SCNReference<'a> {
     });
     SCNReferenceT {
       REFERENCE_ID,
-      DISPLAY_NAME,
+      NAME,
       REFERENCE_KIND,
       REMOVE,
       NORAD_CAT_ID,
       OBJECT_ID,
       COUNTRY,
+      OWNER,
       SOURCES,
       DATA_MODES,
       MEAN_ELEMENTS,
-      STATES,
+      STATE_VECTORS,
       MANEUVERS,
       SITE,
       SENSOR,
       SENSOR_SYSTEM_ID,
       SENSOR_ID,
-      SITE_LATITUDE,
-      SITE_LONGITUDE,
+      SITE_POSITION,
       VARIABLE_SATELLITE_ID,
       VARIABLE_SITE_ID,
       POINTS,
@@ -1603,13 +1432,13 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_REFERENCE_ID, None)}
   }
-  /// Human-readable display name for the reference.
+  /// Human-readable name for the reference.
   #[inline]
-  pub fn DISPLAY_NAME(&self) -> Option<&'a str> {
+  pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_DISPLAY_NAME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_NAME, None)}
   }
   /// Category of object or annotation represented by this reference.
   #[inline]
@@ -1643,13 +1472,21 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_OBJECT_ID, None)}
   }
-  /// Country or owner label associated with the reference.
+  /// Country associated with the reference.
   #[inline]
   pub fn COUNTRY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_COUNTRY, None)}
+  }
+  /// Owner or operator label associated with the reference.
+  #[inline]
+  pub fn OWNER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_OWNER, None)}
   }
   /// Source labels or URIs that produced this reference.
   #[inline]
@@ -1677,11 +1514,11 @@ impl<'a> SCNReference<'a> {
   }
   /// State vectors associated with this reference.
   #[inline]
-  pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
+  pub fn STATE_VECTORS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNReference::VT_STATES, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNReference::VT_STATE_VECTORS, None)}
   }
   /// Maneuver records associated with this reference.
   #[inline]
@@ -1723,21 +1560,13 @@ impl<'a> SCNReference<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNReference::VT_SENSOR_ID, None)}
   }
-  /// Ground-site latitude in degrees when no SIT record is available.
+  /// WGS84 site position when no SIT or SEN record is available.
   #[inline]
-  pub fn SITE_LATITUDE(&self) -> f64 {
+  pub fn SITE_POSITION(&self) -> Option<GJNPosition<'a>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LATITUDE, Some(0.0)).unwrap()}
-  }
-  /// Ground-site longitude in degrees when no SIT record is available.
-  #[inline]
-  pub fn SITE_LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SCNReference::VT_SITE_LONGITUDE, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<GJNPosition>>(SCNReference::VT_SITE_POSITION, None)}
   }
   /// Scenario variable id for variable satellite references.
   #[inline]
@@ -1812,23 +1641,23 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_ID", Self::VT_REFERENCE_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISPLAY_NAME", Self::VT_DISPLAY_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<scenarioReferenceKind>("REFERENCE_KIND", Self::VT_REFERENCE_KIND, false)?
      .visit_field::<bool>("REMOVE", Self::VT_REMOVE, false)?
      .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COUNTRY", Self::VT_COUNTRY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OWNER", Self::VT_OWNER, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SOURCES", Self::VT_SOURCES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DATA_MODES", Self::VT_DATA_MODES, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMM>>>>("MEAN_ELEMENTS", Self::VT_MEAN_ELEMENTS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<STV>>>>("STATES", Self::VT_STATES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<STV>>>>("STATE_VECTORS", Self::VT_STATE_VECTORS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<MNV>>>>("MANEUVERS", Self::VT_MANEUVERS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SIT>>("SITE", Self::VT_SITE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SEN>>("SENSOR", Self::VT_SENSOR, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_SYSTEM_ID", Self::VT_SENSOR_SYSTEM_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
-     .visit_field::<f64>("SITE_LATITUDE", Self::VT_SITE_LATITUDE, false)?
-     .visit_field::<f64>("SITE_LONGITUDE", Self::VT_SITE_LONGITUDE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<GJNPosition>>("SITE_POSITION", Self::VT_SITE_POSITION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VARIABLE_SATELLITE_ID", Self::VT_VARIABLE_SATELLITE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VARIABLE_SITE_ID", Self::VT_VARIABLE_SITE_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest>>>>("POINTS", Self::VT_POINTS, false)?
@@ -1843,23 +1672,23 @@ impl ::flatbuffers::Verifiable for SCNReference<'_> {
 }
 pub struct SCNReferenceArgs<'a> {
     pub REFERENCE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub DISPLAY_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REFERENCE_KIND: scenarioReferenceKind,
     pub REMOVE: bool,
     pub NORAD_CAT_ID: u32,
     pub OBJECT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub COUNTRY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OWNER: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub DATA_MODES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub MEAN_ELEMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>>>,
-    pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>>>,
+    pub STATE_VECTORS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>>>,
     pub MANEUVERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MNV<'a>>>>>,
     pub SITE: Option<::flatbuffers::WIPOffset<SIT<'a>>>,
     pub SENSOR: Option<::flatbuffers::WIPOffset<SEN<'a>>>,
     pub SENSOR_SYSTEM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SITE_LATITUDE: f64,
-    pub SITE_LONGITUDE: f64,
+    pub SITE_POSITION: Option<::flatbuffers::WIPOffset<GJNPosition<'a>>>,
     pub VARIABLE_SATELLITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub VARIABLE_SITE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub POINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCNPointOfInterest<'a>>>>>,
@@ -1874,23 +1703,23 @@ impl<'a> Default for SCNReferenceArgs<'a> {
   fn default() -> Self {
     SCNReferenceArgs {
       REFERENCE_ID: None,
-      DISPLAY_NAME: None,
+      NAME: None,
       REFERENCE_KIND: scenarioReferenceKind::UNKNOWN,
       REMOVE: false,
       NORAD_CAT_ID: 0,
       OBJECT_ID: None,
       COUNTRY: None,
+      OWNER: None,
       SOURCES: None,
       DATA_MODES: None,
       MEAN_ELEMENTS: None,
-      STATES: None,
+      STATE_VECTORS: None,
       MANEUVERS: None,
       SITE: None,
       SENSOR: None,
       SENSOR_SYSTEM_ID: None,
       SENSOR_ID: None,
-      SITE_LATITUDE: 0.0,
-      SITE_LONGITUDE: 0.0,
+      SITE_POSITION: None,
       VARIABLE_SATELLITE_ID: None,
       VARIABLE_SITE_ID: None,
       POINTS: None,
@@ -1913,8 +1742,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_REFERENCE_ID, REFERENCE_ID);
   }
   #[inline]
-  pub fn add_DISPLAY_NAME(&mut self, DISPLAY_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_DISPLAY_NAME, DISPLAY_NAME);
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_NAME, NAME);
   }
   #[inline]
   pub fn add_REFERENCE_KIND(&mut self, REFERENCE_KIND: scenarioReferenceKind) {
@@ -1937,6 +1766,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_COUNTRY, COUNTRY);
   }
   #[inline]
+  pub fn add_OWNER(&mut self, OWNER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_OWNER, OWNER);
+  }
+  #[inline]
   pub fn add_SOURCES(&mut self, SOURCES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_SOURCES, SOURCES);
   }
@@ -1949,8 +1782,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
   #[inline]
-  pub fn add_STATES(&mut self, STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<STV<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_STATES, STATES);
+  pub fn add_STATE_VECTORS(&mut self, STATE_VECTORS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<STV<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_STATE_VECTORS, STATE_VECTORS);
   }
   #[inline]
   pub fn add_MANEUVERS(&mut self, MANEUVERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<MNV<'b >>>>) {
@@ -1973,12 +1806,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNReferenceBuilder<'a, 'b, A
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNReference::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
-  pub fn add_SITE_LATITUDE(&mut self, SITE_LATITUDE: f64) {
-    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LATITUDE, SITE_LATITUDE, 0.0);
-  }
-  #[inline]
-  pub fn add_SITE_LONGITUDE(&mut self, SITE_LONGITUDE: f64) {
-    self.fbb_.push_slot::<f64>(SCNReference::VT_SITE_LONGITUDE, SITE_LONGITUDE, 0.0);
+  pub fn add_SITE_POSITION(&mut self, SITE_POSITION: ::flatbuffers::WIPOffset<GJNPosition<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<GJNPosition>>(SCNReference::VT_SITE_POSITION, SITE_POSITION);
   }
   #[inline]
   pub fn add_VARIABLE_SATELLITE_ID(&mut self, VARIABLE_SATELLITE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
@@ -2031,23 +1860,23 @@ impl ::core::fmt::Debug for SCNReference<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCNReference");
       ds.field("REFERENCE_ID", &self.REFERENCE_ID());
-      ds.field("DISPLAY_NAME", &self.DISPLAY_NAME());
+      ds.field("NAME", &self.NAME());
       ds.field("REFERENCE_KIND", &self.REFERENCE_KIND());
       ds.field("REMOVE", &self.REMOVE());
       ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
       ds.field("OBJECT_ID", &self.OBJECT_ID());
       ds.field("COUNTRY", &self.COUNTRY());
+      ds.field("OWNER", &self.OWNER());
       ds.field("SOURCES", &self.SOURCES());
       ds.field("DATA_MODES", &self.DATA_MODES());
       ds.field("MEAN_ELEMENTS", &self.MEAN_ELEMENTS());
-      ds.field("STATES", &self.STATES());
+      ds.field("STATE_VECTORS", &self.STATE_VECTORS());
       ds.field("MANEUVERS", &self.MANEUVERS());
       ds.field("SITE", &self.SITE());
       ds.field("SENSOR", &self.SENSOR());
       ds.field("SENSOR_SYSTEM_ID", &self.SENSOR_SYSTEM_ID());
       ds.field("SENSOR_ID", &self.SENSOR_ID());
-      ds.field("SITE_LATITUDE", &self.SITE_LATITUDE());
-      ds.field("SITE_LONGITUDE", &self.SITE_LONGITUDE());
+      ds.field("SITE_POSITION", &self.SITE_POSITION());
       ds.field("VARIABLE_SATELLITE_ID", &self.VARIABLE_SATELLITE_ID());
       ds.field("VARIABLE_SITE_ID", &self.VARIABLE_SITE_ID());
       ds.field("POINTS", &self.POINTS());
@@ -2063,23 +1892,23 @@ impl ::core::fmt::Debug for SCNReference<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCNReferenceT {
   pub REFERENCE_ID: Option<alloc::string::String>,
-  pub DISPLAY_NAME: Option<alloc::string::String>,
+  pub NAME: Option<alloc::string::String>,
   pub REFERENCE_KIND: scenarioReferenceKind,
   pub REMOVE: bool,
   pub NORAD_CAT_ID: u32,
   pub OBJECT_ID: Option<alloc::string::String>,
   pub COUNTRY: Option<alloc::string::String>,
+  pub OWNER: Option<alloc::string::String>,
   pub SOURCES: Option<alloc::vec::Vec<alloc::string::String>>,
   pub DATA_MODES: Option<alloc::vec::Vec<alloc::string::String>>,
   pub MEAN_ELEMENTS: Option<alloc::vec::Vec<OMMT>>,
-  pub STATES: Option<alloc::vec::Vec<STVT>>,
+  pub STATE_VECTORS: Option<alloc::vec::Vec<STVT>>,
   pub MANEUVERS: Option<alloc::vec::Vec<MNVT>>,
   pub SITE: Option<alloc::boxed::Box<SITT>>,
   pub SENSOR: Option<alloc::boxed::Box<SENT>>,
   pub SENSOR_SYSTEM_ID: Option<alloc::string::String>,
   pub SENSOR_ID: Option<alloc::string::String>,
-  pub SITE_LATITUDE: f64,
-  pub SITE_LONGITUDE: f64,
+  pub SITE_POSITION: Option<alloc::boxed::Box<GJNPositionT>>,
   pub VARIABLE_SATELLITE_ID: Option<alloc::string::String>,
   pub VARIABLE_SITE_ID: Option<alloc::string::String>,
   pub POINTS: Option<alloc::vec::Vec<SCNPointOfInterestT>>,
@@ -2093,23 +1922,23 @@ impl Default for SCNReferenceT {
   fn default() -> Self {
     Self {
       REFERENCE_ID: None,
-      DISPLAY_NAME: None,
+      NAME: None,
       REFERENCE_KIND: scenarioReferenceKind::UNKNOWN,
       REMOVE: false,
       NORAD_CAT_ID: 0,
       OBJECT_ID: None,
       COUNTRY: None,
+      OWNER: None,
       SOURCES: None,
       DATA_MODES: None,
       MEAN_ELEMENTS: None,
-      STATES: None,
+      STATE_VECTORS: None,
       MANEUVERS: None,
       SITE: None,
       SENSOR: None,
       SENSOR_SYSTEM_ID: None,
       SENSOR_ID: None,
-      SITE_LATITUDE: 0.0,
-      SITE_LONGITUDE: 0.0,
+      SITE_POSITION: None,
       VARIABLE_SATELLITE_ID: None,
       VARIABLE_SITE_ID: None,
       POINTS: None,
@@ -2129,7 +1958,7 @@ impl SCNReferenceT {
     let REFERENCE_ID = self.REFERENCE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DISPLAY_NAME = self.DISPLAY_NAME.as_ref().map(|x|{
+    let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let REFERENCE_KIND = self.REFERENCE_KIND;
@@ -2141,6 +1970,9 @@ impl SCNReferenceT {
     let COUNTRY = self.COUNTRY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let OWNER = self.OWNER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SOURCES = self.SOURCES.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -2150,7 +1982,7 @@ impl SCNReferenceT {
     let MEAN_ELEMENTS = self.MEAN_ELEMENTS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let STATES = self.STATES.as_ref().map(|x|{
+    let STATE_VECTORS = self.STATE_VECTORS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let MANEUVERS = self.MANEUVERS.as_ref().map(|x|{
@@ -2168,8 +2000,9 @@ impl SCNReferenceT {
     let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SITE_LATITUDE = self.SITE_LATITUDE;
-    let SITE_LONGITUDE = self.SITE_LONGITUDE;
+    let SITE_POSITION = self.SITE_POSITION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     let VARIABLE_SATELLITE_ID = self.VARIABLE_SATELLITE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2196,23 +2029,23 @@ impl SCNReferenceT {
     });
     SCNReference::create(_fbb, &SCNReferenceArgs{
       REFERENCE_ID,
-      DISPLAY_NAME,
+      NAME,
       REFERENCE_KIND,
       REMOVE,
       NORAD_CAT_ID,
       OBJECT_ID,
       COUNTRY,
+      OWNER,
       SOURCES,
       DATA_MODES,
       MEAN_ELEMENTS,
-      STATES,
+      STATE_VECTORS,
       MANEUVERS,
       SITE,
       SENSOR,
       SENSOR_SYSTEM_ID,
       SENSOR_ID,
-      SITE_LATITUDE,
-      SITE_LONGITUDE,
+      SITE_POSITION,
       VARIABLE_SATELLITE_ID,
       VARIABLE_SITE_ID,
       POINTS,
@@ -2242,8 +2075,8 @@ impl<'a> ::flatbuffers::Follow<'a> for SCNEvent<'a> {
 
 impl<'a> SCNEvent<'a> {
   pub const VT_EVENT_ID: ::flatbuffers::VOffsetT = 4;
-  pub const VT_ELSETS: ::flatbuffers::VOffsetT = 6;
-  pub const VT_STATES: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MEAN_ELEMENTS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_STATE_VECTORS: ::flatbuffers::VOffsetT = 8;
   pub const VT_EO_OBSERVATIONS: ::flatbuffers::VOffsetT = 10;
   pub const VT_RADAR_OBSERVATIONS: ::flatbuffers::VOffsetT = 12;
 
@@ -2259,8 +2092,8 @@ impl<'a> SCNEvent<'a> {
     let mut builder = SCNEventBuilder::new(_fbb);
     if let Some(x) = args.RADAR_OBSERVATIONS { builder.add_RADAR_OBSERVATIONS(x); }
     if let Some(x) = args.EO_OBSERVATIONS { builder.add_EO_OBSERVATIONS(x); }
-    if let Some(x) = args.STATES { builder.add_STATES(x); }
-    if let Some(x) = args.ELSETS { builder.add_ELSETS(x); }
+    if let Some(x) = args.STATE_VECTORS { builder.add_STATE_VECTORS(x); }
+    if let Some(x) = args.MEAN_ELEMENTS { builder.add_MEAN_ELEMENTS(x); }
     if let Some(x) = args.EVENT_ID { builder.add_EVENT_ID(x); }
     builder.finish()
   }
@@ -2269,10 +2102,10 @@ impl<'a> SCNEvent<'a> {
     let EVENT_ID = self.EVENT_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let ELSETS = self.ELSETS().map(|x| {
+    let MEAN_ELEMENTS = self.MEAN_ELEMENTS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
-    let STATES = self.STATES().map(|x| {
+    let STATE_VECTORS = self.STATE_VECTORS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
     let EO_OBSERVATIONS = self.EO_OBSERVATIONS().map(|x| {
@@ -2283,8 +2116,8 @@ impl<'a> SCNEvent<'a> {
     });
     SCNEventT {
       EVENT_ID,
-      ELSETS,
-      STATES,
+      MEAN_ELEMENTS,
+      STATE_VECTORS,
       EO_OBSERVATIONS,
       RADAR_OBSERVATIONS,
     }
@@ -2298,21 +2131,21 @@ impl<'a> SCNEvent<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCNEvent::VT_EVENT_ID, None)}
   }
-  /// Element sets associated with the event.
+  /// Mean orbital elements associated with the event.
   #[inline]
-  pub fn ELSETS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>> {
+  pub fn MEAN_ELEMENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM>>>>(SCNEvent::VT_ELSETS, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM>>>>(SCNEvent::VT_MEAN_ELEMENTS, None)}
   }
   /// State vectors associated with the event.
   #[inline]
-  pub fn STATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
+  pub fn STATE_VECTORS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNEvent::VT_STATES, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV>>>>(SCNEvent::VT_STATE_VECTORS, None)}
   }
   /// Electro-optical observations associated with the event.
   #[inline]
@@ -2339,8 +2172,8 @@ impl ::flatbuffers::Verifiable for SCNEvent<'_> {
   ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
     v.visit_table(pos)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EVENT_ID", Self::VT_EVENT_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMM>>>>("ELSETS", Self::VT_ELSETS, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<STV>>>>("STATES", Self::VT_STATES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<OMM>>>>("MEAN_ELEMENTS", Self::VT_MEAN_ELEMENTS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<STV>>>>("STATE_VECTORS", Self::VT_STATE_VECTORS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<EOO>>>>("EO_OBSERVATIONS", Self::VT_EO_OBSERVATIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<RDO>>>>("RADAR_OBSERVATIONS", Self::VT_RADAR_OBSERVATIONS, false)?
      .finish();
@@ -2349,8 +2182,8 @@ impl ::flatbuffers::Verifiable for SCNEvent<'_> {
 }
 pub struct SCNEventArgs<'a> {
     pub EVENT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub ELSETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>>>,
-    pub STATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>>>,
+    pub MEAN_ELEMENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<OMM<'a>>>>>,
+    pub STATE_VECTORS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<STV<'a>>>>>,
     pub EO_OBSERVATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<EOO<'a>>>>>,
     pub RADAR_OBSERVATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<RDO<'a>>>>>,
 }
@@ -2359,8 +2192,8 @@ impl<'a> Default for SCNEventArgs<'a> {
   fn default() -> Self {
     SCNEventArgs {
       EVENT_ID: None,
-      ELSETS: None,
-      STATES: None,
+      MEAN_ELEMENTS: None,
+      STATE_VECTORS: None,
       EO_OBSERVATIONS: None,
       RADAR_OBSERVATIONS: None,
     }
@@ -2377,12 +2210,12 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNEventBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNEvent::VT_EVENT_ID, EVENT_ID);
   }
   #[inline]
-  pub fn add_ELSETS(&mut self, ELSETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OMM<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNEvent::VT_ELSETS, ELSETS);
+  pub fn add_MEAN_ELEMENTS(&mut self, MEAN_ELEMENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<OMM<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNEvent::VT_MEAN_ELEMENTS, MEAN_ELEMENTS);
   }
   #[inline]
-  pub fn add_STATES(&mut self, STATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<STV<'b >>>>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNEvent::VT_STATES, STATES);
+  pub fn add_STATE_VECTORS(&mut self, STATE_VECTORS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<STV<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCNEvent::VT_STATE_VECTORS, STATE_VECTORS);
   }
   #[inline]
   pub fn add_EO_OBSERVATIONS(&mut self, EO_OBSERVATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<EOO<'b >>>>) {
@@ -2411,8 +2244,8 @@ impl ::core::fmt::Debug for SCNEvent<'_> {
   fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
     let mut ds = f.debug_struct("SCNEvent");
       ds.field("EVENT_ID", &self.EVENT_ID());
-      ds.field("ELSETS", &self.ELSETS());
-      ds.field("STATES", &self.STATES());
+      ds.field("MEAN_ELEMENTS", &self.MEAN_ELEMENTS());
+      ds.field("STATE_VECTORS", &self.STATE_VECTORS());
       ds.field("EO_OBSERVATIONS", &self.EO_OBSERVATIONS());
       ds.field("RADAR_OBSERVATIONS", &self.RADAR_OBSERVATIONS());
       ds.finish()
@@ -2422,8 +2255,8 @@ impl ::core::fmt::Debug for SCNEvent<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SCNEventT {
   pub EVENT_ID: Option<alloc::string::String>,
-  pub ELSETS: Option<alloc::vec::Vec<OMMT>>,
-  pub STATES: Option<alloc::vec::Vec<STVT>>,
+  pub MEAN_ELEMENTS: Option<alloc::vec::Vec<OMMT>>,
+  pub STATE_VECTORS: Option<alloc::vec::Vec<STVT>>,
   pub EO_OBSERVATIONS: Option<alloc::vec::Vec<EOOT>>,
   pub RADAR_OBSERVATIONS: Option<alloc::vec::Vec<RDOT>>,
 }
@@ -2431,8 +2264,8 @@ impl Default for SCNEventT {
   fn default() -> Self {
     Self {
       EVENT_ID: None,
-      ELSETS: None,
-      STATES: None,
+      MEAN_ELEMENTS: None,
+      STATE_VECTORS: None,
       EO_OBSERVATIONS: None,
       RADAR_OBSERVATIONS: None,
     }
@@ -2446,10 +2279,10 @@ impl SCNEventT {
     let EVENT_ID = self.EVENT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ELSETS = self.ELSETS.as_ref().map(|x|{
+    let MEAN_ELEMENTS = self.MEAN_ELEMENTS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
-    let STATES = self.STATES.as_ref().map(|x|{
+    let STATE_VECTORS = self.STATE_VECTORS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let EO_OBSERVATIONS = self.EO_OBSERVATIONS.as_ref().map(|x|{
@@ -2460,8 +2293,8 @@ impl SCNEventT {
     });
     SCNEvent::create(_fbb, &SCNEventArgs{
       EVENT_ID,
-      ELSETS,
-      STATES,
+      MEAN_ELEMENTS,
+      STATE_VECTORS,
       EO_OBSERVATIONS,
       RADAR_OBSERVATIONS,
     })
@@ -2790,9 +2623,9 @@ impl<'a> SCN<'a> {
   pub const VT_EVENT: ::flatbuffers::VOffsetT = 8;
   pub const VT_FOCUSED_REFERENCE_INDEX: ::flatbuffers::VOffsetT = 10;
   pub const VT_FOCUSED_REFERENCE_ID: ::flatbuffers::VOffsetT = 12;
-  pub const VT_SIM_TIME: ::flatbuffers::VOffsetT = 14;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 14;
   pub const VT_SIM_SPEED: ::flatbuffers::VOffsetT = 16;
-  pub const VT_USE_ECEF_FRAME: ::flatbuffers::VOffsetT = 18;
+  pub const VT_USE_BODY_FIXED_FRAME: ::flatbuffers::VOffsetT = 18;
   pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 20;
   pub const VT_ACTION: ::flatbuffers::VOffsetT = 22;
   pub const VT_VIEW_STATE: ::flatbuffers::VOffsetT = 24;
@@ -2812,14 +2645,14 @@ impl<'a> SCN<'a> {
     if let Some(x) = args.ASSETS_CHANGED { builder.add_ASSETS_CHANGED(x); }
     if let Some(x) = args.VIEW_STATE { builder.add_VIEW_STATE(x); }
     if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
-    if let Some(x) = args.SIM_TIME { builder.add_SIM_TIME(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.FOCUSED_REFERENCE_ID { builder.add_FOCUSED_REFERENCE_ID(x); }
     builder.add_FOCUSED_REFERENCE_INDEX(args.FOCUSED_REFERENCE_INDEX);
     if let Some(x) = args.EVENT { builder.add_EVENT(x); }
     if let Some(x) = args.REFERENCES { builder.add_REFERENCES(x); }
     if let Some(x) = args.SCENARIO_ID { builder.add_SCENARIO_ID(x); }
     builder.add_ACTION(args.ACTION);
-    builder.add_USE_ECEF_FRAME(args.USE_ECEF_FRAME);
+    builder.add_USE_BODY_FIXED_FRAME(args.USE_BODY_FIXED_FRAME);
     builder.finish()
   }
 
@@ -2837,11 +2670,11 @@ impl<'a> SCN<'a> {
     let FOCUSED_REFERENCE_ID = self.FOCUSED_REFERENCE_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
-    let SIM_TIME = self.SIM_TIME().map(|x| {
+    let EPOCH = self.EPOCH().map(|x| {
       alloc::string::ToString::to_string(x)
     });
     let SIM_SPEED = self.SIM_SPEED();
-    let USE_ECEF_FRAME = self.USE_ECEF_FRAME();
+    let USE_BODY_FIXED_FRAME = self.USE_BODY_FIXED_FRAME();
     let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
@@ -2858,9 +2691,9 @@ impl<'a> SCN<'a> {
       EVENT,
       FOCUSED_REFERENCE_INDEX,
       FOCUSED_REFERENCE_ID,
-      SIM_TIME,
+      EPOCH,
       SIM_SPEED,
-      USE_ECEF_FRAME,
+      USE_BODY_FIXED_FRAME,
       REFERENCE_FRAME,
       ACTION,
       VIEW_STATE,
@@ -2908,13 +2741,13 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_FOCUSED_REFERENCE_ID, None)}
   }
-  /// Current simulation time as an ISO-8601 UTC timestamp.
+  /// Current scenario epoch as an ISO-8601 UTC timestamp.
   #[inline]
-  pub fn SIM_TIME(&self) -> Option<&'a str> {
+  pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_SIM_TIME, None)}
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCN::VT_EPOCH, None)}
   }
   /// Simulation time-rate multiplier.
   #[inline]
@@ -2924,15 +2757,15 @@ impl<'a> SCN<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCN::VT_SIM_SPEED, Some(0.0)).unwrap()}
   }
-  /// True when the viewer should use an Earth-centered Earth-fixed frame.
+  /// True when the viewer should use a body-fixed display frame.
   #[inline]
-  pub fn USE_ECEF_FRAME(&self) -> bool {
+  pub fn USE_BODY_FIXED_FRAME(&self) -> bool {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(SCN::VT_USE_ECEF_FRAME, Some(false)).unwrap()}
+    unsafe { self._tab.get::<bool>(SCN::VT_USE_BODY_FIXED_FRAME, Some(false)).unwrap()}
   }
-  /// Reference frame used for scenario propagation and display.
+  /// Authoritative reference frame used for scenario propagation and display.
   #[inline]
   pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
     // Safety:
@@ -2977,9 +2810,9 @@ impl ::flatbuffers::Verifiable for SCN<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SCNEvent>>("EVENT", Self::VT_EVENT, false)?
      .visit_field::<i32>("FOCUSED_REFERENCE_INDEX", Self::VT_FOCUSED_REFERENCE_INDEX, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FOCUSED_REFERENCE_ID", Self::VT_FOCUSED_REFERENCE_ID, false)?
-     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIM_TIME", Self::VT_SIM_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<f64>("SIM_SPEED", Self::VT_SIM_SPEED, false)?
-     .visit_field::<bool>("USE_ECEF_FRAME", Self::VT_USE_ECEF_FRAME, false)?
+     .visit_field::<bool>("USE_BODY_FIXED_FRAME", Self::VT_USE_BODY_FIXED_FRAME, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<scenarioActionCode>("ACTION", Self::VT_ACTION, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<VST>>("VIEW_STATE", Self::VT_VIEW_STATE, false)?
@@ -2994,9 +2827,9 @@ pub struct SCNArgs<'a> {
     pub EVENT: Option<::flatbuffers::WIPOffset<SCNEvent<'a>>>,
     pub FOCUSED_REFERENCE_INDEX: i32,
     pub FOCUSED_REFERENCE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub SIM_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIM_SPEED: f64,
-    pub USE_ECEF_FRAME: bool,
+    pub USE_BODY_FIXED_FRAME: bool,
     pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
     pub ACTION: scenarioActionCode,
     pub VIEW_STATE: Option<::flatbuffers::WIPOffset<VST<'a>>>,
@@ -3011,9 +2844,9 @@ impl<'a> Default for SCNArgs<'a> {
       EVENT: None,
       FOCUSED_REFERENCE_INDEX: -1,
       FOCUSED_REFERENCE_ID: None,
-      SIM_TIME: None,
+      EPOCH: None,
       SIM_SPEED: 0.0,
-      USE_ECEF_FRAME: false,
+      USE_BODY_FIXED_FRAME: false,
       REFERENCE_FRAME: None,
       ACTION: scenarioActionCode::NONE,
       VIEW_STATE: None,
@@ -3048,16 +2881,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCNBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_FOCUSED_REFERENCE_ID, FOCUSED_REFERENCE_ID);
   }
   #[inline]
-  pub fn add_SIM_TIME(&mut self, SIM_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_SIM_TIME, SIM_TIME);
+  pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCN::VT_EPOCH, EPOCH);
   }
   #[inline]
   pub fn add_SIM_SPEED(&mut self, SIM_SPEED: f64) {
     self.fbb_.push_slot::<f64>(SCN::VT_SIM_SPEED, SIM_SPEED, 0.0);
   }
   #[inline]
-  pub fn add_USE_ECEF_FRAME(&mut self, USE_ECEF_FRAME: bool) {
-    self.fbb_.push_slot::<bool>(SCN::VT_USE_ECEF_FRAME, USE_ECEF_FRAME, false);
+  pub fn add_USE_BODY_FIXED_FRAME(&mut self, USE_BODY_FIXED_FRAME: bool) {
+    self.fbb_.push_slot::<bool>(SCN::VT_USE_BODY_FIXED_FRAME, USE_BODY_FIXED_FRAME, false);
   }
   #[inline]
   pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
@@ -3098,9 +2931,9 @@ impl ::core::fmt::Debug for SCN<'_> {
       ds.field("EVENT", &self.EVENT());
       ds.field("FOCUSED_REFERENCE_INDEX", &self.FOCUSED_REFERENCE_INDEX());
       ds.field("FOCUSED_REFERENCE_ID", &self.FOCUSED_REFERENCE_ID());
-      ds.field("SIM_TIME", &self.SIM_TIME());
+      ds.field("EPOCH", &self.EPOCH());
       ds.field("SIM_SPEED", &self.SIM_SPEED());
-      ds.field("USE_ECEF_FRAME", &self.USE_ECEF_FRAME());
+      ds.field("USE_BODY_FIXED_FRAME", &self.USE_BODY_FIXED_FRAME());
       ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
       ds.field("ACTION", &self.ACTION());
       ds.field("VIEW_STATE", &self.VIEW_STATE());
@@ -3116,9 +2949,9 @@ pub struct SCNT {
   pub EVENT: Option<alloc::boxed::Box<SCNEventT>>,
   pub FOCUSED_REFERENCE_INDEX: i32,
   pub FOCUSED_REFERENCE_ID: Option<alloc::string::String>,
-  pub SIM_TIME: Option<alloc::string::String>,
+  pub EPOCH: Option<alloc::string::String>,
   pub SIM_SPEED: f64,
-  pub USE_ECEF_FRAME: bool,
+  pub USE_BODY_FIXED_FRAME: bool,
   pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
   pub ACTION: scenarioActionCode,
   pub VIEW_STATE: Option<alloc::boxed::Box<VSTT>>,
@@ -3132,9 +2965,9 @@ impl Default for SCNT {
       EVENT: None,
       FOCUSED_REFERENCE_INDEX: -1,
       FOCUSED_REFERENCE_ID: None,
-      SIM_TIME: None,
+      EPOCH: None,
       SIM_SPEED: 0.0,
-      USE_ECEF_FRAME: false,
+      USE_BODY_FIXED_FRAME: false,
       REFERENCE_FRAME: None,
       ACTION: scenarioActionCode::NONE,
       VIEW_STATE: None,
@@ -3160,11 +2993,11 @@ impl SCNT {
     let FOCUSED_REFERENCE_ID = self.FOCUSED_REFERENCE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SIM_TIME = self.SIM_TIME.as_ref().map(|x|{
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let SIM_SPEED = self.SIM_SPEED;
-    let USE_ECEF_FRAME = self.USE_ECEF_FRAME;
+    let USE_BODY_FIXED_FRAME = self.USE_BODY_FIXED_FRAME;
     let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
       x.pack(_fbb)
     });
@@ -3181,9 +3014,9 @@ impl SCNT {
       EVENT,
       FOCUSED_REFERENCE_INDEX,
       FOCUSED_REFERENCE_ID,
-      SIM_TIME,
+      EPOCH,
       SIM_SPEED,
-      USE_ECEF_FRAME,
+      USE_BODY_FIXED_FRAME,
       REFERENCE_FRAME,
       ACTION,
       VIEW_STATE,

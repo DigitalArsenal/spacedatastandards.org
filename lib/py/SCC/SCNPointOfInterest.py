@@ -77,14 +77,14 @@ class SCNPointOfInterest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Geodetic position for the point of interest.
+    # WGS84 geodetic position for the point of interest.
     # SCNPointOfInterest
     def POSITION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from SCNGeodeticPoint import SCNGeodeticPoint
-            obj = SCNGeodeticPoint()
+            from GJNPosition import GJNPosition
+            obj = GJNPosition()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -143,7 +143,7 @@ def SCNPointOfInterestEnd(builder):
 def End(builder):
     return SCNPointOfInterestEnd(builder)
 
-import SCNGeodeticPoint
+import GJNPosition
 try:
     from typing import Optional
 except:
@@ -168,7 +168,7 @@ class SCNPointOfInterestT(object):
         self.HIGHLIGHT_BEFORE = HIGHLIGHT_BEFORE  # type: float
         self.HIGHLIGHT_AFTER = HIGHLIGHT_AFTER  # type: float
         self.COLOR = COLOR  # type: Optional[str]
-        self.POSITION = POSITION  # type: Optional[SCNGeodeticPoint.SCNGeodeticPointT]
+        self.POSITION = POSITION  # type: Optional[GJNPosition.GJNPositionT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -198,7 +198,7 @@ class SCNPointOfInterestT(object):
         self.HIGHLIGHT_AFTER = SCNPointOfInterest.HIGHLIGHT_AFTER()
         self.COLOR = SCNPointOfInterest.COLOR()
         if SCNPointOfInterest.POSITION() is not None:
-            self.POSITION = SCNGeodeticPoint.SCNGeodeticPointT.InitFromObj(SCNPointOfInterest.POSITION())
+            self.POSITION = GJNPosition.GJNPositionT.InitFromObj(SCNPointOfInterest.POSITION())
 
     # SCNPointOfInterestT
     def Pack(self, builder):

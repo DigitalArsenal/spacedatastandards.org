@@ -48,11 +48,11 @@ class SCNEvent extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Element sets associated with the event.
+    /// Mean orbital elements associated with the event.
     /**
      * @returnVectorOffset
      */
-    public function getELSETS($j)
+    public function getMEAN_ELEMENTS($j)
     {
         $o = $this->__offset(6);
         $obj = new OMM();
@@ -62,7 +62,7 @@ class SCNEvent extends Table
     /**
      * @return int
      */
-    public function getELSETSLength()
+    public function getMEAN_ELEMENTSLength()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__vector_len($o) : 0;
@@ -72,7 +72,7 @@ class SCNEvent extends Table
     /**
      * @returnVectorOffset
      */
-    public function getSTATES($j)
+    public function getSTATE_VECTORS($j)
     {
         $o = $this->__offset(8);
         $obj = new STV();
@@ -82,7 +82,7 @@ class SCNEvent extends Table
     /**
      * @return int
      */
-    public function getSTATESLength()
+    public function getSTATE_VECTORSLength()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__vector_len($o) : 0;
@@ -141,12 +141,12 @@ class SCNEvent extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNEvent
      */
-    public static function createSCNEvent(FlatBufferBuilder $builder, $EVENT_ID, $ELSETS, $STATES, $EO_OBSERVATIONS, $RADAR_OBSERVATIONS)
+    public static function createSCNEvent(FlatBufferBuilder $builder, $EVENT_ID, $MEAN_ELEMENTS, $STATE_VECTORS, $EO_OBSERVATIONS, $RADAR_OBSERVATIONS)
     {
         $builder->startObject(5);
         self::addEVENT_ID($builder, $EVENT_ID);
-        self::addELSETS($builder, $ELSETS);
-        self::addSTATES($builder, $STATES);
+        self::addMEAN_ELEMENTS($builder, $MEAN_ELEMENTS);
+        self::addSTATE_VECTORS($builder, $STATE_VECTORS);
         self::addEO_OBSERVATIONS($builder, $EO_OBSERVATIONS);
         self::addRADAR_OBSERVATIONS($builder, $RADAR_OBSERVATIONS);
         $o = $builder->endObject();
@@ -168,9 +168,9 @@ class SCNEvent extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addELSETS(FlatBufferBuilder $builder, $ELSETS)
+    public static function addMEAN_ELEMENTS(FlatBufferBuilder $builder, $MEAN_ELEMENTS)
     {
-        $builder->addOffsetX(1, $ELSETS, 0);
+        $builder->addOffsetX(1, $MEAN_ELEMENTS, 0);
     }
 
     /**
@@ -178,7 +178,7 @@ class SCNEvent extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createELSETSVector(FlatBufferBuilder $builder, array $data)
+    public static function createMEAN_ELEMENTSVector(FlatBufferBuilder $builder, array $data)
     {
         $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
@@ -192,7 +192,7 @@ class SCNEvent extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startELSETSVector(FlatBufferBuilder $builder, $numElems)
+    public static function startMEAN_ELEMENTSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }
@@ -202,9 +202,9 @@ class SCNEvent extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addSTATES(FlatBufferBuilder $builder, $STATES)
+    public static function addSTATE_VECTORS(FlatBufferBuilder $builder, $STATE_VECTORS)
     {
-        $builder->addOffsetX(2, $STATES, 0);
+        $builder->addOffsetX(2, $STATE_VECTORS, 0);
     }
 
     /**
@@ -212,7 +212,7 @@ class SCNEvent extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createSTATESVector(FlatBufferBuilder $builder, array $data)
+    public static function createSTATE_VECTORSVector(FlatBufferBuilder $builder, array $data)
     {
         $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
@@ -226,7 +226,7 @@ class SCNEvent extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startSTATESVector(FlatBufferBuilder $builder, $numElems)
+    public static function startSTATE_VECTORSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

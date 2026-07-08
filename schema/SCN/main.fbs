@@ -1,5 +1,5 @@
-// Hash: 5b1484a53023ac74a3ea304e7b9f1e879da2f38b1d5d6cd6ee5507225066caa2
-// Version: 1.136.4
+// Hash: 5af79839265d0a4bf968d0fd83b2467f4689d2834ffb81dfb8fcd70ada15d444
+// Version: 1.136.5
 // -----------------------------------END_HEADER
 include "../EOO/main.fbs";
 include "../RDO/main.fbs";
@@ -34,16 +34,6 @@ enum scenarioActionCode : byte {
   RESET
 }
 
-/// Geodetic point in latitude, longitude, altitude order.
-table SCNGeodeticPoint {
-  /// Latitude in degrees.
-  LATITUDE:double;
-  /// Longitude in degrees.
-  LONGITUDE:double;
-  /// Altitude above the reference ellipsoid in kilometers.
-  ALTITUDE:double;
-}
-
 /// Time-tagged point or annotation shown in a scenario.
 table SCNPointOfInterest {
   /// Display name for the point of interest.
@@ -58,8 +48,8 @@ table SCNPointOfInterest {
   HIGHLIGHT_AFTER:double;
   /// Display color token for the point of interest.
   COLOR:string;
-  /// Geodetic position for the point of interest.
-  POSITION:SCNGeodeticPoint;
+  /// WGS84 geodetic position for the point of interest.
+  POSITION:GJNPosition;
 }
 
 /// Sensor or site view-cone overlay used by scenario tools.
@@ -82,16 +72,16 @@ table SCNViewCone {
 
 /// Target pairing for sun-advantage visualization.
 table SCNSunAdvantageTarget {
-  /// Scenario reference id of the target object.
-  TARGET_REFERENCE_ID:string;
+  /// Target identifier for the paired object.
+  TARGET_ID:string;
   /// NORAD catalog id of the target satellite when available.
-  TARGET_NORAD_CAT_ID:uint32;
-  /// Ground site id associated with the target pairing.
-  GROUND_SITE_ID:string;
+  NORAD_CAT_ID:uint32;
+  /// Site id associated with the target pairing.
+  SITE_ID:string;
 }
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 table SCNExclusionZone {
   /// Display label for the exclusion zone.
   LABEL:string;
@@ -101,8 +91,8 @@ table SCNExclusionZone {
   LABEL_COLOR:string;
   /// True when the exclusion-zone polygon should be filled.
   IS_FILLED:bool;
-  /// Simple geodetic polygon points for imported zones.
-  POINTS:[SCNGeodeticPoint];
+  /// Simple WGS84 polygon points for imported zones.
+  POINTS:[GJNPosition];
   /// Canonical GeoJSON geometry for the exclusion zone.
   BOUNDARY:GJNGeometry;
 }
@@ -112,8 +102,8 @@ table SCNExclusionZone {
 table SCNReference {
   /// Stable scenario-local id for this reference.
   REFERENCE_ID:string;
-  /// Human-readable display name for the reference.
-  DISPLAY_NAME:string;
+  /// Human-readable name for the reference.
+  NAME:string;
   /// Category of object or annotation represented by this reference.
   REFERENCE_KIND:scenarioReferenceKind;
   /// True when this reference represents a removal request.
@@ -122,8 +112,10 @@ table SCNReference {
   NORAD_CAT_ID:uint32;
   /// International designator or provider object id when available.
   OBJECT_ID:string;
-  /// Country or owner label associated with the reference.
+  /// Country associated with the reference.
   COUNTRY:string;
+  /// Owner or operator label associated with the reference.
+  OWNER:string;
   /// Source labels or URIs that produced this reference.
   SOURCES:[string];
   /// Data-mode labels associated with this reference.
@@ -131,7 +123,7 @@ table SCNReference {
   /// Mean orbital elements associated with this reference.
   MEAN_ELEMENTS:[OMM];
   /// State vectors associated with this reference.
-  STATES:[STV];
+  STATE_VECTORS:[STV];
   /// Maneuver records associated with this reference.
   MANEUVERS:[MNV];
   /// Ground-site record associated with this reference.
@@ -142,10 +134,8 @@ table SCNReference {
   SENSOR_SYSTEM_ID:string;
   /// Sensor id for references that identify a sensor by id.
   SENSOR_ID:string;
-  /// Ground-site latitude in degrees when no SIT record is available.
-  SITE_LATITUDE:double;
-  /// Ground-site longitude in degrees when no SIT record is available.
-  SITE_LONGITUDE:double;
+  /// WGS84 site position when no SIT or SEN record is available.
+  SITE_POSITION:GJNPosition;
   /// Scenario variable id for variable satellite references.
   VARIABLE_SATELLITE_ID:string;
   /// Scenario variable id for variable site references.
@@ -168,10 +158,10 @@ table SCNReference {
 table SCNEvent {
   /// Stable id for the imported scenario event.
   EVENT_ID:string;
-  /// Element sets associated with the event.
-  ELSETS:[OMM];
+  /// Mean orbital elements associated with the event.
+  MEAN_ELEMENTS:[OMM];
   /// State vectors associated with the event.
-  STATES:[STV];
+  STATE_VECTORS:[STV];
   /// Electro-optical observations associated with the event.
   EO_OBSERVATIONS:[EOO];
   /// Radar observations associated with the event.
@@ -210,13 +200,13 @@ table SCN {
   FOCUSED_REFERENCE_INDEX:int = -1;
   /// Reference id of the currently focused scenario object.
   FOCUSED_REFERENCE_ID:string;
-  /// Current simulation time as an ISO-8601 UTC timestamp.
-  SIM_TIME:string;
+  /// Current scenario epoch as an ISO-8601 UTC timestamp.
+  EPOCH:string;
   /// Simulation time-rate multiplier.
   SIM_SPEED:double;
-  /// True when the viewer should use an Earth-centered Earth-fixed frame.
-  USE_ECEF_FRAME:bool;
-  /// Reference frame used for scenario propagation and display.
+  /// True when the viewer should use a body-fixed display frame.
+  USE_BODY_FIXED_FRAME:bool;
+  /// Authoritative reference frame used for scenario propagation and display.
   REFERENCE_FRAME:RFM;
   /// Command action requested for the scenario.
   ACTION:scenarioActionCode;

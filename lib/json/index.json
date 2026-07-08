@@ -35176,7 +35176,7 @@
                 },
                 "DPM": {
                     "type": "object",
-                    "description": "Dataset Publication Manifest binding data/index CIDs, query replay,\nsource hashes, schema hashes, encryption metadata, provider-mediated query\nprotocols, completeness roots, and provider signature.",
+                    "description": "Immutable signed publication contract for one dataset update. DPM records\nare the authoritative product manifests consumed by subscribers, pinning\nnodes, archive nodes, and query gateways. A valid DPM answers: who published\nthis update, which dataset and FILE_ID it represents, which source batches\nproduced it, which exact bytes or provider-mediated query responses are\nauthorized, how those bytes are addressed, how records and indexes are\nhashed, whether content-key metadata applies, and which provider signature\ncommits to the manifest. PNM announces the current DPM; DPM defines what\nmust be fetched, verified, imported, pinned, or archived.",
                     "properties": {
                         "VERSION": {
                             "type": "string",

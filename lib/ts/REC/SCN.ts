@@ -89,11 +89,11 @@ FOCUSED_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Current simulation time as an ISO-8601 UTC timestamp.
+ * Current scenario epoch as an ISO-8601 UTC timestamp.
  */
-SIM_TIME():string|null
-SIM_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SIM_TIME(optionalEncoding?:any):string|Uint8Array|null {
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -107,15 +107,15 @@ SIM_SPEED():number {
 }
 
 /**
- * True when the viewer should use an Earth-centered Earth-fixed frame.
+ * True when the viewer should use a body-fixed display frame.
  */
-USE_ECEF_FRAME():boolean {
+USE_BODY_FIXED_FRAME():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
 /**
- * Reference frame used for scenario propagation and display.
+ * Authoritative reference frame used for scenario propagation and display.
  */
 REFERENCE_FRAME(obj?:RFM):RFM|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -182,16 +182,16 @@ static addFocusedReferenceId(builder:flatbuffers.Builder, FOCUSED_REFERENCE_IDOf
   builder.addFieldOffset(4, FOCUSED_REFERENCE_IDOffset, 0);
 }
 
-static addSimTime(builder:flatbuffers.Builder, SIM_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, SIM_TIMEOffset, 0);
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, EPOCHOffset, 0);
 }
 
 static addSimSpeed(builder:flatbuffers.Builder, SIM_SPEED:number) {
   builder.addFieldFloat64(6, SIM_SPEED, 0.0);
 }
 
-static addUseEcefFrame(builder:flatbuffers.Builder, USE_ECEF_FRAME:boolean) {
-  builder.addFieldInt8(7, +USE_ECEF_FRAME, +false);
+static addUseBodyFixedFrame(builder:flatbuffers.Builder, USE_BODY_FIXED_FRAME:boolean) {
+  builder.addFieldInt8(7, +USE_BODY_FIXED_FRAME, +false);
 }
 
 static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
@@ -231,9 +231,9 @@ unpack(): SCNT {
     (this.EVENT() !== null ? this.EVENT()!.unpack() : null),
     this.FOCUSED_REFERENCE_INDEX(),
     this.FOCUSED_REFERENCE_ID(),
-    this.SIM_TIME(),
+    this.EPOCH(),
     this.SIM_SPEED(),
-    this.USE_ECEF_FRAME(),
+    this.USE_BODY_FIXED_FRAME(),
     (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
     this.ACTION(),
     (this.VIEW_STATE() !== null ? this.VIEW_STATE()!.unpack() : null),
@@ -248,9 +248,9 @@ unpackTo(_o: SCNT): void {
   _o.EVENT = (this.EVENT() !== null ? this.EVENT()!.unpack() : null);
   _o.FOCUSED_REFERENCE_INDEX = this.FOCUSED_REFERENCE_INDEX();
   _o.FOCUSED_REFERENCE_ID = this.FOCUSED_REFERENCE_ID();
-  _o.SIM_TIME = this.SIM_TIME();
+  _o.EPOCH = this.EPOCH();
   _o.SIM_SPEED = this.SIM_SPEED();
-  _o.USE_ECEF_FRAME = this.USE_ECEF_FRAME();
+  _o.USE_BODY_FIXED_FRAME = this.USE_BODY_FIXED_FRAME();
   _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
   _o.ACTION = this.ACTION();
   _o.VIEW_STATE = (this.VIEW_STATE() !== null ? this.VIEW_STATE()!.unpack() : null);
@@ -265,9 +265,9 @@ constructor(
   public EVENT: SCNEventT|null = null,
   public FOCUSED_REFERENCE_INDEX: number = -1,
   public FOCUSED_REFERENCE_ID: string|Uint8Array|null = null,
-  public SIM_TIME: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
   public SIM_SPEED: number = 0.0,
-  public USE_ECEF_FRAME: boolean = false,
+  public USE_BODY_FIXED_FRAME: boolean = false,
   public REFERENCE_FRAME: RFMT|null = null,
   public ACTION: scenarioActionCode = scenarioActionCode.NONE,
   public VIEW_STATE: VSTT|null = null,
@@ -280,7 +280,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REFERENCES = SCN.createReferencesVector(builder, builder.createObjectOffsetList(this.REFERENCES));
   const EVENT = (this.EVENT !== null ? this.EVENT!.pack(builder) : 0);
   const FOCUSED_REFERENCE_ID = (this.FOCUSED_REFERENCE_ID !== null ? builder.createString(this.FOCUSED_REFERENCE_ID!) : 0);
-  const SIM_TIME = (this.SIM_TIME !== null ? builder.createString(this.SIM_TIME!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
   const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
   const VIEW_STATE = (this.VIEW_STATE !== null ? this.VIEW_STATE!.pack(builder) : 0);
   const ASSETS_CHANGED = (this.ASSETS_CHANGED !== null ? this.ASSETS_CHANGED!.pack(builder) : 0);
@@ -291,9 +291,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SCN.addEvent(builder, EVENT);
   SCN.addFocusedReferenceIndex(builder, this.FOCUSED_REFERENCE_INDEX);
   SCN.addFocusedReferenceId(builder, FOCUSED_REFERENCE_ID);
-  SCN.addSimTime(builder, SIM_TIME);
+  SCN.addEpoch(builder, EPOCH);
   SCN.addSimSpeed(builder, this.SIM_SPEED);
-  SCN.addUseEcefFrame(builder, this.USE_ECEF_FRAME);
+  SCN.addUseBodyFixedFrame(builder, this.USE_BODY_FIXED_FRAME);
   SCN.addReferenceFrame(builder, REFERENCE_FRAME);
   SCN.addAction(builder, this.ACTION);
   SCN.addViewState(builder, VIEW_STATE);

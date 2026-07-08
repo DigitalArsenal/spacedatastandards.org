@@ -42,8 +42,8 @@ func (rcv *SCNSunAdvantageTarget) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Scenario reference id of the target object.
-func (rcv *SCNSunAdvantageTarget) TARGET_REFERENCE_ID() []byte {
+/// Target identifier for the paired object.
+func (rcv *SCNSunAdvantageTarget) TARGET_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -51,13 +51,13 @@ func (rcv *SCNSunAdvantageTarget) TARGET_REFERENCE_ID() []byte {
 	return nil
 }
 
-func (rcv *SCNSunAdvantageTarget) TargetReferenceId() []byte {
-	return rcv.TARGET_REFERENCE_ID()
+func (rcv *SCNSunAdvantageTarget) TargetId() []byte {
+	return rcv.TARGET_ID()
 }
 
-/// Scenario reference id of the target object.
+/// Target identifier for the paired object.
 /// NORAD catalog id of the target satellite when available.
-func (rcv *SCNSunAdvantageTarget) TARGET_NORAD_CAT_ID() uint32 {
+func (rcv *SCNSunAdvantageTarget) NORAD_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.GetUint32(o + rcv._tab.Pos)
@@ -65,21 +65,21 @@ func (rcv *SCNSunAdvantageTarget) TARGET_NORAD_CAT_ID() uint32 {
 	return 0
 }
 
-func (rcv *SCNSunAdvantageTarget) TargetNoradCatId() uint32 {
-	return rcv.TARGET_NORAD_CAT_ID()
+func (rcv *SCNSunAdvantageTarget) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
 }
 
 /// NORAD catalog id of the target satellite when available.
-func (rcv *SCNSunAdvantageTarget) MutateTARGET_NORAD_CAT_ID(n uint32) bool {
+func (rcv *SCNSunAdvantageTarget) MutateNORAD_CAT_ID(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(6, n)
 }
 
-func (rcv *SCNSunAdvantageTarget) MutateTargetNoradCatId(n uint32) bool {
-	return rcv.MutateTARGET_NORAD_CAT_ID(n)
+func (rcv *SCNSunAdvantageTarget) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
 }
 
-/// Ground site id associated with the target pairing.
-func (rcv *SCNSunAdvantageTarget) GROUND_SITE_ID() []byte {
+/// Site id associated with the target pairing.
+func (rcv *SCNSunAdvantageTarget) SITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -87,31 +87,31 @@ func (rcv *SCNSunAdvantageTarget) GROUND_SITE_ID() []byte {
 	return nil
 }
 
-func (rcv *SCNSunAdvantageTarget) GroundSiteId() []byte {
-	return rcv.GROUND_SITE_ID()
+func (rcv *SCNSunAdvantageTarget) SiteId() []byte {
+	return rcv.SITE_ID()
 }
 
-/// Ground site id associated with the target pairing.
+/// Site id associated with the target pairing.
 func SCNSunAdvantageTargetStart(builder *flatbuffers.Builder) {
 	builder.StartObject(3)
 }
-func SCNSunAdvantageTargetAddTARGET_REFERENCE_ID(builder *flatbuffers.Builder, TARGET_REFERENCE_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TARGET_REFERENCE_ID), 0)
+func SCNSunAdvantageTargetAddTARGET_ID(builder *flatbuffers.Builder, TARGET_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TARGET_ID), 0)
 }
-func SCNSunAdvantageTargetAddTargetReferenceId(builder *flatbuffers.Builder, TARGET_REFERENCE_ID flatbuffers.UOffsetT) {
-	SCNSunAdvantageTargetAddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_ID)
+func SCNSunAdvantageTargetAddTargetId(builder *flatbuffers.Builder, TARGET_ID flatbuffers.UOffsetT) {
+	SCNSunAdvantageTargetAddTARGET_ID(builder, TARGET_ID)
 }
-func SCNSunAdvantageTargetAddTARGET_NORAD_CAT_ID(builder *flatbuffers.Builder, TARGET_NORAD_CAT_ID uint32) {
-	builder.PrependUint32Slot(1, TARGET_NORAD_CAT_ID, 0)
+func SCNSunAdvantageTargetAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(1, NORAD_CAT_ID, 0)
 }
-func SCNSunAdvantageTargetAddTargetNoradCatId(builder *flatbuffers.Builder, TARGET_NORAD_CAT_ID uint32) {
-	SCNSunAdvantageTargetAddTARGET_NORAD_CAT_ID(builder, TARGET_NORAD_CAT_ID)
+func SCNSunAdvantageTargetAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	SCNSunAdvantageTargetAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 }
-func SCNSunAdvantageTargetAddGROUND_SITE_ID(builder *flatbuffers.Builder, GROUND_SITE_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(GROUND_SITE_ID), 0)
+func SCNSunAdvantageTargetAddSITE_ID(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(SITE_ID), 0)
 }
-func SCNSunAdvantageTargetAddGroundSiteId(builder *flatbuffers.Builder, GROUND_SITE_ID flatbuffers.UOffsetT) {
-	SCNSunAdvantageTargetAddGROUND_SITE_ID(builder, GROUND_SITE_ID)
+func SCNSunAdvantageTargetAddSiteId(builder *flatbuffers.Builder, SITE_ID flatbuffers.UOffsetT) {
+	SCNSunAdvantageTargetAddSITE_ID(builder, SITE_ID)
 }
 func SCNSunAdvantageTargetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

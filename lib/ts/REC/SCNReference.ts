@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { EOO, EOOT } from './EOO.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 import { MNV, MNVT } from './MNV.js';
 import { OMM, OMMT } from './OMM.js';
 import { RDO, RDOT } from './RDO.js';
@@ -51,11 +52,11 @@ REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Human-readable display name for the reference.
+ * Human-readable name for the reference.
  */
-DISPLAY_NAME():string|null
-DISPLAY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DISPLAY_NAME(optionalEncoding?:any):string|Uint8Array|null {
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -95,7 +96,7 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Country or owner label associated with the reference.
+ * Country associated with the reference.
  */
 COUNTRY():string|null
 COUNTRY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -105,17 +106,27 @@ COUNTRY(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
+ * Owner or operator label associated with the reference.
+ */
+OWNER():string|null
+OWNER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OWNER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
  * Source labels or URIs that produced this reference.
  */
 SOURCES(index: number):string
 SOURCES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SOURCES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 sourcesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -125,12 +136,12 @@ sourcesLength():number {
 DATA_MODES(index: number):string
 DATA_MODES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 DATA_MODES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 dataModesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -138,25 +149,25 @@ dataModesLength():number {
  * Mean orbital elements associated with this reference.
  */
 MEAN_ELEMENTS(index: number, obj?:OMM):OMM|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? (obj || new OMM()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 meanElementsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 /**
  * State vectors associated with this reference.
  */
-STATES(index: number, obj?:STV):STV|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+STATE_VECTORS(index: number, obj?:STV):STV|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? (obj || new STV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
-statesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+stateVectorsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -164,12 +175,12 @@ statesLength():number {
  * Maneuver records associated with this reference.
  */
 MANEUVERS(index: number, obj?:MNV):MNV|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? (obj || new MNV()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 maneuversLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
@@ -177,7 +188,7 @@ maneuversLength():number {
  * Ground-site record associated with this reference.
  */
 SITE(obj?:SIT):SIT|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? (obj || new SIT()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -185,7 +196,7 @@ SITE(obj?:SIT):SIT|null {
  * Sensor record associated with this reference.
  */
 SENSOR(obj?:SEN):SEN|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? (obj || new SEN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -195,7 +206,7 @@ SENSOR(obj?:SEN):SEN|null {
 SENSOR_SYSTEM_ID():string|null
 SENSOR_SYSTEM_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
@@ -205,24 +216,16 @@ SENSOR_SYSTEM_ID(optionalEncoding?:any):string|Uint8Array|null {
 SENSOR_ID():string|null
 SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
- * Ground-site latitude in degrees when no SIT record is available.
+ * WGS84 site position when no SIT or SEN record is available.
  */
-SITE_LATITUDE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-/**
- * Ground-site longitude in degrees when no SIT record is available.
- */
-SITE_LONGITUDE():number {
+SITE_POSITION(obj?:GJNPosition):GJNPosition|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? (obj || new GJNPosition()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -306,8 +309,8 @@ static addReferenceId(builder:flatbuffers.Builder, REFERENCE_IDOffset:flatbuffer
   builder.addFieldOffset(0, REFERENCE_IDOffset, 0);
 }
 
-static addDisplayName(builder:flatbuffers.Builder, DISPLAY_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, DISPLAY_NAMEOffset, 0);
+static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, NAMEOffset, 0);
 }
 
 static addReferenceKind(builder:flatbuffers.Builder, REFERENCE_KIND:scenarioReferenceKind) {
@@ -330,8 +333,12 @@ static addCountry(builder:flatbuffers.Builder, COUNTRYOffset:flatbuffers.Offset)
   builder.addFieldOffset(6, COUNTRYOffset, 0);
 }
 
+static addOwner(builder:flatbuffers.Builder, OWNEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, OWNEROffset, 0);
+}
+
 static addSources(builder:flatbuffers.Builder, SOURCESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, SOURCESOffset, 0);
+  builder.addFieldOffset(8, SOURCESOffset, 0);
 }
 
 static createSourcesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -347,7 +354,7 @@ static startSourcesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addDataModes(builder:flatbuffers.Builder, DATA_MODESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, DATA_MODESOffset, 0);
+  builder.addFieldOffset(9, DATA_MODESOffset, 0);
 }
 
 static createDataModesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -363,7 +370,7 @@ static startDataModesVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addMeanElements(builder:flatbuffers.Builder, MEAN_ELEMENTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, MEAN_ELEMENTSOffset, 0);
+  builder.addFieldOffset(10, MEAN_ELEMENTSOffset, 0);
 }
 
 static createMeanElementsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -378,11 +385,11 @@ static startMeanElementsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addStates(builder:flatbuffers.Builder, STATESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, STATESOffset, 0);
+static addStateVectors(builder:flatbuffers.Builder, STATE_VECTORSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, STATE_VECTORSOffset, 0);
 }
 
-static createStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+static createStateVectorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
   builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
     builder.addOffset(data[i]!);
@@ -390,12 +397,12 @@ static createStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]
   return builder.endVector();
 }
 
-static startStatesVector(builder:flatbuffers.Builder, numElems:number) {
+static startStateVectorsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
 static addManeuvers(builder:flatbuffers.Builder, MANEUVERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, MANEUVERSOffset, 0);
+  builder.addFieldOffset(12, MANEUVERSOffset, 0);
 }
 
 static createManeuversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -411,27 +418,23 @@ static startManeuversVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSite(builder:flatbuffers.Builder, SITEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, SITEOffset, 0);
+  builder.addFieldOffset(13, SITEOffset, 0);
 }
 
 static addSensor(builder:flatbuffers.Builder, SENSOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, SENSOROffset, 0);
+  builder.addFieldOffset(14, SENSOROffset, 0);
 }
 
 static addSensorSystemId(builder:flatbuffers.Builder, SENSOR_SYSTEM_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, SENSOR_SYSTEM_IDOffset, 0);
+  builder.addFieldOffset(15, SENSOR_SYSTEM_IDOffset, 0);
 }
 
 static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, SENSOR_IDOffset, 0);
+  builder.addFieldOffset(16, SENSOR_IDOffset, 0);
 }
 
-static addSiteLatitude(builder:flatbuffers.Builder, SITE_LATITUDE:number) {
-  builder.addFieldFloat64(16, SITE_LATITUDE, 0.0);
-}
-
-static addSiteLongitude(builder:flatbuffers.Builder, SITE_LONGITUDE:number) {
-  builder.addFieldFloat64(17, SITE_LONGITUDE, 0.0);
+static addSitePosition(builder:flatbuffers.Builder, SITE_POSITIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, SITE_POSITIONOffset, 0);
 }
 
 static addVariableSatelliteId(builder:flatbuffers.Builder, VARIABLE_SATELLITE_IDOffset:flatbuffers.Offset) {
@@ -487,23 +490,23 @@ static endSCNReference(builder:flatbuffers.Builder):flatbuffers.Offset {
 unpack(): SCNReferenceT {
   return new SCNReferenceT(
     this.REFERENCE_ID(),
-    this.DISPLAY_NAME(),
+    this.NAME(),
     this.REFERENCE_KIND(),
     this.REMOVE(),
     this.NORAD_CAT_ID(),
     this.OBJECT_ID(),
     this.COUNTRY(),
+    this.OWNER(),
     this.bb!.createScalarList<string>(this.SOURCES.bind(this), this.sourcesLength()),
     this.bb!.createScalarList<string>(this.DATA_MODES.bind(this), this.dataModesLength()),
     this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength()),
-    this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength()),
+    this.bb!.createObjList<STV, STVT>(this.STATE_VECTORS.bind(this), this.stateVectorsLength()),
     this.bb!.createObjList<MNV, MNVT>(this.MANEUVERS.bind(this), this.maneuversLength()),
     (this.SITE() !== null ? this.SITE()!.unpack() : null),
     (this.SENSOR() !== null ? this.SENSOR()!.unpack() : null),
     this.SENSOR_SYSTEM_ID(),
     this.SENSOR_ID(),
-    this.SITE_LATITUDE(),
-    this.SITE_LONGITUDE(),
+    (this.SITE_POSITION() !== null ? this.SITE_POSITION()!.unpack() : null),
     this.VARIABLE_SATELLITE_ID(),
     this.VARIABLE_SITE_ID(),
     this.bb!.createObjList<SCNPointOfInterest, SCNPointOfInterestT>(this.POINTS.bind(this), this.pointsLength()),
@@ -518,23 +521,23 @@ unpack(): SCNReferenceT {
 
 unpackTo(_o: SCNReferenceT): void {
   _o.REFERENCE_ID = this.REFERENCE_ID();
-  _o.DISPLAY_NAME = this.DISPLAY_NAME();
+  _o.NAME = this.NAME();
   _o.REFERENCE_KIND = this.REFERENCE_KIND();
   _o.REMOVE = this.REMOVE();
   _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
   _o.OBJECT_ID = this.OBJECT_ID();
   _o.COUNTRY = this.COUNTRY();
+  _o.OWNER = this.OWNER();
   _o.SOURCES = this.bb!.createScalarList<string>(this.SOURCES.bind(this), this.sourcesLength());
   _o.DATA_MODES = this.bb!.createScalarList<string>(this.DATA_MODES.bind(this), this.dataModesLength());
   _o.MEAN_ELEMENTS = this.bb!.createObjList<OMM, OMMT>(this.MEAN_ELEMENTS.bind(this), this.meanElementsLength());
-  _o.STATES = this.bb!.createObjList<STV, STVT>(this.STATES.bind(this), this.statesLength());
+  _o.STATE_VECTORS = this.bb!.createObjList<STV, STVT>(this.STATE_VECTORS.bind(this), this.stateVectorsLength());
   _o.MANEUVERS = this.bb!.createObjList<MNV, MNVT>(this.MANEUVERS.bind(this), this.maneuversLength());
   _o.SITE = (this.SITE() !== null ? this.SITE()!.unpack() : null);
   _o.SENSOR = (this.SENSOR() !== null ? this.SENSOR()!.unpack() : null);
   _o.SENSOR_SYSTEM_ID = this.SENSOR_SYSTEM_ID();
   _o.SENSOR_ID = this.SENSOR_ID();
-  _o.SITE_LATITUDE = this.SITE_LATITUDE();
-  _o.SITE_LONGITUDE = this.SITE_LONGITUDE();
+  _o.SITE_POSITION = (this.SITE_POSITION() !== null ? this.SITE_POSITION()!.unpack() : null);
   _o.VARIABLE_SATELLITE_ID = this.VARIABLE_SATELLITE_ID();
   _o.VARIABLE_SITE_ID = this.VARIABLE_SITE_ID();
   _o.POINTS = this.bb!.createObjList<SCNPointOfInterest, SCNPointOfInterestT>(this.POINTS.bind(this), this.pointsLength());
@@ -549,23 +552,23 @@ unpackTo(_o: SCNReferenceT): void {
 export class SCNReferenceT implements flatbuffers.IGeneratedObject {
 constructor(
   public REFERENCE_ID: string|Uint8Array|null = null,
-  public DISPLAY_NAME: string|Uint8Array|null = null,
+  public NAME: string|Uint8Array|null = null,
   public REFERENCE_KIND: scenarioReferenceKind = scenarioReferenceKind.UNKNOWN,
   public REMOVE: boolean = false,
   public NORAD_CAT_ID: number = 0,
   public OBJECT_ID: string|Uint8Array|null = null,
   public COUNTRY: string|Uint8Array|null = null,
+  public OWNER: string|Uint8Array|null = null,
   public SOURCES: (string)[] = [],
   public DATA_MODES: (string)[] = [],
   public MEAN_ELEMENTS: (OMMT)[] = [],
-  public STATES: (STVT)[] = [],
+  public STATE_VECTORS: (STVT)[] = [],
   public MANEUVERS: (MNVT)[] = [],
   public SITE: SITT|null = null,
   public SENSOR: SENT|null = null,
   public SENSOR_SYSTEM_ID: string|Uint8Array|null = null,
   public SENSOR_ID: string|Uint8Array|null = null,
-  public SITE_LATITUDE: number = 0.0,
-  public SITE_LONGITUDE: number = 0.0,
+  public SITE_POSITION: GJNPositionT|null = null,
   public VARIABLE_SATELLITE_ID: string|Uint8Array|null = null,
   public VARIABLE_SITE_ID: string|Uint8Array|null = null,
   public POINTS: (SCNPointOfInterestT)[] = [],
@@ -579,18 +582,20 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REFERENCE_ID = (this.REFERENCE_ID !== null ? builder.createString(this.REFERENCE_ID!) : 0);
-  const DISPLAY_NAME = (this.DISPLAY_NAME !== null ? builder.createString(this.DISPLAY_NAME!) : 0);
+  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
   const COUNTRY = (this.COUNTRY !== null ? builder.createString(this.COUNTRY!) : 0);
+  const OWNER = (this.OWNER !== null ? builder.createString(this.OWNER!) : 0);
   const SOURCES = SCNReference.createSourcesVector(builder, builder.createObjectOffsetList(this.SOURCES));
   const DATA_MODES = SCNReference.createDataModesVector(builder, builder.createObjectOffsetList(this.DATA_MODES));
   const MEAN_ELEMENTS = SCNReference.createMeanElementsVector(builder, builder.createObjectOffsetList(this.MEAN_ELEMENTS));
-  const STATES = SCNReference.createStatesVector(builder, builder.createObjectOffsetList(this.STATES));
+  const STATE_VECTORS = SCNReference.createStateVectorsVector(builder, builder.createObjectOffsetList(this.STATE_VECTORS));
   const MANEUVERS = SCNReference.createManeuversVector(builder, builder.createObjectOffsetList(this.MANEUVERS));
   const SITE = (this.SITE !== null ? this.SITE!.pack(builder) : 0);
   const SENSOR = (this.SENSOR !== null ? this.SENSOR!.pack(builder) : 0);
   const SENSOR_SYSTEM_ID = (this.SENSOR_SYSTEM_ID !== null ? builder.createString(this.SENSOR_SYSTEM_ID!) : 0);
   const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
+  const SITE_POSITION = (this.SITE_POSITION !== null ? this.SITE_POSITION!.pack(builder) : 0);
   const VARIABLE_SATELLITE_ID = (this.VARIABLE_SATELLITE_ID !== null ? builder.createString(this.VARIABLE_SATELLITE_ID!) : 0);
   const VARIABLE_SITE_ID = (this.VARIABLE_SITE_ID !== null ? builder.createString(this.VARIABLE_SITE_ID!) : 0);
   const POINTS = SCNReference.createPointsVector(builder, builder.createObjectOffsetList(this.POINTS));
@@ -602,23 +607,23 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
 
   SCNReference.startSCNReference(builder);
   SCNReference.addReferenceId(builder, REFERENCE_ID);
-  SCNReference.addDisplayName(builder, DISPLAY_NAME);
+  SCNReference.addName(builder, NAME);
   SCNReference.addReferenceKind(builder, this.REFERENCE_KIND);
   SCNReference.addRemove(builder, this.REMOVE);
   SCNReference.addNoradCatId(builder, this.NORAD_CAT_ID);
   SCNReference.addObjectId(builder, OBJECT_ID);
   SCNReference.addCountry(builder, COUNTRY);
+  SCNReference.addOwner(builder, OWNER);
   SCNReference.addSources(builder, SOURCES);
   SCNReference.addDataModes(builder, DATA_MODES);
   SCNReference.addMeanElements(builder, MEAN_ELEMENTS);
-  SCNReference.addStates(builder, STATES);
+  SCNReference.addStateVectors(builder, STATE_VECTORS);
   SCNReference.addManeuvers(builder, MANEUVERS);
   SCNReference.addSite(builder, SITE);
   SCNReference.addSensor(builder, SENSOR);
   SCNReference.addSensorSystemId(builder, SENSOR_SYSTEM_ID);
   SCNReference.addSensorId(builder, SENSOR_ID);
-  SCNReference.addSiteLatitude(builder, this.SITE_LATITUDE);
-  SCNReference.addSiteLongitude(builder, this.SITE_LONGITUDE);
+  SCNReference.addSitePosition(builder, SITE_POSITION);
   SCNReference.addVariableSatelliteId(builder, VARIABLE_SATELLITE_ID);
   SCNReference.addVariableSiteId(builder, VARIABLE_SITE_ID);
   SCNReference.addPoints(builder, POINTS);

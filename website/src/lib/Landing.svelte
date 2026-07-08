@@ -1596,22 +1596,6 @@ CN_N           = 6.789e-3`
   </div>
 </section>
 
-<footer class="landing-footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="https://github.com/DigitalArsenal/spacedatastandards.org" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://www.npmjs.com/package/spacedatastandards.org" target="_blank" rel="noopener">npm</a>
-        <a href="https://digitalarsenal.github.io/space-data-network/" target="_blank" rel="noopener">Space Data Network</a>
-        <a href="https://digitalarsenal-io-inc.gitbook.io/spacedatastandards.org/" target="_blank" rel="noopener">GitBook Docs</a>
-      </div>
-      <p class="footer-copy">
-        Apache 2.0 License &middot; Built for the space community
-      </p>
-    </div>
-  </div>
-</footer>
-
 <style>
   .starfield {
     position: fixed;
@@ -2303,41 +2287,6 @@ CN_N           = 6.789e-3`
     flex-wrap: wrap;
   }
 
-  /* Footer */
-  .landing-footer {
-    padding: 40px 24px;
-    border-top: 1px solid var(--ui-border);
-  }
-
-  .footer-content {
-    text-align: center;
-  }
-
-  .footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-
-  .footer-links a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
-
-  .footer-links a:hover {
-    color: var(--accent);
-  }
-
-  .footer-copy {
-    font-size: 13px;
-    color: var(--text-secondary);
-    opacity: 0.7;
-  }
-
   @media (max-width: 968px) {
     .about-grid, .sdn-content, .code-grid {
       grid-template-columns: 1fr;
@@ -2353,10 +2302,6 @@ CN_N           = 6.789e-3`
   }
 
   @media (max-width: 768px) {
-    .landing-footer {
-      display: none;
-    }
-
     .hero {
       padding: 100px 20px 60px;
     }

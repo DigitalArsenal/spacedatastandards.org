@@ -18,7 +18,7 @@ import java.nio.ByteOrder;
 
 /**
  * Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
- * when available; POINTS preserves simple LLA polygon imports.
+ * when available; POINTS preserves simple WGS84 polygon imports.
  */
 @SuppressWarnings("unused")
 public final class SCNExclusionZone extends com.google.flatbuffers.Table {
@@ -51,13 +51,13 @@ public final class SCNExclusionZone extends com.google.flatbuffers.Table {
    */
   public boolean IS_FILLED() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Simple geodetic polygon points for imported zones.
+   * Simple WGS84 polygon points for imported zones.
    */
-  public SCNGeodeticPoint POINTS(int j) { return POINTS(new SCNGeodeticPoint(), j); }
-  public SCNGeodeticPoint POINTS(SCNGeodeticPoint obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public GJNPosition POINTS(int j) { return POINTS(new GJNPosition(), j); }
+  public GJNPosition POINTS(GJNPosition obj, int j) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int POINTSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
-  public SCNGeodeticPoint.Vector pointsVector() { return pointsVector(new SCNGeodeticPoint.Vector()); }
-  public SCNGeodeticPoint.Vector pointsVector(SCNGeodeticPoint.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public GJNPosition.Vector pointsVector() { return pointsVector(new GJNPosition.Vector()); }
+  public GJNPosition.Vector pointsVector(GJNPosition.Vector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
    * Canonical GeoJSON geometry for the exclusion zone.
    */

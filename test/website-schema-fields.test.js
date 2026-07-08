@@ -75,8 +75,8 @@ describe("website schema field explorer", () => {
       { text: "]" },
     ]);
 
-    const simTime = definitions[0].fields.find((field) => field.name === "SIM_TIME");
-    assert.deepEqual(simTime.typeParts, [{ text: "string" }]);
+    const epoch = definitions[0].fields.find((field) => field.name === "EPOCH");
+    assert.deepEqual(epoch.typeParts, [{ text: "string" }]);
 
     const scnReference = definitions.find((definition) => definition.name === "SCNReference");
     const meanElements = scnReference.fields.find((field) => field.name === "MEAN_ELEMENTS");
@@ -85,6 +85,12 @@ describe("website schema field explorer", () => {
       { text: "[" },
       { text: "OMM", definitionName: "OMM" },
       { text: "]" },
+    ]);
+
+    const sitePosition = scnReference.fields.find((field) => field.name === "SITE_POSITION");
+    assert.equal(sitePosition.type, "GJNPosition");
+    assert.deepEqual(sitePosition.typeParts, [
+      { text: "GJNPosition", definitionName: "GJNPosition" },
     ]);
   });
 });

@@ -14,7 +14,7 @@
     },
     "Event": {
       "$ref": "#/$defs/Event",
-      "description": "JCO event (elsets, states, observations)"
+      "description": "Scenario event with mean elements, state vectors, and observations."
     },
     "FocusedReferenceIndex": {
       "type": [
@@ -23,7 +23,7 @@
       ],
       "description": "Index into the canonical References list. May be sent without References to change focus only; ignored when out of bounds."
     },
-    "SimTime": {
+    "Epoch": {
       "$ref": "#/$defs/DateTimeString"
     },
     "SimSpeed": {
@@ -32,12 +32,12 @@
         "null"
       ]
     },
-    "UseEcefFrame": {
+    "UseBodyFixedFrame": {
       "type": [
         "boolean",
         "null"
       ],
-      "description": "When set, forces the simulation reference frame for this scenario (false = ECI/J2000, true = ECEF/ITRF)."
+      "description": "When set, requests a body-fixed display frame. The scenario reference frame remains authoritative."
     },
     "Action": {
       "type": [
@@ -83,7 +83,7 @@
             "null"
           ]
         },
-        "SimTime": {
+        "Epoch": {
           "$ref": "#/$defs/DateTimeString"
         },
         "SimSpeed": {
@@ -92,7 +92,7 @@
             "null"
           ]
         },
-        "UseEcefFrame": {
+        "UseBodyFixedFrame": {
           "type": [
             "boolean",
             "null"
@@ -349,8 +349,11 @@
             "null"
           ]
         },
-        "SatNo": {
-          "type": "string"
+        "NoradCatId": {
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "Sources": {
           "type": "array",
@@ -364,22 +367,22 @@
             "type": "string"
           }
         },
-        "Tles": {
+        "MeanElements": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/Tle"
+            "$ref": "#/$defs/MeanElement"
           }
         },
         "Country": {
           "type": "string"
         },
-        "States": {
+        "StateVectors": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/StateVector"
           }
         },
-        "Pois": {
+        "Points": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/CustomPoiData"
@@ -391,25 +394,16 @@
             "$ref": "#/$defs/Maneuver"
           }
         },
-        "VarSatId": {
+        "VariableSatelliteId": {
           "type": "string"
         },
         "SensorId": {
           "type": "string"
         },
-        "SiteLat": {
-          "type": [
-            "number",
-            "null"
-          ]
+        "SitePosition": {
+          "$ref": "#/$defs/Wgs84Position"
         },
-        "SiteLon": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "VarSiteId": {
+        "VariableSiteId": {
           "type": "string"
         },
         "ViewCone": {
@@ -432,16 +426,16 @@
         "Id": {
           "type": "string"
         },
-        "elsets": {
+        "meanElements": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/JcoEventElsetDto"
+            "$ref": "#/$defs/EventMeanElementDto"
           }
         },
-        "states": {
+        "stateVectors": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/JcoEventStateVectorDto"
+            "$ref": "#/$defs/EventStateVectorDto"
           }
         },
         "eoObs": {
@@ -458,17 +452,21 @@
         }
       }
     },
-    "Tle": {
+    "MeanElement": {
       "type": "object",
+      "description": "Mean orbital element payload aligned to CCSDS OMM concepts.",
       "properties": {
-        "Line1": {
+        "ObjectName": {
           "type": "string"
         },
-        "Line2": {
+        "ObjectId": {
           "type": "string"
         },
-        "Source": {
-          "type": "string"
+        "NoradCatId": {
+          "type": "integer"
+        },
+        "Epoch": {
+          "$ref": "#/$defs/DateTimeString"
         }
       }
     },
@@ -549,10 +547,16 @@
     "SunAdvantageTarget": {
       "type": "object",
       "properties": {
-        "SatNo": {
+        "TargetId": {
           "type": "string"
         },
-        "GroundSite": {
+        "NoradCatId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "SiteId": {
           "type": "string"
         }
       }
@@ -563,7 +567,7 @@
         "Points": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/LLA"
+            "$ref": "#/$defs/Wgs84Position"
           }
         },
         "Label": {
@@ -580,17 +584,61 @@
         }
       }
     },
-    "LLA": {
+    "Wgs84Position": {
       "type": "object",
       "properties": {
-        "Lat": {
+        "Longitude": {
           "type": "number"
         },
-        "Lon": {
+        "Latitude": {
           "type": "number"
         },
-        "Alt": {
+        "Altitude": {
           "type": "number"
+        },
+        "HasAltitude": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EventMeanElementDto": {
+      "type": "object",
+      "properties": {
+        "argOfPerigee": {
+          "type": "number"
+        },
+        "eccentricity": {
+          "type": "number"
+        },
+        "epoch": {
+          "$ref": "#/$defs/DateTimeString"
+        },
+        "inclination": {
+          "type": "number"
+        },
+        "meanAnomaly": {
+          "type": "number"
+        },
+        "meanMotion": {
+          "type": "number"
+        },
+        "objectId": {
+          "type": "string"
+        },
+        "raan": {
+          "type": "number"
+        },
+        "noradCatId": {
+          "type": "integer"
+        },
+        "semiMajorAxis": {
+          "type": "number"
+        },
+        "source": {
+          "type": "string"
+        },
+        "dataMode": {
+          "type": "string"
         }
       }
     },
@@ -612,10 +660,10 @@
         "IdUdl": {
           "type": "string"
         },
-        "IDSensor": {
+        "SensorId": {
           "type": "string"
         },
-        "ObTime": {
+        "Epoch": {
           "$ref": "#/$defs/DateTimeString"
         },
         "Range": {
@@ -627,8 +675,11 @@
         "SatName": {
           "type": "string"
         },
-        "SatNo": {
-          "type": "string"
+        "NoradCatId": {
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "SatCountry": {
           "type": "string"
@@ -765,54 +816,13 @@
         }
       }
     },
-    "JcoEventElsetDto": {
-      "type": "object",
-      "properties": {
-        "argOfPerigee": {
-          "type": "number"
-        },
-        "eccentricity": {
-          "type": "number"
-        },
-        "epoch": {
-          "$ref": "#/$defs/DateTimeString"
-        },
-        "inclination": {
-          "type": "number"
-        },
-        "line1": {
-          "type": "string"
-        },
-        "line2": {
-          "type": "string"
-        },
-        "meanAnomaly": {
-          "type": "number"
-        },
-        "raan": {
-          "type": "number"
-        },
-        "satNo": {
-          "type": "integer"
-        },
-        "semiMajorAxis": {
-          "type": "number"
-        },
-        "source": {
-          "type": "string"
-        },
-        "dataMode": {
-          "type": "string"
-        }
-      }
-    },
-    "JcoEventStateVectorDto": {
+    "EventStateVectorDto": {
       "type": "object",
       "properties": {
         "epoch": {
           "$ref": "#/$defs/DateTimeString"
         },
-        "satNo": {
+        "noradCatId": {
           "type": "integer"
         },
         "origObjectId": {

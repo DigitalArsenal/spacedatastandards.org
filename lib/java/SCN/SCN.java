@@ -60,21 +60,21 @@ public final class SCN extends com.google.flatbuffers.Table {
   public ByteBuffer FOCUSED_REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer FOCUSED_REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Current simulation time as an ISO-8601 UTC timestamp.
+   * Current scenario epoch as an ISO-8601 UTC timestamp.
    */
-  public String SIM_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SIM_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer SIM_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  public String EPOCH() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
    * Simulation time-rate multiplier.
    */
   public double SIM_SPEED() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * True when the viewer should use an Earth-centered Earth-fixed frame.
+   * True when the viewer should use a body-fixed display frame.
    */
-  public boolean USE_ECEF_FRAME() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean USE_BODY_FIXED_FRAME() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Reference frame used for scenario propagation and display.
+   * Authoritative reference frame used for scenario propagation and display.
    */
   public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
   public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -99,9 +99,9 @@ public final class SCN extends com.google.flatbuffers.Table {
       int EVENTOffset,
       int FOCUSED_REFERENCE_INDEX,
       int FOCUSED_REFERENCE_IDOffset,
-      int SIM_TIMEOffset,
+      int EPOCHOffset,
       double SIM_SPEED,
-      boolean USE_ECEF_FRAME,
+      boolean USE_BODY_FIXED_FRAME,
       int REFERENCE_FRAMEOffset,
       byte ACTION,
       int VIEW_STATEOffset,
@@ -111,14 +111,14 @@ public final class SCN extends com.google.flatbuffers.Table {
     SCN.addAssetsChanged(builder, ASSETS_CHANGEDOffset);
     SCN.addViewState(builder, VIEW_STATEOffset);
     SCN.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
-    SCN.addSimTime(builder, SIM_TIMEOffset);
+    SCN.addEpoch(builder, EPOCHOffset);
     SCN.addFocusedReferenceId(builder, FOCUSED_REFERENCE_IDOffset);
     SCN.addFocusedReferenceIndex(builder, FOCUSED_REFERENCE_INDEX);
     SCN.addEvent(builder, EVENTOffset);
     SCN.addReferences(builder, REFERENCESOffset);
     SCN.addScenarioId(builder, SCENARIO_IDOffset);
     SCN.addAction(builder, ACTION);
-    SCN.addUseEcefFrame(builder, USE_ECEF_FRAME);
+    SCN.addUseBodyFixedFrame(builder, USE_BODY_FIXED_FRAME);
     return SCN.endSCN(builder);
   }
 
@@ -130,9 +130,9 @@ public final class SCN extends com.google.flatbuffers.Table {
   public static void addEvent(FlatBufferBuilder builder, int EVENTOffset) { builder.addOffset(2, EVENTOffset, 0); }
   public static void addFocusedReferenceIndex(FlatBufferBuilder builder, int FOCUSED_REFERENCE_INDEX) { builder.addInt(3, FOCUSED_REFERENCE_INDEX, -1); }
   public static void addFocusedReferenceId(FlatBufferBuilder builder, int FOCUSED_REFERENCE_IDOffset) { builder.addOffset(4, FOCUSED_REFERENCE_IDOffset, 0); }
-  public static void addSimTime(FlatBufferBuilder builder, int SIM_TIMEOffset) { builder.addOffset(5, SIM_TIMEOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(5, EPOCHOffset, 0); }
   public static void addSimSpeed(FlatBufferBuilder builder, double SIM_SPEED) { builder.addDouble(6, SIM_SPEED, 0.0); }
-  public static void addUseEcefFrame(FlatBufferBuilder builder, boolean USE_ECEF_FRAME) { builder.addBoolean(7, USE_ECEF_FRAME, false); }
+  public static void addUseBodyFixedFrame(FlatBufferBuilder builder, boolean USE_BODY_FIXED_FRAME) { builder.addBoolean(7, USE_BODY_FIXED_FRAME, false); }
   public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(8, REFERENCE_FRAMEOffset, 0); }
   public static void addAction(FlatBufferBuilder builder, byte ACTION) { builder.addByte(9, ACTION, 0); }
   public static void addViewState(FlatBufferBuilder builder, int VIEW_STATEOffset) { builder.addOffset(10, VIEW_STATEOffset, 0); }

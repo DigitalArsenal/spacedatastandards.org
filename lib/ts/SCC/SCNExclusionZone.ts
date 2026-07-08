@@ -5,12 +5,12 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { GJNGeometry, GJNGeometryT } from './GJNGeometry.js';
-import { SCNGeodeticPoint, SCNGeodeticPointT } from './SCNGeodeticPoint.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 
 
 /**
  * Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
- * when available; POINTS preserves simple LLA polygon imports.
+ * when available; POINTS preserves simple WGS84 polygon imports.
  */
 export class SCNExclusionZone implements flatbuffers.IUnpackableObject<SCNExclusionZoneT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -69,11 +69,11 @@ IS_FILLED():boolean {
 }
 
 /**
- * Simple geodetic polygon points for imported zones.
+ * Simple WGS84 polygon points for imported zones.
  */
-POINTS(index: number, obj?:SCNGeodeticPoint):SCNGeodeticPoint|null {
+POINTS(index: number, obj?:GJNPosition):GJNPosition|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? (obj || new SCNGeodeticPoint()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+  return offset ? (obj || new GJNPosition()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 pointsLength():number {
@@ -141,7 +141,7 @@ unpack(): SCNExclusionZoneT {
     this.FILL_COLOR(),
     this.LABEL_COLOR(),
     this.IS_FILLED(),
-    this.bb!.createObjList<SCNGeodeticPoint, SCNGeodeticPointT>(this.POINTS.bind(this), this.pointsLength()),
+    this.bb!.createObjList<GJNPosition, GJNPositionT>(this.POINTS.bind(this), this.pointsLength()),
     (this.BOUNDARY() !== null ? this.BOUNDARY()!.unpack() : null)
   );
 }
@@ -152,7 +152,7 @@ unpackTo(_o: SCNExclusionZoneT): void {
   _o.FILL_COLOR = this.FILL_COLOR();
   _o.LABEL_COLOR = this.LABEL_COLOR();
   _o.IS_FILLED = this.IS_FILLED();
-  _o.POINTS = this.bb!.createObjList<SCNGeodeticPoint, SCNGeodeticPointT>(this.POINTS.bind(this), this.pointsLength());
+  _o.POINTS = this.bb!.createObjList<GJNPosition, GJNPositionT>(this.POINTS.bind(this), this.pointsLength());
   _o.BOUNDARY = (this.BOUNDARY() !== null ? this.BOUNDARY()!.unpack() : null);
 }
 }
@@ -163,7 +163,7 @@ constructor(
   public FILL_COLOR: string|Uint8Array|null = null,
   public LABEL_COLOR: string|Uint8Array|null = null,
   public IS_FILLED: boolean = false,
-  public POINTS: (SCNGeodeticPointT)[] = [],
+  public POINTS: (GJNPositionT)[] = [],
   public BOUNDARY: GJNGeometryT|null = null
 ){}
 

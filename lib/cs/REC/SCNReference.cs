@@ -26,14 +26,14 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetREFERENCE_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetREFERENCE_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Human-readable display name for the reference.
-  public string DISPLAY_NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Human-readable name for the reference.
+  public string NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDISPLAY_NAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetDISPLAY_NAMEBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetDISPLAY_NAMEArray() { return __p.__vector_as_array<byte>(6); }
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(6); }
   /// Category of object or annotation represented by this reference.
   public scenarioReferenceKind REFERENCE_KIND { get { int o = __p.__offset(8); return o != 0 ? (scenarioReferenceKind)__p.bb.GetSbyte(o + __p.bb_pos) : scenarioReferenceKind.UNKNOWN; } }
   /// True when this reference represents a removal request.
@@ -48,7 +48,7 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(14); }
-  /// Country or owner label associated with the reference.
+  /// Country associated with the reference.
   public string COUNTRY { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOUNTRYBytes() { return __p.__vector_as_span<byte>(16, 1); }
@@ -56,45 +56,51 @@ public struct SCNReference : IFlatbufferObject
   public ArraySegment<byte>? GetCOUNTRYBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetCOUNTRYArray() { return __p.__vector_as_array<byte>(16); }
+  /// Owner or operator label associated with the reference.
+  public string OWNER { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOWNERBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetOWNERBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetOWNERArray() { return __p.__vector_as_array<byte>(18); }
   /// Source labels or URIs that produced this reference.
-  public string SOURCES(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SOURCESLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string SOURCES(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SOURCESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Data-mode labels associated with this reference.
-  public string DATA_MODES(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int DATA_MODESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public string DATA_MODES(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int DATA_MODESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Mean orbital elements associated with this reference.
-  public OMM? MEAN_ELEMENTS(int j) { int o = __p.__offset(22); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int MEAN_ELEMENTSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public OMM? MEAN_ELEMENTS(int j) { int o = __p.__offset(24); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MEAN_ELEMENTSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// State vectors associated with this reference.
-  public STV? STATES(int j) { int o = __p.__offset(24); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int STATESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public STV? STATE_VECTORS(int j) { int o = __p.__offset(26); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int STATE_VECTORSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Maneuver records associated with this reference.
-  public MNV? MANEUVERS(int j) { int o = __p.__offset(26); return o != 0 ? (MNV?)(new MNV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int MANEUVERSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public MNV? MANEUVERS(int j) { int o = __p.__offset(28); return o != 0 ? (MNV?)(new MNV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MANEUVERSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Ground-site record associated with this reference.
-  public SIT? SITE { get { int o = __p.__offset(28); return o != 0 ? (SIT?)(new SIT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SIT? SITE { get { int o = __p.__offset(30); return o != 0 ? (SIT?)(new SIT()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Sensor record associated with this reference.
-  public SEN? SENSOR { get { int o = __p.__offset(30); return o != 0 ? (SEN?)(new SEN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SEN? SENSOR { get { int o = __p.__offset(32); return o != 0 ? (SEN?)(new SEN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Sensor system id for references that identify a sensor by id.
-  public string SENSOR_SYSTEM_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SENSOR_SYSTEM_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetSENSOR_SYSTEM_IDBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetSENSOR_SYSTEM_IDArray() { return __p.__vector_as_array<byte>(32); }
+  public byte[] GetSENSOR_SYSTEM_IDArray() { return __p.__vector_as_array<byte>(34); }
   /// Sensor id for references that identify a sensor by id.
-  public string SENSOR_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public string SENSOR_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(34); }
-  /// Ground-site latitude in degrees when no SIT record is available.
-  public double SITE_LATITUDE { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Ground-site longitude in degrees when no SIT record is available.
-  public double SITE_LONGITUDE { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(36); }
+  /// WGS84 site position when no SIT or SEN record is available.
+  public GJNPosition? SITE_POSITION { get { int o = __p.__offset(38); return o != 0 ? (GJNPosition?)(new GJNPosition()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Scenario variable id for variable satellite references.
   public string VARIABLE_SATELLITE_ID { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -127,23 +133,23 @@ public struct SCNReference : IFlatbufferObject
 
   public static Offset<SCNReference> CreateSCNReference(FlatBufferBuilder builder,
       StringOffset REFERENCE_IDOffset = default(StringOffset),
-      StringOffset DISPLAY_NAMEOffset = default(StringOffset),
+      StringOffset NAMEOffset = default(StringOffset),
       scenarioReferenceKind REFERENCE_KIND = scenarioReferenceKind.UNKNOWN,
       bool REMOVE = false,
       uint NORAD_CAT_ID = 0,
       StringOffset OBJECT_IDOffset = default(StringOffset),
       StringOffset COUNTRYOffset = default(StringOffset),
+      StringOffset OWNEROffset = default(StringOffset),
       VectorOffset SOURCESOffset = default(VectorOffset),
       VectorOffset DATA_MODESOffset = default(VectorOffset),
       VectorOffset MEAN_ELEMENTSOffset = default(VectorOffset),
-      VectorOffset STATESOffset = default(VectorOffset),
+      VectorOffset STATE_VECTORSOffset = default(VectorOffset),
       VectorOffset MANEUVERSOffset = default(VectorOffset),
       Offset<SIT> SITEOffset = default(Offset<SIT>),
       Offset<SEN> SENSOROffset = default(Offset<SEN>),
       StringOffset SENSOR_SYSTEM_IDOffset = default(StringOffset),
       StringOffset SENSOR_IDOffset = default(StringOffset),
-      double SITE_LATITUDE = 0.0,
-      double SITE_LONGITUDE = 0.0,
+      Offset<GJNPosition> SITE_POSITIONOffset = default(Offset<GJNPosition>),
       StringOffset VARIABLE_SATELLITE_IDOffset = default(StringOffset),
       StringOffset VARIABLE_SITE_IDOffset = default(StringOffset),
       VectorOffset POINTSOffset = default(VectorOffset),
@@ -153,8 +159,6 @@ public struct SCNReference : IFlatbufferObject
       Offset<EOO> OBSERVATION_EOOffset = default(Offset<EOO>),
       Offset<RDO> OBSERVATION_RADAROffset = default(Offset<RDO>)) {
     builder.StartTable(26);
-    SCNReference.AddSITE_LONGITUDE(builder, SITE_LONGITUDE);
-    SCNReference.AddSITE_LATITUDE(builder, SITE_LATITUDE);
     SCNReference.AddOBSERVATION_RADAR(builder, OBSERVATION_RADAROffset);
     SCNReference.AddOBSERVATION_EO(builder, OBSERVATION_EOOffset);
     SCNReference.AddEXCLUSION_ZONE(builder, EXCLUSION_ZONEOffset);
@@ -163,19 +167,21 @@ public struct SCNReference : IFlatbufferObject
     SCNReference.AddPOINTS(builder, POINTSOffset);
     SCNReference.AddVARIABLE_SITE_ID(builder, VARIABLE_SITE_IDOffset);
     SCNReference.AddVARIABLE_SATELLITE_ID(builder, VARIABLE_SATELLITE_IDOffset);
+    SCNReference.AddSITE_POSITION(builder, SITE_POSITIONOffset);
     SCNReference.AddSENSOR_ID(builder, SENSOR_IDOffset);
     SCNReference.AddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_IDOffset);
     SCNReference.AddSENSOR(builder, SENSOROffset);
     SCNReference.AddSITE(builder, SITEOffset);
     SCNReference.AddMANEUVERS(builder, MANEUVERSOffset);
-    SCNReference.AddSTATES(builder, STATESOffset);
+    SCNReference.AddSTATE_VECTORS(builder, STATE_VECTORSOffset);
     SCNReference.AddMEAN_ELEMENTS(builder, MEAN_ELEMENTSOffset);
     SCNReference.AddDATA_MODES(builder, DATA_MODESOffset);
     SCNReference.AddSOURCES(builder, SOURCESOffset);
+    SCNReference.AddOWNER(builder, OWNEROffset);
     SCNReference.AddCOUNTRY(builder, COUNTRYOffset);
     SCNReference.AddOBJECT_ID(builder, OBJECT_IDOffset);
     SCNReference.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
-    SCNReference.AddDISPLAY_NAME(builder, DISPLAY_NAMEOffset);
+    SCNReference.AddNAME(builder, NAMEOffset);
     SCNReference.AddREFERENCE_ID(builder, REFERENCE_IDOffset);
     SCNReference.AddREMOVE(builder, REMOVE);
     SCNReference.AddREFERENCE_KIND(builder, REFERENCE_KIND);
@@ -184,48 +190,48 @@ public struct SCNReference : IFlatbufferObject
 
   public static void StartSCNReference(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddREFERENCE_ID(FlatBufferBuilder builder, StringOffset REFERENCE_IDOffset) { builder.AddOffset(0, REFERENCE_IDOffset.Value, 0); }
-  public static void AddDISPLAY_NAME(FlatBufferBuilder builder, StringOffset DISPLAY_NAMEOffset) { builder.AddOffset(1, DISPLAY_NAMEOffset.Value, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddREFERENCE_KIND(FlatBufferBuilder builder, scenarioReferenceKind REFERENCE_KIND) { builder.AddSbyte(2, (sbyte)REFERENCE_KIND, 0); }
   public static void AddREMOVE(FlatBufferBuilder builder, bool REMOVE) { builder.AddBool(3, REMOVE, false); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(4, NORAD_CAT_ID, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(5, OBJECT_IDOffset.Value, 0); }
   public static void AddCOUNTRY(FlatBufferBuilder builder, StringOffset COUNTRYOffset) { builder.AddOffset(6, COUNTRYOffset.Value, 0); }
-  public static void AddSOURCES(FlatBufferBuilder builder, VectorOffset SOURCESOffset) { builder.AddOffset(7, SOURCESOffset.Value, 0); }
+  public static void AddOWNER(FlatBufferBuilder builder, StringOffset OWNEROffset) { builder.AddOffset(7, OWNEROffset.Value, 0); }
+  public static void AddSOURCES(FlatBufferBuilder builder, VectorOffset SOURCESOffset) { builder.AddOffset(8, SOURCESOffset.Value, 0); }
   public static VectorOffset CreateSOURCESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSOURCESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSOURCESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddDATA_MODES(FlatBufferBuilder builder, VectorOffset DATA_MODESOffset) { builder.AddOffset(8, DATA_MODESOffset.Value, 0); }
+  public static void AddDATA_MODES(FlatBufferBuilder builder, VectorOffset DATA_MODESOffset) { builder.AddOffset(9, DATA_MODESOffset.Value, 0); }
   public static VectorOffset CreateDATA_MODESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateDATA_MODESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDATA_MODESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDATA_MODESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDATA_MODESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMEAN_ELEMENTS(FlatBufferBuilder builder, VectorOffset MEAN_ELEMENTSOffset) { builder.AddOffset(9, MEAN_ELEMENTSOffset.Value, 0); }
+  public static void AddMEAN_ELEMENTS(FlatBufferBuilder builder, VectorOffset MEAN_ELEMENTSOffset) { builder.AddOffset(10, MEAN_ELEMENTSOffset.Value, 0); }
   public static VectorOffset CreateMEAN_ELEMENTSVector(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OMM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OMM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMEAN_ELEMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSTATES(FlatBufferBuilder builder, VectorOffset STATESOffset) { builder.AddOffset(10, STATESOffset.Value, 0); }
-  public static VectorOffset CreateSTATESVector(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<STV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<STV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSTATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMANEUVERS(FlatBufferBuilder builder, VectorOffset MANEUVERSOffset) { builder.AddOffset(11, MANEUVERSOffset.Value, 0); }
+  public static void AddSTATE_VECTORS(FlatBufferBuilder builder, VectorOffset STATE_VECTORSOffset) { builder.AddOffset(11, STATE_VECTORSOffset.Value, 0); }
+  public static VectorOffset CreateSTATE_VECTORSVector(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<STV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<STV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTATE_VECTORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMANEUVERS(FlatBufferBuilder builder, VectorOffset MANEUVERSOffset) { builder.AddOffset(12, MANEUVERSOffset.Value, 0); }
   public static VectorOffset CreateMANEUVERSVector(FlatBufferBuilder builder, Offset<MNV>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, Offset<MNV>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<MNV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<MNV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMANEUVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSITE(FlatBufferBuilder builder, Offset<SIT> SITEOffset) { builder.AddOffset(12, SITEOffset.Value, 0); }
-  public static void AddSENSOR(FlatBufferBuilder builder, Offset<SEN> SENSOROffset) { builder.AddOffset(13, SENSOROffset.Value, 0); }
-  public static void AddSENSOR_SYSTEM_ID(FlatBufferBuilder builder, StringOffset SENSOR_SYSTEM_IDOffset) { builder.AddOffset(14, SENSOR_SYSTEM_IDOffset.Value, 0); }
-  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(15, SENSOR_IDOffset.Value, 0); }
-  public static void AddSITE_LATITUDE(FlatBufferBuilder builder, double SITE_LATITUDE) { builder.AddDouble(16, SITE_LATITUDE, 0.0); }
-  public static void AddSITE_LONGITUDE(FlatBufferBuilder builder, double SITE_LONGITUDE) { builder.AddDouble(17, SITE_LONGITUDE, 0.0); }
+  public static void AddSITE(FlatBufferBuilder builder, Offset<SIT> SITEOffset) { builder.AddOffset(13, SITEOffset.Value, 0); }
+  public static void AddSENSOR(FlatBufferBuilder builder, Offset<SEN> SENSOROffset) { builder.AddOffset(14, SENSOROffset.Value, 0); }
+  public static void AddSENSOR_SYSTEM_ID(FlatBufferBuilder builder, StringOffset SENSOR_SYSTEM_IDOffset) { builder.AddOffset(15, SENSOR_SYSTEM_IDOffset.Value, 0); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(16, SENSOR_IDOffset.Value, 0); }
+  public static void AddSITE_POSITION(FlatBufferBuilder builder, Offset<GJNPosition> SITE_POSITIONOffset) { builder.AddOffset(17, SITE_POSITIONOffset.Value, 0); }
   public static void AddVARIABLE_SATELLITE_ID(FlatBufferBuilder builder, StringOffset VARIABLE_SATELLITE_IDOffset) { builder.AddOffset(18, VARIABLE_SATELLITE_IDOffset.Value, 0); }
   public static void AddVARIABLE_SITE_ID(FlatBufferBuilder builder, StringOffset VARIABLE_SITE_IDOffset) { builder.AddOffset(19, VARIABLE_SITE_IDOffset.Value, 0); }
   public static void AddPOINTS(FlatBufferBuilder builder, VectorOffset POINTSOffset) { builder.AddOffset(20, POINTSOffset.Value, 0); }
@@ -250,28 +256,28 @@ public struct SCNReference : IFlatbufferObject
   }
   public void UnPackTo(SCNReferenceT _o) {
     _o.REFERENCE_ID = this.REFERENCE_ID;
-    _o.DISPLAY_NAME = this.DISPLAY_NAME;
+    _o.NAME = this.NAME;
     _o.REFERENCE_KIND = this.REFERENCE_KIND;
     _o.REMOVE = this.REMOVE;
     _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
     _o.OBJECT_ID = this.OBJECT_ID;
     _o.COUNTRY = this.COUNTRY;
+    _o.OWNER = this.OWNER;
     _o.SOURCES = new List<string>();
     for (var _j = 0; _j < this.SOURCESLength; ++_j) {_o.SOURCES.Add(this.SOURCES(_j));}
     _o.DATA_MODES = new List<string>();
     for (var _j = 0; _j < this.DATA_MODESLength; ++_j) {_o.DATA_MODES.Add(this.DATA_MODES(_j));}
     _o.MEAN_ELEMENTS = new List<OMMT>();
     for (var _j = 0; _j < this.MEAN_ELEMENTSLength; ++_j) {_o.MEAN_ELEMENTS.Add(this.MEAN_ELEMENTS(_j).HasValue ? this.MEAN_ELEMENTS(_j).Value.UnPack() : null);}
-    _o.STATES = new List<STVT>();
-    for (var _j = 0; _j < this.STATESLength; ++_j) {_o.STATES.Add(this.STATES(_j).HasValue ? this.STATES(_j).Value.UnPack() : null);}
+    _o.STATE_VECTORS = new List<STVT>();
+    for (var _j = 0; _j < this.STATE_VECTORSLength; ++_j) {_o.STATE_VECTORS.Add(this.STATE_VECTORS(_j).HasValue ? this.STATE_VECTORS(_j).Value.UnPack() : null);}
     _o.MANEUVERS = new List<MNVT>();
     for (var _j = 0; _j < this.MANEUVERSLength; ++_j) {_o.MANEUVERS.Add(this.MANEUVERS(_j).HasValue ? this.MANEUVERS(_j).Value.UnPack() : null);}
     _o.SITE = this.SITE.HasValue ? this.SITE.Value.UnPack() : null;
     _o.SENSOR = this.SENSOR.HasValue ? this.SENSOR.Value.UnPack() : null;
     _o.SENSOR_SYSTEM_ID = this.SENSOR_SYSTEM_ID;
     _o.SENSOR_ID = this.SENSOR_ID;
-    _o.SITE_LATITUDE = this.SITE_LATITUDE;
-    _o.SITE_LONGITUDE = this.SITE_LONGITUDE;
+    _o.SITE_POSITION = this.SITE_POSITION.HasValue ? this.SITE_POSITION.Value.UnPack() : null;
     _o.VARIABLE_SATELLITE_ID = this.VARIABLE_SATELLITE_ID;
     _o.VARIABLE_SITE_ID = this.VARIABLE_SITE_ID;
     _o.POINTS = new List<SCNPointOfInterestT>();
@@ -285,9 +291,10 @@ public struct SCNReference : IFlatbufferObject
   public static Offset<SCNReference> Pack(FlatBufferBuilder builder, SCNReferenceT _o) {
     if (_o == null) return default(Offset<SCNReference>);
     var _REFERENCE_ID = _o.REFERENCE_ID == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_ID);
-    var _DISPLAY_NAME = _o.DISPLAY_NAME == null ? default(StringOffset) : builder.CreateString(_o.DISPLAY_NAME);
+    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
     var _COUNTRY = _o.COUNTRY == null ? default(StringOffset) : builder.CreateString(_o.COUNTRY);
+    var _OWNER = _o.OWNER == null ? default(StringOffset) : builder.CreateString(_o.OWNER);
     var _SOURCES = default(VectorOffset);
     if (_o.SOURCES != null) {
       var __SOURCES = new StringOffset[_o.SOURCES.Count];
@@ -306,11 +313,11 @@ public struct SCNReference : IFlatbufferObject
       for (var _j = 0; _j < __MEAN_ELEMENTS.Length; ++_j) { __MEAN_ELEMENTS[_j] = OMM.Pack(builder, _o.MEAN_ELEMENTS[_j]); }
       _MEAN_ELEMENTS = CreateMEAN_ELEMENTSVector(builder, __MEAN_ELEMENTS);
     }
-    var _STATES = default(VectorOffset);
-    if (_o.STATES != null) {
-      var __STATES = new Offset<STV>[_o.STATES.Count];
-      for (var _j = 0; _j < __STATES.Length; ++_j) { __STATES[_j] = STV.Pack(builder, _o.STATES[_j]); }
-      _STATES = CreateSTATESVector(builder, __STATES);
+    var _STATE_VECTORS = default(VectorOffset);
+    if (_o.STATE_VECTORS != null) {
+      var __STATE_VECTORS = new Offset<STV>[_o.STATE_VECTORS.Count];
+      for (var _j = 0; _j < __STATE_VECTORS.Length; ++_j) { __STATE_VECTORS[_j] = STV.Pack(builder, _o.STATE_VECTORS[_j]); }
+      _STATE_VECTORS = CreateSTATE_VECTORSVector(builder, __STATE_VECTORS);
     }
     var _MANEUVERS = default(VectorOffset);
     if (_o.MANEUVERS != null) {
@@ -322,6 +329,7 @@ public struct SCNReference : IFlatbufferObject
     var _SENSOR = _o.SENSOR == null ? default(Offset<SEN>) : SEN.Pack(builder, _o.SENSOR);
     var _SENSOR_SYSTEM_ID = _o.SENSOR_SYSTEM_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_SYSTEM_ID);
     var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
+    var _SITE_POSITION = _o.SITE_POSITION == null ? default(Offset<GJNPosition>) : GJNPosition.Pack(builder, _o.SITE_POSITION);
     var _VARIABLE_SATELLITE_ID = _o.VARIABLE_SATELLITE_ID == null ? default(StringOffset) : builder.CreateString(_o.VARIABLE_SATELLITE_ID);
     var _VARIABLE_SITE_ID = _o.VARIABLE_SITE_ID == null ? default(StringOffset) : builder.CreateString(_o.VARIABLE_SITE_ID);
     var _POINTS = default(VectorOffset);
@@ -338,23 +346,23 @@ public struct SCNReference : IFlatbufferObject
     return CreateSCNReference(
       builder,
       _REFERENCE_ID,
-      _DISPLAY_NAME,
+      _NAME,
       _o.REFERENCE_KIND,
       _o.REMOVE,
       _o.NORAD_CAT_ID,
       _OBJECT_ID,
       _COUNTRY,
+      _OWNER,
       _SOURCES,
       _DATA_MODES,
       _MEAN_ELEMENTS,
-      _STATES,
+      _STATE_VECTORS,
       _MANEUVERS,
       _SITE,
       _SENSOR,
       _SENSOR_SYSTEM_ID,
       _SENSOR_ID,
-      _o.SITE_LATITUDE,
-      _o.SITE_LONGITUDE,
+      _SITE_POSITION,
       _VARIABLE_SATELLITE_ID,
       _VARIABLE_SITE_ID,
       _POINTS,
@@ -369,23 +377,23 @@ public struct SCNReference : IFlatbufferObject
 public class SCNReferenceT
 {
   public string REFERENCE_ID { get; set; }
-  public string DISPLAY_NAME { get; set; }
+  public string NAME { get; set; }
   public scenarioReferenceKind REFERENCE_KIND { get; set; }
   public bool REMOVE { get; set; }
   public uint NORAD_CAT_ID { get; set; }
   public string OBJECT_ID { get; set; }
   public string COUNTRY { get; set; }
+  public string OWNER { get; set; }
   public List<string> SOURCES { get; set; }
   public List<string> DATA_MODES { get; set; }
   public List<OMMT> MEAN_ELEMENTS { get; set; }
-  public List<STVT> STATES { get; set; }
+  public List<STVT> STATE_VECTORS { get; set; }
   public List<MNVT> MANEUVERS { get; set; }
   public SITT SITE { get; set; }
   public SENT SENSOR { get; set; }
   public string SENSOR_SYSTEM_ID { get; set; }
   public string SENSOR_ID { get; set; }
-  public double SITE_LATITUDE { get; set; }
-  public double SITE_LONGITUDE { get; set; }
+  public GJNPositionT SITE_POSITION { get; set; }
   public string VARIABLE_SATELLITE_ID { get; set; }
   public string VARIABLE_SITE_ID { get; set; }
   public List<SCNPointOfInterestT> POINTS { get; set; }
@@ -397,23 +405,23 @@ public class SCNReferenceT
 
   public SCNReferenceT() {
     this.REFERENCE_ID = null;
-    this.DISPLAY_NAME = null;
+    this.NAME = null;
     this.REFERENCE_KIND = scenarioReferenceKind.UNKNOWN;
     this.REMOVE = false;
     this.NORAD_CAT_ID = 0;
     this.OBJECT_ID = null;
     this.COUNTRY = null;
+    this.OWNER = null;
     this.SOURCES = null;
     this.DATA_MODES = null;
     this.MEAN_ELEMENTS = null;
-    this.STATES = null;
+    this.STATE_VECTORS = null;
     this.MANEUVERS = null;
     this.SITE = null;
     this.SENSOR = null;
     this.SENSOR_SYSTEM_ID = null;
     this.SENSOR_ID = null;
-    this.SITE_LATITUDE = 0.0;
-    this.SITE_LONGITUDE = 0.0;
+    this.SITE_POSITION = null;
     this.VARIABLE_SATELLITE_ID = null;
     this.VARIABLE_SITE_ID = null;
     this.POINTS = null;
@@ -432,23 +440,23 @@ static public class SCNReferenceVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*REFERENCE_ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*DISPLAY_NAME*/, false)
+      && verifier.VerifyString(tablePos, 6 /*NAME*/, false)
       && verifier.VerifyField(tablePos, 8 /*REFERENCE_KIND*/, 1 /*scenarioReferenceKind*/, 1, false)
       && verifier.VerifyField(tablePos, 10 /*REMOVE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 12 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 14 /*OBJECT_ID*/, false)
       && verifier.VerifyString(tablePos, 16 /*COUNTRY*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 18 /*SOURCES*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 20 /*DATA_MODES*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 22 /*MEAN_ELEMENTS*/, OMMVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 24 /*STATES*/, STVVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 26 /*MANEUVERS*/, MNVVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 28 /*SITE*/, SITVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 30 /*SENSOR*/, SENVerify.Verify, false)
-      && verifier.VerifyString(tablePos, 32 /*SENSOR_SYSTEM_ID*/, false)
-      && verifier.VerifyString(tablePos, 34 /*SENSOR_ID*/, false)
-      && verifier.VerifyField(tablePos, 36 /*SITE_LATITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*SITE_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 18 /*OWNER*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 20 /*SOURCES*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 22 /*DATA_MODES*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*MEAN_ELEMENTS*/, OMMVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 26 /*STATE_VECTORS*/, STVVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 28 /*MANEUVERS*/, MNVVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*SITE*/, SITVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 32 /*SENSOR*/, SENVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 34 /*SENSOR_SYSTEM_ID*/, false)
+      && verifier.VerifyString(tablePos, 36 /*SENSOR_ID*/, false)
+      && verifier.VerifyTable(tablePos, 38 /*SITE_POSITION*/, GJNPositionVerify.Verify, false)
       && verifier.VerifyString(tablePos, 40 /*VARIABLE_SATELLITE_ID*/, false)
       && verifier.VerifyString(tablePos, 42 /*VARIABLE_SITE_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 44 /*POINTS*/, SCNPointOfInterestVerify.Verify, false)

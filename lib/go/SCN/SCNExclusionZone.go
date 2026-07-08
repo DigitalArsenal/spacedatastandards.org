@@ -7,7 +7,7 @@ import (
 )
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 type SCNExclusionZone struct {
 	_tab flatbuffers.Table
 }
@@ -107,15 +107,15 @@ func (rcv *SCNExclusionZone) MutateIsFilled(n bool) bool {
 	return rcv.MutateIS_FILLED(n)
 }
 
-/// Simple geodetic polygon points for imported zones.
-func (rcv *SCNExclusionZone) POINTS(obj *SCNGeodeticPoint, j int) bool {
+/// Simple WGS84 polygon points for imported zones.
+func (rcv *SCNExclusionZone) POINTS(obj *GJNPosition, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
 		x = rcv._tab.Indirect(x)
 		if obj == nil {
-			obj = new(SCNGeodeticPoint)
+			obj = new(GJNPosition)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return true
@@ -123,7 +123,7 @@ func (rcv *SCNExclusionZone) POINTS(obj *SCNGeodeticPoint, j int) bool {
 	return false
 }
 
-func (rcv *SCNExclusionZone) Points(obj *SCNGeodeticPoint, j int) bool {
+func (rcv *SCNExclusionZone) Points(obj *GJNPosition, j int) bool {
 	return rcv.POINTS(obj, j)
 }
 
@@ -139,7 +139,7 @@ func (rcv *SCNExclusionZone) PointsLength() int {
 	return rcv.POINTSLength()
 }
 
-/// Simple geodetic polygon points for imported zones.
+/// Simple WGS84 polygon points for imported zones.
 /// Canonical GeoJSON geometry for the exclusion zone.
 func (rcv *SCNExclusionZone) BOUNDARY(obj *GJNGeometry) *GJNGeometry {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))

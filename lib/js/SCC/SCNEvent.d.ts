@@ -18,15 +18,15 @@ export declare class SCNEvent implements flatbuffers.IUnpackableObject<SCNEventT
     EVENT_ID(): string | null;
     EVENT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Element sets associated with the event.
+     * Mean orbital elements associated with the event.
      */
-    ELSETS(index: number, obj?: OMM): OMM | null;
-    elsetsLength(): number;
+    MEAN_ELEMENTS(index: number, obj?: OMM): OMM | null;
+    meanElementsLength(): number;
     /**
      * State vectors associated with the event.
      */
-    STATES(index: number, obj?: STV): STV | null;
-    statesLength(): number;
+    STATE_VECTORS(index: number, obj?: STV): STV | null;
+    stateVectorsLength(): number;
     /**
      * Electro-optical observations associated with the event.
      */
@@ -39,12 +39,12 @@ export declare class SCNEvent implements flatbuffers.IUnpackableObject<SCNEventT
     radarObservationsLength(): number;
     static startSCNEvent(builder: flatbuffers.Builder): void;
     static addEventId(builder: flatbuffers.Builder, EVENT_IDOffset: flatbuffers.Offset): void;
-    static addElsets(builder: flatbuffers.Builder, ELSETSOffset: flatbuffers.Offset): void;
-    static createElsetsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startElsetsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addStates(builder: flatbuffers.Builder, STATESOffset: flatbuffers.Offset): void;
-    static createStatesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startStatesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMeanElements(builder: flatbuffers.Builder, MEAN_ELEMENTSOffset: flatbuffers.Offset): void;
+    static createMeanElementsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startMeanElementsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addStateVectors(builder: flatbuffers.Builder, STATE_VECTORSOffset: flatbuffers.Offset): void;
+    static createStateVectorsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startStateVectorsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEoObservations(builder: flatbuffers.Builder, EO_OBSERVATIONSOffset: flatbuffers.Offset): void;
     static createEoObservationsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startEoObservationsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -52,17 +52,17 @@ export declare class SCNEvent implements flatbuffers.IUnpackableObject<SCNEventT
     static createRadarObservationsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startRadarObservationsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSCNEvent(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createSCNEvent(builder: flatbuffers.Builder, EVENT_IDOffset: flatbuffers.Offset, ELSETSOffset: flatbuffers.Offset, STATESOffset: flatbuffers.Offset, EO_OBSERVATIONSOffset: flatbuffers.Offset, RADAR_OBSERVATIONSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSCNEvent(builder: flatbuffers.Builder, EVENT_IDOffset: flatbuffers.Offset, MEAN_ELEMENTSOffset: flatbuffers.Offset, STATE_VECTORSOffset: flatbuffers.Offset, EO_OBSERVATIONSOffset: flatbuffers.Offset, RADAR_OBSERVATIONSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SCNEventT;
     unpackTo(_o: SCNEventT): void;
 }
 export declare class SCNEventT implements flatbuffers.IGeneratedObject {
     EVENT_ID: string | Uint8Array | null;
-    ELSETS: (OMMT)[];
-    STATES: (STVT)[];
+    MEAN_ELEMENTS: (OMMT)[];
+    STATE_VECTORS: (STVT)[];
     EO_OBSERVATIONS: (EOOT)[];
     RADAR_OBSERVATIONS: (RDOT)[];
-    constructor(EVENT_ID?: string | Uint8Array | null, ELSETS?: (OMMT)[], STATES?: (STVT)[], EO_OBSERVATIONS?: (EOOT)[], RADAR_OBSERVATIONS?: (RDOT)[]);
+    constructor(EVENT_ID?: string | Uint8Array | null, MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], EO_OBSERVATIONS?: (EOOT)[], RADAR_OBSERVATIONS?: (RDOT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNEvent.d.ts.map

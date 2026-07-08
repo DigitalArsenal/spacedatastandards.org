@@ -1,9 +1,9 @@
 import * as flatbuffers from 'flatbuffers';
 import { GJNGeometry, GJNGeometryT } from './GJNGeometry.js';
-import { SCNGeodeticPoint, SCNGeodeticPointT } from './SCNGeodeticPoint.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 /**
  * Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
- * when available; POINTS preserves simple LLA polygon imports.
+ * when available; POINTS preserves simple WGS84 polygon imports.
  */
 export declare class SCNExclusionZone implements flatbuffers.IUnpackableObject<SCNExclusionZoneT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -31,9 +31,9 @@ export declare class SCNExclusionZone implements flatbuffers.IUnpackableObject<S
      */
     IS_FILLED(): boolean;
     /**
-     * Simple geodetic polygon points for imported zones.
+     * Simple WGS84 polygon points for imported zones.
      */
-    POINTS(index: number, obj?: SCNGeodeticPoint): SCNGeodeticPoint | null;
+    POINTS(index: number, obj?: GJNPosition): GJNPosition | null;
     pointsLength(): number;
     /**
      * Canonical GeoJSON geometry for the exclusion zone.
@@ -57,9 +57,9 @@ export declare class SCNExclusionZoneT implements flatbuffers.IGeneratedObject {
     FILL_COLOR: string | Uint8Array | null;
     LABEL_COLOR: string | Uint8Array | null;
     IS_FILLED: boolean;
-    POINTS: (SCNGeodeticPointT)[];
+    POINTS: (GJNPositionT)[];
     BOUNDARY: GJNGeometryT | null;
-    constructor(LABEL?: string | Uint8Array | null, FILL_COLOR?: string | Uint8Array | null, LABEL_COLOR?: string | Uint8Array | null, IS_FILLED?: boolean, POINTS?: (SCNGeodeticPointT)[], BOUNDARY?: GJNGeometryT | null);
+    constructor(LABEL?: string | Uint8Array | null, FILL_COLOR?: string | Uint8Array | null, LABEL_COLOR?: string | Uint8Array | null, IS_FILLED?: boolean, POINTS?: (GJNPositionT)[], BOUNDARY?: GJNGeometryT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNExclusionZone.d.ts.map

@@ -29,9 +29,9 @@ class SCNSunAdvantageTarget(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Scenario reference id of the target object.
+    # Target identifier for the paired object.
     # SCNSunAdvantageTarget
-    def TARGET_REFERENCE_ID(self):
+    def TARGET_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -39,15 +39,15 @@ class SCNSunAdvantageTarget(object):
 
     # NORAD catalog id of the target satellite when available.
     # SCNSunAdvantageTarget
-    def TARGET_NORAD_CAT_ID(self):
+    def NORAD_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Ground site id associated with the target pairing.
+    # Site id associated with the target pairing.
     # SCNSunAdvantageTarget
-    def GROUND_SITE_ID(self):
+    def SITE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -59,23 +59,23 @@ def SCNSunAdvantageTargetStart(builder):
 def Start(builder):
     SCNSunAdvantageTargetStart(builder)
 
-def SCNSunAdvantageTargetAddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_ID):
-    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_REFERENCE_ID), 0)
+def SCNSunAdvantageTargetAddTARGET_ID(builder, TARGET_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_ID), 0)
 
-def AddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_ID):
-    SCNSunAdvantageTargetAddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_ID)
+def AddTARGET_ID(builder, TARGET_ID):
+    SCNSunAdvantageTargetAddTARGET_ID(builder, TARGET_ID)
 
-def SCNSunAdvantageTargetAddTARGET_NORAD_CAT_ID(builder, TARGET_NORAD_CAT_ID):
-    builder.PrependUint32Slot(1, TARGET_NORAD_CAT_ID, 0)
+def SCNSunAdvantageTargetAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(1, NORAD_CAT_ID, 0)
 
-def AddTARGET_NORAD_CAT_ID(builder, TARGET_NORAD_CAT_ID):
-    SCNSunAdvantageTargetAddTARGET_NORAD_CAT_ID(builder, TARGET_NORAD_CAT_ID)
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    SCNSunAdvantageTargetAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
 
-def SCNSunAdvantageTargetAddGROUND_SITE_ID(builder, GROUND_SITE_ID):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_SITE_ID), 0)
+def SCNSunAdvantageTargetAddSITE_ID(builder, SITE_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SITE_ID), 0)
 
-def AddGROUND_SITE_ID(builder, GROUND_SITE_ID):
-    SCNSunAdvantageTargetAddGROUND_SITE_ID(builder, GROUND_SITE_ID)
+def AddSITE_ID(builder, SITE_ID):
+    SCNSunAdvantageTargetAddSITE_ID(builder, SITE_ID)
 
 def SCNSunAdvantageTargetEnd(builder):
     return builder.EndObject()
@@ -89,13 +89,13 @@ class SCNSunAdvantageTargetT(object):
     # SCNSunAdvantageTargetT
     def __init__(
         self,
-        TARGET_REFERENCE_ID = None,
-        TARGET_NORAD_CAT_ID = 0,
-        GROUND_SITE_ID = None,
+        TARGET_ID = None,
+        NORAD_CAT_ID = 0,
+        SITE_ID = None,
     ):
-        self.TARGET_REFERENCE_ID = TARGET_REFERENCE_ID  # type: Optional[str]
-        self.TARGET_NORAD_CAT_ID = TARGET_NORAD_CAT_ID  # type: int
-        self.GROUND_SITE_ID = GROUND_SITE_ID  # type: Optional[str]
+        self.TARGET_ID = TARGET_ID  # type: Optional[str]
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.SITE_ID = SITE_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -118,21 +118,21 @@ class SCNSunAdvantageTargetT(object):
     def _UnPack(self, SCNSunAdvantageTarget):
         if SCNSunAdvantageTarget is None:
             return
-        self.TARGET_REFERENCE_ID = SCNSunAdvantageTarget.TARGET_REFERENCE_ID()
-        self.TARGET_NORAD_CAT_ID = SCNSunAdvantageTarget.TARGET_NORAD_CAT_ID()
-        self.GROUND_SITE_ID = SCNSunAdvantageTarget.GROUND_SITE_ID()
+        self.TARGET_ID = SCNSunAdvantageTarget.TARGET_ID()
+        self.NORAD_CAT_ID = SCNSunAdvantageTarget.NORAD_CAT_ID()
+        self.SITE_ID = SCNSunAdvantageTarget.SITE_ID()
 
     # SCNSunAdvantageTargetT
     def Pack(self, builder):
-        if self.TARGET_REFERENCE_ID is not None:
-            TARGET_REFERENCE_ID = builder.CreateString(self.TARGET_REFERENCE_ID)
-        if self.GROUND_SITE_ID is not None:
-            GROUND_SITE_ID = builder.CreateString(self.GROUND_SITE_ID)
+        if self.TARGET_ID is not None:
+            TARGET_ID = builder.CreateString(self.TARGET_ID)
+        if self.SITE_ID is not None:
+            SITE_ID = builder.CreateString(self.SITE_ID)
         SCNSunAdvantageTargetStart(builder)
-        if self.TARGET_REFERENCE_ID is not None:
-            SCNSunAdvantageTargetAddTARGET_REFERENCE_ID(builder, TARGET_REFERENCE_ID)
-        SCNSunAdvantageTargetAddTARGET_NORAD_CAT_ID(builder, self.TARGET_NORAD_CAT_ID)
-        if self.GROUND_SITE_ID is not None:
-            SCNSunAdvantageTargetAddGROUND_SITE_ID(builder, GROUND_SITE_ID)
+        if self.TARGET_ID is not None:
+            SCNSunAdvantageTargetAddTARGET_ID(builder, TARGET_ID)
+        SCNSunAdvantageTargetAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        if self.SITE_ID is not None:
+            SCNSunAdvantageTargetAddSITE_ID(builder, SITE_ID)
         SCNSunAdvantageTarget = SCNSunAdvantageTargetEnd(builder)
         return SCNSunAdvantageTarget

@@ -7,7 +7,7 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-/// when available; POINTS preserves simple LLA polygon imports.
+/// when available; POINTS preserves simple WGS84 polygon imports.
 public struct SCNExclusionZone : IFlatbufferObject
 {
   private Table __p;
@@ -44,8 +44,8 @@ public struct SCNExclusionZone : IFlatbufferObject
   public byte[] GetLABEL_COLORArray() { return __p.__vector_as_array<byte>(8); }
   /// True when the exclusion-zone polygon should be filled.
   public bool IS_FILLED { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Simple geodetic polygon points for imported zones.
-  public SCNGeodeticPoint? POINTS(int j) { int o = __p.__offset(12); return o != 0 ? (SCNGeodeticPoint?)(new SCNGeodeticPoint()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  /// Simple WGS84 polygon points for imported zones.
+  public GJNPosition? POINTS(int j) { int o = __p.__offset(12); return o != 0 ? (GJNPosition?)(new GJNPosition()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int POINTSLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Canonical GeoJSON geometry for the exclusion zone.
   public GJNGeometry? BOUNDARY { get { int o = __p.__offset(14); return o != 0 ? (GJNGeometry?)(new GJNGeometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -73,10 +73,10 @@ public struct SCNExclusionZone : IFlatbufferObject
   public static void AddLABEL_COLOR(FlatBufferBuilder builder, StringOffset LABEL_COLOROffset) { builder.AddOffset(2, LABEL_COLOROffset.Value, 0); }
   public static void AddIS_FILLED(FlatBufferBuilder builder, bool IS_FILLED) { builder.AddBool(3, IS_FILLED, false); }
   public static void AddPOINTS(FlatBufferBuilder builder, VectorOffset POINTSOffset) { builder.AddOffset(4, POINTSOffset.Value, 0); }
-  public static VectorOffset CreatePOINTSVector(FlatBufferBuilder builder, Offset<SCNGeodeticPoint>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, Offset<SCNGeodeticPoint>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCNGeodeticPoint>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCNGeodeticPoint>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTSVector(FlatBufferBuilder builder, Offset<GJNPosition>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, Offset<GJNPosition>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<GJNPosition>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOINTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<GJNPosition>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPOINTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddBOUNDARY(FlatBufferBuilder builder, Offset<GJNGeometry> BOUNDARYOffset) { builder.AddOffset(5, BOUNDARYOffset.Value, 0); }
   public static Offset<SCNExclusionZone> EndSCNExclusionZone(FlatBufferBuilder builder) {
@@ -93,7 +93,7 @@ public struct SCNExclusionZone : IFlatbufferObject
     _o.FILL_COLOR = this.FILL_COLOR;
     _o.LABEL_COLOR = this.LABEL_COLOR;
     _o.IS_FILLED = this.IS_FILLED;
-    _o.POINTS = new List<SCNGeodeticPointT>();
+    _o.POINTS = new List<GJNPositionT>();
     for (var _j = 0; _j < this.POINTSLength; ++_j) {_o.POINTS.Add(this.POINTS(_j).HasValue ? this.POINTS(_j).Value.UnPack() : null);}
     _o.BOUNDARY = this.BOUNDARY.HasValue ? this.BOUNDARY.Value.UnPack() : null;
   }
@@ -104,8 +104,8 @@ public struct SCNExclusionZone : IFlatbufferObject
     var _LABEL_COLOR = _o.LABEL_COLOR == null ? default(StringOffset) : builder.CreateString(_o.LABEL_COLOR);
     var _POINTS = default(VectorOffset);
     if (_o.POINTS != null) {
-      var __POINTS = new Offset<SCNGeodeticPoint>[_o.POINTS.Count];
-      for (var _j = 0; _j < __POINTS.Length; ++_j) { __POINTS[_j] = SCNGeodeticPoint.Pack(builder, _o.POINTS[_j]); }
+      var __POINTS = new Offset<GJNPosition>[_o.POINTS.Count];
+      for (var _j = 0; _j < __POINTS.Length; ++_j) { __POINTS[_j] = GJNPosition.Pack(builder, _o.POINTS[_j]); }
       _POINTS = CreatePOINTSVector(builder, __POINTS);
     }
     var _BOUNDARY = _o.BOUNDARY == null ? default(Offset<GJNGeometry>) : GJNGeometry.Pack(builder, _o.BOUNDARY);
@@ -126,7 +126,7 @@ public class SCNExclusionZoneT
   public string FILL_COLOR { get; set; }
   public string LABEL_COLOR { get; set; }
   public bool IS_FILLED { get; set; }
-  public List<SCNGeodeticPointT> POINTS { get; set; }
+  public List<GJNPositionT> POINTS { get; set; }
   public GJNGeometryT BOUNDARY { get; set; }
 
   public SCNExclusionZoneT() {
@@ -149,7 +149,7 @@ static public class SCNExclusionZoneVerify
       && verifier.VerifyString(tablePos, 6 /*FILL_COLOR*/, false)
       && verifier.VerifyString(tablePos, 8 /*LABEL_COLOR*/, false)
       && verifier.VerifyField(tablePos, 10 /*IS_FILLED*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyVectorOfTables(tablePos, 12 /*POINTS*/, SCNGeodeticPointVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 12 /*POINTS*/, GJNPositionVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 14 /*BOUNDARY*/, GJNGeometryVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }

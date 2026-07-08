@@ -49,8 +49,8 @@ class SCNReference extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Human-readable display name for the reference.
-    public function getDISPLAY_NAME()
+    /// Human-readable name for the reference.
+    public function getNAME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -93,10 +93,17 @@ class SCNReference extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Country or owner label associated with the reference.
+    /// Country associated with the reference.
     public function getCOUNTRY()
     {
         $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Owner or operator label associated with the reference.
+    public function getOWNER()
+    {
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -107,7 +114,7 @@ class SCNReference extends Table
      */
     public function getSOURCES($j)
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -116,7 +123,7 @@ class SCNReference extends Table
      */
     public function getSOURCESLength()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -127,7 +134,7 @@ class SCNReference extends Table
      */
     public function getDATA_MODES($j)
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -136,7 +143,7 @@ class SCNReference extends Table
      */
     public function getDATA_MODESLength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -146,7 +153,7 @@ class SCNReference extends Table
      */
     public function getMEAN_ELEMENTS($j)
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         $obj = new OMM();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -156,7 +163,7 @@ class SCNReference extends Table
      */
     public function getMEAN_ELEMENTSLength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -164,9 +171,9 @@ class SCNReference extends Table
     /**
      * @returnVectorOffset
      */
-    public function getSTATES($j)
+    public function getSTATE_VECTORS($j)
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         $obj = new STV();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -174,9 +181,9 @@ class SCNReference extends Table
     /**
      * @return int
      */
-    public function getSTATESLength()
+    public function getSTATE_VECTORSLength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -186,7 +193,7 @@ class SCNReference extends Table
      */
     public function getMANEUVERS($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         $obj = new MNV();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -196,7 +203,7 @@ class SCNReference extends Table
      */
     public function getMANEUVERSLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -204,7 +211,7 @@ class SCNReference extends Table
     public function getSITE()
     {
         $obj = new SIT();
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -212,42 +219,30 @@ class SCNReference extends Table
     public function getSENSOR()
     {
         $obj = new SEN();
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Sensor system id for references that identify a sensor by id.
     public function getSENSOR_SYSTEM_ID()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Sensor id for references that identify a sensor by id.
     public function getSENSOR_ID()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Ground-site latitude in degrees when no SIT record is available.
-    /**
-     * @return double
-     */
-    public function getSITE_LATITUDE()
+    /// WGS84 site position when no SIT or SEN record is available.
+    public function getSITE_POSITION()
     {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// Ground-site longitude in degrees when no SIT record is available.
-    /**
-     * @return double
-     */
-    public function getSITE_LONGITUDE()
-    {
+        $obj = new GJNPosition();
         $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Scenario variable id for variable satellite references.
@@ -337,27 +332,27 @@ class SCNReference extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNReference
      */
-    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $DISPLAY_NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $SOURCES, $DATA_MODES, $MEAN_ELEMENTS, $STATES, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_LATITUDE, $SITE_LONGITUDE, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR)
+    public static function createSCNReference(FlatBufferBuilder $builder, $REFERENCE_ID, $NAME, $REFERENCE_KIND, $REMOVE, $NORAD_CAT_ID, $OBJECT_ID, $COUNTRY, $OWNER, $SOURCES, $DATA_MODES, $MEAN_ELEMENTS, $STATE_VECTORS, $MANEUVERS, $SITE, $SENSOR, $SENSOR_SYSTEM_ID, $SENSOR_ID, $SITE_POSITION, $VARIABLE_SATELLITE_ID, $VARIABLE_SITE_ID, $POINTS, $VIEW_CONE, $SUN_ADVANTAGE_TARGET, $EXCLUSION_ZONE, $OBSERVATION_EO, $OBSERVATION_RADAR)
     {
         $builder->startObject(26);
         self::addREFERENCE_ID($builder, $REFERENCE_ID);
-        self::addDISPLAY_NAME($builder, $DISPLAY_NAME);
+        self::addNAME($builder, $NAME);
         self::addREFERENCE_KIND($builder, $REFERENCE_KIND);
         self::addREMOVE($builder, $REMOVE);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addCOUNTRY($builder, $COUNTRY);
+        self::addOWNER($builder, $OWNER);
         self::addSOURCES($builder, $SOURCES);
         self::addDATA_MODES($builder, $DATA_MODES);
         self::addMEAN_ELEMENTS($builder, $MEAN_ELEMENTS);
-        self::addSTATES($builder, $STATES);
+        self::addSTATE_VECTORS($builder, $STATE_VECTORS);
         self::addMANEUVERS($builder, $MANEUVERS);
         self::addSITE($builder, $SITE);
         self::addSENSOR($builder, $SENSOR);
         self::addSENSOR_SYSTEM_ID($builder, $SENSOR_SYSTEM_ID);
         self::addSENSOR_ID($builder, $SENSOR_ID);
-        self::addSITE_LATITUDE($builder, $SITE_LATITUDE);
-        self::addSITE_LONGITUDE($builder, $SITE_LONGITUDE);
+        self::addSITE_POSITION($builder, $SITE_POSITION);
         self::addVARIABLE_SATELLITE_ID($builder, $VARIABLE_SATELLITE_ID);
         self::addVARIABLE_SITE_ID($builder, $VARIABLE_SITE_ID);
         self::addPOINTS($builder, $POINTS);
@@ -385,9 +380,9 @@ class SCNReference extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addDISPLAY_NAME(FlatBufferBuilder $builder, $DISPLAY_NAME)
+    public static function addNAME(FlatBufferBuilder $builder, $NAME)
     {
-        $builder->addOffsetX(1, $DISPLAY_NAME, 0);
+        $builder->addOffsetX(1, $NAME, 0);
     }
 
     /**
@@ -442,12 +437,22 @@ class SCNReference extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOWNER(FlatBufferBuilder $builder, $OWNER)
+    {
+        $builder->addOffsetX(7, $OWNER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addSOURCES(FlatBufferBuilder $builder, $SOURCES)
     {
-        $builder->addOffsetX(7, $SOURCES, 0);
+        $builder->addOffsetX(8, $SOURCES, 0);
     }
 
     /**
@@ -481,7 +486,7 @@ class SCNReference extends Table
      */
     public static function addDATA_MODES(FlatBufferBuilder $builder, $DATA_MODES)
     {
-        $builder->addOffsetX(8, $DATA_MODES, 0);
+        $builder->addOffsetX(9, $DATA_MODES, 0);
     }
 
     /**
@@ -515,7 +520,7 @@ class SCNReference extends Table
      */
     public static function addMEAN_ELEMENTS(FlatBufferBuilder $builder, $MEAN_ELEMENTS)
     {
-        $builder->addOffsetX(9, $MEAN_ELEMENTS, 0);
+        $builder->addOffsetX(10, $MEAN_ELEMENTS, 0);
     }
 
     /**
@@ -547,9 +552,9 @@ class SCNReference extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addSTATES(FlatBufferBuilder $builder, $STATES)
+    public static function addSTATE_VECTORS(FlatBufferBuilder $builder, $STATE_VECTORS)
     {
-        $builder->addOffsetX(10, $STATES, 0);
+        $builder->addOffsetX(11, $STATE_VECTORS, 0);
     }
 
     /**
@@ -557,7 +562,7 @@ class SCNReference extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createSTATESVector(FlatBufferBuilder $builder, array $data)
+    public static function createSTATE_VECTORSVector(FlatBufferBuilder $builder, array $data)
     {
         $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
@@ -571,7 +576,7 @@ class SCNReference extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startSTATESVector(FlatBufferBuilder $builder, $numElems)
+    public static function startSTATE_VECTORSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }
@@ -583,7 +588,7 @@ class SCNReference extends Table
      */
     public static function addMANEUVERS(FlatBufferBuilder $builder, $MANEUVERS)
     {
-        $builder->addOffsetX(11, $MANEUVERS, 0);
+        $builder->addOffsetX(12, $MANEUVERS, 0);
     }
 
     /**
@@ -617,7 +622,7 @@ class SCNReference extends Table
      */
     public static function addSITE(FlatBufferBuilder $builder, $SITE)
     {
-        $builder->addOffsetX(12, $SITE, 0);
+        $builder->addOffsetX(13, $SITE, 0);
     }
 
     /**
@@ -627,7 +632,7 @@ class SCNReference extends Table
      */
     public static function addSENSOR(FlatBufferBuilder $builder, $SENSOR)
     {
-        $builder->addOffsetX(13, $SENSOR, 0);
+        $builder->addOffsetX(14, $SENSOR, 0);
     }
 
     /**
@@ -637,7 +642,7 @@ class SCNReference extends Table
      */
     public static function addSENSOR_SYSTEM_ID(FlatBufferBuilder $builder, $SENSOR_SYSTEM_ID)
     {
-        $builder->addOffsetX(14, $SENSOR_SYSTEM_ID, 0);
+        $builder->addOffsetX(15, $SENSOR_SYSTEM_ID, 0);
     }
 
     /**
@@ -647,27 +652,17 @@ class SCNReference extends Table
      */
     public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
     {
-        $builder->addOffsetX(15, $SENSOR_ID, 0);
+        $builder->addOffsetX(16, $SENSOR_ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param VectorOffset
      * @return void
      */
-    public static function addSITE_LATITUDE(FlatBufferBuilder $builder, $SITE_LATITUDE)
+    public static function addSITE_POSITION(FlatBufferBuilder $builder, $SITE_POSITION)
     {
-        $builder->addDoubleX(16, $SITE_LATITUDE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSITE_LONGITUDE(FlatBufferBuilder $builder, $SITE_LONGITUDE)
-    {
-        $builder->addDoubleX(17, $SITE_LONGITUDE, 0.0);
+        $builder->addOffsetX(17, $SITE_POSITION, 0);
     }
 
     /**

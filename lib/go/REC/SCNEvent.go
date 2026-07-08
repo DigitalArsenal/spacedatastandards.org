@@ -56,8 +56,8 @@ func (rcv *SCNEvent) EventId() []byte {
 }
 
 /// Stable id for the imported scenario event.
-/// Element sets associated with the event.
-func (rcv *SCNEvent) ELSETS(obj *OMM, j int) bool {
+/// Mean orbital elements associated with the event.
+func (rcv *SCNEvent) MEAN_ELEMENTS(obj *OMM, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
@@ -72,11 +72,11 @@ func (rcv *SCNEvent) ELSETS(obj *OMM, j int) bool {
 	return false
 }
 
-func (rcv *SCNEvent) Elsets(obj *OMM, j int) bool {
-	return rcv.ELSETS(obj, j)
+func (rcv *SCNEvent) MeanElements(obj *OMM, j int) bool {
+	return rcv.MEAN_ELEMENTS(obj, j)
 }
 
-func (rcv *SCNEvent) ELSETSLength() int {
+func (rcv *SCNEvent) MEAN_ELEMENTSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -84,13 +84,13 @@ func (rcv *SCNEvent) ELSETSLength() int {
 	return 0
 }
 
-func (rcv *SCNEvent) ElsetsLength() int {
-	return rcv.ELSETSLength()
+func (rcv *SCNEvent) MeanElementsLength() int {
+	return rcv.MEAN_ELEMENTSLength()
 }
 
-/// Element sets associated with the event.
+/// Mean orbital elements associated with the event.
 /// State vectors associated with the event.
-func (rcv *SCNEvent) STATES(obj *STV, j int) bool {
+func (rcv *SCNEvent) STATE_VECTORS(obj *STV, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
@@ -105,11 +105,11 @@ func (rcv *SCNEvent) STATES(obj *STV, j int) bool {
 	return false
 }
 
-func (rcv *SCNEvent) States(obj *STV, j int) bool {
-	return rcv.STATES(obj, j)
+func (rcv *SCNEvent) StateVectors(obj *STV, j int) bool {
+	return rcv.STATE_VECTORS(obj, j)
 }
 
-func (rcv *SCNEvent) STATESLength() int {
+func (rcv *SCNEvent) STATE_VECTORSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -117,8 +117,8 @@ func (rcv *SCNEvent) STATESLength() int {
 	return 0
 }
 
-func (rcv *SCNEvent) StatesLength() int {
-	return rcv.STATESLength()
+func (rcv *SCNEvent) StateVectorsLength() int {
+	return rcv.STATE_VECTORSLength()
 }
 
 /// State vectors associated with the event.
@@ -197,29 +197,29 @@ func SCNEventAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOff
 func SCNEventAddEventId(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
 	SCNEventAddEVENT_ID(builder, EVENT_ID)
 }
-func SCNEventAddELSETS(builder *flatbuffers.Builder, ELSETS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ELSETS), 0)
+func SCNEventAddMEAN_ELEMENTS(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
 }
-func SCNEventAddElsets(builder *flatbuffers.Builder, ELSETS flatbuffers.UOffsetT) {
-	SCNEventAddELSETS(builder, ELSETS)
+func SCNEventAddMeanElements(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
+	SCNEventAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
 }
-func SCNEventStartELSETSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func SCNEventStartMEAN_ELEMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func SCNEventStartElsetsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCNEventStartELSETSVector(builder, numElems)
+func SCNEventStartMeanElementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCNEventStartMEAN_ELEMENTSVector(builder, numElems)
 }
-func SCNEventAddSTATES(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STATES), 0)
+func SCNEventAddSTATE_VECTORS(builder *flatbuffers.Builder, STATE_VECTORS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(STATE_VECTORS), 0)
 }
-func SCNEventAddStates(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
-	SCNEventAddSTATES(builder, STATES)
+func SCNEventAddStateVectors(builder *flatbuffers.Builder, STATE_VECTORS flatbuffers.UOffsetT) {
+	SCNEventAddSTATE_VECTORS(builder, STATE_VECTORS)
 }
-func SCNEventStartSTATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func SCNEventStartSTATE_VECTORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func SCNEventStartStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCNEventStartSTATESVector(builder, numElems)
+func SCNEventStartStateVectorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCNEventStartSTATE_VECTORSVector(builder, numElems)
 }
 func SCNEventAddEO_OBSERVATIONS(builder *flatbuffers.Builder, EO_OBSERVATIONS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(EO_OBSERVATIONS), 0)

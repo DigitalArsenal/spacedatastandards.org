@@ -28,37 +28,37 @@ public final class SCNSunAdvantageTarget extends com.google.flatbuffers.Table {
   public SCNSunAdvantageTarget __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Scenario reference id of the target object.
+   * Target identifier for the paired object.
    */
-  public String TARGET_REFERENCE_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TARGET_REFERENCE_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer TARGET_REFERENCE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String TARGET_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TARGET_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer TARGET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * NORAD catalog id of the target satellite when available.
    */
-  public long TARGET_NORAD_CAT_ID() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public long NORAD_CAT_ID() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Ground site id associated with the target pairing.
+   * Site id associated with the target pairing.
    */
-  public String GROUND_SITE_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer GROUND_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer GROUND_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  public String SITE_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
 
   public static int createSCNSunAdvantageTarget(FlatBufferBuilder builder,
-      int TARGET_REFERENCE_IDOffset,
-      long TARGET_NORAD_CAT_ID,
-      int GROUND_SITE_IDOffset) {
+      int TARGET_IDOffset,
+      long NORAD_CAT_ID,
+      int SITE_IDOffset) {
     builder.startTable(3);
-    SCNSunAdvantageTarget.addGroundSiteId(builder, GROUND_SITE_IDOffset);
-    SCNSunAdvantageTarget.addTargetNoradCatId(builder, TARGET_NORAD_CAT_ID);
-    SCNSunAdvantageTarget.addTargetReferenceId(builder, TARGET_REFERENCE_IDOffset);
+    SCNSunAdvantageTarget.addSiteId(builder, SITE_IDOffset);
+    SCNSunAdvantageTarget.addNoradCatId(builder, NORAD_CAT_ID);
+    SCNSunAdvantageTarget.addTargetId(builder, TARGET_IDOffset);
     return SCNSunAdvantageTarget.endSCNSunAdvantageTarget(builder);
   }
 
   public static void startSCNSunAdvantageTarget(FlatBufferBuilder builder) { builder.startTable(3); }
-  public static void addTargetReferenceId(FlatBufferBuilder builder, int TARGET_REFERENCE_IDOffset) { builder.addOffset(0, TARGET_REFERENCE_IDOffset, 0); }
-  public static void addTargetNoradCatId(FlatBufferBuilder builder, long TARGET_NORAD_CAT_ID) { builder.addInt(1, (int) TARGET_NORAD_CAT_ID, (int) 0L); }
-  public static void addGroundSiteId(FlatBufferBuilder builder, int GROUND_SITE_IDOffset) { builder.addOffset(2, GROUND_SITE_IDOffset, 0); }
+  public static void addTargetId(FlatBufferBuilder builder, int TARGET_IDOffset) { builder.addOffset(0, TARGET_IDOffset, 0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(1, (int) NORAD_CAT_ID, (int) 0L); }
+  public static void addSiteId(FlatBufferBuilder builder, int SITE_IDOffset) { builder.addOffset(2, SITE_IDOffset, 0); }
   public static int endSCNSunAdvantageTarget(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

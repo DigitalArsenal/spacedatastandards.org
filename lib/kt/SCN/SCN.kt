@@ -96,9 +96,9 @@ class SCN : Table() {
     val focusedReferenceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun focusedReferenceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Current simulation time as an ISO-8601 UTC timestamp.
+     * Current scenario epoch as an ISO-8601 UTC timestamp.
      */
-    val simTime : String?
+    val epoch : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -107,8 +107,8 @@ class SCN : Table() {
                 null
             }
         }
-    val simTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
-    fun simTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
+    val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
+    fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
      * Simulation time-rate multiplier.
      */
@@ -118,15 +118,15 @@ class SCN : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * True when the viewer should use an Earth-centered Earth-fixed frame.
+     * True when the viewer should use a body-fixed display frame.
      */
-    val useEcefFrame : Boolean
+    val useBodyFixedFrame : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Reference frame used for scenario propagation and display.
+     * Authoritative reference frame used for scenario propagation and display.
      */
     val referenceFrame : RFM? get() = referenceFrame(RFM())
     fun referenceFrame(obj: RFM) : RFM? {
@@ -177,20 +177,20 @@ class SCN : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SCNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCN")
-        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, simTimeOffset: Int, simSpeed: Double, useEcefFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int) : Int {
+        fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int) : Int {
             builder.startTable(12)
             addSIMSPEED(builder, simSpeed)
             addASSETSCHANGED(builder, assetsChangedOffset)
             addVIEWSTATE(builder, viewStateOffset)
             addREFERENCEFRAME(builder, referenceFrameOffset)
-            addSIMTIME(builder, simTimeOffset)
+            addEPOCH(builder, epochOffset)
             addFOCUSEDREFERENCEID(builder, focusedReferenceIdOffset)
             addFOCUSEDREFERENCEINDEX(builder, focusedReferenceIndex)
             addEVENT(builder, eventOffset)
             addREFERENCES(builder, referencesOffset)
             addSCENARIOID(builder, scenarioIdOffset)
             addACTION(builder, action)
-            addUSEECEFFRAME(builder, useEcefFrame)
+            addUSEBODYFIXEDFRAME(builder, useBodyFixedFrame)
             return endSCN(builder)
         }
         fun startSCN(builder: FlatBufferBuilder) = builder.startTable(12)
@@ -207,9 +207,9 @@ class SCN : Table() {
         fun addEVENT(builder: FlatBufferBuilder, event: Int) = builder.addOffset(2, event, 0)
         fun addFOCUSEDREFERENCEINDEX(builder: FlatBufferBuilder, focusedReferenceIndex: Int) = builder.addInt(3, focusedReferenceIndex, -1)
         fun addFOCUSEDREFERENCEID(builder: FlatBufferBuilder, focusedReferenceId: Int) = builder.addOffset(4, focusedReferenceId, 0)
-        fun addSIMTIME(builder: FlatBufferBuilder, simTime: Int) = builder.addOffset(5, simTime, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(5, epoch, 0)
         fun addSIMSPEED(builder: FlatBufferBuilder, simSpeed: Double) = builder.addDouble(6, simSpeed, 0.0)
-        fun addUSEECEFFRAME(builder: FlatBufferBuilder, useEcefFrame: Boolean) = builder.addBoolean(7, useEcefFrame, false)
+        fun addUSEBODYFIXEDFRAME(builder: FlatBufferBuilder, useBodyFixedFrame: Boolean) = builder.addBoolean(7, useBodyFixedFrame, false)
         fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(8, referenceFrame, 0)
         fun addACTION(builder: FlatBufferBuilder, action: Byte) = builder.addByte(9, action, 0)
         fun addVIEWSTATE(builder: FlatBufferBuilder, viewState: Int) = builder.addOffset(10, viewState, 0)

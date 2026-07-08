@@ -158,8 +158,8 @@ func (rcv *SCN) FocusedReferenceId() []byte {
 }
 
 /// Reference id of the currently focused scenario object.
-/// Current simulation time as an ISO-8601 UTC timestamp.
-func (rcv *SCN) SIM_TIME() []byte {
+/// Current scenario epoch as an ISO-8601 UTC timestamp.
+func (rcv *SCN) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -167,11 +167,11 @@ func (rcv *SCN) SIM_TIME() []byte {
 	return nil
 }
 
-func (rcv *SCN) SimTime() []byte {
-	return rcv.SIM_TIME()
+func (rcv *SCN) Epoch() []byte {
+	return rcv.EPOCH()
 }
 
-/// Current simulation time as an ISO-8601 UTC timestamp.
+/// Current scenario epoch as an ISO-8601 UTC timestamp.
 /// Simulation time-rate multiplier.
 func (rcv *SCN) SIM_SPEED() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -194,8 +194,8 @@ func (rcv *SCN) MutateSimSpeed(n float64) bool {
 	return rcv.MutateSIM_SPEED(n)
 }
 
-/// True when the viewer should use an Earth-centered Earth-fixed frame.
-func (rcv *SCN) USE_ECEF_FRAME() bool {
+/// True when the viewer should use a body-fixed display frame.
+func (rcv *SCN) USE_BODY_FIXED_FRAME() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -203,20 +203,20 @@ func (rcv *SCN) USE_ECEF_FRAME() bool {
 	return false
 }
 
-func (rcv *SCN) UseEcefFrame() bool {
-	return rcv.USE_ECEF_FRAME()
+func (rcv *SCN) UseBodyFixedFrame() bool {
+	return rcv.USE_BODY_FIXED_FRAME()
 }
 
-/// True when the viewer should use an Earth-centered Earth-fixed frame.
-func (rcv *SCN) MutateUSE_ECEF_FRAME(n bool) bool {
+/// True when the viewer should use a body-fixed display frame.
+func (rcv *SCN) MutateUSE_BODY_FIXED_FRAME(n bool) bool {
 	return rcv._tab.MutateBoolSlot(18, n)
 }
 
-func (rcv *SCN) MutateUseEcefFrame(n bool) bool {
-	return rcv.MutateUSE_ECEF_FRAME(n)
+func (rcv *SCN) MutateUseBodyFixedFrame(n bool) bool {
+	return rcv.MutateUSE_BODY_FIXED_FRAME(n)
 }
 
-/// Reference frame used for scenario propagation and display.
+/// Authoritative reference frame used for scenario propagation and display.
 func (rcv *SCN) REFERENCE_FRAME(obj *RFM) *RFM {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -234,7 +234,7 @@ func (rcv *SCN) ReferenceFrame(obj *RFM) *RFM {
 	return rcv.REFERENCE_FRAME(obj)
 }
 
-/// Reference frame used for scenario propagation and display.
+/// Authoritative reference frame used for scenario propagation and display.
 /// Command action requested for the scenario.
 func (rcv *SCN) ACTION() scenarioActionCode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
@@ -334,11 +334,11 @@ func SCNAddFOCUSED_REFERENCE_ID(builder *flatbuffers.Builder, FOCUSED_REFERENCE_
 func SCNAddFocusedReferenceId(builder *flatbuffers.Builder, FOCUSED_REFERENCE_ID flatbuffers.UOffsetT) {
 	SCNAddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_ID)
 }
-func SCNAddSIM_TIME(builder *flatbuffers.Builder, SIM_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SIM_TIME), 0)
+func SCNAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPOCH), 0)
 }
-func SCNAddSimTime(builder *flatbuffers.Builder, SIM_TIME flatbuffers.UOffsetT) {
-	SCNAddSIM_TIME(builder, SIM_TIME)
+func SCNAddEpoch(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	SCNAddEPOCH(builder, EPOCH)
 }
 func SCNAddSIM_SPEED(builder *flatbuffers.Builder, SIM_SPEED float64) {
 	builder.PrependFloat64Slot(6, SIM_SPEED, 0.0)
@@ -346,11 +346,11 @@ func SCNAddSIM_SPEED(builder *flatbuffers.Builder, SIM_SPEED float64) {
 func SCNAddSimSpeed(builder *flatbuffers.Builder, SIM_SPEED float64) {
 	SCNAddSIM_SPEED(builder, SIM_SPEED)
 }
-func SCNAddUSE_ECEF_FRAME(builder *flatbuffers.Builder, USE_ECEF_FRAME bool) {
-	builder.PrependBoolSlot(7, USE_ECEF_FRAME, false)
+func SCNAddUSE_BODY_FIXED_FRAME(builder *flatbuffers.Builder, USE_BODY_FIXED_FRAME bool) {
+	builder.PrependBoolSlot(7, USE_BODY_FIXED_FRAME, false)
 }
-func SCNAddUseEcefFrame(builder *flatbuffers.Builder, USE_ECEF_FRAME bool) {
-	SCNAddUSE_ECEF_FRAME(builder, USE_ECEF_FRAME)
+func SCNAddUseBodyFixedFrame(builder *flatbuffers.Builder, USE_BODY_FIXED_FRAME bool) {
+	SCNAddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME)
 }
 func SCNAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)

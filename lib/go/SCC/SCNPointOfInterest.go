@@ -142,13 +142,13 @@ func (rcv *SCNPointOfInterest) Color() []byte {
 }
 
 /// Display color token for the point of interest.
-/// Geodetic position for the point of interest.
-func (rcv *SCNPointOfInterest) POSITION(obj *SCNGeodeticPoint) *SCNGeodeticPoint {
+/// WGS84 geodetic position for the point of interest.
+func (rcv *SCNPointOfInterest) POSITION(obj *GJNPosition) *GJNPosition {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(SCNGeodeticPoint)
+			obj = new(GJNPosition)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -156,11 +156,11 @@ func (rcv *SCNPointOfInterest) POSITION(obj *SCNGeodeticPoint) *SCNGeodeticPoint
 	return nil
 }
 
-func (rcv *SCNPointOfInterest) Position(obj *SCNGeodeticPoint) *SCNGeodeticPoint {
+func (rcv *SCNPointOfInterest) Position(obj *GJNPosition) *GJNPosition {
 	return rcv.POSITION(obj)
 }
 
-/// Geodetic position for the point of interest.
+/// WGS84 geodetic position for the point of interest.
 func SCNPointOfInterestStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }

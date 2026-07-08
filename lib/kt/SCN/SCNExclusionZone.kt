@@ -18,7 +18,7 @@ import kotlin.math.sign
 
 /**
  * Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
- * when available; POINTS preserves simple LLA polygon imports.
+ * when available; POINTS preserves simple WGS84 polygon imports.
  */
 @Suppress("unused")
 class SCNExclusionZone : Table() {
@@ -81,10 +81,10 @@ class SCNExclusionZone : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Simple geodetic polygon points for imported zones.
+     * Simple WGS84 polygon points for imported zones.
      */
-    fun points(j: Int) : SCNGeodeticPoint? = points(SCNGeodeticPoint(), j)
-    fun points(obj: SCNGeodeticPoint, j: Int) : SCNGeodeticPoint? {
+    fun points(j: Int) : GJNPosition? = points(GJNPosition(), j)
+    fun points(obj: GJNPosition, j: Int) : GJNPosition? {
         val o = __offset(12)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)

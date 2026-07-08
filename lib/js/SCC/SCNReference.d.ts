@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { EOO, EOOT } from './EOO.js';
+import { GJNPosition, GJNPositionT } from './GJNPosition.js';
 import { MNV, MNVT } from './MNV.js';
 import { OMM, OMMT } from './OMM.js';
 import { RDO, RDOT } from './RDO.js';
@@ -27,10 +28,10 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     REFERENCE_ID(): string | null;
     REFERENCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Human-readable display name for the reference.
+     * Human-readable name for the reference.
      */
-    DISPLAY_NAME(): string | null;
-    DISPLAY_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    NAME(): string | null;
+    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Category of object or annotation represented by this reference.
      */
@@ -49,10 +50,15 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     OBJECT_ID(): string | null;
     OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Country or owner label associated with the reference.
+     * Country associated with the reference.
      */
     COUNTRY(): string | null;
     COUNTRY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Owner or operator label associated with the reference.
+     */
+    OWNER(): string | null;
+    OWNER(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Source labels or URIs that produced this reference.
      */
@@ -73,8 +79,8 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     /**
      * State vectors associated with this reference.
      */
-    STATES(index: number, obj?: STV): STV | null;
-    statesLength(): number;
+    STATE_VECTORS(index: number, obj?: STV): STV | null;
+    stateVectorsLength(): number;
     /**
      * Maneuver records associated with this reference.
      */
@@ -99,13 +105,9 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     SENSOR_ID(): string | null;
     SENSOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Ground-site latitude in degrees when no SIT record is available.
+     * WGS84 site position when no SIT or SEN record is available.
      */
-    SITE_LATITUDE(): number;
-    /**
-     * Ground-site longitude in degrees when no SIT record is available.
-     */
-    SITE_LONGITUDE(): number;
+    SITE_POSITION(obj?: GJNPosition): GJNPosition | null;
     /**
      * Scenario variable id for variable satellite references.
      */
@@ -143,12 +145,13 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     OBSERVATION_RADAR(obj?: RDO): RDO | null;
     static startSCNReference(builder: flatbuffers.Builder): void;
     static addReferenceId(builder: flatbuffers.Builder, REFERENCE_IDOffset: flatbuffers.Offset): void;
-    static addDisplayName(builder: flatbuffers.Builder, DISPLAY_NAMEOffset: flatbuffers.Offset): void;
+    static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addReferenceKind(builder: flatbuffers.Builder, REFERENCE_KIND: scenarioReferenceKind): void;
     static addRemove(builder: flatbuffers.Builder, REMOVE: boolean): void;
     static addNoradCatId(builder: flatbuffers.Builder, NORAD_CAT_ID: number): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
     static addCountry(builder: flatbuffers.Builder, COUNTRYOffset: flatbuffers.Offset): void;
+    static addOwner(builder: flatbuffers.Builder, OWNEROffset: flatbuffers.Offset): void;
     static addSources(builder: flatbuffers.Builder, SOURCESOffset: flatbuffers.Offset): void;
     static createSourcesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startSourcesVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -158,9 +161,9 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addMeanElements(builder: flatbuffers.Builder, MEAN_ELEMENTSOffset: flatbuffers.Offset): void;
     static createMeanElementsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startMeanElementsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addStates(builder: flatbuffers.Builder, STATESOffset: flatbuffers.Offset): void;
-    static createStatesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
-    static startStatesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addStateVectors(builder: flatbuffers.Builder, STATE_VECTORSOffset: flatbuffers.Offset): void;
+    static createStateVectorsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startStateVectorsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addManeuvers(builder: flatbuffers.Builder, MANEUVERSOffset: flatbuffers.Offset): void;
     static createManeuversVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startManeuversVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -168,8 +171,7 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
     static addSensor(builder: flatbuffers.Builder, SENSOROffset: flatbuffers.Offset): void;
     static addSensorSystemId(builder: flatbuffers.Builder, SENSOR_SYSTEM_IDOffset: flatbuffers.Offset): void;
     static addSensorId(builder: flatbuffers.Builder, SENSOR_IDOffset: flatbuffers.Offset): void;
-    static addSiteLatitude(builder: flatbuffers.Builder, SITE_LATITUDE: number): void;
-    static addSiteLongitude(builder: flatbuffers.Builder, SITE_LONGITUDE: number): void;
+    static addSitePosition(builder: flatbuffers.Builder, SITE_POSITIONOffset: flatbuffers.Offset): void;
     static addVariableSatelliteId(builder: flatbuffers.Builder, VARIABLE_SATELLITE_IDOffset: flatbuffers.Offset): void;
     static addVariableSiteId(builder: flatbuffers.Builder, VARIABLE_SITE_IDOffset: flatbuffers.Offset): void;
     static addPoints(builder: flatbuffers.Builder, POINTSOffset: flatbuffers.Offset): void;
@@ -186,23 +188,23 @@ export declare class SCNReference implements flatbuffers.IUnpackableObject<SCNRe
 }
 export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     REFERENCE_ID: string | Uint8Array | null;
-    DISPLAY_NAME: string | Uint8Array | null;
+    NAME: string | Uint8Array | null;
     REFERENCE_KIND: scenarioReferenceKind;
     REMOVE: boolean;
     NORAD_CAT_ID: number;
     OBJECT_ID: string | Uint8Array | null;
     COUNTRY: string | Uint8Array | null;
+    OWNER: string | Uint8Array | null;
     SOURCES: (string)[];
     DATA_MODES: (string)[];
     MEAN_ELEMENTS: (OMMT)[];
-    STATES: (STVT)[];
+    STATE_VECTORS: (STVT)[];
     MANEUVERS: (MNVT)[];
     SITE: SITT | null;
     SENSOR: SENT | null;
     SENSOR_SYSTEM_ID: string | Uint8Array | null;
     SENSOR_ID: string | Uint8Array | null;
-    SITE_LATITUDE: number;
-    SITE_LONGITUDE: number;
+    SITE_POSITION: GJNPositionT | null;
     VARIABLE_SATELLITE_ID: string | Uint8Array | null;
     VARIABLE_SITE_ID: string | Uint8Array | null;
     POINTS: (SCNPointOfInterestT)[];
@@ -211,7 +213,7 @@ export declare class SCNReferenceT implements flatbuffers.IGeneratedObject {
     EXCLUSION_ZONE: SCNExclusionZoneT | null;
     OBSERVATION_EO: EOOT | null;
     OBSERVATION_RADAR: RDOT | null;
-    constructor(REFERENCE_ID?: string | Uint8Array | null, DISPLAY_NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATES?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_LATITUDE?: number, SITE_LONGITUDE?: number, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null);
+    constructor(REFERENCE_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, REFERENCE_KIND?: scenarioReferenceKind, REMOVE?: boolean, NORAD_CAT_ID?: number, OBJECT_ID?: string | Uint8Array | null, COUNTRY?: string | Uint8Array | null, OWNER?: string | Uint8Array | null, SOURCES?: (string)[], DATA_MODES?: (string)[], MEAN_ELEMENTS?: (OMMT)[], STATE_VECTORS?: (STVT)[], MANEUVERS?: (MNVT)[], SITE?: SITT | null, SENSOR?: SENT | null, SENSOR_SYSTEM_ID?: string | Uint8Array | null, SENSOR_ID?: string | Uint8Array | null, SITE_POSITION?: GJNPositionT | null, VARIABLE_SATELLITE_ID?: string | Uint8Array | null, VARIABLE_SITE_ID?: string | Uint8Array | null, POINTS?: (SCNPointOfInterestT)[], VIEW_CONE?: SCNViewConeT | null, SUN_ADVANTAGE_TARGET?: SCNSunAdvantageTargetT | null, EXCLUSION_ZONE?: SCNExclusionZoneT | null, OBSERVATION_EO?: EOOT | null, OBSERVATION_RADAR?: RDOT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCNReference.d.ts.map

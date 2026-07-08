@@ -25,12 +25,12 @@ public struct SCNEvent : IFlatbufferObject
   public ArraySegment<byte>? GetEVENT_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetEVENT_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Element sets associated with the event.
-  public OMM? ELSETS(int j) { int o = __p.__offset(6); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int ELSETSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Mean orbital elements associated with the event.
+  public OMM? MEAN_ELEMENTS(int j) { int o = __p.__offset(6); return o != 0 ? (OMM?)(new OMM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MEAN_ELEMENTSLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// State vectors associated with the event.
-  public STV? STATES(int j) { int o = __p.__offset(8); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int STATESLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public STV? STATE_VECTORS(int j) { int o = __p.__offset(8); return o != 0 ? (STV?)(new STV()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int STATE_VECTORSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Electro-optical observations associated with the event.
   public EOO? EO_OBSERVATIONS(int j) { int o = __p.__offset(10); return o != 0 ? (EOO?)(new EOO()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EO_OBSERVATIONSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
@@ -40,33 +40,33 @@ public struct SCNEvent : IFlatbufferObject
 
   public static Offset<SCNEvent> CreateSCNEvent(FlatBufferBuilder builder,
       StringOffset EVENT_IDOffset = default(StringOffset),
-      VectorOffset ELSETSOffset = default(VectorOffset),
-      VectorOffset STATESOffset = default(VectorOffset),
+      VectorOffset MEAN_ELEMENTSOffset = default(VectorOffset),
+      VectorOffset STATE_VECTORSOffset = default(VectorOffset),
       VectorOffset EO_OBSERVATIONSOffset = default(VectorOffset),
       VectorOffset RADAR_OBSERVATIONSOffset = default(VectorOffset)) {
     builder.StartTable(5);
     SCNEvent.AddRADAR_OBSERVATIONS(builder, RADAR_OBSERVATIONSOffset);
     SCNEvent.AddEO_OBSERVATIONS(builder, EO_OBSERVATIONSOffset);
-    SCNEvent.AddSTATES(builder, STATESOffset);
-    SCNEvent.AddELSETS(builder, ELSETSOffset);
+    SCNEvent.AddSTATE_VECTORS(builder, STATE_VECTORSOffset);
+    SCNEvent.AddMEAN_ELEMENTS(builder, MEAN_ELEMENTSOffset);
     SCNEvent.AddEVENT_ID(builder, EVENT_IDOffset);
     return SCNEvent.EndSCNEvent(builder);
   }
 
   public static void StartSCNEvent(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddEVENT_ID(FlatBufferBuilder builder, StringOffset EVENT_IDOffset) { builder.AddOffset(0, EVENT_IDOffset.Value, 0); }
-  public static void AddELSETS(FlatBufferBuilder builder, VectorOffset ELSETSOffset) { builder.AddOffset(1, ELSETSOffset.Value, 0); }
-  public static VectorOffset CreateELSETSVector(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateELSETSVectorBlock(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateELSETSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OMM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateELSETSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OMM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartELSETSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSTATES(FlatBufferBuilder builder, VectorOffset STATESOffset) { builder.AddOffset(2, STATESOffset.Value, 0); }
-  public static VectorOffset CreateSTATESVector(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<STV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSTATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<STV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSTATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMEAN_ELEMENTS(FlatBufferBuilder builder, VectorOffset MEAN_ELEMENTSOffset) { builder.AddOffset(1, MEAN_ELEMENTSOffset.Value, 0); }
+  public static VectorOffset CreateMEAN_ELEMENTSVector(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, Offset<OMM>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<OMM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMEAN_ELEMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<OMM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMEAN_ELEMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTATE_VECTORS(FlatBufferBuilder builder, VectorOffset STATE_VECTORSOffset) { builder.AddOffset(2, STATE_VECTORSOffset.Value, 0); }
+  public static VectorOffset CreateSTATE_VECTORSVector(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, Offset<STV>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<STV>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATE_VECTORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<STV>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTATE_VECTORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddEO_OBSERVATIONS(FlatBufferBuilder builder, VectorOffset EO_OBSERVATIONSOffset) { builder.AddOffset(3, EO_OBSERVATIONSOffset.Value, 0); }
   public static VectorOffset CreateEO_OBSERVATIONSVector(FlatBufferBuilder builder, Offset<EOO>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEO_OBSERVATIONSVectorBlock(FlatBufferBuilder builder, Offset<EOO>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -90,10 +90,10 @@ public struct SCNEvent : IFlatbufferObject
   }
   public void UnPackTo(SCNEventT _o) {
     _o.EVENT_ID = this.EVENT_ID;
-    _o.ELSETS = new List<OMMT>();
-    for (var _j = 0; _j < this.ELSETSLength; ++_j) {_o.ELSETS.Add(this.ELSETS(_j).HasValue ? this.ELSETS(_j).Value.UnPack() : null);}
-    _o.STATES = new List<STVT>();
-    for (var _j = 0; _j < this.STATESLength; ++_j) {_o.STATES.Add(this.STATES(_j).HasValue ? this.STATES(_j).Value.UnPack() : null);}
+    _o.MEAN_ELEMENTS = new List<OMMT>();
+    for (var _j = 0; _j < this.MEAN_ELEMENTSLength; ++_j) {_o.MEAN_ELEMENTS.Add(this.MEAN_ELEMENTS(_j).HasValue ? this.MEAN_ELEMENTS(_j).Value.UnPack() : null);}
+    _o.STATE_VECTORS = new List<STVT>();
+    for (var _j = 0; _j < this.STATE_VECTORSLength; ++_j) {_o.STATE_VECTORS.Add(this.STATE_VECTORS(_j).HasValue ? this.STATE_VECTORS(_j).Value.UnPack() : null);}
     _o.EO_OBSERVATIONS = new List<EOOT>();
     for (var _j = 0; _j < this.EO_OBSERVATIONSLength; ++_j) {_o.EO_OBSERVATIONS.Add(this.EO_OBSERVATIONS(_j).HasValue ? this.EO_OBSERVATIONS(_j).Value.UnPack() : null);}
     _o.RADAR_OBSERVATIONS = new List<RDOT>();
@@ -102,17 +102,17 @@ public struct SCNEvent : IFlatbufferObject
   public static Offset<SCNEvent> Pack(FlatBufferBuilder builder, SCNEventT _o) {
     if (_o == null) return default(Offset<SCNEvent>);
     var _EVENT_ID = _o.EVENT_ID == null ? default(StringOffset) : builder.CreateString(_o.EVENT_ID);
-    var _ELSETS = default(VectorOffset);
-    if (_o.ELSETS != null) {
-      var __ELSETS = new Offset<OMM>[_o.ELSETS.Count];
-      for (var _j = 0; _j < __ELSETS.Length; ++_j) { __ELSETS[_j] = OMM.Pack(builder, _o.ELSETS[_j]); }
-      _ELSETS = CreateELSETSVector(builder, __ELSETS);
+    var _MEAN_ELEMENTS = default(VectorOffset);
+    if (_o.MEAN_ELEMENTS != null) {
+      var __MEAN_ELEMENTS = new Offset<OMM>[_o.MEAN_ELEMENTS.Count];
+      for (var _j = 0; _j < __MEAN_ELEMENTS.Length; ++_j) { __MEAN_ELEMENTS[_j] = OMM.Pack(builder, _o.MEAN_ELEMENTS[_j]); }
+      _MEAN_ELEMENTS = CreateMEAN_ELEMENTSVector(builder, __MEAN_ELEMENTS);
     }
-    var _STATES = default(VectorOffset);
-    if (_o.STATES != null) {
-      var __STATES = new Offset<STV>[_o.STATES.Count];
-      for (var _j = 0; _j < __STATES.Length; ++_j) { __STATES[_j] = STV.Pack(builder, _o.STATES[_j]); }
-      _STATES = CreateSTATESVector(builder, __STATES);
+    var _STATE_VECTORS = default(VectorOffset);
+    if (_o.STATE_VECTORS != null) {
+      var __STATE_VECTORS = new Offset<STV>[_o.STATE_VECTORS.Count];
+      for (var _j = 0; _j < __STATE_VECTORS.Length; ++_j) { __STATE_VECTORS[_j] = STV.Pack(builder, _o.STATE_VECTORS[_j]); }
+      _STATE_VECTORS = CreateSTATE_VECTORSVector(builder, __STATE_VECTORS);
     }
     var _EO_OBSERVATIONS = default(VectorOffset);
     if (_o.EO_OBSERVATIONS != null) {
@@ -129,8 +129,8 @@ public struct SCNEvent : IFlatbufferObject
     return CreateSCNEvent(
       builder,
       _EVENT_ID,
-      _ELSETS,
-      _STATES,
+      _MEAN_ELEMENTS,
+      _STATE_VECTORS,
       _EO_OBSERVATIONS,
       _RADAR_OBSERVATIONS);
   }
@@ -139,15 +139,15 @@ public struct SCNEvent : IFlatbufferObject
 public class SCNEventT
 {
   public string EVENT_ID { get; set; }
-  public List<OMMT> ELSETS { get; set; }
-  public List<STVT> STATES { get; set; }
+  public List<OMMT> MEAN_ELEMENTS { get; set; }
+  public List<STVT> STATE_VECTORS { get; set; }
   public List<EOOT> EO_OBSERVATIONS { get; set; }
   public List<RDOT> RADAR_OBSERVATIONS { get; set; }
 
   public SCNEventT() {
     this.EVENT_ID = null;
-    this.ELSETS = null;
-    this.STATES = null;
+    this.MEAN_ELEMENTS = null;
+    this.STATE_VECTORS = null;
     this.EO_OBSERVATIONS = null;
     this.RADAR_OBSERVATIONS = null;
   }
@@ -160,8 +160,8 @@ static public class SCNEventVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*EVENT_ID*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 6 /*ELSETS*/, OMMVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 8 /*STATES*/, STVVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 6 /*MEAN_ELEMENTS*/, OMMVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 8 /*STATE_VECTORS*/, STVVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 10 /*EO_OBSERVATIONS*/, EOOVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 12 /*RADAR_OBSERVATIONS*/, RDOVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);

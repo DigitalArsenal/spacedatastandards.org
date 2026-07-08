@@ -60,10 +60,10 @@ public final class SCNPointOfInterest extends com.google.flatbuffers.Table {
   public ByteBuffer COLORAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer COLORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
-   * Geodetic position for the point of interest.
+   * WGS84 geodetic position for the point of interest.
    */
-  public SCNGeodeticPoint POSITION() { return POSITION(new SCNGeodeticPoint()); }
-  public SCNGeodeticPoint POSITION(SCNGeodeticPoint obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public GJNPosition POSITION() { return POSITION(new GJNPosition()); }
+  public GJNPosition POSITION(GJNPosition obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSCNPointOfInterest(FlatBufferBuilder builder,
       int NAMEOffset,

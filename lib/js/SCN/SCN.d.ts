@@ -41,20 +41,20 @@ export declare class SCN implements flatbuffers.IUnpackableObject<SCNT> {
     FOCUSED_REFERENCE_ID(): string | null;
     FOCUSED_REFERENCE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Current simulation time as an ISO-8601 UTC timestamp.
+     * Current scenario epoch as an ISO-8601 UTC timestamp.
      */
-    SIM_TIME(): string | null;
-    SIM_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    EPOCH(): string | null;
+    EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Simulation time-rate multiplier.
      */
     SIM_SPEED(): number;
     /**
-     * True when the viewer should use an Earth-centered Earth-fixed frame.
+     * True when the viewer should use a body-fixed display frame.
      */
-    USE_ECEF_FRAME(): boolean;
+    USE_BODY_FIXED_FRAME(): boolean;
     /**
-     * Reference frame used for scenario propagation and display.
+     * Authoritative reference frame used for scenario propagation and display.
      */
     REFERENCE_FRAME(obj?: RFM): RFM | null;
     /**
@@ -77,9 +77,9 @@ export declare class SCN implements flatbuffers.IUnpackableObject<SCNT> {
     static addEvent(builder: flatbuffers.Builder, EVENTOffset: flatbuffers.Offset): void;
     static addFocusedReferenceIndex(builder: flatbuffers.Builder, FOCUSED_REFERENCE_INDEX: number): void;
     static addFocusedReferenceId(builder: flatbuffers.Builder, FOCUSED_REFERENCE_IDOffset: flatbuffers.Offset): void;
-    static addSimTime(builder: flatbuffers.Builder, SIM_TIMEOffset: flatbuffers.Offset): void;
+    static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
     static addSimSpeed(builder: flatbuffers.Builder, SIM_SPEED: number): void;
-    static addUseEcefFrame(builder: flatbuffers.Builder, USE_ECEF_FRAME: boolean): void;
+    static addUseBodyFixedFrame(builder: flatbuffers.Builder, USE_BODY_FIXED_FRAME: boolean): void;
     static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
     static addAction(builder: flatbuffers.Builder, ACTION: scenarioActionCode): void;
     static addViewState(builder: flatbuffers.Builder, VIEW_STATEOffset: flatbuffers.Offset): void;
@@ -96,14 +96,14 @@ export declare class SCNT implements flatbuffers.IGeneratedObject {
     EVENT: SCNEventT | null;
     FOCUSED_REFERENCE_INDEX: number;
     FOCUSED_REFERENCE_ID: string | Uint8Array | null;
-    SIM_TIME: string | Uint8Array | null;
+    EPOCH: string | Uint8Array | null;
     SIM_SPEED: number;
-    USE_ECEF_FRAME: boolean;
+    USE_BODY_FIXED_FRAME: boolean;
     REFERENCE_FRAME: RFMT | null;
     ACTION: scenarioActionCode;
     VIEW_STATE: VSTT | null;
     ASSETS_CHANGED: SCNAssetsChangedT | null;
-    constructor(SCENARIO_ID?: string | Uint8Array | null, REFERENCES?: (SCNReferenceT)[], EVENT?: SCNEventT | null, FOCUSED_REFERENCE_INDEX?: number, FOCUSED_REFERENCE_ID?: string | Uint8Array | null, SIM_TIME?: string | Uint8Array | null, SIM_SPEED?: number, USE_ECEF_FRAME?: boolean, REFERENCE_FRAME?: RFMT | null, ACTION?: scenarioActionCode, VIEW_STATE?: VSTT | null, ASSETS_CHANGED?: SCNAssetsChangedT | null);
+    constructor(SCENARIO_ID?: string | Uint8Array | null, REFERENCES?: (SCNReferenceT)[], EVENT?: SCNEventT | null, FOCUSED_REFERENCE_INDEX?: number, FOCUSED_REFERENCE_ID?: string | Uint8Array | null, EPOCH?: string | Uint8Array | null, SIM_SPEED?: number, USE_BODY_FIXED_FRAME?: boolean, REFERENCE_FRAME?: RFMT | null, ACTION?: scenarioActionCode, VIEW_STATE?: VSTT | null, ASSETS_CHANGED?: SCNAssetsChangedT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCN.d.ts.map

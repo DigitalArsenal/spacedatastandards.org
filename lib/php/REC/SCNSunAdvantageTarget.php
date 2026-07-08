@@ -41,8 +41,8 @@ class SCNSunAdvantageTarget extends Table
         return $this;
     }
 
-    /// Scenario reference id of the target object.
-    public function getTARGET_REFERENCE_ID()
+    /// Target identifier for the paired object.
+    public function getTARGET_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -52,14 +52,14 @@ class SCNSunAdvantageTarget extends Table
     /**
      * @return uint
      */
-    public function getTARGET_NORAD_CAT_ID()
+    public function getNORAD_CAT_ID()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Ground site id associated with the target pairing.
-    public function getGROUND_SITE_ID()
+    /// Site id associated with the target pairing.
+    public function getSITE_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -78,12 +78,12 @@ class SCNSunAdvantageTarget extends Table
      * @param FlatBufferBuilder $builder
      * @return SCNSunAdvantageTarget
      */
-    public static function createSCNSunAdvantageTarget(FlatBufferBuilder $builder, $TARGET_REFERENCE_ID, $TARGET_NORAD_CAT_ID, $GROUND_SITE_ID)
+    public static function createSCNSunAdvantageTarget(FlatBufferBuilder $builder, $TARGET_ID, $NORAD_CAT_ID, $SITE_ID)
     {
         $builder->startObject(3);
-        self::addTARGET_REFERENCE_ID($builder, $TARGET_REFERENCE_ID);
-        self::addTARGET_NORAD_CAT_ID($builder, $TARGET_NORAD_CAT_ID);
-        self::addGROUND_SITE_ID($builder, $GROUND_SITE_ID);
+        self::addTARGET_ID($builder, $TARGET_ID);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
+        self::addSITE_ID($builder, $SITE_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -93,9 +93,9 @@ class SCNSunAdvantageTarget extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addTARGET_REFERENCE_ID(FlatBufferBuilder $builder, $TARGET_REFERENCE_ID)
+    public static function addTARGET_ID(FlatBufferBuilder $builder, $TARGET_ID)
     {
-        $builder->addOffsetX(0, $TARGET_REFERENCE_ID, 0);
+        $builder->addOffsetX(0, $TARGET_ID, 0);
     }
 
     /**
@@ -103,9 +103,9 @@ class SCNSunAdvantageTarget extends Table
      * @param uint
      * @return void
      */
-    public static function addTARGET_NORAD_CAT_ID(FlatBufferBuilder $builder, $TARGET_NORAD_CAT_ID)
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
     {
-        $builder->addUintX(1, $TARGET_NORAD_CAT_ID, 0);
+        $builder->addUintX(1, $NORAD_CAT_ID, 0);
     }
 
     /**
@@ -113,9 +113,9 @@ class SCNSunAdvantageTarget extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addGROUND_SITE_ID(FlatBufferBuilder $builder, $GROUND_SITE_ID)
+    public static function addSITE_ID(FlatBufferBuilder $builder, $SITE_ID)
     {
-        $builder->addOffsetX(2, $GROUND_SITE_ID, 0);
+        $builder->addOffsetX(2, $SITE_ID, 0);
     }
 
     /**

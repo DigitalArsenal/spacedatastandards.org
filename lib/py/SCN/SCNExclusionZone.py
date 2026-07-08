@@ -7,7 +7,7 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Scenario exclusion zone. BOUNDARY carries the canonical geospatial shape
-# when available; POINTS preserves simple LLA polygon imports.
+# when available; POINTS preserves simple WGS84 polygon imports.
 class SCNExclusionZone(object):
     __slots__ = ['_tab']
 
@@ -62,7 +62,7 @@ class SCNExclusionZone(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-    # Simple geodetic polygon points for imported zones.
+    # Simple WGS84 polygon points for imported zones.
     # SCNExclusionZone
     def POINTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -70,8 +70,8 @@ class SCNExclusionZone(object):
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
             x = self._tab.Indirect(x)
-            from SCNGeodeticPoint import SCNGeodeticPoint
-            obj = SCNGeodeticPoint()
+            from GJNPosition import GJNPosition
+            obj = GJNPosition()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -161,7 +161,7 @@ def End(builder):
     return SCNExclusionZoneEnd(builder)
 
 import GJNGeometry
-import SCNGeodeticPoint
+import GJNPosition
 try:
     from typing import List, Optional
 except:
@@ -183,7 +183,7 @@ class SCNExclusionZoneT(object):
         self.FILL_COLOR = FILL_COLOR  # type: Optional[str]
         self.LABEL_COLOR = LABEL_COLOR  # type: Optional[str]
         self.IS_FILLED = IS_FILLED  # type: bool
-        self.POINTS = POINTS  # type: Optional[List[SCNGeodeticPoint.SCNGeodeticPointT]]
+        self.POINTS = POINTS  # type: Optional[List[GJNPosition.GJNPositionT]]
         self.BOUNDARY = BOUNDARY  # type: Optional[GJNGeometry.GJNGeometryT]
 
     @classmethod
@@ -217,8 +217,8 @@ class SCNExclusionZoneT(object):
                 if SCNExclusionZone.POINTS(i) is None:
                     self.POINTS.append(None)
                 else:
-                    sCNGeodeticPoint_ = SCNGeodeticPoint.SCNGeodeticPointT.InitFromObj(SCNExclusionZone.POINTS(i))
-                    self.POINTS.append(sCNGeodeticPoint_)
+                    gJNPosition_ = GJNPosition.GJNPositionT.InitFromObj(SCNExclusionZone.POINTS(i))
+                    self.POINTS.append(gJNPosition_)
         if SCNExclusionZone.BOUNDARY() is not None:
             self.BOUNDARY = GJNGeometry.GJNGeometryT.InitFromObj(SCNExclusionZone.BOUNDARY())
 

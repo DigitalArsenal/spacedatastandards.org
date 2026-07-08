@@ -11,7 +11,6 @@
   import Playground from "./lib/Playground.svelte";
   import Converter from "./lib/Converter.svelte";
   import Nav from "./lib/Nav.svelte";
-  import Footer from "./lib/Footer.svelte";
 
   let routes: any = {
     "/": Landing,
@@ -30,10 +29,6 @@
     return $location;
   });
 
-  const isDocsRoute = derived(currentPath, ($currentPath) => {
-    return $currentPath.startsWith("/docs");
-  });
-
   onMount(async () => {
     try {
       const res = await fetch('/dist/manifest.json');
@@ -48,7 +43,6 @@
 <main>
   <Router {routes} />
 </main>
-<Footer hideOnMobile={$isDocsRoute} />
 {#if appVersion}
   <div class="version-badge">{appVersion}</div>
 {/if}

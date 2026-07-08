@@ -28,11 +28,11 @@ static getSizePrefixedRootAsSCNSunAdvantageTarget(bb:flatbuffers.ByteBuffer, obj
 }
 
 /**
- * Scenario reference id of the target object.
+ * Target identifier for the paired object.
  */
-TARGET_REFERENCE_ID():string|null
-TARGET_REFERENCE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TARGET_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
+TARGET_ID():string|null
+TARGET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TARGET_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -40,17 +40,17 @@ TARGET_REFERENCE_ID(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * NORAD catalog id of the target satellite when available.
  */
-TARGET_NORAD_CAT_ID():number {
+NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
 /**
- * Ground site id associated with the target pairing.
+ * Site id associated with the target pairing.
  */
-GROUND_SITE_ID():string|null
-GROUND_SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-GROUND_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
+SITE_ID():string|null
+SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -59,16 +59,16 @@ static startSCNSunAdvantageTarget(builder:flatbuffers.Builder) {
   builder.startObject(3);
 }
 
-static addTargetReferenceId(builder:flatbuffers.Builder, TARGET_REFERENCE_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, TARGET_REFERENCE_IDOffset, 0);
+static addTargetId(builder:flatbuffers.Builder, TARGET_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, TARGET_IDOffset, 0);
 }
 
-static addTargetNoradCatId(builder:flatbuffers.Builder, TARGET_NORAD_CAT_ID:number) {
-  builder.addFieldInt32(1, TARGET_NORAD_CAT_ID, 0);
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(1, NORAD_CAT_ID, 0);
 }
 
-static addGroundSiteId(builder:flatbuffers.Builder, GROUND_SITE_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, GROUND_SITE_IDOffset, 0);
+static addSiteId(builder:flatbuffers.Builder, SITE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, SITE_IDOffset, 0);
 }
 
 static endSCNSunAdvantageTarget(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -76,46 +76,46 @@ static endSCNSunAdvantageTarget(builder:flatbuffers.Builder):flatbuffers.Offset 
   return offset;
 }
 
-static createSCNSunAdvantageTarget(builder:flatbuffers.Builder, TARGET_REFERENCE_IDOffset:flatbuffers.Offset, TARGET_NORAD_CAT_ID:number, GROUND_SITE_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSCNSunAdvantageTarget(builder:flatbuffers.Builder, TARGET_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, SITE_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   SCNSunAdvantageTarget.startSCNSunAdvantageTarget(builder);
-  SCNSunAdvantageTarget.addTargetReferenceId(builder, TARGET_REFERENCE_IDOffset);
-  SCNSunAdvantageTarget.addTargetNoradCatId(builder, TARGET_NORAD_CAT_ID);
-  SCNSunAdvantageTarget.addGroundSiteId(builder, GROUND_SITE_IDOffset);
+  SCNSunAdvantageTarget.addTargetId(builder, TARGET_IDOffset);
+  SCNSunAdvantageTarget.addNoradCatId(builder, NORAD_CAT_ID);
+  SCNSunAdvantageTarget.addSiteId(builder, SITE_IDOffset);
   return SCNSunAdvantageTarget.endSCNSunAdvantageTarget(builder);
 }
 
 unpack(): SCNSunAdvantageTargetT {
   return new SCNSunAdvantageTargetT(
-    this.TARGET_REFERENCE_ID(),
-    this.TARGET_NORAD_CAT_ID(),
-    this.GROUND_SITE_ID()
+    this.TARGET_ID(),
+    this.NORAD_CAT_ID(),
+    this.SITE_ID()
   );
 }
 
 
 unpackTo(_o: SCNSunAdvantageTargetT): void {
-  _o.TARGET_REFERENCE_ID = this.TARGET_REFERENCE_ID();
-  _o.TARGET_NORAD_CAT_ID = this.TARGET_NORAD_CAT_ID();
-  _o.GROUND_SITE_ID = this.GROUND_SITE_ID();
+  _o.TARGET_ID = this.TARGET_ID();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
+  _o.SITE_ID = this.SITE_ID();
 }
 }
 
 export class SCNSunAdvantageTargetT implements flatbuffers.IGeneratedObject {
 constructor(
-  public TARGET_REFERENCE_ID: string|Uint8Array|null = null,
-  public TARGET_NORAD_CAT_ID: number = 0,
-  public GROUND_SITE_ID: string|Uint8Array|null = null
+  public TARGET_ID: string|Uint8Array|null = null,
+  public NORAD_CAT_ID: number = 0,
+  public SITE_ID: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const TARGET_REFERENCE_ID = (this.TARGET_REFERENCE_ID !== null ? builder.createString(this.TARGET_REFERENCE_ID!) : 0);
-  const GROUND_SITE_ID = (this.GROUND_SITE_ID !== null ? builder.createString(this.GROUND_SITE_ID!) : 0);
+  const TARGET_ID = (this.TARGET_ID !== null ? builder.createString(this.TARGET_ID!) : 0);
+  const SITE_ID = (this.SITE_ID !== null ? builder.createString(this.SITE_ID!) : 0);
 
   return SCNSunAdvantageTarget.createSCNSunAdvantageTarget(builder,
-    TARGET_REFERENCE_ID,
-    this.TARGET_NORAD_CAT_ID,
-    GROUND_SITE_ID
+    TARGET_ID,
+    this.NORAD_CAT_ID,
+    SITE_ID
   );
 }
 }

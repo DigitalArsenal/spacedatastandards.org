@@ -93,9 +93,9 @@ class SCN(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Current simulation time as an ISO-8601 UTC timestamp.
+    # Current scenario epoch as an ISO-8601 UTC timestamp.
     # SCN
-    def SIM_TIME(self):
+    def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -109,15 +109,15 @@ class SCN(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # True when the viewer should use an Earth-centered Earth-fixed frame.
+    # True when the viewer should use a body-fixed display frame.
     # SCN
-    def USE_ECEF_FRAME(self):
+    def USE_BODY_FIXED_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-    # Reference frame used for scenario propagation and display.
+    # Authoritative reference frame used for scenario propagation and display.
     # SCN
     def REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -209,11 +209,11 @@ def SCNAddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_ID):
 def AddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_ID):
     SCNAddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_ID)
 
-def SCNAddSIM_TIME(builder, SIM_TIME):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SIM_TIME), 0)
+def SCNAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
 
-def AddSIM_TIME(builder, SIM_TIME):
-    SCNAddSIM_TIME(builder, SIM_TIME)
+def AddEPOCH(builder, EPOCH):
+    SCNAddEPOCH(builder, EPOCH)
 
 def SCNAddSIM_SPEED(builder, SIM_SPEED):
     builder.PrependFloat64Slot(6, SIM_SPEED, 0.0)
@@ -221,11 +221,11 @@ def SCNAddSIM_SPEED(builder, SIM_SPEED):
 def AddSIM_SPEED(builder, SIM_SPEED):
     SCNAddSIM_SPEED(builder, SIM_SPEED)
 
-def SCNAddUSE_ECEF_FRAME(builder, USE_ECEF_FRAME):
-    builder.PrependBoolSlot(7, USE_ECEF_FRAME, 0)
+def SCNAddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME):
+    builder.PrependBoolSlot(7, USE_BODY_FIXED_FRAME, 0)
 
-def AddUSE_ECEF_FRAME(builder, USE_ECEF_FRAME):
-    SCNAddUSE_ECEF_FRAME(builder, USE_ECEF_FRAME)
+def AddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME):
+    SCNAddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME)
 
 def SCNAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
@@ -277,9 +277,9 @@ class SCNT(object):
         EVENT = None,
         FOCUSED_REFERENCE_INDEX = -1,
         FOCUSED_REFERENCE_ID = None,
-        SIM_TIME = None,
+        EPOCH = None,
         SIM_SPEED = 0.0,
-        USE_ECEF_FRAME = False,
+        USE_BODY_FIXED_FRAME = False,
         REFERENCE_FRAME = None,
         ACTION = 0,
         VIEW_STATE = None,
@@ -290,9 +290,9 @@ class SCNT(object):
         self.EVENT = EVENT  # type: Optional[SCNEvent.SCNEventT]
         self.FOCUSED_REFERENCE_INDEX = FOCUSED_REFERENCE_INDEX  # type: int
         self.FOCUSED_REFERENCE_ID = FOCUSED_REFERENCE_ID  # type: Optional[str]
-        self.SIM_TIME = SIM_TIME  # type: Optional[str]
+        self.EPOCH = EPOCH  # type: Optional[str]
         self.SIM_SPEED = SIM_SPEED  # type: float
-        self.USE_ECEF_FRAME = USE_ECEF_FRAME  # type: bool
+        self.USE_BODY_FIXED_FRAME = USE_BODY_FIXED_FRAME  # type: bool
         self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
         self.ACTION = ACTION  # type: int
         self.VIEW_STATE = VIEW_STATE  # type: Optional[VST.VSTT]
@@ -332,9 +332,9 @@ class SCNT(object):
             self.EVENT = SCNEvent.SCNEventT.InitFromObj(SCN.EVENT())
         self.FOCUSED_REFERENCE_INDEX = SCN.FOCUSED_REFERENCE_INDEX()
         self.FOCUSED_REFERENCE_ID = SCN.FOCUSED_REFERENCE_ID()
-        self.SIM_TIME = SCN.SIM_TIME()
+        self.EPOCH = SCN.EPOCH()
         self.SIM_SPEED = SCN.SIM_SPEED()
-        self.USE_ECEF_FRAME = SCN.USE_ECEF_FRAME()
+        self.USE_BODY_FIXED_FRAME = SCN.USE_BODY_FIXED_FRAME()
         if SCN.REFERENCE_FRAME() is not None:
             self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(SCN.REFERENCE_FRAME())
         self.ACTION = SCN.ACTION()
@@ -359,8 +359,8 @@ class SCNT(object):
             EVENT = self.EVENT.Pack(builder)
         if self.FOCUSED_REFERENCE_ID is not None:
             FOCUSED_REFERENCE_ID = builder.CreateString(self.FOCUSED_REFERENCE_ID)
-        if self.SIM_TIME is not None:
-            SIM_TIME = builder.CreateString(self.SIM_TIME)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
         if self.REFERENCE_FRAME is not None:
             REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
         if self.VIEW_STATE is not None:
@@ -377,10 +377,10 @@ class SCNT(object):
         SCNAddFOCUSED_REFERENCE_INDEX(builder, self.FOCUSED_REFERENCE_INDEX)
         if self.FOCUSED_REFERENCE_ID is not None:
             SCNAddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_ID)
-        if self.SIM_TIME is not None:
-            SCNAddSIM_TIME(builder, SIM_TIME)
+        if self.EPOCH is not None:
+            SCNAddEPOCH(builder, EPOCH)
         SCNAddSIM_SPEED(builder, self.SIM_SPEED)
-        SCNAddUSE_ECEF_FRAME(builder, self.USE_ECEF_FRAME)
+        SCNAddUSE_BODY_FIXED_FRAME(builder, self.USE_BODY_FIXED_FRAME)
         if self.REFERENCE_FRAME is not None:
             SCNAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
         SCNAddACTION(builder, self.ACTION)

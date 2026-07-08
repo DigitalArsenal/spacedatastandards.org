@@ -37,9 +37,9 @@ class SCNEvent(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Element sets associated with the event.
+    # Mean orbital elements associated with the event.
     # SCNEvent
-    def ELSETS(self, j):
+    def MEAN_ELEMENTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             x = self._tab.Vector(o)
@@ -52,20 +52,20 @@ class SCNEvent(object):
         return None
 
     # SCNEvent
-    def ELSETSLength(self):
+    def MEAN_ELEMENTSLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNEvent
-    def ELSETSIsNone(self):
+    def MEAN_ELEMENTSIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         return o == 0
 
     # State vectors associated with the event.
     # SCNEvent
-    def STATES(self, j):
+    def STATE_VECTORS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Vector(o)
@@ -78,14 +78,14 @@ class SCNEvent(object):
         return None
 
     # SCNEvent
-    def STATESLength(self):
+    def STATE_VECTORSLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SCNEvent
-    def STATESIsNone(self):
+    def STATE_VECTORSIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
@@ -153,41 +153,41 @@ def SCNEventAddEVENT_ID(builder, EVENT_ID):
 def AddEVENT_ID(builder, EVENT_ID):
     SCNEventAddEVENT_ID(builder, EVENT_ID)
 
-def SCNEventAddELSETS(builder, ELSETS):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ELSETS), 0)
+def SCNEventAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENTS), 0)
 
-def AddELSETS(builder, ELSETS):
-    SCNEventAddELSETS(builder, ELSETS)
+def AddMEAN_ELEMENTS(builder, MEAN_ELEMENTS):
+    SCNEventAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
 
-def SCNEventStartELSETSVector(builder, numElems):
+def SCNEventStartMEAN_ELEMENTSVector(builder, numElems):
     return builder.StartVector(4, numElems, 4)
 
-def StartELSETSVector(builder, numElems):
-    return SCNEventStartELSETSVector(builder, numElems)
+def StartMEAN_ELEMENTSVector(builder, numElems):
+    return SCNEventStartMEAN_ELEMENTSVector(builder, numElems)
 
-def SCNEventCreateELSETSVector(builder, data):
+def SCNEventCreateMEAN_ELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
-def CreateELSETSVector(builder, data):
-    SCNEventCreateELSETSVector(builder, data)
+def CreateMEAN_ELEMENTSVector(builder, data):
+    SCNEventCreateMEAN_ELEMENTSVector(builder, data)
 
-def SCNEventAddSTATES(builder, STATES):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STATES), 0)
+def SCNEventAddSTATE_VECTORS(builder, STATE_VECTORS):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_VECTORS), 0)
 
-def AddSTATES(builder, STATES):
-    SCNEventAddSTATES(builder, STATES)
+def AddSTATE_VECTORS(builder, STATE_VECTORS):
+    SCNEventAddSTATE_VECTORS(builder, STATE_VECTORS)
 
-def SCNEventStartSTATESVector(builder, numElems):
+def SCNEventStartSTATE_VECTORSVector(builder, numElems):
     return builder.StartVector(4, numElems, 4)
 
-def StartSTATESVector(builder, numElems):
-    return SCNEventStartSTATESVector(builder, numElems)
+def StartSTATE_VECTORSVector(builder, numElems):
+    return SCNEventStartSTATE_VECTORSVector(builder, numElems)
 
-def SCNEventCreateSTATESVector(builder, data):
+def SCNEventCreateSTATE_VECTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
-def CreateSTATESVector(builder, data):
-    SCNEventCreateSTATESVector(builder, data)
+def CreateSTATE_VECTORSVector(builder, data):
+    SCNEventCreateSTATE_VECTORSVector(builder, data)
 
 def SCNEventAddEO_OBSERVATIONS(builder, EO_OBSERVATIONS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EO_OBSERVATIONS), 0)
@@ -246,14 +246,14 @@ class SCNEventT(object):
     def __init__(
         self,
         EVENT_ID = None,
-        ELSETS = None,
-        STATES = None,
+        MEAN_ELEMENTS = None,
+        STATE_VECTORS = None,
         EO_OBSERVATIONS = None,
         RADAR_OBSERVATIONS = None,
     ):
         self.EVENT_ID = EVENT_ID  # type: Optional[str]
-        self.ELSETS = ELSETS  # type: Optional[List[OMM.OMMT]]
-        self.STATES = STATES  # type: Optional[List[STV.STVT]]
+        self.MEAN_ELEMENTS = MEAN_ELEMENTS  # type: Optional[List[OMM.OMMT]]
+        self.STATE_VECTORS = STATE_VECTORS  # type: Optional[List[STV.STVT]]
         self.EO_OBSERVATIONS = EO_OBSERVATIONS  # type: Optional[List[EOO.EOOT]]
         self.RADAR_OBSERVATIONS = RADAR_OBSERVATIONS  # type: Optional[List[RDO.RDOT]]
 
@@ -279,22 +279,22 @@ class SCNEventT(object):
         if SCNEvent is None:
             return
         self.EVENT_ID = SCNEvent.EVENT_ID()
-        if not SCNEvent.ELSETSIsNone():
-            self.ELSETS = []
-            for i in range(SCNEvent.ELSETSLength()):
-                if SCNEvent.ELSETS(i) is None:
-                    self.ELSETS.append(None)
+        if not SCNEvent.MEAN_ELEMENTSIsNone():
+            self.MEAN_ELEMENTS = []
+            for i in range(SCNEvent.MEAN_ELEMENTSLength()):
+                if SCNEvent.MEAN_ELEMENTS(i) is None:
+                    self.MEAN_ELEMENTS.append(None)
                 else:
-                    oMM_ = OMM.OMMT.InitFromObj(SCNEvent.ELSETS(i))
-                    self.ELSETS.append(oMM_)
-        if not SCNEvent.STATESIsNone():
-            self.STATES = []
-            for i in range(SCNEvent.STATESLength()):
-                if SCNEvent.STATES(i) is None:
-                    self.STATES.append(None)
+                    oMM_ = OMM.OMMT.InitFromObj(SCNEvent.MEAN_ELEMENTS(i))
+                    self.MEAN_ELEMENTS.append(oMM_)
+        if not SCNEvent.STATE_VECTORSIsNone():
+            self.STATE_VECTORS = []
+            for i in range(SCNEvent.STATE_VECTORSLength()):
+                if SCNEvent.STATE_VECTORS(i) is None:
+                    self.STATE_VECTORS.append(None)
                 else:
-                    sTV_ = STV.STVT.InitFromObj(SCNEvent.STATES(i))
-                    self.STATES.append(sTV_)
+                    sTV_ = STV.STVT.InitFromObj(SCNEvent.STATE_VECTORS(i))
+                    self.STATE_VECTORS.append(sTV_)
         if not SCNEvent.EO_OBSERVATIONSIsNone():
             self.EO_OBSERVATIONS = []
             for i in range(SCNEvent.EO_OBSERVATIONSLength()):
@@ -316,22 +316,22 @@ class SCNEventT(object):
     def Pack(self, builder):
         if self.EVENT_ID is not None:
             EVENT_ID = builder.CreateString(self.EVENT_ID)
-        if self.ELSETS is not None:
-            ELSETSlist = []
-            for i in range(len(self.ELSETS)):
-                ELSETSlist.append(self.ELSETS[i].Pack(builder))
-            SCNEventStartELSETSVector(builder, len(self.ELSETS))
-            for i in reversed(range(len(self.ELSETS))):
-                builder.PrependUOffsetTRelative(ELSETSlist[i])
-            ELSETS = builder.EndVector()
-        if self.STATES is not None:
-            STATESlist = []
-            for i in range(len(self.STATES)):
-                STATESlist.append(self.STATES[i].Pack(builder))
-            SCNEventStartSTATESVector(builder, len(self.STATES))
-            for i in reversed(range(len(self.STATES))):
-                builder.PrependUOffsetTRelative(STATESlist[i])
-            STATES = builder.EndVector()
+        if self.MEAN_ELEMENTS is not None:
+            MEAN_ELEMENTSlist = []
+            for i in range(len(self.MEAN_ELEMENTS)):
+                MEAN_ELEMENTSlist.append(self.MEAN_ELEMENTS[i].Pack(builder))
+            SCNEventStartMEAN_ELEMENTSVector(builder, len(self.MEAN_ELEMENTS))
+            for i in reversed(range(len(self.MEAN_ELEMENTS))):
+                builder.PrependUOffsetTRelative(MEAN_ELEMENTSlist[i])
+            MEAN_ELEMENTS = builder.EndVector()
+        if self.STATE_VECTORS is not None:
+            STATE_VECTORSlist = []
+            for i in range(len(self.STATE_VECTORS)):
+                STATE_VECTORSlist.append(self.STATE_VECTORS[i].Pack(builder))
+            SCNEventStartSTATE_VECTORSVector(builder, len(self.STATE_VECTORS))
+            for i in reversed(range(len(self.STATE_VECTORS))):
+                builder.PrependUOffsetTRelative(STATE_VECTORSlist[i])
+            STATE_VECTORS = builder.EndVector()
         if self.EO_OBSERVATIONS is not None:
             EO_OBSERVATIONSlist = []
             for i in range(len(self.EO_OBSERVATIONS)):
@@ -351,10 +351,10 @@ class SCNEventT(object):
         SCNEventStart(builder)
         if self.EVENT_ID is not None:
             SCNEventAddEVENT_ID(builder, EVENT_ID)
-        if self.ELSETS is not None:
-            SCNEventAddELSETS(builder, ELSETS)
-        if self.STATES is not None:
-            SCNEventAddSTATES(builder, STATES)
+        if self.MEAN_ELEMENTS is not None:
+            SCNEventAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
+        if self.STATE_VECTORS is not None:
+            SCNEventAddSTATE_VECTORS(builder, STATE_VECTORS)
         if self.EO_OBSERVATIONS is not None:
             SCNEventAddEO_OBSERVATIONS(builder, EO_OBSERVATIONS)
         if self.RADAR_OBSERVATIONS is not None:

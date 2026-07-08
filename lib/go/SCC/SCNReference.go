@@ -57,8 +57,8 @@ func (rcv *SCNReference) ReferenceId() []byte {
 }
 
 /// Stable scenario-local id for this reference.
-/// Human-readable display name for the reference.
-func (rcv *SCNReference) DISPLAY_NAME() []byte {
+/// Human-readable name for the reference.
+func (rcv *SCNReference) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -66,11 +66,11 @@ func (rcv *SCNReference) DISPLAY_NAME() []byte {
 	return nil
 }
 
-func (rcv *SCNReference) DisplayName() []byte {
-	return rcv.DISPLAY_NAME()
+func (rcv *SCNReference) Name() []byte {
+	return rcv.NAME()
 }
 
-/// Human-readable display name for the reference.
+/// Human-readable name for the reference.
 /// Category of object or annotation represented by this reference.
 func (rcv *SCNReference) REFERENCE_KIND() scenarioReferenceKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -151,7 +151,7 @@ func (rcv *SCNReference) ObjectId() []byte {
 }
 
 /// International designator or provider object id when available.
-/// Country or owner label associated with the reference.
+/// Country associated with the reference.
 func (rcv *SCNReference) COUNTRY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -164,10 +164,24 @@ func (rcv *SCNReference) Country() []byte {
 	return rcv.COUNTRY()
 }
 
-/// Country or owner label associated with the reference.
+/// Country associated with the reference.
+/// Owner or operator label associated with the reference.
+func (rcv *SCNReference) OWNER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SCNReference) Owner() []byte {
+	return rcv.OWNER()
+}
+
+/// Owner or operator label associated with the reference.
 /// Source labels or URIs that produced this reference.
 func (rcv *SCNReference) SOURCES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -180,7 +194,7 @@ func (rcv *SCNReference) Sources(j int) []byte {
 }
 
 func (rcv *SCNReference) SOURCESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -194,7 +208,7 @@ func (rcv *SCNReference) SourcesLength() int {
 /// Source labels or URIs that produced this reference.
 /// Data-mode labels associated with this reference.
 func (rcv *SCNReference) DATA_MODES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -207,7 +221,7 @@ func (rcv *SCNReference) DataModes(j int) []byte {
 }
 
 func (rcv *SCNReference) DATA_MODESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -221,7 +235,7 @@ func (rcv *SCNReference) DataModesLength() int {
 /// Data-mode labels associated with this reference.
 /// Mean orbital elements associated with this reference.
 func (rcv *SCNReference) MEAN_ELEMENTS(obj *OMM, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -240,7 +254,7 @@ func (rcv *SCNReference) MeanElements(obj *OMM, j int) bool {
 }
 
 func (rcv *SCNReference) MEAN_ELEMENTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -253,8 +267,8 @@ func (rcv *SCNReference) MeanElementsLength() int {
 
 /// Mean orbital elements associated with this reference.
 /// State vectors associated with this reference.
-func (rcv *SCNReference) STATES(obj *STV, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+func (rcv *SCNReference) STATE_VECTORS(obj *STV, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -268,26 +282,26 @@ func (rcv *SCNReference) STATES(obj *STV, j int) bool {
 	return false
 }
 
-func (rcv *SCNReference) States(obj *STV, j int) bool {
-	return rcv.STATES(obj, j)
+func (rcv *SCNReference) StateVectors(obj *STV, j int) bool {
+	return rcv.STATE_VECTORS(obj, j)
 }
 
-func (rcv *SCNReference) STATESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+func (rcv *SCNReference) STATE_VECTORSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SCNReference) StatesLength() int {
-	return rcv.STATESLength()
+func (rcv *SCNReference) StateVectorsLength() int {
+	return rcv.STATE_VECTORSLength()
 }
 
 /// State vectors associated with this reference.
 /// Maneuver records associated with this reference.
 func (rcv *SCNReference) MANEUVERS(obj *MNV, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -306,7 +320,7 @@ func (rcv *SCNReference) Maneuvers(obj *MNV, j int) bool {
 }
 
 func (rcv *SCNReference) MANEUVERSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -320,7 +334,7 @@ func (rcv *SCNReference) ManeuversLength() int {
 /// Maneuver records associated with this reference.
 /// Ground-site record associated with this reference.
 func (rcv *SCNReference) SITE(obj *SIT) *SIT {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -339,7 +353,7 @@ func (rcv *SCNReference) Site(obj *SIT) *SIT {
 /// Ground-site record associated with this reference.
 /// Sensor record associated with this reference.
 func (rcv *SCNReference) SENSOR(obj *SEN) *SEN {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -358,7 +372,7 @@ func (rcv *SCNReference) Sensor(obj *SEN) *SEN {
 /// Sensor record associated with this reference.
 /// Sensor system id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_SYSTEM_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -372,7 +386,7 @@ func (rcv *SCNReference) SensorSystemId() []byte {
 /// Sensor system id for references that identify a sensor by id.
 /// Sensor id for references that identify a sensor by id.
 func (rcv *SCNReference) SENSOR_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
@@ -384,50 +398,25 @@ func (rcv *SCNReference) SensorId() []byte {
 }
 
 /// Sensor id for references that identify a sensor by id.
-/// Ground-site latitude in degrees when no SIT record is available.
-func (rcv *SCNReference) SITE_LATITUDE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SCNReference) SiteLatitude() float64 {
-	return rcv.SITE_LATITUDE()
-}
-
-/// Ground-site latitude in degrees when no SIT record is available.
-func (rcv *SCNReference) MutateSITE_LATITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
-}
-
-func (rcv *SCNReference) MutateSiteLatitude(n float64) bool {
-	return rcv.MutateSITE_LATITUDE(n)
-}
-
-/// Ground-site longitude in degrees when no SIT record is available.
-func (rcv *SCNReference) SITE_LONGITUDE() float64 {
+/// WGS84 site position when no SIT or SEN record is available.
+func (rcv *SCNReference) SITE_POSITION(obj *GJNPosition) *GJNPosition {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(GJNPosition)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *SCNReference) SiteLongitude() float64 {
-	return rcv.SITE_LONGITUDE()
+func (rcv *SCNReference) SitePosition(obj *GJNPosition) *GJNPosition {
+	return rcv.SITE_POSITION(obj)
 }
 
-/// Ground-site longitude in degrees when no SIT record is available.
-func (rcv *SCNReference) MutateSITE_LONGITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(38, n)
-}
-
-func (rcv *SCNReference) MutateSiteLongitude(n float64) bool {
-	return rcv.MutateSITE_LONGITUDE(n)
-}
-
+/// WGS84 site position when no SIT or SEN record is available.
 /// Scenario variable id for variable satellite references.
 func (rcv *SCNReference) VARIABLE_SATELLITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
@@ -593,11 +582,11 @@ func SCNReferenceAddREFERENCE_ID(builder *flatbuffers.Builder, REFERENCE_ID flat
 func SCNReferenceAddReferenceId(builder *flatbuffers.Builder, REFERENCE_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddREFERENCE_ID(builder, REFERENCE_ID)
 }
-func SCNReferenceAddDISPLAY_NAME(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(DISPLAY_NAME), 0)
+func SCNReferenceAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(NAME), 0)
 }
-func SCNReferenceAddDisplayName(builder *flatbuffers.Builder, DISPLAY_NAME flatbuffers.UOffsetT) {
-	SCNReferenceAddDISPLAY_NAME(builder, DISPLAY_NAME)
+func SCNReferenceAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
+	SCNReferenceAddNAME(builder, NAME)
 }
 func SCNReferenceAddREFERENCE_KIND(builder *flatbuffers.Builder, REFERENCE_KIND scenarioReferenceKind) {
 	builder.PrependInt8Slot(2, int8(REFERENCE_KIND), 0)
@@ -629,8 +618,14 @@ func SCNReferenceAddCOUNTRY(builder *flatbuffers.Builder, COUNTRY flatbuffers.UO
 func SCNReferenceAddCountry(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
 	SCNReferenceAddCOUNTRY(builder, COUNTRY)
 }
+func SCNReferenceAddOWNER(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OWNER), 0)
+}
+func SCNReferenceAddOwner(builder *flatbuffers.Builder, OWNER flatbuffers.UOffsetT) {
+	SCNReferenceAddOWNER(builder, OWNER)
+}
 func SCNReferenceAddSOURCES(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SOURCES), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SOURCES), 0)
 }
 func SCNReferenceAddSources(builder *flatbuffers.Builder, SOURCES flatbuffers.UOffsetT) {
 	SCNReferenceAddSOURCES(builder, SOURCES)
@@ -642,7 +637,7 @@ func SCNReferenceStartSourcesVector(builder *flatbuffers.Builder, numElems int) 
 	return SCNReferenceStartSOURCESVector(builder, numElems)
 }
 func SCNReferenceAddDATA_MODES(builder *flatbuffers.Builder, DATA_MODES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DATA_MODES), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DATA_MODES), 0)
 }
 func SCNReferenceAddDataModes(builder *flatbuffers.Builder, DATA_MODES flatbuffers.UOffsetT) {
 	SCNReferenceAddDATA_MODES(builder, DATA_MODES)
@@ -654,7 +649,7 @@ func SCNReferenceStartDataModesVector(builder *flatbuffers.Builder, numElems int
 	return SCNReferenceStartDATA_MODESVector(builder, numElems)
 }
 func SCNReferenceAddMEAN_ELEMENTS(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MEAN_ELEMENTS), 0)
 }
 func SCNReferenceAddMeanElements(builder *flatbuffers.Builder, MEAN_ELEMENTS flatbuffers.UOffsetT) {
 	SCNReferenceAddMEAN_ELEMENTS(builder, MEAN_ELEMENTS)
@@ -665,20 +660,20 @@ func SCNReferenceStartMEAN_ELEMENTSVector(builder *flatbuffers.Builder, numElems
 func SCNReferenceStartMeanElementsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return SCNReferenceStartMEAN_ELEMENTSVector(builder, numElems)
 }
-func SCNReferenceAddSTATES(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(STATES), 0)
+func SCNReferenceAddSTATE_VECTORS(builder *flatbuffers.Builder, STATE_VECTORS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(STATE_VECTORS), 0)
 }
-func SCNReferenceAddStates(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
-	SCNReferenceAddSTATES(builder, STATES)
+func SCNReferenceAddStateVectors(builder *flatbuffers.Builder, STATE_VECTORS flatbuffers.UOffsetT) {
+	SCNReferenceAddSTATE_VECTORS(builder, STATE_VECTORS)
 }
-func SCNReferenceStartSTATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func SCNReferenceStartSTATE_VECTORSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
-func SCNReferenceStartStatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return SCNReferenceStartSTATESVector(builder, numElems)
+func SCNReferenceStartStateVectorsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SCNReferenceStartSTATE_VECTORSVector(builder, numElems)
 }
 func SCNReferenceAddMANEUVERS(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MANEUVERS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(MANEUVERS), 0)
 }
 func SCNReferenceAddManeuvers(builder *flatbuffers.Builder, MANEUVERS flatbuffers.UOffsetT) {
 	SCNReferenceAddMANEUVERS(builder, MANEUVERS)
@@ -690,40 +685,34 @@ func SCNReferenceStartManeuversVector(builder *flatbuffers.Builder, numElems int
 	return SCNReferenceStartMANEUVERSVector(builder, numElems)
 }
 func SCNReferenceAddSITE(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SITE), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SITE), 0)
 }
 func SCNReferenceAddSite(builder *flatbuffers.Builder, SITE flatbuffers.UOffsetT) {
 	SCNReferenceAddSITE(builder, SITE)
 }
 func SCNReferenceAddSENSOR(builder *flatbuffers.Builder, SENSOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SENSOR), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SENSOR), 0)
 }
 func SCNReferenceAddSensor(builder *flatbuffers.Builder, SENSOR flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR(builder, SENSOR)
 }
 func SCNReferenceAddSENSOR_SYSTEM_ID(builder *flatbuffers.Builder, SENSOR_SYSTEM_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SENSOR_SYSTEM_ID), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENSOR_SYSTEM_ID), 0)
 }
 func SCNReferenceAddSensorSystemId(builder *flatbuffers.Builder, SENSOR_SYSTEM_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR_SYSTEM_ID(builder, SENSOR_SYSTEM_ID)
 }
 func SCNReferenceAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENSOR_ID), 0)
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
 func SCNReferenceAddSensorId(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
 	SCNReferenceAddSENSOR_ID(builder, SENSOR_ID)
 }
-func SCNReferenceAddSITE_LATITUDE(builder *flatbuffers.Builder, SITE_LATITUDE float64) {
-	builder.PrependFloat64Slot(16, SITE_LATITUDE, 0.0)
+func SCNReferenceAddSITE_POSITION(builder *flatbuffers.Builder, SITE_POSITION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(SITE_POSITION), 0)
 }
-func SCNReferenceAddSiteLatitude(builder *flatbuffers.Builder, SITE_LATITUDE float64) {
-	SCNReferenceAddSITE_LATITUDE(builder, SITE_LATITUDE)
-}
-func SCNReferenceAddSITE_LONGITUDE(builder *flatbuffers.Builder, SITE_LONGITUDE float64) {
-	builder.PrependFloat64Slot(17, SITE_LONGITUDE, 0.0)
-}
-func SCNReferenceAddSiteLongitude(builder *flatbuffers.Builder, SITE_LONGITUDE float64) {
-	SCNReferenceAddSITE_LONGITUDE(builder, SITE_LONGITUDE)
+func SCNReferenceAddSitePosition(builder *flatbuffers.Builder, SITE_POSITION flatbuffers.UOffsetT) {
+	SCNReferenceAddSITE_POSITION(builder, SITE_POSITION)
 }
 func SCNReferenceAddVARIABLE_SATELLITE_ID(builder *flatbuffers.Builder, VARIABLE_SATELLITE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(VARIABLE_SATELLITE_ID), 0)

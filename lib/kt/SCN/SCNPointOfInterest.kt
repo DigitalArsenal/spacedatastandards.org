@@ -102,10 +102,10 @@ class SCNPointOfInterest : Table() {
     val colorAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun colorInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Geodetic position for the point of interest.
+     * WGS84 geodetic position for the point of interest.
      */
-    val position : SCNGeodeticPoint? get() = position(SCNGeodeticPoint())
-    fun position(obj: SCNGeodeticPoint) : SCNGeodeticPoint? {
+    val position : GJNPosition? get() = position(GJNPosition())
+    fun position(obj: GJNPosition) : GJNPosition? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)

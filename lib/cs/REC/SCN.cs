@@ -44,19 +44,19 @@ public struct SCN : IFlatbufferObject
   public ArraySegment<byte>? GetFOCUSED_REFERENCE_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetFOCUSED_REFERENCE_IDArray() { return __p.__vector_as_array<byte>(12); }
-  /// Current simulation time as an ISO-8601 UTC timestamp.
-  public string SIM_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Current scenario epoch as an ISO-8601 UTC timestamp.
+  public string EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSIM_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetSIM_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetSIM_TIMEArray() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(14); }
   /// Simulation time-rate multiplier.
   public double SIM_SPEED { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// True when the viewer should use an Earth-centered Earth-fixed frame.
-  public bool USE_ECEF_FRAME { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Reference frame used for scenario propagation and display.
+  /// True when the viewer should use a body-fixed display frame.
+  public bool USE_BODY_FIXED_FRAME { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Authoritative reference frame used for scenario propagation and display.
   public RFM? REFERENCE_FRAME { get { int o = __p.__offset(20); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Command action requested for the scenario.
   public scenarioActionCode ACTION { get { int o = __p.__offset(22); return o != 0 ? (scenarioActionCode)__p.bb.GetSbyte(o + __p.bb_pos) : scenarioActionCode.NONE; } }
@@ -71,9 +71,9 @@ public struct SCN : IFlatbufferObject
       Offset<SCNEvent> EVENTOffset = default(Offset<SCNEvent>),
       int FOCUSED_REFERENCE_INDEX = -1,
       StringOffset FOCUSED_REFERENCE_IDOffset = default(StringOffset),
-      StringOffset SIM_TIMEOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
       double SIM_SPEED = 0.0,
-      bool USE_ECEF_FRAME = false,
+      bool USE_BODY_FIXED_FRAME = false,
       Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
       scenarioActionCode ACTION = scenarioActionCode.NONE,
       Offset<VST> VIEW_STATEOffset = default(Offset<VST>),
@@ -83,14 +83,14 @@ public struct SCN : IFlatbufferObject
     SCN.AddASSETS_CHANGED(builder, ASSETS_CHANGEDOffset);
     SCN.AddVIEW_STATE(builder, VIEW_STATEOffset);
     SCN.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
-    SCN.AddSIM_TIME(builder, SIM_TIMEOffset);
+    SCN.AddEPOCH(builder, EPOCHOffset);
     SCN.AddFOCUSED_REFERENCE_ID(builder, FOCUSED_REFERENCE_IDOffset);
     SCN.AddFOCUSED_REFERENCE_INDEX(builder, FOCUSED_REFERENCE_INDEX);
     SCN.AddEVENT(builder, EVENTOffset);
     SCN.AddREFERENCES(builder, REFERENCESOffset);
     SCN.AddSCENARIO_ID(builder, SCENARIO_IDOffset);
     SCN.AddACTION(builder, ACTION);
-    SCN.AddUSE_ECEF_FRAME(builder, USE_ECEF_FRAME);
+    SCN.AddUSE_BODY_FIXED_FRAME(builder, USE_BODY_FIXED_FRAME);
     return SCN.EndSCN(builder);
   }
 
@@ -105,9 +105,9 @@ public struct SCN : IFlatbufferObject
   public static void AddEVENT(FlatBufferBuilder builder, Offset<SCNEvent> EVENTOffset) { builder.AddOffset(2, EVENTOffset.Value, 0); }
   public static void AddFOCUSED_REFERENCE_INDEX(FlatBufferBuilder builder, int FOCUSED_REFERENCE_INDEX) { builder.AddInt(3, FOCUSED_REFERENCE_INDEX, -1); }
   public static void AddFOCUSED_REFERENCE_ID(FlatBufferBuilder builder, StringOffset FOCUSED_REFERENCE_IDOffset) { builder.AddOffset(4, FOCUSED_REFERENCE_IDOffset.Value, 0); }
-  public static void AddSIM_TIME(FlatBufferBuilder builder, StringOffset SIM_TIMEOffset) { builder.AddOffset(5, SIM_TIMEOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(5, EPOCHOffset.Value, 0); }
   public static void AddSIM_SPEED(FlatBufferBuilder builder, double SIM_SPEED) { builder.AddDouble(6, SIM_SPEED, 0.0); }
-  public static void AddUSE_ECEF_FRAME(FlatBufferBuilder builder, bool USE_ECEF_FRAME) { builder.AddBool(7, USE_ECEF_FRAME, false); }
+  public static void AddUSE_BODY_FIXED_FRAME(FlatBufferBuilder builder, bool USE_BODY_FIXED_FRAME) { builder.AddBool(7, USE_BODY_FIXED_FRAME, false); }
   public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(8, REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddACTION(FlatBufferBuilder builder, scenarioActionCode ACTION) { builder.AddSbyte(9, (sbyte)ACTION, 0); }
   public static void AddVIEW_STATE(FlatBufferBuilder builder, Offset<VST> VIEW_STATEOffset) { builder.AddOffset(10, VIEW_STATEOffset.Value, 0); }
@@ -130,9 +130,9 @@ public struct SCN : IFlatbufferObject
     _o.EVENT = this.EVENT.HasValue ? this.EVENT.Value.UnPack() : null;
     _o.FOCUSED_REFERENCE_INDEX = this.FOCUSED_REFERENCE_INDEX;
     _o.FOCUSED_REFERENCE_ID = this.FOCUSED_REFERENCE_ID;
-    _o.SIM_TIME = this.SIM_TIME;
+    _o.EPOCH = this.EPOCH;
     _o.SIM_SPEED = this.SIM_SPEED;
-    _o.USE_ECEF_FRAME = this.USE_ECEF_FRAME;
+    _o.USE_BODY_FIXED_FRAME = this.USE_BODY_FIXED_FRAME;
     _o.REFERENCE_FRAME = this.REFERENCE_FRAME.HasValue ? this.REFERENCE_FRAME.Value.UnPack() : null;
     _o.ACTION = this.ACTION;
     _o.VIEW_STATE = this.VIEW_STATE.HasValue ? this.VIEW_STATE.Value.UnPack() : null;
@@ -149,7 +149,7 @@ public struct SCN : IFlatbufferObject
     }
     var _EVENT = _o.EVENT == null ? default(Offset<SCNEvent>) : SCNEvent.Pack(builder, _o.EVENT);
     var _FOCUSED_REFERENCE_ID = _o.FOCUSED_REFERENCE_ID == null ? default(StringOffset) : builder.CreateString(_o.FOCUSED_REFERENCE_ID);
-    var _SIM_TIME = _o.SIM_TIME == null ? default(StringOffset) : builder.CreateString(_o.SIM_TIME);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
     var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
     var _VIEW_STATE = _o.VIEW_STATE == null ? default(Offset<VST>) : VST.Pack(builder, _o.VIEW_STATE);
     var _ASSETS_CHANGED = _o.ASSETS_CHANGED == null ? default(Offset<SCNAssetsChanged>) : SCNAssetsChanged.Pack(builder, _o.ASSETS_CHANGED);
@@ -160,9 +160,9 @@ public struct SCN : IFlatbufferObject
       _EVENT,
       _o.FOCUSED_REFERENCE_INDEX,
       _FOCUSED_REFERENCE_ID,
-      _SIM_TIME,
+      _EPOCH,
       _o.SIM_SPEED,
-      _o.USE_ECEF_FRAME,
+      _o.USE_BODY_FIXED_FRAME,
       _REFERENCE_FRAME,
       _o.ACTION,
       _VIEW_STATE,
@@ -177,9 +177,9 @@ public class SCNT
   public SCNEventT EVENT { get; set; }
   public int FOCUSED_REFERENCE_INDEX { get; set; }
   public string FOCUSED_REFERENCE_ID { get; set; }
-  public string SIM_TIME { get; set; }
+  public string EPOCH { get; set; }
   public double SIM_SPEED { get; set; }
-  public bool USE_ECEF_FRAME { get; set; }
+  public bool USE_BODY_FIXED_FRAME { get; set; }
   public RFMT REFERENCE_FRAME { get; set; }
   public scenarioActionCode ACTION { get; set; }
   public VSTT VIEW_STATE { get; set; }
@@ -191,9 +191,9 @@ public class SCNT
     this.EVENT = null;
     this.FOCUSED_REFERENCE_INDEX = -1;
     this.FOCUSED_REFERENCE_ID = null;
-    this.SIM_TIME = null;
+    this.EPOCH = null;
     this.SIM_SPEED = 0.0;
-    this.USE_ECEF_FRAME = false;
+    this.USE_BODY_FIXED_FRAME = false;
     this.REFERENCE_FRAME = null;
     this.ACTION = scenarioActionCode.NONE;
     this.VIEW_STATE = null;
@@ -220,9 +220,9 @@ static public class SCNVerify
       && verifier.VerifyTable(tablePos, 8 /*EVENT*/, SCNEventVerify.Verify, false)
       && verifier.VerifyField(tablePos, 10 /*FOCUSED_REFERENCE_INDEX*/, 4 /*int*/, 4, false)
       && verifier.VerifyString(tablePos, 12 /*FOCUSED_REFERENCE_ID*/, false)
-      && verifier.VerifyString(tablePos, 14 /*SIM_TIME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*EPOCH*/, false)
       && verifier.VerifyField(tablePos, 16 /*SIM_SPEED*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*USE_ECEF_FRAME*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*USE_BODY_FIXED_FRAME*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTable(tablePos, 20 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
       && verifier.VerifyField(tablePos, 22 /*ACTION*/, 1 /*scenarioActionCode*/, 1, false)
       && verifier.VerifyTable(tablePos, 24 /*VIEW_STATE*/, VSTVerify.Verify, false)

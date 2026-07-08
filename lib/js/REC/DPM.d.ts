@@ -5,9 +5,15 @@ import { DPMEncryptionBinding, DPMEncryptionBindingT } from './DPMEncryptionBind
 import { DPMQueryBinding, DPMQueryBindingT } from './DPMQueryBinding.js';
 import { DPMSourceBatch, DPMSourceBatchT } from './DPMSourceBatch.js';
 /**
- * Dataset Publication Manifest binding data/index CIDs, query replay,
- * source hashes, schema hashes, encryption metadata, provider-mediated query
- * protocols, completeness roots, and provider signature.
+ * Immutable signed publication contract for one dataset update. DPM records
+ * are the authoritative product manifests consumed by subscribers, pinning
+ * nodes, archive nodes, and query gateways. A valid DPM answers: who published
+ * this update, which dataset and FILE_ID it represents, which source batches
+ * produced it, which exact bytes or provider-mediated query responses are
+ * authorized, how those bytes are addressed, how records and indexes are
+ * hashed, whether content-key metadata applies, and which provider signature
+ * commits to the manifest. PNM announces the current DPM; DPM defines what
+ * must be fetched, verified, imported, pinned, or archived.
  */
 export declare class DPM implements flatbuffers.IUnpackableObject<DPMT> {
     bb: flatbuffers.ByteBuffer | null;
