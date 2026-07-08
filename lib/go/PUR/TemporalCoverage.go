@@ -106,8 +106,30 @@ func (rcv *TemporalCoverage) MutateHistoricalDepth(n uint32) bool {
 	return rcv.MutateHISTORICAL_DEPTH(n)
 }
 
+/// Typical provider latency in seconds
+func (rcv *TemporalCoverage) LATENCY_SECONDS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *TemporalCoverage) LatencySeconds() uint32 {
+	return rcv.LATENCY_SECONDS()
+}
+
+/// Typical provider latency in seconds
+func (rcv *TemporalCoverage) MutateLATENCY_SECONDS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *TemporalCoverage) MutateLatencySeconds(n uint32) bool {
+	return rcv.MutateLATENCY_SECONDS(n)
+}
+
 func TemporalCoverageStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(5)
 }
 func TemporalCoverageAddSTART_EPOCH(builder *flatbuffers.Builder, START_EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(START_EPOCH), 0)
@@ -132,6 +154,12 @@ func TemporalCoverageAddHISTORICAL_DEPTH(builder *flatbuffers.Builder, HISTORICA
 }
 func TemporalCoverageAddHistoricalDepth(builder *flatbuffers.Builder, HISTORICAL_DEPTH uint32) {
 	TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH)
+}
+func TemporalCoverageAddLATENCY_SECONDS(builder *flatbuffers.Builder, LATENCY_SECONDS uint32) {
+	builder.PrependUint32Slot(4, LATENCY_SECONDS, 0)
+}
+func TemporalCoverageAddLatencySeconds(builder *flatbuffers.Builder, LATENCY_SECONDS uint32) {
+	TemporalCoverageAddLATENCY_SECONDS(builder, LATENCY_SECONDS)
 }
 func TemporalCoverageEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,5 +1,5 @@
-// Hash: 6e0418bda412f4a96a440f4347e93f494e936e6e48a17c0151eafafb79e2ca21
-// Version: 1.0.2
+// Hash: 9e962ca81276e2d0909c429355d20f29d7547cf55b69d47a857993e6e27d42b2
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 /// Access type for data listings
 enum accessCategory : byte {
@@ -26,7 +26,56 @@ enum paymentMethod : byte {
   /// Fiat payment via Stripe
   Fiat_Stripe,
   /// Free/open data
-  Free
+  Free,
+  /// Usage-based billing settled after metered delivery
+  UsageBased,
+  /// Enterprise/offline invoicing
+  Enterprise
+}
+
+/// Listing kind for marketplace entries.
+enum listingCategory : byte {
+  DataStream,
+  WasmModule
+}
+
+/// Field-level stream policy bound into protected delivery and grants.
+table GrantFieldStreamPolicy {
+  POLICY_ID: string;
+  POLICY_VERSION: uint32;
+  STREAM_ID: string;
+  SCHEMA_CODE: string;
+  ALLOWED_FIELD_PATHS: [string];
+  REDACTED_FIELD_PATHS: [string];
+  KEY_EPOCH: string;
+  GRANT_SCOPE: string;
+  ALLOWED_OPERATIONS: [string];
+}
+
+/// Immutable encrypted artifact/window metadata for protected delivery.
+table ProtectedDeliveryBinding {
+  ENCRYPTED_CID: string;
+  MANIFEST_CID: string;
+  CONTENT_HASH: string;
+  CONTENT_KEY_ID: string;
+  LICENSE_MODULE_ID: string;
+  MODULE_ID: string;
+  MODULE_VERSION: string;
+  REQUIRED_SCOPES: [string];
+  GRANT_SCOPE: string;
+  DELIVERY_PROTOCOL: string;
+  FIELD_STREAM_POLICY: GrantFieldStreamPolicy;
+}
+
+/// Provider reputation summary surfaced in marketplace listings.
+table ProviderReputation {
+  TOTAL_SALES: uint64;
+  AVERAGE_RATING_X10: uint16;
+  TOTAL_RATINGS: uint32;
+  UPTIME_PERCENTAGE_X100: uint16;
+  AVG_DELIVERY_LATENCY_MS: uint32;
+  DISPUTE_COUNT: uint32;
+  PROVIDER_SINCE: uint64;
 }
 
 /// Spatial coverage definition
@@ -37,6 +86,12 @@ table SpatialCoverage {
   REGIONS: [string];
   /// Specific NORAD IDs or catalog numbers
   OBJECT_IDS: [string];
+  /// Minimum altitude in kilometers for altitude-bounded offerings
+  MIN_ALTITUDE_KM: double;
+  /// Maximum altitude in kilometers for altitude-bounded offerings
+  MAX_ALTITUDE_KM: double;
+  /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
+  GEO_BOUNDS: [double];
 }
 
 /// Temporal coverage definition
@@ -49,6 +104,8 @@ table TemporalCoverage {
   UPDATE_FREQUENCY: string;
   /// Days of historical data available
   HISTORICAL_DEPTH: uint32;
+  /// Typical provider latency in seconds
+  LATENCY_SECONDS: uint32;
 }
 
 /// Data coverage combining spatial and temporal
@@ -73,6 +130,10 @@ table PricingTier {
   RATE_LIMIT: uint32;
   /// List of features included in this tier
   FEATURES: [string];
+  /// Maximum records returned per request
+  MAX_RECORDS_PER_REQUEST: uint32;
+  /// Human-readable tier description
+  DESCRIPTION: string;
 }
 
 /// Storefront Listing - Data marketplace listing
@@ -114,6 +175,28 @@ table STF {
 
   /// Ed25519 signature from provider
   SIGNATURE: [ubyte];
+  /// Listing category: data stream or WASM module
+  LISTING_KIND: listingCategory;
+  /// Search tags
+  TAGS: [string];
+  /// Number of records in sample data, when available
+  SAMPLE_RECORD_COUNT: uint32;
+  /// Supported delivery methods
+  DELIVERY_METHODS: [string];
+  /// Protected delivery metadata for encrypted artifacts or streams
+  PROTECTED_DELIVERY: ProtectedDeliveryBinding;
+  /// Provider reputation summary
+  REPUTATION: ProviderReputation;
+  /// Listing version
+  VERSION: uint32;
+  /// Unix timestamp when the listing expires, or 0 for no expiry
+  EXPIRES_AT: uint64;
+  /// Terms document CID
+  TERMS_CID: string;
+  /// License label or SPDX-style identifier
+  LICENSE: string;
+  /// Peer ID this listing was sourced from when discovered remotely
+  SOURCE_PEER_ID: string;
 }
 
 root_type STF;

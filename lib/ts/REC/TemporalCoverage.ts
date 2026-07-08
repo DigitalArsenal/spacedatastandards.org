@@ -65,8 +65,16 @@ HISTORICAL_DEPTH():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Typical provider latency in seconds
+ */
+LATENCY_SECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
 static startTemporalCoverage(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(5);
 }
 
 static addStartEpoch(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset) {
@@ -85,17 +93,22 @@ static addHistoricalDepth(builder:flatbuffers.Builder, HISTORICAL_DEPTH:number) 
   builder.addFieldInt32(3, HISTORICAL_DEPTH, 0);
 }
 
+static addLatencySeconds(builder:flatbuffers.Builder, LATENCY_SECONDS:number) {
+  builder.addFieldInt32(4, LATENCY_SECONDS, 0);
+}
+
 static endTemporalCoverage(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createTemporalCoverage(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, END_EPOCHOffset:flatbuffers.Offset, UPDATE_FREQUENCYOffset:flatbuffers.Offset, HISTORICAL_DEPTH:number):flatbuffers.Offset {
+static createTemporalCoverage(builder:flatbuffers.Builder, START_EPOCHOffset:flatbuffers.Offset, END_EPOCHOffset:flatbuffers.Offset, UPDATE_FREQUENCYOffset:flatbuffers.Offset, HISTORICAL_DEPTH:number, LATENCY_SECONDS:number):flatbuffers.Offset {
   TemporalCoverage.startTemporalCoverage(builder);
   TemporalCoverage.addStartEpoch(builder, START_EPOCHOffset);
   TemporalCoverage.addEndEpoch(builder, END_EPOCHOffset);
   TemporalCoverage.addUpdateFrequency(builder, UPDATE_FREQUENCYOffset);
   TemporalCoverage.addHistoricalDepth(builder, HISTORICAL_DEPTH);
+  TemporalCoverage.addLatencySeconds(builder, LATENCY_SECONDS);
   return TemporalCoverage.endTemporalCoverage(builder);
 }
 
@@ -104,7 +117,8 @@ unpack(): TemporalCoverageT {
     this.START_EPOCH(),
     this.END_EPOCH(),
     this.UPDATE_FREQUENCY(),
-    this.HISTORICAL_DEPTH()
+    this.HISTORICAL_DEPTH(),
+    this.LATENCY_SECONDS()
   );
 }
 
@@ -114,6 +128,7 @@ unpackTo(_o: TemporalCoverageT): void {
   _o.END_EPOCH = this.END_EPOCH();
   _o.UPDATE_FREQUENCY = this.UPDATE_FREQUENCY();
   _o.HISTORICAL_DEPTH = this.HISTORICAL_DEPTH();
+  _o.LATENCY_SECONDS = this.LATENCY_SECONDS();
 }
 }
 
@@ -122,7 +137,8 @@ constructor(
   public START_EPOCH: string|Uint8Array|null = null,
   public END_EPOCH: string|Uint8Array|null = null,
   public UPDATE_FREQUENCY: string|Uint8Array|null = null,
-  public HISTORICAL_DEPTH: number = 0
+  public HISTORICAL_DEPTH: number = 0,
+  public LATENCY_SECONDS: number = 0
 ){}
 
 
@@ -135,7 +151,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     START_EPOCH,
     END_EPOCH,
     UPDATE_FREQUENCY,
-    this.HISTORICAL_DEPTH
+    this.HISTORICAL_DEPTH,
+    this.LATENCY_SECONDS
   );
 }
 }

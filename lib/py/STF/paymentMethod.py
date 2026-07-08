@@ -16,3 +16,7 @@ class paymentMethod(object):
     Fiat_Stripe = 4
     # Free/open data
     Free = 5
+    # Usage-based billing settled after metered delivery
+    UsageBased = 6
+    # Enterprise/offline invoicing
+    Enterprise = 7

@@ -85,6 +85,88 @@ public struct ACL : IFlatbufferObject
   public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(24); }
+  /// Key algorithm for buyer encryption public key
+  public string KEY_ALGORITHM { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_ALGORITHMBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_ALGORITHMBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetKEY_ALGORITHMArray() { return __p.__vector_as_array<byte>(26); }
+  /// Request rate limit
+  public uint RATE_LIMIT { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Maximum records returned per request
+  public uint MAX_RECORDS_PER_REQUEST { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Provider-side grant status
+  public grantLifecycleStatus STATUS { get { int o = __p.__offset(32); return o != 0 ? (grantLifecycleStatus)__p.bb.GetSbyte(o + __p.bb_pos) : grantLifecycleStatus.Active; } }
+  /// Payment amount in smallest unit
+  public ulong PAYMENT_AMOUNT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Payment currency
+  public string PAYMENT_CURRENCY { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPAYMENT_CURRENCYBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetPAYMENT_CURRENCYBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetPAYMENT_CURRENCYArray() { return __p.__vector_as_array<byte>(36); }
+  /// Payment chain or processor
+  public string PAYMENT_CHAIN { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPAYMENT_CHAINBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetPAYMENT_CHAINBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetPAYMENT_CHAINArray() { return __p.__vector_as_array<byte>(38); }
+  /// Unix timestamp of next renewal
+  public ulong NEXT_RENEWAL { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Whether renewal is automatic
+  public bool AUTO_RENEW { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Renewal count
+  public uint RENEWAL_COUNT { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Total requests made under this grant
+  public ulong TOTAL_REQUESTS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Total records delivered under this grant
+  public ulong TOTAL_RECORDS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp of last access
+  public ulong LAST_ACCESS { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// PubSub or direct delivery topic
+  public string DELIVERY_TOPIC { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDELIVERY_TOPICBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetDELIVERY_TOPICBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetDELIVERY_TOPICArray() { return __p.__vector_as_array<byte>(52); }
+  /// Unix timestamp when the grant record was created
+  public ulong CREATED_AT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp when the grant record was updated
+  public ulong UPDATED_AT { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Provider notes
+  public string NOTES { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(58); }
+  /// Provider peer ID
+  public string PROVIDER_PEER_ID { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(60); }
+  /// Base64-encoded signed grant response bytes
+  public string GRANT_RESPONSE_BASE64 { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGRANT_RESPONSE_BASE64Bytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetGRANT_RESPONSE_BASE64Bytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetGRANT_RESPONSE_BASE64Array() { return __p.__vector_as_array<byte>(62); }
+  /// Field-level stream policy bound to this grant
+  public GrantFieldStreamPolicy? FIELD_STREAM_POLICY { get { int o = __p.__offset(64); return o != 0 ? (GrantFieldStreamPolicy?)(new GrantFieldStreamPolicy()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<ACL> CreateACL(FlatBufferBuilder builder,
       StringOffset GRANT_IDOffset = default(StringOffset),
@@ -97,10 +179,48 @@ public struct ACL : IFlatbufferObject
       ulong EXPIRES_AT = 0,
       StringOffset PAYMENT_TX_HASHOffset = default(StringOffset),
       paymentMethod PAYMENT_METHOD = paymentMethod.Crypto_ETH,
-      VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(11);
+      VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset),
+      StringOffset KEY_ALGORITHMOffset = default(StringOffset),
+      uint RATE_LIMIT = 0,
+      uint MAX_RECORDS_PER_REQUEST = 0,
+      grantLifecycleStatus STATUS = grantLifecycleStatus.Active,
+      ulong PAYMENT_AMOUNT = 0,
+      StringOffset PAYMENT_CURRENCYOffset = default(StringOffset),
+      StringOffset PAYMENT_CHAINOffset = default(StringOffset),
+      ulong NEXT_RENEWAL = 0,
+      bool AUTO_RENEW = false,
+      uint RENEWAL_COUNT = 0,
+      ulong TOTAL_REQUESTS = 0,
+      ulong TOTAL_RECORDS = 0,
+      ulong LAST_ACCESS = 0,
+      StringOffset DELIVERY_TOPICOffset = default(StringOffset),
+      ulong CREATED_AT = 0,
+      ulong UPDATED_AT = 0,
+      StringOffset NOTESOffset = default(StringOffset),
+      StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
+      StringOffset GRANT_RESPONSE_BASE64Offset = default(StringOffset),
+      Offset<GrantFieldStreamPolicy> FIELD_STREAM_POLICYOffset = default(Offset<GrantFieldStreamPolicy>)) {
+    builder.StartTable(31);
+    ACL.AddUPDATED_AT(builder, UPDATED_AT);
+    ACL.AddCREATED_AT(builder, CREATED_AT);
+    ACL.AddLAST_ACCESS(builder, LAST_ACCESS);
+    ACL.AddTOTAL_RECORDS(builder, TOTAL_RECORDS);
+    ACL.AddTOTAL_REQUESTS(builder, TOTAL_REQUESTS);
+    ACL.AddNEXT_RENEWAL(builder, NEXT_RENEWAL);
+    ACL.AddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT);
     ACL.AddEXPIRES_AT(builder, EXPIRES_AT);
     ACL.AddGRANTED_AT(builder, GRANTED_AT);
+    ACL.AddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICYOffset);
+    ACL.AddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64Offset);
+    ACL.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
+    ACL.AddNOTES(builder, NOTESOffset);
+    ACL.AddDELIVERY_TOPIC(builder, DELIVERY_TOPICOffset);
+    ACL.AddRENEWAL_COUNT(builder, RENEWAL_COUNT);
+    ACL.AddPAYMENT_CHAIN(builder, PAYMENT_CHAINOffset);
+    ACL.AddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCYOffset);
+    ACL.AddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST);
+    ACL.AddRATE_LIMIT(builder, RATE_LIMIT);
+    ACL.AddKEY_ALGORITHM(builder, KEY_ALGORITHMOffset);
     ACL.AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset);
     ACL.AddPAYMENT_TX_HASH(builder, PAYMENT_TX_HASHOffset);
     ACL.AddTIER_NAME(builder, TIER_NAMEOffset);
@@ -108,12 +228,14 @@ public struct ACL : IFlatbufferObject
     ACL.AddBUYER_PEER_ID(builder, BUYER_PEER_IDOffset);
     ACL.AddLISTING_ID(builder, LISTING_IDOffset);
     ACL.AddGRANT_ID(builder, GRANT_IDOffset);
+    ACL.AddAUTO_RENEW(builder, AUTO_RENEW);
+    ACL.AddSTATUS(builder, STATUS);
     ACL.AddPAYMENT_METHOD(builder, PAYMENT_METHOD);
     ACL.AddACCESS_TYPE(builder, ACCESS_TYPE);
     return ACL.EndACL(builder);
   }
 
-  public static void StartACL(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartACL(FlatBufferBuilder builder) { builder.StartTable(31); }
   public static void AddGRANT_ID(FlatBufferBuilder builder, StringOffset GRANT_IDOffset) { builder.AddOffset(0, GRANT_IDOffset.Value, 0); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(1, LISTING_IDOffset.Value, 0); }
   public static void AddBUYER_PEER_ID(FlatBufferBuilder builder, StringOffset BUYER_PEER_IDOffset) { builder.AddOffset(2, BUYER_PEER_IDOffset.Value, 0); }
@@ -135,6 +257,26 @@ public struct ACL : IFlatbufferObject
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPROVIDER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddKEY_ALGORITHM(FlatBufferBuilder builder, StringOffset KEY_ALGORITHMOffset) { builder.AddOffset(11, KEY_ALGORITHMOffset.Value, 0); }
+  public static void AddRATE_LIMIT(FlatBufferBuilder builder, uint RATE_LIMIT) { builder.AddUint(12, RATE_LIMIT, 0); }
+  public static void AddMAX_RECORDS_PER_REQUEST(FlatBufferBuilder builder, uint MAX_RECORDS_PER_REQUEST) { builder.AddUint(13, MAX_RECORDS_PER_REQUEST, 0); }
+  public static void AddSTATUS(FlatBufferBuilder builder, grantLifecycleStatus STATUS) { builder.AddSbyte(14, (sbyte)STATUS, 0); }
+  public static void AddPAYMENT_AMOUNT(FlatBufferBuilder builder, ulong PAYMENT_AMOUNT) { builder.AddUlong(15, PAYMENT_AMOUNT, 0); }
+  public static void AddPAYMENT_CURRENCY(FlatBufferBuilder builder, StringOffset PAYMENT_CURRENCYOffset) { builder.AddOffset(16, PAYMENT_CURRENCYOffset.Value, 0); }
+  public static void AddPAYMENT_CHAIN(FlatBufferBuilder builder, StringOffset PAYMENT_CHAINOffset) { builder.AddOffset(17, PAYMENT_CHAINOffset.Value, 0); }
+  public static void AddNEXT_RENEWAL(FlatBufferBuilder builder, ulong NEXT_RENEWAL) { builder.AddUlong(18, NEXT_RENEWAL, 0); }
+  public static void AddAUTO_RENEW(FlatBufferBuilder builder, bool AUTO_RENEW) { builder.AddBool(19, AUTO_RENEW, false); }
+  public static void AddRENEWAL_COUNT(FlatBufferBuilder builder, uint RENEWAL_COUNT) { builder.AddUint(20, RENEWAL_COUNT, 0); }
+  public static void AddTOTAL_REQUESTS(FlatBufferBuilder builder, ulong TOTAL_REQUESTS) { builder.AddUlong(21, TOTAL_REQUESTS, 0); }
+  public static void AddTOTAL_RECORDS(FlatBufferBuilder builder, ulong TOTAL_RECORDS) { builder.AddUlong(22, TOTAL_RECORDS, 0); }
+  public static void AddLAST_ACCESS(FlatBufferBuilder builder, ulong LAST_ACCESS) { builder.AddUlong(23, LAST_ACCESS, 0); }
+  public static void AddDELIVERY_TOPIC(FlatBufferBuilder builder, StringOffset DELIVERY_TOPICOffset) { builder.AddOffset(24, DELIVERY_TOPICOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(25, CREATED_AT, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(26, UPDATED_AT, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(27, NOTESOffset.Value, 0); }
+  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(28, PROVIDER_PEER_IDOffset.Value, 0); }
+  public static void AddGRANT_RESPONSE_BASE64(FlatBufferBuilder builder, StringOffset GRANT_RESPONSE_BASE64Offset) { builder.AddOffset(29, GRANT_RESPONSE_BASE64Offset.Value, 0); }
+  public static void AddFIELD_STREAM_POLICY(FlatBufferBuilder builder, Offset<GrantFieldStreamPolicy> FIELD_STREAM_POLICYOffset) { builder.AddOffset(30, FIELD_STREAM_POLICYOffset.Value, 0); }
   public static Offset<ACL> EndACL(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // GRANT_ID
@@ -163,6 +305,26 @@ public struct ACL : IFlatbufferObject
     _o.PAYMENT_METHOD = this.PAYMENT_METHOD;
     _o.PROVIDER_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.PROVIDER_SIGNATURELength; ++_j) {_o.PROVIDER_SIGNATURE.Add(this.PROVIDER_SIGNATURE(_j));}
+    _o.KEY_ALGORITHM = this.KEY_ALGORITHM;
+    _o.RATE_LIMIT = this.RATE_LIMIT;
+    _o.MAX_RECORDS_PER_REQUEST = this.MAX_RECORDS_PER_REQUEST;
+    _o.STATUS = this.STATUS;
+    _o.PAYMENT_AMOUNT = this.PAYMENT_AMOUNT;
+    _o.PAYMENT_CURRENCY = this.PAYMENT_CURRENCY;
+    _o.PAYMENT_CHAIN = this.PAYMENT_CHAIN;
+    _o.NEXT_RENEWAL = this.NEXT_RENEWAL;
+    _o.AUTO_RENEW = this.AUTO_RENEW;
+    _o.RENEWAL_COUNT = this.RENEWAL_COUNT;
+    _o.TOTAL_REQUESTS = this.TOTAL_REQUESTS;
+    _o.TOTAL_RECORDS = this.TOTAL_RECORDS;
+    _o.LAST_ACCESS = this.LAST_ACCESS;
+    _o.DELIVERY_TOPIC = this.DELIVERY_TOPIC;
+    _o.CREATED_AT = this.CREATED_AT;
+    _o.UPDATED_AT = this.UPDATED_AT;
+    _o.NOTES = this.NOTES;
+    _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
+    _o.GRANT_RESPONSE_BASE64 = this.GRANT_RESPONSE_BASE64;
+    _o.FIELD_STREAM_POLICY = this.FIELD_STREAM_POLICY.HasValue ? this.FIELD_STREAM_POLICY.Value.UnPack() : null;
   }
   public static Offset<ACL> Pack(FlatBufferBuilder builder, ACLT _o) {
     if (_o == null) return default(Offset<ACL>);
@@ -181,6 +343,14 @@ public struct ACL : IFlatbufferObject
       var __PROVIDER_SIGNATURE = _o.PROVIDER_SIGNATURE.ToArray();
       _PROVIDER_SIGNATURE = CreatePROVIDER_SIGNATUREVector(builder, __PROVIDER_SIGNATURE);
     }
+    var _KEY_ALGORITHM = _o.KEY_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.KEY_ALGORITHM);
+    var _PAYMENT_CURRENCY = _o.PAYMENT_CURRENCY == null ? default(StringOffset) : builder.CreateString(_o.PAYMENT_CURRENCY);
+    var _PAYMENT_CHAIN = _o.PAYMENT_CHAIN == null ? default(StringOffset) : builder.CreateString(_o.PAYMENT_CHAIN);
+    var _DELIVERY_TOPIC = _o.DELIVERY_TOPIC == null ? default(StringOffset) : builder.CreateString(_o.DELIVERY_TOPIC);
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _PROVIDER_PEER_ID = _o.PROVIDER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_PEER_ID);
+    var _GRANT_RESPONSE_BASE64 = _o.GRANT_RESPONSE_BASE64 == null ? default(StringOffset) : builder.CreateString(_o.GRANT_RESPONSE_BASE64);
+    var _FIELD_STREAM_POLICY = _o.FIELD_STREAM_POLICY == null ? default(Offset<GrantFieldStreamPolicy>) : GrantFieldStreamPolicy.Pack(builder, _o.FIELD_STREAM_POLICY);
     return CreateACL(
       builder,
       _GRANT_ID,
@@ -193,7 +363,27 @@ public struct ACL : IFlatbufferObject
       _o.EXPIRES_AT,
       _PAYMENT_TX_HASH,
       _o.PAYMENT_METHOD,
-      _PROVIDER_SIGNATURE);
+      _PROVIDER_SIGNATURE,
+      _KEY_ALGORITHM,
+      _o.RATE_LIMIT,
+      _o.MAX_RECORDS_PER_REQUEST,
+      _o.STATUS,
+      _o.PAYMENT_AMOUNT,
+      _PAYMENT_CURRENCY,
+      _PAYMENT_CHAIN,
+      _o.NEXT_RENEWAL,
+      _o.AUTO_RENEW,
+      _o.RENEWAL_COUNT,
+      _o.TOTAL_REQUESTS,
+      _o.TOTAL_RECORDS,
+      _o.LAST_ACCESS,
+      _DELIVERY_TOPIC,
+      _o.CREATED_AT,
+      _o.UPDATED_AT,
+      _NOTES,
+      _PROVIDER_PEER_ID,
+      _GRANT_RESPONSE_BASE64,
+      _FIELD_STREAM_POLICY);
   }
 }
 
@@ -210,6 +400,26 @@ public class ACLT
   public string PAYMENT_TX_HASH { get; set; }
   public paymentMethod PAYMENT_METHOD { get; set; }
   public List<byte> PROVIDER_SIGNATURE { get; set; }
+  public string KEY_ALGORITHM { get; set; }
+  public uint RATE_LIMIT { get; set; }
+  public uint MAX_RECORDS_PER_REQUEST { get; set; }
+  public grantLifecycleStatus STATUS { get; set; }
+  public ulong PAYMENT_AMOUNT { get; set; }
+  public string PAYMENT_CURRENCY { get; set; }
+  public string PAYMENT_CHAIN { get; set; }
+  public ulong NEXT_RENEWAL { get; set; }
+  public bool AUTO_RENEW { get; set; }
+  public uint RENEWAL_COUNT { get; set; }
+  public ulong TOTAL_REQUESTS { get; set; }
+  public ulong TOTAL_RECORDS { get; set; }
+  public ulong LAST_ACCESS { get; set; }
+  public string DELIVERY_TOPIC { get; set; }
+  public ulong CREATED_AT { get; set; }
+  public ulong UPDATED_AT { get; set; }
+  public string NOTES { get; set; }
+  public string PROVIDER_PEER_ID { get; set; }
+  public string GRANT_RESPONSE_BASE64 { get; set; }
+  public GrantFieldStreamPolicyT FIELD_STREAM_POLICY { get; set; }
 
   public ACLT() {
     this.GRANT_ID = null;
@@ -223,6 +433,26 @@ public class ACLT
     this.PAYMENT_TX_HASH = null;
     this.PAYMENT_METHOD = paymentMethod.Crypto_ETH;
     this.PROVIDER_SIGNATURE = null;
+    this.KEY_ALGORITHM = null;
+    this.RATE_LIMIT = 0;
+    this.MAX_RECORDS_PER_REQUEST = 0;
+    this.STATUS = grantLifecycleStatus.Active;
+    this.PAYMENT_AMOUNT = 0;
+    this.PAYMENT_CURRENCY = null;
+    this.PAYMENT_CHAIN = null;
+    this.NEXT_RENEWAL = 0;
+    this.AUTO_RENEW = false;
+    this.RENEWAL_COUNT = 0;
+    this.TOTAL_REQUESTS = 0;
+    this.TOTAL_RECORDS = 0;
+    this.LAST_ACCESS = 0;
+    this.DELIVERY_TOPIC = null;
+    this.CREATED_AT = 0;
+    this.UPDATED_AT = 0;
+    this.NOTES = null;
+    this.PROVIDER_PEER_ID = null;
+    this.GRANT_RESPONSE_BASE64 = null;
+    this.FIELD_STREAM_POLICY = null;
   }
   public static ACLT DeserializeFromBinary(byte[] fbBuffer) {
     return ACL.GetRootAsACL(new ByteBuffer(fbBuffer)).UnPack();
@@ -251,6 +481,26 @@ static public class ACLVerify
       && verifier.VerifyString(tablePos, 20 /*PAYMENT_TX_HASH*/, false)
       && verifier.VerifyField(tablePos, 22 /*PAYMENT_METHOD*/, 1 /*paymentMethod*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 24 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyString(tablePos, 26 /*KEY_ALGORITHM*/, false)
+      && verifier.VerifyField(tablePos, 28 /*RATE_LIMIT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 30 /*MAX_RECORDS_PER_REQUEST*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 32 /*STATUS*/, 1 /*grantLifecycleStatus*/, 1, false)
+      && verifier.VerifyField(tablePos, 34 /*PAYMENT_AMOUNT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 36 /*PAYMENT_CURRENCY*/, false)
+      && verifier.VerifyString(tablePos, 38 /*PAYMENT_CHAIN*/, false)
+      && verifier.VerifyField(tablePos, 40 /*NEXT_RENEWAL*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*AUTO_RENEW*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 44 /*RENEWAL_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 46 /*TOTAL_REQUESTS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*TOTAL_RECORDS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*LAST_ACCESS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 52 /*DELIVERY_TOPIC*/, false)
+      && verifier.VerifyField(tablePos, 54 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 58 /*NOTES*/, false)
+      && verifier.VerifyString(tablePos, 60 /*PROVIDER_PEER_ID*/, false)
+      && verifier.VerifyString(tablePos, 62 /*GRANT_RESPONSE_BASE64*/, false)
+      && verifier.VerifyTable(tablePos, 64 /*FIELD_STREAM_POLICY*/, GrantFieldStreamPolicyVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

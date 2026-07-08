@@ -8,6 +8,76 @@ import Common
 
 import FlatBuffers
 
+///  Review lifecycle status.
+public enum reviewLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case published = 0
+  case pending = 1
+  case flagged = 2
+  case hidden = 3
+  case removed = 4
+
+  public static var max: reviewLifecycleStatus { return .removed }
+  public static var min: reviewLifecycleStatus { return .published }
+}
+
+
+///  Data quality metrics attached to a review.
+public struct DataQualityMetrics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$REV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DataQualityMetrics.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SCHEMA_COMPLIANCE: VOffset = 4
+    static let DATA_FRESHNESS: VOffset = 6
+    static let COVERAGE_ACCURACY: VOffset = 8
+    static let DELIVERY_RELIABILITY: VOffset = 10
+  }
+
+  public var SCHEMA_COMPLIANCE: UInt8 { let o = _accessor.offset(VT.SCHEMA_COMPLIANCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var DATA_FRESHNESS: UInt8 { let o = _accessor.offset(VT.DATA_FRESHNESS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var COVERAGE_ACCURACY: UInt8 { let o = _accessor.offset(VT.COVERAGE_ACCURACY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public var DELIVERY_RELIABILITY: UInt8 { let o = _accessor.offset(VT.DELIVERY_RELIABILITY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public static func startDataQualityMetrics(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(SCHEMA_COMPLIANCE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCHEMA_COMPLIANCE, def: 0, at: VT.SCHEMA_COMPLIANCE) }
+  public static func add(DATA_FRESHNESS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_FRESHNESS, def: 0, at: VT.DATA_FRESHNESS) }
+  public static func add(COVERAGE_ACCURACY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COVERAGE_ACCURACY, def: 0, at: VT.COVERAGE_ACCURACY) }
+  public static func add(DELIVERY_RELIABILITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELIVERY_RELIABILITY, def: 0, at: VT.DELIVERY_RELIABILITY) }
+  public static func endDataQualityMetrics(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDataQualityMetrics(
+    _ fbb: inout FlatBufferBuilder,
+    SCHEMA_COMPLIANCE: UInt8 = 0,
+    DATA_FRESHNESS: UInt8 = 0,
+    COVERAGE_ACCURACY: UInt8 = 0,
+    DELIVERY_RELIABILITY: UInt8 = 0
+  ) -> Offset {
+    let __start = DataQualityMetrics.startDataQualityMetrics(&fbb)
+    DataQualityMetrics.add(SCHEMA_COMPLIANCE: SCHEMA_COMPLIANCE, &fbb)
+    DataQualityMetrics.add(DATA_FRESHNESS: DATA_FRESHNESS, &fbb)
+    DataQualityMetrics.add(COVERAGE_ACCURACY: COVERAGE_ACCURACY, &fbb)
+    DataQualityMetrics.add(DELIVERY_RELIABILITY: DELIVERY_RELIABILITY, &fbb)
+    return DataQualityMetrics.endDataQualityMetrics(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SCHEMA_COMPLIANCE, fieldName: "SCHEMA_COMPLIANCE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DATA_FRESHNESS, fieldName: "DATA_FRESHNESS", required: false, type: UInt8.self)
+    try _v.visit(field: VT.COVERAGE_ACCURACY, fieldName: "COVERAGE_ACCURACY", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DELIVERY_RELIABILITY, fieldName: "DELIVERY_RELIABILITY", required: false, type: UInt8.self)
+    _v.finish()
+  }
+}
+
 ///  Review - User review of a storefront listing
 public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -30,6 +100,16 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let ACL_GRANT_ID: VOffset = 16
     static let TIMESTAMP: VOffset = 18
     static let REVIEWER_SIGNATURE: VOffset = 20
+    static let QUALITY_METRICS: VOffset = 22
+    static let VERIFIED_PURCHASE: VOffset = 24
+    static let UPDATED_AT: VOffset = 26
+    static let STATUS: VOffset = 28
+    static let HELPFUL_COUNT: VOffset = 30
+    static let NOT_HELPFUL_COUNT: VOffset = 32
+    static let PROVIDER_RESPONSE: VOffset = 34
+    static let PROVIDER_RESPONSE_AT: VOffset = 36
+    static let FLAGGED_COUNT: VOffset = 38
+    static let MODERATION_NOTES: VOffset = 40
   }
 
   ///  Unique identifier for this review
@@ -57,7 +137,29 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Ed25519 signature from reviewer
   public var REVIEWER_SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.REVIEWER_SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToReviewerSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REVIEWER_SIGNATURE, body: body) }
-  public static func startREV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  ///  Data quality metrics supplied by reviewer
+  public var QUALITY_METRICS: DataQualityMetrics? { let o = _accessor.offset(VT.QUALITY_METRICS); return o == 0 ? nil : DataQualityMetrics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Whether the review is tied to a verified purchase
+  public var VERIFIED_PURCHASE: Bool { let o = _accessor.offset(VT.VERIFIED_PURCHASE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Unix timestamp when the review was last updated
+  public var UPDATED_AT: UInt64 { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Review lifecycle status
+  public var STATUS: reviewLifecycleStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .published : reviewLifecycleStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .published }
+  ///  Helpful vote count
+  public var HELPFUL_COUNT: UInt32 { let o = _accessor.offset(VT.HELPFUL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Not-helpful vote count
+  public var NOT_HELPFUL_COUNT: UInt32 { let o = _accessor.offset(VT.NOT_HELPFUL_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Provider response body
+  public var PROVIDER_RESPONSE: String? { let o = _accessor.offset(VT.PROVIDER_RESPONSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDER_RESPONSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER_RESPONSE) }
+  ///  Unix timestamp when provider responded
+  public var PROVIDER_RESPONSE_AT: UInt64 { let o = _accessor.offset(VT.PROVIDER_RESPONSE_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Number of moderation flags
+  public var FLAGGED_COUNT: UInt32 { let o = _accessor.offset(VT.FLAGGED_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Moderation notes
+  public var MODERATION_NOTES: String? { let o = _accessor.offset(VT.MODERATION_NOTES); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODERATION_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODERATION_NOTES) }
+  public static func startREV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(REVIEW_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEW_ID, at: VT.REVIEW_ID) }
   public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VT.LISTING_ID) }
   public static func add(REVIEWER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_PEER_ID, at: VT.REVIEWER_PEER_ID) }
@@ -67,6 +169,17 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(ACL_GRANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACL_GRANT_ID, at: VT.ACL_GRANT_ID) }
   public static func add(TIMESTAMP: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMESTAMP, def: 0, at: VT.TIMESTAMP) }
   public static func addVectorOf(REVIEWER_SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_SIGNATURE, at: VT.REVIEWER_SIGNATURE) }
+  public static func add(QUALITY_METRICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUALITY_METRICS, at: VT.QUALITY_METRICS) }
+  public static func add(VERIFIED_PURCHASE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERIFIED_PURCHASE, def: false,
+   at: VT.VERIFIED_PURCHASE) }
+  public static func add(UPDATED_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPDATED_AT, def: 0, at: VT.UPDATED_AT) }
+  public static func add(STATUS: reviewLifecycleStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(HELPFUL_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELPFUL_COUNT, def: 0, at: VT.HELPFUL_COUNT) }
+  public static func add(NOT_HELPFUL_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOT_HELPFUL_COUNT, def: 0, at: VT.NOT_HELPFUL_COUNT) }
+  public static func add(PROVIDER_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_RESPONSE, at: VT.PROVIDER_RESPONSE) }
+  public static func add(PROVIDER_RESPONSE_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROVIDER_RESPONSE_AT, def: 0, at: VT.PROVIDER_RESPONSE_AT) }
+  public static func add(FLAGGED_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLAGGED_COUNT, def: 0, at: VT.FLAGGED_COUNT) }
+  public static func add(MODERATION_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODERATION_NOTES, at: VT.MODERATION_NOTES) }
   public static func endREV(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
   public static func createREV(
     _ fbb: inout FlatBufferBuilder,
@@ -78,7 +191,17 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CONTENTOffset CONTENT: Offset = Offset(),
     ACL_GRANT_IDOffset ACL_GRANT_ID: Offset = Offset(),
     TIMESTAMP: UInt64 = 0,
-    REVIEWER_SIGNATUREVectorOffset REVIEWER_SIGNATURE: Offset = Offset()
+    REVIEWER_SIGNATUREVectorOffset REVIEWER_SIGNATURE: Offset = Offset(),
+    QUALITY_METRICSOffset QUALITY_METRICS: Offset = Offset(),
+    VERIFIED_PURCHASE: Bool = false,
+    UPDATED_AT: UInt64 = 0,
+    STATUS: reviewLifecycleStatus = .published,
+    HELPFUL_COUNT: UInt32 = 0,
+    NOT_HELPFUL_COUNT: UInt32 = 0,
+    PROVIDER_RESPONSEOffset PROVIDER_RESPONSE: Offset = Offset(),
+    PROVIDER_RESPONSE_AT: UInt64 = 0,
+    FLAGGED_COUNT: UInt32 = 0,
+    MODERATION_NOTESOffset MODERATION_NOTES: Offset = Offset()
   ) -> Offset {
     let __start = REV.startREV(&fbb)
     REV.add(REVIEW_ID: REVIEW_ID, &fbb)
@@ -90,6 +213,16 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     REV.add(ACL_GRANT_ID: ACL_GRANT_ID, &fbb)
     REV.add(TIMESTAMP: TIMESTAMP, &fbb)
     REV.addVectorOf(REVIEWER_SIGNATURE: REVIEWER_SIGNATURE, &fbb)
+    REV.add(QUALITY_METRICS: QUALITY_METRICS, &fbb)
+    REV.add(VERIFIED_PURCHASE: VERIFIED_PURCHASE, &fbb)
+    REV.add(UPDATED_AT: UPDATED_AT, &fbb)
+    REV.add(STATUS: STATUS, &fbb)
+    REV.add(HELPFUL_COUNT: HELPFUL_COUNT, &fbb)
+    REV.add(NOT_HELPFUL_COUNT: NOT_HELPFUL_COUNT, &fbb)
+    REV.add(PROVIDER_RESPONSE: PROVIDER_RESPONSE, &fbb)
+    REV.add(PROVIDER_RESPONSE_AT: PROVIDER_RESPONSE_AT, &fbb)
+    REV.add(FLAGGED_COUNT: FLAGGED_COUNT, &fbb)
+    REV.add(MODERATION_NOTES: MODERATION_NOTES, &fbb)
     return REV.endREV(&fbb, start: __start)
   }
 
@@ -104,6 +237,16 @@ public struct REV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.ACL_GRANT_ID, fieldName: "ACL_GRANT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.TIMESTAMP, fieldName: "TIMESTAMP", required: false, type: UInt64.self)
     try _v.visit(field: VT.REVIEWER_SIGNATURE, fieldName: "REVIEWER_SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.QUALITY_METRICS, fieldName: "QUALITY_METRICS", required: false, type: ForwardOffset<DataQualityMetrics>.self)
+    try _v.visit(field: VT.VERIFIED_PURCHASE, fieldName: "VERIFIED_PURCHASE", required: false, type: Bool.self)
+    try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: reviewLifecycleStatus.self)
+    try _v.visit(field: VT.HELPFUL_COUNT, fieldName: "HELPFUL_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NOT_HELPFUL_COUNT, fieldName: "NOT_HELPFUL_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PROVIDER_RESPONSE, fieldName: "PROVIDER_RESPONSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROVIDER_RESPONSE_AT, fieldName: "PROVIDER_RESPONSE_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.FLAGGED_COUNT, fieldName: "FLAGGED_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MODERATION_NOTES, fieldName: "MODERATION_NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

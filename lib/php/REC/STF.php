@@ -229,22 +229,139 @@ class STF extends Table
         return $this->__vector_as_bytes(34);
     }
 
+    /// Listing category: data stream or WASM module
+    /**
+     * @return sbyte
+     */
+    public function getLISTING_KIND()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \listingCategory::DataStream;
+    }
+
+    /// Search tags
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getTAGS($j)
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTAGSLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Number of records in sample data, when available
+    /**
+     * @return uint
+     */
+    public function getSAMPLE_RECORD_COUNT()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Supported delivery methods
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getDELIVERY_METHODS($j)
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDELIVERY_METHODSLength()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Protected delivery metadata for encrypted artifacts or streams
+    public function getPROTECTED_DELIVERY()
+    {
+        $obj = new ProtectedDeliveryBinding();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Provider reputation summary
+    public function getREPUTATION()
+    {
+        $obj = new ProviderReputation();
+        $o = $this->__offset(46);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Listing version
+    /**
+     * @return uint
+     */
+    public function getVERSION()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when the listing expires, or 0 for no expiry
+    /**
+     * @return ulong
+     */
+    public function getEXPIRES_AT()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Terms document CID
+    public function getTERMS_CID()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// License label or SPDX-style identifier
+    public function getLICENSE()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Peer ID this listing was sourced from when discovered remotely
+    public function getSOURCE_PEER_ID()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSTF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(27);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return STF
      */
-    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE)
+    public static function createSTF(FlatBufferBuilder $builder, $LISTING_ID, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $TITLE, $DESCRIPTION, $DATA_TYPES, $COVERAGE, $SAMPLE_CID, $ACCESS_TYPE, $ENCRYPTION_REQUIRED, $PRICING, $ACCEPTED_PAYMENTS, $CREATED_AT, $UPDATED_AT, $ACTIVE, $SIGNATURE, $LISTING_KIND, $TAGS, $SAMPLE_RECORD_COUNT, $DELIVERY_METHODS, $PROTECTED_DELIVERY, $REPUTATION, $VERSION, $EXPIRES_AT, $TERMS_CID, $LICENSE, $SOURCE_PEER_ID)
     {
-        $builder->startObject(16);
+        $builder->startObject(27);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
         self::addPROVIDER_EPM_CID($builder, $PROVIDER_EPM_CID);
@@ -261,6 +378,17 @@ class STF extends Table
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addACTIVE($builder, $ACTIVE);
         self::addSIGNATURE($builder, $SIGNATURE);
+        self::addLISTING_KIND($builder, $LISTING_KIND);
+        self::addTAGS($builder, $TAGS);
+        self::addSAMPLE_RECORD_COUNT($builder, $SAMPLE_RECORD_COUNT);
+        self::addDELIVERY_METHODS($builder, $DELIVERY_METHODS);
+        self::addPROTECTED_DELIVERY($builder, $PROTECTED_DELIVERY);
+        self::addREPUTATION($builder, $REPUTATION);
+        self::addVERSION($builder, $VERSION);
+        self::addEXPIRES_AT($builder, $EXPIRES_AT);
+        self::addTERMS_CID($builder, $TERMS_CID);
+        self::addLICENSE($builder, $LICENSE);
+        self::addSOURCE_PEER_ID($builder, $SOURCE_PEER_ID);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LISTING_ID
         $builder->required($o, 6);  // PROVIDER_PEER_ID
@@ -522,6 +650,164 @@ class STF extends Table
     public static function startSIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addLISTING_KIND(FlatBufferBuilder $builder, $LISTING_KIND)
+    {
+        $builder->addSbyteX(16, $LISTING_KIND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
+    {
+        $builder->addOffsetX(17, $TAGS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTAGSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAMPLE_RECORD_COUNT(FlatBufferBuilder $builder, $SAMPLE_RECORD_COUNT)
+    {
+        $builder->addUintX(18, $SAMPLE_RECORD_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDELIVERY_METHODS(FlatBufferBuilder $builder, $DELIVERY_METHODS)
+    {
+        $builder->addOffsetX(19, $DELIVERY_METHODS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDELIVERY_METHODSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDELIVERY_METHODSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROTECTED_DELIVERY(FlatBufferBuilder $builder, $PROTECTED_DELIVERY)
+    {
+        $builder->addOffsetX(20, $PROTECTED_DELIVERY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREPUTATION(FlatBufferBuilder $builder, $REPUTATION)
+    {
+        $builder->addOffsetX(21, $REPUTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addVERSION(FlatBufferBuilder $builder, $VERSION)
+    {
+        $builder->addUintX(22, $VERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addEXPIRES_AT(FlatBufferBuilder $builder, $EXPIRES_AT)
+    {
+        $builder->addUlongX(23, $EXPIRES_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTERMS_CID(FlatBufferBuilder $builder, $TERMS_CID)
+    {
+        $builder->addOffsetX(24, $TERMS_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLICENSE(FlatBufferBuilder $builder, $LICENSE)
+    {
+        $builder->addOffsetX(25, $LICENSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE_PEER_ID(FlatBufferBuilder $builder, $SOURCE_PEER_ID)
+    {
+        $builder->addOffsetX(26, $SOURCE_PEER_ID, 0);
     }
 
     /**

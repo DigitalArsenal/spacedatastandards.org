@@ -183,22 +183,200 @@ class PUR extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
+    /// Key algorithm for buyer encryption public key
+    public function getKEY_ALGORITHM()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Buyer contact email
+    public function getBUYER_EMAIL()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// On-chain sender address or fiat payment source reference
+    public function getSENDER_ADDRESS()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Confirmation block for on-chain payments
+    /**
+     * @return ulong
+     */
+    public function getCONFIRMATION_BLOCK()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Fiat processor payment intent identifier
+    public function getPAYMENT_INTENT_ID()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// SDN credits transaction identifier
+    public function getCREDITS_TRANSACTION_ID()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider-side purchase status
+    /**
+     * @return sbyte
+     */
+    public function getSTATUS()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \purchaseLifecycleStatus::Pending;
+    }
+
+    /// Human-readable status message
+    public function getSTATUS_MESSAGE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp when the purchase record was created
+    /**
+     * @return ulong
+     */
+    public function getCREATED_AT()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when the purchase record was updated
+    /**
+     * @return ulong
+     */
+    public function getUPDATED_AT()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when payment must be received
+    /**
+     * @return ulong
+     */
+    public function getPAYMENT_DEADLINE()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when payment was confirmed
+    /**
+     * @return ulong
+     */
+    public function getPAYMENT_CONFIRMED_AT()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when the grant was issued
+    /**
+     * @return ulong
+     */
+    public function getGRANT_ISSUED_AT()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Issued grant identifier
+    public function getGRANT_ID()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider peer ID
+    public function getPROVIDER_PEER_ID()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp when provider acknowledged the request
+    /**
+     * @return ulong
+     */
+    public function getPROVIDER_ACKNOWLEDGED_AT()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Preferred delivery method
+    public function getPREFERRED_DELIVERY_METHOD()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Buyer webhook URL for delivery callbacks
+    public function getWEBHOOK_URL()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Ed25519 signature from provider
+    /**
+     * @param int offset
+     * @return byte
+     */
+    public function getPROVIDER_SIGNATURE($j)
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPROVIDER_SIGNATURELength()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPROVIDER_SIGNATUREBytes()
+    {
+        return $this->__vector_as_bytes(66);
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPUR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(32);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PUR
      */
-    public static function createPUR(FlatBufferBuilder $builder, $REQUEST_ID, $LISTING_ID, $TIER_NAME, $BUYER_PEER_ID, $BUYER_ENCRYPTION_PUBKEY, $PAYMENT_METHOD, $PAYMENT_AMOUNT, $PAYMENT_CURRENCY, $PAYMENT_TX_HASH, $PAYMENT_CHAIN, $PAYMENT_REFERENCE, $BUYER_SIGNATURE, $TIMESTAMP)
+    public static function createPUR(FlatBufferBuilder $builder, $REQUEST_ID, $LISTING_ID, $TIER_NAME, $BUYER_PEER_ID, $BUYER_ENCRYPTION_PUBKEY, $PAYMENT_METHOD, $PAYMENT_AMOUNT, $PAYMENT_CURRENCY, $PAYMENT_TX_HASH, $PAYMENT_CHAIN, $PAYMENT_REFERENCE, $BUYER_SIGNATURE, $TIMESTAMP, $KEY_ALGORITHM, $BUYER_EMAIL, $SENDER_ADDRESS, $CONFIRMATION_BLOCK, $PAYMENT_INTENT_ID, $CREDITS_TRANSACTION_ID, $STATUS, $STATUS_MESSAGE, $CREATED_AT, $UPDATED_AT, $PAYMENT_DEADLINE, $PAYMENT_CONFIRMED_AT, $GRANT_ISSUED_AT, $GRANT_ID, $PROVIDER_PEER_ID, $PROVIDER_ACKNOWLEDGED_AT, $PREFERRED_DELIVERY_METHOD, $WEBHOOK_URL, $PROVIDER_SIGNATURE)
     {
-        $builder->startObject(13);
+        $builder->startObject(32);
         self::addREQUEST_ID($builder, $REQUEST_ID);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addTIER_NAME($builder, $TIER_NAME);
@@ -212,6 +390,25 @@ class PUR extends Table
         self::addPAYMENT_REFERENCE($builder, $PAYMENT_REFERENCE);
         self::addBUYER_SIGNATURE($builder, $BUYER_SIGNATURE);
         self::addTIMESTAMP($builder, $TIMESTAMP);
+        self::addKEY_ALGORITHM($builder, $KEY_ALGORITHM);
+        self::addBUYER_EMAIL($builder, $BUYER_EMAIL);
+        self::addSENDER_ADDRESS($builder, $SENDER_ADDRESS);
+        self::addCONFIRMATION_BLOCK($builder, $CONFIRMATION_BLOCK);
+        self::addPAYMENT_INTENT_ID($builder, $PAYMENT_INTENT_ID);
+        self::addCREDITS_TRANSACTION_ID($builder, $CREDITS_TRANSACTION_ID);
+        self::addSTATUS($builder, $STATUS);
+        self::addSTATUS_MESSAGE($builder, $STATUS_MESSAGE);
+        self::addCREATED_AT($builder, $CREATED_AT);
+        self::addUPDATED_AT($builder, $UPDATED_AT);
+        self::addPAYMENT_DEADLINE($builder, $PAYMENT_DEADLINE);
+        self::addPAYMENT_CONFIRMED_AT($builder, $PAYMENT_CONFIRMED_AT);
+        self::addGRANT_ISSUED_AT($builder, $GRANT_ISSUED_AT);
+        self::addGRANT_ID($builder, $GRANT_ID);
+        self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
+        self::addPROVIDER_ACKNOWLEDGED_AT($builder, $PROVIDER_ACKNOWLEDGED_AT);
+        self::addPREFERRED_DELIVERY_METHOD($builder, $PREFERRED_DELIVERY_METHOD);
+        self::addWEBHOOK_URL($builder, $WEBHOOK_URL);
+        self::addPROVIDER_SIGNATURE($builder, $PROVIDER_SIGNATURE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // REQUEST_ID
         $builder->required($o, 6);  // LISTING_ID
@@ -396,6 +593,220 @@ class PUR extends Table
     public static function addTIMESTAMP(FlatBufferBuilder $builder, $TIMESTAMP)
     {
         $builder->addUlongX(12, $TIMESTAMP, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addKEY_ALGORITHM(FlatBufferBuilder $builder, $KEY_ALGORITHM)
+    {
+        $builder->addOffsetX(13, $KEY_ALGORITHM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBUYER_EMAIL(FlatBufferBuilder $builder, $BUYER_EMAIL)
+    {
+        $builder->addOffsetX(14, $BUYER_EMAIL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENDER_ADDRESS(FlatBufferBuilder $builder, $SENDER_ADDRESS)
+    {
+        $builder->addOffsetX(15, $SENDER_ADDRESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addCONFIRMATION_BLOCK(FlatBufferBuilder $builder, $CONFIRMATION_BLOCK)
+    {
+        $builder->addUlongX(16, $CONFIRMATION_BLOCK, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPAYMENT_INTENT_ID(FlatBufferBuilder $builder, $PAYMENT_INTENT_ID)
+    {
+        $builder->addOffsetX(17, $PAYMENT_INTENT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCREDITS_TRANSACTION_ID(FlatBufferBuilder $builder, $CREDITS_TRANSACTION_ID)
+    {
+        $builder->addOffsetX(18, $CREDITS_TRANSACTION_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
+    {
+        $builder->addSbyteX(19, $STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTATUS_MESSAGE(FlatBufferBuilder $builder, $STATUS_MESSAGE)
+    {
+        $builder->addOffsetX(20, $STATUS_MESSAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addCREATED_AT(FlatBufferBuilder $builder, $CREATED_AT)
+    {
+        $builder->addUlongX(21, $CREATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
+    {
+        $builder->addUlongX(22, $UPDATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addPAYMENT_DEADLINE(FlatBufferBuilder $builder, $PAYMENT_DEADLINE)
+    {
+        $builder->addUlongX(23, $PAYMENT_DEADLINE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addPAYMENT_CONFIRMED_AT(FlatBufferBuilder $builder, $PAYMENT_CONFIRMED_AT)
+    {
+        $builder->addUlongX(24, $PAYMENT_CONFIRMED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addGRANT_ISSUED_AT(FlatBufferBuilder $builder, $GRANT_ISSUED_AT)
+    {
+        $builder->addUlongX(25, $GRANT_ISSUED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGRANT_ID(FlatBufferBuilder $builder, $GRANT_ID)
+    {
+        $builder->addOffsetX(26, $GRANT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_PEER_ID(FlatBufferBuilder $builder, $PROVIDER_PEER_ID)
+    {
+        $builder->addOffsetX(27, $PROVIDER_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addPROVIDER_ACKNOWLEDGED_AT(FlatBufferBuilder $builder, $PROVIDER_ACKNOWLEDGED_AT)
+    {
+        $builder->addUlongX(28, $PROVIDER_ACKNOWLEDGED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPREFERRED_DELIVERY_METHOD(FlatBufferBuilder $builder, $PREFERRED_DELIVERY_METHOD)
+    {
+        $builder->addOffsetX(29, $PREFERRED_DELIVERY_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addWEBHOOK_URL(FlatBufferBuilder $builder, $WEBHOOK_URL)
+    {
+        $builder->addOffsetX(30, $WEBHOOK_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVIDER_SIGNATURE(FlatBufferBuilder $builder, $PROVIDER_SIGNATURE)
+    {
+        $builder->addOffsetX(31, $PROVIDER_SIGNATURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPROVIDER_SIGNATUREVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(1, count($data), 1);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putByte($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPROVIDER_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(1, $numElems, 1);
     }
 
     /**

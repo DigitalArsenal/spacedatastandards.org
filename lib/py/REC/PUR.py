@@ -173,8 +173,180 @@ class PUR(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # Key algorithm for buyer encryption public key
+    # PUR
+    def KEY_ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Buyer contact email
+    # PUR
+    def BUYER_EMAIL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # On-chain sender address or fiat payment source reference
+    # PUR
+    def SENDER_ADDRESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Confirmation block for on-chain payments
+    # PUR
+    def CONFIRMATION_BLOCK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Fiat processor payment intent identifier
+    # PUR
+    def PAYMENT_INTENT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SDN credits transaction identifier
+    # PUR
+    def CREDITS_TRANSACTION_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Provider-side purchase status
+    # PUR
+    def STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Human-readable status message
+    # PUR
+    def STATUS_MESSAGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp when the purchase record was created
+    # PUR
+    def CREATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when the purchase record was updated
+    # PUR
+    def UPDATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when payment must be received
+    # PUR
+    def PAYMENT_DEADLINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when payment was confirmed
+    # PUR
+    def PAYMENT_CONFIRMED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when the grant was issued
+    # PUR
+    def GRANT_ISSUED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Issued grant identifier
+    # PUR
+    def GRANT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Provider peer ID
+    # PUR
+    def PROVIDER_PEER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp when provider acknowledged the request
+    # PUR
+    def PROVIDER_ACKNOWLEDGED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Preferred delivery method
+    # PUR
+    def PREFERRED_DELIVERY_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Buyer webhook URL for delivery callbacks
+    # PUR
+    def WEBHOOK_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Ed25519 signature from provider
+    # PUR
+    def PROVIDER_SIGNATURE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # PUR
+    def PROVIDER_SIGNATUREAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
+        return 0
+
+    # PUR
+    def PROVIDER_SIGNATURELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PUR
+    def PROVIDER_SIGNATUREIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        return o == 0
+
 def PURStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(32)
 
 def Start(builder):
     PURStart(builder)
@@ -289,6 +461,136 @@ def PURAddTIMESTAMP(builder, TIMESTAMP):
 def AddTIMESTAMP(builder, TIMESTAMP):
     PURAddTIMESTAMP(builder, TIMESTAMP)
 
+def PURAddKEY_ALGORITHM(builder, KEY_ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ALGORITHM), 0)
+
+def AddKEY_ALGORITHM(builder, KEY_ALGORITHM):
+    PURAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+
+def PURAddBUYER_EMAIL(builder, BUYER_EMAIL):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(BUYER_EMAIL), 0)
+
+def AddBUYER_EMAIL(builder, BUYER_EMAIL):
+    PURAddBUYER_EMAIL(builder, BUYER_EMAIL)
+
+def PURAddSENDER_ADDRESS(builder, SENDER_ADDRESS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SENDER_ADDRESS), 0)
+
+def AddSENDER_ADDRESS(builder, SENDER_ADDRESS):
+    PURAddSENDER_ADDRESS(builder, SENDER_ADDRESS)
+
+def PURAddCONFIRMATION_BLOCK(builder, CONFIRMATION_BLOCK):
+    builder.PrependUint64Slot(16, CONFIRMATION_BLOCK, 0)
+
+def AddCONFIRMATION_BLOCK(builder, CONFIRMATION_BLOCK):
+    PURAddCONFIRMATION_BLOCK(builder, CONFIRMATION_BLOCK)
+
+def PURAddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_ID):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PAYMENT_INTENT_ID), 0)
+
+def AddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_ID):
+    PURAddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_ID)
+
+def PURAddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CREDITS_TRANSACTION_ID), 0)
+
+def AddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_ID):
+    PURAddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_ID)
+
+def PURAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(19, STATUS, 0)
+
+def AddSTATUS(builder, STATUS):
+    PURAddSTATUS(builder, STATUS)
+
+def PURAddSTATUS_MESSAGE(builder, STATUS_MESSAGE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS_MESSAGE), 0)
+
+def AddSTATUS_MESSAGE(builder, STATUS_MESSAGE):
+    PURAddSTATUS_MESSAGE(builder, STATUS_MESSAGE)
+
+def PURAddCREATED_AT(builder, CREATED_AT):
+    builder.PrependUint64Slot(21, CREATED_AT, 0)
+
+def AddCREATED_AT(builder, CREATED_AT):
+    PURAddCREATED_AT(builder, CREATED_AT)
+
+def PURAddUPDATED_AT(builder, UPDATED_AT):
+    builder.PrependUint64Slot(22, UPDATED_AT, 0)
+
+def AddUPDATED_AT(builder, UPDATED_AT):
+    PURAddUPDATED_AT(builder, UPDATED_AT)
+
+def PURAddPAYMENT_DEADLINE(builder, PAYMENT_DEADLINE):
+    builder.PrependUint64Slot(23, PAYMENT_DEADLINE, 0)
+
+def AddPAYMENT_DEADLINE(builder, PAYMENT_DEADLINE):
+    PURAddPAYMENT_DEADLINE(builder, PAYMENT_DEADLINE)
+
+def PURAddPAYMENT_CONFIRMED_AT(builder, PAYMENT_CONFIRMED_AT):
+    builder.PrependUint64Slot(24, PAYMENT_CONFIRMED_AT, 0)
+
+def AddPAYMENT_CONFIRMED_AT(builder, PAYMENT_CONFIRMED_AT):
+    PURAddPAYMENT_CONFIRMED_AT(builder, PAYMENT_CONFIRMED_AT)
+
+def PURAddGRANT_ISSUED_AT(builder, GRANT_ISSUED_AT):
+    builder.PrependUint64Slot(25, GRANT_ISSUED_AT, 0)
+
+def AddGRANT_ISSUED_AT(builder, GRANT_ISSUED_AT):
+    PURAddGRANT_ISSUED_AT(builder, GRANT_ISSUED_AT)
+
+def PURAddGRANT_ID(builder, GRANT_ID):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_ID), 0)
+
+def AddGRANT_ID(builder, GRANT_ID):
+    PURAddGRANT_ID(builder, GRANT_ID)
+
+def PURAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
+
+def AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
+    PURAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+
+def PURAddPROVIDER_ACKNOWLEDGED_AT(builder, PROVIDER_ACKNOWLEDGED_AT):
+    builder.PrependUint64Slot(28, PROVIDER_ACKNOWLEDGED_AT, 0)
+
+def AddPROVIDER_ACKNOWLEDGED_AT(builder, PROVIDER_ACKNOWLEDGED_AT):
+    PURAddPROVIDER_ACKNOWLEDGED_AT(builder, PROVIDER_ACKNOWLEDGED_AT)
+
+def PURAddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHOD):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(PREFERRED_DELIVERY_METHOD), 0)
+
+def AddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHOD):
+    PURAddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHOD)
+
+def PURAddWEBHOOK_URL(builder, WEBHOOK_URL):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(WEBHOOK_URL), 0)
+
+def AddWEBHOOK_URL(builder, WEBHOOK_URL):
+    PURAddWEBHOOK_URL(builder, WEBHOOK_URL)
+
+def PURAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_SIGNATURE), 0)
+
+def AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE):
+    PURAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
+
+def PURStartPROVIDER_SIGNATUREVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+def StartPROVIDER_SIGNATUREVector(builder, numElems):
+    return PURStartPROVIDER_SIGNATUREVector(builder, numElems)
+
+def PURCreatePROVIDER_SIGNATUREVector(builder, data):
+    data = list(data)
+    builder.StartVector(1, len(data), 1)
+    for item in reversed(data):
+        builder.PrependUint8(item)
+    return builder.EndVector()
+
+def CreatePROVIDER_SIGNATUREVector(builder, data):
+    PURCreatePROVIDER_SIGNATUREVector(builder, data)
+
 def PUREnd(builder):
     return builder.EndObject()
 
@@ -318,6 +620,25 @@ class PURT(object):
         PAYMENT_REFERENCE = None,
         BUYER_SIGNATURE = None,
         TIMESTAMP = 0,
+        KEY_ALGORITHM = None,
+        BUYER_EMAIL = None,
+        SENDER_ADDRESS = None,
+        CONFIRMATION_BLOCK = 0,
+        PAYMENT_INTENT_ID = None,
+        CREDITS_TRANSACTION_ID = None,
+        STATUS = 0,
+        STATUS_MESSAGE = None,
+        CREATED_AT = 0,
+        UPDATED_AT = 0,
+        PAYMENT_DEADLINE = 0,
+        PAYMENT_CONFIRMED_AT = 0,
+        GRANT_ISSUED_AT = 0,
+        GRANT_ID = None,
+        PROVIDER_PEER_ID = None,
+        PROVIDER_ACKNOWLEDGED_AT = 0,
+        PREFERRED_DELIVERY_METHOD = None,
+        WEBHOOK_URL = None,
+        PROVIDER_SIGNATURE = None,
     ):
         self.REQUEST_ID = REQUEST_ID  # type: Optional[str]
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
@@ -332,6 +653,25 @@ class PURT(object):
         self.PAYMENT_REFERENCE = PAYMENT_REFERENCE  # type: Optional[str]
         self.BUYER_SIGNATURE = BUYER_SIGNATURE  # type: Optional[List[int]]
         self.TIMESTAMP = TIMESTAMP  # type: int
+        self.KEY_ALGORITHM = KEY_ALGORITHM  # type: Optional[str]
+        self.BUYER_EMAIL = BUYER_EMAIL  # type: Optional[str]
+        self.SENDER_ADDRESS = SENDER_ADDRESS  # type: Optional[str]
+        self.CONFIRMATION_BLOCK = CONFIRMATION_BLOCK  # type: int
+        self.PAYMENT_INTENT_ID = PAYMENT_INTENT_ID  # type: Optional[str]
+        self.CREDITS_TRANSACTION_ID = CREDITS_TRANSACTION_ID  # type: Optional[str]
+        self.STATUS = STATUS  # type: int
+        self.STATUS_MESSAGE = STATUS_MESSAGE  # type: Optional[str]
+        self.CREATED_AT = CREATED_AT  # type: int
+        self.UPDATED_AT = UPDATED_AT  # type: int
+        self.PAYMENT_DEADLINE = PAYMENT_DEADLINE  # type: int
+        self.PAYMENT_CONFIRMED_AT = PAYMENT_CONFIRMED_AT  # type: int
+        self.GRANT_ISSUED_AT = GRANT_ISSUED_AT  # type: int
+        self.GRANT_ID = GRANT_ID  # type: Optional[str]
+        self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
+        self.PROVIDER_ACKNOWLEDGED_AT = PROVIDER_ACKNOWLEDGED_AT  # type: int
+        self.PREFERRED_DELIVERY_METHOD = PREFERRED_DELIVERY_METHOD  # type: Optional[str]
+        self.WEBHOOK_URL = WEBHOOK_URL  # type: Optional[str]
+        self.PROVIDER_SIGNATURE = PROVIDER_SIGNATURE  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -379,6 +719,31 @@ class PURT(object):
             else:
                 self.BUYER_SIGNATURE = PUR.BUYER_SIGNATUREAsNumpy()
         self.TIMESTAMP = PUR.TIMESTAMP()
+        self.KEY_ALGORITHM = PUR.KEY_ALGORITHM()
+        self.BUYER_EMAIL = PUR.BUYER_EMAIL()
+        self.SENDER_ADDRESS = PUR.SENDER_ADDRESS()
+        self.CONFIRMATION_BLOCK = PUR.CONFIRMATION_BLOCK()
+        self.PAYMENT_INTENT_ID = PUR.PAYMENT_INTENT_ID()
+        self.CREDITS_TRANSACTION_ID = PUR.CREDITS_TRANSACTION_ID()
+        self.STATUS = PUR.STATUS()
+        self.STATUS_MESSAGE = PUR.STATUS_MESSAGE()
+        self.CREATED_AT = PUR.CREATED_AT()
+        self.UPDATED_AT = PUR.UPDATED_AT()
+        self.PAYMENT_DEADLINE = PUR.PAYMENT_DEADLINE()
+        self.PAYMENT_CONFIRMED_AT = PUR.PAYMENT_CONFIRMED_AT()
+        self.GRANT_ISSUED_AT = PUR.GRANT_ISSUED_AT()
+        self.GRANT_ID = PUR.GRANT_ID()
+        self.PROVIDER_PEER_ID = PUR.PROVIDER_PEER_ID()
+        self.PROVIDER_ACKNOWLEDGED_AT = PUR.PROVIDER_ACKNOWLEDGED_AT()
+        self.PREFERRED_DELIVERY_METHOD = PUR.PREFERRED_DELIVERY_METHOD()
+        self.WEBHOOK_URL = PUR.WEBHOOK_URL()
+        if not PUR.PROVIDER_SIGNATUREIsNone():
+            if np is None:
+                self.PROVIDER_SIGNATURE = []
+                for i in range(PUR.PROVIDER_SIGNATURELength()):
+                    self.PROVIDER_SIGNATURE.append(PUR.PROVIDER_SIGNATURE(i))
+            else:
+                self.PROVIDER_SIGNATURE = PUR.PROVIDER_SIGNATUREAsNumpy()
 
     # PURT
     def Pack(self, builder):
@@ -414,6 +779,34 @@ class PURT(object):
                 for i in reversed(range(len(self.BUYER_SIGNATURE))):
                     builder.PrependUint8(self.BUYER_SIGNATURE[i])
                 BUYER_SIGNATURE = builder.EndVector()
+        if self.KEY_ALGORITHM is not None:
+            KEY_ALGORITHM = builder.CreateString(self.KEY_ALGORITHM)
+        if self.BUYER_EMAIL is not None:
+            BUYER_EMAIL = builder.CreateString(self.BUYER_EMAIL)
+        if self.SENDER_ADDRESS is not None:
+            SENDER_ADDRESS = builder.CreateString(self.SENDER_ADDRESS)
+        if self.PAYMENT_INTENT_ID is not None:
+            PAYMENT_INTENT_ID = builder.CreateString(self.PAYMENT_INTENT_ID)
+        if self.CREDITS_TRANSACTION_ID is not None:
+            CREDITS_TRANSACTION_ID = builder.CreateString(self.CREDITS_TRANSACTION_ID)
+        if self.STATUS_MESSAGE is not None:
+            STATUS_MESSAGE = builder.CreateString(self.STATUS_MESSAGE)
+        if self.GRANT_ID is not None:
+            GRANT_ID = builder.CreateString(self.GRANT_ID)
+        if self.PROVIDER_PEER_ID is not None:
+            PROVIDER_PEER_ID = builder.CreateString(self.PROVIDER_PEER_ID)
+        if self.PREFERRED_DELIVERY_METHOD is not None:
+            PREFERRED_DELIVERY_METHOD = builder.CreateString(self.PREFERRED_DELIVERY_METHOD)
+        if self.WEBHOOK_URL is not None:
+            WEBHOOK_URL = builder.CreateString(self.WEBHOOK_URL)
+        if self.PROVIDER_SIGNATURE is not None:
+            if np is not None and type(self.PROVIDER_SIGNATURE) is np.ndarray:
+                PROVIDER_SIGNATURE = builder.CreateNumpyVector(self.PROVIDER_SIGNATURE)
+            else:
+                PURStartPROVIDER_SIGNATUREVector(builder, len(self.PROVIDER_SIGNATURE))
+                for i in reversed(range(len(self.PROVIDER_SIGNATURE))):
+                    builder.PrependUint8(self.PROVIDER_SIGNATURE[i])
+                PROVIDER_SIGNATURE = builder.EndVector()
         PURStart(builder)
         if self.REQUEST_ID is not None:
             PURAddREQUEST_ID(builder, REQUEST_ID)
@@ -438,5 +831,35 @@ class PURT(object):
         if self.BUYER_SIGNATURE is not None:
             PURAddBUYER_SIGNATURE(builder, BUYER_SIGNATURE)
         PURAddTIMESTAMP(builder, self.TIMESTAMP)
+        if self.KEY_ALGORITHM is not None:
+            PURAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+        if self.BUYER_EMAIL is not None:
+            PURAddBUYER_EMAIL(builder, BUYER_EMAIL)
+        if self.SENDER_ADDRESS is not None:
+            PURAddSENDER_ADDRESS(builder, SENDER_ADDRESS)
+        PURAddCONFIRMATION_BLOCK(builder, self.CONFIRMATION_BLOCK)
+        if self.PAYMENT_INTENT_ID is not None:
+            PURAddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_ID)
+        if self.CREDITS_TRANSACTION_ID is not None:
+            PURAddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_ID)
+        PURAddSTATUS(builder, self.STATUS)
+        if self.STATUS_MESSAGE is not None:
+            PURAddSTATUS_MESSAGE(builder, STATUS_MESSAGE)
+        PURAddCREATED_AT(builder, self.CREATED_AT)
+        PURAddUPDATED_AT(builder, self.UPDATED_AT)
+        PURAddPAYMENT_DEADLINE(builder, self.PAYMENT_DEADLINE)
+        PURAddPAYMENT_CONFIRMED_AT(builder, self.PAYMENT_CONFIRMED_AT)
+        PURAddGRANT_ISSUED_AT(builder, self.GRANT_ISSUED_AT)
+        if self.GRANT_ID is not None:
+            PURAddGRANT_ID(builder, GRANT_ID)
+        if self.PROVIDER_PEER_ID is not None:
+            PURAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+        PURAddPROVIDER_ACKNOWLEDGED_AT(builder, self.PROVIDER_ACKNOWLEDGED_AT)
+        if self.PREFERRED_DELIVERY_METHOD is not None:
+            PURAddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHOD)
+        if self.WEBHOOK_URL is not None:
+            PURAddWEBHOOK_URL(builder, WEBHOOK_URL)
+        if self.PROVIDER_SIGNATURE is not None:
+            PURAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
         PUR = PUREnd(builder)
         return PUR

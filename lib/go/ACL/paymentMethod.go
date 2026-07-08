@@ -20,6 +20,10 @@ const (
 	paymentMethodFiat_Stripe paymentMethod = 4
 	/// Free/open data
 	paymentMethodFree        paymentMethod = 5
+	/// Usage-based billing settled after metered delivery
+	paymentMethodUsageBased  paymentMethod = 6
+	/// Enterprise/offline invoicing
+	paymentMethodEnterprise  paymentMethod = 7
 )
 
 var EnumNamespaymentMethod = map[paymentMethod]string{
@@ -29,6 +33,8 @@ var EnumNamespaymentMethod = map[paymentMethod]string{
 	paymentMethodSDN_Credits: "SDN_Credits",
 	paymentMethodFiat_Stripe: "Fiat_Stripe",
 	paymentMethodFree:        "Free",
+	paymentMethodUsageBased:  "UsageBased",
+	paymentMethodEnterprise:  "Enterprise",
 }
 
 var EnumValuespaymentMethod = map[string]paymentMethod{
@@ -38,6 +44,8 @@ var EnumValuespaymentMethod = map[string]paymentMethod{
 	"SDN_Credits": paymentMethodSDN_Credits,
 	"Fiat_Stripe": paymentMethodFiat_Stripe,
 	"Free":        paymentMethodFree,
+	"UsageBased":  paymentMethodUsageBased,
+	"Enterprise":  paymentMethodEnterprise,
 }
 
 func (v paymentMethod) String() string {

@@ -26,6 +26,21 @@ enum paymentMethod:
     paymentMethod_Fiat_Stripe = 4
     /// Free/open data
     paymentMethod_Free = 5
+    /// Usage-based billing settled after metered delivery
+    paymentMethod_UsageBased = 6
+    /// Enterprise/offline invoicing
+    paymentMethod_Enterprise = 7
+
+/// Listing kind for marketplace entries.
+enum listingCategory:
+    listingCategory_DataStream = 0
+    listingCategory_WasmModule = 1
+
+class GrantFieldStreamPolicy
+
+class ProtectedDeliveryBinding
+
+class ProviderReputation
 
 class SpatialCoverage
 
@@ -36,6 +51,217 @@ class DataCoverage
 class PricingTier
 
 class STF
+
+/// Field-level stream policy bound into protected delivery and grants.
+class GrantFieldStreamPolicy : flatbuffers.handle
+    def POLICY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def POLICY_VERSION() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    def STREAM_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def SCHEMA_CODE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    def ALLOWED_FIELD_PATHS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 4)
+    def ALLOWED_FIELD_PATHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    def REDACTED_FIELD_PATHS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
+    def REDACTED_FIELD_PATHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+    def KEY_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    def GRANT_SCOPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    def ALLOWED_OPERATIONS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
+    def ALLOWED_OPERATIONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+
+def GetRootAsGrantFieldStreamPolicy(buf:string): return GrantFieldStreamPolicy { buf, flatbuffers.indirect(buf, 0) }
+
+struct GrantFieldStreamPolicyBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(9)
+        return this
+    def add_POLICY_ID(POLICY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, POLICY_ID)
+        return this
+    def add_POLICY_VERSION(POLICY_VERSION:int):
+        b_.PrependUint32Slot(1, POLICY_VERSION, 0)
+        return this
+    def add_STREAM_ID(STREAM_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, STREAM_ID)
+        return this
+    def add_SCHEMA_CODE(SCHEMA_CODE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, SCHEMA_CODE)
+        return this
+    def add_ALLOWED_FIELD_PATHS(ALLOWED_FIELD_PATHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ALLOWED_FIELD_PATHS)
+        return this
+    def add_REDACTED_FIELD_PATHS(REDACTED_FIELD_PATHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, REDACTED_FIELD_PATHS)
+        return this
+    def add_KEY_EPOCH(KEY_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, KEY_EPOCH)
+        return this
+    def add_GRANT_SCOPE(GRANT_SCOPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, GRANT_SCOPE)
+        return this
+    def add_ALLOWED_OPERATIONS(ALLOWED_OPERATIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, ALLOWED_OPERATIONS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def GrantFieldStreamPolicyStartALLOWEDFIELDPATHSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def GrantFieldStreamPolicyCreateALLOWEDFIELDPATHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def GrantFieldStreamPolicyStartREDACTEDFIELDPATHSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def GrantFieldStreamPolicyCreateREDACTEDFIELDPATHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def GrantFieldStreamPolicyStartALLOWEDOPERATIONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def GrantFieldStreamPolicyCreateALLOWEDOPERATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Immutable encrypted artifact/window metadata for protected delivery.
+class ProtectedDeliveryBinding : flatbuffers.handle
+    def ENCRYPTED_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def MANIFEST_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def CONTENT_HASH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def CONTENT_KEY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    def LICENSE_MODULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    def MODULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    def MODULE_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    def REQUIRED_SCOPES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
+    def REQUIRED_SCOPES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    def GRANT_SCOPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    def DELIVERY_PROTOCOL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    def FIELD_STREAM_POLICY() -> GrantFieldStreamPolicy?:
+        let o = flatbuffers.field_table(buf_, pos_, 24)
+        return if o: GrantFieldStreamPolicy { buf_, o } else: nil
+
+def GetRootAsProtectedDeliveryBinding(buf:string): return ProtectedDeliveryBinding { buf, flatbuffers.indirect(buf, 0) }
+
+struct ProtectedDeliveryBindingBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_ENCRYPTED_CID(ENCRYPTED_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ENCRYPTED_CID)
+        return this
+    def add_MANIFEST_CID(MANIFEST_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, MANIFEST_CID)
+        return this
+    def add_CONTENT_HASH(CONTENT_HASH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CONTENT_HASH)
+        return this
+    def add_CONTENT_KEY_ID(CONTENT_KEY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, CONTENT_KEY_ID)
+        return this
+    def add_LICENSE_MODULE_ID(LICENSE_MODULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, LICENSE_MODULE_ID)
+        return this
+    def add_MODULE_ID(MODULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, MODULE_ID)
+        return this
+    def add_MODULE_VERSION(MODULE_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, MODULE_VERSION)
+        return this
+    def add_REQUIRED_SCOPES(REQUIRED_SCOPES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, REQUIRED_SCOPES)
+        return this
+    def add_GRANT_SCOPE(GRANT_SCOPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, GRANT_SCOPE)
+        return this
+    def add_DELIVERY_PROTOCOL(DELIVERY_PROTOCOL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, DELIVERY_PROTOCOL)
+        return this
+    def add_FIELD_STREAM_POLICY(FIELD_STREAM_POLICY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, FIELD_STREAM_POLICY)
+        return this
+    def end():
+        return b_.EndObject()
+
+def ProtectedDeliveryBindingStartREQUIREDSCOPESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def ProtectedDeliveryBindingCreateREQUIREDSCOPESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Provider reputation summary surfaced in marketplace listings.
+class ProviderReputation : flatbuffers.handle
+    def TOTAL_SALES() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 4, 0)
+    def AVERAGE_RATING_X10() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 6, 0)
+    def TOTAL_RATINGS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    def UPTIME_PERCENTAGE_X100() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 10, 0)
+    def AVG_DELIVERY_LATENCY_MS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    def DISPUTE_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 14, 0)
+    def PROVIDER_SINCE() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 16, 0)
+
+def GetRootAsProviderReputation(buf:string): return ProviderReputation { buf, flatbuffers.indirect(buf, 0) }
+
+struct ProviderReputationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_TOTAL_SALES(TOTAL_SALES:int):
+        b_.PrependUint64Slot(0, TOTAL_SALES, 0)
+        return this
+    def add_AVERAGE_RATING_X10(AVERAGE_RATING_X10:int):
+        b_.PrependUint16Slot(1, AVERAGE_RATING_X10, 0)
+        return this
+    def add_TOTAL_RATINGS(TOTAL_RATINGS:int):
+        b_.PrependUint32Slot(2, TOTAL_RATINGS, 0)
+        return this
+    def add_UPTIME_PERCENTAGE_X100(UPTIME_PERCENTAGE_X100:int):
+        b_.PrependUint16Slot(3, UPTIME_PERCENTAGE_X100, 0)
+        return this
+    def add_AVG_DELIVERY_LATENCY_MS(AVG_DELIVERY_LATENCY_MS:int):
+        b_.PrependUint32Slot(4, AVG_DELIVERY_LATENCY_MS, 0)
+        return this
+    def add_DISPUTE_COUNT(DISPUTE_COUNT:int):
+        b_.PrependUint32Slot(5, DISPUTE_COUNT, 0)
+        return this
+    def add_PROVIDER_SINCE(PROVIDER_SINCE:int):
+        b_.PrependUint64Slot(6, PROVIDER_SINCE, 0)
+        return this
+    def end():
+        return b_.EndObject()
 
 /// Spatial coverage definition
 class SpatialCoverage : flatbuffers.handle
@@ -52,13 +278,24 @@ class SpatialCoverage : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 8) + i * 4)
     def OBJECT_IDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Minimum altitude in kilometers for altitude-bounded offerings
+    def MIN_ALTITUDE_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// Maximum altitude in kilometers for altitude-bounded offerings
+    def MAX_ALTITUDE_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
+    def GEO_BOUNDS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 8)
+    def GEO_BOUNDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
 
 def GetRootAsSpatialCoverage(buf:string): return SpatialCoverage { buf, flatbuffers.indirect(buf, 0) }
 
 struct SpatialCoverageBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(6)
         return this
     def add_TYPE(TYPE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, TYPE)
@@ -68,6 +305,15 @@ struct SpatialCoverageBuilder:
         return this
     def add_OBJECT_IDS(OBJECT_IDS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, OBJECT_IDS)
+        return this
+    def add_MIN_ALTITUDE_KM(MIN_ALTITUDE_KM:float):
+        b_.PrependFloat64Slot(3, MIN_ALTITUDE_KM, 0.0)
+        return this
+    def add_MAX_ALTITUDE_KM(MAX_ALTITUDE_KM:float):
+        b_.PrependFloat64Slot(4, MAX_ALTITUDE_KM, 0.0)
+        return this
+    def add_GEO_BOUNDS(GEO_BOUNDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, GEO_BOUNDS)
         return this
     def end():
         return b_.EndObject()
@@ -86,6 +332,13 @@ def SpatialCoverageCreateOBJECTIDSVector(b_:flatbuffers.builder, v_:[flatbuffers
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+def SpatialCoverageStartGEOBOUNDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def SpatialCoverageCreateGEOBOUNDSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
 /// Temporal coverage definition
 class TemporalCoverage : flatbuffers.handle
     /// Start epoch in ISO 8601 format
@@ -100,13 +353,16 @@ class TemporalCoverage : flatbuffers.handle
     /// Days of historical data available
     def HISTORICAL_DEPTH() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    /// Typical provider latency in seconds
+    def LATENCY_SECONDS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
 
 def GetRootAsTemporalCoverage(buf:string): return TemporalCoverage { buf, flatbuffers.indirect(buf, 0) }
 
 struct TemporalCoverageBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(4)
+        b_.StartObject(5)
         return this
     def add_START_EPOCH(START_EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, START_EPOCH)
@@ -119,6 +375,9 @@ struct TemporalCoverageBuilder:
         return this
     def add_HISTORICAL_DEPTH(HISTORICAL_DEPTH:int):
         b_.PrependUint32Slot(3, HISTORICAL_DEPTH, 0)
+        return this
+    def add_LATENCY_SECONDS(LATENCY_SECONDS:int):
+        b_.PrependUint32Slot(4, LATENCY_SECONDS, 0)
         return this
     def end():
         return b_.EndObject()
@@ -172,13 +431,19 @@ class PricingTier : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
     def FEATURES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// Maximum records returned per request
+    def MAX_RECORDS_PER_REQUEST() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 16, 0)
+    /// Human-readable tier description
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
 
 def GetRootAsPricingTier(buf:string): return PricingTier { buf, flatbuffers.indirect(buf, 0) }
 
 struct PricingTierBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(6)
+        b_.StartObject(8)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -197,6 +462,12 @@ struct PricingTierBuilder:
         return this
     def add_FEATURES(FEATURES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, FEATURES)
+        return this
+    def add_MAX_RECORDS_PER_REQUEST(MAX_RECORDS_PER_REQUEST:int):
+        b_.PrependUint32Slot(6, MAX_RECORDS_PER_REQUEST, 0)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, DESCRIPTION)
         return this
     def end():
         return b_.EndObject()
@@ -267,13 +538,52 @@ class STF : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 1)
     def SIGNATURE_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// Listing category: data stream or WASM module
+    def LISTING_KIND() -> listingCategory:
+        return listingCategory(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    /// Search tags
+    def TAGS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 4)
+    def TAGS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 38)
+    /// Number of records in sample data, when available
+    def SAMPLE_RECORD_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 40, 0)
+    /// Supported delivery methods
+    def DELIVERY_METHODS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 4)
+    def DELIVERY_METHODS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
+    /// Protected delivery metadata for encrypted artifacts or streams
+    def PROTECTED_DELIVERY() -> ProtectedDeliveryBinding?:
+        let o = flatbuffers.field_table(buf_, pos_, 44)
+        return if o: ProtectedDeliveryBinding { buf_, o } else: nil
+    /// Provider reputation summary
+    def REPUTATION() -> ProviderReputation?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: ProviderReputation { buf_, o } else: nil
+    /// Listing version
+    def VERSION() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 48, 0)
+    /// Unix timestamp when the listing expires, or 0 for no expiry
+    def EXPIRES_AT() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 50, 0)
+    /// Terms document CID
+    def TERMS_CID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 52)
+    /// License label or SPDX-style identifier
+    def LICENSE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
+    /// Peer ID this listing was sourced from when discovered remotely
+    def SOURCE_PEER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
 
 def GetRootAsSTF(buf:string): return STF { buf, flatbuffers.indirect(buf, 0) }
 
 struct STFBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(16)
+        b_.StartObject(27)
         return this
     def add_LISTING_ID(LISTING_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, LISTING_ID)
@@ -323,6 +633,39 @@ struct STFBuilder:
     def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(15, SIGNATURE)
         return this
+    def add_LISTING_KIND(LISTING_KIND:listingCategory):
+        b_.PrependInt8Slot(16, LISTING_KIND, 0)
+        return this
+    def add_TAGS(TAGS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, TAGS)
+        return this
+    def add_SAMPLE_RECORD_COUNT(SAMPLE_RECORD_COUNT:int):
+        b_.PrependUint32Slot(18, SAMPLE_RECORD_COUNT, 0)
+        return this
+    def add_DELIVERY_METHODS(DELIVERY_METHODS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, DELIVERY_METHODS)
+        return this
+    def add_PROTECTED_DELIVERY(PROTECTED_DELIVERY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, PROTECTED_DELIVERY)
+        return this
+    def add_REPUTATION(REPUTATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, REPUTATION)
+        return this
+    def add_VERSION(VERSION:int):
+        b_.PrependUint32Slot(22, VERSION, 0)
+        return this
+    def add_EXPIRES_AT(EXPIRES_AT:int):
+        b_.PrependUint64Slot(23, EXPIRES_AT, 0)
+        return this
+    def add_TERMS_CID(TERMS_CID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, TERMS_CID)
+        return this
+    def add_LICENSE(LICENSE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, LICENSE)
+        return this
+    def add_SOURCE_PEER_ID(SOURCE_PEER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, SOURCE_PEER_ID)
+        return this
     def end():
         return b_.EndObject()
 
@@ -352,4 +695,18 @@ def STFStartSIGNATUREVector(b_:flatbuffers.builder, n_:int):
 def STFCreateSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def STFStartTAGSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def STFCreateTAGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def STFStartDELIVERYMETHODSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def STFCreateDELIVERYMETHODSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

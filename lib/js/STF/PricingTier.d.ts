@@ -36,6 +36,15 @@ export declare class PricingTier implements flatbuffers.IUnpackableObject<Pricin
     FEATURES(index: number): string;
     FEATURES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     featuresLength(): number;
+    /**
+     * Maximum records returned per request
+     */
+    MAX_RECORDS_PER_REQUEST(): number;
+    /**
+     * Human-readable tier description
+     */
+    DESCRIPTION(): string | null;
+    DESCRIPTION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startPricingTier(builder: flatbuffers.Builder): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addPriceAmount(builder: flatbuffers.Builder, PRICE_AMOUNT: bigint): void;
@@ -45,8 +54,10 @@ export declare class PricingTier implements flatbuffers.IUnpackableObject<Pricin
     static addFeatures(builder: flatbuffers.Builder, FEATURESOffset: flatbuffers.Offset): void;
     static createFeaturesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startFeaturesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMaxRecordsPerRequest(builder: flatbuffers.Builder, MAX_RECORDS_PER_REQUEST: number): void;
+    static addDescription(builder: flatbuffers.Builder, DESCRIPTIONOffset: flatbuffers.Offset): void;
     static endPricingTier(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPricingTier(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset, PRICE_AMOUNT: bigint, PRICE_CURRENCYOffset: flatbuffers.Offset, DURATION_DAYS: number, RATE_LIMIT: number, FEATURESOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPricingTier(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset, PRICE_AMOUNT: bigint, PRICE_CURRENCYOffset: flatbuffers.Offset, DURATION_DAYS: number, RATE_LIMIT: number, FEATURESOffset: flatbuffers.Offset, MAX_RECORDS_PER_REQUEST: number, DESCRIPTIONOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): PricingTierT;
     unpackTo(_o: PricingTierT): void;
 }
@@ -57,7 +68,9 @@ export declare class PricingTierT implements flatbuffers.IGeneratedObject {
     DURATION_DAYS: number;
     RATE_LIMIT: number;
     FEATURES: (string)[];
-    constructor(NAME?: string | Uint8Array | null, PRICE_AMOUNT?: bigint, PRICE_CURRENCY?: string | Uint8Array | null, DURATION_DAYS?: number, RATE_LIMIT?: number, FEATURES?: (string)[]);
+    MAX_RECORDS_PER_REQUEST: number;
+    DESCRIPTION: string | Uint8Array | null;
+    constructor(NAME?: string | Uint8Array | null, PRICE_AMOUNT?: bigint, PRICE_CURRENCY?: string | Uint8Array | null, DURATION_DAYS?: number, RATE_LIMIT?: number, FEATURES?: (string)[], MAX_RECORDS_PER_REQUEST?: number, DESCRIPTION?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PricingTier.d.ts.map

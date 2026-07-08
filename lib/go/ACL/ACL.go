@@ -316,8 +316,389 @@ func (rcv *ACL) MutateProviderSignature(j int, n byte) bool {
 	return rcv.MutatePROVIDER_SIGNATURE(j, n)
 }
 
+/// Key algorithm for buyer encryption public key
+func (rcv *ACL) KEY_ALGORITHM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) KeyAlgorithm() []byte {
+	return rcv.KEY_ALGORITHM()
+}
+
+/// Key algorithm for buyer encryption public key
+/// Request rate limit
+func (rcv *ACL) RATE_LIMIT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) RateLimit() uint32 {
+	return rcv.RATE_LIMIT()
+}
+
+/// Request rate limit
+func (rcv *ACL) MutateRATE_LIMIT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(28, n)
+}
+
+func (rcv *ACL) MutateRateLimit(n uint32) bool {
+	return rcv.MutateRATE_LIMIT(n)
+}
+
+/// Maximum records returned per request
+func (rcv *ACL) MAX_RECORDS_PER_REQUEST() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) MaxRecordsPerRequest() uint32 {
+	return rcv.MAX_RECORDS_PER_REQUEST()
+}
+
+/// Maximum records returned per request
+func (rcv *ACL) MutateMAX_RECORDS_PER_REQUEST(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(30, n)
+}
+
+func (rcv *ACL) MutateMaxRecordsPerRequest(n uint32) bool {
+	return rcv.MutateMAX_RECORDS_PER_REQUEST(n)
+}
+
+/// Provider-side grant status
+func (rcv *ACL) STATUS() grantLifecycleStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return grantLifecycleStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *ACL) Status() grantLifecycleStatus {
+	return rcv.STATUS()
+}
+
+/// Provider-side grant status
+func (rcv *ACL) MutateSTATUS(n grantLifecycleStatus) bool {
+	return rcv._tab.MutateInt8Slot(32, int8(n))
+}
+
+func (rcv *ACL) MutateStatus(n grantLifecycleStatus) bool {
+	return rcv.MutateSTATUS(n)
+}
+
+/// Payment amount in smallest unit
+func (rcv *ACL) PAYMENT_AMOUNT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) PaymentAmount() uint64 {
+	return rcv.PAYMENT_AMOUNT()
+}
+
+/// Payment amount in smallest unit
+func (rcv *ACL) MutatePAYMENT_AMOUNT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(34, n)
+}
+
+func (rcv *ACL) MutatePaymentAmount(n uint64) bool {
+	return rcv.MutatePAYMENT_AMOUNT(n)
+}
+
+/// Payment currency
+func (rcv *ACL) PAYMENT_CURRENCY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) PaymentCurrency() []byte {
+	return rcv.PAYMENT_CURRENCY()
+}
+
+/// Payment currency
+/// Payment chain or processor
+func (rcv *ACL) PAYMENT_CHAIN() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) PaymentChain() []byte {
+	return rcv.PAYMENT_CHAIN()
+}
+
+/// Payment chain or processor
+/// Unix timestamp of next renewal
+func (rcv *ACL) NEXT_RENEWAL() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) NextRenewal() uint64 {
+	return rcv.NEXT_RENEWAL()
+}
+
+/// Unix timestamp of next renewal
+func (rcv *ACL) MutateNEXT_RENEWAL(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(40, n)
+}
+
+func (rcv *ACL) MutateNextRenewal(n uint64) bool {
+	return rcv.MutateNEXT_RENEWAL(n)
+}
+
+/// Whether renewal is automatic
+func (rcv *ACL) AUTO_RENEW() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *ACL) AutoRenew() bool {
+	return rcv.AUTO_RENEW()
+}
+
+/// Whether renewal is automatic
+func (rcv *ACL) MutateAUTO_RENEW(n bool) bool {
+	return rcv._tab.MutateBoolSlot(42, n)
+}
+
+func (rcv *ACL) MutateAutoRenew(n bool) bool {
+	return rcv.MutateAUTO_RENEW(n)
+}
+
+/// Renewal count
+func (rcv *ACL) RENEWAL_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) RenewalCount() uint32 {
+	return rcv.RENEWAL_COUNT()
+}
+
+/// Renewal count
+func (rcv *ACL) MutateRENEWAL_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(44, n)
+}
+
+func (rcv *ACL) MutateRenewalCount(n uint32) bool {
+	return rcv.MutateRENEWAL_COUNT(n)
+}
+
+/// Total requests made under this grant
+func (rcv *ACL) TOTAL_REQUESTS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) TotalRequests() uint64 {
+	return rcv.TOTAL_REQUESTS()
+}
+
+/// Total requests made under this grant
+func (rcv *ACL) MutateTOTAL_REQUESTS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(46, n)
+}
+
+func (rcv *ACL) MutateTotalRequests(n uint64) bool {
+	return rcv.MutateTOTAL_REQUESTS(n)
+}
+
+/// Total records delivered under this grant
+func (rcv *ACL) TOTAL_RECORDS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) TotalRecords() uint64 {
+	return rcv.TOTAL_RECORDS()
+}
+
+/// Total records delivered under this grant
+func (rcv *ACL) MutateTOTAL_RECORDS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(48, n)
+}
+
+func (rcv *ACL) MutateTotalRecords(n uint64) bool {
+	return rcv.MutateTOTAL_RECORDS(n)
+}
+
+/// Unix timestamp of last access
+func (rcv *ACL) LAST_ACCESS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) LastAccess() uint64 {
+	return rcv.LAST_ACCESS()
+}
+
+/// Unix timestamp of last access
+func (rcv *ACL) MutateLAST_ACCESS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(50, n)
+}
+
+func (rcv *ACL) MutateLastAccess(n uint64) bool {
+	return rcv.MutateLAST_ACCESS(n)
+}
+
+/// PubSub or direct delivery topic
+func (rcv *ACL) DELIVERY_TOPIC() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) DeliveryTopic() []byte {
+	return rcv.DELIVERY_TOPIC()
+}
+
+/// PubSub or direct delivery topic
+/// Unix timestamp when the grant record was created
+func (rcv *ACL) CREATED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) CreatedAt() uint64 {
+	return rcv.CREATED_AT()
+}
+
+/// Unix timestamp when the grant record was created
+func (rcv *ACL) MutateCREATED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(54, n)
+}
+
+func (rcv *ACL) MutateCreatedAt(n uint64) bool {
+	return rcv.MutateCREATED_AT(n)
+}
+
+/// Unix timestamp when the grant record was updated
+func (rcv *ACL) UPDATED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *ACL) UpdatedAt() uint64 {
+	return rcv.UPDATED_AT()
+}
+
+/// Unix timestamp when the grant record was updated
+func (rcv *ACL) MutateUPDATED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(56, n)
+}
+
+func (rcv *ACL) MutateUpdatedAt(n uint64) bool {
+	return rcv.MutateUPDATED_AT(n)
+}
+
+/// Provider notes
+func (rcv *ACL) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) Notes() []byte {
+	return rcv.NOTES()
+}
+
+/// Provider notes
+/// Provider peer ID
+func (rcv *ACL) PROVIDER_PEER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) ProviderPeerId() []byte {
+	return rcv.PROVIDER_PEER_ID()
+}
+
+/// Provider peer ID
+/// Base64-encoded signed grant response bytes
+func (rcv *ACL) GRANT_RESPONSE_BASE64() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *ACL) GrantResponseBase64() []byte {
+	return rcv.GRANT_RESPONSE_BASE64()
+}
+
+/// Base64-encoded signed grant response bytes
+/// Field-level stream policy bound to this grant
+func (rcv *ACL) FIELD_STREAM_POLICY(obj *GrantFieldStreamPolicy) *GrantFieldStreamPolicy {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(GrantFieldStreamPolicy)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *ACL) FieldStreamPolicy(obj *GrantFieldStreamPolicy) *GrantFieldStreamPolicy {
+	return rcv.FIELD_STREAM_POLICY(obj)
+}
+
+/// Field-level stream policy bound to this grant
 func ACLStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(31)
 }
 func ACLAddGRANT_ID(builder *flatbuffers.Builder, GRANT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GRANT_ID), 0)
@@ -396,6 +777,126 @@ func ACLStartPROVIDER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int
 }
 func ACLStartProviderSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return ACLStartPROVIDER_SIGNATUREVector(builder, numElems)
+}
+func ACLAddKEY_ALGORITHM(builder *flatbuffers.Builder, KEY_ALGORITHM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(KEY_ALGORITHM), 0)
+}
+func ACLAddKeyAlgorithm(builder *flatbuffers.Builder, KEY_ALGORITHM flatbuffers.UOffsetT) {
+	ACLAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+}
+func ACLAddRATE_LIMIT(builder *flatbuffers.Builder, RATE_LIMIT uint32) {
+	builder.PrependUint32Slot(12, RATE_LIMIT, 0)
+}
+func ACLAddRateLimit(builder *flatbuffers.Builder, RATE_LIMIT uint32) {
+	ACLAddRATE_LIMIT(builder, RATE_LIMIT)
+}
+func ACLAddMAX_RECORDS_PER_REQUEST(builder *flatbuffers.Builder, MAX_RECORDS_PER_REQUEST uint32) {
+	builder.PrependUint32Slot(13, MAX_RECORDS_PER_REQUEST, 0)
+}
+func ACLAddMaxRecordsPerRequest(builder *flatbuffers.Builder, MAX_RECORDS_PER_REQUEST uint32) {
+	ACLAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST)
+}
+func ACLAddSTATUS(builder *flatbuffers.Builder, STATUS grantLifecycleStatus) {
+	builder.PrependInt8Slot(14, int8(STATUS), 0)
+}
+func ACLAddStatus(builder *flatbuffers.Builder, STATUS grantLifecycleStatus) {
+	ACLAddSTATUS(builder, STATUS)
+}
+func ACLAddPAYMENT_AMOUNT(builder *flatbuffers.Builder, PAYMENT_AMOUNT uint64) {
+	builder.PrependUint64Slot(15, PAYMENT_AMOUNT, 0)
+}
+func ACLAddPaymentAmount(builder *flatbuffers.Builder, PAYMENT_AMOUNT uint64) {
+	ACLAddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT)
+}
+func ACLAddPAYMENT_CURRENCY(builder *flatbuffers.Builder, PAYMENT_CURRENCY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(PAYMENT_CURRENCY), 0)
+}
+func ACLAddPaymentCurrency(builder *flatbuffers.Builder, PAYMENT_CURRENCY flatbuffers.UOffsetT) {
+	ACLAddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY)
+}
+func ACLAddPAYMENT_CHAIN(builder *flatbuffers.Builder, PAYMENT_CHAIN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PAYMENT_CHAIN), 0)
+}
+func ACLAddPaymentChain(builder *flatbuffers.Builder, PAYMENT_CHAIN flatbuffers.UOffsetT) {
+	ACLAddPAYMENT_CHAIN(builder, PAYMENT_CHAIN)
+}
+func ACLAddNEXT_RENEWAL(builder *flatbuffers.Builder, NEXT_RENEWAL uint64) {
+	builder.PrependUint64Slot(18, NEXT_RENEWAL, 0)
+}
+func ACLAddNextRenewal(builder *flatbuffers.Builder, NEXT_RENEWAL uint64) {
+	ACLAddNEXT_RENEWAL(builder, NEXT_RENEWAL)
+}
+func ACLAddAUTO_RENEW(builder *flatbuffers.Builder, AUTO_RENEW bool) {
+	builder.PrependBoolSlot(19, AUTO_RENEW, false)
+}
+func ACLAddAutoRenew(builder *flatbuffers.Builder, AUTO_RENEW bool) {
+	ACLAddAUTO_RENEW(builder, AUTO_RENEW)
+}
+func ACLAddRENEWAL_COUNT(builder *flatbuffers.Builder, RENEWAL_COUNT uint32) {
+	builder.PrependUint32Slot(20, RENEWAL_COUNT, 0)
+}
+func ACLAddRenewalCount(builder *flatbuffers.Builder, RENEWAL_COUNT uint32) {
+	ACLAddRENEWAL_COUNT(builder, RENEWAL_COUNT)
+}
+func ACLAddTOTAL_REQUESTS(builder *flatbuffers.Builder, TOTAL_REQUESTS uint64) {
+	builder.PrependUint64Slot(21, TOTAL_REQUESTS, 0)
+}
+func ACLAddTotalRequests(builder *flatbuffers.Builder, TOTAL_REQUESTS uint64) {
+	ACLAddTOTAL_REQUESTS(builder, TOTAL_REQUESTS)
+}
+func ACLAddTOTAL_RECORDS(builder *flatbuffers.Builder, TOTAL_RECORDS uint64) {
+	builder.PrependUint64Slot(22, TOTAL_RECORDS, 0)
+}
+func ACLAddTotalRecords(builder *flatbuffers.Builder, TOTAL_RECORDS uint64) {
+	ACLAddTOTAL_RECORDS(builder, TOTAL_RECORDS)
+}
+func ACLAddLAST_ACCESS(builder *flatbuffers.Builder, LAST_ACCESS uint64) {
+	builder.PrependUint64Slot(23, LAST_ACCESS, 0)
+}
+func ACLAddLastAccess(builder *flatbuffers.Builder, LAST_ACCESS uint64) {
+	ACLAddLAST_ACCESS(builder, LAST_ACCESS)
+}
+func ACLAddDELIVERY_TOPIC(builder *flatbuffers.Builder, DELIVERY_TOPIC flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(DELIVERY_TOPIC), 0)
+}
+func ACLAddDeliveryTopic(builder *flatbuffers.Builder, DELIVERY_TOPIC flatbuffers.UOffsetT) {
+	ACLAddDELIVERY_TOPIC(builder, DELIVERY_TOPIC)
+}
+func ACLAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT uint64) {
+	builder.PrependUint64Slot(25, CREATED_AT, 0)
+}
+func ACLAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT uint64) {
+	ACLAddCREATED_AT(builder, CREATED_AT)
+}
+func ACLAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	builder.PrependUint64Slot(26, UPDATED_AT, 0)
+}
+func ACLAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	ACLAddUPDATED_AT(builder, UPDATED_AT)
+}
+func ACLAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(NOTES), 0)
+}
+func ACLAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	ACLAddNOTES(builder, NOTES)
+}
+func ACLAddPROVIDER_PEER_ID(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
+}
+func ACLAddProviderPeerId(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
+	ACLAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+}
+func ACLAddGRANT_RESPONSE_BASE64(builder *flatbuffers.Builder, GRANT_RESPONSE_BASE64 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(GRANT_RESPONSE_BASE64), 0)
+}
+func ACLAddGrantResponseBase64(builder *flatbuffers.Builder, GRANT_RESPONSE_BASE64 flatbuffers.UOffsetT) {
+	ACLAddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64)
+}
+func ACLAddFIELD_STREAM_POLICY(builder *flatbuffers.Builder, FIELD_STREAM_POLICY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(FIELD_STREAM_POLICY), 0)
+}
+func ACLAddFieldStreamPolicy(builder *flatbuffers.Builder, FIELD_STREAM_POLICY flatbuffers.UOffsetT) {
+	ACLAddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICY)
 }
 func ACLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -80,6 +80,38 @@ public struct REV : IFlatbufferObject
   public ArraySegment<byte>? GetREVIEWER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetREVIEWER_SIGNATUREArray() { return __p.__vector_as_array<byte>(20); }
+  /// Data quality metrics supplied by reviewer
+  public DataQualityMetrics? QUALITY_METRICS { get { int o = __p.__offset(22); return o != 0 ? (DataQualityMetrics?)(new DataQualityMetrics()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Whether the review is tied to a verified purchase
+  public bool VERIFIED_PURCHASE { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Unix timestamp when the review was last updated
+  public ulong UPDATED_AT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Review lifecycle status
+  public reviewLifecycleStatus STATUS { get { int o = __p.__offset(28); return o != 0 ? (reviewLifecycleStatus)__p.bb.GetSbyte(o + __p.bb_pos) : reviewLifecycleStatus.Published; } }
+  /// Helpful vote count
+  public uint HELPFUL_COUNT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Not-helpful vote count
+  public uint NOT_HELPFUL_COUNT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Provider response body
+  public string PROVIDER_RESPONSE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_RESPONSEBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_RESPONSEBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetPROVIDER_RESPONSEArray() { return __p.__vector_as_array<byte>(34); }
+  /// Unix timestamp when provider responded
+  public ulong PROVIDER_RESPONSE_AT { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Number of moderation flags
+  public uint FLAGGED_COUNT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Moderation notes
+  public string MODERATION_NOTES { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMODERATION_NOTESBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetMODERATION_NOTESBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetMODERATION_NOTESArray() { return __p.__vector_as_array<byte>(40); }
 
   public static Offset<REV> CreateREV(FlatBufferBuilder builder,
       StringOffset REVIEW_IDOffset = default(StringOffset),
@@ -90,9 +122,27 @@ public struct REV : IFlatbufferObject
       StringOffset CONTENTOffset = default(StringOffset),
       StringOffset ACL_GRANT_IDOffset = default(StringOffset),
       ulong TIMESTAMP = 0,
-      VectorOffset REVIEWER_SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(9);
+      VectorOffset REVIEWER_SIGNATUREOffset = default(VectorOffset),
+      Offset<DataQualityMetrics> QUALITY_METRICSOffset = default(Offset<DataQualityMetrics>),
+      bool VERIFIED_PURCHASE = false,
+      ulong UPDATED_AT = 0,
+      reviewLifecycleStatus STATUS = reviewLifecycleStatus.Published,
+      uint HELPFUL_COUNT = 0,
+      uint NOT_HELPFUL_COUNT = 0,
+      StringOffset PROVIDER_RESPONSEOffset = default(StringOffset),
+      ulong PROVIDER_RESPONSE_AT = 0,
+      uint FLAGGED_COUNT = 0,
+      StringOffset MODERATION_NOTESOffset = default(StringOffset)) {
+    builder.StartTable(19);
+    REV.AddPROVIDER_RESPONSE_AT(builder, PROVIDER_RESPONSE_AT);
+    REV.AddUPDATED_AT(builder, UPDATED_AT);
     REV.AddTIMESTAMP(builder, TIMESTAMP);
+    REV.AddMODERATION_NOTES(builder, MODERATION_NOTESOffset);
+    REV.AddFLAGGED_COUNT(builder, FLAGGED_COUNT);
+    REV.AddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSEOffset);
+    REV.AddNOT_HELPFUL_COUNT(builder, NOT_HELPFUL_COUNT);
+    REV.AddHELPFUL_COUNT(builder, HELPFUL_COUNT);
+    REV.AddQUALITY_METRICS(builder, QUALITY_METRICSOffset);
     REV.AddREVIEWER_SIGNATURE(builder, REVIEWER_SIGNATUREOffset);
     REV.AddACL_GRANT_ID(builder, ACL_GRANT_IDOffset);
     REV.AddCONTENT(builder, CONTENTOffset);
@@ -100,11 +150,13 @@ public struct REV : IFlatbufferObject
     REV.AddREVIEWER_PEER_ID(builder, REVIEWER_PEER_IDOffset);
     REV.AddLISTING_ID(builder, LISTING_IDOffset);
     REV.AddREVIEW_ID(builder, REVIEW_IDOffset);
+    REV.AddSTATUS(builder, STATUS);
+    REV.AddVERIFIED_PURCHASE(builder, VERIFIED_PURCHASE);
     REV.AddRATING(builder, RATING);
     return REV.EndREV(builder);
   }
 
-  public static void StartREV(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartREV(FlatBufferBuilder builder) { builder.StartTable(19); }
   public static void AddREVIEW_ID(FlatBufferBuilder builder, StringOffset REVIEW_IDOffset) { builder.AddOffset(0, REVIEW_IDOffset.Value, 0); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(1, LISTING_IDOffset.Value, 0); }
   public static void AddREVIEWER_PEER_ID(FlatBufferBuilder builder, StringOffset REVIEWER_PEER_IDOffset) { builder.AddOffset(2, REVIEWER_PEER_IDOffset.Value, 0); }
@@ -119,6 +171,16 @@ public struct REV : IFlatbufferObject
   public static VectorOffset CreateREVIEWER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREVIEWER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartREVIEWER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddQUALITY_METRICS(FlatBufferBuilder builder, Offset<DataQualityMetrics> QUALITY_METRICSOffset) { builder.AddOffset(9, QUALITY_METRICSOffset.Value, 0); }
+  public static void AddVERIFIED_PURCHASE(FlatBufferBuilder builder, bool VERIFIED_PURCHASE) { builder.AddBool(10, VERIFIED_PURCHASE, false); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(11, UPDATED_AT, 0); }
+  public static void AddSTATUS(FlatBufferBuilder builder, reviewLifecycleStatus STATUS) { builder.AddSbyte(12, (sbyte)STATUS, 0); }
+  public static void AddHELPFUL_COUNT(FlatBufferBuilder builder, uint HELPFUL_COUNT) { builder.AddUint(13, HELPFUL_COUNT, 0); }
+  public static void AddNOT_HELPFUL_COUNT(FlatBufferBuilder builder, uint NOT_HELPFUL_COUNT) { builder.AddUint(14, NOT_HELPFUL_COUNT, 0); }
+  public static void AddPROVIDER_RESPONSE(FlatBufferBuilder builder, StringOffset PROVIDER_RESPONSEOffset) { builder.AddOffset(15, PROVIDER_RESPONSEOffset.Value, 0); }
+  public static void AddPROVIDER_RESPONSE_AT(FlatBufferBuilder builder, ulong PROVIDER_RESPONSE_AT) { builder.AddUlong(16, PROVIDER_RESPONSE_AT, 0); }
+  public static void AddFLAGGED_COUNT(FlatBufferBuilder builder, uint FLAGGED_COUNT) { builder.AddUint(17, FLAGGED_COUNT, 0); }
+  public static void AddMODERATION_NOTES(FlatBufferBuilder builder, StringOffset MODERATION_NOTESOffset) { builder.AddOffset(18, MODERATION_NOTESOffset.Value, 0); }
   public static Offset<REV> EndREV(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // REVIEW_ID
@@ -144,6 +206,16 @@ public struct REV : IFlatbufferObject
     _o.TIMESTAMP = this.TIMESTAMP;
     _o.REVIEWER_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.REVIEWER_SIGNATURELength; ++_j) {_o.REVIEWER_SIGNATURE.Add(this.REVIEWER_SIGNATURE(_j));}
+    _o.QUALITY_METRICS = this.QUALITY_METRICS.HasValue ? this.QUALITY_METRICS.Value.UnPack() : null;
+    _o.VERIFIED_PURCHASE = this.VERIFIED_PURCHASE;
+    _o.UPDATED_AT = this.UPDATED_AT;
+    _o.STATUS = this.STATUS;
+    _o.HELPFUL_COUNT = this.HELPFUL_COUNT;
+    _o.NOT_HELPFUL_COUNT = this.NOT_HELPFUL_COUNT;
+    _o.PROVIDER_RESPONSE = this.PROVIDER_RESPONSE;
+    _o.PROVIDER_RESPONSE_AT = this.PROVIDER_RESPONSE_AT;
+    _o.FLAGGED_COUNT = this.FLAGGED_COUNT;
+    _o.MODERATION_NOTES = this.MODERATION_NOTES;
   }
   public static Offset<REV> Pack(FlatBufferBuilder builder, REVT _o) {
     if (_o == null) return default(Offset<REV>);
@@ -158,6 +230,9 @@ public struct REV : IFlatbufferObject
       var __REVIEWER_SIGNATURE = _o.REVIEWER_SIGNATURE.ToArray();
       _REVIEWER_SIGNATURE = CreateREVIEWER_SIGNATUREVector(builder, __REVIEWER_SIGNATURE);
     }
+    var _QUALITY_METRICS = _o.QUALITY_METRICS == null ? default(Offset<DataQualityMetrics>) : DataQualityMetrics.Pack(builder, _o.QUALITY_METRICS);
+    var _PROVIDER_RESPONSE = _o.PROVIDER_RESPONSE == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_RESPONSE);
+    var _MODERATION_NOTES = _o.MODERATION_NOTES == null ? default(StringOffset) : builder.CreateString(_o.MODERATION_NOTES);
     return CreateREV(
       builder,
       _REVIEW_ID,
@@ -168,7 +243,17 @@ public struct REV : IFlatbufferObject
       _CONTENT,
       _ACL_GRANT_ID,
       _o.TIMESTAMP,
-      _REVIEWER_SIGNATURE);
+      _REVIEWER_SIGNATURE,
+      _QUALITY_METRICS,
+      _o.VERIFIED_PURCHASE,
+      _o.UPDATED_AT,
+      _o.STATUS,
+      _o.HELPFUL_COUNT,
+      _o.NOT_HELPFUL_COUNT,
+      _PROVIDER_RESPONSE,
+      _o.PROVIDER_RESPONSE_AT,
+      _o.FLAGGED_COUNT,
+      _MODERATION_NOTES);
   }
 }
 
@@ -183,6 +268,16 @@ public class REVT
   public string ACL_GRANT_ID { get; set; }
   public ulong TIMESTAMP { get; set; }
   public List<byte> REVIEWER_SIGNATURE { get; set; }
+  public DataQualityMetricsT QUALITY_METRICS { get; set; }
+  public bool VERIFIED_PURCHASE { get; set; }
+  public ulong UPDATED_AT { get; set; }
+  public reviewLifecycleStatus STATUS { get; set; }
+  public uint HELPFUL_COUNT { get; set; }
+  public uint NOT_HELPFUL_COUNT { get; set; }
+  public string PROVIDER_RESPONSE { get; set; }
+  public ulong PROVIDER_RESPONSE_AT { get; set; }
+  public uint FLAGGED_COUNT { get; set; }
+  public string MODERATION_NOTES { get; set; }
 
   public REVT() {
     this.REVIEW_ID = null;
@@ -194,6 +289,16 @@ public class REVT
     this.ACL_GRANT_ID = null;
     this.TIMESTAMP = 0;
     this.REVIEWER_SIGNATURE = null;
+    this.QUALITY_METRICS = null;
+    this.VERIFIED_PURCHASE = false;
+    this.UPDATED_AT = 0;
+    this.STATUS = reviewLifecycleStatus.Published;
+    this.HELPFUL_COUNT = 0;
+    this.NOT_HELPFUL_COUNT = 0;
+    this.PROVIDER_RESPONSE = null;
+    this.PROVIDER_RESPONSE_AT = 0;
+    this.FLAGGED_COUNT = 0;
+    this.MODERATION_NOTES = null;
   }
   public static REVT DeserializeFromBinary(byte[] fbBuffer) {
     return REV.GetRootAsREV(new ByteBuffer(fbBuffer)).UnPack();
@@ -220,6 +325,16 @@ static public class REVVerify
       && verifier.VerifyString(tablePos, 16 /*ACL_GRANT_ID*/, false)
       && verifier.VerifyField(tablePos, 18 /*TIMESTAMP*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyVectorOfData(tablePos, 20 /*REVIEWER_SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyTable(tablePos, 22 /*QUALITY_METRICS*/, DataQualityMetricsVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 24 /*VERIFIED_PURCHASE*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*STATUS*/, 1 /*reviewLifecycleStatus*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*HELPFUL_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 32 /*NOT_HELPFUL_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 34 /*PROVIDER_RESPONSE*/, false)
+      && verifier.VerifyField(tablePos, 36 /*PROVIDER_RESPONSE_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*FLAGGED_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 40 /*MODERATION_NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -16,6 +16,10 @@ class paymentMethod
     const Fiat_Stripe = 4;
     /// Free/open data
     const Free = 5;
+    /// Usage-based billing settled after metered delivery
+    const UsageBased = 6;
+    /// Enterprise/offline invoicing
+    const Enterprise = 7;
 
     private static $names = array(
         paymentMethod::Crypto_ETH=>"Crypto_ETH",
@@ -24,6 +28,8 @@ class paymentMethod
         paymentMethod::SDN_Credits=>"SDN_Credits",
         paymentMethod::Fiat_Stripe=>"Fiat_Stripe",
         paymentMethod::Free=>"Free",
+        paymentMethod::UsageBased=>"UsageBased",
+        paymentMethod::Enterprise=>"Enterprise",
     );
 
     public static function Name($e)

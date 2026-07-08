@@ -122,6 +122,64 @@ public final class STF extends com.google.flatbuffers.Table {
   public ByteVector signatureVector(ByteVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Listing category: data stream or WASM module
+   */
+  public byte LISTING_KIND() { int o = __offset(36); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Search tags
+   */
+  public String TAGS(int j) { int o = __offset(38); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector tagsVector() { return tagsVector(new StringVector()); }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Number of records in sample data, when available
+   */
+  public long SAMPLE_RECORD_COUNT() { int o = __offset(40); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Supported delivery methods
+   */
+  public String DELIVERY_METHODS(int j) { int o = __offset(42); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int DELIVERY_METHODSLength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector deliveryMethodsVector() { return deliveryMethodsVector(new StringVector()); }
+  public StringVector deliveryMethodsVector(StringVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Protected delivery metadata for encrypted artifacts or streams
+   */
+  public ProtectedDeliveryBinding PROTECTED_DELIVERY() { return PROTECTED_DELIVERY(new ProtectedDeliveryBinding()); }
+  public ProtectedDeliveryBinding PROTECTED_DELIVERY(ProtectedDeliveryBinding obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Provider reputation summary
+   */
+  public ProviderReputation REPUTATION() { return REPUTATION(new ProviderReputation()); }
+  public ProviderReputation REPUTATION(ProviderReputation obj) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Listing version
+   */
+  public long VERSION() { int o = __offset(48); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Unix timestamp when the listing expires, or 0 for no expiry
+   */
+  public long EXPIRES_AT() { int o = __offset(50); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Terms document CID
+   */
+  public String TERMS_CID() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TERMS_CIDAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer TERMS_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * License label or SPDX-style identifier
+   */
+  public String LICENSE() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Peer ID this listing was sourced from when discovered remotely
+   */
+  public String SOURCE_PEER_ID() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCE_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer SOURCE_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
 
   public static int createSTF(FlatBufferBuilder builder,
       int LISTING_IDOffset,
@@ -139,10 +197,31 @@ public final class STF extends com.google.flatbuffers.Table {
       long CREATED_AT,
       long UPDATED_AT,
       boolean ACTIVE,
-      int SIGNATUREOffset) {
-    builder.startTable(16);
+      int SIGNATUREOffset,
+      byte LISTING_KIND,
+      int TAGSOffset,
+      long SAMPLE_RECORD_COUNT,
+      int DELIVERY_METHODSOffset,
+      int PROTECTED_DELIVERYOffset,
+      int REPUTATIONOffset,
+      long VERSION,
+      long EXPIRES_AT,
+      int TERMS_CIDOffset,
+      int LICENSEOffset,
+      int SOURCE_PEER_IDOffset) {
+    builder.startTable(27);
+    STF.addExpiresAt(builder, EXPIRES_AT);
     STF.addUpdatedAt(builder, UPDATED_AT);
     STF.addCreatedAt(builder, CREATED_AT);
+    STF.addSourcePeerId(builder, SOURCE_PEER_IDOffset);
+    STF.addLicense(builder, LICENSEOffset);
+    STF.addTermsCid(builder, TERMS_CIDOffset);
+    STF.addVersion(builder, VERSION);
+    STF.addReputation(builder, REPUTATIONOffset);
+    STF.addProtectedDelivery(builder, PROTECTED_DELIVERYOffset);
+    STF.addDeliveryMethods(builder, DELIVERY_METHODSOffset);
+    STF.addSampleRecordCount(builder, SAMPLE_RECORD_COUNT);
+    STF.addTags(builder, TAGSOffset);
     STF.addSignature(builder, SIGNATUREOffset);
     STF.addAcceptedPayments(builder, ACCEPTED_PAYMENTSOffset);
     STF.addPricing(builder, PRICINGOffset);
@@ -154,13 +233,14 @@ public final class STF extends com.google.flatbuffers.Table {
     STF.addProviderEpmCid(builder, PROVIDER_EPM_CIDOffset);
     STF.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
     STF.addListingId(builder, LISTING_IDOffset);
+    STF.addListingKind(builder, LISTING_KIND);
     STF.addActive(builder, ACTIVE);
     STF.addEncryptionRequired(builder, ENCRYPTION_REQUIRED);
     STF.addAccessType(builder, ACCESS_TYPE);
     return STF.endSTF(builder);
   }
 
-  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startSTF(FlatBufferBuilder builder) { builder.startTable(27); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(0, LISTING_IDOffset, 0); }
   public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(1, PROVIDER_PEER_IDOffset, 0); }
   public static void addProviderEpmCid(FlatBufferBuilder builder, int PROVIDER_EPM_CIDOffset) { builder.addOffset(2, PROVIDER_EPM_CIDOffset, 0); }
@@ -187,6 +267,21 @@ public final class STF extends com.google.flatbuffers.Table {
   public static int createSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addListingKind(FlatBufferBuilder builder, byte LISTING_KIND) { builder.addByte(16, LISTING_KIND, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(17, TAGSOffset, 0); }
+  public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSampleRecordCount(FlatBufferBuilder builder, long SAMPLE_RECORD_COUNT) { builder.addInt(18, (int) SAMPLE_RECORD_COUNT, (int) 0L); }
+  public static void addDeliveryMethods(FlatBufferBuilder builder, int DELIVERY_METHODSOffset) { builder.addOffset(19, DELIVERY_METHODSOffset, 0); }
+  public static int createDeliveryMethodsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDeliveryMethodsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProtectedDelivery(FlatBufferBuilder builder, int PROTECTED_DELIVERYOffset) { builder.addOffset(20, PROTECTED_DELIVERYOffset, 0); }
+  public static void addReputation(FlatBufferBuilder builder, int REPUTATIONOffset) { builder.addOffset(21, REPUTATIONOffset, 0); }
+  public static void addVersion(FlatBufferBuilder builder, long VERSION) { builder.addInt(22, (int) VERSION, (int) 0L); }
+  public static void addExpiresAt(FlatBufferBuilder builder, long EXPIRES_AT) { builder.addLong(23, EXPIRES_AT, 0L); }
+  public static void addTermsCid(FlatBufferBuilder builder, int TERMS_CIDOffset) { builder.addOffset(24, TERMS_CIDOffset, 0); }
+  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(25, LICENSEOffset, 0); }
+  public static void addSourcePeerId(FlatBufferBuilder builder, int SOURCE_PEER_IDOffset) { builder.addOffset(26, SOURCE_PEER_IDOffset, 0); }
   public static int endSTF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LISTING_ID

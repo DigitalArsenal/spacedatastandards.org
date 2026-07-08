@@ -27,13 +27,18 @@ export declare class TemporalCoverage implements flatbuffers.IUnpackableObject<T
      * Days of historical data available
      */
     HISTORICAL_DEPTH(): number;
+    /**
+     * Typical provider latency in seconds
+     */
+    LATENCY_SECONDS(): number;
     static startTemporalCoverage(builder: flatbuffers.Builder): void;
     static addStartEpoch(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset): void;
     static addEndEpoch(builder: flatbuffers.Builder, END_EPOCHOffset: flatbuffers.Offset): void;
     static addUpdateFrequency(builder: flatbuffers.Builder, UPDATE_FREQUENCYOffset: flatbuffers.Offset): void;
     static addHistoricalDepth(builder: flatbuffers.Builder, HISTORICAL_DEPTH: number): void;
+    static addLatencySeconds(builder: flatbuffers.Builder, LATENCY_SECONDS: number): void;
     static endTemporalCoverage(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createTemporalCoverage(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, END_EPOCHOffset: flatbuffers.Offset, UPDATE_FREQUENCYOffset: flatbuffers.Offset, HISTORICAL_DEPTH: number): flatbuffers.Offset;
+    static createTemporalCoverage(builder: flatbuffers.Builder, START_EPOCHOffset: flatbuffers.Offset, END_EPOCHOffset: flatbuffers.Offset, UPDATE_FREQUENCYOffset: flatbuffers.Offset, HISTORICAL_DEPTH: number, LATENCY_SECONDS: number): flatbuffers.Offset;
     unpack(): TemporalCoverageT;
     unpackTo(_o: TemporalCoverageT): void;
 }
@@ -42,7 +47,8 @@ export declare class TemporalCoverageT implements flatbuffers.IGeneratedObject {
     END_EPOCH: string | Uint8Array | null;
     UPDATE_FREQUENCY: string | Uint8Array | null;
     HISTORICAL_DEPTH: number;
-    constructor(START_EPOCH?: string | Uint8Array | null, END_EPOCH?: string | Uint8Array | null, UPDATE_FREQUENCY?: string | Uint8Array | null, HISTORICAL_DEPTH?: number);
+    LATENCY_SECONDS: number;
+    constructor(START_EPOCH?: string | Uint8Array | null, END_EPOCH?: string | Uint8Array | null, UPDATE_FREQUENCY?: string | Uint8Array | null, HISTORICAL_DEPTH?: number, LATENCY_SECONDS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TemporalCoverage.d.ts.map

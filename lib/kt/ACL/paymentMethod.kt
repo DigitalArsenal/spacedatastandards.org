@@ -30,5 +30,13 @@ class paymentMethod private constructor() {
          * Free/open data
          */
         const val Free: Byte = 5
+        /**
+         * Usage-based billing settled after metered delivery
+         */
+        const val UsageBased: Byte = 6
+        /**
+         * Enterprise/offline invoicing
+         */
+        const val Enterprise: Byte = 7
     }
 }

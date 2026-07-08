@@ -106,6 +106,107 @@ public final class PUR extends com.google.flatbuffers.Table {
    * Unix timestamp of the request
    */
   public long TIMESTAMP() { int o = __offset(28); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Key algorithm for buyer encryption public key
+   */
+  public String KEY_ALGORITHM() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KEY_ALGORITHMAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer KEY_ALGORITHMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Buyer contact email
+   */
+  public String BUYER_EMAIL() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BUYER_EMAILAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer BUYER_EMAILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * On-chain sender address or fiat payment source reference
+   */
+  public String SENDER_ADDRESS() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENDER_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer SENDER_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Confirmation block for on-chain payments
+   */
+  public long CONFIRMATION_BLOCK() { int o = __offset(36); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Fiat processor payment intent identifier
+   */
+  public String PAYMENT_INTENT_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PAYMENT_INTENT_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer PAYMENT_INTENT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * SDN credits transaction identifier
+   */
+  public String CREDITS_TRANSACTION_ID() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CREDITS_TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer CREDITS_TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Provider-side purchase status
+   */
+  public byte STATUS() { int o = __offset(42); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Human-readable status message
+   */
+  public String STATUS_MESSAGE() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STATUS_MESSAGEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer STATUS_MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Unix timestamp when the purchase record was created
+   */
+  public long CREATED_AT() { int o = __offset(46); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp when the purchase record was updated
+   */
+  public long UPDATED_AT() { int o = __offset(48); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp when payment must be received
+   */
+  public long PAYMENT_DEADLINE() { int o = __offset(50); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp when payment was confirmed
+   */
+  public long PAYMENT_CONFIRMED_AT() { int o = __offset(52); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp when the grant was issued
+   */
+  public long GRANT_ISSUED_AT() { int o = __offset(54); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Issued grant identifier
+   */
+  public String GRANT_ID() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRANT_IDAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer GRANT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * Provider peer ID
+   */
+  public String PROVIDER_PEER_ID() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Unix timestamp when provider acknowledged the request
+   */
+  public long PROVIDER_ACKNOWLEDGED_AT() { int o = __offset(60); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Preferred delivery method
+   */
+  public String PREFERRED_DELIVERY_METHOD() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PREFERRED_DELIVERY_METHODAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer PREFERRED_DELIVERY_METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Buyer webhook URL for delivery callbacks
+   */
+  public String WEBHOOK_URL() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer WEBHOOK_URLAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer WEBHOOK_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * Ed25519 signature from provider
+   */
+  public int PROVIDER_SIGNATURE(int j) { int o = __offset(66); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
+  public int PROVIDER_SIGNATURELength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
+  public ByteVector providerSignatureVector() { return providerSignatureVector(new ByteVector()); }
+  public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
 
   public static int createPUR(FlatBufferBuilder builder,
       int REQUEST_IDOffset,
@@ -120,10 +221,47 @@ public final class PUR extends com.google.flatbuffers.Table {
       int PAYMENT_CHAINOffset,
       int PAYMENT_REFERENCEOffset,
       int BUYER_SIGNATUREOffset,
-      long TIMESTAMP) {
-    builder.startTable(13);
+      long TIMESTAMP,
+      int KEY_ALGORITHMOffset,
+      int BUYER_EMAILOffset,
+      int SENDER_ADDRESSOffset,
+      long CONFIRMATION_BLOCK,
+      int PAYMENT_INTENT_IDOffset,
+      int CREDITS_TRANSACTION_IDOffset,
+      byte STATUS,
+      int STATUS_MESSAGEOffset,
+      long CREATED_AT,
+      long UPDATED_AT,
+      long PAYMENT_DEADLINE,
+      long PAYMENT_CONFIRMED_AT,
+      long GRANT_ISSUED_AT,
+      int GRANT_IDOffset,
+      int PROVIDER_PEER_IDOffset,
+      long PROVIDER_ACKNOWLEDGED_AT,
+      int PREFERRED_DELIVERY_METHODOffset,
+      int WEBHOOK_URLOffset,
+      int PROVIDER_SIGNATUREOffset) {
+    builder.startTable(32);
+    PUR.addProviderAcknowledgedAt(builder, PROVIDER_ACKNOWLEDGED_AT);
+    PUR.addGrantIssuedAt(builder, GRANT_ISSUED_AT);
+    PUR.addPaymentConfirmedAt(builder, PAYMENT_CONFIRMED_AT);
+    PUR.addPaymentDeadline(builder, PAYMENT_DEADLINE);
+    PUR.addUpdatedAt(builder, UPDATED_AT);
+    PUR.addCreatedAt(builder, CREATED_AT);
+    PUR.addConfirmationBlock(builder, CONFIRMATION_BLOCK);
     PUR.addTimestamp(builder, TIMESTAMP);
     PUR.addPaymentAmount(builder, PAYMENT_AMOUNT);
+    PUR.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
+    PUR.addWebhookUrl(builder, WEBHOOK_URLOffset);
+    PUR.addPreferredDeliveryMethod(builder, PREFERRED_DELIVERY_METHODOffset);
+    PUR.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+    PUR.addGrantId(builder, GRANT_IDOffset);
+    PUR.addStatusMessage(builder, STATUS_MESSAGEOffset);
+    PUR.addCreditsTransactionId(builder, CREDITS_TRANSACTION_IDOffset);
+    PUR.addPaymentIntentId(builder, PAYMENT_INTENT_IDOffset);
+    PUR.addSenderAddress(builder, SENDER_ADDRESSOffset);
+    PUR.addBuyerEmail(builder, BUYER_EMAILOffset);
+    PUR.addKeyAlgorithm(builder, KEY_ALGORITHMOffset);
     PUR.addBuyerSignature(builder, BUYER_SIGNATUREOffset);
     PUR.addPaymentReference(builder, PAYMENT_REFERENCEOffset);
     PUR.addPaymentChain(builder, PAYMENT_CHAINOffset);
@@ -134,11 +272,12 @@ public final class PUR extends com.google.flatbuffers.Table {
     PUR.addTierName(builder, TIER_NAMEOffset);
     PUR.addListingId(builder, LISTING_IDOffset);
     PUR.addRequestId(builder, REQUEST_IDOffset);
+    PUR.addStatus(builder, STATUS);
     PUR.addPaymentMethod(builder, PAYMENT_METHOD);
     return PUR.endPUR(builder);
   }
 
-  public static void startPUR(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPUR(FlatBufferBuilder builder) { builder.startTable(32); }
   public static void addRequestId(FlatBufferBuilder builder, int REQUEST_IDOffset) { builder.addOffset(0, REQUEST_IDOffset, 0); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(1, LISTING_IDOffset, 0); }
   public static void addTierName(FlatBufferBuilder builder, int TIER_NAMEOffset) { builder.addOffset(2, TIER_NAMEOffset, 0); }
@@ -158,6 +297,28 @@ public final class PUR extends com.google.flatbuffers.Table {
   public static int createBuyerSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startBuyerSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addTimestamp(FlatBufferBuilder builder, long TIMESTAMP) { builder.addLong(12, TIMESTAMP, 0L); }
+  public static void addKeyAlgorithm(FlatBufferBuilder builder, int KEY_ALGORITHMOffset) { builder.addOffset(13, KEY_ALGORITHMOffset, 0); }
+  public static void addBuyerEmail(FlatBufferBuilder builder, int BUYER_EMAILOffset) { builder.addOffset(14, BUYER_EMAILOffset, 0); }
+  public static void addSenderAddress(FlatBufferBuilder builder, int SENDER_ADDRESSOffset) { builder.addOffset(15, SENDER_ADDRESSOffset, 0); }
+  public static void addConfirmationBlock(FlatBufferBuilder builder, long CONFIRMATION_BLOCK) { builder.addLong(16, CONFIRMATION_BLOCK, 0L); }
+  public static void addPaymentIntentId(FlatBufferBuilder builder, int PAYMENT_INTENT_IDOffset) { builder.addOffset(17, PAYMENT_INTENT_IDOffset, 0); }
+  public static void addCreditsTransactionId(FlatBufferBuilder builder, int CREDITS_TRANSACTION_IDOffset) { builder.addOffset(18, CREDITS_TRANSACTION_IDOffset, 0); }
+  public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(19, STATUS, 0); }
+  public static void addStatusMessage(FlatBufferBuilder builder, int STATUS_MESSAGEOffset) { builder.addOffset(20, STATUS_MESSAGEOffset, 0); }
+  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(21, CREATED_AT, 0L); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(22, UPDATED_AT, 0L); }
+  public static void addPaymentDeadline(FlatBufferBuilder builder, long PAYMENT_DEADLINE) { builder.addLong(23, PAYMENT_DEADLINE, 0L); }
+  public static void addPaymentConfirmedAt(FlatBufferBuilder builder, long PAYMENT_CONFIRMED_AT) { builder.addLong(24, PAYMENT_CONFIRMED_AT, 0L); }
+  public static void addGrantIssuedAt(FlatBufferBuilder builder, long GRANT_ISSUED_AT) { builder.addLong(25, GRANT_ISSUED_AT, 0L); }
+  public static void addGrantId(FlatBufferBuilder builder, int GRANT_IDOffset) { builder.addOffset(26, GRANT_IDOffset, 0); }
+  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(27, PROVIDER_PEER_IDOffset, 0); }
+  public static void addProviderAcknowledgedAt(FlatBufferBuilder builder, long PROVIDER_ACKNOWLEDGED_AT) { builder.addLong(28, PROVIDER_ACKNOWLEDGED_AT, 0L); }
+  public static void addPreferredDeliveryMethod(FlatBufferBuilder builder, int PREFERRED_DELIVERY_METHODOffset) { builder.addOffset(29, PREFERRED_DELIVERY_METHODOffset, 0); }
+  public static void addWebhookUrl(FlatBufferBuilder builder, int WEBHOOK_URLOffset) { builder.addOffset(30, WEBHOOK_URLOffset, 0); }
+  public static void addProviderSignature(FlatBufferBuilder builder, int PROVIDER_SIGNATUREOffset) { builder.addOffset(31, PROVIDER_SIGNATUREOffset, 0); }
+  public static int createProviderSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
+  public static int createProviderSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
+  public static void startProviderSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static int endPUR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // REQUEST_ID

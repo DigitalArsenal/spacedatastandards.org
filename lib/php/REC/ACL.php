@@ -172,22 +172,199 @@ class ACL extends Table
         return $this->__vector_as_bytes(24);
     }
 
+    /// Key algorithm for buyer encryption public key
+    public function getKEY_ALGORITHM()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Request rate limit
+    /**
+     * @return uint
+     */
+    public function getRATE_LIMIT()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Maximum records returned per request
+    /**
+     * @return uint
+     */
+    public function getMAX_RECORDS_PER_REQUEST()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Provider-side grant status
+    /**
+     * @return sbyte
+     */
+    public function getSTATUS()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \grantLifecycleStatus::Active;
+    }
+
+    /// Payment amount in smallest unit
+    /**
+     * @return ulong
+     */
+    public function getPAYMENT_AMOUNT()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Payment currency
+    public function getPAYMENT_CURRENCY()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Payment chain or processor
+    public function getPAYMENT_CHAIN()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp of next renewal
+    /**
+     * @return ulong
+     */
+    public function getNEXT_RENEWAL()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Whether renewal is automatic
+    /**
+     * @return bool
+     */
+    public function getAUTO_RENEW()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Renewal count
+    /**
+     * @return uint
+     */
+    public function getRENEWAL_COUNT()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Total requests made under this grant
+    /**
+     * @return ulong
+     */
+    public function getTOTAL_REQUESTS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Total records delivered under this grant
+    /**
+     * @return ulong
+     */
+    public function getTOTAL_RECORDS()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp of last access
+    /**
+     * @return ulong
+     */
+    public function getLAST_ACCESS()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// PubSub or direct delivery topic
+    public function getDELIVERY_TOPIC()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp when the grant record was created
+    /**
+     * @return ulong
+     */
+    public function getCREATED_AT()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Unix timestamp when the grant record was updated
+    /**
+     * @return ulong
+     */
+    public function getUPDATED_AT()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Provider notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Provider peer ID
+    public function getPROVIDER_PEER_ID()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Base64-encoded signed grant response bytes
+    public function getGRANT_RESPONSE_BASE64()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Field-level stream policy bound to this grant
+    public function getFIELD_STREAM_POLICY()
+    {
+        $obj = new GrantFieldStreamPolicy();
+        $o = $this->__offset(64);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startACL(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(31);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACL
      */
-    public static function createACL(FlatBufferBuilder $builder, $GRANT_ID, $LISTING_ID, $BUYER_PEER_ID, $BUYER_ENCRYPTION_PUBKEY, $ACCESS_TYPE, $TIER_NAME, $GRANTED_AT, $EXPIRES_AT, $PAYMENT_TX_HASH, $PAYMENT_METHOD, $PROVIDER_SIGNATURE)
+    public static function createACL(FlatBufferBuilder $builder, $GRANT_ID, $LISTING_ID, $BUYER_PEER_ID, $BUYER_ENCRYPTION_PUBKEY, $ACCESS_TYPE, $TIER_NAME, $GRANTED_AT, $EXPIRES_AT, $PAYMENT_TX_HASH, $PAYMENT_METHOD, $PROVIDER_SIGNATURE, $KEY_ALGORITHM, $RATE_LIMIT, $MAX_RECORDS_PER_REQUEST, $STATUS, $PAYMENT_AMOUNT, $PAYMENT_CURRENCY, $PAYMENT_CHAIN, $NEXT_RENEWAL, $AUTO_RENEW, $RENEWAL_COUNT, $TOTAL_REQUESTS, $TOTAL_RECORDS, $LAST_ACCESS, $DELIVERY_TOPIC, $CREATED_AT, $UPDATED_AT, $NOTES, $PROVIDER_PEER_ID, $GRANT_RESPONSE_BASE64, $FIELD_STREAM_POLICY)
     {
-        $builder->startObject(11);
+        $builder->startObject(31);
         self::addGRANT_ID($builder, $GRANT_ID);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addBUYER_PEER_ID($builder, $BUYER_PEER_ID);
@@ -199,6 +376,26 @@ class ACL extends Table
         self::addPAYMENT_TX_HASH($builder, $PAYMENT_TX_HASH);
         self::addPAYMENT_METHOD($builder, $PAYMENT_METHOD);
         self::addPROVIDER_SIGNATURE($builder, $PROVIDER_SIGNATURE);
+        self::addKEY_ALGORITHM($builder, $KEY_ALGORITHM);
+        self::addRATE_LIMIT($builder, $RATE_LIMIT);
+        self::addMAX_RECORDS_PER_REQUEST($builder, $MAX_RECORDS_PER_REQUEST);
+        self::addSTATUS($builder, $STATUS);
+        self::addPAYMENT_AMOUNT($builder, $PAYMENT_AMOUNT);
+        self::addPAYMENT_CURRENCY($builder, $PAYMENT_CURRENCY);
+        self::addPAYMENT_CHAIN($builder, $PAYMENT_CHAIN);
+        self::addNEXT_RENEWAL($builder, $NEXT_RENEWAL);
+        self::addAUTO_RENEW($builder, $AUTO_RENEW);
+        self::addRENEWAL_COUNT($builder, $RENEWAL_COUNT);
+        self::addTOTAL_REQUESTS($builder, $TOTAL_REQUESTS);
+        self::addTOTAL_RECORDS($builder, $TOTAL_RECORDS);
+        self::addLAST_ACCESS($builder, $LAST_ACCESS);
+        self::addDELIVERY_TOPIC($builder, $DELIVERY_TOPIC);
+        self::addCREATED_AT($builder, $CREATED_AT);
+        self::addUPDATED_AT($builder, $UPDATED_AT);
+        self::addNOTES($builder, $NOTES);
+        self::addPROVIDER_PEER_ID($builder, $PROVIDER_PEER_ID);
+        self::addGRANT_RESPONSE_BASE64($builder, $GRANT_RESPONSE_BASE64);
+        self::addFIELD_STREAM_POLICY($builder, $FIELD_STREAM_POLICY);
         $o = $builder->endObject();
         $builder->required($o, 4);  // GRANT_ID
         $builder->required($o, 6);  // LISTING_ID
@@ -362,6 +559,206 @@ class ACL extends Table
     public static function startPROVIDER_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addKEY_ALGORITHM(FlatBufferBuilder $builder, $KEY_ALGORITHM)
+    {
+        $builder->addOffsetX(11, $KEY_ALGORITHM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addRATE_LIMIT(FlatBufferBuilder $builder, $RATE_LIMIT)
+    {
+        $builder->addUintX(12, $RATE_LIMIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addMAX_RECORDS_PER_REQUEST(FlatBufferBuilder $builder, $MAX_RECORDS_PER_REQUEST)
+    {
+        $builder->addUintX(13, $MAX_RECORDS_PER_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
+    {
+        $builder->addSbyteX(14, $STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addPAYMENT_AMOUNT(FlatBufferBuilder $builder, $PAYMENT_AMOUNT)
+    {
+        $builder->addUlongX(15, $PAYMENT_AMOUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPAYMENT_CURRENCY(FlatBufferBuilder $builder, $PAYMENT_CURRENCY)
+    {
+        $builder->addOffsetX(16, $PAYMENT_CURRENCY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPAYMENT_CHAIN(FlatBufferBuilder $builder, $PAYMENT_CHAIN)
+    {
+        $builder->addOffsetX(17, $PAYMENT_CHAIN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addNEXT_RENEWAL(FlatBufferBuilder $builder, $NEXT_RENEWAL)
+    {
+        $builder->addUlongX(18, $NEXT_RENEWAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addAUTO_RENEW(FlatBufferBuilder $builder, $AUTO_RENEW)
+    {
+        $builder->addBoolX(19, $AUTO_RENEW, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addRENEWAL_COUNT(FlatBufferBuilder $builder, $RENEWAL_COUNT)
+    {
+        $builder->addUintX(20, $RENEWAL_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addTOTAL_REQUESTS(FlatBufferBuilder $builder, $TOTAL_REQUESTS)
+    {
+        $builder->addUlongX(21, $TOTAL_REQUESTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addTOTAL_RECORDS(FlatBufferBuilder $builder, $TOTAL_RECORDS)
+    {
+        $builder->addUlongX(22, $TOTAL_RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addLAST_ACCESS(FlatBufferBuilder $builder, $LAST_ACCESS)
+    {
+        $builder->addUlongX(23, $LAST_ACCESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDELIVERY_TOPIC(FlatBufferBuilder $builder, $DELIVERY_TOPIC)
+    {
+        $builder->addOffsetX(24, $DELIVERY_TOPIC, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addCREATED_AT(FlatBufferBuilder $builder, $CREATED_AT)
+    {
+        $builder->addUlongX(25, $CREATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
+    {
+        $builder->addUlongX(26, $UPDATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(27, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_PEER_ID(FlatBufferBuilder $builder, $PROVIDER_PEER_ID)
+    {
+        $builder->addOffsetX(28, $PROVIDER_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addGRANT_RESPONSE_BASE64(FlatBufferBuilder $builder, $GRANT_RESPONSE_BASE64)
+    {
+        $builder->addOffsetX(29, $GRANT_RESPONSE_BASE64, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFIELD_STREAM_POLICY(FlatBufferBuilder $builder, $FIELD_STREAM_POLICY)
+    {
+        $builder->addOffsetX(30, $FIELD_STREAM_POLICY, 0);
     }
 
     /**

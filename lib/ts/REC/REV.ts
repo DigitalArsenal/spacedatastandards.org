@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { DataQualityMetrics, DataQualityMetricsT } from './DataQualityMetrics.js';
+import { reviewLifecycleStatus } from './reviewLifecycleStatus.js';
 
 
 /**
@@ -125,8 +127,92 @@ reviewerSignatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Data quality metrics supplied by reviewer
+ */
+QUALITY_METRICS(obj?:DataQualityMetrics):DataQualityMetrics|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new DataQualityMetrics()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Whether the review is tied to a verified purchase
+ */
+VERIFIED_PURCHASE():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Unix timestamp when the review was last updated
+ */
+UPDATED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Review lifecycle status
+ */
+STATUS():reviewLifecycleStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : reviewLifecycleStatus.Published;
+}
+
+/**
+ * Helpful vote count
+ */
+HELPFUL_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Not-helpful vote count
+ */
+NOT_HELPFUL_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Provider response body
+ */
+PROVIDER_RESPONSE():string|null
+PROVIDER_RESPONSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_RESPONSE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp when provider responded
+ */
+PROVIDER_RESPONSE_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Number of moderation flags
+ */
+FLAGGED_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Moderation notes
+ */
+MODERATION_NOTES():string|null
+MODERATION_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MODERATION_NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startREV(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(19);
 }
 
 static addReviewId(builder:flatbuffers.Builder, REVIEW_IDOffset:flatbuffers.Offset) {
@@ -177,6 +263,46 @@ static startReviewerSignatureVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(1, numElems, 1);
 }
 
+static addQualityMetrics(builder:flatbuffers.Builder, QUALITY_METRICSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, QUALITY_METRICSOffset, 0);
+}
+
+static addVerifiedPurchase(builder:flatbuffers.Builder, VERIFIED_PURCHASE:boolean) {
+  builder.addFieldInt8(10, +VERIFIED_PURCHASE, +false);
+}
+
+static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_AT:bigint) {
+  builder.addFieldInt64(11, UPDATED_AT, BigInt('0'));
+}
+
+static addStatus(builder:flatbuffers.Builder, STATUS:reviewLifecycleStatus) {
+  builder.addFieldInt8(12, STATUS, reviewLifecycleStatus.Published);
+}
+
+static addHelpfulCount(builder:flatbuffers.Builder, HELPFUL_COUNT:number) {
+  builder.addFieldInt32(13, HELPFUL_COUNT, 0);
+}
+
+static addNotHelpfulCount(builder:flatbuffers.Builder, NOT_HELPFUL_COUNT:number) {
+  builder.addFieldInt32(14, NOT_HELPFUL_COUNT, 0);
+}
+
+static addProviderResponse(builder:flatbuffers.Builder, PROVIDER_RESPONSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, PROVIDER_RESPONSEOffset, 0);
+}
+
+static addProviderResponseAt(builder:flatbuffers.Builder, PROVIDER_RESPONSE_AT:bigint) {
+  builder.addFieldInt64(16, PROVIDER_RESPONSE_AT, BigInt('0'));
+}
+
+static addFlaggedCount(builder:flatbuffers.Builder, FLAGGED_COUNT:number) {
+  builder.addFieldInt32(17, FLAGGED_COUNT, 0);
+}
+
+static addModerationNotes(builder:flatbuffers.Builder, MODERATION_NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, MODERATION_NOTESOffset, 0);
+}
+
 static endREV(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // REVIEW_ID
@@ -193,19 +319,6 @@ static finishSizePrefixedREVBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$REV', true);
 }
 
-static createREV(builder:flatbuffers.Builder, REVIEW_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, REVIEWER_PEER_IDOffset:flatbuffers.Offset, RATING:number, TITLEOffset:flatbuffers.Offset, CONTENTOffset:flatbuffers.Offset, ACL_GRANT_IDOffset:flatbuffers.Offset, TIMESTAMP:bigint, REVIEWER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
-  REV.startREV(builder);
-  REV.addReviewId(builder, REVIEW_IDOffset);
-  REV.addListingId(builder, LISTING_IDOffset);
-  REV.addReviewerPeerId(builder, REVIEWER_PEER_IDOffset);
-  REV.addRating(builder, RATING);
-  REV.addTitle(builder, TITLEOffset);
-  REV.addContent(builder, CONTENTOffset);
-  REV.addAclGrantId(builder, ACL_GRANT_IDOffset);
-  REV.addTimestamp(builder, TIMESTAMP);
-  REV.addReviewerSignature(builder, REVIEWER_SIGNATUREOffset);
-  return REV.endREV(builder);
-}
 
 unpack(): REVT {
   return new REVT(
@@ -217,7 +330,17 @@ unpack(): REVT {
     this.CONTENT(),
     this.ACL_GRANT_ID(),
     this.TIMESTAMP(),
-    this.bb!.createScalarList<number>(this.REVIEWER_SIGNATURE.bind(this), this.reviewerSignatureLength())
+    this.bb!.createScalarList<number>(this.REVIEWER_SIGNATURE.bind(this), this.reviewerSignatureLength()),
+    (this.QUALITY_METRICS() !== null ? this.QUALITY_METRICS()!.unpack() : null),
+    this.VERIFIED_PURCHASE(),
+    this.UPDATED_AT(),
+    this.STATUS(),
+    this.HELPFUL_COUNT(),
+    this.NOT_HELPFUL_COUNT(),
+    this.PROVIDER_RESPONSE(),
+    this.PROVIDER_RESPONSE_AT(),
+    this.FLAGGED_COUNT(),
+    this.MODERATION_NOTES()
   );
 }
 
@@ -232,6 +355,16 @@ unpackTo(_o: REVT): void {
   _o.ACL_GRANT_ID = this.ACL_GRANT_ID();
   _o.TIMESTAMP = this.TIMESTAMP();
   _o.REVIEWER_SIGNATURE = this.bb!.createScalarList<number>(this.REVIEWER_SIGNATURE.bind(this), this.reviewerSignatureLength());
+  _o.QUALITY_METRICS = (this.QUALITY_METRICS() !== null ? this.QUALITY_METRICS()!.unpack() : null);
+  _o.VERIFIED_PURCHASE = this.VERIFIED_PURCHASE();
+  _o.UPDATED_AT = this.UPDATED_AT();
+  _o.STATUS = this.STATUS();
+  _o.HELPFUL_COUNT = this.HELPFUL_COUNT();
+  _o.NOT_HELPFUL_COUNT = this.NOT_HELPFUL_COUNT();
+  _o.PROVIDER_RESPONSE = this.PROVIDER_RESPONSE();
+  _o.PROVIDER_RESPONSE_AT = this.PROVIDER_RESPONSE_AT();
+  _o.FLAGGED_COUNT = this.FLAGGED_COUNT();
+  _o.MODERATION_NOTES = this.MODERATION_NOTES();
 }
 }
 
@@ -245,7 +378,17 @@ constructor(
   public CONTENT: string|Uint8Array|null = null,
   public ACL_GRANT_ID: string|Uint8Array|null = null,
   public TIMESTAMP: bigint = BigInt('0'),
-  public REVIEWER_SIGNATURE: (number)[] = []
+  public REVIEWER_SIGNATURE: (number)[] = [],
+  public QUALITY_METRICS: DataQualityMetricsT|null = null,
+  public VERIFIED_PURCHASE: boolean = false,
+  public UPDATED_AT: bigint = BigInt('0'),
+  public STATUS: reviewLifecycleStatus = reviewLifecycleStatus.Published,
+  public HELPFUL_COUNT: number = 0,
+  public NOT_HELPFUL_COUNT: number = 0,
+  public PROVIDER_RESPONSE: string|Uint8Array|null = null,
+  public PROVIDER_RESPONSE_AT: bigint = BigInt('0'),
+  public FLAGGED_COUNT: number = 0,
+  public MODERATION_NOTES: string|Uint8Array|null = null
 ){}
 
 
@@ -257,17 +400,31 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONTENT = (this.CONTENT !== null ? builder.createString(this.CONTENT!) : 0);
   const ACL_GRANT_ID = (this.ACL_GRANT_ID !== null ? builder.createString(this.ACL_GRANT_ID!) : 0);
   const REVIEWER_SIGNATURE = REV.createReviewerSignatureVector(builder, this.REVIEWER_SIGNATURE);
+  const QUALITY_METRICS = (this.QUALITY_METRICS !== null ? this.QUALITY_METRICS!.pack(builder) : 0);
+  const PROVIDER_RESPONSE = (this.PROVIDER_RESPONSE !== null ? builder.createString(this.PROVIDER_RESPONSE!) : 0);
+  const MODERATION_NOTES = (this.MODERATION_NOTES !== null ? builder.createString(this.MODERATION_NOTES!) : 0);
 
-  return REV.createREV(builder,
-    REVIEW_ID,
-    LISTING_ID,
-    REVIEWER_PEER_ID,
-    this.RATING,
-    TITLE,
-    CONTENT,
-    ACL_GRANT_ID,
-    this.TIMESTAMP,
-    REVIEWER_SIGNATURE
-  );
+  REV.startREV(builder);
+  REV.addReviewId(builder, REVIEW_ID);
+  REV.addListingId(builder, LISTING_ID);
+  REV.addReviewerPeerId(builder, REVIEWER_PEER_ID);
+  REV.addRating(builder, this.RATING);
+  REV.addTitle(builder, TITLE);
+  REV.addContent(builder, CONTENT);
+  REV.addAclGrantId(builder, ACL_GRANT_ID);
+  REV.addTimestamp(builder, this.TIMESTAMP);
+  REV.addReviewerSignature(builder, REVIEWER_SIGNATURE);
+  REV.addQualityMetrics(builder, QUALITY_METRICS);
+  REV.addVerifiedPurchase(builder, this.VERIFIED_PURCHASE);
+  REV.addUpdatedAt(builder, this.UPDATED_AT);
+  REV.addStatus(builder, this.STATUS);
+  REV.addHelpfulCount(builder, this.HELPFUL_COUNT);
+  REV.addNotHelpfulCount(builder, this.NOT_HELPFUL_COUNT);
+  REV.addProviderResponse(builder, PROVIDER_RESPONSE);
+  REV.addProviderResponseAt(builder, this.PROVIDER_RESPONSE_AT);
+  REV.addFlaggedCount(builder, this.FLAGGED_COUNT);
+  REV.addModerationNotes(builder, MODERATION_NOTES);
+
+  return REV.endREV(builder);
 }
 }

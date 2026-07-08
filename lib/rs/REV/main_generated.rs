@@ -3,6 +3,298 @@
 
 extern crate alloc;
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_REVIEW_LIFECYCLE_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_REVIEW_LIFECYCLE_STATUS: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_REVIEW_LIFECYCLE_STATUS: [reviewLifecycleStatus; 5] = [
+  reviewLifecycleStatus::Published,
+  reviewLifecycleStatus::Pending,
+  reviewLifecycleStatus::Flagged,
+  reviewLifecycleStatus::Hidden,
+  reviewLifecycleStatus::Removed,
+];
+
+/// Review lifecycle status.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct reviewLifecycleStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl reviewLifecycleStatus {
+  pub const Published: Self = Self(0);
+  pub const Pending: Self = Self(1);
+  pub const Flagged: Self = Self(2);
+  pub const Hidden: Self = Self(3);
+  pub const Removed: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Published,
+    Self::Pending,
+    Self::Flagged,
+    Self::Hidden,
+    Self::Removed,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Published => Some("Published"),
+      Self::Pending => Some("Pending"),
+      Self::Flagged => Some("Flagged"),
+      Self::Hidden => Some("Hidden"),
+      Self::Removed => Some("Removed"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for reviewLifecycleStatus {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for reviewLifecycleStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for reviewLifecycleStatus {
+    type Output = reviewLifecycleStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for reviewLifecycleStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for reviewLifecycleStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for reviewLifecycleStatus {}
+pub enum DataQualityMetricsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Data quality metrics attached to a review.
+pub struct DataQualityMetrics<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for DataQualityMetrics<'a> {
+  type Inner = DataQualityMetrics<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> DataQualityMetrics<'a> {
+  pub const VT_SCHEMA_COMPLIANCE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DATA_FRESHNESS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_COVERAGE_ACCURACY: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DELIVERY_RELIABILITY: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    DataQualityMetrics { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args DataQualityMetricsArgs
+  ) -> ::flatbuffers::WIPOffset<DataQualityMetrics<'bldr>> {
+    let mut builder = DataQualityMetricsBuilder::new(_fbb);
+    builder.add_DELIVERY_RELIABILITY(args.DELIVERY_RELIABILITY);
+    builder.add_COVERAGE_ACCURACY(args.COVERAGE_ACCURACY);
+    builder.add_DATA_FRESHNESS(args.DATA_FRESHNESS);
+    builder.add_SCHEMA_COMPLIANCE(args.SCHEMA_COMPLIANCE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> DataQualityMetricsT {
+    let SCHEMA_COMPLIANCE = self.SCHEMA_COMPLIANCE();
+    let DATA_FRESHNESS = self.DATA_FRESHNESS();
+    let COVERAGE_ACCURACY = self.COVERAGE_ACCURACY();
+    let DELIVERY_RELIABILITY = self.DELIVERY_RELIABILITY();
+    DataQualityMetricsT {
+      SCHEMA_COMPLIANCE,
+      DATA_FRESHNESS,
+      COVERAGE_ACCURACY,
+      DELIVERY_RELIABILITY,
+    }
+  }
+
+  #[inline]
+  pub fn SCHEMA_COMPLIANCE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(DataQualityMetrics::VT_SCHEMA_COMPLIANCE, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn DATA_FRESHNESS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(DataQualityMetrics::VT_DATA_FRESHNESS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn COVERAGE_ACCURACY(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(DataQualityMetrics::VT_COVERAGE_ACCURACY, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn DELIVERY_RELIABILITY(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(DataQualityMetrics::VT_DELIVERY_RELIABILITY, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for DataQualityMetrics<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<u8>("SCHEMA_COMPLIANCE", Self::VT_SCHEMA_COMPLIANCE, false)?
+     .visit_field::<u8>("DATA_FRESHNESS", Self::VT_DATA_FRESHNESS, false)?
+     .visit_field::<u8>("COVERAGE_ACCURACY", Self::VT_COVERAGE_ACCURACY, false)?
+     .visit_field::<u8>("DELIVERY_RELIABILITY", Self::VT_DELIVERY_RELIABILITY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct DataQualityMetricsArgs {
+    pub SCHEMA_COMPLIANCE: u8,
+    pub DATA_FRESHNESS: u8,
+    pub COVERAGE_ACCURACY: u8,
+    pub DELIVERY_RELIABILITY: u8,
+}
+impl<'a> Default for DataQualityMetricsArgs {
+  #[inline]
+  fn default() -> Self {
+    DataQualityMetricsArgs {
+      SCHEMA_COMPLIANCE: 0,
+      DATA_FRESHNESS: 0,
+      COVERAGE_ACCURACY: 0,
+      DELIVERY_RELIABILITY: 0,
+    }
+  }
+}
+
+pub struct DataQualityMetricsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DataQualityMetricsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SCHEMA_COMPLIANCE(&mut self, SCHEMA_COMPLIANCE: u8) {
+    self.fbb_.push_slot::<u8>(DataQualityMetrics::VT_SCHEMA_COMPLIANCE, SCHEMA_COMPLIANCE, 0);
+  }
+  #[inline]
+  pub fn add_DATA_FRESHNESS(&mut self, DATA_FRESHNESS: u8) {
+    self.fbb_.push_slot::<u8>(DataQualityMetrics::VT_DATA_FRESHNESS, DATA_FRESHNESS, 0);
+  }
+  #[inline]
+  pub fn add_COVERAGE_ACCURACY(&mut self, COVERAGE_ACCURACY: u8) {
+    self.fbb_.push_slot::<u8>(DataQualityMetrics::VT_COVERAGE_ACCURACY, COVERAGE_ACCURACY, 0);
+  }
+  #[inline]
+  pub fn add_DELIVERY_RELIABILITY(&mut self, DELIVERY_RELIABILITY: u8) {
+    self.fbb_.push_slot::<u8>(DataQualityMetrics::VT_DELIVERY_RELIABILITY, DELIVERY_RELIABILITY, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DataQualityMetricsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    DataQualityMetricsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<DataQualityMetrics<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for DataQualityMetrics<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("DataQualityMetrics");
+      ds.field("SCHEMA_COMPLIANCE", &self.SCHEMA_COMPLIANCE());
+      ds.field("DATA_FRESHNESS", &self.DATA_FRESHNESS());
+      ds.field("COVERAGE_ACCURACY", &self.COVERAGE_ACCURACY());
+      ds.field("DELIVERY_RELIABILITY", &self.DELIVERY_RELIABILITY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct DataQualityMetricsT {
+  pub SCHEMA_COMPLIANCE: u8,
+  pub DATA_FRESHNESS: u8,
+  pub COVERAGE_ACCURACY: u8,
+  pub DELIVERY_RELIABILITY: u8,
+}
+impl Default for DataQualityMetricsT {
+  fn default() -> Self {
+    Self {
+      SCHEMA_COMPLIANCE: 0,
+      DATA_FRESHNESS: 0,
+      COVERAGE_ACCURACY: 0,
+      DELIVERY_RELIABILITY: 0,
+    }
+  }
+}
+impl DataQualityMetricsT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<DataQualityMetrics<'b>> {
+    let SCHEMA_COMPLIANCE = self.SCHEMA_COMPLIANCE;
+    let DATA_FRESHNESS = self.DATA_FRESHNESS;
+    let COVERAGE_ACCURACY = self.COVERAGE_ACCURACY;
+    let DELIVERY_RELIABILITY = self.DELIVERY_RELIABILITY;
+    DataQualityMetrics::create(_fbb, &DataQualityMetricsArgs{
+      SCHEMA_COMPLIANCE,
+      DATA_FRESHNESS,
+      COVERAGE_ACCURACY,
+      DELIVERY_RELIABILITY,
+    })
+  }
+}
 pub enum REVOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,6 +321,16 @@ impl<'a> REV<'a> {
   pub const VT_ACL_GRANT_ID: ::flatbuffers::VOffsetT = 16;
   pub const VT_TIMESTAMP: ::flatbuffers::VOffsetT = 18;
   pub const VT_REVIEWER_SIGNATURE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_QUALITY_METRICS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_VERIFIED_PURCHASE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 26;
+  pub const VT_STATUS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_HELPFUL_COUNT: ::flatbuffers::VOffsetT = 30;
+  pub const VT_NOT_HELPFUL_COUNT: ::flatbuffers::VOffsetT = 32;
+  pub const VT_PROVIDER_RESPONSE: ::flatbuffers::VOffsetT = 34;
+  pub const VT_PROVIDER_RESPONSE_AT: ::flatbuffers::VOffsetT = 36;
+  pub const VT_FLAGGED_COUNT: ::flatbuffers::VOffsetT = 38;
+  pub const VT_MODERATION_NOTES: ::flatbuffers::VOffsetT = 40;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -40,7 +342,15 @@ impl<'a> REV<'a> {
     args: &'args REVArgs<'args>
   ) -> ::flatbuffers::WIPOffset<REV<'bldr>> {
     let mut builder = REVBuilder::new(_fbb);
+    builder.add_PROVIDER_RESPONSE_AT(args.PROVIDER_RESPONSE_AT);
+    builder.add_UPDATED_AT(args.UPDATED_AT);
     builder.add_TIMESTAMP(args.TIMESTAMP);
+    if let Some(x) = args.MODERATION_NOTES { builder.add_MODERATION_NOTES(x); }
+    builder.add_FLAGGED_COUNT(args.FLAGGED_COUNT);
+    if let Some(x) = args.PROVIDER_RESPONSE { builder.add_PROVIDER_RESPONSE(x); }
+    builder.add_NOT_HELPFUL_COUNT(args.NOT_HELPFUL_COUNT);
+    builder.add_HELPFUL_COUNT(args.HELPFUL_COUNT);
+    if let Some(x) = args.QUALITY_METRICS { builder.add_QUALITY_METRICS(x); }
     if let Some(x) = args.REVIEWER_SIGNATURE { builder.add_REVIEWER_SIGNATURE(x); }
     if let Some(x) = args.ACL_GRANT_ID { builder.add_ACL_GRANT_ID(x); }
     if let Some(x) = args.CONTENT { builder.add_CONTENT(x); }
@@ -48,6 +358,8 @@ impl<'a> REV<'a> {
     if let Some(x) = args.REVIEWER_PEER_ID { builder.add_REVIEWER_PEER_ID(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
     if let Some(x) = args.REVIEW_ID { builder.add_REVIEW_ID(x); }
+    builder.add_STATUS(args.STATUS);
+    builder.add_VERIFIED_PURCHASE(args.VERIFIED_PURCHASE);
     builder.add_RATING(args.RATING);
     builder.finish()
   }
@@ -79,6 +391,22 @@ impl<'a> REV<'a> {
     let REVIEWER_SIGNATURE = self.REVIEWER_SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let QUALITY_METRICS = self.QUALITY_METRICS().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let VERIFIED_PURCHASE = self.VERIFIED_PURCHASE();
+    let UPDATED_AT = self.UPDATED_AT();
+    let STATUS = self.STATUS();
+    let HELPFUL_COUNT = self.HELPFUL_COUNT();
+    let NOT_HELPFUL_COUNT = self.NOT_HELPFUL_COUNT();
+    let PROVIDER_RESPONSE = self.PROVIDER_RESPONSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_RESPONSE_AT = self.PROVIDER_RESPONSE_AT();
+    let FLAGGED_COUNT = self.FLAGGED_COUNT();
+    let MODERATION_NOTES = self.MODERATION_NOTES().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     REVT {
       REVIEW_ID,
       LISTING_ID,
@@ -89,6 +417,16 @@ impl<'a> REV<'a> {
       ACL_GRANT_ID,
       TIMESTAMP,
       REVIEWER_SIGNATURE,
+      QUALITY_METRICS,
+      VERIFIED_PURCHASE,
+      UPDATED_AT,
+      STATUS,
+      HELPFUL_COUNT,
+      NOT_HELPFUL_COUNT,
+      PROVIDER_RESPONSE,
+      PROVIDER_RESPONSE_AT,
+      FLAGGED_COUNT,
+      MODERATION_NOTES,
     }
   }
 
@@ -164,6 +502,86 @@ impl<'a> REV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(REV::VT_REVIEWER_SIGNATURE, None)}
   }
+  /// Data quality metrics supplied by reviewer
+  #[inline]
+  pub fn QUALITY_METRICS(&self) -> Option<DataQualityMetrics<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<DataQualityMetrics>>(REV::VT_QUALITY_METRICS, None)}
+  }
+  /// Whether the review is tied to a verified purchase
+  #[inline]
+  pub fn VERIFIED_PURCHASE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(REV::VT_VERIFIED_PURCHASE, Some(false)).unwrap()}
+  }
+  /// Unix timestamp when the review was last updated
+  #[inline]
+  pub fn UPDATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(REV::VT_UPDATED_AT, Some(0)).unwrap()}
+  }
+  /// Review lifecycle status
+  #[inline]
+  pub fn STATUS(&self) -> reviewLifecycleStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<reviewLifecycleStatus>(REV::VT_STATUS, Some(reviewLifecycleStatus::Published)).unwrap()}
+  }
+  /// Helpful vote count
+  #[inline]
+  pub fn HELPFUL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(REV::VT_HELPFUL_COUNT, Some(0)).unwrap()}
+  }
+  /// Not-helpful vote count
+  #[inline]
+  pub fn NOT_HELPFUL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(REV::VT_NOT_HELPFUL_COUNT, Some(0)).unwrap()}
+  }
+  /// Provider response body
+  #[inline]
+  pub fn PROVIDER_RESPONSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(REV::VT_PROVIDER_RESPONSE, None)}
+  }
+  /// Unix timestamp when provider responded
+  #[inline]
+  pub fn PROVIDER_RESPONSE_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(REV::VT_PROVIDER_RESPONSE_AT, Some(0)).unwrap()}
+  }
+  /// Number of moderation flags
+  #[inline]
+  pub fn FLAGGED_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(REV::VT_FLAGGED_COUNT, Some(0)).unwrap()}
+  }
+  /// Moderation notes
+  #[inline]
+  pub fn MODERATION_NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(REV::VT_MODERATION_NOTES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for REV<'_> {
@@ -181,6 +599,16 @@ impl ::flatbuffers::Verifiable for REV<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ACL_GRANT_ID", Self::VT_ACL_GRANT_ID, false)?
      .visit_field::<u64>("TIMESTAMP", Self::VT_TIMESTAMP, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("REVIEWER_SIGNATURE", Self::VT_REVIEWER_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<DataQualityMetrics>>("QUALITY_METRICS", Self::VT_QUALITY_METRICS, false)?
+     .visit_field::<bool>("VERIFIED_PURCHASE", Self::VT_VERIFIED_PURCHASE, false)?
+     .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<reviewLifecycleStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<u32>("HELPFUL_COUNT", Self::VT_HELPFUL_COUNT, false)?
+     .visit_field::<u32>("NOT_HELPFUL_COUNT", Self::VT_NOT_HELPFUL_COUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_RESPONSE", Self::VT_PROVIDER_RESPONSE, false)?
+     .visit_field::<u64>("PROVIDER_RESPONSE_AT", Self::VT_PROVIDER_RESPONSE_AT, false)?
+     .visit_field::<u32>("FLAGGED_COUNT", Self::VT_FLAGGED_COUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODERATION_NOTES", Self::VT_MODERATION_NOTES, false)?
      .finish();
     Ok(())
   }
@@ -195,6 +623,16 @@ pub struct REVArgs<'a> {
     pub ACL_GRANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TIMESTAMP: u64,
     pub REVIEWER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub QUALITY_METRICS: Option<::flatbuffers::WIPOffset<DataQualityMetrics<'a>>>,
+    pub VERIFIED_PURCHASE: bool,
+    pub UPDATED_AT: u64,
+    pub STATUS: reviewLifecycleStatus,
+    pub HELPFUL_COUNT: u32,
+    pub NOT_HELPFUL_COUNT: u32,
+    pub PROVIDER_RESPONSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_RESPONSE_AT: u64,
+    pub FLAGGED_COUNT: u32,
+    pub MODERATION_NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for REVArgs<'a> {
   #[inline]
@@ -209,6 +647,16 @@ impl<'a> Default for REVArgs<'a> {
       ACL_GRANT_ID: None,
       TIMESTAMP: 0,
       REVIEWER_SIGNATURE: None,
+      QUALITY_METRICS: None,
+      VERIFIED_PURCHASE: false,
+      UPDATED_AT: 0,
+      STATUS: reviewLifecycleStatus::Published,
+      HELPFUL_COUNT: 0,
+      NOT_HELPFUL_COUNT: 0,
+      PROVIDER_RESPONSE: None,
+      PROVIDER_RESPONSE_AT: 0,
+      FLAGGED_COUNT: 0,
+      MODERATION_NOTES: None,
     }
   }
 }
@@ -255,6 +703,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> REVBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(REV::VT_REVIEWER_SIGNATURE, REVIEWER_SIGNATURE);
   }
   #[inline]
+  pub fn add_QUALITY_METRICS(&mut self, QUALITY_METRICS: ::flatbuffers::WIPOffset<DataQualityMetrics<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<DataQualityMetrics>>(REV::VT_QUALITY_METRICS, QUALITY_METRICS);
+  }
+  #[inline]
+  pub fn add_VERIFIED_PURCHASE(&mut self, VERIFIED_PURCHASE: bool) {
+    self.fbb_.push_slot::<bool>(REV::VT_VERIFIED_PURCHASE, VERIFIED_PURCHASE, false);
+  }
+  #[inline]
+  pub fn add_UPDATED_AT(&mut self, UPDATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(REV::VT_UPDATED_AT, UPDATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: reviewLifecycleStatus) {
+    self.fbb_.push_slot::<reviewLifecycleStatus>(REV::VT_STATUS, STATUS, reviewLifecycleStatus::Published);
+  }
+  #[inline]
+  pub fn add_HELPFUL_COUNT(&mut self, HELPFUL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(REV::VT_HELPFUL_COUNT, HELPFUL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_NOT_HELPFUL_COUNT(&mut self, NOT_HELPFUL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(REV::VT_NOT_HELPFUL_COUNT, NOT_HELPFUL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_PROVIDER_RESPONSE(&mut self, PROVIDER_RESPONSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(REV::VT_PROVIDER_RESPONSE, PROVIDER_RESPONSE);
+  }
+  #[inline]
+  pub fn add_PROVIDER_RESPONSE_AT(&mut self, PROVIDER_RESPONSE_AT: u64) {
+    self.fbb_.push_slot::<u64>(REV::VT_PROVIDER_RESPONSE_AT, PROVIDER_RESPONSE_AT, 0);
+  }
+  #[inline]
+  pub fn add_FLAGGED_COUNT(&mut self, FLAGGED_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(REV::VT_FLAGGED_COUNT, FLAGGED_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_MODERATION_NOTES(&mut self, MODERATION_NOTES: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(REV::VT_MODERATION_NOTES, MODERATION_NOTES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> REVBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     REVBuilder {
@@ -284,6 +772,16 @@ impl ::core::fmt::Debug for REV<'_> {
       ds.field("ACL_GRANT_ID", &self.ACL_GRANT_ID());
       ds.field("TIMESTAMP", &self.TIMESTAMP());
       ds.field("REVIEWER_SIGNATURE", &self.REVIEWER_SIGNATURE());
+      ds.field("QUALITY_METRICS", &self.QUALITY_METRICS());
+      ds.field("VERIFIED_PURCHASE", &self.VERIFIED_PURCHASE());
+      ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("HELPFUL_COUNT", &self.HELPFUL_COUNT());
+      ds.field("NOT_HELPFUL_COUNT", &self.NOT_HELPFUL_COUNT());
+      ds.field("PROVIDER_RESPONSE", &self.PROVIDER_RESPONSE());
+      ds.field("PROVIDER_RESPONSE_AT", &self.PROVIDER_RESPONSE_AT());
+      ds.field("FLAGGED_COUNT", &self.FLAGGED_COUNT());
+      ds.field("MODERATION_NOTES", &self.MODERATION_NOTES());
       ds.finish()
   }
 }
@@ -299,6 +797,16 @@ pub struct REVT {
   pub ACL_GRANT_ID: Option<alloc::string::String>,
   pub TIMESTAMP: u64,
   pub REVIEWER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub QUALITY_METRICS: Option<alloc::boxed::Box<DataQualityMetricsT>>,
+  pub VERIFIED_PURCHASE: bool,
+  pub UPDATED_AT: u64,
+  pub STATUS: reviewLifecycleStatus,
+  pub HELPFUL_COUNT: u32,
+  pub NOT_HELPFUL_COUNT: u32,
+  pub PROVIDER_RESPONSE: Option<alloc::string::String>,
+  pub PROVIDER_RESPONSE_AT: u64,
+  pub FLAGGED_COUNT: u32,
+  pub MODERATION_NOTES: Option<alloc::string::String>,
 }
 impl Default for REVT {
   fn default() -> Self {
@@ -312,6 +820,16 @@ impl Default for REVT {
       ACL_GRANT_ID: None,
       TIMESTAMP: 0,
       REVIEWER_SIGNATURE: None,
+      QUALITY_METRICS: None,
+      VERIFIED_PURCHASE: false,
+      UPDATED_AT: 0,
+      STATUS: reviewLifecycleStatus::Published,
+      HELPFUL_COUNT: 0,
+      NOT_HELPFUL_COUNT: 0,
+      PROVIDER_RESPONSE: None,
+      PROVIDER_RESPONSE_AT: 0,
+      FLAGGED_COUNT: 0,
+      MODERATION_NOTES: None,
     }
   }
 }
@@ -346,6 +864,22 @@ impl REVT {
     let REVIEWER_SIGNATURE = self.REVIEWER_SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let QUALITY_METRICS = self.QUALITY_METRICS.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let VERIFIED_PURCHASE = self.VERIFIED_PURCHASE;
+    let UPDATED_AT = self.UPDATED_AT;
+    let STATUS = self.STATUS;
+    let HELPFUL_COUNT = self.HELPFUL_COUNT;
+    let NOT_HELPFUL_COUNT = self.NOT_HELPFUL_COUNT;
+    let PROVIDER_RESPONSE = self.PROVIDER_RESPONSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_RESPONSE_AT = self.PROVIDER_RESPONSE_AT;
+    let FLAGGED_COUNT = self.FLAGGED_COUNT;
+    let MODERATION_NOTES = self.MODERATION_NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     REV::create(_fbb, &REVArgs{
       REVIEW_ID,
       LISTING_ID,
@@ -356,6 +890,16 @@ impl REVT {
       ACL_GRANT_ID,
       TIMESTAMP,
       REVIEWER_SIGNATURE,
+      QUALITY_METRICS,
+      VERIFIED_PURCHASE,
+      UPDATED_AT,
+      STATUS,
+      HELPFUL_COUNT,
+      NOT_HELPFUL_COUNT,
+      PROVIDER_RESPONSE,
+      PROVIDER_RESPONSE_AT,
+      FLAGGED_COUNT,
+      MODERATION_NOTES,
     })
   }
 }

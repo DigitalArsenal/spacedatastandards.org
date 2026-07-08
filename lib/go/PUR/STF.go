@@ -419,8 +419,230 @@ func (rcv *STF) MutateSignature(j int, n byte) bool {
 	return rcv.MutateSIGNATURE(j, n)
 }
 
+/// Listing category: data stream or WASM module
+func (rcv *STF) LISTING_KIND() listingCategory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return listingCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *STF) ListingKind() listingCategory {
+	return rcv.LISTING_KIND()
+}
+
+/// Listing category: data stream or WASM module
+func (rcv *STF) MutateLISTING_KIND(n listingCategory) bool {
+	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+func (rcv *STF) MutateListingKind(n listingCategory) bool {
+	return rcv.MutateLISTING_KIND(n)
+}
+
+/// Search tags
+func (rcv *STF) TAGS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *STF) Tags(j int) []byte {
+	return rcv.TAGS(j)
+}
+
+func (rcv *STF) TAGSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *STF) TagsLength() int {
+	return rcv.TAGSLength()
+}
+
+/// Search tags
+/// Number of records in sample data, when available
+func (rcv *STF) SAMPLE_RECORD_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *STF) SampleRecordCount() uint32 {
+	return rcv.SAMPLE_RECORD_COUNT()
+}
+
+/// Number of records in sample data, when available
+func (rcv *STF) MutateSAMPLE_RECORD_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(40, n)
+}
+
+func (rcv *STF) MutateSampleRecordCount(n uint32) bool {
+	return rcv.MutateSAMPLE_RECORD_COUNT(n)
+}
+
+/// Supported delivery methods
+func (rcv *STF) DELIVERY_METHODS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *STF) DeliveryMethods(j int) []byte {
+	return rcv.DELIVERY_METHODS(j)
+}
+
+func (rcv *STF) DELIVERY_METHODSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *STF) DeliveryMethodsLength() int {
+	return rcv.DELIVERY_METHODSLength()
+}
+
+/// Supported delivery methods
+/// Protected delivery metadata for encrypted artifacts or streams
+func (rcv *STF) PROTECTED_DELIVERY(obj *ProtectedDeliveryBinding) *ProtectedDeliveryBinding {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ProtectedDeliveryBinding)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *STF) ProtectedDelivery(obj *ProtectedDeliveryBinding) *ProtectedDeliveryBinding {
+	return rcv.PROTECTED_DELIVERY(obj)
+}
+
+/// Protected delivery metadata for encrypted artifacts or streams
+/// Provider reputation summary
+func (rcv *STF) REPUTATION(obj *ProviderReputation) *ProviderReputation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(ProviderReputation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *STF) Reputation(obj *ProviderReputation) *ProviderReputation {
+	return rcv.REPUTATION(obj)
+}
+
+/// Provider reputation summary
+/// Listing version
+func (rcv *STF) VERSION() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *STF) Version() uint32 {
+	return rcv.VERSION()
+}
+
+/// Listing version
+func (rcv *STF) MutateVERSION(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(48, n)
+}
+
+func (rcv *STF) MutateVersion(n uint32) bool {
+	return rcv.MutateVERSION(n)
+}
+
+/// Unix timestamp when the listing expires, or 0 for no expiry
+func (rcv *STF) EXPIRES_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *STF) ExpiresAt() uint64 {
+	return rcv.EXPIRES_AT()
+}
+
+/// Unix timestamp when the listing expires, or 0 for no expiry
+func (rcv *STF) MutateEXPIRES_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(50, n)
+}
+
+func (rcv *STF) MutateExpiresAt(n uint64) bool {
+	return rcv.MutateEXPIRES_AT(n)
+}
+
+/// Terms document CID
+func (rcv *STF) TERMS_CID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STF) TermsCid() []byte {
+	return rcv.TERMS_CID()
+}
+
+/// Terms document CID
+/// License label or SPDX-style identifier
+func (rcv *STF) LICENSE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STF) License() []byte {
+	return rcv.LICENSE()
+}
+
+/// License label or SPDX-style identifier
+/// Peer ID this listing was sourced from when discovered remotely
+func (rcv *STF) SOURCE_PEER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STF) SourcePeerId() []byte {
+	return rcv.SOURCE_PEER_ID()
+}
+
+/// Peer ID this listing was sourced from when discovered remotely
 func STFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(27)
 }
 func STFAddLISTING_ID(builder *flatbuffers.Builder, LISTING_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LISTING_ID), 0)
@@ -541,6 +763,84 @@ func STFStartSIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuf
 }
 func STFStartSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return STFStartSIGNATUREVector(builder, numElems)
+}
+func STFAddLISTING_KIND(builder *flatbuffers.Builder, LISTING_KIND listingCategory) {
+	builder.PrependInt8Slot(16, int8(LISTING_KIND), 0)
+}
+func STFAddListingKind(builder *flatbuffers.Builder, LISTING_KIND listingCategory) {
+	STFAddLISTING_KIND(builder, LISTING_KIND)
+}
+func STFAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TAGS), 0)
+}
+func STFAddTags(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	STFAddTAGS(builder, TAGS)
+}
+func STFStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func STFStartTagsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartTAGSVector(builder, numElems)
+}
+func STFAddSAMPLE_RECORD_COUNT(builder *flatbuffers.Builder, SAMPLE_RECORD_COUNT uint32) {
+	builder.PrependUint32Slot(18, SAMPLE_RECORD_COUNT, 0)
+}
+func STFAddSampleRecordCount(builder *flatbuffers.Builder, SAMPLE_RECORD_COUNT uint32) {
+	STFAddSAMPLE_RECORD_COUNT(builder, SAMPLE_RECORD_COUNT)
+}
+func STFAddDELIVERY_METHODS(builder *flatbuffers.Builder, DELIVERY_METHODS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(DELIVERY_METHODS), 0)
+}
+func STFAddDeliveryMethods(builder *flatbuffers.Builder, DELIVERY_METHODS flatbuffers.UOffsetT) {
+	STFAddDELIVERY_METHODS(builder, DELIVERY_METHODS)
+}
+func STFStartDELIVERY_METHODSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func STFStartDeliveryMethodsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return STFStartDELIVERY_METHODSVector(builder, numElems)
+}
+func STFAddPROTECTED_DELIVERY(builder *flatbuffers.Builder, PROTECTED_DELIVERY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(PROTECTED_DELIVERY), 0)
+}
+func STFAddProtectedDelivery(builder *flatbuffers.Builder, PROTECTED_DELIVERY flatbuffers.UOffsetT) {
+	STFAddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERY)
+}
+func STFAddREPUTATION(builder *flatbuffers.Builder, REPUTATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(REPUTATION), 0)
+}
+func STFAddReputation(builder *flatbuffers.Builder, REPUTATION flatbuffers.UOffsetT) {
+	STFAddREPUTATION(builder, REPUTATION)
+}
+func STFAddVERSION(builder *flatbuffers.Builder, VERSION uint32) {
+	builder.PrependUint32Slot(22, VERSION, 0)
+}
+func STFAddVersion(builder *flatbuffers.Builder, VERSION uint32) {
+	STFAddVERSION(builder, VERSION)
+}
+func STFAddEXPIRES_AT(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
+	builder.PrependUint64Slot(23, EXPIRES_AT, 0)
+}
+func STFAddExpiresAt(builder *flatbuffers.Builder, EXPIRES_AT uint64) {
+	STFAddEXPIRES_AT(builder, EXPIRES_AT)
+}
+func STFAddTERMS_CID(builder *flatbuffers.Builder, TERMS_CID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(TERMS_CID), 0)
+}
+func STFAddTermsCid(builder *flatbuffers.Builder, TERMS_CID flatbuffers.UOffsetT) {
+	STFAddTERMS_CID(builder, TERMS_CID)
+}
+func STFAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(LICENSE), 0)
+}
+func STFAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	STFAddLICENSE(builder, LICENSE)
+}
+func STFAddSOURCE_PEER_ID(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(SOURCE_PEER_ID), 0)
+}
+func STFAddSourcePeerId(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffers.UOffsetT) {
+	STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
 }
 func STFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -199,6 +199,227 @@ class PUR : Table() {
             val o = __offset(28)
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
+    /**
+     * Key algorithm for buyer encryption public key
+     */
+    val keyAlgorithm : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val keyAlgorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
+    fun keyAlgorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Buyer contact email
+     */
+    val buyerEmail : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val buyerEmailAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun buyerEmailInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * On-chain sender address or fiat payment source reference
+     */
+    val senderAddress : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val senderAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun senderAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Confirmation block for on-chain payments
+     */
+    val confirmationBlock : ULong
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Fiat processor payment intent identifier
+     */
+    val paymentIntentId : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val paymentIntentIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun paymentIntentIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * SDN credits transaction identifier
+     */
+    val creditsTransactionId : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val creditsTransactionIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun creditsTransactionIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Provider-side purchase status
+     */
+    val status : Byte
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Human-readable status message
+     */
+    val statusMessage : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val statusMessageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun statusMessageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Unix timestamp when the purchase record was created
+     */
+    val createdAt : ULong
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when the purchase record was updated
+     */
+    val updatedAt : ULong
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when payment must be received
+     */
+    val paymentDeadline : ULong
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when payment was confirmed
+     */
+    val paymentConfirmedAt : ULong
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when the grant was issued
+     */
+    val grantIssuedAt : ULong
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Issued grant identifier
+     */
+    val grantId : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val grantIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun grantIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * Provider peer ID
+     */
+    val providerPeerId : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Unix timestamp when provider acknowledged the request
+     */
+    val providerAcknowledgedAt : ULong
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Preferred delivery method
+     */
+    val preferredDeliveryMethod : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val preferredDeliveryMethodAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun preferredDeliveryMethodInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Buyer webhook URL for delivery callbacks
+     */
+    val webhookUrl : String?
+        get() {
+            val o = __offset(64)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val webhookUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 1)
+    fun webhookUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * Ed25519 signature from provider
+     */
+    fun providerSignature(j: Int) : UByte {
+        val o = __offset(66)
+        return if (o != 0) {
+            bb.get(__vector(o) + j * 1).toUByte()
+        } else {
+            0u
+        }
+    }
+    val providerSignatureLength : Int
+        get() {
+            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
+        }
+    val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(66, 1)
+    fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 66, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPUR(_bb: ByteBuffer): PUR = getRootAsPUR(_bb, PUR())
@@ -207,10 +428,28 @@ class PUR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PURBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PUR")
-        fun createPUR(builder: FlatBufferBuilder, requestIdOffset: Int, listingIdOffset: Int, tierNameOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, paymentMethod: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentTxHashOffset: Int, paymentChainOffset: Int, paymentReferenceOffset: Int, buyerSignatureOffset: Int, timestamp: ULong) : Int {
-            builder.startTable(13)
+        fun createPUR(builder: FlatBufferBuilder, requestIdOffset: Int, listingIdOffset: Int, tierNameOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, paymentMethod: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentTxHashOffset: Int, paymentChainOffset: Int, paymentReferenceOffset: Int, buyerSignatureOffset: Int, timestamp: ULong, keyAlgorithmOffset: Int, buyerEmailOffset: Int, senderAddressOffset: Int, confirmationBlock: ULong, paymentIntentIdOffset: Int, creditsTransactionIdOffset: Int, status: Byte, statusMessageOffset: Int, createdAt: ULong, updatedAt: ULong, paymentDeadline: ULong, paymentConfirmedAt: ULong, grantIssuedAt: ULong, grantIdOffset: Int, providerPeerIdOffset: Int, providerAcknowledgedAt: ULong, preferredDeliveryMethodOffset: Int, webhookUrlOffset: Int, providerSignatureOffset: Int) : Int {
+            builder.startTable(32)
+            addPROVIDERACKNOWLEDGEDAT(builder, providerAcknowledgedAt)
+            addGRANTISSUEDAT(builder, grantIssuedAt)
+            addPAYMENTCONFIRMEDAT(builder, paymentConfirmedAt)
+            addPAYMENTDEADLINE(builder, paymentDeadline)
+            addUPDATEDAT(builder, updatedAt)
+            addCREATEDAT(builder, createdAt)
+            addCONFIRMATIONBLOCK(builder, confirmationBlock)
             addTIMESTAMP(builder, timestamp)
             addPAYMENTAMOUNT(builder, paymentAmount)
+            addPROVIDERSIGNATURE(builder, providerSignatureOffset)
+            addWEBHOOKURL(builder, webhookUrlOffset)
+            addPREFERREDDELIVERYMETHOD(builder, preferredDeliveryMethodOffset)
+            addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addGRANTID(builder, grantIdOffset)
+            addSTATUSMESSAGE(builder, statusMessageOffset)
+            addCREDITSTRANSACTIONID(builder, creditsTransactionIdOffset)
+            addPAYMENTINTENTID(builder, paymentIntentIdOffset)
+            addSENDERADDRESS(builder, senderAddressOffset)
+            addBUYEREMAIL(builder, buyerEmailOffset)
+            addKEYALGORITHM(builder, keyAlgorithmOffset)
             addBUYERSIGNATURE(builder, buyerSignatureOffset)
             addPAYMENTREFERENCE(builder, paymentReferenceOffset)
             addPAYMENTCHAIN(builder, paymentChainOffset)
@@ -221,10 +460,11 @@ class PUR : Table() {
             addTIERNAME(builder, tierNameOffset)
             addLISTINGID(builder, listingIdOffset)
             addREQUESTID(builder, requestIdOffset)
+            addSTATUS(builder, status)
             addPAYMENTMETHOD(builder, paymentMethod)
             return endPUR(builder)
         }
-        fun startPUR(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startPUR(builder: FlatBufferBuilder) = builder.startTable(32)
         fun addREQUESTID(builder: FlatBufferBuilder, requestId: Int) = builder.addOffset(0, requestId, 0)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
         fun addTIERNAME(builder: FlatBufferBuilder, tierName: Int) = builder.addOffset(2, tierName, 0)
@@ -256,6 +496,34 @@ class PUR : Table() {
         }
         fun startBuyerSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addTIMESTAMP(builder: FlatBufferBuilder, timestamp: ULong) = builder.addLong(12, timestamp.toLong(), 0)
+        fun addKEYALGORITHM(builder: FlatBufferBuilder, keyAlgorithm: Int) = builder.addOffset(13, keyAlgorithm, 0)
+        fun addBUYEREMAIL(builder: FlatBufferBuilder, buyerEmail: Int) = builder.addOffset(14, buyerEmail, 0)
+        fun addSENDERADDRESS(builder: FlatBufferBuilder, senderAddress: Int) = builder.addOffset(15, senderAddress, 0)
+        fun addCONFIRMATIONBLOCK(builder: FlatBufferBuilder, confirmationBlock: ULong) = builder.addLong(16, confirmationBlock.toLong(), 0)
+        fun addPAYMENTINTENTID(builder: FlatBufferBuilder, paymentIntentId: Int) = builder.addOffset(17, paymentIntentId, 0)
+        fun addCREDITSTRANSACTIONID(builder: FlatBufferBuilder, creditsTransactionId: Int) = builder.addOffset(18, creditsTransactionId, 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(19, status, 0)
+        fun addSTATUSMESSAGE(builder: FlatBufferBuilder, statusMessage: Int) = builder.addOffset(20, statusMessage, 0)
+        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: ULong) = builder.addLong(21, createdAt.toLong(), 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(22, updatedAt.toLong(), 0)
+        fun addPAYMENTDEADLINE(builder: FlatBufferBuilder, paymentDeadline: ULong) = builder.addLong(23, paymentDeadline.toLong(), 0)
+        fun addPAYMENTCONFIRMEDAT(builder: FlatBufferBuilder, paymentConfirmedAt: ULong) = builder.addLong(24, paymentConfirmedAt.toLong(), 0)
+        fun addGRANTISSUEDAT(builder: FlatBufferBuilder, grantIssuedAt: ULong) = builder.addLong(25, grantIssuedAt.toLong(), 0)
+        fun addGRANTID(builder: FlatBufferBuilder, grantId: Int) = builder.addOffset(26, grantId, 0)
+        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(27, providerPeerId, 0)
+        fun addPROVIDERACKNOWLEDGEDAT(builder: FlatBufferBuilder, providerAcknowledgedAt: ULong) = builder.addLong(28, providerAcknowledgedAt.toLong(), 0)
+        fun addPREFERREDDELIVERYMETHOD(builder: FlatBufferBuilder, preferredDeliveryMethod: Int) = builder.addOffset(29, preferredDeliveryMethod, 0)
+        fun addWEBHOOKURL(builder: FlatBufferBuilder, webhookUrl: Int) = builder.addOffset(30, webhookUrl, 0)
+        fun addPROVIDERSIGNATURE(builder: FlatBufferBuilder, providerSignature: Int) = builder.addOffset(31, providerSignature, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createProviderSignatureVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
+            builder.startVector(1, data.size, 1)
+            for (i in data.size - 1 downTo 0) {
+                builder.addByte(data[i].toByte())
+            }
+            return builder.endVector()
+        }
+        fun startProviderSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun endPUR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

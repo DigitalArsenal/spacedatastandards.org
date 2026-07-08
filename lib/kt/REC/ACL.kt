@@ -165,6 +165,212 @@ class ACL : Table() {
         }
     val providerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
     fun providerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Key algorithm for buyer encryption public key
+     */
+    val keyAlgorithm : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val keyAlgorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun keyAlgorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Request rate limit
+     */
+    val rateLimit : UInt
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Maximum records returned per request
+     */
+    val maxRecordsPerRequest : UInt
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Provider-side grant status
+     */
+    val status : Byte
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Payment amount in smallest unit
+     */
+    val paymentAmount : ULong
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Payment currency
+     */
+    val paymentCurrency : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val paymentCurrencyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun paymentCurrencyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Payment chain or processor
+     */
+    val paymentChain : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val paymentChainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun paymentChainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Unix timestamp of next renewal
+     */
+    val nextRenewal : ULong
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Whether renewal is automatic
+     */
+    val autoRenew : Boolean
+        get() {
+            val o = __offset(42)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Renewal count
+     */
+    val renewalCount : UInt
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Total requests made under this grant
+     */
+    val totalRequests : ULong
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Total records delivered under this grant
+     */
+    val totalRecords : ULong
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp of last access
+     */
+    val lastAccess : ULong
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * PubSub or direct delivery topic
+     */
+    val deliveryTopic : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val deliveryTopicAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun deliveryTopicInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Unix timestamp when the grant record was created
+     */
+    val createdAt : ULong
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Unix timestamp when the grant record was updated
+     */
+    val updatedAt : ULong
+        get() {
+            val o = __offset(56)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Provider notes
+     */
+    val notes : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Provider peer ID
+     */
+    val providerPeerId : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerPeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun providerPeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Base64-encoded signed grant response bytes
+     */
+    val grantResponseBase64 : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val grantResponseBase64AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun grantResponseBase64InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Field-level stream policy bound to this grant
+     */
+    val fieldStreamPolicy : GrantFieldStreamPolicy? get() = fieldStreamPolicy(GrantFieldStreamPolicy())
+    fun fieldStreamPolicy(obj: GrantFieldStreamPolicy) : GrantFieldStreamPolicy? {
+        val o = __offset(64)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsACL(_bb: ByteBuffer): ACL = getRootAsACL(_bb, ACL())
@@ -173,10 +379,28 @@ class ACL : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACL")
-        fun createACL(builder: FlatBufferBuilder, grantIdOffset: Int, listingIdOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, accessType: Byte, tierNameOffset: Int, grantedAt: ULong, expiresAt: ULong, paymentTxHashOffset: Int, paymentMethod: Byte, providerSignatureOffset: Int) : Int {
-            builder.startTable(11)
+        fun createACL(builder: FlatBufferBuilder, grantIdOffset: Int, listingIdOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, accessType: Byte, tierNameOffset: Int, grantedAt: ULong, expiresAt: ULong, paymentTxHashOffset: Int, paymentMethod: Byte, providerSignatureOffset: Int, keyAlgorithmOffset: Int, rateLimit: UInt, maxRecordsPerRequest: UInt, status: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentChainOffset: Int, nextRenewal: ULong, autoRenew: Boolean, renewalCount: UInt, totalRequests: ULong, totalRecords: ULong, lastAccess: ULong, deliveryTopicOffset: Int, createdAt: ULong, updatedAt: ULong, notesOffset: Int, providerPeerIdOffset: Int, grantResponseBase64Offset: Int, fieldStreamPolicyOffset: Int) : Int {
+            builder.startTable(31)
+            addUPDATEDAT(builder, updatedAt)
+            addCREATEDAT(builder, createdAt)
+            addLASTACCESS(builder, lastAccess)
+            addTOTALRECORDS(builder, totalRecords)
+            addTOTALREQUESTS(builder, totalRequests)
+            addNEXTRENEWAL(builder, nextRenewal)
+            addPAYMENTAMOUNT(builder, paymentAmount)
             addEXPIRESAT(builder, expiresAt)
             addGRANTEDAT(builder, grantedAt)
+            addFIELDSTREAMPOLICY(builder, fieldStreamPolicyOffset)
+            addGRANTRESPONSEBASE64(builder, grantResponseBase64Offset)
+            addPROVIDERPEERID(builder, providerPeerIdOffset)
+            addNOTES(builder, notesOffset)
+            addDELIVERYTOPIC(builder, deliveryTopicOffset)
+            addRENEWALCOUNT(builder, renewalCount)
+            addPAYMENTCHAIN(builder, paymentChainOffset)
+            addPAYMENTCURRENCY(builder, paymentCurrencyOffset)
+            addMAXRECORDSPERREQUEST(builder, maxRecordsPerRequest)
+            addRATELIMIT(builder, rateLimit)
+            addKEYALGORITHM(builder, keyAlgorithmOffset)
             addPROVIDERSIGNATURE(builder, providerSignatureOffset)
             addPAYMENTTXHASH(builder, paymentTxHashOffset)
             addTIERNAME(builder, tierNameOffset)
@@ -184,11 +408,13 @@ class ACL : Table() {
             addBUYERPEERID(builder, buyerPeerIdOffset)
             addLISTINGID(builder, listingIdOffset)
             addGRANTID(builder, grantIdOffset)
+            addAUTORENEW(builder, autoRenew)
+            addSTATUS(builder, status)
             addPAYMENTMETHOD(builder, paymentMethod)
             addACCESSTYPE(builder, accessType)
             return endACL(builder)
         }
-        fun startACL(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startACL(builder: FlatBufferBuilder) = builder.startTable(31)
         fun addGRANTID(builder: FlatBufferBuilder, grantId: Int) = builder.addOffset(0, grantId, 0)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
         fun addBUYERPEERID(builder: FlatBufferBuilder, buyerPeerId: Int) = builder.addOffset(2, buyerPeerId, 0)
@@ -218,6 +444,26 @@ class ACL : Table() {
             return builder.endVector()
         }
         fun startProviderSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addKEYALGORITHM(builder: FlatBufferBuilder, keyAlgorithm: Int) = builder.addOffset(11, keyAlgorithm, 0)
+        fun addRATELIMIT(builder: FlatBufferBuilder, rateLimit: UInt) = builder.addInt(12, rateLimit.toInt(), 0)
+        fun addMAXRECORDSPERREQUEST(builder: FlatBufferBuilder, maxRecordsPerRequest: UInt) = builder.addInt(13, maxRecordsPerRequest.toInt(), 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(14, status, 0)
+        fun addPAYMENTAMOUNT(builder: FlatBufferBuilder, paymentAmount: ULong) = builder.addLong(15, paymentAmount.toLong(), 0)
+        fun addPAYMENTCURRENCY(builder: FlatBufferBuilder, paymentCurrency: Int) = builder.addOffset(16, paymentCurrency, 0)
+        fun addPAYMENTCHAIN(builder: FlatBufferBuilder, paymentChain: Int) = builder.addOffset(17, paymentChain, 0)
+        fun addNEXTRENEWAL(builder: FlatBufferBuilder, nextRenewal: ULong) = builder.addLong(18, nextRenewal.toLong(), 0)
+        fun addAUTORENEW(builder: FlatBufferBuilder, autoRenew: Boolean) = builder.addBoolean(19, autoRenew, false)
+        fun addRENEWALCOUNT(builder: FlatBufferBuilder, renewalCount: UInt) = builder.addInt(20, renewalCount.toInt(), 0)
+        fun addTOTALREQUESTS(builder: FlatBufferBuilder, totalRequests: ULong) = builder.addLong(21, totalRequests.toLong(), 0)
+        fun addTOTALRECORDS(builder: FlatBufferBuilder, totalRecords: ULong) = builder.addLong(22, totalRecords.toLong(), 0)
+        fun addLASTACCESS(builder: FlatBufferBuilder, lastAccess: ULong) = builder.addLong(23, lastAccess.toLong(), 0)
+        fun addDELIVERYTOPIC(builder: FlatBufferBuilder, deliveryTopic: Int) = builder.addOffset(24, deliveryTopic, 0)
+        fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: ULong) = builder.addLong(25, createdAt.toLong(), 0)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(26, updatedAt.toLong(), 0)
+        fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(27, notes, 0)
+        fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(28, providerPeerId, 0)
+        fun addGRANTRESPONSEBASE64(builder: FlatBufferBuilder, grantResponseBase64: Int) = builder.addOffset(29, grantResponseBase64, 0)
+        fun addFIELDSTREAMPOLICY(builder: FlatBufferBuilder, fieldStreamPolicy: Int) = builder.addOffset(30, fieldStreamPolicy, 0)
         fun endACL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

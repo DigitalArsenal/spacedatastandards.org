@@ -103,6 +103,48 @@ public struct STF : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATUREBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetSIGNATUREArray() { return __p.__vector_as_array<byte>(34); }
+  /// Listing category: data stream or WASM module
+  public listingCategory LISTING_KIND { get { int o = __p.__offset(36); return o != 0 ? (listingCategory)__p.bb.GetSbyte(o + __p.bb_pos) : listingCategory.DataStream; } }
+  /// Search tags
+  public string TAGS(int j) { int o = __p.__offset(38); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Number of records in sample data, when available
+  public uint SAMPLE_RECORD_COUNT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Supported delivery methods
+  public string DELIVERY_METHODS(int j) { int o = __p.__offset(42); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int DELIVERY_METHODSLength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Protected delivery metadata for encrypted artifacts or streams
+  public ProtectedDeliveryBinding? PROTECTED_DELIVERY { get { int o = __p.__offset(44); return o != 0 ? (ProtectedDeliveryBinding?)(new ProtectedDeliveryBinding()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Provider reputation summary
+  public ProviderReputation? REPUTATION { get { int o = __p.__offset(46); return o != 0 ? (ProviderReputation?)(new ProviderReputation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Listing version
+  public uint VERSION { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Unix timestamp when the listing expires, or 0 for no expiry
+  public ulong EXPIRES_AT { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Terms document CID
+  public string TERMS_CID { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTERMS_CIDBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetTERMS_CIDBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetTERMS_CIDArray() { return __p.__vector_as_array<byte>(52); }
+  /// License label or SPDX-style identifier
+  public string LICENSE { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(54); }
+  /// Peer ID this listing was sourced from when discovered remotely
+  public string SOURCE_PEER_ID { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCE_PEER_IDBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCE_PEER_IDBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetSOURCE_PEER_IDArray() { return __p.__vector_as_array<byte>(56); }
 
   public static Offset<STF> CreateSTF(FlatBufferBuilder builder,
       StringOffset LISTING_IDOffset = default(StringOffset),
@@ -120,10 +162,31 @@ public struct STF : IFlatbufferObject
       ulong CREATED_AT = 0,
       ulong UPDATED_AT = 0,
       bool ACTIVE = false,
-      VectorOffset SIGNATUREOffset = default(VectorOffset)) {
-    builder.StartTable(16);
+      VectorOffset SIGNATUREOffset = default(VectorOffset),
+      listingCategory LISTING_KIND = listingCategory.DataStream,
+      VectorOffset TAGSOffset = default(VectorOffset),
+      uint SAMPLE_RECORD_COUNT = 0,
+      VectorOffset DELIVERY_METHODSOffset = default(VectorOffset),
+      Offset<ProtectedDeliveryBinding> PROTECTED_DELIVERYOffset = default(Offset<ProtectedDeliveryBinding>),
+      Offset<ProviderReputation> REPUTATIONOffset = default(Offset<ProviderReputation>),
+      uint VERSION = 0,
+      ulong EXPIRES_AT = 0,
+      StringOffset TERMS_CIDOffset = default(StringOffset),
+      StringOffset LICENSEOffset = default(StringOffset),
+      StringOffset SOURCE_PEER_IDOffset = default(StringOffset)) {
+    builder.StartTable(27);
+    STF.AddEXPIRES_AT(builder, EXPIRES_AT);
     STF.AddUPDATED_AT(builder, UPDATED_AT);
     STF.AddCREATED_AT(builder, CREATED_AT);
+    STF.AddSOURCE_PEER_ID(builder, SOURCE_PEER_IDOffset);
+    STF.AddLICENSE(builder, LICENSEOffset);
+    STF.AddTERMS_CID(builder, TERMS_CIDOffset);
+    STF.AddVERSION(builder, VERSION);
+    STF.AddREPUTATION(builder, REPUTATIONOffset);
+    STF.AddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERYOffset);
+    STF.AddDELIVERY_METHODS(builder, DELIVERY_METHODSOffset);
+    STF.AddSAMPLE_RECORD_COUNT(builder, SAMPLE_RECORD_COUNT);
+    STF.AddTAGS(builder, TAGSOffset);
     STF.AddSIGNATURE(builder, SIGNATUREOffset);
     STF.AddACCEPTED_PAYMENTS(builder, ACCEPTED_PAYMENTSOffset);
     STF.AddPRICING(builder, PRICINGOffset);
@@ -135,13 +198,14 @@ public struct STF : IFlatbufferObject
     STF.AddPROVIDER_EPM_CID(builder, PROVIDER_EPM_CIDOffset);
     STF.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
     STF.AddLISTING_ID(builder, LISTING_IDOffset);
+    STF.AddLISTING_KIND(builder, LISTING_KIND);
     STF.AddACTIVE(builder, ACTIVE);
     STF.AddENCRYPTION_REQUIRED(builder, ENCRYPTION_REQUIRED);
     STF.AddACCESS_TYPE(builder, ACCESS_TYPE);
     return STF.EndSTF(builder);
   }
 
-  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartSTF(FlatBufferBuilder builder) { builder.StartTable(27); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(0, LISTING_IDOffset.Value, 0); }
   public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(1, PROVIDER_PEER_IDOffset.Value, 0); }
   public static void AddPROVIDER_EPM_CID(FlatBufferBuilder builder, StringOffset PROVIDER_EPM_CIDOffset) { builder.AddOffset(2, PROVIDER_EPM_CIDOffset.Value, 0); }
@@ -178,6 +242,27 @@ public struct STF : IFlatbufferObject
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddLISTING_KIND(FlatBufferBuilder builder, listingCategory LISTING_KIND) { builder.AddSbyte(16, (sbyte)LISTING_KIND, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(17, TAGSOffset.Value, 0); }
+  public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSAMPLE_RECORD_COUNT(FlatBufferBuilder builder, uint SAMPLE_RECORD_COUNT) { builder.AddUint(18, SAMPLE_RECORD_COUNT, 0); }
+  public static void AddDELIVERY_METHODS(FlatBufferBuilder builder, VectorOffset DELIVERY_METHODSOffset) { builder.AddOffset(19, DELIVERY_METHODSOffset.Value, 0); }
+  public static VectorOffset CreateDELIVERY_METHODSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDELIVERY_METHODSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELIVERY_METHODSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELIVERY_METHODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDELIVERY_METHODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROTECTED_DELIVERY(FlatBufferBuilder builder, Offset<ProtectedDeliveryBinding> PROTECTED_DELIVERYOffset) { builder.AddOffset(20, PROTECTED_DELIVERYOffset.Value, 0); }
+  public static void AddREPUTATION(FlatBufferBuilder builder, Offset<ProviderReputation> REPUTATIONOffset) { builder.AddOffset(21, REPUTATIONOffset.Value, 0); }
+  public static void AddVERSION(FlatBufferBuilder builder, uint VERSION) { builder.AddUint(22, VERSION, 0); }
+  public static void AddEXPIRES_AT(FlatBufferBuilder builder, ulong EXPIRES_AT) { builder.AddUlong(23, EXPIRES_AT, 0); }
+  public static void AddTERMS_CID(FlatBufferBuilder builder, StringOffset TERMS_CIDOffset) { builder.AddOffset(24, TERMS_CIDOffset.Value, 0); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(25, LICENSEOffset.Value, 0); }
+  public static void AddSOURCE_PEER_ID(FlatBufferBuilder builder, StringOffset SOURCE_PEER_IDOffset) { builder.AddOffset(26, SOURCE_PEER_IDOffset.Value, 0); }
   public static Offset<STF> EndSTF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LISTING_ID
@@ -213,6 +298,19 @@ public struct STF : IFlatbufferObject
     _o.ACTIVE = this.ACTIVE;
     _o.SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
+    _o.LISTING_KIND = this.LISTING_KIND;
+    _o.TAGS = new List<string>();
+    for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
+    _o.SAMPLE_RECORD_COUNT = this.SAMPLE_RECORD_COUNT;
+    _o.DELIVERY_METHODS = new List<string>();
+    for (var _j = 0; _j < this.DELIVERY_METHODSLength; ++_j) {_o.DELIVERY_METHODS.Add(this.DELIVERY_METHODS(_j));}
+    _o.PROTECTED_DELIVERY = this.PROTECTED_DELIVERY.HasValue ? this.PROTECTED_DELIVERY.Value.UnPack() : null;
+    _o.REPUTATION = this.REPUTATION.HasValue ? this.REPUTATION.Value.UnPack() : null;
+    _o.VERSION = this.VERSION;
+    _o.EXPIRES_AT = this.EXPIRES_AT;
+    _o.TERMS_CID = this.TERMS_CID;
+    _o.LICENSE = this.LICENSE;
+    _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID;
   }
   public static Offset<STF> Pack(FlatBufferBuilder builder, STFT _o) {
     if (_o == null) return default(Offset<STF>);
@@ -245,6 +343,23 @@ public struct STF : IFlatbufferObject
       var __SIGNATURE = _o.SIGNATURE.ToArray();
       _SIGNATURE = CreateSIGNATUREVector(builder, __SIGNATURE);
     }
+    var _TAGS = default(VectorOffset);
+    if (_o.TAGS != null) {
+      var __TAGS = new StringOffset[_o.TAGS.Count];
+      for (var _j = 0; _j < __TAGS.Length; ++_j) { __TAGS[_j] = builder.CreateString(_o.TAGS[_j]); }
+      _TAGS = CreateTAGSVector(builder, __TAGS);
+    }
+    var _DELIVERY_METHODS = default(VectorOffset);
+    if (_o.DELIVERY_METHODS != null) {
+      var __DELIVERY_METHODS = new StringOffset[_o.DELIVERY_METHODS.Count];
+      for (var _j = 0; _j < __DELIVERY_METHODS.Length; ++_j) { __DELIVERY_METHODS[_j] = builder.CreateString(_o.DELIVERY_METHODS[_j]); }
+      _DELIVERY_METHODS = CreateDELIVERY_METHODSVector(builder, __DELIVERY_METHODS);
+    }
+    var _PROTECTED_DELIVERY = _o.PROTECTED_DELIVERY == null ? default(Offset<ProtectedDeliveryBinding>) : ProtectedDeliveryBinding.Pack(builder, _o.PROTECTED_DELIVERY);
+    var _REPUTATION = _o.REPUTATION == null ? default(Offset<ProviderReputation>) : ProviderReputation.Pack(builder, _o.REPUTATION);
+    var _TERMS_CID = _o.TERMS_CID == null ? default(StringOffset) : builder.CreateString(_o.TERMS_CID);
+    var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
+    var _SOURCE_PEER_ID = _o.SOURCE_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_PEER_ID);
     return CreateSTF(
       builder,
       _LISTING_ID,
@@ -262,7 +377,18 @@ public struct STF : IFlatbufferObject
       _o.CREATED_AT,
       _o.UPDATED_AT,
       _o.ACTIVE,
-      _SIGNATURE);
+      _SIGNATURE,
+      _o.LISTING_KIND,
+      _TAGS,
+      _o.SAMPLE_RECORD_COUNT,
+      _DELIVERY_METHODS,
+      _PROTECTED_DELIVERY,
+      _REPUTATION,
+      _o.VERSION,
+      _o.EXPIRES_AT,
+      _TERMS_CID,
+      _LICENSE,
+      _SOURCE_PEER_ID);
   }
 }
 
@@ -284,6 +410,17 @@ public class STFT
   public ulong UPDATED_AT { get; set; }
   public bool ACTIVE { get; set; }
   public List<byte> SIGNATURE { get; set; }
+  public listingCategory LISTING_KIND { get; set; }
+  public List<string> TAGS { get; set; }
+  public uint SAMPLE_RECORD_COUNT { get; set; }
+  public List<string> DELIVERY_METHODS { get; set; }
+  public ProtectedDeliveryBindingT PROTECTED_DELIVERY { get; set; }
+  public ProviderReputationT REPUTATION { get; set; }
+  public uint VERSION { get; set; }
+  public ulong EXPIRES_AT { get; set; }
+  public string TERMS_CID { get; set; }
+  public string LICENSE { get; set; }
+  public string SOURCE_PEER_ID { get; set; }
 
   public STFT() {
     this.LISTING_ID = null;
@@ -302,6 +439,17 @@ public class STFT
     this.UPDATED_AT = 0;
     this.ACTIVE = false;
     this.SIGNATURE = null;
+    this.LISTING_KIND = listingCategory.DataStream;
+    this.TAGS = null;
+    this.SAMPLE_RECORD_COUNT = 0;
+    this.DELIVERY_METHODS = null;
+    this.PROTECTED_DELIVERY = null;
+    this.REPUTATION = null;
+    this.VERSION = 0;
+    this.EXPIRES_AT = 0;
+    this.TERMS_CID = null;
+    this.LICENSE = null;
+    this.SOURCE_PEER_ID = null;
   }
   public static STFT DeserializeFromBinary(byte[] fbBuffer) {
     return STF.GetRootAsSTF(new ByteBuffer(fbBuffer)).UnPack();
@@ -335,6 +483,17 @@ static public class STFVerify
       && verifier.VerifyField(tablePos, 30 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 32 /*ACTIVE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 34 /*SIGNATURE*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 36 /*LISTING_KIND*/, 1 /*listingCategory*/, 1, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 38 /*TAGS*/, false)
+      && verifier.VerifyField(tablePos, 40 /*SAMPLE_RECORD_COUNT*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 42 /*DELIVERY_METHODS*/, false)
+      && verifier.VerifyTable(tablePos, 44 /*PROTECTED_DELIVERY*/, ProtectedDeliveryBindingVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 46 /*REPUTATION*/, ProviderReputationVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 48 /*VERSION*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*EXPIRES_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 52 /*TERMS_CID*/, false)
+      && verifier.VerifyString(tablePos, 54 /*LICENSE*/, false)
+      && verifier.VerifyString(tablePos, 56 /*SOURCE_PEER_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

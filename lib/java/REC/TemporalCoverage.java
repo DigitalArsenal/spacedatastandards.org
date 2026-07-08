@@ -49,13 +49,19 @@ public final class TemporalCoverage extends com.google.flatbuffers.Table {
    * Days of historical data available
    */
   public long HISTORICAL_DEPTH() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Typical provider latency in seconds
+   */
+  public long LATENCY_SECONDS() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createTemporalCoverage(FlatBufferBuilder builder,
       int START_EPOCHOffset,
       int END_EPOCHOffset,
       int UPDATE_FREQUENCYOffset,
-      long HISTORICAL_DEPTH) {
-    builder.startTable(4);
+      long HISTORICAL_DEPTH,
+      long LATENCY_SECONDS) {
+    builder.startTable(5);
+    TemporalCoverage.addLatencySeconds(builder, LATENCY_SECONDS);
     TemporalCoverage.addHistoricalDepth(builder, HISTORICAL_DEPTH);
     TemporalCoverage.addUpdateFrequency(builder, UPDATE_FREQUENCYOffset);
     TemporalCoverage.addEndEpoch(builder, END_EPOCHOffset);
@@ -63,11 +69,12 @@ public final class TemporalCoverage extends com.google.flatbuffers.Table {
     return TemporalCoverage.endTemporalCoverage(builder);
   }
 
-  public static void startTemporalCoverage(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startTemporalCoverage(FlatBufferBuilder builder) { builder.startTable(5); }
   public static void addStartEpoch(FlatBufferBuilder builder, int START_EPOCHOffset) { builder.addOffset(0, START_EPOCHOffset, 0); }
   public static void addEndEpoch(FlatBufferBuilder builder, int END_EPOCHOffset) { builder.addOffset(1, END_EPOCHOffset, 0); }
   public static void addUpdateFrequency(FlatBufferBuilder builder, int UPDATE_FREQUENCYOffset) { builder.addOffset(2, UPDATE_FREQUENCYOffset, 0); }
   public static void addHistoricalDepth(FlatBufferBuilder builder, long HISTORICAL_DEPTH) { builder.addInt(3, (int) HISTORICAL_DEPTH, (int) 0L); }
+  public static void addLatencySeconds(FlatBufferBuilder builder, long LATENCY_SECONDS) { builder.addInt(4, (int) LATENCY_SECONDS, (int) 0L); }
   public static int endTemporalCoverage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

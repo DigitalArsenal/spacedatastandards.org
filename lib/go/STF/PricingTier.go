@@ -163,8 +163,44 @@ func (rcv *PricingTier) FeaturesLength() int {
 }
 
 /// List of features included in this tier
+/// Maximum records returned per request
+func (rcv *PricingTier) MAX_RECORDS_PER_REQUEST() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PricingTier) MaxRecordsPerRequest() uint32 {
+	return rcv.MAX_RECORDS_PER_REQUEST()
+}
+
+/// Maximum records returned per request
+func (rcv *PricingTier) MutateMAX_RECORDS_PER_REQUEST(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(16, n)
+}
+
+func (rcv *PricingTier) MutateMaxRecordsPerRequest(n uint32) bool {
+	return rcv.MutateMAX_RECORDS_PER_REQUEST(n)
+}
+
+/// Human-readable tier description
+func (rcv *PricingTier) DESCRIPTION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PricingTier) Description() []byte {
+	return rcv.DESCRIPTION()
+}
+
+/// Human-readable tier description
 func PricingTierStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(8)
 }
 func PricingTierAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -207,6 +243,18 @@ func PricingTierStartFEATURESVector(builder *flatbuffers.Builder, numElems int) 
 }
 func PricingTierStartFeaturesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PricingTierStartFEATURESVector(builder, numElems)
+}
+func PricingTierAddMAX_RECORDS_PER_REQUEST(builder *flatbuffers.Builder, MAX_RECORDS_PER_REQUEST uint32) {
+	builder.PrependUint32Slot(6, MAX_RECORDS_PER_REQUEST, 0)
+}
+func PricingTierAddMaxRecordsPerRequest(builder *flatbuffers.Builder, MAX_RECORDS_PER_REQUEST uint32) {
+	PricingTierAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST)
+}
+func PricingTierAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func PricingTierAddDescription(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
+	PricingTierAddDESCRIPTION(builder, DESCRIPTION)
 }
 func PricingTierEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

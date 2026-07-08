@@ -7,7 +7,113 @@
     },
     "paymentMethod" : {
       "type" : "string",
-      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free"]
+      "enum": ["Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free", "UsageBased", "Enterprise"]
+    },
+    "listingCategory" : {
+      "type" : "string",
+      "enum": ["DataStream", "WasmModule"]
+    },
+    "GrantFieldStreamPolicy" : {
+      "type" : "object",
+      "description" : "Field-level stream policy bound into protected delivery and grants.",
+      "properties" : {
+        "POLICY_ID" : {
+                "type" : "string"
+              },
+        "POLICY_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "STREAM_ID" : {
+                "type" : "string"
+              },
+        "SCHEMA_CODE" : {
+                "type" : "string"
+              },
+        "ALLOWED_FIELD_PATHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "REDACTED_FIELD_PATHS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "KEY_EPOCH" : {
+                "type" : "string"
+              },
+        "GRANT_SCOPE" : {
+                "type" : "string"
+              },
+        "ALLOWED_OPERATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ProtectedDeliveryBinding" : {
+      "type" : "object",
+      "description" : "Immutable encrypted artifact/window metadata for protected delivery.",
+      "properties" : {
+        "ENCRYPTED_CID" : {
+                "type" : "string"
+              },
+        "MANIFEST_CID" : {
+                "type" : "string"
+              },
+        "CONTENT_HASH" : {
+                "type" : "string"
+              },
+        "CONTENT_KEY_ID" : {
+                "type" : "string"
+              },
+        "LICENSE_MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_ID" : {
+                "type" : "string"
+              },
+        "MODULE_VERSION" : {
+                "type" : "string"
+              },
+        "REQUIRED_SCOPES" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "GRANT_SCOPE" : {
+                "type" : "string"
+              },
+        "DELIVERY_PROTOCOL" : {
+                "type" : "string"
+              },
+        "FIELD_STREAM_POLICY" : {
+                "$ref" : "#/definitions/GrantFieldStreamPolicy"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ProviderReputation" : {
+      "type" : "object",
+      "description" : "Provider reputation summary surfaced in marketplace listings.",
+      "properties" : {
+        "TOTAL_SALES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "AVERAGE_RATING_X10" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "TOTAL_RATINGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "UPTIME_PERCENTAGE_X100" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "AVG_DELIVERY_LATENCY_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DISPUTE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "PROVIDER_SINCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "additionalProperties" : false
     },
     "SpatialCoverage" : {
       "type" : "object",
@@ -24,6 +130,18 @@
         "OBJECT_IDS" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "Specific NORAD IDs or catalog numbers"
+              },
+        "MIN_ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Minimum altitude in kilometers for altitude-bounded offerings"
+              },
+        "MAX_ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Maximum altitude in kilometers for altitude-bounded offerings"
+              },
+        "GEO_BOUNDS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Bounding box as [min_lat, min_lon, max_lat, max_lon]"
               }
       },
       "additionalProperties" : false
@@ -47,6 +165,10 @@
         "HISTORICAL_DEPTH" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Days of historical data available"
+              },
+        "LATENCY_SECONDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Typical provider latency in seconds"
               }
       },
       "additionalProperties" : false
@@ -93,6 +215,14 @@
         "FEATURES" : {
                 "type" : "array", "items" : {"type" : "string"},
                 "description" : "List of features included in this tier"
+              },
+        "MAX_RECORDS_PER_REQUEST" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum records returned per request"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable tier description"
               }
       },
       "additionalProperties" : false
@@ -164,6 +294,50 @@
         "SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Ed25519 signature from provider"
+              },
+        "LISTING_KIND" : {
+                "$ref" : "#/definitions/listingCategory",
+                "description" : "Listing category: data stream or WASM module"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Search tags"
+              },
+        "SAMPLE_RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of records in sample data, when available"
+              },
+        "DELIVERY_METHODS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Supported delivery methods"
+              },
+        "PROTECTED_DELIVERY" : {
+                "$ref" : "#/definitions/ProtectedDeliveryBinding",
+                "description" : "Protected delivery metadata for encrypted artifacts or streams"
+              },
+        "REPUTATION" : {
+                "$ref" : "#/definitions/ProviderReputation",
+                "description" : "Provider reputation summary"
+              },
+        "VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Listing version"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the listing expires, or 0 for no expiry"
+              },
+        "TERMS_CID" : {
+                "type" : "string",
+                "description" : "Terms document CID"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "License label or SPDX-style identifier"
+              },
+        "SOURCE_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID this listing was sourced from when discovered remotely"
               }
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],

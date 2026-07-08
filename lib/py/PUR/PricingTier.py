@@ -90,8 +90,24 @@ class PricingTier(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
+    # Maximum records returned per request
+    # PricingTier
+    def MAX_RECORDS_PER_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Human-readable tier description
+    # PricingTier
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def PricingTierStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(8)
 
 def Start(builder):
     PricingTierStart(builder)
@@ -144,6 +160,18 @@ def PricingTierCreateFEATURESVector(builder, data):
 def CreateFEATURESVector(builder, data):
     PricingTierCreateFEATURESVector(builder, data)
 
+def PricingTierAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST):
+    builder.PrependUint32Slot(6, MAX_RECORDS_PER_REQUEST, 0)
+
+def AddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST):
+    PricingTierAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST)
+
+def PricingTierAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    PricingTierAddDESCRIPTION(builder, DESCRIPTION)
+
 def PricingTierEnd(builder):
     return builder.EndObject()
 
@@ -166,6 +194,8 @@ class PricingTierT(object):
         DURATION_DAYS = 0,
         RATE_LIMIT = 0,
         FEATURES = None,
+        MAX_RECORDS_PER_REQUEST = 0,
+        DESCRIPTION = None,
     ):
         self.NAME = NAME  # type: Optional[str]
         self.PRICE_AMOUNT = PRICE_AMOUNT  # type: int
@@ -173,6 +203,8 @@ class PricingTierT(object):
         self.DURATION_DAYS = DURATION_DAYS  # type: int
         self.RATE_LIMIT = RATE_LIMIT  # type: int
         self.FEATURES = FEATURES  # type: Optional[List[Optional[str]]]
+        self.MAX_RECORDS_PER_REQUEST = MAX_RECORDS_PER_REQUEST  # type: int
+        self.DESCRIPTION = DESCRIPTION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -204,6 +236,8 @@ class PricingTierT(object):
             self.FEATURES = []
             for i in range(PricingTier.FEATURESLength()):
                 self.FEATURES.append(PricingTier.FEATURES(i))
+        self.MAX_RECORDS_PER_REQUEST = PricingTier.MAX_RECORDS_PER_REQUEST()
+        self.DESCRIPTION = PricingTier.DESCRIPTION()
 
     # PricingTierT
     def Pack(self, builder):
@@ -219,6 +253,8 @@ class PricingTierT(object):
             for i in reversed(range(len(self.FEATURES))):
                 builder.PrependUOffsetTRelative(FEATURESlist[i])
             FEATURES = builder.EndVector()
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
         PricingTierStart(builder)
         if self.NAME is not None:
             PricingTierAddNAME(builder, NAME)
@@ -229,5 +265,8 @@ class PricingTierT(object):
         PricingTierAddRATE_LIMIT(builder, self.RATE_LIMIT)
         if self.FEATURES is not None:
             PricingTierAddFEATURES(builder, FEATURES)
+        PricingTierAddMAX_RECORDS_PER_REQUEST(builder, self.MAX_RECORDS_PER_REQUEST)
+        if self.DESCRIPTION is not None:
+            PricingTierAddDESCRIPTION(builder, DESCRIPTION)
         PricingTier = PricingTierEnd(builder)
         return PricingTier

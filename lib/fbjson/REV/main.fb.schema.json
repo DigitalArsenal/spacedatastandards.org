@@ -1,6 +1,66 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "reviewLifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "Published",
+        "Pending",
+        "Flagged",
+        "Hidden",
+        "Removed"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Published": {
+          "value": 0
+        },
+        "Pending": {
+          "value": 1
+        },
+        "Flagged": {
+          "value": 2
+        },
+        "Hidden": {
+          "value": 3
+        },
+        "Removed": {
+          "value": 4
+        }
+      }
+    },
+    "DataQualityMetrics": {
+      "type": "object",
+      "description": "Data quality metrics attached to a review.",
+      "properties": {
+        "SCHEMA_COMPLIANCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "uint8"
+        },
+        "DATA_FRESHNESS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "uint8"
+        },
+        "COVERAGE_ACCURACY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "uint8"
+        },
+        "DELIVERY_RELIABILITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
     "REV": {
       "type": "object",
       "description": "Review - User review of a storefront listing",
@@ -61,6 +121,84 @@
           },
           "description": "Ed25519 signature from reviewer",
           "x-flatbuffer-type": "[ubyte]"
+        },
+        "QUALITY_METRICS": {
+          "$ref": "#/definitions/DataQualityMetrics",
+          "description": "Data quality metrics supplied by reviewer",
+          "x-flatbuffer-type": "DataQualityMetrics"
+        },
+        "VERIFIED_PURCHASE": {
+          "type": "boolean",
+          "description": "Whether the review is tied to a verified purchase",
+          "x-flatbuffer-type": "bool"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the review was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/reviewLifecycleStatus",
+          "description": "Review lifecycle status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Published": {
+              "value": 0
+            },
+            "Pending": {
+              "value": 1
+            },
+            "Flagged": {
+              "value": 2
+            },
+            "Hidden": {
+              "value": 3
+            },
+            "Removed": {
+              "value": 4
+            }
+          }
+        },
+        "HELPFUL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Helpful vote count",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NOT_HELPFUL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Not-helpful vote count",
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROVIDER_RESPONSE": {
+          "type": "string",
+          "description": "Provider response body",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_RESPONSE_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when provider responded",
+          "x-flatbuffer-type": "uint64"
+        },
+        "FLAGGED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of moderation flags",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MODERATION_NOTES": {
+          "type": "string",
+          "description": "Moderation notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "required": [

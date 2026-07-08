@@ -72,26 +72,37 @@ class TemporalCoverage extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Typical provider latency in seconds
+    /**
+     * @return uint
+     */
+    public function getLATENCY_SECONDS()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTemporalCoverage(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(5);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TemporalCoverage
      */
-    public static function createTemporalCoverage(FlatBufferBuilder $builder, $START_EPOCH, $END_EPOCH, $UPDATE_FREQUENCY, $HISTORICAL_DEPTH)
+    public static function createTemporalCoverage(FlatBufferBuilder $builder, $START_EPOCH, $END_EPOCH, $UPDATE_FREQUENCY, $HISTORICAL_DEPTH, $LATENCY_SECONDS)
     {
-        $builder->startObject(4);
+        $builder->startObject(5);
         self::addSTART_EPOCH($builder, $START_EPOCH);
         self::addEND_EPOCH($builder, $END_EPOCH);
         self::addUPDATE_FREQUENCY($builder, $UPDATE_FREQUENCY);
         self::addHISTORICAL_DEPTH($builder, $HISTORICAL_DEPTH);
+        self::addLATENCY_SECONDS($builder, $LATENCY_SECONDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -134,6 +145,16 @@ class TemporalCoverage extends Table
     public static function addHISTORICAL_DEPTH(FlatBufferBuilder $builder, $HISTORICAL_DEPTH)
     {
         $builder->addUintX(3, $HISTORICAL_DEPTH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addLATENCY_SECONDS(FlatBufferBuilder $builder, $LATENCY_SECONDS)
+    {
+        $builder->addUintX(4, $LATENCY_SECONDS, 0);
     }
 
     /**

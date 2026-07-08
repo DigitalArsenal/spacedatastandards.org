@@ -92,6 +92,101 @@ public final class ACL extends com.google.flatbuffers.Table {
   public ByteVector providerSignatureVector(ByteVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer PROVIDER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer PROVIDER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Key algorithm for buyer encryption public key
+   */
+  public String KEY_ALGORITHM() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KEY_ALGORITHMAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer KEY_ALGORITHMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Request rate limit
+   */
+  public long RATE_LIMIT() { int o = __offset(28); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Maximum records returned per request
+   */
+  public long MAX_RECORDS_PER_REQUEST() { int o = __offset(30); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Provider-side grant status
+   */
+  public byte STATUS() { int o = __offset(32); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Payment amount in smallest unit
+   */
+  public long PAYMENT_AMOUNT() { int o = __offset(34); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Payment currency
+   */
+  public String PAYMENT_CURRENCY() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PAYMENT_CURRENCYAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer PAYMENT_CURRENCYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Payment chain or processor
+   */
+  public String PAYMENT_CHAIN() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PAYMENT_CHAINAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer PAYMENT_CHAINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Unix timestamp of next renewal
+   */
+  public long NEXT_RENEWAL() { int o = __offset(40); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Whether renewal is automatic
+   */
+  public boolean AUTO_RENEW() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Renewal count
+   */
+  public long RENEWAL_COUNT() { int o = __offset(44); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Total requests made under this grant
+   */
+  public long TOTAL_REQUESTS() { int o = __offset(46); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Total records delivered under this grant
+   */
+  public long TOTAL_RECORDS() { int o = __offset(48); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp of last access
+   */
+  public long LAST_ACCESS() { int o = __offset(50); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * PubSub or direct delivery topic
+   */
+  public String DELIVERY_TOPIC() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DELIVERY_TOPICAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer DELIVERY_TOPICInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Unix timestamp when the grant record was created
+   */
+  public long CREATED_AT() { int o = __offset(54); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Unix timestamp when the grant record was updated
+   */
+  public long UPDATED_AT() { int o = __offset(56); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Provider notes
+   */
+  public String NOTES() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Provider peer ID
+   */
+  public String PROVIDER_PEER_ID() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer PROVIDER_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Base64-encoded signed grant response bytes
+   */
+  public String GRANT_RESPONSE_BASE64() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer GRANT_RESPONSE_BASE64AsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer GRANT_RESPONSE_BASE64InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Field-level stream policy bound to this grant
+   */
+  public GrantFieldStreamPolicy FIELD_STREAM_POLICY() { return FIELD_STREAM_POLICY(new GrantFieldStreamPolicy()); }
+  public GrantFieldStreamPolicy FIELD_STREAM_POLICY(GrantFieldStreamPolicy obj) { int o = __offset(64); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createACL(FlatBufferBuilder builder,
       int GRANT_IDOffset,
@@ -104,10 +199,48 @@ public final class ACL extends com.google.flatbuffers.Table {
       long EXPIRES_AT,
       int PAYMENT_TX_HASHOffset,
       byte PAYMENT_METHOD,
-      int PROVIDER_SIGNATUREOffset) {
-    builder.startTable(11);
+      int PROVIDER_SIGNATUREOffset,
+      int KEY_ALGORITHMOffset,
+      long RATE_LIMIT,
+      long MAX_RECORDS_PER_REQUEST,
+      byte STATUS,
+      long PAYMENT_AMOUNT,
+      int PAYMENT_CURRENCYOffset,
+      int PAYMENT_CHAINOffset,
+      long NEXT_RENEWAL,
+      boolean AUTO_RENEW,
+      long RENEWAL_COUNT,
+      long TOTAL_REQUESTS,
+      long TOTAL_RECORDS,
+      long LAST_ACCESS,
+      int DELIVERY_TOPICOffset,
+      long CREATED_AT,
+      long UPDATED_AT,
+      int NOTESOffset,
+      int PROVIDER_PEER_IDOffset,
+      int GRANT_RESPONSE_BASE64Offset,
+      int FIELD_STREAM_POLICYOffset) {
+    builder.startTable(31);
+    ACL.addUpdatedAt(builder, UPDATED_AT);
+    ACL.addCreatedAt(builder, CREATED_AT);
+    ACL.addLastAccess(builder, LAST_ACCESS);
+    ACL.addTotalRecords(builder, TOTAL_RECORDS);
+    ACL.addTotalRequests(builder, TOTAL_REQUESTS);
+    ACL.addNextRenewal(builder, NEXT_RENEWAL);
+    ACL.addPaymentAmount(builder, PAYMENT_AMOUNT);
     ACL.addExpiresAt(builder, EXPIRES_AT);
     ACL.addGrantedAt(builder, GRANTED_AT);
+    ACL.addFieldStreamPolicy(builder, FIELD_STREAM_POLICYOffset);
+    ACL.addGrantResponseBase64(builder, GRANT_RESPONSE_BASE64Offset);
+    ACL.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+    ACL.addNotes(builder, NOTESOffset);
+    ACL.addDeliveryTopic(builder, DELIVERY_TOPICOffset);
+    ACL.addRenewalCount(builder, RENEWAL_COUNT);
+    ACL.addPaymentChain(builder, PAYMENT_CHAINOffset);
+    ACL.addPaymentCurrency(builder, PAYMENT_CURRENCYOffset);
+    ACL.addMaxRecordsPerRequest(builder, MAX_RECORDS_PER_REQUEST);
+    ACL.addRateLimit(builder, RATE_LIMIT);
+    ACL.addKeyAlgorithm(builder, KEY_ALGORITHMOffset);
     ACL.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
     ACL.addPaymentTxHash(builder, PAYMENT_TX_HASHOffset);
     ACL.addTierName(builder, TIER_NAMEOffset);
@@ -115,12 +248,14 @@ public final class ACL extends com.google.flatbuffers.Table {
     ACL.addBuyerPeerId(builder, BUYER_PEER_IDOffset);
     ACL.addListingId(builder, LISTING_IDOffset);
     ACL.addGrantId(builder, GRANT_IDOffset);
+    ACL.addAutoRenew(builder, AUTO_RENEW);
+    ACL.addStatus(builder, STATUS);
     ACL.addPaymentMethod(builder, PAYMENT_METHOD);
     ACL.addAccessType(builder, ACCESS_TYPE);
     return ACL.endACL(builder);
   }
 
-  public static void startACL(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startACL(FlatBufferBuilder builder) { builder.startTable(31); }
   public static void addGrantId(FlatBufferBuilder builder, int GRANT_IDOffset) { builder.addOffset(0, GRANT_IDOffset, 0); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(1, LISTING_IDOffset, 0); }
   public static void addBuyerPeerId(FlatBufferBuilder builder, int BUYER_PEER_IDOffset) { builder.addOffset(2, BUYER_PEER_IDOffset, 0); }
@@ -138,6 +273,26 @@ public final class ACL extends com.google.flatbuffers.Table {
   public static int createProviderSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createProviderSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startProviderSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addKeyAlgorithm(FlatBufferBuilder builder, int KEY_ALGORITHMOffset) { builder.addOffset(11, KEY_ALGORITHMOffset, 0); }
+  public static void addRateLimit(FlatBufferBuilder builder, long RATE_LIMIT) { builder.addInt(12, (int) RATE_LIMIT, (int) 0L); }
+  public static void addMaxRecordsPerRequest(FlatBufferBuilder builder, long MAX_RECORDS_PER_REQUEST) { builder.addInt(13, (int) MAX_RECORDS_PER_REQUEST, (int) 0L); }
+  public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(14, STATUS, 0); }
+  public static void addPaymentAmount(FlatBufferBuilder builder, long PAYMENT_AMOUNT) { builder.addLong(15, PAYMENT_AMOUNT, 0L); }
+  public static void addPaymentCurrency(FlatBufferBuilder builder, int PAYMENT_CURRENCYOffset) { builder.addOffset(16, PAYMENT_CURRENCYOffset, 0); }
+  public static void addPaymentChain(FlatBufferBuilder builder, int PAYMENT_CHAINOffset) { builder.addOffset(17, PAYMENT_CHAINOffset, 0); }
+  public static void addNextRenewal(FlatBufferBuilder builder, long NEXT_RENEWAL) { builder.addLong(18, NEXT_RENEWAL, 0L); }
+  public static void addAutoRenew(FlatBufferBuilder builder, boolean AUTO_RENEW) { builder.addBoolean(19, AUTO_RENEW, false); }
+  public static void addRenewalCount(FlatBufferBuilder builder, long RENEWAL_COUNT) { builder.addInt(20, (int) RENEWAL_COUNT, (int) 0L); }
+  public static void addTotalRequests(FlatBufferBuilder builder, long TOTAL_REQUESTS) { builder.addLong(21, TOTAL_REQUESTS, 0L); }
+  public static void addTotalRecords(FlatBufferBuilder builder, long TOTAL_RECORDS) { builder.addLong(22, TOTAL_RECORDS, 0L); }
+  public static void addLastAccess(FlatBufferBuilder builder, long LAST_ACCESS) { builder.addLong(23, LAST_ACCESS, 0L); }
+  public static void addDeliveryTopic(FlatBufferBuilder builder, int DELIVERY_TOPICOffset) { builder.addOffset(24, DELIVERY_TOPICOffset, 0); }
+  public static void addCreatedAt(FlatBufferBuilder builder, long CREATED_AT) { builder.addLong(25, CREATED_AT, 0L); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(26, UPDATED_AT, 0L); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(27, NOTESOffset, 0); }
+  public static void addProviderPeerId(FlatBufferBuilder builder, int PROVIDER_PEER_IDOffset) { builder.addOffset(28, PROVIDER_PEER_IDOffset, 0); }
+  public static void addGrantResponseBase64(FlatBufferBuilder builder, int GRANT_RESPONSE_BASE64Offset) { builder.addOffset(29, GRANT_RESPONSE_BASE64Offset, 0); }
+  public static void addFieldStreamPolicy(FlatBufferBuilder builder, int FIELD_STREAM_POLICYOffset) { builder.addOffset(30, FIELD_STREAM_POLICYOffset, 0); }
   public static int endACL(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // GRANT_ID

@@ -146,6 +146,102 @@ class REV : Table() {
         }
     val reviewerSignatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
     fun reviewerSignatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Data quality metrics supplied by reviewer
+     */
+    val qualityMetrics : DataQualityMetrics? get() = qualityMetrics(DataQualityMetrics())
+    fun qualityMetrics(obj: DataQualityMetrics) : DataQualityMetrics? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Whether the review is tied to a verified purchase
+     */
+    val verifiedPurchase : Boolean
+        get() {
+            val o = __offset(24)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Unix timestamp when the review was last updated
+     */
+    val updatedAt : ULong
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Review lifecycle status
+     */
+    val status : Byte
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Helpful vote count
+     */
+    val helpfulCount : UInt
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Not-helpful vote count
+     */
+    val notHelpfulCount : UInt
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Provider response body
+     */
+    val providerResponse : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val providerResponseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun providerResponseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Unix timestamp when provider responded
+     */
+    val providerResponseAt : ULong
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Number of moderation flags
+     */
+    val flaggedCount : UInt
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Moderation notes
+     */
+    val moderationNotes : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val moderationNotesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun moderationNotesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsREV(_bb: ByteBuffer): REV = getRootAsREV(_bb, REV())
@@ -154,9 +250,17 @@ class REV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun REVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REV")
-        fun createREV(builder: FlatBufferBuilder, reviewIdOffset: Int, listingIdOffset: Int, reviewerPeerIdOffset: Int, rating: UByte, titleOffset: Int, contentOffset: Int, aclGrantIdOffset: Int, timestamp: ULong, reviewerSignatureOffset: Int) : Int {
-            builder.startTable(9)
+        fun createREV(builder: FlatBufferBuilder, reviewIdOffset: Int, listingIdOffset: Int, reviewerPeerIdOffset: Int, rating: UByte, titleOffset: Int, contentOffset: Int, aclGrantIdOffset: Int, timestamp: ULong, reviewerSignatureOffset: Int, qualityMetricsOffset: Int, verifiedPurchase: Boolean, updatedAt: ULong, status: Byte, helpfulCount: UInt, notHelpfulCount: UInt, providerResponseOffset: Int, providerResponseAt: ULong, flaggedCount: UInt, moderationNotesOffset: Int) : Int {
+            builder.startTable(19)
+            addPROVIDERRESPONSEAT(builder, providerResponseAt)
+            addUPDATEDAT(builder, updatedAt)
             addTIMESTAMP(builder, timestamp)
+            addMODERATIONNOTES(builder, moderationNotesOffset)
+            addFLAGGEDCOUNT(builder, flaggedCount)
+            addPROVIDERRESPONSE(builder, providerResponseOffset)
+            addNOTHELPFULCOUNT(builder, notHelpfulCount)
+            addHELPFULCOUNT(builder, helpfulCount)
+            addQUALITYMETRICS(builder, qualityMetricsOffset)
             addREVIEWERSIGNATURE(builder, reviewerSignatureOffset)
             addACLGRANTID(builder, aclGrantIdOffset)
             addCONTENT(builder, contentOffset)
@@ -164,10 +268,12 @@ class REV : Table() {
             addREVIEWERPEERID(builder, reviewerPeerIdOffset)
             addLISTINGID(builder, listingIdOffset)
             addREVIEWID(builder, reviewIdOffset)
+            addSTATUS(builder, status)
+            addVERIFIEDPURCHASE(builder, verifiedPurchase)
             addRATING(builder, rating)
             return endREV(builder)
         }
-        fun startREV(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startREV(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addREVIEWID(builder: FlatBufferBuilder, reviewId: Int) = builder.addOffset(0, reviewId, 0)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(1, listingId, 0)
         fun addREVIEWERPEERID(builder: FlatBufferBuilder, reviewerPeerId: Int) = builder.addOffset(2, reviewerPeerId, 0)
@@ -186,6 +292,16 @@ class REV : Table() {
             return builder.endVector()
         }
         fun startReviewerSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addQUALITYMETRICS(builder: FlatBufferBuilder, qualityMetrics: Int) = builder.addOffset(9, qualityMetrics, 0)
+        fun addVERIFIEDPURCHASE(builder: FlatBufferBuilder, verifiedPurchase: Boolean) = builder.addBoolean(10, verifiedPurchase, false)
+        fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: ULong) = builder.addLong(11, updatedAt.toLong(), 0)
+        fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(12, status, 0)
+        fun addHELPFULCOUNT(builder: FlatBufferBuilder, helpfulCount: UInt) = builder.addInt(13, helpfulCount.toInt(), 0)
+        fun addNOTHELPFULCOUNT(builder: FlatBufferBuilder, notHelpfulCount: UInt) = builder.addInt(14, notHelpfulCount.toInt(), 0)
+        fun addPROVIDERRESPONSE(builder: FlatBufferBuilder, providerResponse: Int) = builder.addOffset(15, providerResponse, 0)
+        fun addPROVIDERRESPONSEAT(builder: FlatBufferBuilder, providerResponseAt: ULong) = builder.addLong(16, providerResponseAt.toLong(), 0)
+        fun addFLAGGEDCOUNT(builder: FlatBufferBuilder, flaggedCount: UInt) = builder.addInt(17, flaggedCount.toInt(), 0)
+        fun addMODERATIONNOTES(builder: FlatBufferBuilder, moderationNotes: Int) = builder.addOffset(18, moderationNotes, 0)
         fun endREV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -31,19 +31,38 @@ public struct SpatialCoverage : IFlatbufferObject
   /// Specific NORAD IDs or catalog numbers
   public string OBJECT_IDS(int j) { int o = __p.__offset(8); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int OBJECT_IDSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Minimum altitude in kilometers for altitude-bounded offerings
+  public double MIN_ALTITUDE_KM { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum altitude in kilometers for altitude-bounded offerings
+  public double MAX_ALTITUDE_KM { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
+  public double GEO_BOUNDS(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int GEO_BOUNDSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetGEO_BOUNDSBytes() { return __p.__vector_as_span<double>(14, 8); }
+#else
+  public ArraySegment<byte>? GetGEO_BOUNDSBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public double[] GetGEO_BOUNDSArray() { return __p.__vector_as_array<double>(14); }
 
   public static Offset<SpatialCoverage> CreateSpatialCoverage(FlatBufferBuilder builder,
       StringOffset TYPEOffset = default(StringOffset),
       VectorOffset REGIONSOffset = default(VectorOffset),
-      VectorOffset OBJECT_IDSOffset = default(VectorOffset)) {
-    builder.StartTable(3);
+      VectorOffset OBJECT_IDSOffset = default(VectorOffset),
+      double MIN_ALTITUDE_KM = 0.0,
+      double MAX_ALTITUDE_KM = 0.0,
+      VectorOffset GEO_BOUNDSOffset = default(VectorOffset)) {
+    builder.StartTable(6);
+    SpatialCoverage.AddMAX_ALTITUDE_KM(builder, MAX_ALTITUDE_KM);
+    SpatialCoverage.AddMIN_ALTITUDE_KM(builder, MIN_ALTITUDE_KM);
+    SpatialCoverage.AddGEO_BOUNDS(builder, GEO_BOUNDSOffset);
     SpatialCoverage.AddOBJECT_IDS(builder, OBJECT_IDSOffset);
     SpatialCoverage.AddREGIONS(builder, REGIONSOffset);
     SpatialCoverage.AddTYPE(builder, TYPEOffset);
     return SpatialCoverage.EndSpatialCoverage(builder);
   }
 
-  public static void StartSpatialCoverage(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartSpatialCoverage(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(0, TYPEOffset.Value, 0); }
   public static void AddREGIONS(FlatBufferBuilder builder, VectorOffset REGIONSOffset) { builder.AddOffset(1, REGIONSOffset.Value, 0); }
   public static VectorOffset CreateREGIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -57,6 +76,14 @@ public struct SpatialCoverage : IFlatbufferObject
   public static VectorOffset CreateOBJECT_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateOBJECT_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartOBJECT_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMIN_ALTITUDE_KM(FlatBufferBuilder builder, double MIN_ALTITUDE_KM) { builder.AddDouble(3, MIN_ALTITUDE_KM, 0.0); }
+  public static void AddMAX_ALTITUDE_KM(FlatBufferBuilder builder, double MAX_ALTITUDE_KM) { builder.AddDouble(4, MAX_ALTITUDE_KM, 0.0); }
+  public static void AddGEO_BOUNDS(FlatBufferBuilder builder, VectorOffset GEO_BOUNDSOffset) { builder.AddOffset(5, GEO_BOUNDSOffset.Value, 0); }
+  public static VectorOffset CreateGEO_BOUNDSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateGEO_BOUNDSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateGEO_BOUNDSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateGEO_BOUNDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartGEO_BOUNDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<SpatialCoverage> EndSpatialCoverage(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SpatialCoverage>(o);
@@ -72,6 +99,10 @@ public struct SpatialCoverage : IFlatbufferObject
     for (var _j = 0; _j < this.REGIONSLength; ++_j) {_o.REGIONS.Add(this.REGIONS(_j));}
     _o.OBJECT_IDS = new List<string>();
     for (var _j = 0; _j < this.OBJECT_IDSLength; ++_j) {_o.OBJECT_IDS.Add(this.OBJECT_IDS(_j));}
+    _o.MIN_ALTITUDE_KM = this.MIN_ALTITUDE_KM;
+    _o.MAX_ALTITUDE_KM = this.MAX_ALTITUDE_KM;
+    _o.GEO_BOUNDS = new List<double>();
+    for (var _j = 0; _j < this.GEO_BOUNDSLength; ++_j) {_o.GEO_BOUNDS.Add(this.GEO_BOUNDS(_j));}
   }
   public static Offset<SpatialCoverage> Pack(FlatBufferBuilder builder, SpatialCoverageT _o) {
     if (_o == null) return default(Offset<SpatialCoverage>);
@@ -88,11 +119,19 @@ public struct SpatialCoverage : IFlatbufferObject
       for (var _j = 0; _j < __OBJECT_IDS.Length; ++_j) { __OBJECT_IDS[_j] = builder.CreateString(_o.OBJECT_IDS[_j]); }
       _OBJECT_IDS = CreateOBJECT_IDSVector(builder, __OBJECT_IDS);
     }
+    var _GEO_BOUNDS = default(VectorOffset);
+    if (_o.GEO_BOUNDS != null) {
+      var __GEO_BOUNDS = _o.GEO_BOUNDS.ToArray();
+      _GEO_BOUNDS = CreateGEO_BOUNDSVector(builder, __GEO_BOUNDS);
+    }
     return CreateSpatialCoverage(
       builder,
       _TYPE,
       _REGIONS,
-      _OBJECT_IDS);
+      _OBJECT_IDS,
+      _o.MIN_ALTITUDE_KM,
+      _o.MAX_ALTITUDE_KM,
+      _GEO_BOUNDS);
   }
 }
 
@@ -101,11 +140,17 @@ public class SpatialCoverageT
   public string TYPE { get; set; }
   public List<string> REGIONS { get; set; }
   public List<string> OBJECT_IDS { get; set; }
+  public double MIN_ALTITUDE_KM { get; set; }
+  public double MAX_ALTITUDE_KM { get; set; }
+  public List<double> GEO_BOUNDS { get; set; }
 
   public SpatialCoverageT() {
     this.TYPE = null;
     this.REGIONS = null;
     this.OBJECT_IDS = null;
+    this.MIN_ALTITUDE_KM = 0.0;
+    this.MAX_ALTITUDE_KM = 0.0;
+    this.GEO_BOUNDS = null;
   }
 }
 
@@ -118,6 +163,9 @@ static public class SpatialCoverageVerify
       && verifier.VerifyString(tablePos, 4 /*TYPE*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 6 /*REGIONS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 8 /*OBJECT_IDS*/, false)
+      && verifier.VerifyField(tablePos, 10 /*MIN_ALTITUDE_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*MAX_ALTITUDE_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 14 /*GEO_BOUNDS*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

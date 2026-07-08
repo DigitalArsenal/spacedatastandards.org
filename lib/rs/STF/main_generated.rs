@@ -103,16 +103,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for accessCategory {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PAYMENT_METHOD: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PAYMENT_METHOD: i8 = 5;
+pub const ENUM_MAX_PAYMENT_METHOD: i8 = 7;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PAYMENT_METHOD: [paymentMethod; 6] = [
+pub const ENUM_VALUES_PAYMENT_METHOD: [paymentMethod; 8] = [
   paymentMethod::Crypto_ETH,
   paymentMethod::Crypto_SOL,
   paymentMethod::Crypto_BTC,
   paymentMethod::SDN_Credits,
   paymentMethod::Fiat_Stripe,
   paymentMethod::Free,
+  paymentMethod::UsageBased,
+  paymentMethod::Enterprise,
 ];
 
 /// Payment method accepted
@@ -133,9 +135,13 @@ impl paymentMethod {
   pub const Fiat_Stripe: Self = Self(4);
   /// Free/open data
   pub const Free: Self = Self(5);
+  /// Usage-based billing settled after metered delivery
+  pub const UsageBased: Self = Self(6);
+  /// Enterprise/offline invoicing
+  pub const Enterprise: Self = Self(7);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_MAX: i8 = 7;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Crypto_ETH,
     Self::Crypto_SOL,
@@ -143,6 +149,8 @@ impl paymentMethod {
     Self::SDN_Credits,
     Self::Fiat_Stripe,
     Self::Free,
+    Self::UsageBased,
+    Self::Enterprise,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -153,6 +161,8 @@ impl paymentMethod {
       Self::SDN_Credits => Some("SDN_Credits"),
       Self::Fiat_Stripe => Some("Fiat_Stripe"),
       Self::Free => Some("Free"),
+      Self::UsageBased => Some("UsageBased"),
+      Self::Enterprise => Some("Enterprise"),
       _ => None,
     }
   }
@@ -207,6 +217,1097 @@ impl<'a> ::flatbuffers::Verifiable for paymentMethod {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for paymentMethod {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LISTING_CATEGORY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LISTING_CATEGORY: i8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LISTING_CATEGORY: [listingCategory; 2] = [
+  listingCategory::DataStream,
+  listingCategory::WasmModule,
+];
+
+/// Listing kind for marketplace entries.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct listingCategory(pub i8);
+#[allow(non_upper_case_globals)]
+impl listingCategory {
+  pub const DataStream: Self = Self(0);
+  pub const WasmModule: Self = Self(1);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DataStream,
+    Self::WasmModule,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DataStream => Some("DataStream"),
+      Self::WasmModule => Some("WasmModule"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for listingCategory {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for listingCategory {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for listingCategory {
+    type Output = listingCategory;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for listingCategory {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for listingCategory {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for listingCategory {}
+pub enum GrantFieldStreamPolicyOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Field-level stream policy bound into protected delivery and grants.
+pub struct GrantFieldStreamPolicy<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for GrantFieldStreamPolicy<'a> {
+  type Inner = GrantFieldStreamPolicy<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> GrantFieldStreamPolicy<'a> {
+  pub const VT_POLICY_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_POLICY_VERSION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_STREAM_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_SCHEMA_CODE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ALLOWED_FIELD_PATHS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_REDACTED_FIELD_PATHS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_KEY_EPOCH: ::flatbuffers::VOffsetT = 16;
+  pub const VT_GRANT_SCOPE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_ALLOWED_OPERATIONS: ::flatbuffers::VOffsetT = 20;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    GrantFieldStreamPolicy { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args GrantFieldStreamPolicyArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'bldr>> {
+    let mut builder = GrantFieldStreamPolicyBuilder::new(_fbb);
+    if let Some(x) = args.ALLOWED_OPERATIONS { builder.add_ALLOWED_OPERATIONS(x); }
+    if let Some(x) = args.GRANT_SCOPE { builder.add_GRANT_SCOPE(x); }
+    if let Some(x) = args.KEY_EPOCH { builder.add_KEY_EPOCH(x); }
+    if let Some(x) = args.REDACTED_FIELD_PATHS { builder.add_REDACTED_FIELD_PATHS(x); }
+    if let Some(x) = args.ALLOWED_FIELD_PATHS { builder.add_ALLOWED_FIELD_PATHS(x); }
+    if let Some(x) = args.SCHEMA_CODE { builder.add_SCHEMA_CODE(x); }
+    if let Some(x) = args.STREAM_ID { builder.add_STREAM_ID(x); }
+    builder.add_POLICY_VERSION(args.POLICY_VERSION);
+    if let Some(x) = args.POLICY_ID { builder.add_POLICY_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> GrantFieldStreamPolicyT {
+    let POLICY_ID = self.POLICY_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let POLICY_VERSION = self.POLICY_VERSION();
+    let STREAM_ID = self.STREAM_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SCHEMA_CODE = self.SCHEMA_CODE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALLOWED_FIELD_PATHS = self.ALLOWED_FIELD_PATHS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let REDACTED_FIELD_PATHS = self.REDACTED_FIELD_PATHS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let KEY_EPOCH = self.KEY_EPOCH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRANT_SCOPE = self.GRANT_SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALLOWED_OPERATIONS = self.ALLOWED_OPERATIONS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    GrantFieldStreamPolicyT {
+      POLICY_ID,
+      POLICY_VERSION,
+      STREAM_ID,
+      SCHEMA_CODE,
+      ALLOWED_FIELD_PATHS,
+      REDACTED_FIELD_PATHS,
+      KEY_EPOCH,
+      GRANT_SCOPE,
+      ALLOWED_OPERATIONS,
+    }
+  }
+
+  #[inline]
+  pub fn POLICY_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GrantFieldStreamPolicy::VT_POLICY_ID, None)}
+  }
+  #[inline]
+  pub fn POLICY_VERSION(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(GrantFieldStreamPolicy::VT_POLICY_VERSION, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn STREAM_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GrantFieldStreamPolicy::VT_STREAM_ID, None)}
+  }
+  #[inline]
+  pub fn SCHEMA_CODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GrantFieldStreamPolicy::VT_SCHEMA_CODE, None)}
+  }
+  #[inline]
+  pub fn ALLOWED_FIELD_PATHS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(GrantFieldStreamPolicy::VT_ALLOWED_FIELD_PATHS, None)}
+  }
+  #[inline]
+  pub fn REDACTED_FIELD_PATHS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(GrantFieldStreamPolicy::VT_REDACTED_FIELD_PATHS, None)}
+  }
+  #[inline]
+  pub fn KEY_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GrantFieldStreamPolicy::VT_KEY_EPOCH, None)}
+  }
+  #[inline]
+  pub fn GRANT_SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GrantFieldStreamPolicy::VT_GRANT_SCOPE, None)}
+  }
+  #[inline]
+  pub fn ALLOWED_OPERATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(GrantFieldStreamPolicy::VT_ALLOWED_OPERATIONS, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for GrantFieldStreamPolicy<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("POLICY_ID", Self::VT_POLICY_ID, false)?
+     .visit_field::<u32>("POLICY_VERSION", Self::VT_POLICY_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STREAM_ID", Self::VT_STREAM_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_CODE", Self::VT_SCHEMA_CODE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_FIELD_PATHS", Self::VT_ALLOWED_FIELD_PATHS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REDACTED_FIELD_PATHS", Self::VT_REDACTED_FIELD_PATHS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_EPOCH", Self::VT_KEY_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_SCOPE", Self::VT_GRANT_SCOPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_OPERATIONS", Self::VT_ALLOWED_OPERATIONS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct GrantFieldStreamPolicyArgs<'a> {
+    pub POLICY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub POLICY_VERSION: u32,
+    pub STREAM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SCHEMA_CODE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALLOWED_FIELD_PATHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub REDACTED_FIELD_PATHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub KEY_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANT_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALLOWED_OPERATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+impl<'a> Default for GrantFieldStreamPolicyArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    GrantFieldStreamPolicyArgs {
+      POLICY_ID: None,
+      POLICY_VERSION: 0,
+      STREAM_ID: None,
+      SCHEMA_CODE: None,
+      ALLOWED_FIELD_PATHS: None,
+      REDACTED_FIELD_PATHS: None,
+      KEY_EPOCH: None,
+      GRANT_SCOPE: None,
+      ALLOWED_OPERATIONS: None,
+    }
+  }
+}
+
+pub struct GrantFieldStreamPolicyBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> GrantFieldStreamPolicyBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_POLICY_ID(&mut self, POLICY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_POLICY_ID, POLICY_ID);
+  }
+  #[inline]
+  pub fn add_POLICY_VERSION(&mut self, POLICY_VERSION: u32) {
+    self.fbb_.push_slot::<u32>(GrantFieldStreamPolicy::VT_POLICY_VERSION, POLICY_VERSION, 0);
+  }
+  #[inline]
+  pub fn add_STREAM_ID(&mut self, STREAM_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_STREAM_ID, STREAM_ID);
+  }
+  #[inline]
+  pub fn add_SCHEMA_CODE(&mut self, SCHEMA_CODE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_SCHEMA_CODE, SCHEMA_CODE);
+  }
+  #[inline]
+  pub fn add_ALLOWED_FIELD_PATHS(&mut self, ALLOWED_FIELD_PATHS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_ALLOWED_FIELD_PATHS, ALLOWED_FIELD_PATHS);
+  }
+  #[inline]
+  pub fn add_REDACTED_FIELD_PATHS(&mut self, REDACTED_FIELD_PATHS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_REDACTED_FIELD_PATHS, REDACTED_FIELD_PATHS);
+  }
+  #[inline]
+  pub fn add_KEY_EPOCH(&mut self, KEY_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_KEY_EPOCH, KEY_EPOCH);
+  }
+  #[inline]
+  pub fn add_GRANT_SCOPE(&mut self, GRANT_SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_GRANT_SCOPE, GRANT_SCOPE);
+  }
+  #[inline]
+  pub fn add_ALLOWED_OPERATIONS(&mut self, ALLOWED_OPERATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GrantFieldStreamPolicy::VT_ALLOWED_OPERATIONS, ALLOWED_OPERATIONS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> GrantFieldStreamPolicyBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    GrantFieldStreamPolicyBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for GrantFieldStreamPolicy<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("GrantFieldStreamPolicy");
+      ds.field("POLICY_ID", &self.POLICY_ID());
+      ds.field("POLICY_VERSION", &self.POLICY_VERSION());
+      ds.field("STREAM_ID", &self.STREAM_ID());
+      ds.field("SCHEMA_CODE", &self.SCHEMA_CODE());
+      ds.field("ALLOWED_FIELD_PATHS", &self.ALLOWED_FIELD_PATHS());
+      ds.field("REDACTED_FIELD_PATHS", &self.REDACTED_FIELD_PATHS());
+      ds.field("KEY_EPOCH", &self.KEY_EPOCH());
+      ds.field("GRANT_SCOPE", &self.GRANT_SCOPE());
+      ds.field("ALLOWED_OPERATIONS", &self.ALLOWED_OPERATIONS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct GrantFieldStreamPolicyT {
+  pub POLICY_ID: Option<alloc::string::String>,
+  pub POLICY_VERSION: u32,
+  pub STREAM_ID: Option<alloc::string::String>,
+  pub SCHEMA_CODE: Option<alloc::string::String>,
+  pub ALLOWED_FIELD_PATHS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub REDACTED_FIELD_PATHS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub KEY_EPOCH: Option<alloc::string::String>,
+  pub GRANT_SCOPE: Option<alloc::string::String>,
+  pub ALLOWED_OPERATIONS: Option<alloc::vec::Vec<alloc::string::String>>,
+}
+impl Default for GrantFieldStreamPolicyT {
+  fn default() -> Self {
+    Self {
+      POLICY_ID: None,
+      POLICY_VERSION: 0,
+      STREAM_ID: None,
+      SCHEMA_CODE: None,
+      ALLOWED_FIELD_PATHS: None,
+      REDACTED_FIELD_PATHS: None,
+      KEY_EPOCH: None,
+      GRANT_SCOPE: None,
+      ALLOWED_OPERATIONS: None,
+    }
+  }
+}
+impl GrantFieldStreamPolicyT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'b>> {
+    let POLICY_ID = self.POLICY_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let POLICY_VERSION = self.POLICY_VERSION;
+    let STREAM_ID = self.STREAM_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SCHEMA_CODE = self.SCHEMA_CODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALLOWED_FIELD_PATHS = self.ALLOWED_FIELD_PATHS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let REDACTED_FIELD_PATHS = self.REDACTED_FIELD_PATHS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let KEY_EPOCH = self.KEY_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANT_SCOPE = self.GRANT_SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALLOWED_OPERATIONS = self.ALLOWED_OPERATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    GrantFieldStreamPolicy::create(_fbb, &GrantFieldStreamPolicyArgs{
+      POLICY_ID,
+      POLICY_VERSION,
+      STREAM_ID,
+      SCHEMA_CODE,
+      ALLOWED_FIELD_PATHS,
+      REDACTED_FIELD_PATHS,
+      KEY_EPOCH,
+      GRANT_SCOPE,
+      ALLOWED_OPERATIONS,
+    })
+  }
+}
+pub enum ProtectedDeliveryBindingOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Immutable encrypted artifact/window metadata for protected delivery.
+pub struct ProtectedDeliveryBinding<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ProtectedDeliveryBinding<'a> {
+  type Inner = ProtectedDeliveryBinding<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ProtectedDeliveryBinding<'a> {
+  pub const VT_ENCRYPTED_CID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_MANIFEST_CID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CONTENT_HASH: ::flatbuffers::VOffsetT = 8;
+  pub const VT_CONTENT_KEY_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LICENSE_MODULE_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MODULE_VERSION: ::flatbuffers::VOffsetT = 16;
+  pub const VT_REQUIRED_SCOPES: ::flatbuffers::VOffsetT = 18;
+  pub const VT_GRANT_SCOPE: ::flatbuffers::VOffsetT = 20;
+  pub const VT_DELIVERY_PROTOCOL: ::flatbuffers::VOffsetT = 22;
+  pub const VT_FIELD_STREAM_POLICY: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ProtectedDeliveryBinding { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ProtectedDeliveryBindingArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<ProtectedDeliveryBinding<'bldr>> {
+    let mut builder = ProtectedDeliveryBindingBuilder::new(_fbb);
+    if let Some(x) = args.FIELD_STREAM_POLICY { builder.add_FIELD_STREAM_POLICY(x); }
+    if let Some(x) = args.DELIVERY_PROTOCOL { builder.add_DELIVERY_PROTOCOL(x); }
+    if let Some(x) = args.GRANT_SCOPE { builder.add_GRANT_SCOPE(x); }
+    if let Some(x) = args.REQUIRED_SCOPES { builder.add_REQUIRED_SCOPES(x); }
+    if let Some(x) = args.MODULE_VERSION { builder.add_MODULE_VERSION(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    if let Some(x) = args.LICENSE_MODULE_ID { builder.add_LICENSE_MODULE_ID(x); }
+    if let Some(x) = args.CONTENT_KEY_ID { builder.add_CONTENT_KEY_ID(x); }
+    if let Some(x) = args.CONTENT_HASH { builder.add_CONTENT_HASH(x); }
+    if let Some(x) = args.MANIFEST_CID { builder.add_MANIFEST_CID(x); }
+    if let Some(x) = args.ENCRYPTED_CID { builder.add_ENCRYPTED_CID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ProtectedDeliveryBindingT {
+    let ENCRYPTED_CID = self.ENCRYPTED_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MANIFEST_CID = self.MANIFEST_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONTENT_HASH = self.CONTENT_HASH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONTENT_KEY_ID = self.CONTENT_KEY_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE_MODULE_ID = self.LICENSE_MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REQUIRED_SCOPES = self.REQUIRED_SCOPES().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let GRANT_SCOPE = self.GRANT_SCOPE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DELIVERY_PROTOCOL = self.DELIVERY_PROTOCOL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FIELD_STREAM_POLICY = self.FIELD_STREAM_POLICY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    ProtectedDeliveryBindingT {
+      ENCRYPTED_CID,
+      MANIFEST_CID,
+      CONTENT_HASH,
+      CONTENT_KEY_ID,
+      LICENSE_MODULE_ID,
+      MODULE_ID,
+      MODULE_VERSION,
+      REQUIRED_SCOPES,
+      GRANT_SCOPE,
+      DELIVERY_PROTOCOL,
+      FIELD_STREAM_POLICY,
+    }
+  }
+
+  #[inline]
+  pub fn ENCRYPTED_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_ENCRYPTED_CID, None)}
+  }
+  #[inline]
+  pub fn MANIFEST_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_MANIFEST_CID, None)}
+  }
+  #[inline]
+  pub fn CONTENT_HASH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_CONTENT_HASH, None)}
+  }
+  #[inline]
+  pub fn CONTENT_KEY_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_CONTENT_KEY_ID, None)}
+  }
+  #[inline]
+  pub fn LICENSE_MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_LICENSE_MODULE_ID, None)}
+  }
+  #[inline]
+  pub fn MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_MODULE_ID, None)}
+  }
+  #[inline]
+  pub fn MODULE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_MODULE_VERSION, None)}
+  }
+  #[inline]
+  pub fn REQUIRED_SCOPES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(ProtectedDeliveryBinding::VT_REQUIRED_SCOPES, None)}
+  }
+  #[inline]
+  pub fn GRANT_SCOPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_GRANT_SCOPE, None)}
+  }
+  #[inline]
+  pub fn DELIVERY_PROTOCOL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ProtectedDeliveryBinding::VT_DELIVERY_PROTOCOL, None)}
+  }
+  #[inline]
+  pub fn FIELD_STREAM_POLICY(&self) -> Option<GrantFieldStreamPolicy<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<GrantFieldStreamPolicy>>(ProtectedDeliveryBinding::VT_FIELD_STREAM_POLICY, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ProtectedDeliveryBinding<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENCRYPTED_CID", Self::VT_ENCRYPTED_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MANIFEST_CID", Self::VT_MANIFEST_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTENT_HASH", Self::VT_CONTENT_HASH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTENT_KEY_ID", Self::VT_CONTENT_KEY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_MODULE_ID", Self::VT_LICENSE_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_VERSION", Self::VT_MODULE_VERSION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REQUIRED_SCOPES", Self::VT_REQUIRED_SCOPES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_SCOPE", Self::VT_GRANT_SCOPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DELIVERY_PROTOCOL", Self::VT_DELIVERY_PROTOCOL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<GrantFieldStreamPolicy>>("FIELD_STREAM_POLICY", Self::VT_FIELD_STREAM_POLICY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ProtectedDeliveryBindingArgs<'a> {
+    pub ENCRYPTED_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MANIFEST_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTENT_KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE_MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REQUIRED_SCOPES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub GRANT_SCOPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DELIVERY_PROTOCOL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIELD_STREAM_POLICY: Option<::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'a>>>,
+}
+impl<'a> Default for ProtectedDeliveryBindingArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    ProtectedDeliveryBindingArgs {
+      ENCRYPTED_CID: None,
+      MANIFEST_CID: None,
+      CONTENT_HASH: None,
+      CONTENT_KEY_ID: None,
+      LICENSE_MODULE_ID: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      REQUIRED_SCOPES: None,
+      GRANT_SCOPE: None,
+      DELIVERY_PROTOCOL: None,
+      FIELD_STREAM_POLICY: None,
+    }
+  }
+}
+
+pub struct ProtectedDeliveryBindingBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ProtectedDeliveryBindingBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ENCRYPTED_CID(&mut self, ENCRYPTED_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_ENCRYPTED_CID, ENCRYPTED_CID);
+  }
+  #[inline]
+  pub fn add_MANIFEST_CID(&mut self, MANIFEST_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_MANIFEST_CID, MANIFEST_CID);
+  }
+  #[inline]
+  pub fn add_CONTENT_HASH(&mut self, CONTENT_HASH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_CONTENT_HASH, CONTENT_HASH);
+  }
+  #[inline]
+  pub fn add_CONTENT_KEY_ID(&mut self, CONTENT_KEY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_CONTENT_KEY_ID, CONTENT_KEY_ID);
+  }
+  #[inline]
+  pub fn add_LICENSE_MODULE_ID(&mut self, LICENSE_MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_LICENSE_MODULE_ID, LICENSE_MODULE_ID);
+  }
+  #[inline]
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_MODULE_ID, MODULE_ID);
+  }
+  #[inline]
+  pub fn add_MODULE_VERSION(&mut self, MODULE_VERSION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_MODULE_VERSION, MODULE_VERSION);
+  }
+  #[inline]
+  pub fn add_REQUIRED_SCOPES(&mut self, REQUIRED_SCOPES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_REQUIRED_SCOPES, REQUIRED_SCOPES);
+  }
+  #[inline]
+  pub fn add_GRANT_SCOPE(&mut self, GRANT_SCOPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_GRANT_SCOPE, GRANT_SCOPE);
+  }
+  #[inline]
+  pub fn add_DELIVERY_PROTOCOL(&mut self, DELIVERY_PROTOCOL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ProtectedDeliveryBinding::VT_DELIVERY_PROTOCOL, DELIVERY_PROTOCOL);
+  }
+  #[inline]
+  pub fn add_FIELD_STREAM_POLICY(&mut self, FIELD_STREAM_POLICY: ::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<GrantFieldStreamPolicy>>(ProtectedDeliveryBinding::VT_FIELD_STREAM_POLICY, FIELD_STREAM_POLICY);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ProtectedDeliveryBindingBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ProtectedDeliveryBindingBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ProtectedDeliveryBinding<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ProtectedDeliveryBinding<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ProtectedDeliveryBinding");
+      ds.field("ENCRYPTED_CID", &self.ENCRYPTED_CID());
+      ds.field("MANIFEST_CID", &self.MANIFEST_CID());
+      ds.field("CONTENT_HASH", &self.CONTENT_HASH());
+      ds.field("CONTENT_KEY_ID", &self.CONTENT_KEY_ID());
+      ds.field("LICENSE_MODULE_ID", &self.LICENSE_MODULE_ID());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("MODULE_VERSION", &self.MODULE_VERSION());
+      ds.field("REQUIRED_SCOPES", &self.REQUIRED_SCOPES());
+      ds.field("GRANT_SCOPE", &self.GRANT_SCOPE());
+      ds.field("DELIVERY_PROTOCOL", &self.DELIVERY_PROTOCOL());
+      ds.field("FIELD_STREAM_POLICY", &self.FIELD_STREAM_POLICY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProtectedDeliveryBindingT {
+  pub ENCRYPTED_CID: Option<alloc::string::String>,
+  pub MANIFEST_CID: Option<alloc::string::String>,
+  pub CONTENT_HASH: Option<alloc::string::String>,
+  pub CONTENT_KEY_ID: Option<alloc::string::String>,
+  pub LICENSE_MODULE_ID: Option<alloc::string::String>,
+  pub MODULE_ID: Option<alloc::string::String>,
+  pub MODULE_VERSION: Option<alloc::string::String>,
+  pub REQUIRED_SCOPES: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub GRANT_SCOPE: Option<alloc::string::String>,
+  pub DELIVERY_PROTOCOL: Option<alloc::string::String>,
+  pub FIELD_STREAM_POLICY: Option<alloc::boxed::Box<GrantFieldStreamPolicyT>>,
+}
+impl Default for ProtectedDeliveryBindingT {
+  fn default() -> Self {
+    Self {
+      ENCRYPTED_CID: None,
+      MANIFEST_CID: None,
+      CONTENT_HASH: None,
+      CONTENT_KEY_ID: None,
+      LICENSE_MODULE_ID: None,
+      MODULE_ID: None,
+      MODULE_VERSION: None,
+      REQUIRED_SCOPES: None,
+      GRANT_SCOPE: None,
+      DELIVERY_PROTOCOL: None,
+      FIELD_STREAM_POLICY: None,
+    }
+  }
+}
+impl ProtectedDeliveryBindingT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ProtectedDeliveryBinding<'b>> {
+    let ENCRYPTED_CID = self.ENCRYPTED_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MANIFEST_CID = self.MANIFEST_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONTENT_HASH = self.CONTENT_HASH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONTENT_KEY_ID = self.CONTENT_KEY_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE_MODULE_ID = self.LICENSE_MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_VERSION = self.MODULE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REQUIRED_SCOPES = self.REQUIRED_SCOPES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let GRANT_SCOPE = self.GRANT_SCOPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DELIVERY_PROTOCOL = self.DELIVERY_PROTOCOL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FIELD_STREAM_POLICY = self.FIELD_STREAM_POLICY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    ProtectedDeliveryBinding::create(_fbb, &ProtectedDeliveryBindingArgs{
+      ENCRYPTED_CID,
+      MANIFEST_CID,
+      CONTENT_HASH,
+      CONTENT_KEY_ID,
+      LICENSE_MODULE_ID,
+      MODULE_ID,
+      MODULE_VERSION,
+      REQUIRED_SCOPES,
+      GRANT_SCOPE,
+      DELIVERY_PROTOCOL,
+      FIELD_STREAM_POLICY,
+    })
+  }
+}
+pub enum ProviderReputationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Provider reputation summary surfaced in marketplace listings.
+pub struct ProviderReputation<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for ProviderReputation<'a> {
+  type Inner = ProviderReputation<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> ProviderReputation<'a> {
+  pub const VT_TOTAL_SALES: ::flatbuffers::VOffsetT = 4;
+  pub const VT_AVERAGE_RATING_X10: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TOTAL_RATINGS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_UPTIME_PERCENTAGE_X100: ::flatbuffers::VOffsetT = 10;
+  pub const VT_AVG_DELIVERY_LATENCY_MS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_DISPUTE_COUNT: ::flatbuffers::VOffsetT = 14;
+  pub const VT_PROVIDER_SINCE: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    ProviderReputation { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args ProviderReputationArgs
+  ) -> ::flatbuffers::WIPOffset<ProviderReputation<'bldr>> {
+    let mut builder = ProviderReputationBuilder::new(_fbb);
+    builder.add_PROVIDER_SINCE(args.PROVIDER_SINCE);
+    builder.add_TOTAL_SALES(args.TOTAL_SALES);
+    builder.add_DISPUTE_COUNT(args.DISPUTE_COUNT);
+    builder.add_AVG_DELIVERY_LATENCY_MS(args.AVG_DELIVERY_LATENCY_MS);
+    builder.add_TOTAL_RATINGS(args.TOTAL_RATINGS);
+    builder.add_UPTIME_PERCENTAGE_X100(args.UPTIME_PERCENTAGE_X100);
+    builder.add_AVERAGE_RATING_X10(args.AVERAGE_RATING_X10);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> ProviderReputationT {
+    let TOTAL_SALES = self.TOTAL_SALES();
+    let AVERAGE_RATING_X10 = self.AVERAGE_RATING_X10();
+    let TOTAL_RATINGS = self.TOTAL_RATINGS();
+    let UPTIME_PERCENTAGE_X100 = self.UPTIME_PERCENTAGE_X100();
+    let AVG_DELIVERY_LATENCY_MS = self.AVG_DELIVERY_LATENCY_MS();
+    let DISPUTE_COUNT = self.DISPUTE_COUNT();
+    let PROVIDER_SINCE = self.PROVIDER_SINCE();
+    ProviderReputationT {
+      TOTAL_SALES,
+      AVERAGE_RATING_X10,
+      TOTAL_RATINGS,
+      UPTIME_PERCENTAGE_X100,
+      AVG_DELIVERY_LATENCY_MS,
+      DISPUTE_COUNT,
+      PROVIDER_SINCE,
+    }
+  }
+
+  #[inline]
+  pub fn TOTAL_SALES(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ProviderReputation::VT_TOTAL_SALES, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn AVERAGE_RATING_X10(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(ProviderReputation::VT_AVERAGE_RATING_X10, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_RATINGS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ProviderReputation::VT_TOTAL_RATINGS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn UPTIME_PERCENTAGE_X100(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(ProviderReputation::VT_UPTIME_PERCENTAGE_X100, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn AVG_DELIVERY_LATENCY_MS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ProviderReputation::VT_AVG_DELIVERY_LATENCY_MS, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn DISPUTE_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ProviderReputation::VT_DISPUTE_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn PROVIDER_SINCE(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ProviderReputation::VT_PROVIDER_SINCE, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for ProviderReputation<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<u64>("TOTAL_SALES", Self::VT_TOTAL_SALES, false)?
+     .visit_field::<u16>("AVERAGE_RATING_X10", Self::VT_AVERAGE_RATING_X10, false)?
+     .visit_field::<u32>("TOTAL_RATINGS", Self::VT_TOTAL_RATINGS, false)?
+     .visit_field::<u16>("UPTIME_PERCENTAGE_X100", Self::VT_UPTIME_PERCENTAGE_X100, false)?
+     .visit_field::<u32>("AVG_DELIVERY_LATENCY_MS", Self::VT_AVG_DELIVERY_LATENCY_MS, false)?
+     .visit_field::<u32>("DISPUTE_COUNT", Self::VT_DISPUTE_COUNT, false)?
+     .visit_field::<u64>("PROVIDER_SINCE", Self::VT_PROVIDER_SINCE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct ProviderReputationArgs {
+    pub TOTAL_SALES: u64,
+    pub AVERAGE_RATING_X10: u16,
+    pub TOTAL_RATINGS: u32,
+    pub UPTIME_PERCENTAGE_X100: u16,
+    pub AVG_DELIVERY_LATENCY_MS: u32,
+    pub DISPUTE_COUNT: u32,
+    pub PROVIDER_SINCE: u64,
+}
+impl<'a> Default for ProviderReputationArgs {
+  #[inline]
+  fn default() -> Self {
+    ProviderReputationArgs {
+      TOTAL_SALES: 0,
+      AVERAGE_RATING_X10: 0,
+      TOTAL_RATINGS: 0,
+      UPTIME_PERCENTAGE_X100: 0,
+      AVG_DELIVERY_LATENCY_MS: 0,
+      DISPUTE_COUNT: 0,
+      PROVIDER_SINCE: 0,
+    }
+  }
+}
+
+pub struct ProviderReputationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ProviderReputationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TOTAL_SALES(&mut self, TOTAL_SALES: u64) {
+    self.fbb_.push_slot::<u64>(ProviderReputation::VT_TOTAL_SALES, TOTAL_SALES, 0);
+  }
+  #[inline]
+  pub fn add_AVERAGE_RATING_X10(&mut self, AVERAGE_RATING_X10: u16) {
+    self.fbb_.push_slot::<u16>(ProviderReputation::VT_AVERAGE_RATING_X10, AVERAGE_RATING_X10, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_RATINGS(&mut self, TOTAL_RATINGS: u32) {
+    self.fbb_.push_slot::<u32>(ProviderReputation::VT_TOTAL_RATINGS, TOTAL_RATINGS, 0);
+  }
+  #[inline]
+  pub fn add_UPTIME_PERCENTAGE_X100(&mut self, UPTIME_PERCENTAGE_X100: u16) {
+    self.fbb_.push_slot::<u16>(ProviderReputation::VT_UPTIME_PERCENTAGE_X100, UPTIME_PERCENTAGE_X100, 0);
+  }
+  #[inline]
+  pub fn add_AVG_DELIVERY_LATENCY_MS(&mut self, AVG_DELIVERY_LATENCY_MS: u32) {
+    self.fbb_.push_slot::<u32>(ProviderReputation::VT_AVG_DELIVERY_LATENCY_MS, AVG_DELIVERY_LATENCY_MS, 0);
+  }
+  #[inline]
+  pub fn add_DISPUTE_COUNT(&mut self, DISPUTE_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(ProviderReputation::VT_DISPUTE_COUNT, DISPUTE_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_PROVIDER_SINCE(&mut self, PROVIDER_SINCE: u64) {
+    self.fbb_.push_slot::<u64>(ProviderReputation::VT_PROVIDER_SINCE, PROVIDER_SINCE, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ProviderReputationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    ProviderReputationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<ProviderReputation<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for ProviderReputation<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("ProviderReputation");
+      ds.field("TOTAL_SALES", &self.TOTAL_SALES());
+      ds.field("AVERAGE_RATING_X10", &self.AVERAGE_RATING_X10());
+      ds.field("TOTAL_RATINGS", &self.TOTAL_RATINGS());
+      ds.field("UPTIME_PERCENTAGE_X100", &self.UPTIME_PERCENTAGE_X100());
+      ds.field("AVG_DELIVERY_LATENCY_MS", &self.AVG_DELIVERY_LATENCY_MS());
+      ds.field("DISPUTE_COUNT", &self.DISPUTE_COUNT());
+      ds.field("PROVIDER_SINCE", &self.PROVIDER_SINCE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProviderReputationT {
+  pub TOTAL_SALES: u64,
+  pub AVERAGE_RATING_X10: u16,
+  pub TOTAL_RATINGS: u32,
+  pub UPTIME_PERCENTAGE_X100: u16,
+  pub AVG_DELIVERY_LATENCY_MS: u32,
+  pub DISPUTE_COUNT: u32,
+  pub PROVIDER_SINCE: u64,
+}
+impl Default for ProviderReputationT {
+  fn default() -> Self {
+    Self {
+      TOTAL_SALES: 0,
+      AVERAGE_RATING_X10: 0,
+      TOTAL_RATINGS: 0,
+      UPTIME_PERCENTAGE_X100: 0,
+      AVG_DELIVERY_LATENCY_MS: 0,
+      DISPUTE_COUNT: 0,
+      PROVIDER_SINCE: 0,
+    }
+  }
+}
+impl ProviderReputationT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<ProviderReputation<'b>> {
+    let TOTAL_SALES = self.TOTAL_SALES;
+    let AVERAGE_RATING_X10 = self.AVERAGE_RATING_X10;
+    let TOTAL_RATINGS = self.TOTAL_RATINGS;
+    let UPTIME_PERCENTAGE_X100 = self.UPTIME_PERCENTAGE_X100;
+    let AVG_DELIVERY_LATENCY_MS = self.AVG_DELIVERY_LATENCY_MS;
+    let DISPUTE_COUNT = self.DISPUTE_COUNT;
+    let PROVIDER_SINCE = self.PROVIDER_SINCE;
+    ProviderReputation::create(_fbb, &ProviderReputationArgs{
+      TOTAL_SALES,
+      AVERAGE_RATING_X10,
+      TOTAL_RATINGS,
+      UPTIME_PERCENTAGE_X100,
+      AVG_DELIVERY_LATENCY_MS,
+      DISPUTE_COUNT,
+      PROVIDER_SINCE,
+    })
+  }
+}
 pub enum SpatialCoverageOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -227,6 +1328,9 @@ impl<'a> SpatialCoverage<'a> {
   pub const VT_TYPE: ::flatbuffers::VOffsetT = 4;
   pub const VT_REGIONS: ::flatbuffers::VOffsetT = 6;
   pub const VT_OBJECT_IDS: ::flatbuffers::VOffsetT = 8;
+  pub const VT_MIN_ALTITUDE_KM: ::flatbuffers::VOffsetT = 10;
+  pub const VT_MAX_ALTITUDE_KM: ::flatbuffers::VOffsetT = 12;
+  pub const VT_GEO_BOUNDS: ::flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -238,6 +1342,9 @@ impl<'a> SpatialCoverage<'a> {
     args: &'args SpatialCoverageArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SpatialCoverage<'bldr>> {
     let mut builder = SpatialCoverageBuilder::new(_fbb);
+    builder.add_MAX_ALTITUDE_KM(args.MAX_ALTITUDE_KM);
+    builder.add_MIN_ALTITUDE_KM(args.MIN_ALTITUDE_KM);
+    if let Some(x) = args.GEO_BOUNDS { builder.add_GEO_BOUNDS(x); }
     if let Some(x) = args.OBJECT_IDS { builder.add_OBJECT_IDS(x); }
     if let Some(x) = args.REGIONS { builder.add_REGIONS(x); }
     if let Some(x) = args.TYPE { builder.add_TYPE(x); }
@@ -254,10 +1361,18 @@ impl<'a> SpatialCoverage<'a> {
     let OBJECT_IDS = self.OBJECT_IDS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let MIN_ALTITUDE_KM = self.MIN_ALTITUDE_KM();
+    let MAX_ALTITUDE_KM = self.MAX_ALTITUDE_KM();
+    let GEO_BOUNDS = self.GEO_BOUNDS().map(|x| {
+      x.into_iter().collect()
+    });
     SpatialCoverageT {
       TYPE,
       REGIONS,
       OBJECT_IDS,
+      MIN_ALTITUDE_KM,
+      MAX_ALTITUDE_KM,
+      GEO_BOUNDS,
     }
   }
 
@@ -285,6 +1400,30 @@ impl<'a> SpatialCoverage<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(SpatialCoverage::VT_OBJECT_IDS, None)}
   }
+  /// Minimum altitude in kilometers for altitude-bounded offerings
+  #[inline]
+  pub fn MIN_ALTITUDE_KM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SpatialCoverage::VT_MIN_ALTITUDE_KM, Some(0.0)).unwrap()}
+  }
+  /// Maximum altitude in kilometers for altitude-bounded offerings
+  #[inline]
+  pub fn MAX_ALTITUDE_KM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SpatialCoverage::VT_MAX_ALTITUDE_KM, Some(0.0)).unwrap()}
+  }
+  /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
+  #[inline]
+  pub fn GEO_BOUNDS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(SpatialCoverage::VT_GEO_BOUNDS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SpatialCoverage<'_> {
@@ -296,6 +1435,9 @@ impl ::flatbuffers::Verifiable for SpatialCoverage<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REGIONS", Self::VT_REGIONS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OBJECT_IDS", Self::VT_OBJECT_IDS, false)?
+     .visit_field::<f64>("MIN_ALTITUDE_KM", Self::VT_MIN_ALTITUDE_KM, false)?
+     .visit_field::<f64>("MAX_ALTITUDE_KM", Self::VT_MAX_ALTITUDE_KM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("GEO_BOUNDS", Self::VT_GEO_BOUNDS, false)?
      .finish();
     Ok(())
   }
@@ -304,6 +1446,9 @@ pub struct SpatialCoverageArgs<'a> {
     pub TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REGIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub OBJECT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MIN_ALTITUDE_KM: f64,
+    pub MAX_ALTITUDE_KM: f64,
+    pub GEO_BOUNDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 impl<'a> Default for SpatialCoverageArgs<'a> {
   #[inline]
@@ -312,6 +1457,9 @@ impl<'a> Default for SpatialCoverageArgs<'a> {
       TYPE: None,
       REGIONS: None,
       OBJECT_IDS: None,
+      MIN_ALTITUDE_KM: 0.0,
+      MAX_ALTITUDE_KM: 0.0,
+      GEO_BOUNDS: None,
     }
   }
 }
@@ -334,6 +1482,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SpatialCoverageBuilder<'a, 'b
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SpatialCoverage::VT_OBJECT_IDS, OBJECT_IDS);
   }
   #[inline]
+  pub fn add_MIN_ALTITUDE_KM(&mut self, MIN_ALTITUDE_KM: f64) {
+    self.fbb_.push_slot::<f64>(SpatialCoverage::VT_MIN_ALTITUDE_KM, MIN_ALTITUDE_KM, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_ALTITUDE_KM(&mut self, MAX_ALTITUDE_KM: f64) {
+    self.fbb_.push_slot::<f64>(SpatialCoverage::VT_MAX_ALTITUDE_KM, MAX_ALTITUDE_KM, 0.0);
+  }
+  #[inline]
+  pub fn add_GEO_BOUNDS(&mut self, GEO_BOUNDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SpatialCoverage::VT_GEO_BOUNDS, GEO_BOUNDS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SpatialCoverageBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SpatialCoverageBuilder {
@@ -354,6 +1514,9 @@ impl ::core::fmt::Debug for SpatialCoverage<'_> {
       ds.field("TYPE", &self.TYPE());
       ds.field("REGIONS", &self.REGIONS());
       ds.field("OBJECT_IDS", &self.OBJECT_IDS());
+      ds.field("MIN_ALTITUDE_KM", &self.MIN_ALTITUDE_KM());
+      ds.field("MAX_ALTITUDE_KM", &self.MAX_ALTITUDE_KM());
+      ds.field("GEO_BOUNDS", &self.GEO_BOUNDS());
       ds.finish()
   }
 }
@@ -363,6 +1526,9 @@ pub struct SpatialCoverageT {
   pub TYPE: Option<alloc::string::String>,
   pub REGIONS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub OBJECT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub MIN_ALTITUDE_KM: f64,
+  pub MAX_ALTITUDE_KM: f64,
+  pub GEO_BOUNDS: Option<alloc::vec::Vec<f64>>,
 }
 impl Default for SpatialCoverageT {
   fn default() -> Self {
@@ -370,6 +1536,9 @@ impl Default for SpatialCoverageT {
       TYPE: None,
       REGIONS: None,
       OBJECT_IDS: None,
+      MIN_ALTITUDE_KM: 0.0,
+      MAX_ALTITUDE_KM: 0.0,
+      GEO_BOUNDS: None,
     }
   }
 }
@@ -387,10 +1556,18 @@ impl SpatialCoverageT {
     let OBJECT_IDS = self.OBJECT_IDS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let MIN_ALTITUDE_KM = self.MIN_ALTITUDE_KM;
+    let MAX_ALTITUDE_KM = self.MAX_ALTITUDE_KM;
+    let GEO_BOUNDS = self.GEO_BOUNDS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     SpatialCoverage::create(_fbb, &SpatialCoverageArgs{
       TYPE,
       REGIONS,
       OBJECT_IDS,
+      MIN_ALTITUDE_KM,
+      MAX_ALTITUDE_KM,
+      GEO_BOUNDS,
     })
   }
 }
@@ -415,6 +1592,7 @@ impl<'a> TemporalCoverage<'a> {
   pub const VT_END_EPOCH: ::flatbuffers::VOffsetT = 6;
   pub const VT_UPDATE_FREQUENCY: ::flatbuffers::VOffsetT = 8;
   pub const VT_HISTORICAL_DEPTH: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LATENCY_SECONDS: ::flatbuffers::VOffsetT = 12;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -426,6 +1604,7 @@ impl<'a> TemporalCoverage<'a> {
     args: &'args TemporalCoverageArgs<'args>
   ) -> ::flatbuffers::WIPOffset<TemporalCoverage<'bldr>> {
     let mut builder = TemporalCoverageBuilder::new(_fbb);
+    builder.add_LATENCY_SECONDS(args.LATENCY_SECONDS);
     builder.add_HISTORICAL_DEPTH(args.HISTORICAL_DEPTH);
     if let Some(x) = args.UPDATE_FREQUENCY { builder.add_UPDATE_FREQUENCY(x); }
     if let Some(x) = args.END_EPOCH { builder.add_END_EPOCH(x); }
@@ -444,11 +1623,13 @@ impl<'a> TemporalCoverage<'a> {
       alloc::string::ToString::to_string(x)
     });
     let HISTORICAL_DEPTH = self.HISTORICAL_DEPTH();
+    let LATENCY_SECONDS = self.LATENCY_SECONDS();
     TemporalCoverageT {
       START_EPOCH,
       END_EPOCH,
       UPDATE_FREQUENCY,
       HISTORICAL_DEPTH,
+      LATENCY_SECONDS,
     }
   }
 
@@ -484,6 +1665,14 @@ impl<'a> TemporalCoverage<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(TemporalCoverage::VT_HISTORICAL_DEPTH, Some(0)).unwrap()}
   }
+  /// Typical provider latency in seconds
+  #[inline]
+  pub fn LATENCY_SECONDS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(TemporalCoverage::VT_LATENCY_SECONDS, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for TemporalCoverage<'_> {
@@ -496,6 +1685,7 @@ impl ::flatbuffers::Verifiable for TemporalCoverage<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("END_EPOCH", Self::VT_END_EPOCH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATE_FREQUENCY", Self::VT_UPDATE_FREQUENCY, false)?
      .visit_field::<u32>("HISTORICAL_DEPTH", Self::VT_HISTORICAL_DEPTH, false)?
+     .visit_field::<u32>("LATENCY_SECONDS", Self::VT_LATENCY_SECONDS, false)?
      .finish();
     Ok(())
   }
@@ -505,6 +1695,7 @@ pub struct TemporalCoverageArgs<'a> {
     pub END_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATE_FREQUENCY: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub HISTORICAL_DEPTH: u32,
+    pub LATENCY_SECONDS: u32,
 }
 impl<'a> Default for TemporalCoverageArgs<'a> {
   #[inline]
@@ -514,6 +1705,7 @@ impl<'a> Default for TemporalCoverageArgs<'a> {
       END_EPOCH: None,
       UPDATE_FREQUENCY: None,
       HISTORICAL_DEPTH: 0,
+      LATENCY_SECONDS: 0,
     }
   }
 }
@@ -540,6 +1732,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TemporalCoverageBuilder<'a, '
     self.fbb_.push_slot::<u32>(TemporalCoverage::VT_HISTORICAL_DEPTH, HISTORICAL_DEPTH, 0);
   }
   #[inline]
+  pub fn add_LATENCY_SECONDS(&mut self, LATENCY_SECONDS: u32) {
+    self.fbb_.push_slot::<u32>(TemporalCoverage::VT_LATENCY_SECONDS, LATENCY_SECONDS, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TemporalCoverageBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TemporalCoverageBuilder {
@@ -561,6 +1757,7 @@ impl ::core::fmt::Debug for TemporalCoverage<'_> {
       ds.field("END_EPOCH", &self.END_EPOCH());
       ds.field("UPDATE_FREQUENCY", &self.UPDATE_FREQUENCY());
       ds.field("HISTORICAL_DEPTH", &self.HISTORICAL_DEPTH());
+      ds.field("LATENCY_SECONDS", &self.LATENCY_SECONDS());
       ds.finish()
   }
 }
@@ -571,6 +1768,7 @@ pub struct TemporalCoverageT {
   pub END_EPOCH: Option<alloc::string::String>,
   pub UPDATE_FREQUENCY: Option<alloc::string::String>,
   pub HISTORICAL_DEPTH: u32,
+  pub LATENCY_SECONDS: u32,
 }
 impl Default for TemporalCoverageT {
   fn default() -> Self {
@@ -579,6 +1777,7 @@ impl Default for TemporalCoverageT {
       END_EPOCH: None,
       UPDATE_FREQUENCY: None,
       HISTORICAL_DEPTH: 0,
+      LATENCY_SECONDS: 0,
     }
   }
 }
@@ -597,11 +1796,13 @@ impl TemporalCoverageT {
       _fbb.create_string(x)
     });
     let HISTORICAL_DEPTH = self.HISTORICAL_DEPTH;
+    let LATENCY_SECONDS = self.LATENCY_SECONDS;
     TemporalCoverage::create(_fbb, &TemporalCoverageArgs{
       START_EPOCH,
       END_EPOCH,
       UPDATE_FREQUENCY,
       HISTORICAL_DEPTH,
+      LATENCY_SECONDS,
     })
   }
 }
@@ -787,6 +1988,8 @@ impl<'a> PricingTier<'a> {
   pub const VT_DURATION_DAYS: ::flatbuffers::VOffsetT = 10;
   pub const VT_RATE_LIMIT: ::flatbuffers::VOffsetT = 12;
   pub const VT_FEATURES: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAX_RECORDS_PER_REQUEST: ::flatbuffers::VOffsetT = 16;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 18;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -799,6 +2002,8 @@ impl<'a> PricingTier<'a> {
   ) -> ::flatbuffers::WIPOffset<PricingTier<'bldr>> {
     let mut builder = PricingTierBuilder::new(_fbb);
     builder.add_PRICE_AMOUNT(args.PRICE_AMOUNT);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    builder.add_MAX_RECORDS_PER_REQUEST(args.MAX_RECORDS_PER_REQUEST);
     if let Some(x) = args.FEATURES { builder.add_FEATURES(x); }
     builder.add_RATE_LIMIT(args.RATE_LIMIT);
     builder.add_DURATION_DAYS(args.DURATION_DAYS);
@@ -820,6 +2025,10 @@ impl<'a> PricingTier<'a> {
     let FEATURES = self.FEATURES().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let MAX_RECORDS_PER_REQUEST = self.MAX_RECORDS_PER_REQUEST();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     PricingTierT {
       NAME,
       PRICE_AMOUNT,
@@ -827,6 +2036,8 @@ impl<'a> PricingTier<'a> {
       DURATION_DAYS,
       RATE_LIMIT,
       FEATURES,
+      MAX_RECORDS_PER_REQUEST,
+      DESCRIPTION,
     }
   }
 
@@ -878,6 +2089,22 @@ impl<'a> PricingTier<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PricingTier::VT_FEATURES, None)}
   }
+  /// Maximum records returned per request
+  #[inline]
+  pub fn MAX_RECORDS_PER_REQUEST(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(PricingTier::VT_MAX_RECORDS_PER_REQUEST, Some(0)).unwrap()}
+  }
+  /// Human-readable tier description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PricingTier::VT_DESCRIPTION, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PricingTier<'_> {
@@ -892,6 +2119,8 @@ impl ::flatbuffers::Verifiable for PricingTier<'_> {
      .visit_field::<u32>("DURATION_DAYS", Self::VT_DURATION_DAYS, false)?
      .visit_field::<u32>("RATE_LIMIT", Self::VT_RATE_LIMIT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("FEATURES", Self::VT_FEATURES, false)?
+     .visit_field::<u32>("MAX_RECORDS_PER_REQUEST", Self::VT_MAX_RECORDS_PER_REQUEST, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .finish();
     Ok(())
   }
@@ -903,6 +2132,8 @@ pub struct PricingTierArgs<'a> {
     pub DURATION_DAYS: u32,
     pub RATE_LIMIT: u32,
     pub FEATURES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MAX_RECORDS_PER_REQUEST: u32,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for PricingTierArgs<'a> {
   #[inline]
@@ -914,6 +2145,8 @@ impl<'a> Default for PricingTierArgs<'a> {
       DURATION_DAYS: 0,
       RATE_LIMIT: 0,
       FEATURES: None,
+      MAX_RECORDS_PER_REQUEST: 0,
+      DESCRIPTION: None,
     }
   }
 }
@@ -948,6 +2181,14 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PricingTierBuilder<'a, 'b, A>
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PricingTier::VT_FEATURES, FEATURES);
   }
   #[inline]
+  pub fn add_MAX_RECORDS_PER_REQUEST(&mut self, MAX_RECORDS_PER_REQUEST: u32) {
+    self.fbb_.push_slot::<u32>(PricingTier::VT_MAX_RECORDS_PER_REQUEST, MAX_RECORDS_PER_REQUEST, 0);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PricingTier::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PricingTierBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PricingTierBuilder {
@@ -971,6 +2212,8 @@ impl ::core::fmt::Debug for PricingTier<'_> {
       ds.field("DURATION_DAYS", &self.DURATION_DAYS());
       ds.field("RATE_LIMIT", &self.RATE_LIMIT());
       ds.field("FEATURES", &self.FEATURES());
+      ds.field("MAX_RECORDS_PER_REQUEST", &self.MAX_RECORDS_PER_REQUEST());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.finish()
   }
 }
@@ -983,6 +2226,8 @@ pub struct PricingTierT {
   pub DURATION_DAYS: u32,
   pub RATE_LIMIT: u32,
   pub FEATURES: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub MAX_RECORDS_PER_REQUEST: u32,
+  pub DESCRIPTION: Option<alloc::string::String>,
 }
 impl Default for PricingTierT {
   fn default() -> Self {
@@ -993,6 +2238,8 @@ impl Default for PricingTierT {
       DURATION_DAYS: 0,
       RATE_LIMIT: 0,
       FEATURES: None,
+      MAX_RECORDS_PER_REQUEST: 0,
+      DESCRIPTION: None,
     }
   }
 }
@@ -1013,6 +2260,10 @@ impl PricingTierT {
     let FEATURES = self.FEATURES.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let MAX_RECORDS_PER_REQUEST = self.MAX_RECORDS_PER_REQUEST;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     PricingTier::create(_fbb, &PricingTierArgs{
       NAME,
       PRICE_AMOUNT,
@@ -1020,6 +2271,8 @@ impl PricingTierT {
       DURATION_DAYS,
       RATE_LIMIT,
       FEATURES,
+      MAX_RECORDS_PER_REQUEST,
+      DESCRIPTION,
     })
   }
 }
@@ -1056,6 +2309,17 @@ impl<'a> STF<'a> {
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 30;
   pub const VT_ACTIVE: ::flatbuffers::VOffsetT = 32;
   pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 34;
+  pub const VT_LISTING_KIND: ::flatbuffers::VOffsetT = 36;
+  pub const VT_TAGS: ::flatbuffers::VOffsetT = 38;
+  pub const VT_SAMPLE_RECORD_COUNT: ::flatbuffers::VOffsetT = 40;
+  pub const VT_DELIVERY_METHODS: ::flatbuffers::VOffsetT = 42;
+  pub const VT_PROTECTED_DELIVERY: ::flatbuffers::VOffsetT = 44;
+  pub const VT_REPUTATION: ::flatbuffers::VOffsetT = 46;
+  pub const VT_VERSION: ::flatbuffers::VOffsetT = 48;
+  pub const VT_EXPIRES_AT: ::flatbuffers::VOffsetT = 50;
+  pub const VT_TERMS_CID: ::flatbuffers::VOffsetT = 52;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 54;
+  pub const VT_SOURCE_PEER_ID: ::flatbuffers::VOffsetT = 56;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1067,8 +2331,18 @@ impl<'a> STF<'a> {
     args: &'args STFArgs<'args>
   ) -> ::flatbuffers::WIPOffset<STF<'bldr>> {
     let mut builder = STFBuilder::new(_fbb);
+    builder.add_EXPIRES_AT(args.EXPIRES_AT);
     builder.add_UPDATED_AT(args.UPDATED_AT);
     builder.add_CREATED_AT(args.CREATED_AT);
+    if let Some(x) = args.SOURCE_PEER_ID { builder.add_SOURCE_PEER_ID(x); }
+    if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
+    if let Some(x) = args.TERMS_CID { builder.add_TERMS_CID(x); }
+    builder.add_VERSION(args.VERSION);
+    if let Some(x) = args.REPUTATION { builder.add_REPUTATION(x); }
+    if let Some(x) = args.PROTECTED_DELIVERY { builder.add_PROTECTED_DELIVERY(x); }
+    if let Some(x) = args.DELIVERY_METHODS { builder.add_DELIVERY_METHODS(x); }
+    builder.add_SAMPLE_RECORD_COUNT(args.SAMPLE_RECORD_COUNT);
+    if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.ACCEPTED_PAYMENTS { builder.add_ACCEPTED_PAYMENTS(x); }
     if let Some(x) = args.PRICING { builder.add_PRICING(x); }
@@ -1080,6 +2354,7 @@ impl<'a> STF<'a> {
     if let Some(x) = args.PROVIDER_EPM_CID { builder.add_PROVIDER_EPM_CID(x); }
     if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
+    builder.add_LISTING_KIND(args.LISTING_KIND);
     builder.add_ACTIVE(args.ACTIVE);
     builder.add_ENCRYPTION_REQUIRED(args.ENCRYPTION_REQUIRED);
     builder.add_ACCESS_TYPE(args.ACCESS_TYPE);
@@ -1128,6 +2403,31 @@ impl<'a> STF<'a> {
     let SIGNATURE = self.SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let LISTING_KIND = self.LISTING_KIND();
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let SAMPLE_RECORD_COUNT = self.SAMPLE_RECORD_COUNT();
+    let DELIVERY_METHODS = self.DELIVERY_METHODS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let PROTECTED_DELIVERY = self.PROTECTED_DELIVERY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let REPUTATION = self.REPUTATION().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let VERSION = self.VERSION();
+    let EXPIRES_AT = self.EXPIRES_AT();
+    let TERMS_CID = self.TERMS_CID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE = self.LICENSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE_PEER_ID = self.SOURCE_PEER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     STFT {
       LISTING_ID,
       PROVIDER_PEER_ID,
@@ -1145,6 +2445,17 @@ impl<'a> STF<'a> {
       UPDATED_AT,
       ACTIVE,
       SIGNATURE,
+      LISTING_KIND,
+      TAGS,
+      SAMPLE_RECORD_COUNT,
+      DELIVERY_METHODS,
+      PROTECTED_DELIVERY,
+      REPUTATION,
+      VERSION,
+      EXPIRES_AT,
+      TERMS_CID,
+      LICENSE,
+      SOURCE_PEER_ID,
     }
   }
 
@@ -1276,6 +2587,94 @@ impl<'a> STF<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(STF::VT_SIGNATURE, None)}
   }
+  /// Listing category: data stream or WASM module
+  #[inline]
+  pub fn LISTING_KIND(&self) -> listingCategory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<listingCategory>(STF::VT_LISTING_KIND, Some(listingCategory::DataStream)).unwrap()}
+  }
+  /// Search tags
+  #[inline]
+  pub fn TAGS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(STF::VT_TAGS, None)}
+  }
+  /// Number of records in sample data, when available
+  #[inline]
+  pub fn SAMPLE_RECORD_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(STF::VT_SAMPLE_RECORD_COUNT, Some(0)).unwrap()}
+  }
+  /// Supported delivery methods
+  #[inline]
+  pub fn DELIVERY_METHODS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(STF::VT_DELIVERY_METHODS, None)}
+  }
+  /// Protected delivery metadata for encrypted artifacts or streams
+  #[inline]
+  pub fn PROTECTED_DELIVERY(&self) -> Option<ProtectedDeliveryBinding<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ProtectedDeliveryBinding>>(STF::VT_PROTECTED_DELIVERY, None)}
+  }
+  /// Provider reputation summary
+  #[inline]
+  pub fn REPUTATION(&self) -> Option<ProviderReputation<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<ProviderReputation>>(STF::VT_REPUTATION, None)}
+  }
+  /// Listing version
+  #[inline]
+  pub fn VERSION(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(STF::VT_VERSION, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when the listing expires, or 0 for no expiry
+  #[inline]
+  pub fn EXPIRES_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(STF::VT_EXPIRES_AT, Some(0)).unwrap()}
+  }
+  /// Terms document CID
+  #[inline]
+  pub fn TERMS_CID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_TERMS_CID, None)}
+  }
+  /// License label or SPDX-style identifier
+  #[inline]
+  pub fn LICENSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_LICENSE, None)}
+  }
+  /// Peer ID this listing was sourced from when discovered remotely
+  #[inline]
+  pub fn SOURCE_PEER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STF::VT_SOURCE_PEER_ID, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for STF<'_> {
@@ -1300,6 +2699,17 @@ impl ::flatbuffers::Verifiable for STF<'_> {
      .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<bool>("ACTIVE", Self::VT_ACTIVE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<listingCategory>("LISTING_KIND", Self::VT_LISTING_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+     .visit_field::<u32>("SAMPLE_RECORD_COUNT", Self::VT_SAMPLE_RECORD_COUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DELIVERY_METHODS", Self::VT_DELIVERY_METHODS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ProtectedDeliveryBinding>>("PROTECTED_DELIVERY", Self::VT_PROTECTED_DELIVERY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<ProviderReputation>>("REPUTATION", Self::VT_REPUTATION, false)?
+     .visit_field::<u32>("VERSION", Self::VT_VERSION, false)?
+     .visit_field::<u64>("EXPIRES_AT", Self::VT_EXPIRES_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TERMS_CID", Self::VT_TERMS_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_PEER_ID", Self::VT_SOURCE_PEER_ID, false)?
      .finish();
     Ok(())
   }
@@ -1321,6 +2731,17 @@ pub struct STFArgs<'a> {
     pub UPDATED_AT: u64,
     pub ACTIVE: bool,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub LISTING_KIND: listingCategory,
+    pub TAGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SAMPLE_RECORD_COUNT: u32,
+    pub DELIVERY_METHODS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub PROTECTED_DELIVERY: Option<::flatbuffers::WIPOffset<ProtectedDeliveryBinding<'a>>>,
+    pub REPUTATION: Option<::flatbuffers::WIPOffset<ProviderReputation<'a>>>,
+    pub VERSION: u32,
+    pub EXPIRES_AT: u64,
+    pub TERMS_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for STFArgs<'a> {
   #[inline]
@@ -1342,6 +2763,17 @@ impl<'a> Default for STFArgs<'a> {
       UPDATED_AT: 0,
       ACTIVE: false,
       SIGNATURE: None,
+      LISTING_KIND: listingCategory::DataStream,
+      TAGS: None,
+      SAMPLE_RECORD_COUNT: 0,
+      DELIVERY_METHODS: None,
+      PROTECTED_DELIVERY: None,
+      REPUTATION: None,
+      VERSION: 0,
+      EXPIRES_AT: 0,
+      TERMS_CID: None,
+      LICENSE: None,
+      SOURCE_PEER_ID: None,
     }
   }
 }
@@ -1416,6 +2848,50 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STFBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_SIGNATURE, SIGNATURE);
   }
   #[inline]
+  pub fn add_LISTING_KIND(&mut self, LISTING_KIND: listingCategory) {
+    self.fbb_.push_slot::<listingCategory>(STF::VT_LISTING_KIND, LISTING_KIND, listingCategory::DataStream);
+  }
+  #[inline]
+  pub fn add_TAGS(&mut self, TAGS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_TAGS, TAGS);
+  }
+  #[inline]
+  pub fn add_SAMPLE_RECORD_COUNT(&mut self, SAMPLE_RECORD_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(STF::VT_SAMPLE_RECORD_COUNT, SAMPLE_RECORD_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_DELIVERY_METHODS(&mut self, DELIVERY_METHODS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_DELIVERY_METHODS, DELIVERY_METHODS);
+  }
+  #[inline]
+  pub fn add_PROTECTED_DELIVERY(&mut self, PROTECTED_DELIVERY: ::flatbuffers::WIPOffset<ProtectedDeliveryBinding<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ProtectedDeliveryBinding>>(STF::VT_PROTECTED_DELIVERY, PROTECTED_DELIVERY);
+  }
+  #[inline]
+  pub fn add_REPUTATION(&mut self, REPUTATION: ::flatbuffers::WIPOffset<ProviderReputation<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<ProviderReputation>>(STF::VT_REPUTATION, REPUTATION);
+  }
+  #[inline]
+  pub fn add_VERSION(&mut self, VERSION: u32) {
+    self.fbb_.push_slot::<u32>(STF::VT_VERSION, VERSION, 0);
+  }
+  #[inline]
+  pub fn add_EXPIRES_AT(&mut self, EXPIRES_AT: u64) {
+    self.fbb_.push_slot::<u64>(STF::VT_EXPIRES_AT, EXPIRES_AT, 0);
+  }
+  #[inline]
+  pub fn add_TERMS_CID(&mut self, TERMS_CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_TERMS_CID, TERMS_CID);
+  }
+  #[inline]
+  pub fn add_LICENSE(&mut self, LICENSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_LICENSE, LICENSE);
+  }
+  #[inline]
+  pub fn add_SOURCE_PEER_ID(&mut self, SOURCE_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STF::VT_SOURCE_PEER_ID, SOURCE_PEER_ID);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> STFBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     STFBuilder {
@@ -1452,6 +2928,17 @@ impl ::core::fmt::Debug for STF<'_> {
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("ACTIVE", &self.ACTIVE());
       ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("LISTING_KIND", &self.LISTING_KIND());
+      ds.field("TAGS", &self.TAGS());
+      ds.field("SAMPLE_RECORD_COUNT", &self.SAMPLE_RECORD_COUNT());
+      ds.field("DELIVERY_METHODS", &self.DELIVERY_METHODS());
+      ds.field("PROTECTED_DELIVERY", &self.PROTECTED_DELIVERY());
+      ds.field("REPUTATION", &self.REPUTATION());
+      ds.field("VERSION", &self.VERSION());
+      ds.field("EXPIRES_AT", &self.EXPIRES_AT());
+      ds.field("TERMS_CID", &self.TERMS_CID());
+      ds.field("LICENSE", &self.LICENSE());
+      ds.field("SOURCE_PEER_ID", &self.SOURCE_PEER_ID());
       ds.finish()
   }
 }
@@ -1474,6 +2961,17 @@ pub struct STFT {
   pub UPDATED_AT: u64,
   pub ACTIVE: bool,
   pub SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub LISTING_KIND: listingCategory,
+  pub TAGS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub SAMPLE_RECORD_COUNT: u32,
+  pub DELIVERY_METHODS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub PROTECTED_DELIVERY: Option<alloc::boxed::Box<ProtectedDeliveryBindingT>>,
+  pub REPUTATION: Option<alloc::boxed::Box<ProviderReputationT>>,
+  pub VERSION: u32,
+  pub EXPIRES_AT: u64,
+  pub TERMS_CID: Option<alloc::string::String>,
+  pub LICENSE: Option<alloc::string::String>,
+  pub SOURCE_PEER_ID: Option<alloc::string::String>,
 }
 impl Default for STFT {
   fn default() -> Self {
@@ -1494,6 +2992,17 @@ impl Default for STFT {
       UPDATED_AT: 0,
       ACTIVE: false,
       SIGNATURE: None,
+      LISTING_KIND: listingCategory::DataStream,
+      TAGS: None,
+      SAMPLE_RECORD_COUNT: 0,
+      DELIVERY_METHODS: None,
+      PROTECTED_DELIVERY: None,
+      REPUTATION: None,
+      VERSION: 0,
+      EXPIRES_AT: 0,
+      TERMS_CID: None,
+      LICENSE: None,
+      SOURCE_PEER_ID: None,
     }
   }
 }
@@ -1543,6 +3052,31 @@ impl STFT {
     let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let LISTING_KIND = self.LISTING_KIND;
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let SAMPLE_RECORD_COUNT = self.SAMPLE_RECORD_COUNT;
+    let DELIVERY_METHODS = self.DELIVERY_METHODS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let PROTECTED_DELIVERY = self.PROTECTED_DELIVERY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let REPUTATION = self.REPUTATION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let VERSION = self.VERSION;
+    let EXPIRES_AT = self.EXPIRES_AT;
+    let TERMS_CID = self.TERMS_CID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE = self.LICENSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE_PEER_ID = self.SOURCE_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     STF::create(_fbb, &STFArgs{
       LISTING_ID,
       PROVIDER_PEER_ID,
@@ -1560,6 +3094,17 @@ impl STFT {
       UPDATED_AT,
       ACTIVE,
       SIGNATURE,
+      LISTING_KIND,
+      TAGS,
+      SAMPLE_RECORD_COUNT,
+      DELIVERY_METHODS,
+      PROTECTED_DELIVERY,
+      REPUTATION,
+      VERSION,
+      EXPIRES_AT,
+      TERMS_CID,
+      LICENSE,
+      SOURCE_PEER_ID,
     })
   }
 }

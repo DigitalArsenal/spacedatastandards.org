@@ -58,6 +58,16 @@ public final class PricingTier extends com.google.flatbuffers.Table {
   public int FEATURESLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public StringVector featuresVector() { return featuresVector(new StringVector()); }
   public StringVector featuresVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maximum records returned per request
+   */
+  public long MAX_RECORDS_PER_REQUEST() { int o = __offset(16); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Human-readable tier description
+   */
+  public String DESCRIPTION() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
 
   public static int createPricingTier(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -65,9 +75,13 @@ public final class PricingTier extends com.google.flatbuffers.Table {
       int PRICE_CURRENCYOffset,
       long DURATION_DAYS,
       long RATE_LIMIT,
-      int FEATURESOffset) {
-    builder.startTable(6);
+      int FEATURESOffset,
+      long MAX_RECORDS_PER_REQUEST,
+      int DESCRIPTIONOffset) {
+    builder.startTable(8);
     PricingTier.addPriceAmount(builder, PRICE_AMOUNT);
+    PricingTier.addDescription(builder, DESCRIPTIONOffset);
+    PricingTier.addMaxRecordsPerRequest(builder, MAX_RECORDS_PER_REQUEST);
     PricingTier.addFeatures(builder, FEATURESOffset);
     PricingTier.addRateLimit(builder, RATE_LIMIT);
     PricingTier.addDurationDays(builder, DURATION_DAYS);
@@ -76,7 +90,7 @@ public final class PricingTier extends com.google.flatbuffers.Table {
     return PricingTier.endPricingTier(builder);
   }
 
-  public static void startPricingTier(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startPricingTier(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addPriceAmount(FlatBufferBuilder builder, long PRICE_AMOUNT) { builder.addLong(1, PRICE_AMOUNT, 0L); }
   public static void addPriceCurrency(FlatBufferBuilder builder, int PRICE_CURRENCYOffset) { builder.addOffset(2, PRICE_CURRENCYOffset, 0); }
@@ -85,6 +99,8 @@ public final class PricingTier extends com.google.flatbuffers.Table {
   public static void addFeatures(FlatBufferBuilder builder, int FEATURESOffset) { builder.addOffset(5, FEATURESOffset, 0); }
   public static int createFeaturesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFeaturesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMaxRecordsPerRequest(FlatBufferBuilder builder, long MAX_RECORDS_PER_REQUEST) { builder.addInt(6, (int) MAX_RECORDS_PER_REQUEST, (int) 0L); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(7, DESCRIPTIONOffset, 0); }
   public static int endPricingTier(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

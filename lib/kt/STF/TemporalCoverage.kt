@@ -79,6 +79,14 @@ class TemporalCoverage : Table() {
             val o = __offset(10)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Typical provider latency in seconds
+     */
+    val latencySeconds : UInt
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsTemporalCoverage(_bb: ByteBuffer): TemporalCoverage = getRootAsTemporalCoverage(_bb, TemporalCoverage())
@@ -86,19 +94,21 @@ class TemporalCoverage : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createTemporalCoverage(builder: FlatBufferBuilder, startEpochOffset: Int, endEpochOffset: Int, updateFrequencyOffset: Int, historicalDepth: UInt) : Int {
-            builder.startTable(4)
+        fun createTemporalCoverage(builder: FlatBufferBuilder, startEpochOffset: Int, endEpochOffset: Int, updateFrequencyOffset: Int, historicalDepth: UInt, latencySeconds: UInt) : Int {
+            builder.startTable(5)
+            addLATENCYSECONDS(builder, latencySeconds)
             addHISTORICALDEPTH(builder, historicalDepth)
             addUPDATEFREQUENCY(builder, updateFrequencyOffset)
             addENDEPOCH(builder, endEpochOffset)
             addSTARTEPOCH(builder, startEpochOffset)
             return endTemporalCoverage(builder)
         }
-        fun startTemporalCoverage(builder: FlatBufferBuilder) = builder.startTable(4)
+        fun startTemporalCoverage(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addSTARTEPOCH(builder: FlatBufferBuilder, startEpoch: Int) = builder.addOffset(0, startEpoch, 0)
         fun addENDEPOCH(builder: FlatBufferBuilder, endEpoch: Int) = builder.addOffset(1, endEpoch, 0)
         fun addUPDATEFREQUENCY(builder: FlatBufferBuilder, updateFrequency: Int) = builder.addOffset(2, updateFrequency, 0)
         fun addHISTORICALDEPTH(builder: FlatBufferBuilder, historicalDepth: UInt) = builder.addInt(3, historicalDepth.toInt(), 0)
+        fun addLATENCYSECONDS(builder: FlatBufferBuilder, latencySeconds: UInt) = builder.addInt(4, latencySeconds.toInt(), 0)
         fun endTemporalCoverage(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

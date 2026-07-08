@@ -4,9 +4,14 @@
 
 export * from './accessCategory.js';
 export * from './DataCoverage.js';
+export * from './GrantFieldStreamPolicy.js';
+export * from './listingCategory.js';
 export * from './paymentMethod.js';
 export * from './PricingTier.js';
+export * from './ProtectedDeliveryBinding.js';
+export * from './ProviderReputation.js';
 export * from './PUR.js';
+export * from './purchaseLifecycleStatus.js';
 export * from './SpatialCoverage.js';
 export * from './STF.js';
 export * from './TemporalCoverage.js';

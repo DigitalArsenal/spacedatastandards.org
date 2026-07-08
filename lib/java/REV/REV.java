@@ -81,6 +81,51 @@ public final class REV extends com.google.flatbuffers.Table {
   public ByteVector reviewerSignatureVector(ByteVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer REVIEWER_SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer REVIEWER_SIGNATUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Data quality metrics supplied by reviewer
+   */
+  public DataQualityMetrics QUALITY_METRICS() { return QUALITY_METRICS(new DataQualityMetrics()); }
+  public DataQualityMetrics QUALITY_METRICS(DataQualityMetrics obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Whether the review is tied to a verified purchase
+   */
+  public boolean VERIFIED_PURCHASE() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Unix timestamp when the review was last updated
+   */
+  public long UPDATED_AT() { int o = __offset(26); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Review lifecycle status
+   */
+  public byte STATUS() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Helpful vote count
+   */
+  public long HELPFUL_COUNT() { int o = __offset(30); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Not-helpful vote count
+   */
+  public long NOT_HELPFUL_COUNT() { int o = __offset(32); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Provider response body
+   */
+  public String PROVIDER_RESPONSE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROVIDER_RESPONSEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer PROVIDER_RESPONSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Unix timestamp when provider responded
+   */
+  public long PROVIDER_RESPONSE_AT() { int o = __offset(36); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Number of moderation flags
+   */
+  public long FLAGGED_COUNT() { int o = __offset(38); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Moderation notes
+   */
+  public String MODERATION_NOTES() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MODERATION_NOTESAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer MODERATION_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
 
   public static int createREV(FlatBufferBuilder builder,
       int REVIEW_IDOffset,
@@ -91,9 +136,27 @@ public final class REV extends com.google.flatbuffers.Table {
       int CONTENTOffset,
       int ACL_GRANT_IDOffset,
       long TIMESTAMP,
-      int REVIEWER_SIGNATUREOffset) {
-    builder.startTable(9);
+      int REVIEWER_SIGNATUREOffset,
+      int QUALITY_METRICSOffset,
+      boolean VERIFIED_PURCHASE,
+      long UPDATED_AT,
+      byte STATUS,
+      long HELPFUL_COUNT,
+      long NOT_HELPFUL_COUNT,
+      int PROVIDER_RESPONSEOffset,
+      long PROVIDER_RESPONSE_AT,
+      long FLAGGED_COUNT,
+      int MODERATION_NOTESOffset) {
+    builder.startTable(19);
+    REV.addProviderResponseAt(builder, PROVIDER_RESPONSE_AT);
+    REV.addUpdatedAt(builder, UPDATED_AT);
     REV.addTimestamp(builder, TIMESTAMP);
+    REV.addModerationNotes(builder, MODERATION_NOTESOffset);
+    REV.addFlaggedCount(builder, FLAGGED_COUNT);
+    REV.addProviderResponse(builder, PROVIDER_RESPONSEOffset);
+    REV.addNotHelpfulCount(builder, NOT_HELPFUL_COUNT);
+    REV.addHelpfulCount(builder, HELPFUL_COUNT);
+    REV.addQualityMetrics(builder, QUALITY_METRICSOffset);
     REV.addReviewerSignature(builder, REVIEWER_SIGNATUREOffset);
     REV.addAclGrantId(builder, ACL_GRANT_IDOffset);
     REV.addContent(builder, CONTENTOffset);
@@ -101,11 +164,13 @@ public final class REV extends com.google.flatbuffers.Table {
     REV.addReviewerPeerId(builder, REVIEWER_PEER_IDOffset);
     REV.addListingId(builder, LISTING_IDOffset);
     REV.addReviewId(builder, REVIEW_IDOffset);
+    REV.addStatus(builder, STATUS);
+    REV.addVerifiedPurchase(builder, VERIFIED_PURCHASE);
     REV.addRating(builder, RATING);
     return REV.endREV(builder);
   }
 
-  public static void startREV(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startREV(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addReviewId(FlatBufferBuilder builder, int REVIEW_IDOffset) { builder.addOffset(0, REVIEW_IDOffset, 0); }
   public static void addListingId(FlatBufferBuilder builder, int LISTING_IDOffset) { builder.addOffset(1, LISTING_IDOffset, 0); }
   public static void addReviewerPeerId(FlatBufferBuilder builder, int REVIEWER_PEER_IDOffset) { builder.addOffset(2, REVIEWER_PEER_IDOffset, 0); }
@@ -118,6 +183,16 @@ public final class REV extends com.google.flatbuffers.Table {
   public static int createReviewerSignatureVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createReviewerSignatureVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startReviewerSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addQualityMetrics(FlatBufferBuilder builder, int QUALITY_METRICSOffset) { builder.addOffset(9, QUALITY_METRICSOffset, 0); }
+  public static void addVerifiedPurchase(FlatBufferBuilder builder, boolean VERIFIED_PURCHASE) { builder.addBoolean(10, VERIFIED_PURCHASE, false); }
+  public static void addUpdatedAt(FlatBufferBuilder builder, long UPDATED_AT) { builder.addLong(11, UPDATED_AT, 0L); }
+  public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(12, STATUS, 0); }
+  public static void addHelpfulCount(FlatBufferBuilder builder, long HELPFUL_COUNT) { builder.addInt(13, (int) HELPFUL_COUNT, (int) 0L); }
+  public static void addNotHelpfulCount(FlatBufferBuilder builder, long NOT_HELPFUL_COUNT) { builder.addInt(14, (int) NOT_HELPFUL_COUNT, (int) 0L); }
+  public static void addProviderResponse(FlatBufferBuilder builder, int PROVIDER_RESPONSEOffset) { builder.addOffset(15, PROVIDER_RESPONSEOffset, 0); }
+  public static void addProviderResponseAt(FlatBufferBuilder builder, long PROVIDER_RESPONSE_AT) { builder.addLong(16, PROVIDER_RESPONSE_AT, 0L); }
+  public static void addFlaggedCount(FlatBufferBuilder builder, long FLAGGED_COUNT) { builder.addInt(17, (int) FLAGGED_COUNT, (int) 0L); }
+  public static void addModerationNotes(FlatBufferBuilder builder, int MODERATION_NOTESOffset) { builder.addOffset(18, MODERATION_NOTESOffset, 0); }
   public static int endREV(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // REVIEW_ID

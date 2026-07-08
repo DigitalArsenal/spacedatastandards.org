@@ -121,8 +121,92 @@ class REV(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
+    # Data quality metrics supplied by reviewer
+    # REV
+    def QUALITY_METRICS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DataQualityMetrics import DataQualityMetrics
+            obj = DataQualityMetrics()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Whether the review is tied to a verified purchase
+    # REV
+    def VERIFIED_PURCHASE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Unix timestamp when the review was last updated
+    # REV
+    def UPDATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Review lifecycle status
+    # REV
+    def STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Helpful vote count
+    # REV
+    def HELPFUL_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Not-helpful vote count
+    # REV
+    def NOT_HELPFUL_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Provider response body
+    # REV
+    def PROVIDER_RESPONSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp when provider responded
+    # REV
+    def PROVIDER_RESPONSE_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of moderation flags
+    # REV
+    def FLAGGED_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Moderation notes
+    # REV
+    def MODERATION_NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def REVStart(builder):
-    builder.StartObject(9)
+    builder.StartObject(19)
 
 def Start(builder):
     REVStart(builder)
@@ -197,14 +281,75 @@ def REVCreateREVIEWER_SIGNATUREVector(builder, data):
 def CreateREVIEWER_SIGNATUREVector(builder, data):
     REVCreateREVIEWER_SIGNATUREVector(builder, data)
 
+def REVAddQUALITY_METRICS(builder, QUALITY_METRICS):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(QUALITY_METRICS), 0)
+
+def AddQUALITY_METRICS(builder, QUALITY_METRICS):
+    REVAddQUALITY_METRICS(builder, QUALITY_METRICS)
+
+def REVAddVERIFIED_PURCHASE(builder, VERIFIED_PURCHASE):
+    builder.PrependBoolSlot(10, VERIFIED_PURCHASE, 0)
+
+def AddVERIFIED_PURCHASE(builder, VERIFIED_PURCHASE):
+    REVAddVERIFIED_PURCHASE(builder, VERIFIED_PURCHASE)
+
+def REVAddUPDATED_AT(builder, UPDATED_AT):
+    builder.PrependUint64Slot(11, UPDATED_AT, 0)
+
+def AddUPDATED_AT(builder, UPDATED_AT):
+    REVAddUPDATED_AT(builder, UPDATED_AT)
+
+def REVAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(12, STATUS, 0)
+
+def AddSTATUS(builder, STATUS):
+    REVAddSTATUS(builder, STATUS)
+
+def REVAddHELPFUL_COUNT(builder, HELPFUL_COUNT):
+    builder.PrependUint32Slot(13, HELPFUL_COUNT, 0)
+
+def AddHELPFUL_COUNT(builder, HELPFUL_COUNT):
+    REVAddHELPFUL_COUNT(builder, HELPFUL_COUNT)
+
+def REVAddNOT_HELPFUL_COUNT(builder, NOT_HELPFUL_COUNT):
+    builder.PrependUint32Slot(14, NOT_HELPFUL_COUNT, 0)
+
+def AddNOT_HELPFUL_COUNT(builder, NOT_HELPFUL_COUNT):
+    REVAddNOT_HELPFUL_COUNT(builder, NOT_HELPFUL_COUNT)
+
+def REVAddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSE):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_RESPONSE), 0)
+
+def AddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSE):
+    REVAddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSE)
+
+def REVAddPROVIDER_RESPONSE_AT(builder, PROVIDER_RESPONSE_AT):
+    builder.PrependUint64Slot(16, PROVIDER_RESPONSE_AT, 0)
+
+def AddPROVIDER_RESPONSE_AT(builder, PROVIDER_RESPONSE_AT):
+    REVAddPROVIDER_RESPONSE_AT(builder, PROVIDER_RESPONSE_AT)
+
+def REVAddFLAGGED_COUNT(builder, FLAGGED_COUNT):
+    builder.PrependUint32Slot(17, FLAGGED_COUNT, 0)
+
+def AddFLAGGED_COUNT(builder, FLAGGED_COUNT):
+    REVAddFLAGGED_COUNT(builder, FLAGGED_COUNT)
+
+def REVAddMODERATION_NOTES(builder, MODERATION_NOTES):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MODERATION_NOTES), 0)
+
+def AddMODERATION_NOTES(builder, MODERATION_NOTES):
+    REVAddMODERATION_NOTES(builder, MODERATION_NOTES)
+
 def REVEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return REVEnd(builder)
 
+import DataQualityMetrics
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -222,6 +367,16 @@ class REVT(object):
         ACL_GRANT_ID = None,
         TIMESTAMP = 0,
         REVIEWER_SIGNATURE = None,
+        QUALITY_METRICS = None,
+        VERIFIED_PURCHASE = False,
+        UPDATED_AT = 0,
+        STATUS = 0,
+        HELPFUL_COUNT = 0,
+        NOT_HELPFUL_COUNT = 0,
+        PROVIDER_RESPONSE = None,
+        PROVIDER_RESPONSE_AT = 0,
+        FLAGGED_COUNT = 0,
+        MODERATION_NOTES = None,
     ):
         self.REVIEW_ID = REVIEW_ID  # type: Optional[str]
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
@@ -232,6 +387,16 @@ class REVT(object):
         self.ACL_GRANT_ID = ACL_GRANT_ID  # type: Optional[str]
         self.TIMESTAMP = TIMESTAMP  # type: int
         self.REVIEWER_SIGNATURE = REVIEWER_SIGNATURE  # type: Optional[List[int]]
+        self.QUALITY_METRICS = QUALITY_METRICS  # type: Optional[DataQualityMetrics.DataQualityMetricsT]
+        self.VERIFIED_PURCHASE = VERIFIED_PURCHASE  # type: bool
+        self.UPDATED_AT = UPDATED_AT  # type: int
+        self.STATUS = STATUS  # type: int
+        self.HELPFUL_COUNT = HELPFUL_COUNT  # type: int
+        self.NOT_HELPFUL_COUNT = NOT_HELPFUL_COUNT  # type: int
+        self.PROVIDER_RESPONSE = PROVIDER_RESPONSE  # type: Optional[str]
+        self.PROVIDER_RESPONSE_AT = PROVIDER_RESPONSE_AT  # type: int
+        self.FLAGGED_COUNT = FLAGGED_COUNT  # type: int
+        self.MODERATION_NOTES = MODERATION_NOTES  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -269,6 +434,17 @@ class REVT(object):
                     self.REVIEWER_SIGNATURE.append(REV.REVIEWER_SIGNATURE(i))
             else:
                 self.REVIEWER_SIGNATURE = REV.REVIEWER_SIGNATUREAsNumpy()
+        if REV.QUALITY_METRICS() is not None:
+            self.QUALITY_METRICS = DataQualityMetrics.DataQualityMetricsT.InitFromObj(REV.QUALITY_METRICS())
+        self.VERIFIED_PURCHASE = REV.VERIFIED_PURCHASE()
+        self.UPDATED_AT = REV.UPDATED_AT()
+        self.STATUS = REV.STATUS()
+        self.HELPFUL_COUNT = REV.HELPFUL_COUNT()
+        self.NOT_HELPFUL_COUNT = REV.NOT_HELPFUL_COUNT()
+        self.PROVIDER_RESPONSE = REV.PROVIDER_RESPONSE()
+        self.PROVIDER_RESPONSE_AT = REV.PROVIDER_RESPONSE_AT()
+        self.FLAGGED_COUNT = REV.FLAGGED_COUNT()
+        self.MODERATION_NOTES = REV.MODERATION_NOTES()
 
     # REVT
     def Pack(self, builder):
@@ -292,6 +468,12 @@ class REVT(object):
                 for i in reversed(range(len(self.REVIEWER_SIGNATURE))):
                     builder.PrependUint8(self.REVIEWER_SIGNATURE[i])
                 REVIEWER_SIGNATURE = builder.EndVector()
+        if self.QUALITY_METRICS is not None:
+            QUALITY_METRICS = self.QUALITY_METRICS.Pack(builder)
+        if self.PROVIDER_RESPONSE is not None:
+            PROVIDER_RESPONSE = builder.CreateString(self.PROVIDER_RESPONSE)
+        if self.MODERATION_NOTES is not None:
+            MODERATION_NOTES = builder.CreateString(self.MODERATION_NOTES)
         REVStart(builder)
         if self.REVIEW_ID is not None:
             REVAddREVIEW_ID(builder, REVIEW_ID)
@@ -309,5 +491,18 @@ class REVT(object):
         REVAddTIMESTAMP(builder, self.TIMESTAMP)
         if self.REVIEWER_SIGNATURE is not None:
             REVAddREVIEWER_SIGNATURE(builder, REVIEWER_SIGNATURE)
+        if self.QUALITY_METRICS is not None:
+            REVAddQUALITY_METRICS(builder, QUALITY_METRICS)
+        REVAddVERIFIED_PURCHASE(builder, self.VERIFIED_PURCHASE)
+        REVAddUPDATED_AT(builder, self.UPDATED_AT)
+        REVAddSTATUS(builder, self.STATUS)
+        REVAddHELPFUL_COUNT(builder, self.HELPFUL_COUNT)
+        REVAddNOT_HELPFUL_COUNT(builder, self.NOT_HELPFUL_COUNT)
+        if self.PROVIDER_RESPONSE is not None:
+            REVAddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSE)
+        REVAddPROVIDER_RESPONSE_AT(builder, self.PROVIDER_RESPONSE_AT)
+        REVAddFLAGGED_COUNT(builder, self.FLAGGED_COUNT)
+        if self.MODERATION_NOTES is not None:
+            REVAddMODERATION_NOTES(builder, MODERATION_NOTES)
         REV = REVEnd(builder)
         return REV

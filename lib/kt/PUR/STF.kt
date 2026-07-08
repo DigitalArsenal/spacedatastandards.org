@@ -230,6 +230,134 @@ class STF : Table() {
         }
     val signatureAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
     fun signatureInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Listing category: data stream or WASM module
+     */
+    val listingKind : Byte
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Search tags
+     */
+    fun tags(j: Int) : String? {
+        val o = __offset(38)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val tagsLength : Int
+        get() {
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Number of records in sample data, when available
+     */
+    val sampleRecordCount : UInt
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Supported delivery methods
+     */
+    fun deliveryMethods(j: Int) : String? {
+        val o = __offset(42)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val deliveryMethodsLength : Int
+        get() {
+            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Protected delivery metadata for encrypted artifacts or streams
+     */
+    val protectedDelivery : ProtectedDeliveryBinding? get() = protectedDelivery(ProtectedDeliveryBinding())
+    fun protectedDelivery(obj: ProtectedDeliveryBinding) : ProtectedDeliveryBinding? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Provider reputation summary
+     */
+    val reputation : ProviderReputation? get() = reputation(ProviderReputation())
+    fun reputation(obj: ProviderReputation) : ProviderReputation? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Listing version
+     */
+    val version : UInt
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Unix timestamp when the listing expires, or 0 for no expiry
+     */
+    val expiresAt : ULong
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Terms document CID
+     */
+    val termsCid : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val termsCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun termsCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * License label or SPDX-style identifier
+     */
+    val license : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun licenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * Peer ID this listing was sourced from when discovered remotely
+     */
+    val sourcePeerId : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val sourcePeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun sourcePeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTF(_bb: ByteBuffer): STF = getRootAsSTF(_bb, STF())
@@ -238,10 +366,20 @@ class STF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STF")
-        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int) : Int {
-            builder.startTable(16)
+        fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int) : Int {
+            builder.startTable(27)
+            addEXPIRESAT(builder, expiresAt)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
+            addSOURCEPEERID(builder, sourcePeerIdOffset)
+            addLICENSE(builder, licenseOffset)
+            addTERMSCID(builder, termsCidOffset)
+            addVERSION(builder, version)
+            addREPUTATION(builder, reputationOffset)
+            addPROTECTEDDELIVERY(builder, protectedDeliveryOffset)
+            addDELIVERYMETHODS(builder, deliveryMethodsOffset)
+            addSAMPLERECORDCOUNT(builder, sampleRecordCount)
+            addTAGS(builder, tagsOffset)
             addSIGNATURE(builder, signatureOffset)
             addACCEPTEDPAYMENTS(builder, acceptedPaymentsOffset)
             addPRICING(builder, pricingOffset)
@@ -253,12 +391,13 @@ class STF : Table() {
             addPROVIDEREPMCID(builder, providerEpmCidOffset)
             addPROVIDERPEERID(builder, providerPeerIdOffset)
             addLISTINGID(builder, listingIdOffset)
+            addLISTINGKIND(builder, listingKind)
             addACTIVE(builder, active)
             addENCRYPTIONREQUIRED(builder, encryptionRequired)
             addACCESSTYPE(builder, accessType)
             return endSTF(builder)
         }
-        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startSTF(builder: FlatBufferBuilder) = builder.startTable(27)
         fun addLISTINGID(builder: FlatBufferBuilder, listingId: Int) = builder.addOffset(0, listingId, 0)
         fun addPROVIDERPEERID(builder: FlatBufferBuilder, providerPeerId: Int) = builder.addOffset(1, providerPeerId, 0)
         fun addPROVIDEREPMCID(builder: FlatBufferBuilder, providerEpmCid: Int) = builder.addOffset(2, providerEpmCid, 0)
@@ -308,6 +447,33 @@ class STF : Table() {
             return builder.endVector()
         }
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addLISTINGKIND(builder: FlatBufferBuilder, listingKind: Byte) = builder.addByte(16, listingKind, 0)
+        fun addTAGS(builder: FlatBufferBuilder, tags: Int) = builder.addOffset(17, tags, 0)
+        fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSAMPLERECORDCOUNT(builder: FlatBufferBuilder, sampleRecordCount: UInt) = builder.addInt(18, sampleRecordCount.toInt(), 0)
+        fun addDELIVERYMETHODS(builder: FlatBufferBuilder, deliveryMethods: Int) = builder.addOffset(19, deliveryMethods, 0)
+        fun createDeliveryMethodsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDeliveryMethodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROTECTEDDELIVERY(builder: FlatBufferBuilder, protectedDelivery: Int) = builder.addOffset(20, protectedDelivery, 0)
+        fun addREPUTATION(builder: FlatBufferBuilder, reputation: Int) = builder.addOffset(21, reputation, 0)
+        fun addVERSION(builder: FlatBufferBuilder, version: UInt) = builder.addInt(22, version.toInt(), 0)
+        fun addEXPIRESAT(builder: FlatBufferBuilder, expiresAt: ULong) = builder.addLong(23, expiresAt.toLong(), 0)
+        fun addTERMSCID(builder: FlatBufferBuilder, termsCid: Int) = builder.addOffset(24, termsCid, 0)
+        fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(25, license, 0)
+        fun addSOURCEPEERID(builder: FlatBufferBuilder, sourcePeerId: Int) = builder.addOffset(26, sourcePeerId, 0)
         fun endSTF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

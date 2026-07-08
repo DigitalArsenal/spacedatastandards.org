@@ -44,11 +44,294 @@ public enum paymentMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case fiatStripe = 4
   ///  Free/open data
   case free = 5
+  ///  Usage-based billing settled after metered delivery
+  case usagebased = 6
+  ///  Enterprise/offline invoicing
+  case enterprise = 7
 
-  public static var max: paymentMethod { return .free }
+  public static var max: paymentMethod { return .enterprise }
   public static var min: paymentMethod { return .cryptoEth }
 }
 
+
+///  Listing kind for marketplace entries.
+public enum listingCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case datastream = 0
+  case wasmmodule = 1
+
+  public static var max: listingCategory { return .wasmmodule }
+  public static var min: listingCategory { return .datastream }
+}
+
+
+///  Field-level stream policy bound into protected delivery and grants.
+public struct GrantFieldStreamPolicy: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$STF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: GrantFieldStreamPolicy.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let POLICY_ID: VOffset = 4
+    static let POLICY_VERSION: VOffset = 6
+    static let STREAM_ID: VOffset = 8
+    static let SCHEMA_CODE: VOffset = 10
+    static let ALLOWED_FIELD_PATHS: VOffset = 12
+    static let REDACTED_FIELD_PATHS: VOffset = 14
+    static let KEY_EPOCH: VOffset = 16
+    static let GRANT_SCOPE: VOffset = 18
+    static let ALLOWED_OPERATIONS: VOffset = 20
+  }
+
+  public var POLICY_ID: String? { let o = _accessor.offset(VT.POLICY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POLICY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POLICY_ID) }
+  public var POLICY_VERSION: UInt32 { let o = _accessor.offset(VT.POLICY_VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var STREAM_ID: String? { let o = _accessor.offset(VT.STREAM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STREAM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STREAM_ID) }
+  public var SCHEMA_CODE: String? { let o = _accessor.offset(VT.SCHEMA_CODE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_CODE) }
+  public var ALLOWED_FIELD_PATHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_FIELD_PATHS, byteSize: 4) }
+  public var REDACTED_FIELD_PATHS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REDACTED_FIELD_PATHS, byteSize: 4) }
+  public var KEY_EPOCH: String? { let o = _accessor.offset(VT.KEY_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_EPOCH) }
+  public var GRANT_SCOPE: String? { let o = _accessor.offset(VT.GRANT_SCOPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANT_SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANT_SCOPE) }
+  public var ALLOWED_OPERATIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALLOWED_OPERATIONS, byteSize: 4) }
+  public static func startGrantFieldStreamPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(POLICY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLICY_ID, at: VT.POLICY_ID) }
+  public static func add(POLICY_VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLICY_VERSION, def: 0, at: VT.POLICY_VERSION) }
+  public static func add(STREAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREAM_ID, at: VT.STREAM_ID) }
+  public static func add(SCHEMA_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_CODE, at: VT.SCHEMA_CODE) }
+  public static func addVectorOf(ALLOWED_FIELD_PATHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_FIELD_PATHS, at: VT.ALLOWED_FIELD_PATHS) }
+  public static func addVectorOf(REDACTED_FIELD_PATHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REDACTED_FIELD_PATHS, at: VT.REDACTED_FIELD_PATHS) }
+  public static func add(KEY_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_EPOCH, at: VT.KEY_EPOCH) }
+  public static func add(GRANT_SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_SCOPE, at: VT.GRANT_SCOPE) }
+  public static func addVectorOf(ALLOWED_OPERATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALLOWED_OPERATIONS, at: VT.ALLOWED_OPERATIONS) }
+  public static func endGrantFieldStreamPolicy(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createGrantFieldStreamPolicy(
+    _ fbb: inout FlatBufferBuilder,
+    POLICY_IDOffset POLICY_ID: Offset = Offset(),
+    POLICY_VERSION: UInt32 = 0,
+    STREAM_IDOffset STREAM_ID: Offset = Offset(),
+    SCHEMA_CODEOffset SCHEMA_CODE: Offset = Offset(),
+    ALLOWED_FIELD_PATHSVectorOffset ALLOWED_FIELD_PATHS: Offset = Offset(),
+    REDACTED_FIELD_PATHSVectorOffset REDACTED_FIELD_PATHS: Offset = Offset(),
+    KEY_EPOCHOffset KEY_EPOCH: Offset = Offset(),
+    GRANT_SCOPEOffset GRANT_SCOPE: Offset = Offset(),
+    ALLOWED_OPERATIONSVectorOffset ALLOWED_OPERATIONS: Offset = Offset()
+  ) -> Offset {
+    let __start = GrantFieldStreamPolicy.startGrantFieldStreamPolicy(&fbb)
+    GrantFieldStreamPolicy.add(POLICY_ID: POLICY_ID, &fbb)
+    GrantFieldStreamPolicy.add(POLICY_VERSION: POLICY_VERSION, &fbb)
+    GrantFieldStreamPolicy.add(STREAM_ID: STREAM_ID, &fbb)
+    GrantFieldStreamPolicy.add(SCHEMA_CODE: SCHEMA_CODE, &fbb)
+    GrantFieldStreamPolicy.addVectorOf(ALLOWED_FIELD_PATHS: ALLOWED_FIELD_PATHS, &fbb)
+    GrantFieldStreamPolicy.addVectorOf(REDACTED_FIELD_PATHS: REDACTED_FIELD_PATHS, &fbb)
+    GrantFieldStreamPolicy.add(KEY_EPOCH: KEY_EPOCH, &fbb)
+    GrantFieldStreamPolicy.add(GRANT_SCOPE: GRANT_SCOPE, &fbb)
+    GrantFieldStreamPolicy.addVectorOf(ALLOWED_OPERATIONS: ALLOWED_OPERATIONS, &fbb)
+    return GrantFieldStreamPolicy.endGrantFieldStreamPolicy(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.POLICY_ID, fieldName: "POLICY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POLICY_VERSION, fieldName: "POLICY_VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.STREAM_ID, fieldName: "STREAM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_CODE, fieldName: "SCHEMA_CODE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALLOWED_FIELD_PATHS, fieldName: "ALLOWED_FIELD_PATHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.REDACTED_FIELD_PATHS, fieldName: "REDACTED_FIELD_PATHS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.KEY_EPOCH, fieldName: "KEY_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GRANT_SCOPE, fieldName: "GRANT_SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALLOWED_OPERATIONS, fieldName: "ALLOWED_OPERATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    _v.finish()
+  }
+}
+
+///  Immutable encrypted artifact/window metadata for protected delivery.
+public struct ProtectedDeliveryBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$STF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ProtectedDeliveryBinding.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ENCRYPTED_CID: VOffset = 4
+    static let MANIFEST_CID: VOffset = 6
+    static let CONTENT_HASH: VOffset = 8
+    static let CONTENT_KEY_ID: VOffset = 10
+    static let LICENSE_MODULE_ID: VOffset = 12
+    static let MODULE_ID: VOffset = 14
+    static let MODULE_VERSION: VOffset = 16
+    static let REQUIRED_SCOPES: VOffset = 18
+    static let GRANT_SCOPE: VOffset = 20
+    static let DELIVERY_PROTOCOL: VOffset = 22
+    static let FIELD_STREAM_POLICY: VOffset = 24
+  }
+
+  public var ENCRYPTED_CID: String? { let o = _accessor.offset(VT.ENCRYPTED_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCRYPTED_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCRYPTED_CID) }
+  public var MANIFEST_CID: String? { let o = _accessor.offset(VT.MANIFEST_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MANIFEST_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MANIFEST_CID) }
+  public var CONTENT_HASH: String? { let o = _accessor.offset(VT.CONTENT_HASH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENT_HASHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_HASH) }
+  public var CONTENT_KEY_ID: String? { let o = _accessor.offset(VT.CONTENT_KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTENT_KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_KEY_ID) }
+  public var LICENSE_MODULE_ID: String? { let o = _accessor.offset(VT.LICENSE_MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_MODULE_ID) }
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  public var MODULE_VERSION: String? { let o = _accessor.offset(VT.MODULE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_VERSION) }
+  public var REQUIRED_SCOPES: FlatbufferVector<String?> { return _accessor.vector(at: VT.REQUIRED_SCOPES, byteSize: 4) }
+  public var GRANT_SCOPE: String? { let o = _accessor.offset(VT.GRANT_SCOPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var GRANT_SCOPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GRANT_SCOPE) }
+  public var DELIVERY_PROTOCOL: String? { let o = _accessor.offset(VT.DELIVERY_PROTOCOL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DELIVERY_PROTOCOLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DELIVERY_PROTOCOL) }
+  public var FIELD_STREAM_POLICY: GrantFieldStreamPolicy? { let o = _accessor.offset(VT.FIELD_STREAM_POLICY); return o == 0 ? nil : GrantFieldStreamPolicy(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startProtectedDeliveryBinding(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(ENCRYPTED_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCRYPTED_CID, at: VT.ENCRYPTED_CID) }
+  public static func add(MANIFEST_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANIFEST_CID, at: VT.MANIFEST_CID) }
+  public static func add(CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_HASH, at: VT.CONTENT_HASH) }
+  public static func add(CONTENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_KEY_ID, at: VT.CONTENT_KEY_ID) }
+  public static func add(LICENSE_MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_MODULE_ID, at: VT.LICENSE_MODULE_ID) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(MODULE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_VERSION, at: VT.MODULE_VERSION) }
+  public static func addVectorOf(REQUIRED_SCOPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REQUIRED_SCOPES, at: VT.REQUIRED_SCOPES) }
+  public static func add(GRANT_SCOPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GRANT_SCOPE, at: VT.GRANT_SCOPE) }
+  public static func add(DELIVERY_PROTOCOL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELIVERY_PROTOCOL, at: VT.DELIVERY_PROTOCOL) }
+  public static func add(FIELD_STREAM_POLICY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIELD_STREAM_POLICY, at: VT.FIELD_STREAM_POLICY) }
+  public static func endProtectedDeliveryBinding(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createProtectedDeliveryBinding(
+    _ fbb: inout FlatBufferBuilder,
+    ENCRYPTED_CIDOffset ENCRYPTED_CID: Offset = Offset(),
+    MANIFEST_CIDOffset MANIFEST_CID: Offset = Offset(),
+    CONTENT_HASHOffset CONTENT_HASH: Offset = Offset(),
+    CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset(),
+    LICENSE_MODULE_IDOffset LICENSE_MODULE_ID: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    MODULE_VERSIONOffset MODULE_VERSION: Offset = Offset(),
+    REQUIRED_SCOPESVectorOffset REQUIRED_SCOPES: Offset = Offset(),
+    GRANT_SCOPEOffset GRANT_SCOPE: Offset = Offset(),
+    DELIVERY_PROTOCOLOffset DELIVERY_PROTOCOL: Offset = Offset(),
+    FIELD_STREAM_POLICYOffset FIELD_STREAM_POLICY: Offset = Offset()
+  ) -> Offset {
+    let __start = ProtectedDeliveryBinding.startProtectedDeliveryBinding(&fbb)
+    ProtectedDeliveryBinding.add(ENCRYPTED_CID: ENCRYPTED_CID, &fbb)
+    ProtectedDeliveryBinding.add(MANIFEST_CID: MANIFEST_CID, &fbb)
+    ProtectedDeliveryBinding.add(CONTENT_HASH: CONTENT_HASH, &fbb)
+    ProtectedDeliveryBinding.add(CONTENT_KEY_ID: CONTENT_KEY_ID, &fbb)
+    ProtectedDeliveryBinding.add(LICENSE_MODULE_ID: LICENSE_MODULE_ID, &fbb)
+    ProtectedDeliveryBinding.add(MODULE_ID: MODULE_ID, &fbb)
+    ProtectedDeliveryBinding.add(MODULE_VERSION: MODULE_VERSION, &fbb)
+    ProtectedDeliveryBinding.addVectorOf(REQUIRED_SCOPES: REQUIRED_SCOPES, &fbb)
+    ProtectedDeliveryBinding.add(GRANT_SCOPE: GRANT_SCOPE, &fbb)
+    ProtectedDeliveryBinding.add(DELIVERY_PROTOCOL: DELIVERY_PROTOCOL, &fbb)
+    ProtectedDeliveryBinding.add(FIELD_STREAM_POLICY: FIELD_STREAM_POLICY, &fbb)
+    return ProtectedDeliveryBinding.endProtectedDeliveryBinding(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ENCRYPTED_CID, fieldName: "ENCRYPTED_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MANIFEST_CID, fieldName: "MANIFEST_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTENT_HASH, fieldName: "CONTENT_HASH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTENT_KEY_ID, fieldName: "CONTENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE_MODULE_ID, fieldName: "LICENSE_MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_VERSION, fieldName: "MODULE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REQUIRED_SCOPES, fieldName: "REQUIRED_SCOPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.GRANT_SCOPE, fieldName: "GRANT_SCOPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DELIVERY_PROTOCOL, fieldName: "DELIVERY_PROTOCOL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FIELD_STREAM_POLICY, fieldName: "FIELD_STREAM_POLICY", required: false, type: ForwardOffset<GrantFieldStreamPolicy>.self)
+    _v.finish()
+  }
+}
+
+///  Provider reputation summary surfaced in marketplace listings.
+public struct ProviderReputation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$STF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ProviderReputation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TOTAL_SALES: VOffset = 4
+    static let AVERAGE_RATING_X10: VOffset = 6
+    static let TOTAL_RATINGS: VOffset = 8
+    static let UPTIME_PERCENTAGE_X100: VOffset = 10
+    static let AVG_DELIVERY_LATENCY_MS: VOffset = 12
+    static let DISPUTE_COUNT: VOffset = 14
+    static let PROVIDER_SINCE: VOffset = 16
+  }
+
+  public var TOTAL_SALES: UInt64 { let o = _accessor.offset(VT.TOTAL_SALES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var AVERAGE_RATING_X10: UInt16 { let o = _accessor.offset(VT.AVERAGE_RATING_X10); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var TOTAL_RATINGS: UInt32 { let o = _accessor.offset(VT.TOTAL_RATINGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var UPTIME_PERCENTAGE_X100: UInt16 { let o = _accessor.offset(VT.UPTIME_PERCENTAGE_X100); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public var AVG_DELIVERY_LATENCY_MS: UInt32 { let o = _accessor.offset(VT.AVG_DELIVERY_LATENCY_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var DISPUTE_COUNT: UInt32 { let o = _accessor.offset(VT.DISPUTE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var PROVIDER_SINCE: UInt64 { let o = _accessor.offset(VT.PROVIDER_SINCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startProviderReputation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(TOTAL_SALES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_SALES, def: 0, at: VT.TOTAL_SALES) }
+  public static func add(AVERAGE_RATING_X10: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVERAGE_RATING_X10, def: 0, at: VT.AVERAGE_RATING_X10) }
+  public static func add(TOTAL_RATINGS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_RATINGS, def: 0, at: VT.TOTAL_RATINGS) }
+  public static func add(UPTIME_PERCENTAGE_X100: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPTIME_PERCENTAGE_X100, def: 0, at: VT.UPTIME_PERCENTAGE_X100) }
+  public static func add(AVG_DELIVERY_LATENCY_MS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AVG_DELIVERY_LATENCY_MS, def: 0, at: VT.AVG_DELIVERY_LATENCY_MS) }
+  public static func add(DISPUTE_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPUTE_COUNT, def: 0, at: VT.DISPUTE_COUNT) }
+  public static func add(PROVIDER_SINCE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROVIDER_SINCE, def: 0, at: VT.PROVIDER_SINCE) }
+  public static func endProviderReputation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createProviderReputation(
+    _ fbb: inout FlatBufferBuilder,
+    TOTAL_SALES: UInt64 = 0,
+    AVERAGE_RATING_X10: UInt16 = 0,
+    TOTAL_RATINGS: UInt32 = 0,
+    UPTIME_PERCENTAGE_X100: UInt16 = 0,
+    AVG_DELIVERY_LATENCY_MS: UInt32 = 0,
+    DISPUTE_COUNT: UInt32 = 0,
+    PROVIDER_SINCE: UInt64 = 0
+  ) -> Offset {
+    let __start = ProviderReputation.startProviderReputation(&fbb)
+    ProviderReputation.add(TOTAL_SALES: TOTAL_SALES, &fbb)
+    ProviderReputation.add(AVERAGE_RATING_X10: AVERAGE_RATING_X10, &fbb)
+    ProviderReputation.add(TOTAL_RATINGS: TOTAL_RATINGS, &fbb)
+    ProviderReputation.add(UPTIME_PERCENTAGE_X100: UPTIME_PERCENTAGE_X100, &fbb)
+    ProviderReputation.add(AVG_DELIVERY_LATENCY_MS: AVG_DELIVERY_LATENCY_MS, &fbb)
+    ProviderReputation.add(DISPUTE_COUNT: DISPUTE_COUNT, &fbb)
+    ProviderReputation.add(PROVIDER_SINCE: PROVIDER_SINCE, &fbb)
+    return ProviderReputation.endProviderReputation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TOTAL_SALES, fieldName: "TOTAL_SALES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.AVERAGE_RATING_X10, fieldName: "AVERAGE_RATING_X10", required: false, type: UInt16.self)
+    try _v.visit(field: VT.TOTAL_RATINGS, fieldName: "TOTAL_RATINGS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.UPTIME_PERCENTAGE_X100, fieldName: "UPTIME_PERCENTAGE_X100", required: false, type: UInt16.self)
+    try _v.visit(field: VT.AVG_DELIVERY_LATENCY_MS, fieldName: "AVG_DELIVERY_LATENCY_MS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DISPUTE_COUNT, fieldName: "DISPUTE_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.PROVIDER_SINCE, fieldName: "PROVIDER_SINCE", required: false, type: UInt64.self)
+    _v.finish()
+  }
+}
 
 ///  Spatial coverage definition
 public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
@@ -66,6 +349,9 @@ public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, 
     static let TYPE: VOffset = 4
     static let REGIONS: VOffset = 6
     static let OBJECT_IDS: VOffset = 8
+    static let MIN_ALTITUDE_KM: VOffset = 10
+    static let MAX_ALTITUDE_KM: VOffset = 12
+    static let GEO_BOUNDS: VOffset = 14
   }
 
   ///  Type of coverage: "global", "region", "object_list"
@@ -75,21 +361,37 @@ public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, 
   public var REGIONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REGIONS, byteSize: 4) }
   ///  Specific NORAD IDs or catalog numbers
   public var OBJECT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.OBJECT_IDS, byteSize: 4) }
-  public static func startSpatialCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Minimum altitude in kilometers for altitude-bounded offerings
+  public var MIN_ALTITUDE_KM: Double { let o = _accessor.offset(VT.MIN_ALTITUDE_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum altitude in kilometers for altitude-bounded offerings
+  public var MAX_ALTITUDE_KM: Double { let o = _accessor.offset(VT.MAX_ALTITUDE_KM); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Bounding box as [min_lat, min_lon, max_lat, max_lon]
+  public var GEO_BOUNDS: FlatbufferVector<Double> { return _accessor.vector(at: VT.GEO_BOUNDS, byteSize: 8) }
+  public func withUnsafePointerToGeoBounds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.GEO_BOUNDS, body: body) }
+  public static func startSpatialCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
   public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VT.TYPE) }
   public static func addVectorOf(REGIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGIONS, at: VT.REGIONS) }
   public static func addVectorOf(OBJECT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_IDS, at: VT.OBJECT_IDS) }
+  public static func add(MIN_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ALTITUDE_KM, def: 0.0, at: VT.MIN_ALTITUDE_KM) }
+  public static func add(MAX_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE_KM, def: 0.0, at: VT.MAX_ALTITUDE_KM) }
+  public static func addVectorOf(GEO_BOUNDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEO_BOUNDS, at: VT.GEO_BOUNDS) }
   public static func endSpatialCoverage(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSpatialCoverage(
     _ fbb: inout FlatBufferBuilder,
     TYPEOffset TYPE: Offset = Offset(),
     REGIONSVectorOffset REGIONS: Offset = Offset(),
-    OBJECT_IDSVectorOffset OBJECT_IDS: Offset = Offset()
+    OBJECT_IDSVectorOffset OBJECT_IDS: Offset = Offset(),
+    MIN_ALTITUDE_KM: Double = 0.0,
+    MAX_ALTITUDE_KM: Double = 0.0,
+    GEO_BOUNDSVectorOffset GEO_BOUNDS: Offset = Offset()
   ) -> Offset {
     let __start = SpatialCoverage.startSpatialCoverage(&fbb)
     SpatialCoverage.add(TYPE: TYPE, &fbb)
     SpatialCoverage.addVectorOf(REGIONS: REGIONS, &fbb)
     SpatialCoverage.addVectorOf(OBJECT_IDS: OBJECT_IDS, &fbb)
+    SpatialCoverage.add(MIN_ALTITUDE_KM: MIN_ALTITUDE_KM, &fbb)
+    SpatialCoverage.add(MAX_ALTITUDE_KM: MAX_ALTITUDE_KM, &fbb)
+    SpatialCoverage.addVectorOf(GEO_BOUNDS: GEO_BOUNDS, &fbb)
     return SpatialCoverage.endSpatialCoverage(&fbb, start: __start)
   }
 
@@ -98,6 +400,9 @@ public struct SpatialCoverage: FlatBufferTable, FlatbuffersVectorInitializable, 
     try _v.visit(field: VT.TYPE, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.REGIONS, fieldName: "REGIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.OBJECT_IDS, fieldName: "OBJECT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MIN_ALTITUDE_KM, fieldName: "MIN_ALTITUDE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_ALTITUDE_KM, fieldName: "MAX_ALTITUDE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.GEO_BOUNDS, fieldName: "GEO_BOUNDS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -119,6 +424,7 @@ public struct TemporalCoverage: FlatBufferTable, FlatbuffersVectorInitializable,
     static let END_EPOCH: VOffset = 6
     static let UPDATE_FREQUENCY: VOffset = 8
     static let HISTORICAL_DEPTH: VOffset = 10
+    static let LATENCY_SECONDS: VOffset = 12
   }
 
   ///  Start epoch in ISO 8601 format
@@ -132,24 +438,29 @@ public struct TemporalCoverage: FlatBufferTable, FlatbuffersVectorInitializable,
   public var UPDATE_FREQUENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATE_FREQUENCY) }
   ///  Days of historical data available
   public var HISTORICAL_DEPTH: UInt32 { let o = _accessor.offset(VT.HISTORICAL_DEPTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startTemporalCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  ///  Typical provider latency in seconds
+  public var LATENCY_SECONDS: UInt32 { let o = _accessor.offset(VT.LATENCY_SECONDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startTemporalCoverage(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
   public static func add(START_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_EPOCH, at: VT.START_EPOCH) }
   public static func add(END_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_EPOCH, at: VT.END_EPOCH) }
   public static func add(UPDATE_FREQUENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATE_FREQUENCY, at: VT.UPDATE_FREQUENCY) }
   public static func add(HISTORICAL_DEPTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORICAL_DEPTH, def: 0, at: VT.HISTORICAL_DEPTH) }
+  public static func add(LATENCY_SECONDS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATENCY_SECONDS, def: 0, at: VT.LATENCY_SECONDS) }
   public static func endTemporalCoverage(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createTemporalCoverage(
     _ fbb: inout FlatBufferBuilder,
     START_EPOCHOffset START_EPOCH: Offset = Offset(),
     END_EPOCHOffset END_EPOCH: Offset = Offset(),
     UPDATE_FREQUENCYOffset UPDATE_FREQUENCY: Offset = Offset(),
-    HISTORICAL_DEPTH: UInt32 = 0
+    HISTORICAL_DEPTH: UInt32 = 0,
+    LATENCY_SECONDS: UInt32 = 0
   ) -> Offset {
     let __start = TemporalCoverage.startTemporalCoverage(&fbb)
     TemporalCoverage.add(START_EPOCH: START_EPOCH, &fbb)
     TemporalCoverage.add(END_EPOCH: END_EPOCH, &fbb)
     TemporalCoverage.add(UPDATE_FREQUENCY: UPDATE_FREQUENCY, &fbb)
     TemporalCoverage.add(HISTORICAL_DEPTH: HISTORICAL_DEPTH, &fbb)
+    TemporalCoverage.add(LATENCY_SECONDS: LATENCY_SECONDS, &fbb)
     return TemporalCoverage.endTemporalCoverage(&fbb, start: __start)
   }
 
@@ -159,6 +470,7 @@ public struct TemporalCoverage: FlatBufferTable, FlatbuffersVectorInitializable,
     try _v.visit(field: VT.END_EPOCH, fieldName: "END_EPOCH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.UPDATE_FREQUENCY, fieldName: "UPDATE_FREQUENCY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.HISTORICAL_DEPTH, fieldName: "HISTORICAL_DEPTH", required: false, type: UInt32.self)
+    try _v.visit(field: VT.LATENCY_SECONDS, fieldName: "LATENCY_SECONDS", required: false, type: UInt32.self)
     _v.finish()
   }
 }
@@ -226,6 +538,8 @@ public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Veri
     static let DURATION_DAYS: VOffset = 10
     static let RATE_LIMIT: VOffset = 12
     static let FEATURES: VOffset = 14
+    static let MAX_RECORDS_PER_REQUEST: VOffset = 16
+    static let DESCRIPTION: VOffset = 18
   }
 
   ///  Tier name, e.g., "Basic", "Pro", "Enterprise"
@@ -242,13 +556,20 @@ public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   public var RATE_LIMIT: UInt32 { let o = _accessor.offset(VT.RATE_LIMIT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  List of features included in this tier
   public var FEATURES: FlatbufferVector<String?> { return _accessor.vector(at: VT.FEATURES, byteSize: 4) }
-  public static func startPricingTier(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  ///  Maximum records returned per request
+  public var MAX_RECORDS_PER_REQUEST: UInt32 { let o = _accessor.offset(VT.MAX_RECORDS_PER_REQUEST); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Human-readable tier description
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startPricingTier(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(PRICE_AMOUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PRICE_AMOUNT, def: 0, at: VT.PRICE_AMOUNT) }
   public static func add(PRICE_CURRENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRICE_CURRENCY, at: VT.PRICE_CURRENCY) }
   public static func add(DURATION_DAYS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DURATION_DAYS, def: 0, at: VT.DURATION_DAYS) }
   public static func add(RATE_LIMIT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_LIMIT, def: 0, at: VT.RATE_LIMIT) }
   public static func addVectorOf(FEATURES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FEATURES, at: VT.FEATURES) }
+  public static func add(MAX_RECORDS_PER_REQUEST: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_RECORDS_PER_REQUEST, def: 0, at: VT.MAX_RECORDS_PER_REQUEST) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
   public static func endPricingTier(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPricingTier(
     _ fbb: inout FlatBufferBuilder,
@@ -257,7 +578,9 @@ public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Veri
     PRICE_CURRENCYOffset PRICE_CURRENCY: Offset = Offset(),
     DURATION_DAYS: UInt32 = 0,
     RATE_LIMIT: UInt32 = 0,
-    FEATURESVectorOffset FEATURES: Offset = Offset()
+    FEATURESVectorOffset FEATURES: Offset = Offset(),
+    MAX_RECORDS_PER_REQUEST: UInt32 = 0,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
   ) -> Offset {
     let __start = PricingTier.startPricingTier(&fbb)
     PricingTier.add(NAME: NAME, &fbb)
@@ -266,6 +589,8 @@ public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Veri
     PricingTier.add(DURATION_DAYS: DURATION_DAYS, &fbb)
     PricingTier.add(RATE_LIMIT: RATE_LIMIT, &fbb)
     PricingTier.addVectorOf(FEATURES: FEATURES, &fbb)
+    PricingTier.add(MAX_RECORDS_PER_REQUEST: MAX_RECORDS_PER_REQUEST, &fbb)
+    PricingTier.add(DESCRIPTION: DESCRIPTION, &fbb)
     return PricingTier.endPricingTier(&fbb, start: __start)
   }
 
@@ -277,6 +602,8 @@ public struct PricingTier: FlatBufferTable, FlatbuffersVectorInitializable, Veri
     try _v.visit(field: VT.DURATION_DAYS, fieldName: "DURATION_DAYS", required: false, type: UInt32.self)
     try _v.visit(field: VT.RATE_LIMIT, fieldName: "RATE_LIMIT", required: false, type: UInt32.self)
     try _v.visit(field: VT.FEATURES, fieldName: "FEATURES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.MAX_RECORDS_PER_REQUEST, fieldName: "MAX_RECORDS_PER_REQUEST", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -310,6 +637,17 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let UPDATED_AT: VOffset = 30
     static let ACTIVE: VOffset = 32
     static let SIGNATURE: VOffset = 34
+    static let LISTING_KIND: VOffset = 36
+    static let TAGS: VOffset = 38
+    static let SAMPLE_RECORD_COUNT: VOffset = 40
+    static let DELIVERY_METHODS: VOffset = 42
+    static let PROTECTED_DELIVERY: VOffset = 44
+    static let REPUTATION: VOffset = 46
+    static let VERSION: VOffset = 48
+    static let EXPIRES_AT: VOffset = 50
+    static let TERMS_CID: VOffset = 52
+    static let LICENSE: VOffset = 54
+    static let SOURCE_PEER_ID: VOffset = 56
   }
 
   ///  Unique identifier for the listing
@@ -351,7 +689,32 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Ed25519 signature from provider
   public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
   public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
-  public static func startSTF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  Listing category: data stream or WASM module
+  public var LISTING_KIND: listingCategory { let o = _accessor.offset(VT.LISTING_KIND); return o == 0 ? .datastream : listingCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .datastream }
+  ///  Search tags
+  public var TAGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.TAGS, byteSize: 4) }
+  ///  Number of records in sample data, when available
+  public var SAMPLE_RECORD_COUNT: UInt32 { let o = _accessor.offset(VT.SAMPLE_RECORD_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Supported delivery methods
+  public var DELIVERY_METHODS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DELIVERY_METHODS, byteSize: 4) }
+  ///  Protected delivery metadata for encrypted artifacts or streams
+  public var PROTECTED_DELIVERY: ProtectedDeliveryBinding? { let o = _accessor.offset(VT.PROTECTED_DELIVERY); return o == 0 ? nil : ProtectedDeliveryBinding(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Provider reputation summary
+  public var REPUTATION: ProviderReputation? { let o = _accessor.offset(VT.REPUTATION); return o == 0 ? nil : ProviderReputation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Listing version
+  public var VERSION: UInt32 { let o = _accessor.offset(VT.VERSION); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Unix timestamp when the listing expires, or 0 for no expiry
+  public var EXPIRES_AT: UInt64 { let o = _accessor.offset(VT.EXPIRES_AT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Terms document CID
+  public var TERMS_CID: String? { let o = _accessor.offset(VT.TERMS_CID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TERMS_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TERMS_CID) }
+  ///  License label or SPDX-style identifier
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  Peer ID this listing was sourced from when discovered remotely
+  public var SOURCE_PEER_ID: String? { let o = _accessor.offset(VT.SOURCE_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_PEER_ID) }
+  public static func startSTF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
   public static func add(LISTING_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LISTING_ID, at: VT.LISTING_ID) }
   public static func add(PROVIDER_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_PEER_ID, at: VT.PROVIDER_PEER_ID) }
   public static func add(PROVIDER_EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_EPM_CID, at: VT.PROVIDER_EPM_CID) }
@@ -370,6 +733,17 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(ACTIVE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTIVE, def: false,
    at: VT.ACTIVE) }
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(LISTING_KIND: listingCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LISTING_KIND.rawValue, def: 0, at: VT.LISTING_KIND) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VT.TAGS) }
+  public static func add(SAMPLE_RECORD_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAMPLE_RECORD_COUNT, def: 0, at: VT.SAMPLE_RECORD_COUNT) }
+  public static func addVectorOf(DELIVERY_METHODS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DELIVERY_METHODS, at: VT.DELIVERY_METHODS) }
+  public static func add(PROTECTED_DELIVERY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROTECTED_DELIVERY, at: VT.PROTECTED_DELIVERY) }
+  public static func add(REPUTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPUTATION, at: VT.REPUTATION) }
+  public static func add(VERSION: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VERSION, def: 0, at: VT.VERSION) }
+  public static func add(EXPIRES_AT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXPIRES_AT, def: 0, at: VT.EXPIRES_AT) }
+  public static func add(TERMS_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERMS_CID, at: VT.TERMS_CID) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(SOURCE_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_PEER_ID, at: VT.SOURCE_PEER_ID) }
   public static func endSTF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 10]); return end }
   public static func createSTF(
     _ fbb: inout FlatBufferBuilder,
@@ -388,7 +762,18 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CREATED_AT: UInt64 = 0,
     UPDATED_AT: UInt64 = 0,
     ACTIVE: Bool = false,
-    SIGNATUREVectorOffset SIGNATURE: Offset = Offset()
+    SIGNATUREVectorOffset SIGNATURE: Offset = Offset(),
+    LISTING_KIND: listingCategory = .datastream,
+    TAGSVectorOffset TAGS: Offset = Offset(),
+    SAMPLE_RECORD_COUNT: UInt32 = 0,
+    DELIVERY_METHODSVectorOffset DELIVERY_METHODS: Offset = Offset(),
+    PROTECTED_DELIVERYOffset PROTECTED_DELIVERY: Offset = Offset(),
+    REPUTATIONOffset REPUTATION: Offset = Offset(),
+    VERSION: UInt32 = 0,
+    EXPIRES_AT: UInt64 = 0,
+    TERMS_CIDOffset TERMS_CID: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    SOURCE_PEER_IDOffset SOURCE_PEER_ID: Offset = Offset()
   ) -> Offset {
     let __start = STF.startSTF(&fbb)
     STF.add(LISTING_ID: LISTING_ID, &fbb)
@@ -407,6 +792,17 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     STF.add(UPDATED_AT: UPDATED_AT, &fbb)
     STF.add(ACTIVE: ACTIVE, &fbb)
     STF.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    STF.add(LISTING_KIND: LISTING_KIND, &fbb)
+    STF.addVectorOf(TAGS: TAGS, &fbb)
+    STF.add(SAMPLE_RECORD_COUNT: SAMPLE_RECORD_COUNT, &fbb)
+    STF.addVectorOf(DELIVERY_METHODS: DELIVERY_METHODS, &fbb)
+    STF.add(PROTECTED_DELIVERY: PROTECTED_DELIVERY, &fbb)
+    STF.add(REPUTATION: REPUTATION, &fbb)
+    STF.add(VERSION: VERSION, &fbb)
+    STF.add(EXPIRES_AT: EXPIRES_AT, &fbb)
+    STF.add(TERMS_CID: TERMS_CID, &fbb)
+    STF.add(LICENSE: LICENSE, &fbb)
+    STF.add(SOURCE_PEER_ID: SOURCE_PEER_ID, &fbb)
     return STF.endSTF(&fbb, start: __start)
   }
 
@@ -428,6 +824,17 @@ public struct STF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: UInt64.self)
     try _v.visit(field: VT.ACTIVE, fieldName: "ACTIVE", required: false, type: Bool.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.LISTING_KIND, fieldName: "LISTING_KIND", required: false, type: listingCategory.self)
+    try _v.visit(field: VT.TAGS, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SAMPLE_RECORD_COUNT, fieldName: "SAMPLE_RECORD_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.DELIVERY_METHODS, fieldName: "DELIVERY_METHODS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.PROTECTED_DELIVERY, fieldName: "PROTECTED_DELIVERY", required: false, type: ForwardOffset<ProtectedDeliveryBinding>.self)
+    try _v.visit(field: VT.REPUTATION, fieldName: "REPUTATION", required: false, type: ForwardOffset<ProviderReputation>.self)
+    try _v.visit(field: VT.VERSION, fieldName: "VERSION", required: false, type: UInt32.self)
+    try _v.visit(field: VT.EXPIRES_AT, fieldName: "EXPIRES_AT", required: false, type: UInt64.self)
+    try _v.visit(field: VT.TERMS_CID, fieldName: "TERMS_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_PEER_ID, fieldName: "SOURCE_PEER_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

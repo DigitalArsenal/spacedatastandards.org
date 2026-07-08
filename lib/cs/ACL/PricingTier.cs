@@ -42,6 +42,16 @@ public struct PricingTier : IFlatbufferObject
   /// List of features included in this tier
   public string FEATURES(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int FEATURESLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Maximum records returned per request
+  public uint MAX_RECORDS_PER_REQUEST { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Human-readable tier description
+  public string DESCRIPTION { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(18); }
 
   public static Offset<PricingTier> CreatePricingTier(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -49,9 +59,13 @@ public struct PricingTier : IFlatbufferObject
       StringOffset PRICE_CURRENCYOffset = default(StringOffset),
       uint DURATION_DAYS = 0,
       uint RATE_LIMIT = 0,
-      VectorOffset FEATURESOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      VectorOffset FEATURESOffset = default(VectorOffset),
+      uint MAX_RECORDS_PER_REQUEST = 0,
+      StringOffset DESCRIPTIONOffset = default(StringOffset)) {
+    builder.StartTable(8);
     PricingTier.AddPRICE_AMOUNT(builder, PRICE_AMOUNT);
+    PricingTier.AddDESCRIPTION(builder, DESCRIPTIONOffset);
+    PricingTier.AddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST);
     PricingTier.AddFEATURES(builder, FEATURESOffset);
     PricingTier.AddRATE_LIMIT(builder, RATE_LIMIT);
     PricingTier.AddDURATION_DAYS(builder, DURATION_DAYS);
@@ -60,7 +74,7 @@ public struct PricingTier : IFlatbufferObject
     return PricingTier.EndPricingTier(builder);
   }
 
-  public static void StartPricingTier(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartPricingTier(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddPRICE_AMOUNT(FlatBufferBuilder builder, ulong PRICE_AMOUNT) { builder.AddUlong(1, PRICE_AMOUNT, 0); }
   public static void AddPRICE_CURRENCY(FlatBufferBuilder builder, StringOffset PRICE_CURRENCYOffset) { builder.AddOffset(2, PRICE_CURRENCYOffset.Value, 0); }
@@ -72,6 +86,8 @@ public struct PricingTier : IFlatbufferObject
   public static VectorOffset CreateFEATURESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateFEATURESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartFEATURESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAX_RECORDS_PER_REQUEST(FlatBufferBuilder builder, uint MAX_RECORDS_PER_REQUEST) { builder.AddUint(6, MAX_RECORDS_PER_REQUEST, 0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(7, DESCRIPTIONOffset.Value, 0); }
   public static Offset<PricingTier> EndPricingTier(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PricingTier>(o);
@@ -89,6 +105,8 @@ public struct PricingTier : IFlatbufferObject
     _o.RATE_LIMIT = this.RATE_LIMIT;
     _o.FEATURES = new List<string>();
     for (var _j = 0; _j < this.FEATURESLength; ++_j) {_o.FEATURES.Add(this.FEATURES(_j));}
+    _o.MAX_RECORDS_PER_REQUEST = this.MAX_RECORDS_PER_REQUEST;
+    _o.DESCRIPTION = this.DESCRIPTION;
   }
   public static Offset<PricingTier> Pack(FlatBufferBuilder builder, PricingTierT _o) {
     if (_o == null) return default(Offset<PricingTier>);
@@ -100,6 +118,7 @@ public struct PricingTier : IFlatbufferObject
       for (var _j = 0; _j < __FEATURES.Length; ++_j) { __FEATURES[_j] = builder.CreateString(_o.FEATURES[_j]); }
       _FEATURES = CreateFEATURESVector(builder, __FEATURES);
     }
+    var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     return CreatePricingTier(
       builder,
       _NAME,
@@ -107,7 +126,9 @@ public struct PricingTier : IFlatbufferObject
       _PRICE_CURRENCY,
       _o.DURATION_DAYS,
       _o.RATE_LIMIT,
-      _FEATURES);
+      _FEATURES,
+      _o.MAX_RECORDS_PER_REQUEST,
+      _DESCRIPTION);
   }
 }
 
@@ -119,6 +140,8 @@ public class PricingTierT
   public uint DURATION_DAYS { get; set; }
   public uint RATE_LIMIT { get; set; }
   public List<string> FEATURES { get; set; }
+  public uint MAX_RECORDS_PER_REQUEST { get; set; }
+  public string DESCRIPTION { get; set; }
 
   public PricingTierT() {
     this.NAME = null;
@@ -127,6 +150,8 @@ public class PricingTierT
     this.DURATION_DAYS = 0;
     this.RATE_LIMIT = 0;
     this.FEATURES = null;
+    this.MAX_RECORDS_PER_REQUEST = 0;
+    this.DESCRIPTION = null;
   }
 }
 
@@ -142,6 +167,8 @@ static public class PricingTierVerify
       && verifier.VerifyField(tablePos, 10 /*DURATION_DAYS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 12 /*RATE_LIMIT*/, 4 /*uint*/, 4, false)
       && verifier.VerifyVectorOfStrings(tablePos, 14 /*FEATURES*/, false)
+      && verifier.VerifyField(tablePos, 16 /*MAX_RECORDS_PER_REQUEST*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 18 /*DESCRIPTION*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

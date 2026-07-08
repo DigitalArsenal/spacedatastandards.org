@@ -6,7 +6,10 @@ import * as flatbuffers from 'flatbuffers';
 
 import { DataCoverage, DataCoverageT } from './DataCoverage.js';
 import { PricingTier, PricingTierT } from './PricingTier.js';
+import { ProtectedDeliveryBinding, ProtectedDeliveryBindingT } from './ProtectedDeliveryBinding.js';
+import { ProviderReputation, ProviderReputationT } from './ProviderReputation.js';
 import { accessCategory } from './accessCategory.js';
+import { listingCategory } from './listingCategory.js';
 import { paymentMethod } from './paymentMethod.js';
 
 
@@ -207,8 +210,116 @@ signatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Listing category: data stream or WASM module
+ */
+LISTING_KIND():listingCategory {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : listingCategory.DataStream;
+}
+
+/**
+ * Search tags
+ */
+TAGS(index: number):string
+TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+tagsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of records in sample data, when available
+ */
+SAMPLE_RECORD_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Supported delivery methods
+ */
+DELIVERY_METHODS(index: number):string
+DELIVERY_METHODS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+DELIVERY_METHODS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+deliveryMethodsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Protected delivery metadata for encrypted artifacts or streams
+ */
+PROTECTED_DELIVERY(obj?:ProtectedDeliveryBinding):ProtectedDeliveryBinding|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new ProtectedDeliveryBinding()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Provider reputation summary
+ */
+REPUTATION(obj?:ProviderReputation):ProviderReputation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new ProviderReputation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Listing version
+ */
+VERSION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Unix timestamp when the listing expires, or 0 for no expiry
+ */
+EXPIRES_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Terms document CID
+ */
+TERMS_CID():string|null
+TERMS_CID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TERMS_CID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * License label or SPDX-style identifier
+ */
+LICENSE():string|null
+LICENSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LICENSE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Peer ID this listing was sourced from when discovered remotely
+ */
+SOURCE_PEER_ID():string|null
+SOURCE_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSTF(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(27);
 }
 
 static addListingId(builder:flatbuffers.Builder, LISTING_IDOffset:flatbuffers.Offset) {
@@ -323,6 +434,74 @@ static startSignatureVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addListingKind(builder:flatbuffers.Builder, LISTING_KIND:listingCategory) {
+  builder.addFieldInt8(16, LISTING_KIND, listingCategory.DataStream);
+}
+
+static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, TAGSOffset, 0);
+}
+
+static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSampleRecordCount(builder:flatbuffers.Builder, SAMPLE_RECORD_COUNT:number) {
+  builder.addFieldInt32(18, SAMPLE_RECORD_COUNT, 0);
+}
+
+static addDeliveryMethods(builder:flatbuffers.Builder, DELIVERY_METHODSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, DELIVERY_METHODSOffset, 0);
+}
+
+static createDeliveryMethodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDeliveryMethodsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addProtectedDelivery(builder:flatbuffers.Builder, PROTECTED_DELIVERYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, PROTECTED_DELIVERYOffset, 0);
+}
+
+static addReputation(builder:flatbuffers.Builder, REPUTATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, REPUTATIONOffset, 0);
+}
+
+static addVersion(builder:flatbuffers.Builder, VERSION:number) {
+  builder.addFieldInt32(22, VERSION, 0);
+}
+
+static addExpiresAt(builder:flatbuffers.Builder, EXPIRES_AT:bigint) {
+  builder.addFieldInt64(23, EXPIRES_AT, BigInt('0'));
+}
+
+static addTermsCid(builder:flatbuffers.Builder, TERMS_CIDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, TERMS_CIDOffset, 0);
+}
+
+static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, LICENSEOffset, 0);
+}
+
+static addSourcePeerId(builder:flatbuffers.Builder, SOURCE_PEER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, SOURCE_PEER_IDOffset, 0);
+}
+
 static endSTF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LISTING_ID
@@ -357,7 +536,18 @@ unpack(): STFT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.ACTIVE(),
-    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength())
+    this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
+    this.LISTING_KIND(),
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
+    this.SAMPLE_RECORD_COUNT(),
+    this.bb!.createScalarList<string>(this.DELIVERY_METHODS.bind(this), this.deliveryMethodsLength()),
+    (this.PROTECTED_DELIVERY() !== null ? this.PROTECTED_DELIVERY()!.unpack() : null),
+    (this.REPUTATION() !== null ? this.REPUTATION()!.unpack() : null),
+    this.VERSION(),
+    this.EXPIRES_AT(),
+    this.TERMS_CID(),
+    this.LICENSE(),
+    this.SOURCE_PEER_ID()
   );
 }
 
@@ -379,6 +569,17 @@ unpackTo(_o: STFT): void {
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.ACTIVE = this.ACTIVE();
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
+  _o.LISTING_KIND = this.LISTING_KIND();
+  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
+  _o.SAMPLE_RECORD_COUNT = this.SAMPLE_RECORD_COUNT();
+  _o.DELIVERY_METHODS = this.bb!.createScalarList<string>(this.DELIVERY_METHODS.bind(this), this.deliveryMethodsLength());
+  _o.PROTECTED_DELIVERY = (this.PROTECTED_DELIVERY() !== null ? this.PROTECTED_DELIVERY()!.unpack() : null);
+  _o.REPUTATION = (this.REPUTATION() !== null ? this.REPUTATION()!.unpack() : null);
+  _o.VERSION = this.VERSION();
+  _o.EXPIRES_AT = this.EXPIRES_AT();
+  _o.TERMS_CID = this.TERMS_CID();
+  _o.LICENSE = this.LICENSE();
+  _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID();
 }
 }
 
@@ -399,7 +600,18 @@ constructor(
   public CREATED_AT: bigint = BigInt('0'),
   public UPDATED_AT: bigint = BigInt('0'),
   public ACTIVE: boolean = false,
-  public SIGNATURE: (number)[] = []
+  public SIGNATURE: (number)[] = [],
+  public LISTING_KIND: listingCategory = listingCategory.DataStream,
+  public TAGS: (string)[] = [],
+  public SAMPLE_RECORD_COUNT: number = 0,
+  public DELIVERY_METHODS: (string)[] = [],
+  public PROTECTED_DELIVERY: ProtectedDeliveryBindingT|null = null,
+  public REPUTATION: ProviderReputationT|null = null,
+  public VERSION: number = 0,
+  public EXPIRES_AT: bigint = BigInt('0'),
+  public TERMS_CID: string|Uint8Array|null = null,
+  public LICENSE: string|Uint8Array|null = null,
+  public SOURCE_PEER_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -415,6 +627,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PRICING = STF.createPricingVector(builder, builder.createObjectOffsetList(this.PRICING));
   const ACCEPTED_PAYMENTS = STF.createAcceptedPaymentsVector(builder, this.ACCEPTED_PAYMENTS);
   const SIGNATURE = STF.createSignatureVector(builder, this.SIGNATURE);
+  const TAGS = STF.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
+  const DELIVERY_METHODS = STF.createDeliveryMethodsVector(builder, builder.createObjectOffsetList(this.DELIVERY_METHODS));
+  const PROTECTED_DELIVERY = (this.PROTECTED_DELIVERY !== null ? this.PROTECTED_DELIVERY!.pack(builder) : 0);
+  const REPUTATION = (this.REPUTATION !== null ? this.REPUTATION!.pack(builder) : 0);
+  const TERMS_CID = (this.TERMS_CID !== null ? builder.createString(this.TERMS_CID!) : 0);
+  const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
+  const SOURCE_PEER_ID = (this.SOURCE_PEER_ID !== null ? builder.createString(this.SOURCE_PEER_ID!) : 0);
 
   STF.startSTF(builder);
   STF.addListingId(builder, LISTING_ID);
@@ -433,6 +652,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   STF.addUpdatedAt(builder, this.UPDATED_AT);
   STF.addActive(builder, this.ACTIVE);
   STF.addSignature(builder, SIGNATURE);
+  STF.addListingKind(builder, this.LISTING_KIND);
+  STF.addTags(builder, TAGS);
+  STF.addSampleRecordCount(builder, this.SAMPLE_RECORD_COUNT);
+  STF.addDeliveryMethods(builder, DELIVERY_METHODS);
+  STF.addProtectedDelivery(builder, PROTECTED_DELIVERY);
+  STF.addReputation(builder, REPUTATION);
+  STF.addVersion(builder, this.VERSION);
+  STF.addExpiresAt(builder, this.EXPIRES_AT);
+  STF.addTermsCid(builder, TERMS_CID);
+  STF.addLicense(builder, LICENSE);
+  STF.addSourcePeerId(builder, SOURCE_PEER_ID);
 
   return STF.endSTF(builder);
 }

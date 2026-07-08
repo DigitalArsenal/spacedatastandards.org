@@ -234,8 +234,209 @@ func (rcv *REV) MutateReviewerSignature(j int, n byte) bool {
 	return rcv.MutateREVIEWER_SIGNATURE(j, n)
 }
 
+/// Data quality metrics supplied by reviewer
+func (rcv *REV) QUALITY_METRICS(obj *DataQualityMetrics) *DataQualityMetrics {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(DataQualityMetrics)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *REV) QualityMetrics(obj *DataQualityMetrics) *DataQualityMetrics {
+	return rcv.QUALITY_METRICS(obj)
+}
+
+/// Data quality metrics supplied by reviewer
+/// Whether the review is tied to a verified purchase
+func (rcv *REV) VERIFIED_PURCHASE() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *REV) VerifiedPurchase() bool {
+	return rcv.VERIFIED_PURCHASE()
+}
+
+/// Whether the review is tied to a verified purchase
+func (rcv *REV) MutateVERIFIED_PURCHASE(n bool) bool {
+	return rcv._tab.MutateBoolSlot(24, n)
+}
+
+func (rcv *REV) MutateVerifiedPurchase(n bool) bool {
+	return rcv.MutateVERIFIED_PURCHASE(n)
+}
+
+/// Unix timestamp when the review was last updated
+func (rcv *REV) UPDATED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *REV) UpdatedAt() uint64 {
+	return rcv.UPDATED_AT()
+}
+
+/// Unix timestamp when the review was last updated
+func (rcv *REV) MutateUPDATED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(26, n)
+}
+
+func (rcv *REV) MutateUpdatedAt(n uint64) bool {
+	return rcv.MutateUPDATED_AT(n)
+}
+
+/// Review lifecycle status
+func (rcv *REV) STATUS() reviewLifecycleStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return reviewLifecycleStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *REV) Status() reviewLifecycleStatus {
+	return rcv.STATUS()
+}
+
+/// Review lifecycle status
+func (rcv *REV) MutateSTATUS(n reviewLifecycleStatus) bool {
+	return rcv._tab.MutateInt8Slot(28, int8(n))
+}
+
+func (rcv *REV) MutateStatus(n reviewLifecycleStatus) bool {
+	return rcv.MutateSTATUS(n)
+}
+
+/// Helpful vote count
+func (rcv *REV) HELPFUL_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *REV) HelpfulCount() uint32 {
+	return rcv.HELPFUL_COUNT()
+}
+
+/// Helpful vote count
+func (rcv *REV) MutateHELPFUL_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(30, n)
+}
+
+func (rcv *REV) MutateHelpfulCount(n uint32) bool {
+	return rcv.MutateHELPFUL_COUNT(n)
+}
+
+/// Not-helpful vote count
+func (rcv *REV) NOT_HELPFUL_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *REV) NotHelpfulCount() uint32 {
+	return rcv.NOT_HELPFUL_COUNT()
+}
+
+/// Not-helpful vote count
+func (rcv *REV) MutateNOT_HELPFUL_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(32, n)
+}
+
+func (rcv *REV) MutateNotHelpfulCount(n uint32) bool {
+	return rcv.MutateNOT_HELPFUL_COUNT(n)
+}
+
+/// Provider response body
+func (rcv *REV) PROVIDER_RESPONSE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *REV) ProviderResponse() []byte {
+	return rcv.PROVIDER_RESPONSE()
+}
+
+/// Provider response body
+/// Unix timestamp when provider responded
+func (rcv *REV) PROVIDER_RESPONSE_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *REV) ProviderResponseAt() uint64 {
+	return rcv.PROVIDER_RESPONSE_AT()
+}
+
+/// Unix timestamp when provider responded
+func (rcv *REV) MutatePROVIDER_RESPONSE_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(36, n)
+}
+
+func (rcv *REV) MutateProviderResponseAt(n uint64) bool {
+	return rcv.MutatePROVIDER_RESPONSE_AT(n)
+}
+
+/// Number of moderation flags
+func (rcv *REV) FLAGGED_COUNT() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *REV) FlaggedCount() uint32 {
+	return rcv.FLAGGED_COUNT()
+}
+
+/// Number of moderation flags
+func (rcv *REV) MutateFLAGGED_COUNT(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(38, n)
+}
+
+func (rcv *REV) MutateFlaggedCount(n uint32) bool {
+	return rcv.MutateFLAGGED_COUNT(n)
+}
+
+/// Moderation notes
+func (rcv *REV) MODERATION_NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *REV) ModerationNotes() []byte {
+	return rcv.MODERATION_NOTES()
+}
+
+/// Moderation notes
 func REVStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(19)
 }
 func REVAddREVIEW_ID(builder *flatbuffers.Builder, REVIEW_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REVIEW_ID), 0)
@@ -296,6 +497,66 @@ func REVStartREVIEWER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int
 }
 func REVStartReviewerSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return REVStartREVIEWER_SIGNATUREVector(builder, numElems)
+}
+func REVAddQUALITY_METRICS(builder *flatbuffers.Builder, QUALITY_METRICS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(QUALITY_METRICS), 0)
+}
+func REVAddQualityMetrics(builder *flatbuffers.Builder, QUALITY_METRICS flatbuffers.UOffsetT) {
+	REVAddQUALITY_METRICS(builder, QUALITY_METRICS)
+}
+func REVAddVERIFIED_PURCHASE(builder *flatbuffers.Builder, VERIFIED_PURCHASE bool) {
+	builder.PrependBoolSlot(10, VERIFIED_PURCHASE, false)
+}
+func REVAddVerifiedPurchase(builder *flatbuffers.Builder, VERIFIED_PURCHASE bool) {
+	REVAddVERIFIED_PURCHASE(builder, VERIFIED_PURCHASE)
+}
+func REVAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	builder.PrependUint64Slot(11, UPDATED_AT, 0)
+}
+func REVAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	REVAddUPDATED_AT(builder, UPDATED_AT)
+}
+func REVAddSTATUS(builder *flatbuffers.Builder, STATUS reviewLifecycleStatus) {
+	builder.PrependInt8Slot(12, int8(STATUS), 0)
+}
+func REVAddStatus(builder *flatbuffers.Builder, STATUS reviewLifecycleStatus) {
+	REVAddSTATUS(builder, STATUS)
+}
+func REVAddHELPFUL_COUNT(builder *flatbuffers.Builder, HELPFUL_COUNT uint32) {
+	builder.PrependUint32Slot(13, HELPFUL_COUNT, 0)
+}
+func REVAddHelpfulCount(builder *flatbuffers.Builder, HELPFUL_COUNT uint32) {
+	REVAddHELPFUL_COUNT(builder, HELPFUL_COUNT)
+}
+func REVAddNOT_HELPFUL_COUNT(builder *flatbuffers.Builder, NOT_HELPFUL_COUNT uint32) {
+	builder.PrependUint32Slot(14, NOT_HELPFUL_COUNT, 0)
+}
+func REVAddNotHelpfulCount(builder *flatbuffers.Builder, NOT_HELPFUL_COUNT uint32) {
+	REVAddNOT_HELPFUL_COUNT(builder, NOT_HELPFUL_COUNT)
+}
+func REVAddPROVIDER_RESPONSE(builder *flatbuffers.Builder, PROVIDER_RESPONSE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PROVIDER_RESPONSE), 0)
+}
+func REVAddProviderResponse(builder *flatbuffers.Builder, PROVIDER_RESPONSE flatbuffers.UOffsetT) {
+	REVAddPROVIDER_RESPONSE(builder, PROVIDER_RESPONSE)
+}
+func REVAddPROVIDER_RESPONSE_AT(builder *flatbuffers.Builder, PROVIDER_RESPONSE_AT uint64) {
+	builder.PrependUint64Slot(16, PROVIDER_RESPONSE_AT, 0)
+}
+func REVAddProviderResponseAt(builder *flatbuffers.Builder, PROVIDER_RESPONSE_AT uint64) {
+	REVAddPROVIDER_RESPONSE_AT(builder, PROVIDER_RESPONSE_AT)
+}
+func REVAddFLAGGED_COUNT(builder *flatbuffers.Builder, FLAGGED_COUNT uint32) {
+	builder.PrependUint32Slot(17, FLAGGED_COUNT, 0)
+}
+func REVAddFlaggedCount(builder *flatbuffers.Builder, FLAGGED_COUNT uint32) {
+	REVAddFLAGGED_COUNT(builder, FLAGGED_COUNT)
+}
+func REVAddMODERATION_NOTES(builder *flatbuffers.Builder, MODERATION_NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(MODERATION_NOTES), 0)
+}
+func REVAddModerationNotes(builder *flatbuffers.Builder, MODERATION_NOTES flatbuffers.UOffsetT) {
+	REVAddMODERATION_NOTES(builder, MODERATION_NOTES)
 }
 func REVEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -86,8 +86,26 @@ featuresLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Maximum records returned per request
+ */
+MAX_RECORDS_PER_REQUEST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Human-readable tier description
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startPricingTier(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(8);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -126,12 +144,20 @@ static startFeaturesVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addMaxRecordsPerRequest(builder:flatbuffers.Builder, MAX_RECORDS_PER_REQUEST:number) {
+  builder.addFieldInt32(6, MAX_RECORDS_PER_REQUEST, 0);
+}
+
+static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, DESCRIPTIONOffset, 0);
+}
+
 static endPricingTier(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPricingTier(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, PRICE_AMOUNT:bigint, PRICE_CURRENCYOffset:flatbuffers.Offset, DURATION_DAYS:number, RATE_LIMIT:number, FEATURESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPricingTier(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset, PRICE_AMOUNT:bigint, PRICE_CURRENCYOffset:flatbuffers.Offset, DURATION_DAYS:number, RATE_LIMIT:number, FEATURESOffset:flatbuffers.Offset, MAX_RECORDS_PER_REQUEST:number, DESCRIPTIONOffset:flatbuffers.Offset):flatbuffers.Offset {
   PricingTier.startPricingTier(builder);
   PricingTier.addName(builder, NAMEOffset);
   PricingTier.addPriceAmount(builder, PRICE_AMOUNT);
@@ -139,6 +165,8 @@ static createPricingTier(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Off
   PricingTier.addDurationDays(builder, DURATION_DAYS);
   PricingTier.addRateLimit(builder, RATE_LIMIT);
   PricingTier.addFeatures(builder, FEATURESOffset);
+  PricingTier.addMaxRecordsPerRequest(builder, MAX_RECORDS_PER_REQUEST);
+  PricingTier.addDescription(builder, DESCRIPTIONOffset);
   return PricingTier.endPricingTier(builder);
 }
 
@@ -149,7 +177,9 @@ unpack(): PricingTierT {
     this.PRICE_CURRENCY(),
     this.DURATION_DAYS(),
     this.RATE_LIMIT(),
-    this.bb!.createScalarList<string>(this.FEATURES.bind(this), this.featuresLength())
+    this.bb!.createScalarList<string>(this.FEATURES.bind(this), this.featuresLength()),
+    this.MAX_RECORDS_PER_REQUEST(),
+    this.DESCRIPTION()
   );
 }
 
@@ -161,6 +191,8 @@ unpackTo(_o: PricingTierT): void {
   _o.DURATION_DAYS = this.DURATION_DAYS();
   _o.RATE_LIMIT = this.RATE_LIMIT();
   _o.FEATURES = this.bb!.createScalarList<string>(this.FEATURES.bind(this), this.featuresLength());
+  _o.MAX_RECORDS_PER_REQUEST = this.MAX_RECORDS_PER_REQUEST();
+  _o.DESCRIPTION = this.DESCRIPTION();
 }
 }
 
@@ -171,7 +203,9 @@ constructor(
   public PRICE_CURRENCY: string|Uint8Array|null = null,
   public DURATION_DAYS: number = 0,
   public RATE_LIMIT: number = 0,
-  public FEATURES: (string)[] = []
+  public FEATURES: (string)[] = [],
+  public MAX_RECORDS_PER_REQUEST: number = 0,
+  public DESCRIPTION: string|Uint8Array|null = null
 ){}
 
 
@@ -179,6 +213,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const PRICE_CURRENCY = (this.PRICE_CURRENCY !== null ? builder.createString(this.PRICE_CURRENCY!) : 0);
   const FEATURES = PricingTier.createFeaturesVector(builder, builder.createObjectOffsetList(this.FEATURES));
+  const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
 
   return PricingTier.createPricingTier(builder,
     NAME,
@@ -186,7 +221,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PRICE_CURRENCY,
     this.DURATION_DAYS,
     this.RATE_LIMIT,
-    FEATURES
+    FEATURES,
+    this.MAX_RECORDS_PER_REQUEST,
+    DESCRIPTION
   );
 }
 }

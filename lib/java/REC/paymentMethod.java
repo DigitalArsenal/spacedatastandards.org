@@ -30,8 +30,16 @@ public final class paymentMethod {
    * Free/open data
    */
   public static final byte Free = 5;
+  /**
+   * Usage-based billing settled after metered delivery
+   */
+  public static final byte UsageBased = 6;
+  /**
+   * Enterprise/offline invoicing
+   */
+  public static final byte Enterprise = 7;
 
-  public static final String[] names = { "Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free", };
+  public static final String[] names = { "Crypto_ETH", "Crypto_SOL", "Crypto_BTC", "SDN_Credits", "Fiat_Stripe", "Free", "UsageBased", "Enterprise", };
 
   public static String name(int e) { return names[e]; }
 }

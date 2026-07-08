@@ -1,7 +1,20 @@
-// Hash: cfc94459aba55c350a0ca938c670ba87d6b2561edf22ccd515259ddbfcb6eeb4
-// Version: 1.0.1
+// Hash: b61cb59d69ac162ac5a0232271d1265afaebc9273da3f57b073c0efe001719a0
+// Version: 1.0.2
 // -----------------------------------END_HEADER
 include "../STF/main.fbs";
+
+/// Purchase lifecycle status tracked by the provider.
+enum purchaseLifecycleStatus : byte {
+  Pending,
+  PaymentDetected,
+  PaymentConfirmed,
+  Completed,
+  Failed,
+  Cancelled,
+  RefundRequested,
+  Refunded,
+  Expired
+}
 
 /// Purchase Request - Request to purchase data from a storefront listing
 table PUR {
@@ -36,6 +49,44 @@ table PUR {
   BUYER_SIGNATURE: [ubyte];
   /// Unix timestamp of the request
   TIMESTAMP: uint64;
+  /// Key algorithm for buyer encryption public key
+  KEY_ALGORITHM: string;
+  /// Buyer contact email
+  BUYER_EMAIL: string;
+  /// On-chain sender address or fiat payment source reference
+  SENDER_ADDRESS: string;
+  /// Confirmation block for on-chain payments
+  CONFIRMATION_BLOCK: uint64;
+  /// Fiat processor payment intent identifier
+  PAYMENT_INTENT_ID: string;
+  /// SDN credits transaction identifier
+  CREDITS_TRANSACTION_ID: string;
+  /// Provider-side purchase status
+  STATUS: purchaseLifecycleStatus;
+  /// Human-readable status message
+  STATUS_MESSAGE: string;
+  /// Unix timestamp when the purchase record was created
+  CREATED_AT: uint64;
+  /// Unix timestamp when the purchase record was updated
+  UPDATED_AT: uint64;
+  /// Unix timestamp when payment must be received
+  PAYMENT_DEADLINE: uint64;
+  /// Unix timestamp when payment was confirmed
+  PAYMENT_CONFIRMED_AT: uint64;
+  /// Unix timestamp when the grant was issued
+  GRANT_ISSUED_AT: uint64;
+  /// Issued grant identifier
+  GRANT_ID: string;
+  /// Provider peer ID
+  PROVIDER_PEER_ID: string;
+  /// Unix timestamp when provider acknowledged the request
+  PROVIDER_ACKNOWLEDGED_AT: uint64;
+  /// Preferred delivery method
+  PREFERRED_DELIVERY_METHOD: string;
+  /// Buyer webhook URL for delivery callbacks
+  WEBHOOK_URL: string;
+  /// Ed25519 signature from provider
+  PROVIDER_SIGNATURE: [ubyte];
 }
 
 root_type PUR;

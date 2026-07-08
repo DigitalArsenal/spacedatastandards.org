@@ -131,22 +131,114 @@ class REV extends Table
         return $this->__vector_as_bytes(20);
     }
 
+    /// Data quality metrics supplied by reviewer
+    public function getQUALITY_METRICS()
+    {
+        $obj = new DataQualityMetrics();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Whether the review is tied to a verified purchase
+    /**
+     * @return bool
+     */
+    public function getVERIFIED_PURCHASE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Unix timestamp when the review was last updated
+    /**
+     * @return ulong
+     */
+    public function getUPDATED_AT()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Review lifecycle status
+    /**
+     * @return sbyte
+     */
+    public function getSTATUS()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \reviewLifecycleStatus::Published;
+    }
+
+    /// Helpful vote count
+    /**
+     * @return uint
+     */
+    public function getHELPFUL_COUNT()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Not-helpful vote count
+    /**
+     * @return uint
+     */
+    public function getNOT_HELPFUL_COUNT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Provider response body
+    public function getPROVIDER_RESPONSE()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unix timestamp when provider responded
+    /**
+     * @return ulong
+     */
+    public function getPROVIDER_RESPONSE_AT()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Number of moderation flags
+    /**
+     * @return uint
+     */
+    public function getFLAGGED_COUNT()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Moderation notes
+    public function getMODERATION_NOTES()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startREV(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return REV
      */
-    public static function createREV(FlatBufferBuilder $builder, $REVIEW_ID, $LISTING_ID, $REVIEWER_PEER_ID, $RATING, $TITLE, $CONTENT, $ACL_GRANT_ID, $TIMESTAMP, $REVIEWER_SIGNATURE)
+    public static function createREV(FlatBufferBuilder $builder, $REVIEW_ID, $LISTING_ID, $REVIEWER_PEER_ID, $RATING, $TITLE, $CONTENT, $ACL_GRANT_ID, $TIMESTAMP, $REVIEWER_SIGNATURE, $QUALITY_METRICS, $VERIFIED_PURCHASE, $UPDATED_AT, $STATUS, $HELPFUL_COUNT, $NOT_HELPFUL_COUNT, $PROVIDER_RESPONSE, $PROVIDER_RESPONSE_AT, $FLAGGED_COUNT, $MODERATION_NOTES)
     {
-        $builder->startObject(9);
+        $builder->startObject(19);
         self::addREVIEW_ID($builder, $REVIEW_ID);
         self::addLISTING_ID($builder, $LISTING_ID);
         self::addREVIEWER_PEER_ID($builder, $REVIEWER_PEER_ID);
@@ -156,6 +248,16 @@ class REV extends Table
         self::addACL_GRANT_ID($builder, $ACL_GRANT_ID);
         self::addTIMESTAMP($builder, $TIMESTAMP);
         self::addREVIEWER_SIGNATURE($builder, $REVIEWER_SIGNATURE);
+        self::addQUALITY_METRICS($builder, $QUALITY_METRICS);
+        self::addVERIFIED_PURCHASE($builder, $VERIFIED_PURCHASE);
+        self::addUPDATED_AT($builder, $UPDATED_AT);
+        self::addSTATUS($builder, $STATUS);
+        self::addHELPFUL_COUNT($builder, $HELPFUL_COUNT);
+        self::addNOT_HELPFUL_COUNT($builder, $NOT_HELPFUL_COUNT);
+        self::addPROVIDER_RESPONSE($builder, $PROVIDER_RESPONSE);
+        self::addPROVIDER_RESPONSE_AT($builder, $PROVIDER_RESPONSE_AT);
+        self::addFLAGGED_COUNT($builder, $FLAGGED_COUNT);
+        self::addMODERATION_NOTES($builder, $MODERATION_NOTES);
         $o = $builder->endObject();
         $builder->required($o, 4);  // REVIEW_ID
         $builder->required($o, 6);  // LISTING_ID
@@ -275,6 +377,106 @@ class REV extends Table
     public static function startREVIEWER_SIGNATUREVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addQUALITY_METRICS(FlatBufferBuilder $builder, $QUALITY_METRICS)
+    {
+        $builder->addOffsetX(9, $QUALITY_METRICS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addVERIFIED_PURCHASE(FlatBufferBuilder $builder, $VERIFIED_PURCHASE)
+    {
+        $builder->addBoolX(10, $VERIFIED_PURCHASE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
+    {
+        $builder->addUlongX(11, $UPDATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
+    {
+        $builder->addSbyteX(12, $STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addHELPFUL_COUNT(FlatBufferBuilder $builder, $HELPFUL_COUNT)
+    {
+        $builder->addUintX(13, $HELPFUL_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNOT_HELPFUL_COUNT(FlatBufferBuilder $builder, $NOT_HELPFUL_COUNT)
+    {
+        $builder->addUintX(14, $NOT_HELPFUL_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPROVIDER_RESPONSE(FlatBufferBuilder $builder, $PROVIDER_RESPONSE)
+    {
+        $builder->addOffsetX(15, $PROVIDER_RESPONSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addPROVIDER_RESPONSE_AT(FlatBufferBuilder $builder, $PROVIDER_RESPONSE_AT)
+    {
+        $builder->addUlongX(16, $PROVIDER_RESPONSE_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addFLAGGED_COUNT(FlatBufferBuilder $builder, $FLAGGED_COUNT)
+    {
+        $builder->addUintX(17, $FLAGGED_COUNT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMODERATION_NOTES(FlatBufferBuilder $builder, $MODERATION_NOTES)
+    {
+        $builder->addOffsetX(18, $MODERATION_NOTES, 0);
     }
 
     /**

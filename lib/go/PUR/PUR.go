@@ -336,8 +336,376 @@ func (rcv *PUR) MutateTimestamp(n uint64) bool {
 	return rcv.MutateTIMESTAMP(n)
 }
 
+/// Key algorithm for buyer encryption public key
+func (rcv *PUR) KEY_ALGORITHM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) KeyAlgorithm() []byte {
+	return rcv.KEY_ALGORITHM()
+}
+
+/// Key algorithm for buyer encryption public key
+/// Buyer contact email
+func (rcv *PUR) BUYER_EMAIL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) BuyerEmail() []byte {
+	return rcv.BUYER_EMAIL()
+}
+
+/// Buyer contact email
+/// On-chain sender address or fiat payment source reference
+func (rcv *PUR) SENDER_ADDRESS() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) SenderAddress() []byte {
+	return rcv.SENDER_ADDRESS()
+}
+
+/// On-chain sender address or fiat payment source reference
+/// Confirmation block for on-chain payments
+func (rcv *PUR) CONFIRMATION_BLOCK() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) ConfirmationBlock() uint64 {
+	return rcv.CONFIRMATION_BLOCK()
+}
+
+/// Confirmation block for on-chain payments
+func (rcv *PUR) MutateCONFIRMATION_BLOCK(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(36, n)
+}
+
+func (rcv *PUR) MutateConfirmationBlock(n uint64) bool {
+	return rcv.MutateCONFIRMATION_BLOCK(n)
+}
+
+/// Fiat processor payment intent identifier
+func (rcv *PUR) PAYMENT_INTENT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) PaymentIntentId() []byte {
+	return rcv.PAYMENT_INTENT_ID()
+}
+
+/// Fiat processor payment intent identifier
+/// SDN credits transaction identifier
+func (rcv *PUR) CREDITS_TRANSACTION_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) CreditsTransactionId() []byte {
+	return rcv.CREDITS_TRANSACTION_ID()
+}
+
+/// SDN credits transaction identifier
+/// Provider-side purchase status
+func (rcv *PUR) STATUS() purchaseLifecycleStatus {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return purchaseLifecycleStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PUR) Status() purchaseLifecycleStatus {
+	return rcv.STATUS()
+}
+
+/// Provider-side purchase status
+func (rcv *PUR) MutateSTATUS(n purchaseLifecycleStatus) bool {
+	return rcv._tab.MutateInt8Slot(42, int8(n))
+}
+
+func (rcv *PUR) MutateStatus(n purchaseLifecycleStatus) bool {
+	return rcv.MutateSTATUS(n)
+}
+
+/// Human-readable status message
+func (rcv *PUR) STATUS_MESSAGE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) StatusMessage() []byte {
+	return rcv.STATUS_MESSAGE()
+}
+
+/// Human-readable status message
+/// Unix timestamp when the purchase record was created
+func (rcv *PUR) CREATED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) CreatedAt() uint64 {
+	return rcv.CREATED_AT()
+}
+
+/// Unix timestamp when the purchase record was created
+func (rcv *PUR) MutateCREATED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(46, n)
+}
+
+func (rcv *PUR) MutateCreatedAt(n uint64) bool {
+	return rcv.MutateCREATED_AT(n)
+}
+
+/// Unix timestamp when the purchase record was updated
+func (rcv *PUR) UPDATED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) UpdatedAt() uint64 {
+	return rcv.UPDATED_AT()
+}
+
+/// Unix timestamp when the purchase record was updated
+func (rcv *PUR) MutateUPDATED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(48, n)
+}
+
+func (rcv *PUR) MutateUpdatedAt(n uint64) bool {
+	return rcv.MutateUPDATED_AT(n)
+}
+
+/// Unix timestamp when payment must be received
+func (rcv *PUR) PAYMENT_DEADLINE() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) PaymentDeadline() uint64 {
+	return rcv.PAYMENT_DEADLINE()
+}
+
+/// Unix timestamp when payment must be received
+func (rcv *PUR) MutatePAYMENT_DEADLINE(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(50, n)
+}
+
+func (rcv *PUR) MutatePaymentDeadline(n uint64) bool {
+	return rcv.MutatePAYMENT_DEADLINE(n)
+}
+
+/// Unix timestamp when payment was confirmed
+func (rcv *PUR) PAYMENT_CONFIRMED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) PaymentConfirmedAt() uint64 {
+	return rcv.PAYMENT_CONFIRMED_AT()
+}
+
+/// Unix timestamp when payment was confirmed
+func (rcv *PUR) MutatePAYMENT_CONFIRMED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(52, n)
+}
+
+func (rcv *PUR) MutatePaymentConfirmedAt(n uint64) bool {
+	return rcv.MutatePAYMENT_CONFIRMED_AT(n)
+}
+
+/// Unix timestamp when the grant was issued
+func (rcv *PUR) GRANT_ISSUED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) GrantIssuedAt() uint64 {
+	return rcv.GRANT_ISSUED_AT()
+}
+
+/// Unix timestamp when the grant was issued
+func (rcv *PUR) MutateGRANT_ISSUED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(54, n)
+}
+
+func (rcv *PUR) MutateGrantIssuedAt(n uint64) bool {
+	return rcv.MutateGRANT_ISSUED_AT(n)
+}
+
+/// Issued grant identifier
+func (rcv *PUR) GRANT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) GrantId() []byte {
+	return rcv.GRANT_ID()
+}
+
+/// Issued grant identifier
+/// Provider peer ID
+func (rcv *PUR) PROVIDER_PEER_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) ProviderPeerId() []byte {
+	return rcv.PROVIDER_PEER_ID()
+}
+
+/// Provider peer ID
+/// Unix timestamp when provider acknowledged the request
+func (rcv *PUR) PROVIDER_ACKNOWLEDGED_AT() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *PUR) ProviderAcknowledgedAt() uint64 {
+	return rcv.PROVIDER_ACKNOWLEDGED_AT()
+}
+
+/// Unix timestamp when provider acknowledged the request
+func (rcv *PUR) MutatePROVIDER_ACKNOWLEDGED_AT(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(60, n)
+}
+
+func (rcv *PUR) MutateProviderAcknowledgedAt(n uint64) bool {
+	return rcv.MutatePROVIDER_ACKNOWLEDGED_AT(n)
+}
+
+/// Preferred delivery method
+func (rcv *PUR) PREFERRED_DELIVERY_METHOD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) PreferredDeliveryMethod() []byte {
+	return rcv.PREFERRED_DELIVERY_METHOD()
+}
+
+/// Preferred delivery method
+/// Buyer webhook URL for delivery callbacks
+func (rcv *PUR) WEBHOOK_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) WebhookUrl() []byte {
+	return rcv.WEBHOOK_URL()
+}
+
+/// Buyer webhook URL for delivery callbacks
+/// Ed25519 signature from provider
+func (rcv *PUR) PROVIDER_SIGNATURE(j int) byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
+	}
+	return 0
+}
+
+func (rcv *PUR) ProviderSignature(j int) byte {
+	return rcv.PROVIDER_SIGNATURE(j)
+}
+
+func (rcv *PUR) PROVIDER_SIGNATURELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PUR) ProviderSignatureLength() int {
+	return rcv.PROVIDER_SIGNATURELength()
+}
+
+func (rcv *PUR) PROVIDER_SIGNATUREBytes() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PUR) ProviderSignatureBytes() []byte {
+	return rcv.PROVIDER_SIGNATUREBytes()
+}
+
+/// Ed25519 signature from provider
+func (rcv *PUR) MutatePROVIDER_SIGNATURE(j int, n byte) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+	}
+	return false
+}
+
+func (rcv *PUR) MutateProviderSignature(j int, n byte) bool {
+	return rcv.MutatePROVIDER_SIGNATURE(j, n)
+}
+
 func PURStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(32)
 }
 func PURAddREQUEST_ID(builder *flatbuffers.Builder, REQUEST_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REQUEST_ID), 0)
@@ -428,6 +796,126 @@ func PURAddTIMESTAMP(builder *flatbuffers.Builder, TIMESTAMP uint64) {
 }
 func PURAddTimestamp(builder *flatbuffers.Builder, TIMESTAMP uint64) {
 	PURAddTIMESTAMP(builder, TIMESTAMP)
+}
+func PURAddKEY_ALGORITHM(builder *flatbuffers.Builder, KEY_ALGORITHM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(KEY_ALGORITHM), 0)
+}
+func PURAddKeyAlgorithm(builder *flatbuffers.Builder, KEY_ALGORITHM flatbuffers.UOffsetT) {
+	PURAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+}
+func PURAddBUYER_EMAIL(builder *flatbuffers.Builder, BUYER_EMAIL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(BUYER_EMAIL), 0)
+}
+func PURAddBuyerEmail(builder *flatbuffers.Builder, BUYER_EMAIL flatbuffers.UOffsetT) {
+	PURAddBUYER_EMAIL(builder, BUYER_EMAIL)
+}
+func PURAddSENDER_ADDRESS(builder *flatbuffers.Builder, SENDER_ADDRESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SENDER_ADDRESS), 0)
+}
+func PURAddSenderAddress(builder *flatbuffers.Builder, SENDER_ADDRESS flatbuffers.UOffsetT) {
+	PURAddSENDER_ADDRESS(builder, SENDER_ADDRESS)
+}
+func PURAddCONFIRMATION_BLOCK(builder *flatbuffers.Builder, CONFIRMATION_BLOCK uint64) {
+	builder.PrependUint64Slot(16, CONFIRMATION_BLOCK, 0)
+}
+func PURAddConfirmationBlock(builder *flatbuffers.Builder, CONFIRMATION_BLOCK uint64) {
+	PURAddCONFIRMATION_BLOCK(builder, CONFIRMATION_BLOCK)
+}
+func PURAddPAYMENT_INTENT_ID(builder *flatbuffers.Builder, PAYMENT_INTENT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PAYMENT_INTENT_ID), 0)
+}
+func PURAddPaymentIntentId(builder *flatbuffers.Builder, PAYMENT_INTENT_ID flatbuffers.UOffsetT) {
+	PURAddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_ID)
+}
+func PURAddCREDITS_TRANSACTION_ID(builder *flatbuffers.Builder, CREDITS_TRANSACTION_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(CREDITS_TRANSACTION_ID), 0)
+}
+func PURAddCreditsTransactionId(builder *flatbuffers.Builder, CREDITS_TRANSACTION_ID flatbuffers.UOffsetT) {
+	PURAddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_ID)
+}
+func PURAddSTATUS(builder *flatbuffers.Builder, STATUS purchaseLifecycleStatus) {
+	builder.PrependInt8Slot(19, int8(STATUS), 0)
+}
+func PURAddStatus(builder *flatbuffers.Builder, STATUS purchaseLifecycleStatus) {
+	PURAddSTATUS(builder, STATUS)
+}
+func PURAddSTATUS_MESSAGE(builder *flatbuffers.Builder, STATUS_MESSAGE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(STATUS_MESSAGE), 0)
+}
+func PURAddStatusMessage(builder *flatbuffers.Builder, STATUS_MESSAGE flatbuffers.UOffsetT) {
+	PURAddSTATUS_MESSAGE(builder, STATUS_MESSAGE)
+}
+func PURAddCREATED_AT(builder *flatbuffers.Builder, CREATED_AT uint64) {
+	builder.PrependUint64Slot(21, CREATED_AT, 0)
+}
+func PURAddCreatedAt(builder *flatbuffers.Builder, CREATED_AT uint64) {
+	PURAddCREATED_AT(builder, CREATED_AT)
+}
+func PURAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	builder.PrependUint64Slot(22, UPDATED_AT, 0)
+}
+func PURAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT uint64) {
+	PURAddUPDATED_AT(builder, UPDATED_AT)
+}
+func PURAddPAYMENT_DEADLINE(builder *flatbuffers.Builder, PAYMENT_DEADLINE uint64) {
+	builder.PrependUint64Slot(23, PAYMENT_DEADLINE, 0)
+}
+func PURAddPaymentDeadline(builder *flatbuffers.Builder, PAYMENT_DEADLINE uint64) {
+	PURAddPAYMENT_DEADLINE(builder, PAYMENT_DEADLINE)
+}
+func PURAddPAYMENT_CONFIRMED_AT(builder *flatbuffers.Builder, PAYMENT_CONFIRMED_AT uint64) {
+	builder.PrependUint64Slot(24, PAYMENT_CONFIRMED_AT, 0)
+}
+func PURAddPaymentConfirmedAt(builder *flatbuffers.Builder, PAYMENT_CONFIRMED_AT uint64) {
+	PURAddPAYMENT_CONFIRMED_AT(builder, PAYMENT_CONFIRMED_AT)
+}
+func PURAddGRANT_ISSUED_AT(builder *flatbuffers.Builder, GRANT_ISSUED_AT uint64) {
+	builder.PrependUint64Slot(25, GRANT_ISSUED_AT, 0)
+}
+func PURAddGrantIssuedAt(builder *flatbuffers.Builder, GRANT_ISSUED_AT uint64) {
+	PURAddGRANT_ISSUED_AT(builder, GRANT_ISSUED_AT)
+}
+func PURAddGRANT_ID(builder *flatbuffers.Builder, GRANT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(GRANT_ID), 0)
+}
+func PURAddGrantId(builder *flatbuffers.Builder, GRANT_ID flatbuffers.UOffsetT) {
+	PURAddGRANT_ID(builder, GRANT_ID)
+}
+func PURAddPROVIDER_PEER_ID(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(PROVIDER_PEER_ID), 0)
+}
+func PURAddProviderPeerId(builder *flatbuffers.Builder, PROVIDER_PEER_ID flatbuffers.UOffsetT) {
+	PURAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+}
+func PURAddPROVIDER_ACKNOWLEDGED_AT(builder *flatbuffers.Builder, PROVIDER_ACKNOWLEDGED_AT uint64) {
+	builder.PrependUint64Slot(28, PROVIDER_ACKNOWLEDGED_AT, 0)
+}
+func PURAddProviderAcknowledgedAt(builder *flatbuffers.Builder, PROVIDER_ACKNOWLEDGED_AT uint64) {
+	PURAddPROVIDER_ACKNOWLEDGED_AT(builder, PROVIDER_ACKNOWLEDGED_AT)
+}
+func PURAddPREFERRED_DELIVERY_METHOD(builder *flatbuffers.Builder, PREFERRED_DELIVERY_METHOD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(PREFERRED_DELIVERY_METHOD), 0)
+}
+func PURAddPreferredDeliveryMethod(builder *flatbuffers.Builder, PREFERRED_DELIVERY_METHOD flatbuffers.UOffsetT) {
+	PURAddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHOD)
+}
+func PURAddWEBHOOK_URL(builder *flatbuffers.Builder, WEBHOOK_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(WEBHOOK_URL), 0)
+}
+func PURAddWebhookUrl(builder *flatbuffers.Builder, WEBHOOK_URL flatbuffers.UOffsetT) {
+	PURAddWEBHOOK_URL(builder, WEBHOOK_URL)
+}
+func PURAddPROVIDER_SIGNATURE(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(PROVIDER_SIGNATURE), 0)
+}
+func PURAddProviderSignature(builder *flatbuffers.Builder, PROVIDER_SIGNATURE flatbuffers.UOffsetT) {
+	PURAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
+}
+func PURStartPROVIDER_SIGNATUREVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(1, numElems, 1)
+}
+func PURStartProviderSignatureVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PURStartPROVIDER_SIGNATUREVector(builder, numElems)
 }
 func PUREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

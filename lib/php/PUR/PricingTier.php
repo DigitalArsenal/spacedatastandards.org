@@ -105,28 +105,47 @@ class PricingTier extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Maximum records returned per request
+    /**
+     * @return uint
+     */
+    public function getMAX_RECORDS_PER_REQUEST()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Human-readable tier description
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPricingTier(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PricingTier
      */
-    public static function createPricingTier(FlatBufferBuilder $builder, $NAME, $PRICE_AMOUNT, $PRICE_CURRENCY, $DURATION_DAYS, $RATE_LIMIT, $FEATURES)
+    public static function createPricingTier(FlatBufferBuilder $builder, $NAME, $PRICE_AMOUNT, $PRICE_CURRENCY, $DURATION_DAYS, $RATE_LIMIT, $FEATURES, $MAX_RECORDS_PER_REQUEST, $DESCRIPTION)
     {
-        $builder->startObject(6);
+        $builder->startObject(8);
         self::addNAME($builder, $NAME);
         self::addPRICE_AMOUNT($builder, $PRICE_AMOUNT);
         self::addPRICE_CURRENCY($builder, $PRICE_CURRENCY);
         self::addDURATION_DAYS($builder, $DURATION_DAYS);
         self::addRATE_LIMIT($builder, $RATE_LIMIT);
         self::addFEATURES($builder, $FEATURES);
+        self::addMAX_RECORDS_PER_REQUEST($builder, $MAX_RECORDS_PER_REQUEST);
+        self::addDESCRIPTION($builder, $DESCRIPTION);
         $o = $builder->endObject();
         return $o;
     }
@@ -213,6 +232,26 @@ class PricingTier extends Table
     public static function startFEATURESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addMAX_RECORDS_PER_REQUEST(FlatBufferBuilder $builder, $MAX_RECORDS_PER_REQUEST)
+    {
+        $builder->addUintX(6, $MAX_RECORDS_PER_REQUEST, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(7, $DESCRIPTION, 0);
     }
 
     /**

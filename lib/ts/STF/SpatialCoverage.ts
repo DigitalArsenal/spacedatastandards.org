@@ -67,8 +67,42 @@ objectIdsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Minimum altitude in kilometers for altitude-bounded offerings
+ */
+MIN_ALTITUDE_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Maximum altitude in kilometers for altitude-bounded offerings
+ */
+MAX_ALTITUDE_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Bounding box as [min_lat, min_lon, max_lat, max_lon]
+ */
+GEO_BOUNDS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+geoBoundsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+geoBoundsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startSpatialCoverage(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(6);
 }
 
 static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
@@ -107,16 +141,48 @@ static startObjectIdsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addMinAltitudeKm(builder:flatbuffers.Builder, MIN_ALTITUDE_KM:number) {
+  builder.addFieldFloat64(3, MIN_ALTITUDE_KM, 0.0);
+}
+
+static addMaxAltitudeKm(builder:flatbuffers.Builder, MAX_ALTITUDE_KM:number) {
+  builder.addFieldFloat64(4, MAX_ALTITUDE_KM, 0.0);
+}
+
+static addGeoBounds(builder:flatbuffers.Builder, GEO_BOUNDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, GEO_BOUNDSOffset, 0);
+}
+
+static createGeoBoundsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createGeoBoundsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createGeoBoundsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startGeoBoundsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endSpatialCoverage(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createSpatialCoverage(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset, REGIONSOffset:flatbuffers.Offset, OBJECT_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSpatialCoverage(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset, REGIONSOffset:flatbuffers.Offset, OBJECT_IDSOffset:flatbuffers.Offset, MIN_ALTITUDE_KM:number, MAX_ALTITUDE_KM:number, GEO_BOUNDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SpatialCoverage.startSpatialCoverage(builder);
   SpatialCoverage.addType(builder, TYPEOffset);
   SpatialCoverage.addRegions(builder, REGIONSOffset);
   SpatialCoverage.addObjectIds(builder, OBJECT_IDSOffset);
+  SpatialCoverage.addMinAltitudeKm(builder, MIN_ALTITUDE_KM);
+  SpatialCoverage.addMaxAltitudeKm(builder, MAX_ALTITUDE_KM);
+  SpatialCoverage.addGeoBounds(builder, GEO_BOUNDSOffset);
   return SpatialCoverage.endSpatialCoverage(builder);
 }
 
@@ -124,7 +190,10 @@ unpack(): SpatialCoverageT {
   return new SpatialCoverageT(
     this.TYPE(),
     this.bb!.createScalarList<string>(this.REGIONS.bind(this), this.regionsLength()),
-    this.bb!.createScalarList<string>(this.OBJECT_IDS.bind(this), this.objectIdsLength())
+    this.bb!.createScalarList<string>(this.OBJECT_IDS.bind(this), this.objectIdsLength()),
+    this.MIN_ALTITUDE_KM(),
+    this.MAX_ALTITUDE_KM(),
+    this.bb!.createScalarList<number>(this.GEO_BOUNDS.bind(this), this.geoBoundsLength())
   );
 }
 
@@ -133,6 +202,9 @@ unpackTo(_o: SpatialCoverageT): void {
   _o.TYPE = this.TYPE();
   _o.REGIONS = this.bb!.createScalarList<string>(this.REGIONS.bind(this), this.regionsLength());
   _o.OBJECT_IDS = this.bb!.createScalarList<string>(this.OBJECT_IDS.bind(this), this.objectIdsLength());
+  _o.MIN_ALTITUDE_KM = this.MIN_ALTITUDE_KM();
+  _o.MAX_ALTITUDE_KM = this.MAX_ALTITUDE_KM();
+  _o.GEO_BOUNDS = this.bb!.createScalarList<number>(this.GEO_BOUNDS.bind(this), this.geoBoundsLength());
 }
 }
 
@@ -140,7 +212,10 @@ export class SpatialCoverageT implements flatbuffers.IGeneratedObject {
 constructor(
   public TYPE: string|Uint8Array|null = null,
   public REGIONS: (string)[] = [],
-  public OBJECT_IDS: (string)[] = []
+  public OBJECT_IDS: (string)[] = [],
+  public MIN_ALTITUDE_KM: number = 0.0,
+  public MAX_ALTITUDE_KM: number = 0.0,
+  public GEO_BOUNDS: (number)[] = []
 ){}
 
 
@@ -148,11 +223,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
   const REGIONS = SpatialCoverage.createRegionsVector(builder, builder.createObjectOffsetList(this.REGIONS));
   const OBJECT_IDS = SpatialCoverage.createObjectIdsVector(builder, builder.createObjectOffsetList(this.OBJECT_IDS));
+  const GEO_BOUNDS = SpatialCoverage.createGeoBoundsVector(builder, this.GEO_BOUNDS);
 
   return SpatialCoverage.createSpatialCoverage(builder,
     TYPE,
     REGIONS,
-    OBJECT_IDS
+    OBJECT_IDS,
+    this.MIN_ALTITUDE_KM,
+    this.MAX_ALTITUDE_KM,
+    GEO_BOUNDS
   );
 }
 }

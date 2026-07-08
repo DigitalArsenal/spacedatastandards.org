@@ -43,13 +43,17 @@ public struct TemporalCoverage : IFlatbufferObject
   public byte[] GetUPDATE_FREQUENCYArray() { return __p.__vector_as_array<byte>(8); }
   /// Days of historical data available
   public uint HISTORICAL_DEPTH { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Typical provider latency in seconds
+  public uint LATENCY_SECONDS { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<TemporalCoverage> CreateTemporalCoverage(FlatBufferBuilder builder,
       StringOffset START_EPOCHOffset = default(StringOffset),
       StringOffset END_EPOCHOffset = default(StringOffset),
       StringOffset UPDATE_FREQUENCYOffset = default(StringOffset),
-      uint HISTORICAL_DEPTH = 0) {
-    builder.StartTable(4);
+      uint HISTORICAL_DEPTH = 0,
+      uint LATENCY_SECONDS = 0) {
+    builder.StartTable(5);
+    TemporalCoverage.AddLATENCY_SECONDS(builder, LATENCY_SECONDS);
     TemporalCoverage.AddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH);
     TemporalCoverage.AddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCYOffset);
     TemporalCoverage.AddEND_EPOCH(builder, END_EPOCHOffset);
@@ -57,11 +61,12 @@ public struct TemporalCoverage : IFlatbufferObject
     return TemporalCoverage.EndTemporalCoverage(builder);
   }
 
-  public static void StartTemporalCoverage(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartTemporalCoverage(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddSTART_EPOCH(FlatBufferBuilder builder, StringOffset START_EPOCHOffset) { builder.AddOffset(0, START_EPOCHOffset.Value, 0); }
   public static void AddEND_EPOCH(FlatBufferBuilder builder, StringOffset END_EPOCHOffset) { builder.AddOffset(1, END_EPOCHOffset.Value, 0); }
   public static void AddUPDATE_FREQUENCY(FlatBufferBuilder builder, StringOffset UPDATE_FREQUENCYOffset) { builder.AddOffset(2, UPDATE_FREQUENCYOffset.Value, 0); }
   public static void AddHISTORICAL_DEPTH(FlatBufferBuilder builder, uint HISTORICAL_DEPTH) { builder.AddUint(3, HISTORICAL_DEPTH, 0); }
+  public static void AddLATENCY_SECONDS(FlatBufferBuilder builder, uint LATENCY_SECONDS) { builder.AddUint(4, LATENCY_SECONDS, 0); }
   public static Offset<TemporalCoverage> EndTemporalCoverage(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TemporalCoverage>(o);
@@ -76,6 +81,7 @@ public struct TemporalCoverage : IFlatbufferObject
     _o.END_EPOCH = this.END_EPOCH;
     _o.UPDATE_FREQUENCY = this.UPDATE_FREQUENCY;
     _o.HISTORICAL_DEPTH = this.HISTORICAL_DEPTH;
+    _o.LATENCY_SECONDS = this.LATENCY_SECONDS;
   }
   public static Offset<TemporalCoverage> Pack(FlatBufferBuilder builder, TemporalCoverageT _o) {
     if (_o == null) return default(Offset<TemporalCoverage>);
@@ -87,7 +93,8 @@ public struct TemporalCoverage : IFlatbufferObject
       _START_EPOCH,
       _END_EPOCH,
       _UPDATE_FREQUENCY,
-      _o.HISTORICAL_DEPTH);
+      _o.HISTORICAL_DEPTH,
+      _o.LATENCY_SECONDS);
   }
 }
 
@@ -97,12 +104,14 @@ public class TemporalCoverageT
   public string END_EPOCH { get; set; }
   public string UPDATE_FREQUENCY { get; set; }
   public uint HISTORICAL_DEPTH { get; set; }
+  public uint LATENCY_SECONDS { get; set; }
 
   public TemporalCoverageT() {
     this.START_EPOCH = null;
     this.END_EPOCH = null;
     this.UPDATE_FREQUENCY = null;
     this.HISTORICAL_DEPTH = 0;
+    this.LATENCY_SECONDS = 0;
   }
 }
 
@@ -116,6 +125,7 @@ static public class TemporalCoverageVerify
       && verifier.VerifyString(tablePos, 6 /*END_EPOCH*/, false)
       && verifier.VerifyString(tablePos, 8 /*UPDATE_FREQUENCY*/, false)
       && verifier.VerifyField(tablePos, 10 /*HISTORICAL_DEPTH*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*LATENCY_SECONDS*/, 4 /*uint*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

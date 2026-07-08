@@ -107,6 +107,111 @@ public struct PUR : IFlatbufferObject
   public byte[] GetBUYER_SIGNATUREArray() { return __p.__vector_as_array<byte>(26); }
   /// Unix timestamp of the request
   public ulong TIMESTAMP { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Key algorithm for buyer encryption public key
+  public string KEY_ALGORITHM { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_ALGORITHMBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_ALGORITHMBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetKEY_ALGORITHMArray() { return __p.__vector_as_array<byte>(30); }
+  /// Buyer contact email
+  public string BUYER_EMAIL { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBUYER_EMAILBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetBUYER_EMAILBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetBUYER_EMAILArray() { return __p.__vector_as_array<byte>(32); }
+  /// On-chain sender address or fiat payment source reference
+  public string SENDER_ADDRESS { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSENDER_ADDRESSBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetSENDER_ADDRESSBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetSENDER_ADDRESSArray() { return __p.__vector_as_array<byte>(34); }
+  /// Confirmation block for on-chain payments
+  public ulong CONFIRMATION_BLOCK { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Fiat processor payment intent identifier
+  public string PAYMENT_INTENT_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPAYMENT_INTENT_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetPAYMENT_INTENT_IDBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetPAYMENT_INTENT_IDArray() { return __p.__vector_as_array<byte>(38); }
+  /// SDN credits transaction identifier
+  public string CREDITS_TRANSACTION_ID { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCREDITS_TRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetCREDITS_TRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetCREDITS_TRANSACTION_IDArray() { return __p.__vector_as_array<byte>(40); }
+  /// Provider-side purchase status
+  public purchaseLifecycleStatus STATUS { get { int o = __p.__offset(42); return o != 0 ? (purchaseLifecycleStatus)__p.bb.GetSbyte(o + __p.bb_pos) : purchaseLifecycleStatus.Pending; } }
+  /// Human-readable status message
+  public string STATUS_MESSAGE { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTATUS_MESSAGEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetSTATUS_MESSAGEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetSTATUS_MESSAGEArray() { return __p.__vector_as_array<byte>(44); }
+  /// Unix timestamp when the purchase record was created
+  public ulong CREATED_AT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp when the purchase record was updated
+  public ulong UPDATED_AT { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp when payment must be received
+  public ulong PAYMENT_DEADLINE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp when payment was confirmed
+  public ulong PAYMENT_CONFIRMED_AT { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Unix timestamp when the grant was issued
+  public ulong GRANT_ISSUED_AT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Issued grant identifier
+  public string GRANT_ID { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetGRANT_IDBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetGRANT_IDBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetGRANT_IDArray() { return __p.__vector_as_array<byte>(56); }
+  /// Provider peer ID
+  public string PROVIDER_PEER_ID { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_span<byte>(58, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_PEER_IDBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public byte[] GetPROVIDER_PEER_IDArray() { return __p.__vector_as_array<byte>(58); }
+  /// Unix timestamp when provider acknowledged the request
+  public ulong PROVIDER_ACKNOWLEDGED_AT { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Preferred delivery method
+  public string PREFERRED_DELIVERY_METHOD { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPREFERRED_DELIVERY_METHODBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetPREFERRED_DELIVERY_METHODBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetPREFERRED_DELIVERY_METHODArray() { return __p.__vector_as_array<byte>(62); }
+  /// Buyer webhook URL for delivery callbacks
+  public string WEBHOOK_URL { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetWEBHOOK_URLBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetWEBHOOK_URLBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetWEBHOOK_URLArray() { return __p.__vector_as_array<byte>(64); }
+  /// Ed25519 signature from provider
+  public byte PROVIDER_SIGNATURE(int j) { int o = __p.__offset(66); return o != 0 ? __p.bb.Get(__p.__vector(o) + j * 1) : (byte)0; }
+  public int PROVIDER_SIGNATURELength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetPROVIDER_SIGNATUREBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetPROVIDER_SIGNATUREArray() { return __p.__vector_as_array<byte>(66); }
 
   public static Offset<PUR> CreatePUR(FlatBufferBuilder builder,
       StringOffset REQUEST_IDOffset = default(StringOffset),
@@ -121,10 +226,47 @@ public struct PUR : IFlatbufferObject
       StringOffset PAYMENT_CHAINOffset = default(StringOffset),
       StringOffset PAYMENT_REFERENCEOffset = default(StringOffset),
       VectorOffset BUYER_SIGNATUREOffset = default(VectorOffset),
-      ulong TIMESTAMP = 0) {
-    builder.StartTable(13);
+      ulong TIMESTAMP = 0,
+      StringOffset KEY_ALGORITHMOffset = default(StringOffset),
+      StringOffset BUYER_EMAILOffset = default(StringOffset),
+      StringOffset SENDER_ADDRESSOffset = default(StringOffset),
+      ulong CONFIRMATION_BLOCK = 0,
+      StringOffset PAYMENT_INTENT_IDOffset = default(StringOffset),
+      StringOffset CREDITS_TRANSACTION_IDOffset = default(StringOffset),
+      purchaseLifecycleStatus STATUS = purchaseLifecycleStatus.Pending,
+      StringOffset STATUS_MESSAGEOffset = default(StringOffset),
+      ulong CREATED_AT = 0,
+      ulong UPDATED_AT = 0,
+      ulong PAYMENT_DEADLINE = 0,
+      ulong PAYMENT_CONFIRMED_AT = 0,
+      ulong GRANT_ISSUED_AT = 0,
+      StringOffset GRANT_IDOffset = default(StringOffset),
+      StringOffset PROVIDER_PEER_IDOffset = default(StringOffset),
+      ulong PROVIDER_ACKNOWLEDGED_AT = 0,
+      StringOffset PREFERRED_DELIVERY_METHODOffset = default(StringOffset),
+      StringOffset WEBHOOK_URLOffset = default(StringOffset),
+      VectorOffset PROVIDER_SIGNATUREOffset = default(VectorOffset)) {
+    builder.StartTable(32);
+    PUR.AddPROVIDER_ACKNOWLEDGED_AT(builder, PROVIDER_ACKNOWLEDGED_AT);
+    PUR.AddGRANT_ISSUED_AT(builder, GRANT_ISSUED_AT);
+    PUR.AddPAYMENT_CONFIRMED_AT(builder, PAYMENT_CONFIRMED_AT);
+    PUR.AddPAYMENT_DEADLINE(builder, PAYMENT_DEADLINE);
+    PUR.AddUPDATED_AT(builder, UPDATED_AT);
+    PUR.AddCREATED_AT(builder, CREATED_AT);
+    PUR.AddCONFIRMATION_BLOCK(builder, CONFIRMATION_BLOCK);
     PUR.AddTIMESTAMP(builder, TIMESTAMP);
     PUR.AddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT);
+    PUR.AddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATUREOffset);
+    PUR.AddWEBHOOK_URL(builder, WEBHOOK_URLOffset);
+    PUR.AddPREFERRED_DELIVERY_METHOD(builder, PREFERRED_DELIVERY_METHODOffset);
+    PUR.AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_IDOffset);
+    PUR.AddGRANT_ID(builder, GRANT_IDOffset);
+    PUR.AddSTATUS_MESSAGE(builder, STATUS_MESSAGEOffset);
+    PUR.AddCREDITS_TRANSACTION_ID(builder, CREDITS_TRANSACTION_IDOffset);
+    PUR.AddPAYMENT_INTENT_ID(builder, PAYMENT_INTENT_IDOffset);
+    PUR.AddSENDER_ADDRESS(builder, SENDER_ADDRESSOffset);
+    PUR.AddBUYER_EMAIL(builder, BUYER_EMAILOffset);
+    PUR.AddKEY_ALGORITHM(builder, KEY_ALGORITHMOffset);
     PUR.AddBUYER_SIGNATURE(builder, BUYER_SIGNATUREOffset);
     PUR.AddPAYMENT_REFERENCE(builder, PAYMENT_REFERENCEOffset);
     PUR.AddPAYMENT_CHAIN(builder, PAYMENT_CHAINOffset);
@@ -135,11 +277,12 @@ public struct PUR : IFlatbufferObject
     PUR.AddTIER_NAME(builder, TIER_NAMEOffset);
     PUR.AddLISTING_ID(builder, LISTING_IDOffset);
     PUR.AddREQUEST_ID(builder, REQUEST_IDOffset);
+    PUR.AddSTATUS(builder, STATUS);
     PUR.AddPAYMENT_METHOD(builder, PAYMENT_METHOD);
     return PUR.EndPUR(builder);
   }
 
-  public static void StartPUR(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPUR(FlatBufferBuilder builder) { builder.StartTable(32); }
   public static void AddREQUEST_ID(FlatBufferBuilder builder, StringOffset REQUEST_IDOffset) { builder.AddOffset(0, REQUEST_IDOffset.Value, 0); }
   public static void AddLISTING_ID(FlatBufferBuilder builder, StringOffset LISTING_IDOffset) { builder.AddOffset(1, LISTING_IDOffset.Value, 0); }
   public static void AddTIER_NAME(FlatBufferBuilder builder, StringOffset TIER_NAMEOffset) { builder.AddOffset(2, TIER_NAMEOffset.Value, 0); }
@@ -163,6 +306,30 @@ public struct PUR : IFlatbufferObject
   public static VectorOffset CreateBUYER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBUYER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddTIMESTAMP(FlatBufferBuilder builder, ulong TIMESTAMP) { builder.AddUlong(12, TIMESTAMP, 0); }
+  public static void AddKEY_ALGORITHM(FlatBufferBuilder builder, StringOffset KEY_ALGORITHMOffset) { builder.AddOffset(13, KEY_ALGORITHMOffset.Value, 0); }
+  public static void AddBUYER_EMAIL(FlatBufferBuilder builder, StringOffset BUYER_EMAILOffset) { builder.AddOffset(14, BUYER_EMAILOffset.Value, 0); }
+  public static void AddSENDER_ADDRESS(FlatBufferBuilder builder, StringOffset SENDER_ADDRESSOffset) { builder.AddOffset(15, SENDER_ADDRESSOffset.Value, 0); }
+  public static void AddCONFIRMATION_BLOCK(FlatBufferBuilder builder, ulong CONFIRMATION_BLOCK) { builder.AddUlong(16, CONFIRMATION_BLOCK, 0); }
+  public static void AddPAYMENT_INTENT_ID(FlatBufferBuilder builder, StringOffset PAYMENT_INTENT_IDOffset) { builder.AddOffset(17, PAYMENT_INTENT_IDOffset.Value, 0); }
+  public static void AddCREDITS_TRANSACTION_ID(FlatBufferBuilder builder, StringOffset CREDITS_TRANSACTION_IDOffset) { builder.AddOffset(18, CREDITS_TRANSACTION_IDOffset.Value, 0); }
+  public static void AddSTATUS(FlatBufferBuilder builder, purchaseLifecycleStatus STATUS) { builder.AddSbyte(19, (sbyte)STATUS, 0); }
+  public static void AddSTATUS_MESSAGE(FlatBufferBuilder builder, StringOffset STATUS_MESSAGEOffset) { builder.AddOffset(20, STATUS_MESSAGEOffset.Value, 0); }
+  public static void AddCREATED_AT(FlatBufferBuilder builder, ulong CREATED_AT) { builder.AddUlong(21, CREATED_AT, 0); }
+  public static void AddUPDATED_AT(FlatBufferBuilder builder, ulong UPDATED_AT) { builder.AddUlong(22, UPDATED_AT, 0); }
+  public static void AddPAYMENT_DEADLINE(FlatBufferBuilder builder, ulong PAYMENT_DEADLINE) { builder.AddUlong(23, PAYMENT_DEADLINE, 0); }
+  public static void AddPAYMENT_CONFIRMED_AT(FlatBufferBuilder builder, ulong PAYMENT_CONFIRMED_AT) { builder.AddUlong(24, PAYMENT_CONFIRMED_AT, 0); }
+  public static void AddGRANT_ISSUED_AT(FlatBufferBuilder builder, ulong GRANT_ISSUED_AT) { builder.AddUlong(25, GRANT_ISSUED_AT, 0); }
+  public static void AddGRANT_ID(FlatBufferBuilder builder, StringOffset GRANT_IDOffset) { builder.AddOffset(26, GRANT_IDOffset.Value, 0); }
+  public static void AddPROVIDER_PEER_ID(FlatBufferBuilder builder, StringOffset PROVIDER_PEER_IDOffset) { builder.AddOffset(27, PROVIDER_PEER_IDOffset.Value, 0); }
+  public static void AddPROVIDER_ACKNOWLEDGED_AT(FlatBufferBuilder builder, ulong PROVIDER_ACKNOWLEDGED_AT) { builder.AddUlong(28, PROVIDER_ACKNOWLEDGED_AT, 0); }
+  public static void AddPREFERRED_DELIVERY_METHOD(FlatBufferBuilder builder, StringOffset PREFERRED_DELIVERY_METHODOffset) { builder.AddOffset(29, PREFERRED_DELIVERY_METHODOffset.Value, 0); }
+  public static void AddWEBHOOK_URL(FlatBufferBuilder builder, StringOffset WEBHOOK_URLOffset) { builder.AddOffset(30, WEBHOOK_URLOffset.Value, 0); }
+  public static void AddPROVIDER_SIGNATURE(FlatBufferBuilder builder, VectorOffset PROVIDER_SIGNATUREOffset) { builder.AddOffset(31, PROVIDER_SIGNATUREOffset.Value, 0); }
+  public static VectorOffset CreatePROVIDER_SIGNATUREVector(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); for (int i = data.Length - 1; i >= 0; i--) builder.AddByte(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, byte[] data) { builder.StartVector(1, data.Length, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePROVIDER_SIGNATUREVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPROVIDER_SIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static Offset<PUR> EndPUR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // REQUEST_ID
@@ -194,6 +361,26 @@ public struct PUR : IFlatbufferObject
     _o.BUYER_SIGNATURE = new List<byte>();
     for (var _j = 0; _j < this.BUYER_SIGNATURELength; ++_j) {_o.BUYER_SIGNATURE.Add(this.BUYER_SIGNATURE(_j));}
     _o.TIMESTAMP = this.TIMESTAMP;
+    _o.KEY_ALGORITHM = this.KEY_ALGORITHM;
+    _o.BUYER_EMAIL = this.BUYER_EMAIL;
+    _o.SENDER_ADDRESS = this.SENDER_ADDRESS;
+    _o.CONFIRMATION_BLOCK = this.CONFIRMATION_BLOCK;
+    _o.PAYMENT_INTENT_ID = this.PAYMENT_INTENT_ID;
+    _o.CREDITS_TRANSACTION_ID = this.CREDITS_TRANSACTION_ID;
+    _o.STATUS = this.STATUS;
+    _o.STATUS_MESSAGE = this.STATUS_MESSAGE;
+    _o.CREATED_AT = this.CREATED_AT;
+    _o.UPDATED_AT = this.UPDATED_AT;
+    _o.PAYMENT_DEADLINE = this.PAYMENT_DEADLINE;
+    _o.PAYMENT_CONFIRMED_AT = this.PAYMENT_CONFIRMED_AT;
+    _o.GRANT_ISSUED_AT = this.GRANT_ISSUED_AT;
+    _o.GRANT_ID = this.GRANT_ID;
+    _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID;
+    _o.PROVIDER_ACKNOWLEDGED_AT = this.PROVIDER_ACKNOWLEDGED_AT;
+    _o.PREFERRED_DELIVERY_METHOD = this.PREFERRED_DELIVERY_METHOD;
+    _o.WEBHOOK_URL = this.WEBHOOK_URL;
+    _o.PROVIDER_SIGNATURE = new List<byte>();
+    for (var _j = 0; _j < this.PROVIDER_SIGNATURELength; ++_j) {_o.PROVIDER_SIGNATURE.Add(this.PROVIDER_SIGNATURE(_j));}
   }
   public static Offset<PUR> Pack(FlatBufferBuilder builder, PURT _o) {
     if (_o == null) return default(Offset<PUR>);
@@ -215,6 +402,21 @@ public struct PUR : IFlatbufferObject
       var __BUYER_SIGNATURE = _o.BUYER_SIGNATURE.ToArray();
       _BUYER_SIGNATURE = CreateBUYER_SIGNATUREVector(builder, __BUYER_SIGNATURE);
     }
+    var _KEY_ALGORITHM = _o.KEY_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.KEY_ALGORITHM);
+    var _BUYER_EMAIL = _o.BUYER_EMAIL == null ? default(StringOffset) : builder.CreateString(_o.BUYER_EMAIL);
+    var _SENDER_ADDRESS = _o.SENDER_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.SENDER_ADDRESS);
+    var _PAYMENT_INTENT_ID = _o.PAYMENT_INTENT_ID == null ? default(StringOffset) : builder.CreateString(_o.PAYMENT_INTENT_ID);
+    var _CREDITS_TRANSACTION_ID = _o.CREDITS_TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.CREDITS_TRANSACTION_ID);
+    var _STATUS_MESSAGE = _o.STATUS_MESSAGE == null ? default(StringOffset) : builder.CreateString(_o.STATUS_MESSAGE);
+    var _GRANT_ID = _o.GRANT_ID == null ? default(StringOffset) : builder.CreateString(_o.GRANT_ID);
+    var _PROVIDER_PEER_ID = _o.PROVIDER_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.PROVIDER_PEER_ID);
+    var _PREFERRED_DELIVERY_METHOD = _o.PREFERRED_DELIVERY_METHOD == null ? default(StringOffset) : builder.CreateString(_o.PREFERRED_DELIVERY_METHOD);
+    var _WEBHOOK_URL = _o.WEBHOOK_URL == null ? default(StringOffset) : builder.CreateString(_o.WEBHOOK_URL);
+    var _PROVIDER_SIGNATURE = default(VectorOffset);
+    if (_o.PROVIDER_SIGNATURE != null) {
+      var __PROVIDER_SIGNATURE = _o.PROVIDER_SIGNATURE.ToArray();
+      _PROVIDER_SIGNATURE = CreatePROVIDER_SIGNATUREVector(builder, __PROVIDER_SIGNATURE);
+    }
     return CreatePUR(
       builder,
       _REQUEST_ID,
@@ -229,7 +431,26 @@ public struct PUR : IFlatbufferObject
       _PAYMENT_CHAIN,
       _PAYMENT_REFERENCE,
       _BUYER_SIGNATURE,
-      _o.TIMESTAMP);
+      _o.TIMESTAMP,
+      _KEY_ALGORITHM,
+      _BUYER_EMAIL,
+      _SENDER_ADDRESS,
+      _o.CONFIRMATION_BLOCK,
+      _PAYMENT_INTENT_ID,
+      _CREDITS_TRANSACTION_ID,
+      _o.STATUS,
+      _STATUS_MESSAGE,
+      _o.CREATED_AT,
+      _o.UPDATED_AT,
+      _o.PAYMENT_DEADLINE,
+      _o.PAYMENT_CONFIRMED_AT,
+      _o.GRANT_ISSUED_AT,
+      _GRANT_ID,
+      _PROVIDER_PEER_ID,
+      _o.PROVIDER_ACKNOWLEDGED_AT,
+      _PREFERRED_DELIVERY_METHOD,
+      _WEBHOOK_URL,
+      _PROVIDER_SIGNATURE);
   }
 }
 
@@ -248,6 +469,25 @@ public class PURT
   public string PAYMENT_REFERENCE { get; set; }
   public List<byte> BUYER_SIGNATURE { get; set; }
   public ulong TIMESTAMP { get; set; }
+  public string KEY_ALGORITHM { get; set; }
+  public string BUYER_EMAIL { get; set; }
+  public string SENDER_ADDRESS { get; set; }
+  public ulong CONFIRMATION_BLOCK { get; set; }
+  public string PAYMENT_INTENT_ID { get; set; }
+  public string CREDITS_TRANSACTION_ID { get; set; }
+  public purchaseLifecycleStatus STATUS { get; set; }
+  public string STATUS_MESSAGE { get; set; }
+  public ulong CREATED_AT { get; set; }
+  public ulong UPDATED_AT { get; set; }
+  public ulong PAYMENT_DEADLINE { get; set; }
+  public ulong PAYMENT_CONFIRMED_AT { get; set; }
+  public ulong GRANT_ISSUED_AT { get; set; }
+  public string GRANT_ID { get; set; }
+  public string PROVIDER_PEER_ID { get; set; }
+  public ulong PROVIDER_ACKNOWLEDGED_AT { get; set; }
+  public string PREFERRED_DELIVERY_METHOD { get; set; }
+  public string WEBHOOK_URL { get; set; }
+  public List<byte> PROVIDER_SIGNATURE { get; set; }
 
   public PURT() {
     this.REQUEST_ID = null;
@@ -263,6 +503,25 @@ public class PURT
     this.PAYMENT_REFERENCE = null;
     this.BUYER_SIGNATURE = null;
     this.TIMESTAMP = 0;
+    this.KEY_ALGORITHM = null;
+    this.BUYER_EMAIL = null;
+    this.SENDER_ADDRESS = null;
+    this.CONFIRMATION_BLOCK = 0;
+    this.PAYMENT_INTENT_ID = null;
+    this.CREDITS_TRANSACTION_ID = null;
+    this.STATUS = purchaseLifecycleStatus.Pending;
+    this.STATUS_MESSAGE = null;
+    this.CREATED_AT = 0;
+    this.UPDATED_AT = 0;
+    this.PAYMENT_DEADLINE = 0;
+    this.PAYMENT_CONFIRMED_AT = 0;
+    this.GRANT_ISSUED_AT = 0;
+    this.GRANT_ID = null;
+    this.PROVIDER_PEER_ID = null;
+    this.PROVIDER_ACKNOWLEDGED_AT = 0;
+    this.PREFERRED_DELIVERY_METHOD = null;
+    this.WEBHOOK_URL = null;
+    this.PROVIDER_SIGNATURE = null;
   }
   public static PURT DeserializeFromBinary(byte[] fbBuffer) {
     return PUR.GetRootAsPUR(new ByteBuffer(fbBuffer)).UnPack();
@@ -293,6 +552,25 @@ static public class PURVerify
       && verifier.VerifyString(tablePos, 24 /*PAYMENT_REFERENCE*/, false)
       && verifier.VerifyVectorOfData(tablePos, 26 /*BUYER_SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyField(tablePos, 28 /*TIMESTAMP*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 30 /*KEY_ALGORITHM*/, false)
+      && verifier.VerifyString(tablePos, 32 /*BUYER_EMAIL*/, false)
+      && verifier.VerifyString(tablePos, 34 /*SENDER_ADDRESS*/, false)
+      && verifier.VerifyField(tablePos, 36 /*CONFIRMATION_BLOCK*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 38 /*PAYMENT_INTENT_ID*/, false)
+      && verifier.VerifyString(tablePos, 40 /*CREDITS_TRANSACTION_ID*/, false)
+      && verifier.VerifyField(tablePos, 42 /*STATUS*/, 1 /*purchaseLifecycleStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 44 /*STATUS_MESSAGE*/, false)
+      && verifier.VerifyField(tablePos, 46 /*CREATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*UPDATED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*PAYMENT_DEADLINE*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*PAYMENT_CONFIRMED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*GRANT_ISSUED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 56 /*GRANT_ID*/, false)
+      && verifier.VerifyString(tablePos, 58 /*PROVIDER_PEER_ID*/, false)
+      && verifier.VerifyField(tablePos, 60 /*PROVIDER_ACKNOWLEDGED_AT*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 62 /*PREFERRED_DELIVERY_METHOD*/, false)
+      && verifier.VerifyString(tablePos, 64 /*WEBHOOK_URL*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 66 /*PROVIDER_SIGNATURE*/, 1 /*byte*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

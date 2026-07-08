@@ -1,6 +1,29 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "reviewLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["Published", "Pending", "Flagged", "Hidden", "Removed"]
+    },
+    "DataQualityMetrics" : {
+      "type" : "object",
+      "description" : "Data quality metrics attached to a review.",
+      "properties" : {
+        "SCHEMA_COMPLIANCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DATA_FRESHNESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "COVERAGE_ACCURACY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "DELIVERY_RELIABILITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              }
+      },
+      "additionalProperties" : false
+    },
     "REV" : {
       "type" : "object",
       "description" : "Review - User review of a storefront listing",
@@ -40,6 +63,46 @@
         "REVIEWER_SIGNATURE" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Ed25519 signature from reviewer"
+              },
+        "QUALITY_METRICS" : {
+                "$ref" : "#/definitions/DataQualityMetrics",
+                "description" : "Data quality metrics supplied by reviewer"
+              },
+        "VERIFIED_PURCHASE" : {
+                "type" : "boolean",
+                "description" : "Whether the review is tied to a verified purchase"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the review was last updated"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/reviewLifecycleStatus",
+                "description" : "Review lifecycle status"
+              },
+        "HELPFUL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Helpful vote count"
+              },
+        "NOT_HELPFUL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Not-helpful vote count"
+              },
+        "PROVIDER_RESPONSE" : {
+                "type" : "string",
+                "description" : "Provider response body"
+              },
+        "PROVIDER_RESPONSE_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when provider responded"
+              },
+        "FLAGGED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of moderation flags"
+              },
+        "MODERATION_NOTES" : {
+                "type" : "string",
+                "description" : "Moderation notes"
               }
       },
       "required" : ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],

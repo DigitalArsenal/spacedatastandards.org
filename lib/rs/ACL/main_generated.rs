@@ -4,6 +4,103 @@
 use crate::main_generated::*;
 extern crate alloc;
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_GRANT_LIFECYCLE_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_GRANT_LIFECYCLE_STATUS: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GRANT_LIFECYCLE_STATUS: [grantLifecycleStatus; 5] = [
+  grantLifecycleStatus::Active,
+  grantLifecycleStatus::Revoked,
+  grantLifecycleStatus::Expired,
+  grantLifecycleStatus::Suspended,
+  grantLifecycleStatus::Pending,
+];
+
+/// Grant lifecycle status tracked by the provider.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct grantLifecycleStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl grantLifecycleStatus {
+  pub const Active: Self = Self(0);
+  pub const Revoked: Self = Self(1);
+  pub const Expired: Self = Self(2);
+  pub const Suspended: Self = Self(3);
+  pub const Pending: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Active,
+    Self::Revoked,
+    Self::Expired,
+    Self::Suspended,
+    Self::Pending,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Active => Some("Active"),
+      Self::Revoked => Some("Revoked"),
+      Self::Expired => Some("Expired"),
+      Self::Suspended => Some("Suspended"),
+      Self::Pending => Some("Pending"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for grantLifecycleStatus {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for grantLifecycleStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for grantLifecycleStatus {
+    type Output = grantLifecycleStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for grantLifecycleStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for grantLifecycleStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for grantLifecycleStatus {}
 pub enum ACLOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -32,6 +129,26 @@ impl<'a> ACL<'a> {
   pub const VT_PAYMENT_TX_HASH: ::flatbuffers::VOffsetT = 20;
   pub const VT_PAYMENT_METHOD: ::flatbuffers::VOffsetT = 22;
   pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 24;
+  pub const VT_KEY_ALGORITHM: ::flatbuffers::VOffsetT = 26;
+  pub const VT_RATE_LIMIT: ::flatbuffers::VOffsetT = 28;
+  pub const VT_MAX_RECORDS_PER_REQUEST: ::flatbuffers::VOffsetT = 30;
+  pub const VT_STATUS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_PAYMENT_AMOUNT: ::flatbuffers::VOffsetT = 34;
+  pub const VT_PAYMENT_CURRENCY: ::flatbuffers::VOffsetT = 36;
+  pub const VT_PAYMENT_CHAIN: ::flatbuffers::VOffsetT = 38;
+  pub const VT_NEXT_RENEWAL: ::flatbuffers::VOffsetT = 40;
+  pub const VT_AUTO_RENEW: ::flatbuffers::VOffsetT = 42;
+  pub const VT_RENEWAL_COUNT: ::flatbuffers::VOffsetT = 44;
+  pub const VT_TOTAL_REQUESTS: ::flatbuffers::VOffsetT = 46;
+  pub const VT_TOTAL_RECORDS: ::flatbuffers::VOffsetT = 48;
+  pub const VT_LAST_ACCESS: ::flatbuffers::VOffsetT = 50;
+  pub const VT_DELIVERY_TOPIC: ::flatbuffers::VOffsetT = 52;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 54;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 56;
+  pub const VT_NOTES: ::flatbuffers::VOffsetT = 58;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 60;
+  pub const VT_GRANT_RESPONSE_BASE64: ::flatbuffers::VOffsetT = 62;
+  pub const VT_FIELD_STREAM_POLICY: ::flatbuffers::VOffsetT = 64;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -43,8 +160,26 @@ impl<'a> ACL<'a> {
     args: &'args ACLArgs<'args>
   ) -> ::flatbuffers::WIPOffset<ACL<'bldr>> {
     let mut builder = ACLBuilder::new(_fbb);
+    builder.add_UPDATED_AT(args.UPDATED_AT);
+    builder.add_CREATED_AT(args.CREATED_AT);
+    builder.add_LAST_ACCESS(args.LAST_ACCESS);
+    builder.add_TOTAL_RECORDS(args.TOTAL_RECORDS);
+    builder.add_TOTAL_REQUESTS(args.TOTAL_REQUESTS);
+    builder.add_NEXT_RENEWAL(args.NEXT_RENEWAL);
+    builder.add_PAYMENT_AMOUNT(args.PAYMENT_AMOUNT);
     builder.add_EXPIRES_AT(args.EXPIRES_AT);
     builder.add_GRANTED_AT(args.GRANTED_AT);
+    if let Some(x) = args.FIELD_STREAM_POLICY { builder.add_FIELD_STREAM_POLICY(x); }
+    if let Some(x) = args.GRANT_RESPONSE_BASE64 { builder.add_GRANT_RESPONSE_BASE64(x); }
+    if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.DELIVERY_TOPIC { builder.add_DELIVERY_TOPIC(x); }
+    builder.add_RENEWAL_COUNT(args.RENEWAL_COUNT);
+    if let Some(x) = args.PAYMENT_CHAIN { builder.add_PAYMENT_CHAIN(x); }
+    if let Some(x) = args.PAYMENT_CURRENCY { builder.add_PAYMENT_CURRENCY(x); }
+    builder.add_MAX_RECORDS_PER_REQUEST(args.MAX_RECORDS_PER_REQUEST);
+    builder.add_RATE_LIMIT(args.RATE_LIMIT);
+    if let Some(x) = args.KEY_ALGORITHM { builder.add_KEY_ALGORITHM(x); }
     if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
     if let Some(x) = args.PAYMENT_TX_HASH { builder.add_PAYMENT_TX_HASH(x); }
     if let Some(x) = args.TIER_NAME { builder.add_TIER_NAME(x); }
@@ -52,6 +187,8 @@ impl<'a> ACL<'a> {
     if let Some(x) = args.BUYER_PEER_ID { builder.add_BUYER_PEER_ID(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
     if let Some(x) = args.GRANT_ID { builder.add_GRANT_ID(x); }
+    builder.add_AUTO_RENEW(args.AUTO_RENEW);
+    builder.add_STATUS(args.STATUS);
     builder.add_PAYMENT_METHOD(args.PAYMENT_METHOD);
     builder.add_ACCESS_TYPE(args.ACCESS_TYPE);
     builder.finish()
@@ -86,6 +223,42 @@ impl<'a> ACL<'a> {
     let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE().map(|x| {
       x.into_iter().collect()
     });
+    let KEY_ALGORITHM = self.KEY_ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let RATE_LIMIT = self.RATE_LIMIT();
+    let MAX_RECORDS_PER_REQUEST = self.MAX_RECORDS_PER_REQUEST();
+    let STATUS = self.STATUS();
+    let PAYMENT_AMOUNT = self.PAYMENT_AMOUNT();
+    let PAYMENT_CURRENCY = self.PAYMENT_CURRENCY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PAYMENT_CHAIN = self.PAYMENT_CHAIN().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NEXT_RENEWAL = self.NEXT_RENEWAL();
+    let AUTO_RENEW = self.AUTO_RENEW();
+    let RENEWAL_COUNT = self.RENEWAL_COUNT();
+    let TOTAL_REQUESTS = self.TOTAL_REQUESTS();
+    let TOTAL_RECORDS = self.TOTAL_RECORDS();
+    let LAST_ACCESS = self.LAST_ACCESS();
+    let DELIVERY_TOPIC = self.DELIVERY_TOPIC().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREATED_AT = self.CREATED_AT();
+    let UPDATED_AT = self.UPDATED_AT();
+    let NOTES = self.NOTES().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let GRANT_RESPONSE_BASE64 = self.GRANT_RESPONSE_BASE64().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FIELD_STREAM_POLICY = self.FIELD_STREAM_POLICY().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     ACLT {
       GRANT_ID,
       LISTING_ID,
@@ -98,6 +271,26 @@ impl<'a> ACL<'a> {
       PAYMENT_TX_HASH,
       PAYMENT_METHOD,
       PROVIDER_SIGNATURE,
+      KEY_ALGORITHM,
+      RATE_LIMIT,
+      MAX_RECORDS_PER_REQUEST,
+      STATUS,
+      PAYMENT_AMOUNT,
+      PAYMENT_CURRENCY,
+      PAYMENT_CHAIN,
+      NEXT_RENEWAL,
+      AUTO_RENEW,
+      RENEWAL_COUNT,
+      TOTAL_REQUESTS,
+      TOTAL_RECORDS,
+      LAST_ACCESS,
+      DELIVERY_TOPIC,
+      CREATED_AT,
+      UPDATED_AT,
+      NOTES,
+      PROVIDER_PEER_ID,
+      GRANT_RESPONSE_BASE64,
+      FIELD_STREAM_POLICY,
     }
   }
 
@@ -189,6 +382,166 @@ impl<'a> ACL<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(ACL::VT_PROVIDER_SIGNATURE, None)}
   }
+  /// Key algorithm for buyer encryption public key
+  #[inline]
+  pub fn KEY_ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_KEY_ALGORITHM, None)}
+  }
+  /// Request rate limit
+  #[inline]
+  pub fn RATE_LIMIT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ACL::VT_RATE_LIMIT, Some(0)).unwrap()}
+  }
+  /// Maximum records returned per request
+  #[inline]
+  pub fn MAX_RECORDS_PER_REQUEST(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ACL::VT_MAX_RECORDS_PER_REQUEST, Some(0)).unwrap()}
+  }
+  /// Provider-side grant status
+  #[inline]
+  pub fn STATUS(&self) -> grantLifecycleStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<grantLifecycleStatus>(ACL::VT_STATUS, Some(grantLifecycleStatus::Active)).unwrap()}
+  }
+  /// Payment amount in smallest unit
+  #[inline]
+  pub fn PAYMENT_AMOUNT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_PAYMENT_AMOUNT, Some(0)).unwrap()}
+  }
+  /// Payment currency
+  #[inline]
+  pub fn PAYMENT_CURRENCY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_PAYMENT_CURRENCY, None)}
+  }
+  /// Payment chain or processor
+  #[inline]
+  pub fn PAYMENT_CHAIN(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_PAYMENT_CHAIN, None)}
+  }
+  /// Unix timestamp of next renewal
+  #[inline]
+  pub fn NEXT_RENEWAL(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_NEXT_RENEWAL, Some(0)).unwrap()}
+  }
+  /// Whether renewal is automatic
+  #[inline]
+  pub fn AUTO_RENEW(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(ACL::VT_AUTO_RENEW, Some(false)).unwrap()}
+  }
+  /// Renewal count
+  #[inline]
+  pub fn RENEWAL_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(ACL::VT_RENEWAL_COUNT, Some(0)).unwrap()}
+  }
+  /// Total requests made under this grant
+  #[inline]
+  pub fn TOTAL_REQUESTS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_TOTAL_REQUESTS, Some(0)).unwrap()}
+  }
+  /// Total records delivered under this grant
+  #[inline]
+  pub fn TOTAL_RECORDS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_TOTAL_RECORDS, Some(0)).unwrap()}
+  }
+  /// Unix timestamp of last access
+  #[inline]
+  pub fn LAST_ACCESS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_LAST_ACCESS, Some(0)).unwrap()}
+  }
+  /// PubSub or direct delivery topic
+  #[inline]
+  pub fn DELIVERY_TOPIC(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_DELIVERY_TOPIC, None)}
+  }
+  /// Unix timestamp when the grant record was created
+  #[inline]
+  pub fn CREATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_CREATED_AT, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when the grant record was updated
+  #[inline]
+  pub fn UPDATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(ACL::VT_UPDATED_AT, Some(0)).unwrap()}
+  }
+  /// Provider notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_NOTES, None)}
+  }
+  /// Provider peer ID
+  #[inline]
+  pub fn PROVIDER_PEER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_PROVIDER_PEER_ID, None)}
+  }
+  /// Base64-encoded signed grant response bytes
+  #[inline]
+  pub fn GRANT_RESPONSE_BASE64(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ACL::VT_GRANT_RESPONSE_BASE64, None)}
+  }
+  /// Field-level stream policy bound to this grant
+  #[inline]
+  pub fn FIELD_STREAM_POLICY(&self) -> Option<GrantFieldStreamPolicy<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<GrantFieldStreamPolicy>>(ACL::VT_FIELD_STREAM_POLICY, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for ACL<'_> {
@@ -208,6 +561,26 @@ impl ::flatbuffers::Verifiable for ACL<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_TX_HASH", Self::VT_PAYMENT_TX_HASH, false)?
      .visit_field::<paymentMethod>("PAYMENT_METHOD", Self::VT_PAYMENT_METHOD, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ALGORITHM", Self::VT_KEY_ALGORITHM, false)?
+     .visit_field::<u32>("RATE_LIMIT", Self::VT_RATE_LIMIT, false)?
+     .visit_field::<u32>("MAX_RECORDS_PER_REQUEST", Self::VT_MAX_RECORDS_PER_REQUEST, false)?
+     .visit_field::<grantLifecycleStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<u64>("PAYMENT_AMOUNT", Self::VT_PAYMENT_AMOUNT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_CURRENCY", Self::VT_PAYMENT_CURRENCY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_CHAIN", Self::VT_PAYMENT_CHAIN, false)?
+     .visit_field::<u64>("NEXT_RENEWAL", Self::VT_NEXT_RENEWAL, false)?
+     .visit_field::<bool>("AUTO_RENEW", Self::VT_AUTO_RENEW, false)?
+     .visit_field::<u32>("RENEWAL_COUNT", Self::VT_RENEWAL_COUNT, false)?
+     .visit_field::<u64>("TOTAL_REQUESTS", Self::VT_TOTAL_REQUESTS, false)?
+     .visit_field::<u64>("TOTAL_RECORDS", Self::VT_TOTAL_RECORDS, false)?
+     .visit_field::<u64>("LAST_ACCESS", Self::VT_LAST_ACCESS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DELIVERY_TOPIC", Self::VT_DELIVERY_TOPIC, false)?
+     .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
+     .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_RESPONSE_BASE64", Self::VT_GRANT_RESPONSE_BASE64, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<GrantFieldStreamPolicy>>("FIELD_STREAM_POLICY", Self::VT_FIELD_STREAM_POLICY, false)?
      .finish();
     Ok(())
   }
@@ -224,6 +597,26 @@ pub struct ACLArgs<'a> {
     pub PAYMENT_TX_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PAYMENT_METHOD: paymentMethod,
     pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub KEY_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RATE_LIMIT: u32,
+    pub MAX_RECORDS_PER_REQUEST: u32,
+    pub STATUS: grantLifecycleStatus,
+    pub PAYMENT_AMOUNT: u64,
+    pub PAYMENT_CURRENCY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PAYMENT_CHAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NEXT_RENEWAL: u64,
+    pub AUTO_RENEW: bool,
+    pub RENEWAL_COUNT: u32,
+    pub TOTAL_REQUESTS: u64,
+    pub TOTAL_RECORDS: u64,
+    pub LAST_ACCESS: u64,
+    pub DELIVERY_TOPIC: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATED_AT: u64,
+    pub UPDATED_AT: u64,
+    pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GRANT_RESPONSE_BASE64: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FIELD_STREAM_POLICY: Option<::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'a>>>,
 }
 impl<'a> Default for ACLArgs<'a> {
   #[inline]
@@ -240,6 +633,26 @@ impl<'a> Default for ACLArgs<'a> {
       PAYMENT_TX_HASH: None,
       PAYMENT_METHOD: paymentMethod::Crypto_ETH,
       PROVIDER_SIGNATURE: None,
+      KEY_ALGORITHM: None,
+      RATE_LIMIT: 0,
+      MAX_RECORDS_PER_REQUEST: 0,
+      STATUS: grantLifecycleStatus::Active,
+      PAYMENT_AMOUNT: 0,
+      PAYMENT_CURRENCY: None,
+      PAYMENT_CHAIN: None,
+      NEXT_RENEWAL: 0,
+      AUTO_RENEW: false,
+      RENEWAL_COUNT: 0,
+      TOTAL_REQUESTS: 0,
+      TOTAL_RECORDS: 0,
+      LAST_ACCESS: 0,
+      DELIVERY_TOPIC: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      NOTES: None,
+      PROVIDER_PEER_ID: None,
+      GRANT_RESPONSE_BASE64: None,
+      FIELD_STREAM_POLICY: None,
     }
   }
 }
@@ -294,6 +707,86 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> ACLBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
   }
   #[inline]
+  pub fn add_KEY_ALGORITHM(&mut self, KEY_ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_KEY_ALGORITHM, KEY_ALGORITHM);
+  }
+  #[inline]
+  pub fn add_RATE_LIMIT(&mut self, RATE_LIMIT: u32) {
+    self.fbb_.push_slot::<u32>(ACL::VT_RATE_LIMIT, RATE_LIMIT, 0);
+  }
+  #[inline]
+  pub fn add_MAX_RECORDS_PER_REQUEST(&mut self, MAX_RECORDS_PER_REQUEST: u32) {
+    self.fbb_.push_slot::<u32>(ACL::VT_MAX_RECORDS_PER_REQUEST, MAX_RECORDS_PER_REQUEST, 0);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: grantLifecycleStatus) {
+    self.fbb_.push_slot::<grantLifecycleStatus>(ACL::VT_STATUS, STATUS, grantLifecycleStatus::Active);
+  }
+  #[inline]
+  pub fn add_PAYMENT_AMOUNT(&mut self, PAYMENT_AMOUNT: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_PAYMENT_AMOUNT, PAYMENT_AMOUNT, 0);
+  }
+  #[inline]
+  pub fn add_PAYMENT_CURRENCY(&mut self, PAYMENT_CURRENCY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PAYMENT_CURRENCY, PAYMENT_CURRENCY);
+  }
+  #[inline]
+  pub fn add_PAYMENT_CHAIN(&mut self, PAYMENT_CHAIN: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PAYMENT_CHAIN, PAYMENT_CHAIN);
+  }
+  #[inline]
+  pub fn add_NEXT_RENEWAL(&mut self, NEXT_RENEWAL: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_NEXT_RENEWAL, NEXT_RENEWAL, 0);
+  }
+  #[inline]
+  pub fn add_AUTO_RENEW(&mut self, AUTO_RENEW: bool) {
+    self.fbb_.push_slot::<bool>(ACL::VT_AUTO_RENEW, AUTO_RENEW, false);
+  }
+  #[inline]
+  pub fn add_RENEWAL_COUNT(&mut self, RENEWAL_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(ACL::VT_RENEWAL_COUNT, RENEWAL_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_REQUESTS(&mut self, TOTAL_REQUESTS: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_TOTAL_REQUESTS, TOTAL_REQUESTS, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_RECORDS(&mut self, TOTAL_RECORDS: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_TOTAL_RECORDS, TOTAL_RECORDS, 0);
+  }
+  #[inline]
+  pub fn add_LAST_ACCESS(&mut self, LAST_ACCESS: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_LAST_ACCESS, LAST_ACCESS, 0);
+  }
+  #[inline]
+  pub fn add_DELIVERY_TOPIC(&mut self, DELIVERY_TOPIC: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_DELIVERY_TOPIC, DELIVERY_TOPIC);
+  }
+  #[inline]
+  pub fn add_CREATED_AT(&mut self, CREATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_CREATED_AT, CREATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_UPDATED_AT(&mut self, UPDATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(ACL::VT_UPDATED_AT, UPDATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_NOTES, NOTES);
+  }
+  #[inline]
+  pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
+  }
+  #[inline]
+  pub fn add_GRANT_RESPONSE_BASE64(&mut self, GRANT_RESPONSE_BASE64: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(ACL::VT_GRANT_RESPONSE_BASE64, GRANT_RESPONSE_BASE64);
+  }
+  #[inline]
+  pub fn add_FIELD_STREAM_POLICY(&mut self, FIELD_STREAM_POLICY: ::flatbuffers::WIPOffset<GrantFieldStreamPolicy<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<GrantFieldStreamPolicy>>(ACL::VT_FIELD_STREAM_POLICY, FIELD_STREAM_POLICY);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> ACLBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACLBuilder {
@@ -325,6 +818,26 @@ impl ::core::fmt::Debug for ACL<'_> {
       ds.field("PAYMENT_TX_HASH", &self.PAYMENT_TX_HASH());
       ds.field("PAYMENT_METHOD", &self.PAYMENT_METHOD());
       ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
+      ds.field("KEY_ALGORITHM", &self.KEY_ALGORITHM());
+      ds.field("RATE_LIMIT", &self.RATE_LIMIT());
+      ds.field("MAX_RECORDS_PER_REQUEST", &self.MAX_RECORDS_PER_REQUEST());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("PAYMENT_AMOUNT", &self.PAYMENT_AMOUNT());
+      ds.field("PAYMENT_CURRENCY", &self.PAYMENT_CURRENCY());
+      ds.field("PAYMENT_CHAIN", &self.PAYMENT_CHAIN());
+      ds.field("NEXT_RENEWAL", &self.NEXT_RENEWAL());
+      ds.field("AUTO_RENEW", &self.AUTO_RENEW());
+      ds.field("RENEWAL_COUNT", &self.RENEWAL_COUNT());
+      ds.field("TOTAL_REQUESTS", &self.TOTAL_REQUESTS());
+      ds.field("TOTAL_RECORDS", &self.TOTAL_RECORDS());
+      ds.field("LAST_ACCESS", &self.LAST_ACCESS());
+      ds.field("DELIVERY_TOPIC", &self.DELIVERY_TOPIC());
+      ds.field("CREATED_AT", &self.CREATED_AT());
+      ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("NOTES", &self.NOTES());
+      ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
+      ds.field("GRANT_RESPONSE_BASE64", &self.GRANT_RESPONSE_BASE64());
+      ds.field("FIELD_STREAM_POLICY", &self.FIELD_STREAM_POLICY());
       ds.finish()
   }
 }
@@ -342,6 +855,26 @@ pub struct ACLT {
   pub PAYMENT_TX_HASH: Option<alloc::string::String>,
   pub PAYMENT_METHOD: paymentMethod,
   pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
+  pub KEY_ALGORITHM: Option<alloc::string::String>,
+  pub RATE_LIMIT: u32,
+  pub MAX_RECORDS_PER_REQUEST: u32,
+  pub STATUS: grantLifecycleStatus,
+  pub PAYMENT_AMOUNT: u64,
+  pub PAYMENT_CURRENCY: Option<alloc::string::String>,
+  pub PAYMENT_CHAIN: Option<alloc::string::String>,
+  pub NEXT_RENEWAL: u64,
+  pub AUTO_RENEW: bool,
+  pub RENEWAL_COUNT: u32,
+  pub TOTAL_REQUESTS: u64,
+  pub TOTAL_RECORDS: u64,
+  pub LAST_ACCESS: u64,
+  pub DELIVERY_TOPIC: Option<alloc::string::String>,
+  pub CREATED_AT: u64,
+  pub UPDATED_AT: u64,
+  pub NOTES: Option<alloc::string::String>,
+  pub PROVIDER_PEER_ID: Option<alloc::string::String>,
+  pub GRANT_RESPONSE_BASE64: Option<alloc::string::String>,
+  pub FIELD_STREAM_POLICY: Option<alloc::boxed::Box<GrantFieldStreamPolicyT>>,
 }
 impl Default for ACLT {
   fn default() -> Self {
@@ -357,6 +890,26 @@ impl Default for ACLT {
       PAYMENT_TX_HASH: None,
       PAYMENT_METHOD: paymentMethod::Crypto_ETH,
       PROVIDER_SIGNATURE: None,
+      KEY_ALGORITHM: None,
+      RATE_LIMIT: 0,
+      MAX_RECORDS_PER_REQUEST: 0,
+      STATUS: grantLifecycleStatus::Active,
+      PAYMENT_AMOUNT: 0,
+      PAYMENT_CURRENCY: None,
+      PAYMENT_CHAIN: None,
+      NEXT_RENEWAL: 0,
+      AUTO_RENEW: false,
+      RENEWAL_COUNT: 0,
+      TOTAL_REQUESTS: 0,
+      TOTAL_RECORDS: 0,
+      LAST_ACCESS: 0,
+      DELIVERY_TOPIC: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      NOTES: None,
+      PROVIDER_PEER_ID: None,
+      GRANT_RESPONSE_BASE64: None,
+      FIELD_STREAM_POLICY: None,
     }
   }
 }
@@ -393,6 +946,42 @@ impl ACLT {
     let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let KEY_ALGORITHM = self.KEY_ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RATE_LIMIT = self.RATE_LIMIT;
+    let MAX_RECORDS_PER_REQUEST = self.MAX_RECORDS_PER_REQUEST;
+    let STATUS = self.STATUS;
+    let PAYMENT_AMOUNT = self.PAYMENT_AMOUNT;
+    let PAYMENT_CURRENCY = self.PAYMENT_CURRENCY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PAYMENT_CHAIN = self.PAYMENT_CHAIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NEXT_RENEWAL = self.NEXT_RENEWAL;
+    let AUTO_RENEW = self.AUTO_RENEW;
+    let RENEWAL_COUNT = self.RENEWAL_COUNT;
+    let TOTAL_REQUESTS = self.TOTAL_REQUESTS;
+    let TOTAL_RECORDS = self.TOTAL_RECORDS;
+    let LAST_ACCESS = self.LAST_ACCESS;
+    let DELIVERY_TOPIC = self.DELIVERY_TOPIC.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATED_AT = self.CREATED_AT;
+    let UPDATED_AT = self.UPDATED_AT;
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GRANT_RESPONSE_BASE64 = self.GRANT_RESPONSE_BASE64.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FIELD_STREAM_POLICY = self.FIELD_STREAM_POLICY.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     ACL::create(_fbb, &ACLArgs{
       GRANT_ID,
       LISTING_ID,
@@ -405,6 +994,26 @@ impl ACLT {
       PAYMENT_TX_HASH,
       PAYMENT_METHOD,
       PROVIDER_SIGNATURE,
+      KEY_ALGORITHM,
+      RATE_LIMIT,
+      MAX_RECORDS_PER_REQUEST,
+      STATUS,
+      PAYMENT_AMOUNT,
+      PAYMENT_CURRENCY,
+      PAYMENT_CHAIN,
+      NEXT_RENEWAL,
+      AUTO_RENEW,
+      RENEWAL_COUNT,
+      TOTAL_REQUESTS,
+      TOTAL_RECORDS,
+      LAST_ACCESS,
+      DELIVERY_TOPIC,
+      CREATED_AT,
+      UPDATED_AT,
+      NOTES,
+      PROVIDER_PEER_ID,
+      GRANT_RESPONSE_BASE64,
+      FIELD_STREAM_POLICY,
     })
   }
 }

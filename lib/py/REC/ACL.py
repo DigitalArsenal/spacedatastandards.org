@@ -157,8 +157,172 @@ class ACL(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
+    # Key algorithm for buyer encryption public key
+    # ACL
+    def KEY_ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Request rate limit
+    # ACL
+    def RATE_LIMIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Maximum records returned per request
+    # ACL
+    def MAX_RECORDS_PER_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Provider-side grant status
+    # ACL
+    def STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Payment amount in smallest unit
+    # ACL
+    def PAYMENT_AMOUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Payment currency
+    # ACL
+    def PAYMENT_CURRENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Payment chain or processor
+    # ACL
+    def PAYMENT_CHAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp of next renewal
+    # ACL
+    def NEXT_RENEWAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Whether renewal is automatic
+    # ACL
+    def AUTO_RENEW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Renewal count
+    # ACL
+    def RENEWAL_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Total requests made under this grant
+    # ACL
+    def TOTAL_REQUESTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Total records delivered under this grant
+    # ACL
+    def TOTAL_RECORDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp of last access
+    # ACL
+    def LAST_ACCESS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # PubSub or direct delivery topic
+    # ACL
+    def DELIVERY_TOPIC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unix timestamp when the grant record was created
+    # ACL
+    def CREATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when the grant record was updated
+    # ACL
+    def UPDATED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Provider notes
+    # ACL
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Provider peer ID
+    # ACL
+    def PROVIDER_PEER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Base64-encoded signed grant response bytes
+    # ACL
+    def GRANT_RESPONSE_BASE64(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Field-level stream policy bound to this grant
+    # ACL
+    def FIELD_STREAM_POLICY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from GrantFieldStreamPolicy import GrantFieldStreamPolicy
+            obj = GrantFieldStreamPolicy()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def ACLStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(31)
 
 def Start(builder):
     ACLStart(builder)
@@ -261,14 +425,135 @@ def ACLCreatePROVIDER_SIGNATUREVector(builder, data):
 def CreatePROVIDER_SIGNATUREVector(builder, data):
     ACLCreatePROVIDER_SIGNATUREVector(builder, data)
 
+def ACLAddKEY_ALGORITHM(builder, KEY_ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ALGORITHM), 0)
+
+def AddKEY_ALGORITHM(builder, KEY_ALGORITHM):
+    ACLAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+
+def ACLAddRATE_LIMIT(builder, RATE_LIMIT):
+    builder.PrependUint32Slot(12, RATE_LIMIT, 0)
+
+def AddRATE_LIMIT(builder, RATE_LIMIT):
+    ACLAddRATE_LIMIT(builder, RATE_LIMIT)
+
+def ACLAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST):
+    builder.PrependUint32Slot(13, MAX_RECORDS_PER_REQUEST, 0)
+
+def AddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST):
+    ACLAddMAX_RECORDS_PER_REQUEST(builder, MAX_RECORDS_PER_REQUEST)
+
+def ACLAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(14, STATUS, 0)
+
+def AddSTATUS(builder, STATUS):
+    ACLAddSTATUS(builder, STATUS)
+
+def ACLAddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT):
+    builder.PrependUint64Slot(15, PAYMENT_AMOUNT, 0)
+
+def AddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT):
+    ACLAddPAYMENT_AMOUNT(builder, PAYMENT_AMOUNT)
+
+def ACLAddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(PAYMENT_CURRENCY), 0)
+
+def AddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY):
+    ACLAddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY)
+
+def ACLAddPAYMENT_CHAIN(builder, PAYMENT_CHAIN):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PAYMENT_CHAIN), 0)
+
+def AddPAYMENT_CHAIN(builder, PAYMENT_CHAIN):
+    ACLAddPAYMENT_CHAIN(builder, PAYMENT_CHAIN)
+
+def ACLAddNEXT_RENEWAL(builder, NEXT_RENEWAL):
+    builder.PrependUint64Slot(18, NEXT_RENEWAL, 0)
+
+def AddNEXT_RENEWAL(builder, NEXT_RENEWAL):
+    ACLAddNEXT_RENEWAL(builder, NEXT_RENEWAL)
+
+def ACLAddAUTO_RENEW(builder, AUTO_RENEW):
+    builder.PrependBoolSlot(19, AUTO_RENEW, 0)
+
+def AddAUTO_RENEW(builder, AUTO_RENEW):
+    ACLAddAUTO_RENEW(builder, AUTO_RENEW)
+
+def ACLAddRENEWAL_COUNT(builder, RENEWAL_COUNT):
+    builder.PrependUint32Slot(20, RENEWAL_COUNT, 0)
+
+def AddRENEWAL_COUNT(builder, RENEWAL_COUNT):
+    ACLAddRENEWAL_COUNT(builder, RENEWAL_COUNT)
+
+def ACLAddTOTAL_REQUESTS(builder, TOTAL_REQUESTS):
+    builder.PrependUint64Slot(21, TOTAL_REQUESTS, 0)
+
+def AddTOTAL_REQUESTS(builder, TOTAL_REQUESTS):
+    ACLAddTOTAL_REQUESTS(builder, TOTAL_REQUESTS)
+
+def ACLAddTOTAL_RECORDS(builder, TOTAL_RECORDS):
+    builder.PrependUint64Slot(22, TOTAL_RECORDS, 0)
+
+def AddTOTAL_RECORDS(builder, TOTAL_RECORDS):
+    ACLAddTOTAL_RECORDS(builder, TOTAL_RECORDS)
+
+def ACLAddLAST_ACCESS(builder, LAST_ACCESS):
+    builder.PrependUint64Slot(23, LAST_ACCESS, 0)
+
+def AddLAST_ACCESS(builder, LAST_ACCESS):
+    ACLAddLAST_ACCESS(builder, LAST_ACCESS)
+
+def ACLAddDELIVERY_TOPIC(builder, DELIVERY_TOPIC):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(DELIVERY_TOPIC), 0)
+
+def AddDELIVERY_TOPIC(builder, DELIVERY_TOPIC):
+    ACLAddDELIVERY_TOPIC(builder, DELIVERY_TOPIC)
+
+def ACLAddCREATED_AT(builder, CREATED_AT):
+    builder.PrependUint64Slot(25, CREATED_AT, 0)
+
+def AddCREATED_AT(builder, CREATED_AT):
+    ACLAddCREATED_AT(builder, CREATED_AT)
+
+def ACLAddUPDATED_AT(builder, UPDATED_AT):
+    builder.PrependUint64Slot(26, UPDATED_AT, 0)
+
+def AddUPDATED_AT(builder, UPDATED_AT):
+    ACLAddUPDATED_AT(builder, UPDATED_AT)
+
+def ACLAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    ACLAddNOTES(builder, NOTES)
+
+def ACLAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_PEER_ID), 0)
+
+def AddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID):
+    ACLAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+
+def ACLAddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(GRANT_RESPONSE_BASE64), 0)
+
+def AddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64):
+    ACLAddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64)
+
+def ACLAddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICY):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(FIELD_STREAM_POLICY), 0)
+
+def AddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICY):
+    ACLAddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICY)
+
 def ACLEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return ACLEnd(builder)
 
+import GrantFieldStreamPolicy
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -288,6 +573,26 @@ class ACLT(object):
         PAYMENT_TX_HASH = None,
         PAYMENT_METHOD = 0,
         PROVIDER_SIGNATURE = None,
+        KEY_ALGORITHM = None,
+        RATE_LIMIT = 0,
+        MAX_RECORDS_PER_REQUEST = 0,
+        STATUS = 0,
+        PAYMENT_AMOUNT = 0,
+        PAYMENT_CURRENCY = None,
+        PAYMENT_CHAIN = None,
+        NEXT_RENEWAL = 0,
+        AUTO_RENEW = False,
+        RENEWAL_COUNT = 0,
+        TOTAL_REQUESTS = 0,
+        TOTAL_RECORDS = 0,
+        LAST_ACCESS = 0,
+        DELIVERY_TOPIC = None,
+        CREATED_AT = 0,
+        UPDATED_AT = 0,
+        NOTES = None,
+        PROVIDER_PEER_ID = None,
+        GRANT_RESPONSE_BASE64 = None,
+        FIELD_STREAM_POLICY = None,
     ):
         self.GRANT_ID = GRANT_ID  # type: Optional[str]
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
@@ -300,6 +605,26 @@ class ACLT(object):
         self.PAYMENT_TX_HASH = PAYMENT_TX_HASH  # type: Optional[str]
         self.PAYMENT_METHOD = PAYMENT_METHOD  # type: int
         self.PROVIDER_SIGNATURE = PROVIDER_SIGNATURE  # type: Optional[List[int]]
+        self.KEY_ALGORITHM = KEY_ALGORITHM  # type: Optional[str]
+        self.RATE_LIMIT = RATE_LIMIT  # type: int
+        self.MAX_RECORDS_PER_REQUEST = MAX_RECORDS_PER_REQUEST  # type: int
+        self.STATUS = STATUS  # type: int
+        self.PAYMENT_AMOUNT = PAYMENT_AMOUNT  # type: int
+        self.PAYMENT_CURRENCY = PAYMENT_CURRENCY  # type: Optional[str]
+        self.PAYMENT_CHAIN = PAYMENT_CHAIN  # type: Optional[str]
+        self.NEXT_RENEWAL = NEXT_RENEWAL  # type: int
+        self.AUTO_RENEW = AUTO_RENEW  # type: bool
+        self.RENEWAL_COUNT = RENEWAL_COUNT  # type: int
+        self.TOTAL_REQUESTS = TOTAL_REQUESTS  # type: int
+        self.TOTAL_RECORDS = TOTAL_RECORDS  # type: int
+        self.LAST_ACCESS = LAST_ACCESS  # type: int
+        self.DELIVERY_TOPIC = DELIVERY_TOPIC  # type: Optional[str]
+        self.CREATED_AT = CREATED_AT  # type: int
+        self.UPDATED_AT = UPDATED_AT  # type: int
+        self.NOTES = NOTES  # type: Optional[str]
+        self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
+        self.GRANT_RESPONSE_BASE64 = GRANT_RESPONSE_BASE64  # type: Optional[str]
+        self.FIELD_STREAM_POLICY = FIELD_STREAM_POLICY  # type: Optional[GrantFieldStreamPolicy.GrantFieldStreamPolicyT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -345,6 +670,27 @@ class ACLT(object):
                     self.PROVIDER_SIGNATURE.append(ACL.PROVIDER_SIGNATURE(i))
             else:
                 self.PROVIDER_SIGNATURE = ACL.PROVIDER_SIGNATUREAsNumpy()
+        self.KEY_ALGORITHM = ACL.KEY_ALGORITHM()
+        self.RATE_LIMIT = ACL.RATE_LIMIT()
+        self.MAX_RECORDS_PER_REQUEST = ACL.MAX_RECORDS_PER_REQUEST()
+        self.STATUS = ACL.STATUS()
+        self.PAYMENT_AMOUNT = ACL.PAYMENT_AMOUNT()
+        self.PAYMENT_CURRENCY = ACL.PAYMENT_CURRENCY()
+        self.PAYMENT_CHAIN = ACL.PAYMENT_CHAIN()
+        self.NEXT_RENEWAL = ACL.NEXT_RENEWAL()
+        self.AUTO_RENEW = ACL.AUTO_RENEW()
+        self.RENEWAL_COUNT = ACL.RENEWAL_COUNT()
+        self.TOTAL_REQUESTS = ACL.TOTAL_REQUESTS()
+        self.TOTAL_RECORDS = ACL.TOTAL_RECORDS()
+        self.LAST_ACCESS = ACL.LAST_ACCESS()
+        self.DELIVERY_TOPIC = ACL.DELIVERY_TOPIC()
+        self.CREATED_AT = ACL.CREATED_AT()
+        self.UPDATED_AT = ACL.UPDATED_AT()
+        self.NOTES = ACL.NOTES()
+        self.PROVIDER_PEER_ID = ACL.PROVIDER_PEER_ID()
+        self.GRANT_RESPONSE_BASE64 = ACL.GRANT_RESPONSE_BASE64()
+        if ACL.FIELD_STREAM_POLICY() is not None:
+            self.FIELD_STREAM_POLICY = GrantFieldStreamPolicy.GrantFieldStreamPolicyT.InitFromObj(ACL.FIELD_STREAM_POLICY())
 
     # ACLT
     def Pack(self, builder):
@@ -374,6 +720,22 @@ class ACLT(object):
                 for i in reversed(range(len(self.PROVIDER_SIGNATURE))):
                     builder.PrependUint8(self.PROVIDER_SIGNATURE[i])
                 PROVIDER_SIGNATURE = builder.EndVector()
+        if self.KEY_ALGORITHM is not None:
+            KEY_ALGORITHM = builder.CreateString(self.KEY_ALGORITHM)
+        if self.PAYMENT_CURRENCY is not None:
+            PAYMENT_CURRENCY = builder.CreateString(self.PAYMENT_CURRENCY)
+        if self.PAYMENT_CHAIN is not None:
+            PAYMENT_CHAIN = builder.CreateString(self.PAYMENT_CHAIN)
+        if self.DELIVERY_TOPIC is not None:
+            DELIVERY_TOPIC = builder.CreateString(self.DELIVERY_TOPIC)
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
+        if self.PROVIDER_PEER_ID is not None:
+            PROVIDER_PEER_ID = builder.CreateString(self.PROVIDER_PEER_ID)
+        if self.GRANT_RESPONSE_BASE64 is not None:
+            GRANT_RESPONSE_BASE64 = builder.CreateString(self.GRANT_RESPONSE_BASE64)
+        if self.FIELD_STREAM_POLICY is not None:
+            FIELD_STREAM_POLICY = self.FIELD_STREAM_POLICY.Pack(builder)
         ACLStart(builder)
         if self.GRANT_ID is not None:
             ACLAddGRANT_ID(builder, GRANT_ID)
@@ -393,5 +755,33 @@ class ACLT(object):
         ACLAddPAYMENT_METHOD(builder, self.PAYMENT_METHOD)
         if self.PROVIDER_SIGNATURE is not None:
             ACLAddPROVIDER_SIGNATURE(builder, PROVIDER_SIGNATURE)
+        if self.KEY_ALGORITHM is not None:
+            ACLAddKEY_ALGORITHM(builder, KEY_ALGORITHM)
+        ACLAddRATE_LIMIT(builder, self.RATE_LIMIT)
+        ACLAddMAX_RECORDS_PER_REQUEST(builder, self.MAX_RECORDS_PER_REQUEST)
+        ACLAddSTATUS(builder, self.STATUS)
+        ACLAddPAYMENT_AMOUNT(builder, self.PAYMENT_AMOUNT)
+        if self.PAYMENT_CURRENCY is not None:
+            ACLAddPAYMENT_CURRENCY(builder, PAYMENT_CURRENCY)
+        if self.PAYMENT_CHAIN is not None:
+            ACLAddPAYMENT_CHAIN(builder, PAYMENT_CHAIN)
+        ACLAddNEXT_RENEWAL(builder, self.NEXT_RENEWAL)
+        ACLAddAUTO_RENEW(builder, self.AUTO_RENEW)
+        ACLAddRENEWAL_COUNT(builder, self.RENEWAL_COUNT)
+        ACLAddTOTAL_REQUESTS(builder, self.TOTAL_REQUESTS)
+        ACLAddTOTAL_RECORDS(builder, self.TOTAL_RECORDS)
+        ACLAddLAST_ACCESS(builder, self.LAST_ACCESS)
+        if self.DELIVERY_TOPIC is not None:
+            ACLAddDELIVERY_TOPIC(builder, DELIVERY_TOPIC)
+        ACLAddCREATED_AT(builder, self.CREATED_AT)
+        ACLAddUPDATED_AT(builder, self.UPDATED_AT)
+        if self.NOTES is not None:
+            ACLAddNOTES(builder, NOTES)
+        if self.PROVIDER_PEER_ID is not None:
+            ACLAddPROVIDER_PEER_ID(builder, PROVIDER_PEER_ID)
+        if self.GRANT_RESPONSE_BASE64 is not None:
+            ACLAddGRANT_RESPONSE_BASE64(builder, GRANT_RESPONSE_BASE64)
+        if self.FIELD_STREAM_POLICY is not None:
+            ACLAddFIELD_STREAM_POLICY(builder, FIELD_STREAM_POLICY)
         ACL = ACLEnd(builder)
         return ACL

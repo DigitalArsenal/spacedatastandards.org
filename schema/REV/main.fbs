@@ -1,6 +1,23 @@
-// Hash: 79e94008a46b17a5a2f19dd31f1771a174241599de23b755ce473d17166ea635
-// Version: 1.0.1
+// Hash: fc1c3a72bd5b8da84c30c1ef459bbfc6fe614e3949c0b6500257de382a37685f
+// Version: 1.0.2
 // -----------------------------------END_HEADER
+/// Review lifecycle status.
+enum reviewLifecycleStatus : byte {
+  Published,
+  Pending,
+  Flagged,
+  Hidden,
+  Removed
+}
+
+/// Data quality metrics attached to a review.
+table DataQualityMetrics {
+  SCHEMA_COMPLIANCE: uint8;
+  DATA_FRESHNESS: uint8;
+  COVERAGE_ACCURACY: uint8;
+  DELIVERY_RELIABILITY: uint8;
+}
+
 /// Review - User review of a storefront listing
 table REV {
   /// Unique identifier for this review
@@ -24,6 +41,26 @@ table REV {
   TIMESTAMP: uint64;
   /// Ed25519 signature from reviewer
   REVIEWER_SIGNATURE: [ubyte];
+  /// Data quality metrics supplied by reviewer
+  QUALITY_METRICS: DataQualityMetrics;
+  /// Whether the review is tied to a verified purchase
+  VERIFIED_PURCHASE: bool;
+  /// Unix timestamp when the review was last updated
+  UPDATED_AT: uint64;
+  /// Review lifecycle status
+  STATUS: reviewLifecycleStatus;
+  /// Helpful vote count
+  HELPFUL_COUNT: uint32;
+  /// Not-helpful vote count
+  NOT_HELPFUL_COUNT: uint32;
+  /// Provider response body
+  PROVIDER_RESPONSE: string;
+  /// Unix timestamp when provider responded
+  PROVIDER_RESPONSE_AT: uint64;
+  /// Number of moderation flags
+  FLAGGED_COUNT: uint32;
+  /// Moderation notes
+  MODERATION_NOTES: string;
 }
 
 root_type REV;

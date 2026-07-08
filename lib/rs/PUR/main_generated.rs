@@ -4,6 +4,119 @@
 use crate::main_generated::*;
 extern crate alloc;
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PURCHASE_LIFECYCLE_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PURCHASE_LIFECYCLE_STATUS: i8 = 8;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PURCHASE_LIFECYCLE_STATUS: [purchaseLifecycleStatus; 9] = [
+  purchaseLifecycleStatus::Pending,
+  purchaseLifecycleStatus::PaymentDetected,
+  purchaseLifecycleStatus::PaymentConfirmed,
+  purchaseLifecycleStatus::Completed,
+  purchaseLifecycleStatus::Failed,
+  purchaseLifecycleStatus::Cancelled,
+  purchaseLifecycleStatus::RefundRequested,
+  purchaseLifecycleStatus::Refunded,
+  purchaseLifecycleStatus::Expired,
+];
+
+/// Purchase lifecycle status tracked by the provider.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct purchaseLifecycleStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl purchaseLifecycleStatus {
+  pub const Pending: Self = Self(0);
+  pub const PaymentDetected: Self = Self(1);
+  pub const PaymentConfirmed: Self = Self(2);
+  pub const Completed: Self = Self(3);
+  pub const Failed: Self = Self(4);
+  pub const Cancelled: Self = Self(5);
+  pub const RefundRequested: Self = Self(6);
+  pub const Refunded: Self = Self(7);
+  pub const Expired: Self = Self(8);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Pending,
+    Self::PaymentDetected,
+    Self::PaymentConfirmed,
+    Self::Completed,
+    Self::Failed,
+    Self::Cancelled,
+    Self::RefundRequested,
+    Self::Refunded,
+    Self::Expired,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Pending => Some("Pending"),
+      Self::PaymentDetected => Some("PaymentDetected"),
+      Self::PaymentConfirmed => Some("PaymentConfirmed"),
+      Self::Completed => Some("Completed"),
+      Self::Failed => Some("Failed"),
+      Self::Cancelled => Some("Cancelled"),
+      Self::RefundRequested => Some("RefundRequested"),
+      Self::Refunded => Some("Refunded"),
+      Self::Expired => Some("Expired"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for purchaseLifecycleStatus {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for purchaseLifecycleStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for purchaseLifecycleStatus {
+    type Output = purchaseLifecycleStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for purchaseLifecycleStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for purchaseLifecycleStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for purchaseLifecycleStatus {}
 pub enum PUROffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -34,6 +147,25 @@ impl<'a> PUR<'a> {
   pub const VT_PAYMENT_REFERENCE: ::flatbuffers::VOffsetT = 24;
   pub const VT_BUYER_SIGNATURE: ::flatbuffers::VOffsetT = 26;
   pub const VT_TIMESTAMP: ::flatbuffers::VOffsetT = 28;
+  pub const VT_KEY_ALGORITHM: ::flatbuffers::VOffsetT = 30;
+  pub const VT_BUYER_EMAIL: ::flatbuffers::VOffsetT = 32;
+  pub const VT_SENDER_ADDRESS: ::flatbuffers::VOffsetT = 34;
+  pub const VT_CONFIRMATION_BLOCK: ::flatbuffers::VOffsetT = 36;
+  pub const VT_PAYMENT_INTENT_ID: ::flatbuffers::VOffsetT = 38;
+  pub const VT_CREDITS_TRANSACTION_ID: ::flatbuffers::VOffsetT = 40;
+  pub const VT_STATUS: ::flatbuffers::VOffsetT = 42;
+  pub const VT_STATUS_MESSAGE: ::flatbuffers::VOffsetT = 44;
+  pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 46;
+  pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 48;
+  pub const VT_PAYMENT_DEADLINE: ::flatbuffers::VOffsetT = 50;
+  pub const VT_PAYMENT_CONFIRMED_AT: ::flatbuffers::VOffsetT = 52;
+  pub const VT_GRANT_ISSUED_AT: ::flatbuffers::VOffsetT = 54;
+  pub const VT_GRANT_ID: ::flatbuffers::VOffsetT = 56;
+  pub const VT_PROVIDER_PEER_ID: ::flatbuffers::VOffsetT = 58;
+  pub const VT_PROVIDER_ACKNOWLEDGED_AT: ::flatbuffers::VOffsetT = 60;
+  pub const VT_PREFERRED_DELIVERY_METHOD: ::flatbuffers::VOffsetT = 62;
+  pub const VT_WEBHOOK_URL: ::flatbuffers::VOffsetT = 64;
+  pub const VT_PROVIDER_SIGNATURE: ::flatbuffers::VOffsetT = 66;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -45,8 +177,26 @@ impl<'a> PUR<'a> {
     args: &'args PURArgs<'args>
   ) -> ::flatbuffers::WIPOffset<PUR<'bldr>> {
     let mut builder = PURBuilder::new(_fbb);
+    builder.add_PROVIDER_ACKNOWLEDGED_AT(args.PROVIDER_ACKNOWLEDGED_AT);
+    builder.add_GRANT_ISSUED_AT(args.GRANT_ISSUED_AT);
+    builder.add_PAYMENT_CONFIRMED_AT(args.PAYMENT_CONFIRMED_AT);
+    builder.add_PAYMENT_DEADLINE(args.PAYMENT_DEADLINE);
+    builder.add_UPDATED_AT(args.UPDATED_AT);
+    builder.add_CREATED_AT(args.CREATED_AT);
+    builder.add_CONFIRMATION_BLOCK(args.CONFIRMATION_BLOCK);
     builder.add_TIMESTAMP(args.TIMESTAMP);
     builder.add_PAYMENT_AMOUNT(args.PAYMENT_AMOUNT);
+    if let Some(x) = args.PROVIDER_SIGNATURE { builder.add_PROVIDER_SIGNATURE(x); }
+    if let Some(x) = args.WEBHOOK_URL { builder.add_WEBHOOK_URL(x); }
+    if let Some(x) = args.PREFERRED_DELIVERY_METHOD { builder.add_PREFERRED_DELIVERY_METHOD(x); }
+    if let Some(x) = args.PROVIDER_PEER_ID { builder.add_PROVIDER_PEER_ID(x); }
+    if let Some(x) = args.GRANT_ID { builder.add_GRANT_ID(x); }
+    if let Some(x) = args.STATUS_MESSAGE { builder.add_STATUS_MESSAGE(x); }
+    if let Some(x) = args.CREDITS_TRANSACTION_ID { builder.add_CREDITS_TRANSACTION_ID(x); }
+    if let Some(x) = args.PAYMENT_INTENT_ID { builder.add_PAYMENT_INTENT_ID(x); }
+    if let Some(x) = args.SENDER_ADDRESS { builder.add_SENDER_ADDRESS(x); }
+    if let Some(x) = args.BUYER_EMAIL { builder.add_BUYER_EMAIL(x); }
+    if let Some(x) = args.KEY_ALGORITHM { builder.add_KEY_ALGORITHM(x); }
     if let Some(x) = args.BUYER_SIGNATURE { builder.add_BUYER_SIGNATURE(x); }
     if let Some(x) = args.PAYMENT_REFERENCE { builder.add_PAYMENT_REFERENCE(x); }
     if let Some(x) = args.PAYMENT_CHAIN { builder.add_PAYMENT_CHAIN(x); }
@@ -57,6 +207,7 @@ impl<'a> PUR<'a> {
     if let Some(x) = args.TIER_NAME { builder.add_TIER_NAME(x); }
     if let Some(x) = args.LISTING_ID { builder.add_LISTING_ID(x); }
     if let Some(x) = args.REQUEST_ID { builder.add_REQUEST_ID(x); }
+    builder.add_STATUS(args.STATUS);
     builder.add_PAYMENT_METHOD(args.PAYMENT_METHOD);
     builder.finish()
   }
@@ -99,6 +250,47 @@ impl<'a> PUR<'a> {
       x.into_iter().collect()
     });
     let TIMESTAMP = self.TIMESTAMP();
+    let KEY_ALGORITHM = self.KEY_ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let BUYER_EMAIL = self.BUYER_EMAIL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SENDER_ADDRESS = self.SENDER_ADDRESS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONFIRMATION_BLOCK = self.CONFIRMATION_BLOCK();
+    let PAYMENT_INTENT_ID = self.PAYMENT_INTENT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREDITS_TRANSACTION_ID = self.CREDITS_TRANSACTION_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let STATUS = self.STATUS();
+    let STATUS_MESSAGE = self.STATUS_MESSAGE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CREATED_AT = self.CREATED_AT();
+    let UPDATED_AT = self.UPDATED_AT();
+    let PAYMENT_DEADLINE = self.PAYMENT_DEADLINE();
+    let PAYMENT_CONFIRMED_AT = self.PAYMENT_CONFIRMED_AT();
+    let GRANT_ISSUED_AT = self.GRANT_ISSUED_AT();
+    let GRANT_ID = self.GRANT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_ACKNOWLEDGED_AT = self.PROVIDER_ACKNOWLEDGED_AT();
+    let PREFERRED_DELIVERY_METHOD = self.PREFERRED_DELIVERY_METHOD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let WEBHOOK_URL = self.WEBHOOK_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE().map(|x| {
+      x.into_iter().collect()
+    });
     PURT {
       REQUEST_ID,
       LISTING_ID,
@@ -113,6 +305,25 @@ impl<'a> PUR<'a> {
       PAYMENT_REFERENCE,
       BUYER_SIGNATURE,
       TIMESTAMP,
+      KEY_ALGORITHM,
+      BUYER_EMAIL,
+      SENDER_ADDRESS,
+      CONFIRMATION_BLOCK,
+      PAYMENT_INTENT_ID,
+      CREDITS_TRANSACTION_ID,
+      STATUS,
+      STATUS_MESSAGE,
+      CREATED_AT,
+      UPDATED_AT,
+      PAYMENT_DEADLINE,
+      PAYMENT_CONFIRMED_AT,
+      GRANT_ISSUED_AT,
+      GRANT_ID,
+      PROVIDER_PEER_ID,
+      PROVIDER_ACKNOWLEDGED_AT,
+      PREFERRED_DELIVERY_METHOD,
+      WEBHOOK_URL,
+      PROVIDER_SIGNATURE,
     }
   }
 
@@ -220,6 +431,158 @@ impl<'a> PUR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u64>(PUR::VT_TIMESTAMP, Some(0)).unwrap()}
   }
+  /// Key algorithm for buyer encryption public key
+  #[inline]
+  pub fn KEY_ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_KEY_ALGORITHM, None)}
+  }
+  /// Buyer contact email
+  #[inline]
+  pub fn BUYER_EMAIL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_BUYER_EMAIL, None)}
+  }
+  /// On-chain sender address or fiat payment source reference
+  #[inline]
+  pub fn SENDER_ADDRESS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_SENDER_ADDRESS, None)}
+  }
+  /// Confirmation block for on-chain payments
+  #[inline]
+  pub fn CONFIRMATION_BLOCK(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_CONFIRMATION_BLOCK, Some(0)).unwrap()}
+  }
+  /// Fiat processor payment intent identifier
+  #[inline]
+  pub fn PAYMENT_INTENT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_PAYMENT_INTENT_ID, None)}
+  }
+  /// SDN credits transaction identifier
+  #[inline]
+  pub fn CREDITS_TRANSACTION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_CREDITS_TRANSACTION_ID, None)}
+  }
+  /// Provider-side purchase status
+  #[inline]
+  pub fn STATUS(&self) -> purchaseLifecycleStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<purchaseLifecycleStatus>(PUR::VT_STATUS, Some(purchaseLifecycleStatus::Pending)).unwrap()}
+  }
+  /// Human-readable status message
+  #[inline]
+  pub fn STATUS_MESSAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_STATUS_MESSAGE, None)}
+  }
+  /// Unix timestamp when the purchase record was created
+  #[inline]
+  pub fn CREATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_CREATED_AT, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when the purchase record was updated
+  #[inline]
+  pub fn UPDATED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_UPDATED_AT, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when payment must be received
+  #[inline]
+  pub fn PAYMENT_DEADLINE(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_PAYMENT_DEADLINE, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when payment was confirmed
+  #[inline]
+  pub fn PAYMENT_CONFIRMED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_PAYMENT_CONFIRMED_AT, Some(0)).unwrap()}
+  }
+  /// Unix timestamp when the grant was issued
+  #[inline]
+  pub fn GRANT_ISSUED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_GRANT_ISSUED_AT, Some(0)).unwrap()}
+  }
+  /// Issued grant identifier
+  #[inline]
+  pub fn GRANT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_GRANT_ID, None)}
+  }
+  /// Provider peer ID
+  #[inline]
+  pub fn PROVIDER_PEER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_PROVIDER_PEER_ID, None)}
+  }
+  /// Unix timestamp when provider acknowledged the request
+  #[inline]
+  pub fn PROVIDER_ACKNOWLEDGED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PUR::VT_PROVIDER_ACKNOWLEDGED_AT, Some(0)).unwrap()}
+  }
+  /// Preferred delivery method
+  #[inline]
+  pub fn PREFERRED_DELIVERY_METHOD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_PREFERRED_DELIVERY_METHOD, None)}
+  }
+  /// Buyer webhook URL for delivery callbacks
+  #[inline]
+  pub fn WEBHOOK_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PUR::VT_WEBHOOK_URL, None)}
+  }
+  /// Ed25519 signature from provider
+  #[inline]
+  pub fn PROVIDER_SIGNATURE(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PUR::VT_PROVIDER_SIGNATURE, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PUR<'_> {
@@ -241,6 +604,25 @@ impl ::flatbuffers::Verifiable for PUR<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_REFERENCE", Self::VT_PAYMENT_REFERENCE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("BUYER_SIGNATURE", Self::VT_BUYER_SIGNATURE, false)?
      .visit_field::<u64>("TIMESTAMP", Self::VT_TIMESTAMP, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ALGORITHM", Self::VT_KEY_ALGORITHM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BUYER_EMAIL", Self::VT_BUYER_EMAIL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SENDER_ADDRESS", Self::VT_SENDER_ADDRESS, false)?
+     .visit_field::<u64>("CONFIRMATION_BLOCK", Self::VT_CONFIRMATION_BLOCK, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PAYMENT_INTENT_ID", Self::VT_PAYMENT_INTENT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREDITS_TRANSACTION_ID", Self::VT_CREDITS_TRANSACTION_ID, false)?
+     .visit_field::<purchaseLifecycleStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("STATUS_MESSAGE", Self::VT_STATUS_MESSAGE, false)?
+     .visit_field::<u64>("CREATED_AT", Self::VT_CREATED_AT, false)?
+     .visit_field::<u64>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<u64>("PAYMENT_DEADLINE", Self::VT_PAYMENT_DEADLINE, false)?
+     .visit_field::<u64>("PAYMENT_CONFIRMED_AT", Self::VT_PAYMENT_CONFIRMED_AT, false)?
+     .visit_field::<u64>("GRANT_ISSUED_AT", Self::VT_GRANT_ISSUED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("GRANT_ID", Self::VT_GRANT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROVIDER_PEER_ID", Self::VT_PROVIDER_PEER_ID, false)?
+     .visit_field::<u64>("PROVIDER_ACKNOWLEDGED_AT", Self::VT_PROVIDER_ACKNOWLEDGED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREFERRED_DELIVERY_METHOD", Self::VT_PREFERRED_DELIVERY_METHOD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("WEBHOOK_URL", Self::VT_WEBHOOK_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PROVIDER_SIGNATURE", Self::VT_PROVIDER_SIGNATURE, false)?
      .finish();
     Ok(())
   }
@@ -259,6 +641,25 @@ pub struct PURArgs<'a> {
     pub PAYMENT_REFERENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub BUYER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub TIMESTAMP: u64,
+    pub KEY_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BUYER_EMAIL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SENDER_ADDRESS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONFIRMATION_BLOCK: u64,
+    pub PAYMENT_INTENT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREDITS_TRANSACTION_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub STATUS: purchaseLifecycleStatus,
+    pub STATUS_MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CREATED_AT: u64,
+    pub UPDATED_AT: u64,
+    pub PAYMENT_DEADLINE: u64,
+    pub PAYMENT_CONFIRMED_AT: u64,
+    pub GRANT_ISSUED_AT: u64,
+    pub GRANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_PEER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_ACKNOWLEDGED_AT: u64,
+    pub PREFERRED_DELIVERY_METHOD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub WEBHOOK_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PROVIDER_SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
 }
 impl<'a> Default for PURArgs<'a> {
   #[inline]
@@ -277,6 +678,25 @@ impl<'a> Default for PURArgs<'a> {
       PAYMENT_REFERENCE: None,
       BUYER_SIGNATURE: None,
       TIMESTAMP: 0,
+      KEY_ALGORITHM: None,
+      BUYER_EMAIL: None,
+      SENDER_ADDRESS: None,
+      CONFIRMATION_BLOCK: 0,
+      PAYMENT_INTENT_ID: None,
+      CREDITS_TRANSACTION_ID: None,
+      STATUS: purchaseLifecycleStatus::Pending,
+      STATUS_MESSAGE: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      PAYMENT_DEADLINE: 0,
+      PAYMENT_CONFIRMED_AT: 0,
+      GRANT_ISSUED_AT: 0,
+      GRANT_ID: None,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_ACKNOWLEDGED_AT: 0,
+      PREFERRED_DELIVERY_METHOD: None,
+      WEBHOOK_URL: None,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
@@ -339,6 +759,82 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PURBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<u64>(PUR::VT_TIMESTAMP, TIMESTAMP, 0);
   }
   #[inline]
+  pub fn add_KEY_ALGORITHM(&mut self, KEY_ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_KEY_ALGORITHM, KEY_ALGORITHM);
+  }
+  #[inline]
+  pub fn add_BUYER_EMAIL(&mut self, BUYER_EMAIL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_BUYER_EMAIL, BUYER_EMAIL);
+  }
+  #[inline]
+  pub fn add_SENDER_ADDRESS(&mut self, SENDER_ADDRESS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_SENDER_ADDRESS, SENDER_ADDRESS);
+  }
+  #[inline]
+  pub fn add_CONFIRMATION_BLOCK(&mut self, CONFIRMATION_BLOCK: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_CONFIRMATION_BLOCK, CONFIRMATION_BLOCK, 0);
+  }
+  #[inline]
+  pub fn add_PAYMENT_INTENT_ID(&mut self, PAYMENT_INTENT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_PAYMENT_INTENT_ID, PAYMENT_INTENT_ID);
+  }
+  #[inline]
+  pub fn add_CREDITS_TRANSACTION_ID(&mut self, CREDITS_TRANSACTION_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_CREDITS_TRANSACTION_ID, CREDITS_TRANSACTION_ID);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: purchaseLifecycleStatus) {
+    self.fbb_.push_slot::<purchaseLifecycleStatus>(PUR::VT_STATUS, STATUS, purchaseLifecycleStatus::Pending);
+  }
+  #[inline]
+  pub fn add_STATUS_MESSAGE(&mut self, STATUS_MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_STATUS_MESSAGE, STATUS_MESSAGE);
+  }
+  #[inline]
+  pub fn add_CREATED_AT(&mut self, CREATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_CREATED_AT, CREATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_UPDATED_AT(&mut self, UPDATED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_UPDATED_AT, UPDATED_AT, 0);
+  }
+  #[inline]
+  pub fn add_PAYMENT_DEADLINE(&mut self, PAYMENT_DEADLINE: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_PAYMENT_DEADLINE, PAYMENT_DEADLINE, 0);
+  }
+  #[inline]
+  pub fn add_PAYMENT_CONFIRMED_AT(&mut self, PAYMENT_CONFIRMED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_PAYMENT_CONFIRMED_AT, PAYMENT_CONFIRMED_AT, 0);
+  }
+  #[inline]
+  pub fn add_GRANT_ISSUED_AT(&mut self, GRANT_ISSUED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_GRANT_ISSUED_AT, GRANT_ISSUED_AT, 0);
+  }
+  #[inline]
+  pub fn add_GRANT_ID(&mut self, GRANT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_GRANT_ID, GRANT_ID);
+  }
+  #[inline]
+  pub fn add_PROVIDER_PEER_ID(&mut self, PROVIDER_PEER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_PROVIDER_PEER_ID, PROVIDER_PEER_ID);
+  }
+  #[inline]
+  pub fn add_PROVIDER_ACKNOWLEDGED_AT(&mut self, PROVIDER_ACKNOWLEDGED_AT: u64) {
+    self.fbb_.push_slot::<u64>(PUR::VT_PROVIDER_ACKNOWLEDGED_AT, PROVIDER_ACKNOWLEDGED_AT, 0);
+  }
+  #[inline]
+  pub fn add_PREFERRED_DELIVERY_METHOD(&mut self, PREFERRED_DELIVERY_METHOD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_PREFERRED_DELIVERY_METHOD, PREFERRED_DELIVERY_METHOD);
+  }
+  #[inline]
+  pub fn add_WEBHOOK_URL(&mut self, WEBHOOK_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_WEBHOOK_URL, WEBHOOK_URL);
+  }
+  #[inline]
+  pub fn add_PROVIDER_SIGNATURE(&mut self, PROVIDER_SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PUR::VT_PROVIDER_SIGNATURE, PROVIDER_SIGNATURE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PURBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PURBuilder {
@@ -373,6 +869,25 @@ impl ::core::fmt::Debug for PUR<'_> {
       ds.field("PAYMENT_REFERENCE", &self.PAYMENT_REFERENCE());
       ds.field("BUYER_SIGNATURE", &self.BUYER_SIGNATURE());
       ds.field("TIMESTAMP", &self.TIMESTAMP());
+      ds.field("KEY_ALGORITHM", &self.KEY_ALGORITHM());
+      ds.field("BUYER_EMAIL", &self.BUYER_EMAIL());
+      ds.field("SENDER_ADDRESS", &self.SENDER_ADDRESS());
+      ds.field("CONFIRMATION_BLOCK", &self.CONFIRMATION_BLOCK());
+      ds.field("PAYMENT_INTENT_ID", &self.PAYMENT_INTENT_ID());
+      ds.field("CREDITS_TRANSACTION_ID", &self.CREDITS_TRANSACTION_ID());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("STATUS_MESSAGE", &self.STATUS_MESSAGE());
+      ds.field("CREATED_AT", &self.CREATED_AT());
+      ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("PAYMENT_DEADLINE", &self.PAYMENT_DEADLINE());
+      ds.field("PAYMENT_CONFIRMED_AT", &self.PAYMENT_CONFIRMED_AT());
+      ds.field("GRANT_ISSUED_AT", &self.GRANT_ISSUED_AT());
+      ds.field("GRANT_ID", &self.GRANT_ID());
+      ds.field("PROVIDER_PEER_ID", &self.PROVIDER_PEER_ID());
+      ds.field("PROVIDER_ACKNOWLEDGED_AT", &self.PROVIDER_ACKNOWLEDGED_AT());
+      ds.field("PREFERRED_DELIVERY_METHOD", &self.PREFERRED_DELIVERY_METHOD());
+      ds.field("WEBHOOK_URL", &self.WEBHOOK_URL());
+      ds.field("PROVIDER_SIGNATURE", &self.PROVIDER_SIGNATURE());
       ds.finish()
   }
 }
@@ -392,6 +907,25 @@ pub struct PURT {
   pub PAYMENT_REFERENCE: Option<alloc::string::String>,
   pub BUYER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
   pub TIMESTAMP: u64,
+  pub KEY_ALGORITHM: Option<alloc::string::String>,
+  pub BUYER_EMAIL: Option<alloc::string::String>,
+  pub SENDER_ADDRESS: Option<alloc::string::String>,
+  pub CONFIRMATION_BLOCK: u64,
+  pub PAYMENT_INTENT_ID: Option<alloc::string::String>,
+  pub CREDITS_TRANSACTION_ID: Option<alloc::string::String>,
+  pub STATUS: purchaseLifecycleStatus,
+  pub STATUS_MESSAGE: Option<alloc::string::String>,
+  pub CREATED_AT: u64,
+  pub UPDATED_AT: u64,
+  pub PAYMENT_DEADLINE: u64,
+  pub PAYMENT_CONFIRMED_AT: u64,
+  pub GRANT_ISSUED_AT: u64,
+  pub GRANT_ID: Option<alloc::string::String>,
+  pub PROVIDER_PEER_ID: Option<alloc::string::String>,
+  pub PROVIDER_ACKNOWLEDGED_AT: u64,
+  pub PREFERRED_DELIVERY_METHOD: Option<alloc::string::String>,
+  pub WEBHOOK_URL: Option<alloc::string::String>,
+  pub PROVIDER_SIGNATURE: Option<alloc::vec::Vec<u8>>,
 }
 impl Default for PURT {
   fn default() -> Self {
@@ -409,6 +943,25 @@ impl Default for PURT {
       PAYMENT_REFERENCE: None,
       BUYER_SIGNATURE: None,
       TIMESTAMP: 0,
+      KEY_ALGORITHM: None,
+      BUYER_EMAIL: None,
+      SENDER_ADDRESS: None,
+      CONFIRMATION_BLOCK: 0,
+      PAYMENT_INTENT_ID: None,
+      CREDITS_TRANSACTION_ID: None,
+      STATUS: purchaseLifecycleStatus::Pending,
+      STATUS_MESSAGE: None,
+      CREATED_AT: 0,
+      UPDATED_AT: 0,
+      PAYMENT_DEADLINE: 0,
+      PAYMENT_CONFIRMED_AT: 0,
+      GRANT_ISSUED_AT: 0,
+      GRANT_ID: None,
+      PROVIDER_PEER_ID: None,
+      PROVIDER_ACKNOWLEDGED_AT: 0,
+      PREFERRED_DELIVERY_METHOD: None,
+      WEBHOOK_URL: None,
+      PROVIDER_SIGNATURE: None,
     }
   }
 }
@@ -454,6 +1007,47 @@ impl PURT {
       _fbb.create_vector(x)
     });
     let TIMESTAMP = self.TIMESTAMP;
+    let KEY_ALGORITHM = self.KEY_ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BUYER_EMAIL = self.BUYER_EMAIL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SENDER_ADDRESS = self.SENDER_ADDRESS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONFIRMATION_BLOCK = self.CONFIRMATION_BLOCK;
+    let PAYMENT_INTENT_ID = self.PAYMENT_INTENT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREDITS_TRANSACTION_ID = self.CREDITS_TRANSACTION_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATUS = self.STATUS;
+    let STATUS_MESSAGE = self.STATUS_MESSAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CREATED_AT = self.CREATED_AT;
+    let UPDATED_AT = self.UPDATED_AT;
+    let PAYMENT_DEADLINE = self.PAYMENT_DEADLINE;
+    let PAYMENT_CONFIRMED_AT = self.PAYMENT_CONFIRMED_AT;
+    let GRANT_ISSUED_AT = self.GRANT_ISSUED_AT;
+    let GRANT_ID = self.GRANT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_PEER_ID = self.PROVIDER_PEER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_ACKNOWLEDGED_AT = self.PROVIDER_ACKNOWLEDGED_AT;
+    let PREFERRED_DELIVERY_METHOD = self.PREFERRED_DELIVERY_METHOD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let WEBHOOK_URL = self.WEBHOOK_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PROVIDER_SIGNATURE = self.PROVIDER_SIGNATURE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     PUR::create(_fbb, &PURArgs{
       REQUEST_ID,
       LISTING_ID,
@@ -468,6 +1062,25 @@ impl PURT {
       PAYMENT_REFERENCE,
       BUYER_SIGNATURE,
       TIMESTAMP,
+      KEY_ALGORITHM,
+      BUYER_EMAIL,
+      SENDER_ADDRESS,
+      CONFIRMATION_BLOCK,
+      PAYMENT_INTENT_ID,
+      CREDITS_TRANSACTION_ID,
+      STATUS,
+      STATUS_MESSAGE,
+      CREATED_AT,
+      UPDATED_AT,
+      PAYMENT_DEADLINE,
+      PAYMENT_CONFIRMED_AT,
+      GRANT_ISSUED_AT,
+      GRANT_ID,
+      PROVIDER_PEER_ID,
+      PROVIDER_ACKNOWLEDGED_AT,
+      PREFERRED_DELIVERY_METHOD,
+      WEBHOOK_URL,
+      PROVIDER_SIGNATURE,
     })
   }
 }

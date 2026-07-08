@@ -232,8 +232,130 @@ class STF(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
+    # Listing category: data stream or WASM module
+    # STF
+    def LISTING_KIND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Search tags
+    # STF
+    def TAGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # STF
+    def TAGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # STF
+    def TAGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # Number of records in sample data, when available
+    # STF
+    def SAMPLE_RECORD_COUNT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Supported delivery methods
+    # STF
+    def DELIVERY_METHODS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # STF
+    def DELIVERY_METHODSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # STF
+    def DELIVERY_METHODSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        return o == 0
+
+    # Protected delivery metadata for encrypted artifacts or streams
+    # STF
+    def PROTECTED_DELIVERY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ProtectedDeliveryBinding import ProtectedDeliveryBinding
+            obj = ProtectedDeliveryBinding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Provider reputation summary
+    # STF
+    def REPUTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from ProviderReputation import ProviderReputation
+            obj = ProviderReputation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Listing version
+    # STF
+    def VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Unix timestamp when the listing expires, or 0 for no expiry
+    # STF
+    def EXPIRES_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Terms document CID
+    # STF
+    def TERMS_CID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # License label or SPDX-style identifier
+    # STF
+    def LICENSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Peer ID this listing was sourced from when discovered remotely
+    # STF
+    def SOURCE_PEER_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def STFStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(27)
 
 def Start(builder):
     STFStart(builder)
@@ -390,6 +512,96 @@ def STFCreateSIGNATUREVector(builder, data):
 def CreateSIGNATUREVector(builder, data):
     STFCreateSIGNATUREVector(builder, data)
 
+def STFAddLISTING_KIND(builder, LISTING_KIND):
+    builder.PrependInt8Slot(16, LISTING_KIND, 0)
+
+def AddLISTING_KIND(builder, LISTING_KIND):
+    STFAddLISTING_KIND(builder, LISTING_KIND)
+
+def STFAddTAGS(builder, TAGS):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+
+def AddTAGS(builder, TAGS):
+    STFAddTAGS(builder, TAGS)
+
+def STFStartTAGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTAGSVector(builder, numElems):
+    return STFStartTAGSVector(builder, numElems)
+
+def STFCreateTAGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTAGSVector(builder, data):
+    STFCreateTAGSVector(builder, data)
+
+def STFAddSAMPLE_RECORD_COUNT(builder, SAMPLE_RECORD_COUNT):
+    builder.PrependUint32Slot(18, SAMPLE_RECORD_COUNT, 0)
+
+def AddSAMPLE_RECORD_COUNT(builder, SAMPLE_RECORD_COUNT):
+    STFAddSAMPLE_RECORD_COUNT(builder, SAMPLE_RECORD_COUNT)
+
+def STFAddDELIVERY_METHODS(builder, DELIVERY_METHODS):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(DELIVERY_METHODS), 0)
+
+def AddDELIVERY_METHODS(builder, DELIVERY_METHODS):
+    STFAddDELIVERY_METHODS(builder, DELIVERY_METHODS)
+
+def STFStartDELIVERY_METHODSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDELIVERY_METHODSVector(builder, numElems):
+    return STFStartDELIVERY_METHODSVector(builder, numElems)
+
+def STFCreateDELIVERY_METHODSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDELIVERY_METHODSVector(builder, data):
+    STFCreateDELIVERY_METHODSVector(builder, data)
+
+def STFAddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERY):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(PROTECTED_DELIVERY), 0)
+
+def AddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERY):
+    STFAddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERY)
+
+def STFAddREPUTATION(builder, REPUTATION):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(REPUTATION), 0)
+
+def AddREPUTATION(builder, REPUTATION):
+    STFAddREPUTATION(builder, REPUTATION)
+
+def STFAddVERSION(builder, VERSION):
+    builder.PrependUint32Slot(22, VERSION, 0)
+
+def AddVERSION(builder, VERSION):
+    STFAddVERSION(builder, VERSION)
+
+def STFAddEXPIRES_AT(builder, EXPIRES_AT):
+    builder.PrependUint64Slot(23, EXPIRES_AT, 0)
+
+def AddEXPIRES_AT(builder, EXPIRES_AT):
+    STFAddEXPIRES_AT(builder, EXPIRES_AT)
+
+def STFAddTERMS_CID(builder, TERMS_CID):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(TERMS_CID), 0)
+
+def AddTERMS_CID(builder, TERMS_CID):
+    STFAddTERMS_CID(builder, TERMS_CID)
+
+def STFAddLICENSE(builder, LICENSE):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
+
+def AddLICENSE(builder, LICENSE):
+    STFAddLICENSE(builder, LICENSE)
+
+def STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_PEER_ID), 0)
+
+def AddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
+    STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+
 def STFEnd(builder):
     return builder.EndObject()
 
@@ -398,6 +610,8 @@ def End(builder):
 
 import DataCoverage
 import PricingTier
+import ProtectedDeliveryBinding
+import ProviderReputation
 try:
     from typing import List, Optional
 except:
@@ -424,6 +638,17 @@ class STFT(object):
         UPDATED_AT = 0,
         ACTIVE = False,
         SIGNATURE = None,
+        LISTING_KIND = 0,
+        TAGS = None,
+        SAMPLE_RECORD_COUNT = 0,
+        DELIVERY_METHODS = None,
+        PROTECTED_DELIVERY = None,
+        REPUTATION = None,
+        VERSION = 0,
+        EXPIRES_AT = 0,
+        TERMS_CID = None,
+        LICENSE = None,
+        SOURCE_PEER_ID = None,
     ):
         self.LISTING_ID = LISTING_ID  # type: Optional[str]
         self.PROVIDER_PEER_ID = PROVIDER_PEER_ID  # type: Optional[str]
@@ -441,6 +666,17 @@ class STFT(object):
         self.UPDATED_AT = UPDATED_AT  # type: int
         self.ACTIVE = ACTIVE  # type: bool
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
+        self.LISTING_KIND = LISTING_KIND  # type: int
+        self.TAGS = TAGS  # type: Optional[List[Optional[str]]]
+        self.SAMPLE_RECORD_COUNT = SAMPLE_RECORD_COUNT  # type: int
+        self.DELIVERY_METHODS = DELIVERY_METHODS  # type: Optional[List[Optional[str]]]
+        self.PROTECTED_DELIVERY = PROTECTED_DELIVERY  # type: Optional[ProtectedDeliveryBinding.ProtectedDeliveryBindingT]
+        self.REPUTATION = REPUTATION  # type: Optional[ProviderReputation.ProviderReputationT]
+        self.VERSION = VERSION  # type: int
+        self.EXPIRES_AT = EXPIRES_AT  # type: int
+        self.TERMS_CID = TERMS_CID  # type: Optional[str]
+        self.LICENSE = LICENSE  # type: Optional[str]
+        self.SOURCE_PEER_ID = SOURCE_PEER_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -502,6 +738,25 @@ class STFT(object):
                     self.SIGNATURE.append(STF.SIGNATURE(i))
             else:
                 self.SIGNATURE = STF.SIGNATUREAsNumpy()
+        self.LISTING_KIND = STF.LISTING_KIND()
+        if not STF.TAGSIsNone():
+            self.TAGS = []
+            for i in range(STF.TAGSLength()):
+                self.TAGS.append(STF.TAGS(i))
+        self.SAMPLE_RECORD_COUNT = STF.SAMPLE_RECORD_COUNT()
+        if not STF.DELIVERY_METHODSIsNone():
+            self.DELIVERY_METHODS = []
+            for i in range(STF.DELIVERY_METHODSLength()):
+                self.DELIVERY_METHODS.append(STF.DELIVERY_METHODS(i))
+        if STF.PROTECTED_DELIVERY() is not None:
+            self.PROTECTED_DELIVERY = ProtectedDeliveryBinding.ProtectedDeliveryBindingT.InitFromObj(STF.PROTECTED_DELIVERY())
+        if STF.REPUTATION() is not None:
+            self.REPUTATION = ProviderReputation.ProviderReputationT.InitFromObj(STF.REPUTATION())
+        self.VERSION = STF.VERSION()
+        self.EXPIRES_AT = STF.EXPIRES_AT()
+        self.TERMS_CID = STF.TERMS_CID()
+        self.LICENSE = STF.LICENSE()
+        self.SOURCE_PEER_ID = STF.SOURCE_PEER_ID()
 
     # STFT
     def Pack(self, builder):
@@ -551,6 +806,32 @@ class STFT(object):
                 for i in reversed(range(len(self.SIGNATURE))):
                     builder.PrependUint8(self.SIGNATURE[i])
                 SIGNATURE = builder.EndVector()
+        if self.TAGS is not None:
+            TAGSlist = []
+            for i in range(len(self.TAGS)):
+                TAGSlist.append(builder.CreateString(self.TAGS[i]))
+            STFStartTAGSVector(builder, len(self.TAGS))
+            for i in reversed(range(len(self.TAGS))):
+                builder.PrependUOffsetTRelative(TAGSlist[i])
+            TAGS = builder.EndVector()
+        if self.DELIVERY_METHODS is not None:
+            DELIVERY_METHODSlist = []
+            for i in range(len(self.DELIVERY_METHODS)):
+                DELIVERY_METHODSlist.append(builder.CreateString(self.DELIVERY_METHODS[i]))
+            STFStartDELIVERY_METHODSVector(builder, len(self.DELIVERY_METHODS))
+            for i in reversed(range(len(self.DELIVERY_METHODS))):
+                builder.PrependUOffsetTRelative(DELIVERY_METHODSlist[i])
+            DELIVERY_METHODS = builder.EndVector()
+        if self.PROTECTED_DELIVERY is not None:
+            PROTECTED_DELIVERY = self.PROTECTED_DELIVERY.Pack(builder)
+        if self.REPUTATION is not None:
+            REPUTATION = self.REPUTATION.Pack(builder)
+        if self.TERMS_CID is not None:
+            TERMS_CID = builder.CreateString(self.TERMS_CID)
+        if self.LICENSE is not None:
+            LICENSE = builder.CreateString(self.LICENSE)
+        if self.SOURCE_PEER_ID is not None:
+            SOURCE_PEER_ID = builder.CreateString(self.SOURCE_PEER_ID)
         STFStart(builder)
         if self.LISTING_ID is not None:
             STFAddLISTING_ID(builder, LISTING_ID)
@@ -579,5 +860,23 @@ class STFT(object):
         STFAddACTIVE(builder, self.ACTIVE)
         if self.SIGNATURE is not None:
             STFAddSIGNATURE(builder, SIGNATURE)
+        STFAddLISTING_KIND(builder, self.LISTING_KIND)
+        if self.TAGS is not None:
+            STFAddTAGS(builder, TAGS)
+        STFAddSAMPLE_RECORD_COUNT(builder, self.SAMPLE_RECORD_COUNT)
+        if self.DELIVERY_METHODS is not None:
+            STFAddDELIVERY_METHODS(builder, DELIVERY_METHODS)
+        if self.PROTECTED_DELIVERY is not None:
+            STFAddPROTECTED_DELIVERY(builder, PROTECTED_DELIVERY)
+        if self.REPUTATION is not None:
+            STFAddREPUTATION(builder, REPUTATION)
+        STFAddVERSION(builder, self.VERSION)
+        STFAddEXPIRES_AT(builder, self.EXPIRES_AT)
+        if self.TERMS_CID is not None:
+            STFAddTERMS_CID(builder, TERMS_CID)
+        if self.LICENSE is not None:
+            STFAddLICENSE(builder, LICENSE)
+        if self.SOURCE_PEER_ID is not None:
+            STFAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
         STF = STFEnd(builder)
         return STF

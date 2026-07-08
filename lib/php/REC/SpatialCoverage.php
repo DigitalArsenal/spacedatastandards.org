@@ -88,25 +88,68 @@ class SpatialCoverage extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Minimum altitude in kilometers for altitude-bounded offerings
+    /**
+     * @return double
+     */
+    public function getMIN_ALTITUDE_KM()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum altitude in kilometers for altitude-bounded offerings
+    /**
+     * @return double
+     */
+    public function getMAX_ALTITUDE_KM()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Bounding box as [min_lat, min_lon, max_lat, max_lon]
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getGEO_BOUNDS($j)
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGEO_BOUNDSLength()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSpatialCoverage(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SpatialCoverage
      */
-    public static function createSpatialCoverage(FlatBufferBuilder $builder, $TYPE, $REGIONS, $OBJECT_IDS)
+    public static function createSpatialCoverage(FlatBufferBuilder $builder, $TYPE, $REGIONS, $OBJECT_IDS, $MIN_ALTITUDE_KM, $MAX_ALTITUDE_KM, $GEO_BOUNDS)
     {
-        $builder->startObject(3);
+        $builder->startObject(6);
         self::addTYPE($builder, $TYPE);
         self::addREGIONS($builder, $REGIONS);
         self::addOBJECT_IDS($builder, $OBJECT_IDS);
+        self::addMIN_ALTITUDE_KM($builder, $MIN_ALTITUDE_KM);
+        self::addMAX_ALTITUDE_KM($builder, $MAX_ALTITUDE_KM);
+        self::addGEO_BOUNDS($builder, $GEO_BOUNDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -187,6 +230,60 @@ class SpatialCoverage extends Table
     public static function startOBJECT_IDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMIN_ALTITUDE_KM(FlatBufferBuilder $builder, $MIN_ALTITUDE_KM)
+    {
+        $builder->addDoubleX(3, $MIN_ALTITUDE_KM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_ALTITUDE_KM(FlatBufferBuilder $builder, $MAX_ALTITUDE_KM)
+    {
+        $builder->addDoubleX(4, $MAX_ALTITUDE_KM, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addGEO_BOUNDS(FlatBufferBuilder $builder, $GEO_BOUNDS)
+    {
+        $builder->addOffsetX(5, $GEO_BOUNDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createGEO_BOUNDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startGEO_BOUNDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

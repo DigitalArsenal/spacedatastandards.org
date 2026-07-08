@@ -4,7 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { GrantFieldStreamPolicy, GrantFieldStreamPolicyT } from './GrantFieldStreamPolicy.js';
 import { accessCategory } from './accessCategory.js';
+import { grantLifecycleStatus } from './grantLifecycleStatus.js';
 import { paymentMethod } from './paymentMethod.js';
 
 
@@ -151,8 +153,182 @@ providerSignatureArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Key algorithm for buyer encryption public key
+ */
+KEY_ALGORITHM():string|null
+KEY_ALGORITHM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+KEY_ALGORITHM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Request rate limit
+ */
+RATE_LIMIT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Maximum records returned per request
+ */
+MAX_RECORDS_PER_REQUEST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Provider-side grant status
+ */
+STATUS():grantLifecycleStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : grantLifecycleStatus.Active;
+}
+
+/**
+ * Payment amount in smallest unit
+ */
+PAYMENT_AMOUNT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Payment currency
+ */
+PAYMENT_CURRENCY():string|null
+PAYMENT_CURRENCY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PAYMENT_CURRENCY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Payment chain or processor
+ */
+PAYMENT_CHAIN():string|null
+PAYMENT_CHAIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PAYMENT_CHAIN(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp of next renewal
+ */
+NEXT_RENEWAL():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Whether renewal is automatic
+ */
+AUTO_RENEW():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Renewal count
+ */
+RENEWAL_COUNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Total requests made under this grant
+ */
+TOTAL_REQUESTS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Total records delivered under this grant
+ */
+TOTAL_RECORDS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp of last access
+ */
+LAST_ACCESS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * PubSub or direct delivery topic
+ */
+DELIVERY_TOPIC():string|null
+DELIVERY_TOPIC(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DELIVERY_TOPIC(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp when the grant record was created
+ */
+CREATED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp when the grant record was updated
+ */
+UPDATED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Provider notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Provider peer ID
+ */
+PROVIDER_PEER_ID():string|null
+PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Base64-encoded signed grant response bytes
+ */
+GRANT_RESPONSE_BASE64():string|null
+GRANT_RESPONSE_BASE64(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GRANT_RESPONSE_BASE64(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Field-level stream policy bound to this grant
+ */
+FIELD_STREAM_POLICY(obj?:GrantFieldStreamPolicy):GrantFieldStreamPolicy|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? (obj || new GrantFieldStreamPolicy()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startACL(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(31);
 }
 
 static addGrantId(builder:flatbuffers.Builder, GRANT_IDOffset:flatbuffers.Offset) {
@@ -223,6 +399,86 @@ static startProviderSignatureVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(1, numElems, 1);
 }
 
+static addKeyAlgorithm(builder:flatbuffers.Builder, KEY_ALGORITHMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, KEY_ALGORITHMOffset, 0);
+}
+
+static addRateLimit(builder:flatbuffers.Builder, RATE_LIMIT:number) {
+  builder.addFieldInt32(12, RATE_LIMIT, 0);
+}
+
+static addMaxRecordsPerRequest(builder:flatbuffers.Builder, MAX_RECORDS_PER_REQUEST:number) {
+  builder.addFieldInt32(13, MAX_RECORDS_PER_REQUEST, 0);
+}
+
+static addStatus(builder:flatbuffers.Builder, STATUS:grantLifecycleStatus) {
+  builder.addFieldInt8(14, STATUS, grantLifecycleStatus.Active);
+}
+
+static addPaymentAmount(builder:flatbuffers.Builder, PAYMENT_AMOUNT:bigint) {
+  builder.addFieldInt64(15, PAYMENT_AMOUNT, BigInt('0'));
+}
+
+static addPaymentCurrency(builder:flatbuffers.Builder, PAYMENT_CURRENCYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, PAYMENT_CURRENCYOffset, 0);
+}
+
+static addPaymentChain(builder:flatbuffers.Builder, PAYMENT_CHAINOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, PAYMENT_CHAINOffset, 0);
+}
+
+static addNextRenewal(builder:flatbuffers.Builder, NEXT_RENEWAL:bigint) {
+  builder.addFieldInt64(18, NEXT_RENEWAL, BigInt('0'));
+}
+
+static addAutoRenew(builder:flatbuffers.Builder, AUTO_RENEW:boolean) {
+  builder.addFieldInt8(19, +AUTO_RENEW, +false);
+}
+
+static addRenewalCount(builder:flatbuffers.Builder, RENEWAL_COUNT:number) {
+  builder.addFieldInt32(20, RENEWAL_COUNT, 0);
+}
+
+static addTotalRequests(builder:flatbuffers.Builder, TOTAL_REQUESTS:bigint) {
+  builder.addFieldInt64(21, TOTAL_REQUESTS, BigInt('0'));
+}
+
+static addTotalRecords(builder:flatbuffers.Builder, TOTAL_RECORDS:bigint) {
+  builder.addFieldInt64(22, TOTAL_RECORDS, BigInt('0'));
+}
+
+static addLastAccess(builder:flatbuffers.Builder, LAST_ACCESS:bigint) {
+  builder.addFieldInt64(23, LAST_ACCESS, BigInt('0'));
+}
+
+static addDeliveryTopic(builder:flatbuffers.Builder, DELIVERY_TOPICOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, DELIVERY_TOPICOffset, 0);
+}
+
+static addCreatedAt(builder:flatbuffers.Builder, CREATED_AT:bigint) {
+  builder.addFieldInt64(25, CREATED_AT, BigInt('0'));
+}
+
+static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_AT:bigint) {
+  builder.addFieldInt64(26, UPDATED_AT, BigInt('0'));
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, NOTESOffset, 0);
+}
+
+static addProviderPeerId(builder:flatbuffers.Builder, PROVIDER_PEER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, PROVIDER_PEER_IDOffset, 0);
+}
+
+static addGrantResponseBase64(builder:flatbuffers.Builder, GRANT_RESPONSE_BASE64Offset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, GRANT_RESPONSE_BASE64Offset, 0);
+}
+
+static addFieldStreamPolicy(builder:flatbuffers.Builder, FIELD_STREAM_POLICYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, FIELD_STREAM_POLICYOffset, 0);
+}
+
 static endACL(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // GRANT_ID
@@ -239,21 +495,6 @@ static finishSizePrefixedACLBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ACL', true);
 }
 
-static createACL(builder:flatbuffers.Builder, GRANT_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, BUYER_PEER_IDOffset:flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset:flatbuffers.Offset, ACCESS_TYPE:accessCategory, TIER_NAMEOffset:flatbuffers.Offset, GRANTED_AT:bigint, EXPIRES_AT:bigint, PAYMENT_TX_HASHOffset:flatbuffers.Offset, PAYMENT_METHOD:paymentMethod, PROVIDER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
-  ACL.startACL(builder);
-  ACL.addGrantId(builder, GRANT_IDOffset);
-  ACL.addListingId(builder, LISTING_IDOffset);
-  ACL.addBuyerPeerId(builder, BUYER_PEER_IDOffset);
-  ACL.addBuyerEncryptionPubkey(builder, BUYER_ENCRYPTION_PUBKEYOffset);
-  ACL.addAccessType(builder, ACCESS_TYPE);
-  ACL.addTierName(builder, TIER_NAMEOffset);
-  ACL.addGrantedAt(builder, GRANTED_AT);
-  ACL.addExpiresAt(builder, EXPIRES_AT);
-  ACL.addPaymentTxHash(builder, PAYMENT_TX_HASHOffset);
-  ACL.addPaymentMethod(builder, PAYMENT_METHOD);
-  ACL.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
-  return ACL.endACL(builder);
-}
 
 unpack(): ACLT {
   return new ACLT(
@@ -267,7 +508,27 @@ unpack(): ACLT {
     this.EXPIRES_AT(),
     this.PAYMENT_TX_HASH(),
     this.PAYMENT_METHOD(),
-    this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength())
+    this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength()),
+    this.KEY_ALGORITHM(),
+    this.RATE_LIMIT(),
+    this.MAX_RECORDS_PER_REQUEST(),
+    this.STATUS(),
+    this.PAYMENT_AMOUNT(),
+    this.PAYMENT_CURRENCY(),
+    this.PAYMENT_CHAIN(),
+    this.NEXT_RENEWAL(),
+    this.AUTO_RENEW(),
+    this.RENEWAL_COUNT(),
+    this.TOTAL_REQUESTS(),
+    this.TOTAL_RECORDS(),
+    this.LAST_ACCESS(),
+    this.DELIVERY_TOPIC(),
+    this.CREATED_AT(),
+    this.UPDATED_AT(),
+    this.NOTES(),
+    this.PROVIDER_PEER_ID(),
+    this.GRANT_RESPONSE_BASE64(),
+    (this.FIELD_STREAM_POLICY() !== null ? this.FIELD_STREAM_POLICY()!.unpack() : null)
   );
 }
 
@@ -284,6 +545,26 @@ unpackTo(_o: ACLT): void {
   _o.PAYMENT_TX_HASH = this.PAYMENT_TX_HASH();
   _o.PAYMENT_METHOD = this.PAYMENT_METHOD();
   _o.PROVIDER_SIGNATURE = this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength());
+  _o.KEY_ALGORITHM = this.KEY_ALGORITHM();
+  _o.RATE_LIMIT = this.RATE_LIMIT();
+  _o.MAX_RECORDS_PER_REQUEST = this.MAX_RECORDS_PER_REQUEST();
+  _o.STATUS = this.STATUS();
+  _o.PAYMENT_AMOUNT = this.PAYMENT_AMOUNT();
+  _o.PAYMENT_CURRENCY = this.PAYMENT_CURRENCY();
+  _o.PAYMENT_CHAIN = this.PAYMENT_CHAIN();
+  _o.NEXT_RENEWAL = this.NEXT_RENEWAL();
+  _o.AUTO_RENEW = this.AUTO_RENEW();
+  _o.RENEWAL_COUNT = this.RENEWAL_COUNT();
+  _o.TOTAL_REQUESTS = this.TOTAL_REQUESTS();
+  _o.TOTAL_RECORDS = this.TOTAL_RECORDS();
+  _o.LAST_ACCESS = this.LAST_ACCESS();
+  _o.DELIVERY_TOPIC = this.DELIVERY_TOPIC();
+  _o.CREATED_AT = this.CREATED_AT();
+  _o.UPDATED_AT = this.UPDATED_AT();
+  _o.NOTES = this.NOTES();
+  _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID();
+  _o.GRANT_RESPONSE_BASE64 = this.GRANT_RESPONSE_BASE64();
+  _o.FIELD_STREAM_POLICY = (this.FIELD_STREAM_POLICY() !== null ? this.FIELD_STREAM_POLICY()!.unpack() : null);
 }
 }
 
@@ -299,7 +580,27 @@ constructor(
   public EXPIRES_AT: bigint = BigInt('0'),
   public PAYMENT_TX_HASH: string|Uint8Array|null = null,
   public PAYMENT_METHOD: paymentMethod = paymentMethod.Crypto_ETH,
-  public PROVIDER_SIGNATURE: (number)[] = []
+  public PROVIDER_SIGNATURE: (number)[] = [],
+  public KEY_ALGORITHM: string|Uint8Array|null = null,
+  public RATE_LIMIT: number = 0,
+  public MAX_RECORDS_PER_REQUEST: number = 0,
+  public STATUS: grantLifecycleStatus = grantLifecycleStatus.Active,
+  public PAYMENT_AMOUNT: bigint = BigInt('0'),
+  public PAYMENT_CURRENCY: string|Uint8Array|null = null,
+  public PAYMENT_CHAIN: string|Uint8Array|null = null,
+  public NEXT_RENEWAL: bigint = BigInt('0'),
+  public AUTO_RENEW: boolean = false,
+  public RENEWAL_COUNT: number = 0,
+  public TOTAL_REQUESTS: bigint = BigInt('0'),
+  public TOTAL_RECORDS: bigint = BigInt('0'),
+  public LAST_ACCESS: bigint = BigInt('0'),
+  public DELIVERY_TOPIC: string|Uint8Array|null = null,
+  public CREATED_AT: bigint = BigInt('0'),
+  public UPDATED_AT: bigint = BigInt('0'),
+  public NOTES: string|Uint8Array|null = null,
+  public PROVIDER_PEER_ID: string|Uint8Array|null = null,
+  public GRANT_RESPONSE_BASE64: string|Uint8Array|null = null,
+  public FIELD_STREAM_POLICY: GrantFieldStreamPolicyT|null = null
 ){}
 
 
@@ -311,19 +612,48 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TIER_NAME = (this.TIER_NAME !== null ? builder.createString(this.TIER_NAME!) : 0);
   const PAYMENT_TX_HASH = (this.PAYMENT_TX_HASH !== null ? builder.createString(this.PAYMENT_TX_HASH!) : 0);
   const PROVIDER_SIGNATURE = ACL.createProviderSignatureVector(builder, this.PROVIDER_SIGNATURE);
+  const KEY_ALGORITHM = (this.KEY_ALGORITHM !== null ? builder.createString(this.KEY_ALGORITHM!) : 0);
+  const PAYMENT_CURRENCY = (this.PAYMENT_CURRENCY !== null ? builder.createString(this.PAYMENT_CURRENCY!) : 0);
+  const PAYMENT_CHAIN = (this.PAYMENT_CHAIN !== null ? builder.createString(this.PAYMENT_CHAIN!) : 0);
+  const DELIVERY_TOPIC = (this.DELIVERY_TOPIC !== null ? builder.createString(this.DELIVERY_TOPIC!) : 0);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const PROVIDER_PEER_ID = (this.PROVIDER_PEER_ID !== null ? builder.createString(this.PROVIDER_PEER_ID!) : 0);
+  const GRANT_RESPONSE_BASE64 = (this.GRANT_RESPONSE_BASE64 !== null ? builder.createString(this.GRANT_RESPONSE_BASE64!) : 0);
+  const FIELD_STREAM_POLICY = (this.FIELD_STREAM_POLICY !== null ? this.FIELD_STREAM_POLICY!.pack(builder) : 0);
 
-  return ACL.createACL(builder,
-    GRANT_ID,
-    LISTING_ID,
-    BUYER_PEER_ID,
-    BUYER_ENCRYPTION_PUBKEY,
-    this.ACCESS_TYPE,
-    TIER_NAME,
-    this.GRANTED_AT,
-    this.EXPIRES_AT,
-    PAYMENT_TX_HASH,
-    this.PAYMENT_METHOD,
-    PROVIDER_SIGNATURE
-  );
+  ACL.startACL(builder);
+  ACL.addGrantId(builder, GRANT_ID);
+  ACL.addListingId(builder, LISTING_ID);
+  ACL.addBuyerPeerId(builder, BUYER_PEER_ID);
+  ACL.addBuyerEncryptionPubkey(builder, BUYER_ENCRYPTION_PUBKEY);
+  ACL.addAccessType(builder, this.ACCESS_TYPE);
+  ACL.addTierName(builder, TIER_NAME);
+  ACL.addGrantedAt(builder, this.GRANTED_AT);
+  ACL.addExpiresAt(builder, this.EXPIRES_AT);
+  ACL.addPaymentTxHash(builder, PAYMENT_TX_HASH);
+  ACL.addPaymentMethod(builder, this.PAYMENT_METHOD);
+  ACL.addProviderSignature(builder, PROVIDER_SIGNATURE);
+  ACL.addKeyAlgorithm(builder, KEY_ALGORITHM);
+  ACL.addRateLimit(builder, this.RATE_LIMIT);
+  ACL.addMaxRecordsPerRequest(builder, this.MAX_RECORDS_PER_REQUEST);
+  ACL.addStatus(builder, this.STATUS);
+  ACL.addPaymentAmount(builder, this.PAYMENT_AMOUNT);
+  ACL.addPaymentCurrency(builder, PAYMENT_CURRENCY);
+  ACL.addPaymentChain(builder, PAYMENT_CHAIN);
+  ACL.addNextRenewal(builder, this.NEXT_RENEWAL);
+  ACL.addAutoRenew(builder, this.AUTO_RENEW);
+  ACL.addRenewalCount(builder, this.RENEWAL_COUNT);
+  ACL.addTotalRequests(builder, this.TOTAL_REQUESTS);
+  ACL.addTotalRecords(builder, this.TOTAL_RECORDS);
+  ACL.addLastAccess(builder, this.LAST_ACCESS);
+  ACL.addDeliveryTopic(builder, DELIVERY_TOPIC);
+  ACL.addCreatedAt(builder, this.CREATED_AT);
+  ACL.addUpdatedAt(builder, this.UPDATED_AT);
+  ACL.addNotes(builder, NOTES);
+  ACL.addProviderPeerId(builder, PROVIDER_PEER_ID);
+  ACL.addGrantResponseBase64(builder, GRANT_RESPONSE_BASE64);
+  ACL.addFieldStreamPolicy(builder, FIELD_STREAM_POLICY);
+
+  return ACL.endACL(builder);
 }
 }

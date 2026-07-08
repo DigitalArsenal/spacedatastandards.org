@@ -47,19 +47,42 @@ public final class SpatialCoverage extends com.google.flatbuffers.Table {
   public int OBJECT_IDSLength() { int o = __offset(8); return o != 0 ? __vector_len(o) : 0; }
   public StringVector objectIdsVector() { return objectIdsVector(new StringVector()); }
   public StringVector objectIdsVector(StringVector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Minimum altitude in kilometers for altitude-bounded offerings
+   */
+  public double MIN_ALTITUDE_KM() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum altitude in kilometers for altitude-bounded offerings
+   */
+  public double MAX_ALTITUDE_KM() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Bounding box as [min_lat, min_lon, max_lat, max_lon]
+   */
+  public double GEO_BOUNDS(int j) { int o = __offset(14); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int GEO_BOUNDSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector geoBoundsVector() { return geoBoundsVector(new DoubleVector()); }
+  public DoubleVector geoBoundsVector(DoubleVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer GEO_BOUNDSAsByteBuffer() { return __vector_as_bytebuffer(14, 8); }
+  public ByteBuffer GEO_BOUNDSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 8); }
 
   public static int createSpatialCoverage(FlatBufferBuilder builder,
       int TYPEOffset,
       int REGIONSOffset,
-      int OBJECT_IDSOffset) {
-    builder.startTable(3);
+      int OBJECT_IDSOffset,
+      double MIN_ALTITUDE_KM,
+      double MAX_ALTITUDE_KM,
+      int GEO_BOUNDSOffset) {
+    builder.startTable(6);
+    SpatialCoverage.addMaxAltitudeKm(builder, MAX_ALTITUDE_KM);
+    SpatialCoverage.addMinAltitudeKm(builder, MIN_ALTITUDE_KM);
+    SpatialCoverage.addGeoBounds(builder, GEO_BOUNDSOffset);
     SpatialCoverage.addObjectIds(builder, OBJECT_IDSOffset);
     SpatialCoverage.addRegions(builder, REGIONSOffset);
     SpatialCoverage.addType(builder, TYPEOffset);
     return SpatialCoverage.endSpatialCoverage(builder);
   }
 
-  public static void startSpatialCoverage(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startSpatialCoverage(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addType(FlatBufferBuilder builder, int TYPEOffset) { builder.addOffset(0, TYPEOffset, 0); }
   public static void addRegions(FlatBufferBuilder builder, int REGIONSOffset) { builder.addOffset(1, REGIONSOffset, 0); }
   public static int createRegionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -67,6 +90,11 @@ public final class SpatialCoverage extends com.google.flatbuffers.Table {
   public static void addObjectIds(FlatBufferBuilder builder, int OBJECT_IDSOffset) { builder.addOffset(2, OBJECT_IDSOffset, 0); }
   public static int createObjectIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startObjectIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMinAltitudeKm(FlatBufferBuilder builder, double MIN_ALTITUDE_KM) { builder.addDouble(3, MIN_ALTITUDE_KM, 0.0); }
+  public static void addMaxAltitudeKm(FlatBufferBuilder builder, double MAX_ALTITUDE_KM) { builder.addDouble(4, MAX_ALTITUDE_KM, 0.0); }
+  public static void addGeoBounds(FlatBufferBuilder builder, int GEO_BOUNDSOffset) { builder.addOffset(5, GEO_BOUNDSOffset, 0); }
+  public static int createGeoBoundsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startGeoBoundsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endSpatialCoverage(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

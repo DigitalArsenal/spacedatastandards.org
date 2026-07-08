@@ -52,7 +52,9 @@ enum paymentMethod {
   Crypto_BTC(2),
   SDN_Credits(3),
   Fiat_Stripe(4),
-  Free(5);
+  Free(5),
+  UsageBased(6),
+  Enterprise(7);
 
   final int value;
   const paymentMethod(this.value);
@@ -65,6 +67,8 @@ enum paymentMethod {
       case 3: return paymentMethod.SDN_Credits;
       case 4: return paymentMethod.Fiat_Stripe;
       case 5: return paymentMethod.Free;
+      case 6: return paymentMethod.UsageBased;
+      case 7: return paymentMethod.Enterprise;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -73,7 +77,7 @@ enum paymentMethod {
       value == null ? null : paymentMethod.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 7;
   static const fb.Reader<paymentMethod> reader = _paymentMethodReader();
 }
 
@@ -88,6 +92,564 @@ class _paymentMethodReader extends fb.Reader<paymentMethod> {
       paymentMethod.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Listing kind for marketplace entries.
+enum listingCategory {
+  DataStream(0),
+  WasmModule(1);
+
+  final int value;
+  const listingCategory(this.value);
+
+  factory listingCategory.fromValue(int value) {
+    switch (value) {
+      case 0: return listingCategory.DataStream;
+      case 1: return listingCategory.WasmModule;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static listingCategory? _createOrNull(int? value) =>
+      value == null ? null : listingCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<listingCategory> reader = _listingCategoryReader();
+}
+
+class _listingCategoryReader extends fb.Reader<listingCategory> {
+  const _listingCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  listingCategory read(fb.BufferContext bc, int offset) =>
+      listingCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Field-level stream policy bound into protected delivery and grants.
+class GrantFieldStreamPolicy {
+  GrantFieldStreamPolicy._(this._bc, this._bcOffset);
+  factory GrantFieldStreamPolicy(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<GrantFieldStreamPolicy> reader = _GrantFieldStreamPolicyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get POLICY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get policyId => POLICY_ID;
+  int get POLICY_VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get policyVersion => POLICY_VERSION;
+  String? get STREAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get streamId => STREAM_ID;
+  String? get SCHEMA_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get schemaCode => SCHEMA_CODE;
+  List<String>? get ALLOWED_FIELD_PATHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<String>? get allowedFieldPaths => ALLOWED_FIELD_PATHS;
+  List<String>? get REDACTED_FIELD_PATHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<String>? get redactedFieldPaths => REDACTED_FIELD_PATHS;
+  String? get KEY_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get keyEpoch => KEY_EPOCH;
+  String? get GRANT_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get grantScope => GRANT_SCOPE;
+  List<String>? get ALLOWED_OPERATIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<String>? get allowedOperations => ALLOWED_OPERATIONS;
+
+  @override
+  String toString() {
+    return 'GrantFieldStreamPolicy{policyId: ${policyId}, policyVersion: ${policyVersion}, streamId: ${streamId}, schemaCode: ${schemaCode}, allowedFieldPaths: ${allowedFieldPaths}, redactedFieldPaths: ${redactedFieldPaths}, keyEpoch: ${keyEpoch}, grantScope: ${grantScope}, allowedOperations: ${allowedOperations}}';
+  }
+}
+
+class _GrantFieldStreamPolicyReader extends fb.TableReader<GrantFieldStreamPolicy> {
+  const _GrantFieldStreamPolicyReader();
+
+  @override
+  GrantFieldStreamPolicy createObject(fb.BufferContext bc, int offset) =>
+    GrantFieldStreamPolicy._(bc, offset);
+}
+
+class GrantFieldStreamPolicyBuilder {
+  GrantFieldStreamPolicyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addPolicyIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPolicyVersion(int? POLICY_VERSION) {
+    fbBuilder.addUint32(1, POLICY_VERSION);
+    return fbBuilder.offset;
+  }
+  int addStreamIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSchemaCodeOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedFieldPathsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRedactedFieldPathsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyEpochOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantScopeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addAllowedOperationsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class GrantFieldStreamPolicyObjectBuilder extends fb.ObjectBuilder {
+  final String? _POLICY_ID;
+  final int? _POLICY_VERSION;
+  final String? _STREAM_ID;
+  final String? _SCHEMA_CODE;
+  final List<String>? _ALLOWED_FIELD_PATHS;
+  final List<String>? _REDACTED_FIELD_PATHS;
+  final String? _KEY_EPOCH;
+  final String? _GRANT_SCOPE;
+  final List<String>? _ALLOWED_OPERATIONS;
+
+  GrantFieldStreamPolicyObjectBuilder({
+    String? POLICY_ID,
+    String? policyId,
+    int? POLICY_VERSION,
+    int? policyVersion,
+    String? STREAM_ID,
+    String? streamId,
+    String? SCHEMA_CODE,
+    String? schemaCode,
+    List<String>? ALLOWED_FIELD_PATHS,
+    List<String>? allowedFieldPaths,
+    List<String>? REDACTED_FIELD_PATHS,
+    List<String>? redactedFieldPaths,
+    String? KEY_EPOCH,
+    String? keyEpoch,
+    String? GRANT_SCOPE,
+    String? grantScope,
+    List<String>? ALLOWED_OPERATIONS,
+    List<String>? allowedOperations,
+  })
+      : _POLICY_ID = policyId ?? POLICY_ID,
+        _POLICY_VERSION = policyVersion ?? POLICY_VERSION,
+        _STREAM_ID = streamId ?? STREAM_ID,
+        _SCHEMA_CODE = schemaCode ?? SCHEMA_CODE,
+        _ALLOWED_FIELD_PATHS = allowedFieldPaths ?? ALLOWED_FIELD_PATHS,
+        _REDACTED_FIELD_PATHS = redactedFieldPaths ?? REDACTED_FIELD_PATHS,
+        _KEY_EPOCH = keyEpoch ?? KEY_EPOCH,
+        _GRANT_SCOPE = grantScope ?? GRANT_SCOPE,
+        _ALLOWED_OPERATIONS = allowedOperations ?? ALLOWED_OPERATIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? POLICY_IDOffset = _POLICY_ID == null ? null
+        : fbBuilder.writeString(_POLICY_ID!);
+    final int? STREAM_IDOffset = _STREAM_ID == null ? null
+        : fbBuilder.writeString(_STREAM_ID!);
+    final int? SCHEMA_CODEOffset = _SCHEMA_CODE == null ? null
+        : fbBuilder.writeString(_SCHEMA_CODE!);
+    final int? ALLOWED_FIELD_PATHSOffset = _ALLOWED_FIELD_PATHS == null ? null
+        : fbBuilder.writeList(_ALLOWED_FIELD_PATHS!.map(fbBuilder.writeString).toList());
+    final int? REDACTED_FIELD_PATHSOffset = _REDACTED_FIELD_PATHS == null ? null
+        : fbBuilder.writeList(_REDACTED_FIELD_PATHS!.map(fbBuilder.writeString).toList());
+    final int? KEY_EPOCHOffset = _KEY_EPOCH == null ? null
+        : fbBuilder.writeString(_KEY_EPOCH!);
+    final int? GRANT_SCOPEOffset = _GRANT_SCOPE == null ? null
+        : fbBuilder.writeString(_GRANT_SCOPE!);
+    final int? ALLOWED_OPERATIONSOffset = _ALLOWED_OPERATIONS == null ? null
+        : fbBuilder.writeList(_ALLOWED_OPERATIONS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(9);
+    fbBuilder.addOffset(0, POLICY_IDOffset);
+    fbBuilder.addUint32(1, _POLICY_VERSION);
+    fbBuilder.addOffset(2, STREAM_IDOffset);
+    fbBuilder.addOffset(3, SCHEMA_CODEOffset);
+    fbBuilder.addOffset(4, ALLOWED_FIELD_PATHSOffset);
+    fbBuilder.addOffset(5, REDACTED_FIELD_PATHSOffset);
+    fbBuilder.addOffset(6, KEY_EPOCHOffset);
+    fbBuilder.addOffset(7, GRANT_SCOPEOffset);
+    fbBuilder.addOffset(8, ALLOWED_OPERATIONSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Immutable encrypted artifact/window metadata for protected delivery.
+class ProtectedDeliveryBinding {
+  ProtectedDeliveryBinding._(this._bc, this._bcOffset);
+  factory ProtectedDeliveryBinding(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ProtectedDeliveryBinding> reader = _ProtectedDeliveryBindingReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get ENCRYPTED_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get encryptedCid => ENCRYPTED_CID;
+  String? get MANIFEST_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get manifestCid => MANIFEST_CID;
+  String? get CONTENT_HASH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get contentHash => CONTENT_HASH;
+  String? get CONTENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get contentKeyId => CONTENT_KEY_ID;
+  String? get LICENSE_MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get licenseModuleId => LICENSE_MODULE_ID;
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get moduleId => MODULE_ID;
+  String? get MODULE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get moduleVersion => MODULE_VERSION;
+  List<String>? get REQUIRED_SCOPES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<String>? get requiredScopes => REQUIRED_SCOPES;
+  String? get GRANT_SCOPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get grantScope => GRANT_SCOPE;
+  String? get DELIVERY_PROTOCOL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get deliveryProtocol => DELIVERY_PROTOCOL;
+  GrantFieldStreamPolicy? get FIELD_STREAM_POLICY => GrantFieldStreamPolicy.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  GrantFieldStreamPolicy? get fieldStreamPolicy => FIELD_STREAM_POLICY;
+
+  @override
+  String toString() {
+    return 'ProtectedDeliveryBinding{encryptedCid: ${encryptedCid}, manifestCid: ${manifestCid}, contentHash: ${contentHash}, contentKeyId: ${contentKeyId}, licenseModuleId: ${licenseModuleId}, moduleId: ${moduleId}, moduleVersion: ${moduleVersion}, requiredScopes: ${requiredScopes}, grantScope: ${grantScope}, deliveryProtocol: ${deliveryProtocol}, fieldStreamPolicy: ${fieldStreamPolicy}}';
+  }
+}
+
+class _ProtectedDeliveryBindingReader extends fb.TableReader<ProtectedDeliveryBinding> {
+  const _ProtectedDeliveryBindingReader();
+
+  @override
+  ProtectedDeliveryBinding createObject(fb.BufferContext bc, int offset) =>
+    ProtectedDeliveryBinding._(bc, offset);
+}
+
+class ProtectedDeliveryBindingBuilder {
+  ProtectedDeliveryBindingBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addEncryptedCidOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addManifestCidOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addContentHashOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addContentKeyIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleVersionOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addRequiredScopesOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addGrantScopeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addDeliveryProtocolOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addFieldStreamPolicyOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ProtectedDeliveryBindingObjectBuilder extends fb.ObjectBuilder {
+  final String? _ENCRYPTED_CID;
+  final String? _MANIFEST_CID;
+  final String? _CONTENT_HASH;
+  final String? _CONTENT_KEY_ID;
+  final String? _LICENSE_MODULE_ID;
+  final String? _MODULE_ID;
+  final String? _MODULE_VERSION;
+  final List<String>? _REQUIRED_SCOPES;
+  final String? _GRANT_SCOPE;
+  final String? _DELIVERY_PROTOCOL;
+  final GrantFieldStreamPolicyObjectBuilder? _FIELD_STREAM_POLICY;
+
+  ProtectedDeliveryBindingObjectBuilder({
+    String? ENCRYPTED_CID,
+    String? encryptedCid,
+    String? MANIFEST_CID,
+    String? manifestCid,
+    String? CONTENT_HASH,
+    String? contentHash,
+    String? CONTENT_KEY_ID,
+    String? contentKeyId,
+    String? LICENSE_MODULE_ID,
+    String? licenseModuleId,
+    String? MODULE_ID,
+    String? moduleId,
+    String? MODULE_VERSION,
+    String? moduleVersion,
+    List<String>? REQUIRED_SCOPES,
+    List<String>? requiredScopes,
+    String? GRANT_SCOPE,
+    String? grantScope,
+    String? DELIVERY_PROTOCOL,
+    String? deliveryProtocol,
+    GrantFieldStreamPolicyObjectBuilder? FIELD_STREAM_POLICY,
+    GrantFieldStreamPolicyObjectBuilder? fieldStreamPolicy,
+  })
+      : _ENCRYPTED_CID = encryptedCid ?? ENCRYPTED_CID,
+        _MANIFEST_CID = manifestCid ?? MANIFEST_CID,
+        _CONTENT_HASH = contentHash ?? CONTENT_HASH,
+        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
+        _LICENSE_MODULE_ID = licenseModuleId ?? LICENSE_MODULE_ID,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _MODULE_VERSION = moduleVersion ?? MODULE_VERSION,
+        _REQUIRED_SCOPES = requiredScopes ?? REQUIRED_SCOPES,
+        _GRANT_SCOPE = grantScope ?? GRANT_SCOPE,
+        _DELIVERY_PROTOCOL = deliveryProtocol ?? DELIVERY_PROTOCOL,
+        _FIELD_STREAM_POLICY = fieldStreamPolicy ?? FIELD_STREAM_POLICY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ENCRYPTED_CIDOffset = _ENCRYPTED_CID == null ? null
+        : fbBuilder.writeString(_ENCRYPTED_CID!);
+    final int? MANIFEST_CIDOffset = _MANIFEST_CID == null ? null
+        : fbBuilder.writeString(_MANIFEST_CID!);
+    final int? CONTENT_HASHOffset = _CONTENT_HASH == null ? null
+        : fbBuilder.writeString(_CONTENT_HASH!);
+    final int? CONTENT_KEY_IDOffset = _CONTENT_KEY_ID == null ? null
+        : fbBuilder.writeString(_CONTENT_KEY_ID!);
+    final int? LICENSE_MODULE_IDOffset = _LICENSE_MODULE_ID == null ? null
+        : fbBuilder.writeString(_LICENSE_MODULE_ID!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? MODULE_VERSIONOffset = _MODULE_VERSION == null ? null
+        : fbBuilder.writeString(_MODULE_VERSION!);
+    final int? REQUIRED_SCOPESOffset = _REQUIRED_SCOPES == null ? null
+        : fbBuilder.writeList(_REQUIRED_SCOPES!.map(fbBuilder.writeString).toList());
+    final int? GRANT_SCOPEOffset = _GRANT_SCOPE == null ? null
+        : fbBuilder.writeString(_GRANT_SCOPE!);
+    final int? DELIVERY_PROTOCOLOffset = _DELIVERY_PROTOCOL == null ? null
+        : fbBuilder.writeString(_DELIVERY_PROTOCOL!);
+    final int? FIELD_STREAM_POLICYOffset = _FIELD_STREAM_POLICY?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(11);
+    fbBuilder.addOffset(0, ENCRYPTED_CIDOffset);
+    fbBuilder.addOffset(1, MANIFEST_CIDOffset);
+    fbBuilder.addOffset(2, CONTENT_HASHOffset);
+    fbBuilder.addOffset(3, CONTENT_KEY_IDOffset);
+    fbBuilder.addOffset(4, LICENSE_MODULE_IDOffset);
+    fbBuilder.addOffset(5, MODULE_IDOffset);
+    fbBuilder.addOffset(6, MODULE_VERSIONOffset);
+    fbBuilder.addOffset(7, REQUIRED_SCOPESOffset);
+    fbBuilder.addOffset(8, GRANT_SCOPEOffset);
+    fbBuilder.addOffset(9, DELIVERY_PROTOCOLOffset);
+    fbBuilder.addOffset(10, FIELD_STREAM_POLICYOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Provider reputation summary surfaced in marketplace listings.
+class ProviderReputation {
+  ProviderReputation._(this._bc, this._bcOffset);
+  factory ProviderReputation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ProviderReputation> reader = _ProviderReputationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get TOTAL_SALES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get totalSales => TOTAL_SALES;
+  int get AVERAGE_RATING_X10 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get averageRatingX10 => AVERAGE_RATING_X10;
+  int get TOTAL_RATINGS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get totalRatings => TOTAL_RATINGS;
+  int get UPTIME_PERCENTAGE_X100 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get uptimePercentageX100 => UPTIME_PERCENTAGE_X100;
+  int get AVG_DELIVERY_LATENCY_MS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get avgDeliveryLatencyMs => AVG_DELIVERY_LATENCY_MS;
+  int get DISPUTE_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  int get disputeCount => DISPUTE_COUNT;
+  int get PROVIDER_SINCE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get providerSince => PROVIDER_SINCE;
+
+  @override
+  String toString() {
+    return 'ProviderReputation{totalSales: ${totalSales}, averageRatingX10: ${averageRatingX10}, totalRatings: ${totalRatings}, uptimePercentageX100: ${uptimePercentageX100}, avgDeliveryLatencyMs: ${avgDeliveryLatencyMs}, disputeCount: ${disputeCount}, providerSince: ${providerSince}}';
+  }
+}
+
+class _ProviderReputationReader extends fb.TableReader<ProviderReputation> {
+  const _ProviderReputationReader();
+
+  @override
+  ProviderReputation createObject(fb.BufferContext bc, int offset) =>
+    ProviderReputation._(bc, offset);
+}
+
+class ProviderReputationBuilder {
+  ProviderReputationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addTotalSales(int? TOTAL_SALES) {
+    fbBuilder.addUint64(0, TOTAL_SALES);
+    return fbBuilder.offset;
+  }
+  int addAverageRatingX10(int? AVERAGE_RATING_X10) {
+    fbBuilder.addUint16(1, AVERAGE_RATING_X10);
+    return fbBuilder.offset;
+  }
+  int addTotalRatings(int? TOTAL_RATINGS) {
+    fbBuilder.addUint32(2, TOTAL_RATINGS);
+    return fbBuilder.offset;
+  }
+  int addUptimePercentageX100(int? UPTIME_PERCENTAGE_X100) {
+    fbBuilder.addUint16(3, UPTIME_PERCENTAGE_X100);
+    return fbBuilder.offset;
+  }
+  int addAvgDeliveryLatencyMs(int? AVG_DELIVERY_LATENCY_MS) {
+    fbBuilder.addUint32(4, AVG_DELIVERY_LATENCY_MS);
+    return fbBuilder.offset;
+  }
+  int addDisputeCount(int? DISPUTE_COUNT) {
+    fbBuilder.addUint32(5, DISPUTE_COUNT);
+    return fbBuilder.offset;
+  }
+  int addProviderSince(int? PROVIDER_SINCE) {
+    fbBuilder.addUint64(6, PROVIDER_SINCE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ProviderReputationObjectBuilder extends fb.ObjectBuilder {
+  final int? _TOTAL_SALES;
+  final int? _AVERAGE_RATING_X10;
+  final int? _TOTAL_RATINGS;
+  final int? _UPTIME_PERCENTAGE_X100;
+  final int? _AVG_DELIVERY_LATENCY_MS;
+  final int? _DISPUTE_COUNT;
+  final int? _PROVIDER_SINCE;
+
+  ProviderReputationObjectBuilder({
+    int? TOTAL_SALES,
+    int? totalSales,
+    int? AVERAGE_RATING_X10,
+    int? averageRatingX10,
+    int? TOTAL_RATINGS,
+    int? totalRatings,
+    int? UPTIME_PERCENTAGE_X100,
+    int? uptimePercentageX100,
+    int? AVG_DELIVERY_LATENCY_MS,
+    int? avgDeliveryLatencyMs,
+    int? DISPUTE_COUNT,
+    int? disputeCount,
+    int? PROVIDER_SINCE,
+    int? providerSince,
+  })
+      : _TOTAL_SALES = totalSales ?? TOTAL_SALES,
+        _AVERAGE_RATING_X10 = averageRatingX10 ?? AVERAGE_RATING_X10,
+        _TOTAL_RATINGS = totalRatings ?? TOTAL_RATINGS,
+        _UPTIME_PERCENTAGE_X100 = uptimePercentageX100 ?? UPTIME_PERCENTAGE_X100,
+        _AVG_DELIVERY_LATENCY_MS = avgDeliveryLatencyMs ?? AVG_DELIVERY_LATENCY_MS,
+        _DISPUTE_COUNT = disputeCount ?? DISPUTE_COUNT,
+        _PROVIDER_SINCE = providerSince ?? PROVIDER_SINCE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(7);
+    fbBuilder.addUint64(0, _TOTAL_SALES);
+    fbBuilder.addUint16(1, _AVERAGE_RATING_X10);
+    fbBuilder.addUint32(2, _TOTAL_RATINGS);
+    fbBuilder.addUint16(3, _UPTIME_PERCENTAGE_X100);
+    fbBuilder.addUint32(4, _AVG_DELIVERY_LATENCY_MS);
+    fbBuilder.addUint32(5, _DISPUTE_COUNT);
+    fbBuilder.addUint64(6, _PROVIDER_SINCE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Spatial coverage definition
 class SpatialCoverage {
   SpatialCoverage._(this._bc, this._bcOffset);
@@ -108,10 +670,19 @@ class SpatialCoverage {
   ///  Specific NORAD IDs or catalog numbers
   List<String>? get OBJECT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 8);
   List<String>? get objectIds => OBJECT_IDS;
+  ///  Minimum altitude in kilometers for altitude-bounded offerings
+  double get MIN_ALTITUDE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get minAltitudeKm => MIN_ALTITUDE_KM;
+  ///  Maximum altitude in kilometers for altitude-bounded offerings
+  double get MAX_ALTITUDE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get maxAltitudeKm => MAX_ALTITUDE_KM;
+  ///  Bounding box as [min_lat, min_lon, max_lat, max_lon]
+  List<double>? get GEO_BOUNDS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 14);
+  List<double>? get geoBounds => GEO_BOUNDS;
 
   @override
   String toString() {
-    return 'SpatialCoverage{TYPE: ${TYPE}, REGIONS: ${REGIONS}, objectIds: ${objectIds}}';
+    return 'SpatialCoverage{TYPE: ${TYPE}, REGIONS: ${REGIONS}, objectIds: ${objectIds}, minAltitudeKm: ${minAltitudeKm}, maxAltitudeKm: ${maxAltitudeKm}, geoBounds: ${geoBounds}}';
   }
 }
 
@@ -129,7 +700,7 @@ class SpatialCoverageBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(6);
   }
 
   int addTypeOffset(int? offset) {
@@ -144,6 +715,18 @@ class SpatialCoverageBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addMinAltitudeKm(double? MIN_ALTITUDE_KM) {
+    fbBuilder.addFloat64(3, MIN_ALTITUDE_KM);
+    return fbBuilder.offset;
+  }
+  int addMaxAltitudeKm(double? MAX_ALTITUDE_KM) {
+    fbBuilder.addFloat64(4, MAX_ALTITUDE_KM);
+    return fbBuilder.offset;
+  }
+  int addGeoBoundsOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -154,16 +737,28 @@ class SpatialCoverageObjectBuilder extends fb.ObjectBuilder {
   final String? _TYPE;
   final List<String>? _REGIONS;
   final List<String>? _OBJECT_IDS;
+  final double? _MIN_ALTITUDE_KM;
+  final double? _MAX_ALTITUDE_KM;
+  final List<double>? _GEO_BOUNDS;
 
   SpatialCoverageObjectBuilder({
     String? TYPE,
     List<String>? REGIONS,
     List<String>? OBJECT_IDS,
     List<String>? objectIds,
+    double? MIN_ALTITUDE_KM,
+    double? minAltitudeKm,
+    double? MAX_ALTITUDE_KM,
+    double? maxAltitudeKm,
+    List<double>? GEO_BOUNDS,
+    List<double>? geoBounds,
   })
       : _TYPE = TYPE,
         _REGIONS = REGIONS,
-        _OBJECT_IDS = objectIds ?? OBJECT_IDS;
+        _OBJECT_IDS = objectIds ?? OBJECT_IDS,
+        _MIN_ALTITUDE_KM = minAltitudeKm ?? MIN_ALTITUDE_KM,
+        _MAX_ALTITUDE_KM = maxAltitudeKm ?? MAX_ALTITUDE_KM,
+        _GEO_BOUNDS = geoBounds ?? GEO_BOUNDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -174,10 +769,15 @@ class SpatialCoverageObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_REGIONS!.map(fbBuilder.writeString).toList());
     final int? OBJECT_IDSOffset = _OBJECT_IDS == null ? null
         : fbBuilder.writeList(_OBJECT_IDS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(3);
+    final int? GEO_BOUNDSOffset = _GEO_BOUNDS == null ? null
+        : fbBuilder.writeListFloat64(_GEO_BOUNDS!);
+    fbBuilder.startTable(6);
     fbBuilder.addOffset(0, TYPEOffset);
     fbBuilder.addOffset(1, REGIONSOffset);
     fbBuilder.addOffset(2, OBJECT_IDSOffset);
+    fbBuilder.addFloat64(3, _MIN_ALTITUDE_KM);
+    fbBuilder.addFloat64(4, _MAX_ALTITUDE_KM);
+    fbBuilder.addOffset(5, GEO_BOUNDSOffset);
     return fbBuilder.endTable();
   }
 
@@ -214,10 +814,13 @@ class TemporalCoverage {
   ///  Days of historical data available
   int get HISTORICAL_DEPTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get historicalDepth => HISTORICAL_DEPTH;
+  ///  Typical provider latency in seconds
+  int get LATENCY_SECONDS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get latencySeconds => LATENCY_SECONDS;
 
   @override
   String toString() {
-    return 'TemporalCoverage{startEpoch: ${startEpoch}, endEpoch: ${endEpoch}, updateFrequency: ${updateFrequency}, historicalDepth: ${historicalDepth}}';
+    return 'TemporalCoverage{startEpoch: ${startEpoch}, endEpoch: ${endEpoch}, updateFrequency: ${updateFrequency}, historicalDepth: ${historicalDepth}, latencySeconds: ${latencySeconds}}';
   }
 }
 
@@ -235,7 +838,7 @@ class TemporalCoverageBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
   }
 
   int addStartEpochOffset(int? offset) {
@@ -254,6 +857,10 @@ class TemporalCoverageBuilder {
     fbBuilder.addUint32(3, HISTORICAL_DEPTH);
     return fbBuilder.offset;
   }
+  int addLatencySeconds(int? LATENCY_SECONDS) {
+    fbBuilder.addUint32(4, LATENCY_SECONDS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -265,6 +872,7 @@ class TemporalCoverageObjectBuilder extends fb.ObjectBuilder {
   final String? _END_EPOCH;
   final String? _UPDATE_FREQUENCY;
   final int? _HISTORICAL_DEPTH;
+  final int? _LATENCY_SECONDS;
 
   TemporalCoverageObjectBuilder({
     String? START_EPOCH,
@@ -275,11 +883,14 @@ class TemporalCoverageObjectBuilder extends fb.ObjectBuilder {
     String? updateFrequency,
     int? HISTORICAL_DEPTH,
     int? historicalDepth,
+    int? LATENCY_SECONDS,
+    int? latencySeconds,
   })
       : _START_EPOCH = startEpoch ?? START_EPOCH,
         _END_EPOCH = endEpoch ?? END_EPOCH,
         _UPDATE_FREQUENCY = updateFrequency ?? UPDATE_FREQUENCY,
-        _HISTORICAL_DEPTH = historicalDepth ?? HISTORICAL_DEPTH;
+        _HISTORICAL_DEPTH = historicalDepth ?? HISTORICAL_DEPTH,
+        _LATENCY_SECONDS = latencySeconds ?? LATENCY_SECONDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -290,11 +901,12 @@ class TemporalCoverageObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_END_EPOCH!);
     final int? UPDATE_FREQUENCYOffset = _UPDATE_FREQUENCY == null ? null
         : fbBuilder.writeString(_UPDATE_FREQUENCY!);
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(5);
     fbBuilder.addOffset(0, START_EPOCHOffset);
     fbBuilder.addOffset(1, END_EPOCHOffset);
     fbBuilder.addOffset(2, UPDATE_FREQUENCYOffset);
     fbBuilder.addUint32(3, _HISTORICAL_DEPTH);
+    fbBuilder.addUint32(4, _LATENCY_SECONDS);
     return fbBuilder.endTable();
   }
 
@@ -420,10 +1032,15 @@ class PricingTier {
   int get rateLimit => RATE_LIMIT;
   ///  List of features included in this tier
   List<String>? get FEATURES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Maximum records returned per request
+  int get MAX_RECORDS_PER_REQUEST => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  int get maxRecordsPerRequest => MAX_RECORDS_PER_REQUEST;
+  ///  Human-readable tier description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'PricingTier{NAME: ${NAME}, priceAmount: ${priceAmount}, priceCurrency: ${priceCurrency}, durationDays: ${durationDays}, rateLimit: ${rateLimit}, FEATURES: ${FEATURES}}';
+    return 'PricingTier{NAME: ${NAME}, priceAmount: ${priceAmount}, priceCurrency: ${priceCurrency}, durationDays: ${durationDays}, rateLimit: ${rateLimit}, FEATURES: ${FEATURES}, maxRecordsPerRequest: ${maxRecordsPerRequest}, DESCRIPTION: ${DESCRIPTION}}';
   }
 }
 
@@ -441,7 +1058,7 @@ class PricingTierBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(8);
   }
 
   int addNameOffset(int? offset) {
@@ -468,6 +1085,14 @@ class PricingTierBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
+  int addMaxRecordsPerRequest(int? MAX_RECORDS_PER_REQUEST) {
+    fbBuilder.addUint32(6, MAX_RECORDS_PER_REQUEST);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -481,6 +1106,8 @@ class PricingTierObjectBuilder extends fb.ObjectBuilder {
   final int? _DURATION_DAYS;
   final int? _RATE_LIMIT;
   final List<String>? _FEATURES;
+  final int? _MAX_RECORDS_PER_REQUEST;
+  final String? _DESCRIPTION;
 
   PricingTierObjectBuilder({
     String? NAME,
@@ -493,13 +1120,18 @@ class PricingTierObjectBuilder extends fb.ObjectBuilder {
     int? RATE_LIMIT,
     int? rateLimit,
     List<String>? FEATURES,
+    int? MAX_RECORDS_PER_REQUEST,
+    int? maxRecordsPerRequest,
+    String? DESCRIPTION,
   })
       : _NAME = NAME,
         _PRICE_AMOUNT = priceAmount ?? PRICE_AMOUNT,
         _PRICE_CURRENCY = priceCurrency ?? PRICE_CURRENCY,
         _DURATION_DAYS = durationDays ?? DURATION_DAYS,
         _RATE_LIMIT = rateLimit ?? RATE_LIMIT,
-        _FEATURES = FEATURES;
+        _FEATURES = FEATURES,
+        _MAX_RECORDS_PER_REQUEST = maxRecordsPerRequest ?? MAX_RECORDS_PER_REQUEST,
+        _DESCRIPTION = DESCRIPTION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -510,13 +1142,17 @@ class PricingTierObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PRICE_CURRENCY!);
     final int? FEATURESOffset = _FEATURES == null ? null
         : fbBuilder.writeList(_FEATURES!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(6);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addUint64(1, _PRICE_AMOUNT);
     fbBuilder.addOffset(2, PRICE_CURRENCYOffset);
     fbBuilder.addUint32(3, _DURATION_DAYS);
     fbBuilder.addUint32(4, _RATE_LIMIT);
     fbBuilder.addOffset(5, FEATURESOffset);
+    fbBuilder.addUint32(6, _MAX_RECORDS_PER_REQUEST);
+    fbBuilder.addOffset(7, DESCRIPTIONOffset);
     return fbBuilder.endTable();
   }
 
@@ -583,10 +1219,39 @@ class STF {
   bool get ACTIVE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
   ///  Ed25519 signature from provider
   List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Listing category: data stream or WASM module
+  listingCategory get LISTING_KIND => listingCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  listingCategory get listingKind => LISTING_KIND;
+  ///  Search tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Number of records in sample data, when available
+  int get SAMPLE_RECORD_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 40, 0);
+  int get sampleRecordCount => SAMPLE_RECORD_COUNT;
+  ///  Supported delivery methods
+  List<String>? get DELIVERY_METHODS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<String>? get deliveryMethods => DELIVERY_METHODS;
+  ///  Protected delivery metadata for encrypted artifacts or streams
+  ProtectedDeliveryBinding? get PROTECTED_DELIVERY => ProtectedDeliveryBinding.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ProtectedDeliveryBinding? get protectedDelivery => PROTECTED_DELIVERY;
+  ///  Provider reputation summary
+  ProviderReputation? get REPUTATION => ProviderReputation.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Listing version
+  int get VERSION => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 48, 0);
+  ///  Unix timestamp when the listing expires, or 0 for no expiry
+  int get EXPIRES_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  int get expiresAt => EXPIRES_AT;
+  ///  Terms document CID
+  String? get TERMS_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  String? get termsCid => TERMS_CID;
+  ///  License label or SPDX-style identifier
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Peer ID this listing was sourced from when discovered remotely
+  String? get SOURCE_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get sourcePeerId => SOURCE_PEER_ID;
 
   @override
   String toString() {
-    return 'STF{listingId: ${listingId}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, TITLE: ${TITLE}, DESCRIPTION: ${DESCRIPTION}, dataTypes: ${dataTypes}, COVERAGE: ${COVERAGE}, sampleCid: ${sampleCid}, accessType: ${accessType}, encryptionRequired: ${encryptionRequired}, PRICING: ${PRICING}, acceptedPayments: ${acceptedPayments}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, ACTIVE: ${ACTIVE}, SIGNATURE: ${SIGNATURE}}';
+    return 'STF{listingId: ${listingId}, providerPeerId: ${providerPeerId}, providerEpmCid: ${providerEpmCid}, TITLE: ${TITLE}, DESCRIPTION: ${DESCRIPTION}, dataTypes: ${dataTypes}, COVERAGE: ${COVERAGE}, sampleCid: ${sampleCid}, accessType: ${accessType}, encryptionRequired: ${encryptionRequired}, PRICING: ${PRICING}, acceptedPayments: ${acceptedPayments}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, ACTIVE: ${ACTIVE}, SIGNATURE: ${SIGNATURE}, listingKind: ${listingKind}, TAGS: ${TAGS}, sampleRecordCount: ${sampleRecordCount}, deliveryMethods: ${deliveryMethods}, protectedDelivery: ${protectedDelivery}, REPUTATION: ${REPUTATION}, VERSION: ${VERSION}, expiresAt: ${expiresAt}, termsCid: ${termsCid}, LICENSE: ${LICENSE}, sourcePeerId: ${sourcePeerId}}';
   }
 }
 
@@ -604,7 +1269,7 @@ class STFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(27);
   }
 
   int addListingIdOffset(int? offset) {
@@ -671,6 +1336,50 @@ class STFBuilder {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addListingKind(listingCategory? LISTING_KIND) {
+    fbBuilder.addInt8(16, LISTING_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addTagsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addSampleRecordCount(int? SAMPLE_RECORD_COUNT) {
+    fbBuilder.addUint32(18, SAMPLE_RECORD_COUNT);
+    return fbBuilder.offset;
+  }
+  int addDeliveryMethodsOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addProtectedDeliveryOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addReputationOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addVersion(int? VERSION) {
+    fbBuilder.addUint32(22, VERSION);
+    return fbBuilder.offset;
+  }
+  int addExpiresAt(int? EXPIRES_AT) {
+    fbBuilder.addUint64(23, EXPIRES_AT);
+    return fbBuilder.offset;
+  }
+  int addTermsCidOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addSourcePeerIdOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -694,6 +1403,17 @@ class STFObjectBuilder extends fb.ObjectBuilder {
   final int? _UPDATED_AT;
   final bool? _ACTIVE;
   final List<int>? _SIGNATURE;
+  final listingCategory? _LISTING_KIND;
+  final List<String>? _TAGS;
+  final int? _SAMPLE_RECORD_COUNT;
+  final List<String>? _DELIVERY_METHODS;
+  final ProtectedDeliveryBindingObjectBuilder? _PROTECTED_DELIVERY;
+  final ProviderReputationObjectBuilder? _REPUTATION;
+  final int? _VERSION;
+  final int? _EXPIRES_AT;
+  final String? _TERMS_CID;
+  final String? _LICENSE;
+  final String? _SOURCE_PEER_ID;
 
   STFObjectBuilder({
     String? LISTING_ID,
@@ -722,6 +1442,24 @@ class STFObjectBuilder extends fb.ObjectBuilder {
     int? updatedAt,
     bool? ACTIVE,
     List<int>? SIGNATURE,
+    listingCategory? LISTING_KIND,
+    listingCategory? listingKind,
+    List<String>? TAGS,
+    int? SAMPLE_RECORD_COUNT,
+    int? sampleRecordCount,
+    List<String>? DELIVERY_METHODS,
+    List<String>? deliveryMethods,
+    ProtectedDeliveryBindingObjectBuilder? PROTECTED_DELIVERY,
+    ProtectedDeliveryBindingObjectBuilder? protectedDelivery,
+    ProviderReputationObjectBuilder? REPUTATION,
+    int? VERSION,
+    int? EXPIRES_AT,
+    int? expiresAt,
+    String? TERMS_CID,
+    String? termsCid,
+    String? LICENSE,
+    String? SOURCE_PEER_ID,
+    String? sourcePeerId,
   })
       : _LISTING_ID = listingId ?? LISTING_ID,
         _PROVIDER_PEER_ID = providerPeerId ?? PROVIDER_PEER_ID,
@@ -738,7 +1476,18 @@ class STFObjectBuilder extends fb.ObjectBuilder {
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _ACTIVE = ACTIVE,
-        _SIGNATURE = SIGNATURE;
+        _SIGNATURE = SIGNATURE,
+        _LISTING_KIND = listingKind ?? LISTING_KIND,
+        _TAGS = TAGS,
+        _SAMPLE_RECORD_COUNT = sampleRecordCount ?? SAMPLE_RECORD_COUNT,
+        _DELIVERY_METHODS = deliveryMethods ?? DELIVERY_METHODS,
+        _PROTECTED_DELIVERY = protectedDelivery ?? PROTECTED_DELIVERY,
+        _REPUTATION = REPUTATION,
+        _VERSION = VERSION,
+        _EXPIRES_AT = expiresAt ?? EXPIRES_AT,
+        _TERMS_CID = termsCid ?? TERMS_CID,
+        _LICENSE = LICENSE,
+        _SOURCE_PEER_ID = sourcePeerId ?? SOURCE_PEER_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -764,7 +1513,19 @@ class STFObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListInt8(_ACCEPTED_PAYMENTS!.map((f) => f.value).toList());
     final int? SIGNATUREOffset = _SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_SIGNATURE!);
-    fbBuilder.startTable(16);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
+    final int? DELIVERY_METHODSOffset = _DELIVERY_METHODS == null ? null
+        : fbBuilder.writeList(_DELIVERY_METHODS!.map(fbBuilder.writeString).toList());
+    final int? PROTECTED_DELIVERYOffset = _PROTECTED_DELIVERY?.getOrCreateOffset(fbBuilder);
+    final int? REPUTATIONOffset = _REPUTATION?.getOrCreateOffset(fbBuilder);
+    final int? TERMS_CIDOffset = _TERMS_CID == null ? null
+        : fbBuilder.writeString(_TERMS_CID!);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? SOURCE_PEER_IDOffset = _SOURCE_PEER_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_PEER_ID!);
+    fbBuilder.startTable(27);
     fbBuilder.addOffset(0, LISTING_IDOffset);
     fbBuilder.addOffset(1, PROVIDER_PEER_IDOffset);
     fbBuilder.addOffset(2, PROVIDER_EPM_CIDOffset);
@@ -781,6 +1542,17 @@ class STFObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(13, _UPDATED_AT);
     fbBuilder.addBool(14, _ACTIVE);
     fbBuilder.addOffset(15, SIGNATUREOffset);
+    fbBuilder.addInt8(16, _LISTING_KIND?.value);
+    fbBuilder.addOffset(17, TAGSOffset);
+    fbBuilder.addUint32(18, _SAMPLE_RECORD_COUNT);
+    fbBuilder.addOffset(19, DELIVERY_METHODSOffset);
+    fbBuilder.addOffset(20, PROTECTED_DELIVERYOffset);
+    fbBuilder.addOffset(21, REPUTATIONOffset);
+    fbBuilder.addUint32(22, _VERSION);
+    fbBuilder.addUint64(23, _EXPIRES_AT);
+    fbBuilder.addOffset(24, TERMS_CIDOffset);
+    fbBuilder.addOffset(25, LICENSEOffset);
+    fbBuilder.addOffset(26, SOURCE_PEER_IDOffset);
     return fbBuilder.endTable();
   }
 

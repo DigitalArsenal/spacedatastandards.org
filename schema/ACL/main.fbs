@@ -1,7 +1,16 @@
-// Hash: 8b8e9651ecb1b2dcf0c9b7096ef1a59a016d262c8d330c4380329f6f1b7c57a8
-// Version: 1.0.2
+// Hash: dc697e7c688ddc4ed18bf78c63963a0943870750824caea04d03eede1c2f5e3d
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 include "../STF/main.fbs";
+
+/// Grant lifecycle status tracked by the provider.
+enum grantLifecycleStatus : byte {
+  Active,
+  Revoked,
+  Expired,
+  Suspended,
+  Pending
+}
 
 /// Access Control Grant - Permission to access purchased data
 table ACL {
@@ -31,6 +40,46 @@ table ACL {
 
   /// Ed25519 signature from provider
   PROVIDER_SIGNATURE: [ubyte];
+  /// Key algorithm for buyer encryption public key
+  KEY_ALGORITHM: string;
+  /// Request rate limit
+  RATE_LIMIT: uint32;
+  /// Maximum records returned per request
+  MAX_RECORDS_PER_REQUEST: uint32;
+  /// Provider-side grant status
+  STATUS: grantLifecycleStatus;
+  /// Payment amount in smallest unit
+  PAYMENT_AMOUNT: uint64;
+  /// Payment currency
+  PAYMENT_CURRENCY: string;
+  /// Payment chain or processor
+  PAYMENT_CHAIN: string;
+  /// Unix timestamp of next renewal
+  NEXT_RENEWAL: uint64;
+  /// Whether renewal is automatic
+  AUTO_RENEW: bool;
+  /// Renewal count
+  RENEWAL_COUNT: uint32;
+  /// Total requests made under this grant
+  TOTAL_REQUESTS: uint64;
+  /// Total records delivered under this grant
+  TOTAL_RECORDS: uint64;
+  /// Unix timestamp of last access
+  LAST_ACCESS: uint64;
+  /// PubSub or direct delivery topic
+  DELIVERY_TOPIC: string;
+  /// Unix timestamp when the grant record was created
+  CREATED_AT: uint64;
+  /// Unix timestamp when the grant record was updated
+  UPDATED_AT: uint64;
+  /// Provider notes
+  NOTES: string;
+  /// Provider peer ID
+  PROVIDER_PEER_ID: string;
+  /// Base64-encoded signed grant response bytes
+  GRANT_RESPONSE_BASE64: string;
+  /// Field-level stream policy bound to this grant
+  FIELD_STREAM_POLICY: GrantFieldStreamPolicy;
 }
 
 root_type ACL;

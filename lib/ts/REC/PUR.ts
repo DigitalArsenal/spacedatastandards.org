@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { paymentMethod } from './paymentMethod.js';
+import { purchaseLifecycleStatus } from './purchaseLifecycleStatus.js';
 
 
 /**
@@ -172,8 +173,190 @@ TIMESTAMP():bigint {
   return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * Key algorithm for buyer encryption public key
+ */
+KEY_ALGORITHM():string|null
+KEY_ALGORITHM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+KEY_ALGORITHM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Buyer contact email
+ */
+BUYER_EMAIL():string|null
+BUYER_EMAIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BUYER_EMAIL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * On-chain sender address or fiat payment source reference
+ */
+SENDER_ADDRESS():string|null
+SENDER_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENDER_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Confirmation block for on-chain payments
+ */
+CONFIRMATION_BLOCK():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Fiat processor payment intent identifier
+ */
+PAYMENT_INTENT_ID():string|null
+PAYMENT_INTENT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PAYMENT_INTENT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * SDN credits transaction identifier
+ */
+CREDITS_TRANSACTION_ID():string|null
+CREDITS_TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CREDITS_TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Provider-side purchase status
+ */
+STATUS():purchaseLifecycleStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : purchaseLifecycleStatus.Pending;
+}
+
+/**
+ * Human-readable status message
+ */
+STATUS_MESSAGE():string|null
+STATUS_MESSAGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STATUS_MESSAGE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp when the purchase record was created
+ */
+CREATED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp when the purchase record was updated
+ */
+UPDATED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp when payment must be received
+ */
+PAYMENT_DEADLINE():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp when payment was confirmed
+ */
+PAYMENT_CONFIRMED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Unix timestamp when the grant was issued
+ */
+GRANT_ISSUED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Issued grant identifier
+ */
+GRANT_ID():string|null
+GRANT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+GRANT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Provider peer ID
+ */
+PROVIDER_PEER_ID():string|null
+PROVIDER_PEER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROVIDER_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unix timestamp when provider acknowledged the request
+ */
+PROVIDER_ACKNOWLEDGED_AT():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Preferred delivery method
+ */
+PREFERRED_DELIVERY_METHOD():string|null
+PREFERRED_DELIVERY_METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PREFERRED_DELIVERY_METHOD(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Buyer webhook URL for delivery callbacks
+ */
+WEBHOOK_URL():string|null
+WEBHOOK_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+WEBHOOK_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ed25519 signature from provider
+ */
+PROVIDER_SIGNATURE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
+}
+
+providerSignatureLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+providerSignatureArray():Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startPUR(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(32);
 }
 
 static addRequestId(builder:flatbuffers.Builder, REQUEST_IDOffset:flatbuffers.Offset) {
@@ -252,6 +435,94 @@ static addTimestamp(builder:flatbuffers.Builder, TIMESTAMP:bigint) {
   builder.addFieldInt64(12, TIMESTAMP, BigInt('0'));
 }
 
+static addKeyAlgorithm(builder:flatbuffers.Builder, KEY_ALGORITHMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, KEY_ALGORITHMOffset, 0);
+}
+
+static addBuyerEmail(builder:flatbuffers.Builder, BUYER_EMAILOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, BUYER_EMAILOffset, 0);
+}
+
+static addSenderAddress(builder:flatbuffers.Builder, SENDER_ADDRESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, SENDER_ADDRESSOffset, 0);
+}
+
+static addConfirmationBlock(builder:flatbuffers.Builder, CONFIRMATION_BLOCK:bigint) {
+  builder.addFieldInt64(16, CONFIRMATION_BLOCK, BigInt('0'));
+}
+
+static addPaymentIntentId(builder:flatbuffers.Builder, PAYMENT_INTENT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, PAYMENT_INTENT_IDOffset, 0);
+}
+
+static addCreditsTransactionId(builder:flatbuffers.Builder, CREDITS_TRANSACTION_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, CREDITS_TRANSACTION_IDOffset, 0);
+}
+
+static addStatus(builder:flatbuffers.Builder, STATUS:purchaseLifecycleStatus) {
+  builder.addFieldInt8(19, STATUS, purchaseLifecycleStatus.Pending);
+}
+
+static addStatusMessage(builder:flatbuffers.Builder, STATUS_MESSAGEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, STATUS_MESSAGEOffset, 0);
+}
+
+static addCreatedAt(builder:flatbuffers.Builder, CREATED_AT:bigint) {
+  builder.addFieldInt64(21, CREATED_AT, BigInt('0'));
+}
+
+static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_AT:bigint) {
+  builder.addFieldInt64(22, UPDATED_AT, BigInt('0'));
+}
+
+static addPaymentDeadline(builder:flatbuffers.Builder, PAYMENT_DEADLINE:bigint) {
+  builder.addFieldInt64(23, PAYMENT_DEADLINE, BigInt('0'));
+}
+
+static addPaymentConfirmedAt(builder:flatbuffers.Builder, PAYMENT_CONFIRMED_AT:bigint) {
+  builder.addFieldInt64(24, PAYMENT_CONFIRMED_AT, BigInt('0'));
+}
+
+static addGrantIssuedAt(builder:flatbuffers.Builder, GRANT_ISSUED_AT:bigint) {
+  builder.addFieldInt64(25, GRANT_ISSUED_AT, BigInt('0'));
+}
+
+static addGrantId(builder:flatbuffers.Builder, GRANT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, GRANT_IDOffset, 0);
+}
+
+static addProviderPeerId(builder:flatbuffers.Builder, PROVIDER_PEER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, PROVIDER_PEER_IDOffset, 0);
+}
+
+static addProviderAcknowledgedAt(builder:flatbuffers.Builder, PROVIDER_ACKNOWLEDGED_AT:bigint) {
+  builder.addFieldInt64(28, PROVIDER_ACKNOWLEDGED_AT, BigInt('0'));
+}
+
+static addPreferredDeliveryMethod(builder:flatbuffers.Builder, PREFERRED_DELIVERY_METHODOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, PREFERRED_DELIVERY_METHODOffset, 0);
+}
+
+static addWebhookUrl(builder:flatbuffers.Builder, WEBHOOK_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, WEBHOOK_URLOffset, 0);
+}
+
+static addProviderSignature(builder:flatbuffers.Builder, PROVIDER_SIGNATUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, PROVIDER_SIGNATUREOffset, 0);
+}
+
+static createProviderSignatureVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
+  builder.startVector(1, data.length, 1);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt8(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startProviderSignatureVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(1, numElems, 1);
+}
+
 static endPUR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // REQUEST_ID
@@ -269,7 +540,7 @@ static finishSizePrefixedPURBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PUR', true);
 }
 
-static createPUR(builder:flatbuffers.Builder, REQUEST_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, TIER_NAMEOffset:flatbuffers.Offset, BUYER_PEER_IDOffset:flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset:flatbuffers.Offset, PAYMENT_METHOD:paymentMethod, PAYMENT_AMOUNT:bigint, PAYMENT_CURRENCYOffset:flatbuffers.Offset, PAYMENT_TX_HASHOffset:flatbuffers.Offset, PAYMENT_CHAINOffset:flatbuffers.Offset, PAYMENT_REFERENCEOffset:flatbuffers.Offset, BUYER_SIGNATUREOffset:flatbuffers.Offset, TIMESTAMP:bigint):flatbuffers.Offset {
+static createPUR(builder:flatbuffers.Builder, REQUEST_IDOffset:flatbuffers.Offset, LISTING_IDOffset:flatbuffers.Offset, TIER_NAMEOffset:flatbuffers.Offset, BUYER_PEER_IDOffset:flatbuffers.Offset, BUYER_ENCRYPTION_PUBKEYOffset:flatbuffers.Offset, PAYMENT_METHOD:paymentMethod, PAYMENT_AMOUNT:bigint, PAYMENT_CURRENCYOffset:flatbuffers.Offset, PAYMENT_TX_HASHOffset:flatbuffers.Offset, PAYMENT_CHAINOffset:flatbuffers.Offset, PAYMENT_REFERENCEOffset:flatbuffers.Offset, BUYER_SIGNATUREOffset:flatbuffers.Offset, TIMESTAMP:bigint, KEY_ALGORITHMOffset:flatbuffers.Offset, BUYER_EMAILOffset:flatbuffers.Offset, SENDER_ADDRESSOffset:flatbuffers.Offset, CONFIRMATION_BLOCK:bigint, PAYMENT_INTENT_IDOffset:flatbuffers.Offset, CREDITS_TRANSACTION_IDOffset:flatbuffers.Offset, STATUS:purchaseLifecycleStatus, STATUS_MESSAGEOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, PAYMENT_DEADLINE:bigint, PAYMENT_CONFIRMED_AT:bigint, GRANT_ISSUED_AT:bigint, GRANT_IDOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_ACKNOWLEDGED_AT:bigint, PREFERRED_DELIVERY_METHODOffset:flatbuffers.Offset, WEBHOOK_URLOffset:flatbuffers.Offset, PROVIDER_SIGNATUREOffset:flatbuffers.Offset):flatbuffers.Offset {
   PUR.startPUR(builder);
   PUR.addRequestId(builder, REQUEST_IDOffset);
   PUR.addListingId(builder, LISTING_IDOffset);
@@ -284,6 +555,25 @@ static createPUR(builder:flatbuffers.Builder, REQUEST_IDOffset:flatbuffers.Offse
   PUR.addPaymentReference(builder, PAYMENT_REFERENCEOffset);
   PUR.addBuyerSignature(builder, BUYER_SIGNATUREOffset);
   PUR.addTimestamp(builder, TIMESTAMP);
+  PUR.addKeyAlgorithm(builder, KEY_ALGORITHMOffset);
+  PUR.addBuyerEmail(builder, BUYER_EMAILOffset);
+  PUR.addSenderAddress(builder, SENDER_ADDRESSOffset);
+  PUR.addConfirmationBlock(builder, CONFIRMATION_BLOCK);
+  PUR.addPaymentIntentId(builder, PAYMENT_INTENT_IDOffset);
+  PUR.addCreditsTransactionId(builder, CREDITS_TRANSACTION_IDOffset);
+  PUR.addStatus(builder, STATUS);
+  PUR.addStatusMessage(builder, STATUS_MESSAGEOffset);
+  PUR.addCreatedAt(builder, CREATED_AT);
+  PUR.addUpdatedAt(builder, UPDATED_AT);
+  PUR.addPaymentDeadline(builder, PAYMENT_DEADLINE);
+  PUR.addPaymentConfirmedAt(builder, PAYMENT_CONFIRMED_AT);
+  PUR.addGrantIssuedAt(builder, GRANT_ISSUED_AT);
+  PUR.addGrantId(builder, GRANT_IDOffset);
+  PUR.addProviderPeerId(builder, PROVIDER_PEER_IDOffset);
+  PUR.addProviderAcknowledgedAt(builder, PROVIDER_ACKNOWLEDGED_AT);
+  PUR.addPreferredDeliveryMethod(builder, PREFERRED_DELIVERY_METHODOffset);
+  PUR.addWebhookUrl(builder, WEBHOOK_URLOffset);
+  PUR.addProviderSignature(builder, PROVIDER_SIGNATUREOffset);
   return PUR.endPUR(builder);
 }
 
@@ -301,7 +591,26 @@ unpack(): PURT {
     this.PAYMENT_CHAIN(),
     this.PAYMENT_REFERENCE(),
     this.bb!.createScalarList<number>(this.BUYER_SIGNATURE.bind(this), this.buyerSignatureLength()),
-    this.TIMESTAMP()
+    this.TIMESTAMP(),
+    this.KEY_ALGORITHM(),
+    this.BUYER_EMAIL(),
+    this.SENDER_ADDRESS(),
+    this.CONFIRMATION_BLOCK(),
+    this.PAYMENT_INTENT_ID(),
+    this.CREDITS_TRANSACTION_ID(),
+    this.STATUS(),
+    this.STATUS_MESSAGE(),
+    this.CREATED_AT(),
+    this.UPDATED_AT(),
+    this.PAYMENT_DEADLINE(),
+    this.PAYMENT_CONFIRMED_AT(),
+    this.GRANT_ISSUED_AT(),
+    this.GRANT_ID(),
+    this.PROVIDER_PEER_ID(),
+    this.PROVIDER_ACKNOWLEDGED_AT(),
+    this.PREFERRED_DELIVERY_METHOD(),
+    this.WEBHOOK_URL(),
+    this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength())
   );
 }
 
@@ -320,6 +629,25 @@ unpackTo(_o: PURT): void {
   _o.PAYMENT_REFERENCE = this.PAYMENT_REFERENCE();
   _o.BUYER_SIGNATURE = this.bb!.createScalarList<number>(this.BUYER_SIGNATURE.bind(this), this.buyerSignatureLength());
   _o.TIMESTAMP = this.TIMESTAMP();
+  _o.KEY_ALGORITHM = this.KEY_ALGORITHM();
+  _o.BUYER_EMAIL = this.BUYER_EMAIL();
+  _o.SENDER_ADDRESS = this.SENDER_ADDRESS();
+  _o.CONFIRMATION_BLOCK = this.CONFIRMATION_BLOCK();
+  _o.PAYMENT_INTENT_ID = this.PAYMENT_INTENT_ID();
+  _o.CREDITS_TRANSACTION_ID = this.CREDITS_TRANSACTION_ID();
+  _o.STATUS = this.STATUS();
+  _o.STATUS_MESSAGE = this.STATUS_MESSAGE();
+  _o.CREATED_AT = this.CREATED_AT();
+  _o.UPDATED_AT = this.UPDATED_AT();
+  _o.PAYMENT_DEADLINE = this.PAYMENT_DEADLINE();
+  _o.PAYMENT_CONFIRMED_AT = this.PAYMENT_CONFIRMED_AT();
+  _o.GRANT_ISSUED_AT = this.GRANT_ISSUED_AT();
+  _o.GRANT_ID = this.GRANT_ID();
+  _o.PROVIDER_PEER_ID = this.PROVIDER_PEER_ID();
+  _o.PROVIDER_ACKNOWLEDGED_AT = this.PROVIDER_ACKNOWLEDGED_AT();
+  _o.PREFERRED_DELIVERY_METHOD = this.PREFERRED_DELIVERY_METHOD();
+  _o.WEBHOOK_URL = this.WEBHOOK_URL();
+  _o.PROVIDER_SIGNATURE = this.bb!.createScalarList<number>(this.PROVIDER_SIGNATURE.bind(this), this.providerSignatureLength());
 }
 }
 
@@ -337,7 +665,26 @@ constructor(
   public PAYMENT_CHAIN: string|Uint8Array|null = null,
   public PAYMENT_REFERENCE: string|Uint8Array|null = null,
   public BUYER_SIGNATURE: (number)[] = [],
-  public TIMESTAMP: bigint = BigInt('0')
+  public TIMESTAMP: bigint = BigInt('0'),
+  public KEY_ALGORITHM: string|Uint8Array|null = null,
+  public BUYER_EMAIL: string|Uint8Array|null = null,
+  public SENDER_ADDRESS: string|Uint8Array|null = null,
+  public CONFIRMATION_BLOCK: bigint = BigInt('0'),
+  public PAYMENT_INTENT_ID: string|Uint8Array|null = null,
+  public CREDITS_TRANSACTION_ID: string|Uint8Array|null = null,
+  public STATUS: purchaseLifecycleStatus = purchaseLifecycleStatus.Pending,
+  public STATUS_MESSAGE: string|Uint8Array|null = null,
+  public CREATED_AT: bigint = BigInt('0'),
+  public UPDATED_AT: bigint = BigInt('0'),
+  public PAYMENT_DEADLINE: bigint = BigInt('0'),
+  public PAYMENT_CONFIRMED_AT: bigint = BigInt('0'),
+  public GRANT_ISSUED_AT: bigint = BigInt('0'),
+  public GRANT_ID: string|Uint8Array|null = null,
+  public PROVIDER_PEER_ID: string|Uint8Array|null = null,
+  public PROVIDER_ACKNOWLEDGED_AT: bigint = BigInt('0'),
+  public PREFERRED_DELIVERY_METHOD: string|Uint8Array|null = null,
+  public WEBHOOK_URL: string|Uint8Array|null = null,
+  public PROVIDER_SIGNATURE: (number)[] = []
 ){}
 
 
@@ -352,6 +699,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PAYMENT_CHAIN = (this.PAYMENT_CHAIN !== null ? builder.createString(this.PAYMENT_CHAIN!) : 0);
   const PAYMENT_REFERENCE = (this.PAYMENT_REFERENCE !== null ? builder.createString(this.PAYMENT_REFERENCE!) : 0);
   const BUYER_SIGNATURE = PUR.createBuyerSignatureVector(builder, this.BUYER_SIGNATURE);
+  const KEY_ALGORITHM = (this.KEY_ALGORITHM !== null ? builder.createString(this.KEY_ALGORITHM!) : 0);
+  const BUYER_EMAIL = (this.BUYER_EMAIL !== null ? builder.createString(this.BUYER_EMAIL!) : 0);
+  const SENDER_ADDRESS = (this.SENDER_ADDRESS !== null ? builder.createString(this.SENDER_ADDRESS!) : 0);
+  const PAYMENT_INTENT_ID = (this.PAYMENT_INTENT_ID !== null ? builder.createString(this.PAYMENT_INTENT_ID!) : 0);
+  const CREDITS_TRANSACTION_ID = (this.CREDITS_TRANSACTION_ID !== null ? builder.createString(this.CREDITS_TRANSACTION_ID!) : 0);
+  const STATUS_MESSAGE = (this.STATUS_MESSAGE !== null ? builder.createString(this.STATUS_MESSAGE!) : 0);
+  const GRANT_ID = (this.GRANT_ID !== null ? builder.createString(this.GRANT_ID!) : 0);
+  const PROVIDER_PEER_ID = (this.PROVIDER_PEER_ID !== null ? builder.createString(this.PROVIDER_PEER_ID!) : 0);
+  const PREFERRED_DELIVERY_METHOD = (this.PREFERRED_DELIVERY_METHOD !== null ? builder.createString(this.PREFERRED_DELIVERY_METHOD!) : 0);
+  const WEBHOOK_URL = (this.WEBHOOK_URL !== null ? builder.createString(this.WEBHOOK_URL!) : 0);
+  const PROVIDER_SIGNATURE = PUR.createProviderSignatureVector(builder, this.PROVIDER_SIGNATURE);
 
   return PUR.createPUR(builder,
     REQUEST_ID,
@@ -366,7 +724,26 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PAYMENT_CHAIN,
     PAYMENT_REFERENCE,
     BUYER_SIGNATURE,
-    this.TIMESTAMP
+    this.TIMESTAMP,
+    KEY_ALGORITHM,
+    BUYER_EMAIL,
+    SENDER_ADDRESS,
+    this.CONFIRMATION_BLOCK,
+    PAYMENT_INTENT_ID,
+    CREDITS_TRANSACTION_ID,
+    this.STATUS,
+    STATUS_MESSAGE,
+    this.CREATED_AT,
+    this.UPDATED_AT,
+    this.PAYMENT_DEADLINE,
+    this.PAYMENT_CONFIRMED_AT,
+    this.GRANT_ISSUED_AT,
+    GRANT_ID,
+    PROVIDER_PEER_ID,
+    this.PROVIDER_ACKNOWLEDGED_AT,
+    PREFERRED_DELIVERY_METHOD,
+    WEBHOOK_URL,
+    PROVIDER_SIGNATURE
   );
 }
 }

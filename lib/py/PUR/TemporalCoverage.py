@@ -61,8 +61,16 @@ class TemporalCoverage(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Typical provider latency in seconds
+    # TemporalCoverage
+    def LATENCY_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
 def TemporalCoverageStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(5)
 
 def Start(builder):
     TemporalCoverageStart(builder)
@@ -91,6 +99,12 @@ def TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH):
 def AddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH):
     TemporalCoverageAddHISTORICAL_DEPTH(builder, HISTORICAL_DEPTH)
 
+def TemporalCoverageAddLATENCY_SECONDS(builder, LATENCY_SECONDS):
+    builder.PrependUint32Slot(4, LATENCY_SECONDS, 0)
+
+def AddLATENCY_SECONDS(builder, LATENCY_SECONDS):
+    TemporalCoverageAddLATENCY_SECONDS(builder, LATENCY_SECONDS)
+
 def TemporalCoverageEnd(builder):
     return builder.EndObject()
 
@@ -107,11 +121,13 @@ class TemporalCoverageT(object):
         END_EPOCH = None,
         UPDATE_FREQUENCY = None,
         HISTORICAL_DEPTH = 0,
+        LATENCY_SECONDS = 0,
     ):
         self.START_EPOCH = START_EPOCH  # type: Optional[str]
         self.END_EPOCH = END_EPOCH  # type: Optional[str]
         self.UPDATE_FREQUENCY = UPDATE_FREQUENCY  # type: Optional[str]
         self.HISTORICAL_DEPTH = HISTORICAL_DEPTH  # type: int
+        self.LATENCY_SECONDS = LATENCY_SECONDS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -138,6 +154,7 @@ class TemporalCoverageT(object):
         self.END_EPOCH = TemporalCoverage.END_EPOCH()
         self.UPDATE_FREQUENCY = TemporalCoverage.UPDATE_FREQUENCY()
         self.HISTORICAL_DEPTH = TemporalCoverage.HISTORICAL_DEPTH()
+        self.LATENCY_SECONDS = TemporalCoverage.LATENCY_SECONDS()
 
     # TemporalCoverageT
     def Pack(self, builder):
@@ -155,5 +172,6 @@ class TemporalCoverageT(object):
         if self.UPDATE_FREQUENCY is not None:
             TemporalCoverageAddUPDATE_FREQUENCY(builder, UPDATE_FREQUENCY)
         TemporalCoverageAddHISTORICAL_DEPTH(builder, self.HISTORICAL_DEPTH)
+        TemporalCoverageAddLATENCY_SECONDS(builder, self.LATENCY_SECONDS)
         TemporalCoverage = TemporalCoverageEnd(builder)
         return TemporalCoverage

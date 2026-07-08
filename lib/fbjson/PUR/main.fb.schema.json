@@ -38,7 +38,9 @@
         "Crypto_BTC",
         "SDN_Credits",
         "Fiat_Stripe",
-        "Free"
+        "Free",
+        "UsageBased",
+        "Enterprise"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -66,8 +68,190 @@
         "Free": {
           "value": 5,
           "description": "Free/open data"
+        },
+        "UsageBased": {
+          "value": 6,
+          "description": "Usage-based billing settled after metered delivery"
+        },
+        "Enterprise": {
+          "value": 7,
+          "description": "Enterprise/offline invoicing"
         }
       }
+    },
+    "listingCategory": {
+      "type": "string",
+      "enum": [
+        "DataStream",
+        "WasmModule"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DataStream": {
+          "value": 0
+        },
+        "WasmModule": {
+          "value": 1
+        }
+      }
+    },
+    "GrantFieldStreamPolicy": {
+      "type": "object",
+      "description": "Field-level stream policy bound into protected delivery and grants.",
+      "properties": {
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_FIELD_PATHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REDACTED_FIELD_PATHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GRANT_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_OPERATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProtectedDeliveryBinding": {
+      "type": "object",
+      "description": "Immutable encrypted artifact/window metadata for protected delivery.",
+      "properties": {
+        "ENCRYPTED_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MANIFEST_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUIRED_SCOPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "GRANT_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DELIVERY_PROTOCOL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIELD_STREAM_POLICY": {
+          "$ref": "#/definitions/GrantFieldStreamPolicy",
+          "x-flatbuffer-type": "GrantFieldStreamPolicy"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProviderReputation": {
+      "type": "object",
+      "description": "Provider reputation summary surfaced in marketplace listings.",
+      "properties": {
+        "TOTAL_SALES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "AVERAGE_RATING_X10": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "TOTAL_RATINGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UPTIME_PERCENTAGE_X100": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "AVG_DELIVERY_LATENCY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DISPUTE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROVIDER_SINCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
     },
     "SpatialCoverage": {
       "type": "object",
@@ -93,6 +277,24 @@
           },
           "description": "Specific NORAD IDs or catalog numbers",
           "x-flatbuffer-type": "[string]"
+        },
+        "MIN_ALTITUDE_KM": {
+          "type": "number",
+          "description": "Minimum altitude in kilometers for altitude-bounded offerings",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ALTITUDE_KM": {
+          "type": "number",
+          "description": "Maximum altitude in kilometers for altitude-bounded offerings",
+          "x-flatbuffer-type": "double"
+        },
+        "GEO_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Bounding box as [min_lat, min_lon, max_lat, max_lon]",
+          "x-flatbuffer-type": "[double]"
         }
       },
       "additionalProperties": false
@@ -121,6 +323,13 @@
           "minimum": 0,
           "maximum": 4294967295,
           "description": "Days of historical data available",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LATENCY_SECONDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Typical provider latency in seconds",
           "x-flatbuffer-type": "uint32"
         }
       },
@@ -185,6 +394,18 @@
           },
           "description": "List of features included in this tier",
           "x-flatbuffer-type": "[string]"
+        },
+        "MAX_RECORDS_PER_REQUEST": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Maximum records returned per request",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable tier description",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false
@@ -312,6 +533,82 @@
           },
           "description": "Ed25519 signature from provider",
           "x-flatbuffer-type": "[ubyte]"
+        },
+        "LISTING_KIND": {
+          "$ref": "#/definitions/listingCategory",
+          "description": "Listing category: data stream or WASM module",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DataStream": {
+              "value": 0
+            },
+            "WasmModule": {
+              "value": 1
+            }
+          }
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Search tags",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SAMPLE_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records in sample data, when available",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DELIVERY_METHODS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Supported delivery methods",
+          "x-flatbuffer-type": "[string]"
+        },
+        "PROTECTED_DELIVERY": {
+          "$ref": "#/definitions/ProtectedDeliveryBinding",
+          "description": "Protected delivery metadata for encrypted artifacts or streams",
+          "x-flatbuffer-type": "ProtectedDeliveryBinding"
+        },
+        "REPUTATION": {
+          "$ref": "#/definitions/ProviderReputation",
+          "description": "Provider reputation summary",
+          "x-flatbuffer-type": "ProviderReputation"
+        },
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Listing version",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the listing expires, or 0 for no expiry",
+          "x-flatbuffer-type": "uint64"
+        },
+        "TERMS_CID": {
+          "type": "string",
+          "description": "Terms document CID",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "License label or SPDX-style identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID this listing was sourced from when discovered remotely",
+          "x-flatbuffer-type": "string"
         }
       },
       "required": [
@@ -320,6 +617,52 @@
         "TITLE"
       ],
       "additionalProperties": false
+    },
+    "purchaseLifecycleStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Purchase lifecycle status tracked by the provider.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "x-flatbuffer-enum-values": {
+        "Pending": {
+          "value": 0
+        },
+        "PaymentDetected": {
+          "value": 1
+        },
+        "PaymentConfirmed": {
+          "value": 2
+        },
+        "Completed": {
+          "value": 3
+        },
+        "Failed": {
+          "value": 4
+        },
+        "Cancelled": {
+          "value": 5
+        },
+        "RefundRequested": {
+          "value": 6
+        },
+        "Refunded": {
+          "value": 7
+        },
+        "Expired": {
+          "value": 8
+        }
+      }
     },
     "PUR": {
       "type": "object",
@@ -386,6 +729,14 @@
             "Free": {
               "value": 5,
               "description": "Free/open data"
+            },
+            "UsageBased": {
+              "value": 6,
+              "description": "Usage-based billing settled after metered delivery"
+            },
+            "Enterprise": {
+              "value": 7,
+              "description": "Enterprise/offline invoicing"
             }
           }
         },
@@ -426,6 +777,134 @@
           "type": "integer",
           "description": "Unix timestamp of the request",
           "x-flatbuffer-type": "uint64"
+        },
+        "KEY_ALGORITHM": {
+          "type": "string",
+          "description": "Key algorithm for buyer encryption public key",
+          "x-flatbuffer-type": "string"
+        },
+        "BUYER_EMAIL": {
+          "type": "string",
+          "description": "Buyer contact email",
+          "x-flatbuffer-type": "string"
+        },
+        "SENDER_ADDRESS": {
+          "type": "string",
+          "description": "On-chain sender address or fiat payment source reference",
+          "x-flatbuffer-type": "string"
+        },
+        "CONFIRMATION_BLOCK": {
+          "type": "integer",
+          "description": "Confirmation block for on-chain payments",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PAYMENT_INTENT_ID": {
+          "type": "string",
+          "description": "Fiat processor payment intent identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "CREDITS_TRANSACTION_ID": {
+          "type": "string",
+          "description": "SDN credits transaction identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/purchaseLifecycleStatus",
+          "description": "Provider-side purchase status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Pending": {
+              "value": 0
+            },
+            "PaymentDetected": {
+              "value": 1
+            },
+            "PaymentConfirmed": {
+              "value": 2
+            },
+            "Completed": {
+              "value": 3
+            },
+            "Failed": {
+              "value": 4
+            },
+            "Cancelled": {
+              "value": 5
+            },
+            "RefundRequested": {
+              "value": 6
+            },
+            "Refunded": {
+              "value": 7
+            },
+            "Expired": {
+              "value": 8
+            }
+          }
+        },
+        "STATUS_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable status message",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the purchase record was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the purchase record was updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PAYMENT_DEADLINE": {
+          "type": "integer",
+          "description": "Unix timestamp when payment must be received",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PAYMENT_CONFIRMED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when payment was confirmed",
+          "x-flatbuffer-type": "uint64"
+        },
+        "GRANT_ISSUED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when the grant was issued",
+          "x-flatbuffer-type": "uint64"
+        },
+        "GRANT_ID": {
+          "type": "string",
+          "description": "Issued grant identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Provider peer ID",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ACKNOWLEDGED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp when provider acknowledged the request",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PREFERRED_DELIVERY_METHOD": {
+          "type": "string",
+          "description": "Preferred delivery method",
+          "x-flatbuffer-type": "string"
+        },
+        "WEBHOOK_URL": {
+          "type": "string",
+          "description": "Buyer webhook URL for delivery callbacks",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature from provider",
+          "x-flatbuffer-type": "[ubyte]"
         }
       },
       "description": "Purchase Request - Request to purchase data from a storefront listing",

@@ -6,6 +6,154 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
+///  Review lifecycle status.
+enum reviewLifecycleStatus {
+  Published(0),
+  Pending(1),
+  Flagged(2),
+  Hidden(3),
+  Removed(4);
+
+  final int value;
+  const reviewLifecycleStatus(this.value);
+
+  factory reviewLifecycleStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return reviewLifecycleStatus.Published;
+      case 1: return reviewLifecycleStatus.Pending;
+      case 2: return reviewLifecycleStatus.Flagged;
+      case 3: return reviewLifecycleStatus.Hidden;
+      case 4: return reviewLifecycleStatus.Removed;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static reviewLifecycleStatus? _createOrNull(int? value) =>
+      value == null ? null : reviewLifecycleStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<reviewLifecycleStatus> reader = _reviewLifecycleStatusReader();
+}
+
+class _reviewLifecycleStatusReader extends fb.Reader<reviewLifecycleStatus> {
+  const _reviewLifecycleStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  reviewLifecycleStatus read(fb.BufferContext bc, int offset) =>
+      reviewLifecycleStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Data quality metrics attached to a review.
+class DataQualityMetrics {
+  DataQualityMetrics._(this._bc, this._bcOffset);
+  factory DataQualityMetrics(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DataQualityMetrics> reader = _DataQualityMetricsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  int get SCHEMA_COMPLIANCE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get schemaCompliance => SCHEMA_COMPLIANCE;
+  int get DATA_FRESHNESS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get dataFreshness => DATA_FRESHNESS;
+  int get COVERAGE_ACCURACY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get coverageAccuracy => COVERAGE_ACCURACY;
+  int get DELIVERY_RELIABILITY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get deliveryReliability => DELIVERY_RELIABILITY;
+
+  @override
+  String toString() {
+    return 'DataQualityMetrics{schemaCompliance: ${schemaCompliance}, dataFreshness: ${dataFreshness}, coverageAccuracy: ${coverageAccuracy}, deliveryReliability: ${deliveryReliability}}';
+  }
+}
+
+class _DataQualityMetricsReader extends fb.TableReader<DataQualityMetrics> {
+  const _DataQualityMetricsReader();
+
+  @override
+  DataQualityMetrics createObject(fb.BufferContext bc, int offset) =>
+    DataQualityMetrics._(bc, offset);
+}
+
+class DataQualityMetricsBuilder {
+  DataQualityMetricsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addSchemaCompliance(int? SCHEMA_COMPLIANCE) {
+    fbBuilder.addUint8(0, SCHEMA_COMPLIANCE);
+    return fbBuilder.offset;
+  }
+  int addDataFreshness(int? DATA_FRESHNESS) {
+    fbBuilder.addUint8(1, DATA_FRESHNESS);
+    return fbBuilder.offset;
+  }
+  int addCoverageAccuracy(int? COVERAGE_ACCURACY) {
+    fbBuilder.addUint8(2, COVERAGE_ACCURACY);
+    return fbBuilder.offset;
+  }
+  int addDeliveryReliability(int? DELIVERY_RELIABILITY) {
+    fbBuilder.addUint8(3, DELIVERY_RELIABILITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DataQualityMetricsObjectBuilder extends fb.ObjectBuilder {
+  final int? _SCHEMA_COMPLIANCE;
+  final int? _DATA_FRESHNESS;
+  final int? _COVERAGE_ACCURACY;
+  final int? _DELIVERY_RELIABILITY;
+
+  DataQualityMetricsObjectBuilder({
+    int? SCHEMA_COMPLIANCE,
+    int? schemaCompliance,
+    int? DATA_FRESHNESS,
+    int? dataFreshness,
+    int? COVERAGE_ACCURACY,
+    int? coverageAccuracy,
+    int? DELIVERY_RELIABILITY,
+    int? deliveryReliability,
+  })
+      : _SCHEMA_COMPLIANCE = schemaCompliance ?? SCHEMA_COMPLIANCE,
+        _DATA_FRESHNESS = dataFreshness ?? DATA_FRESHNESS,
+        _COVERAGE_ACCURACY = coverageAccuracy ?? COVERAGE_ACCURACY,
+        _DELIVERY_RELIABILITY = deliveryReliability ?? DELIVERY_RELIABILITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(4);
+    fbBuilder.addUint8(0, _SCHEMA_COMPLIANCE);
+    fbBuilder.addUint8(1, _DATA_FRESHNESS);
+    fbBuilder.addUint8(2, _COVERAGE_ACCURACY);
+    fbBuilder.addUint8(3, _DELIVERY_RELIABILITY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Review - User review of a storefront listing
 class REV {
   REV._(this._bc, this._bcOffset);
@@ -42,10 +190,39 @@ class REV {
   ///  Ed25519 signature from reviewer
   List<int>? get REVIEWER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 20);
   List<int>? get reviewerSignature => REVIEWER_SIGNATURE;
+  ///  Data quality metrics supplied by reviewer
+  DataQualityMetrics? get QUALITY_METRICS => DataQualityMetrics.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  DataQualityMetrics? get qualityMetrics => QUALITY_METRICS;
+  ///  Whether the review is tied to a verified purchase
+  bool get VERIFIED_PURCHASE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get verifiedPurchase => VERIFIED_PURCHASE;
+  ///  Unix timestamp when the review was last updated
+  int get UPDATED_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get updatedAt => UPDATED_AT;
+  ///  Review lifecycle status
+  reviewLifecycleStatus get STATUS => reviewLifecycleStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Helpful vote count
+  int get HELPFUL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get helpfulCount => HELPFUL_COUNT;
+  ///  Not-helpful vote count
+  int get NOT_HELPFUL_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get notHelpfulCount => NOT_HELPFUL_COUNT;
+  ///  Provider response body
+  String? get PROVIDER_RESPONSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get providerResponse => PROVIDER_RESPONSE;
+  ///  Unix timestamp when provider responded
+  int get PROVIDER_RESPONSE_AT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  int get providerResponseAt => PROVIDER_RESPONSE_AT;
+  ///  Number of moderation flags
+  int get FLAGGED_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get flaggedCount => FLAGGED_COUNT;
+  ///  Moderation notes
+  String? get MODERATION_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get moderationNotes => MODERATION_NOTES;
 
   @override
   String toString() {
-    return 'REV{reviewId: ${reviewId}, listingId: ${listingId}, reviewerPeerId: ${reviewerPeerId}, RATING: ${RATING}, TITLE: ${TITLE}, CONTENT: ${CONTENT}, aclGrantId: ${aclGrantId}, TIMESTAMP: ${TIMESTAMP}, reviewerSignature: ${reviewerSignature}}';
+    return 'REV{reviewId: ${reviewId}, listingId: ${listingId}, reviewerPeerId: ${reviewerPeerId}, RATING: ${RATING}, TITLE: ${TITLE}, CONTENT: ${CONTENT}, aclGrantId: ${aclGrantId}, TIMESTAMP: ${TIMESTAMP}, reviewerSignature: ${reviewerSignature}, qualityMetrics: ${qualityMetrics}, verifiedPurchase: ${verifiedPurchase}, updatedAt: ${updatedAt}, STATUS: ${STATUS}, helpfulCount: ${helpfulCount}, notHelpfulCount: ${notHelpfulCount}, providerResponse: ${providerResponse}, providerResponseAt: ${providerResponseAt}, flaggedCount: ${flaggedCount}, moderationNotes: ${moderationNotes}}';
   }
 }
 
@@ -63,7 +240,7 @@ class REVBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(19);
   }
 
   int addReviewIdOffset(int? offset) {
@@ -102,6 +279,46 @@ class REVBuilder {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
+  int addQualityMetricsOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addVerifiedPurchase(bool? VERIFIED_PURCHASE) {
+    fbBuilder.addBool(10, VERIFIED_PURCHASE);
+    return fbBuilder.offset;
+  }
+  int addUpdatedAt(int? UPDATED_AT) {
+    fbBuilder.addUint64(11, UPDATED_AT);
+    return fbBuilder.offset;
+  }
+  int addStatus(reviewLifecycleStatus? STATUS) {
+    fbBuilder.addInt8(12, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addHelpfulCount(int? HELPFUL_COUNT) {
+    fbBuilder.addUint32(13, HELPFUL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addNotHelpfulCount(int? NOT_HELPFUL_COUNT) {
+    fbBuilder.addUint32(14, NOT_HELPFUL_COUNT);
+    return fbBuilder.offset;
+  }
+  int addProviderResponseOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderResponseAt(int? PROVIDER_RESPONSE_AT) {
+    fbBuilder.addUint64(16, PROVIDER_RESPONSE_AT);
+    return fbBuilder.offset;
+  }
+  int addFlaggedCount(int? FLAGGED_COUNT) {
+    fbBuilder.addUint32(17, FLAGGED_COUNT);
+    return fbBuilder.offset;
+  }
+  int addModerationNotesOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -118,6 +335,16 @@ class REVObjectBuilder extends fb.ObjectBuilder {
   final String? _ACL_GRANT_ID;
   final int? _TIMESTAMP;
   final List<int>? _REVIEWER_SIGNATURE;
+  final DataQualityMetricsObjectBuilder? _QUALITY_METRICS;
+  final bool? _VERIFIED_PURCHASE;
+  final int? _UPDATED_AT;
+  final reviewLifecycleStatus? _STATUS;
+  final int? _HELPFUL_COUNT;
+  final int? _NOT_HELPFUL_COUNT;
+  final String? _PROVIDER_RESPONSE;
+  final int? _PROVIDER_RESPONSE_AT;
+  final int? _FLAGGED_COUNT;
+  final String? _MODERATION_NOTES;
 
   REVObjectBuilder({
     String? REVIEW_ID,
@@ -134,6 +361,25 @@ class REVObjectBuilder extends fb.ObjectBuilder {
     int? TIMESTAMP,
     List<int>? REVIEWER_SIGNATURE,
     List<int>? reviewerSignature,
+    DataQualityMetricsObjectBuilder? QUALITY_METRICS,
+    DataQualityMetricsObjectBuilder? qualityMetrics,
+    bool? VERIFIED_PURCHASE,
+    bool? verifiedPurchase,
+    int? UPDATED_AT,
+    int? updatedAt,
+    reviewLifecycleStatus? STATUS,
+    int? HELPFUL_COUNT,
+    int? helpfulCount,
+    int? NOT_HELPFUL_COUNT,
+    int? notHelpfulCount,
+    String? PROVIDER_RESPONSE,
+    String? providerResponse,
+    int? PROVIDER_RESPONSE_AT,
+    int? providerResponseAt,
+    int? FLAGGED_COUNT,
+    int? flaggedCount,
+    String? MODERATION_NOTES,
+    String? moderationNotes,
   })
       : _REVIEW_ID = reviewId ?? REVIEW_ID,
         _LISTING_ID = listingId ?? LISTING_ID,
@@ -143,7 +389,17 @@ class REVObjectBuilder extends fb.ObjectBuilder {
         _CONTENT = CONTENT,
         _ACL_GRANT_ID = aclGrantId ?? ACL_GRANT_ID,
         _TIMESTAMP = TIMESTAMP,
-        _REVIEWER_SIGNATURE = reviewerSignature ?? REVIEWER_SIGNATURE;
+        _REVIEWER_SIGNATURE = reviewerSignature ?? REVIEWER_SIGNATURE,
+        _QUALITY_METRICS = qualityMetrics ?? QUALITY_METRICS,
+        _VERIFIED_PURCHASE = verifiedPurchase ?? VERIFIED_PURCHASE,
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _STATUS = STATUS,
+        _HELPFUL_COUNT = helpfulCount ?? HELPFUL_COUNT,
+        _NOT_HELPFUL_COUNT = notHelpfulCount ?? NOT_HELPFUL_COUNT,
+        _PROVIDER_RESPONSE = providerResponse ?? PROVIDER_RESPONSE,
+        _PROVIDER_RESPONSE_AT = providerResponseAt ?? PROVIDER_RESPONSE_AT,
+        _FLAGGED_COUNT = flaggedCount ?? FLAGGED_COUNT,
+        _MODERATION_NOTES = moderationNotes ?? MODERATION_NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -162,7 +418,12 @@ class REVObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ACL_GRANT_ID!);
     final int? REVIEWER_SIGNATUREOffset = _REVIEWER_SIGNATURE == null ? null
         : fbBuilder.writeListUint8(_REVIEWER_SIGNATURE!);
-    fbBuilder.startTable(9);
+    final int? QUALITY_METRICSOffset = _QUALITY_METRICS?.getOrCreateOffset(fbBuilder);
+    final int? PROVIDER_RESPONSEOffset = _PROVIDER_RESPONSE == null ? null
+        : fbBuilder.writeString(_PROVIDER_RESPONSE!);
+    final int? MODERATION_NOTESOffset = _MODERATION_NOTES == null ? null
+        : fbBuilder.writeString(_MODERATION_NOTES!);
+    fbBuilder.startTable(19);
     fbBuilder.addOffset(0, REVIEW_IDOffset);
     fbBuilder.addOffset(1, LISTING_IDOffset);
     fbBuilder.addOffset(2, REVIEWER_PEER_IDOffset);
@@ -172,6 +433,16 @@ class REVObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(6, ACL_GRANT_IDOffset);
     fbBuilder.addUint64(7, _TIMESTAMP);
     fbBuilder.addOffset(8, REVIEWER_SIGNATUREOffset);
+    fbBuilder.addOffset(9, QUALITY_METRICSOffset);
+    fbBuilder.addBool(10, _VERIFIED_PURCHASE);
+    fbBuilder.addUint64(11, _UPDATED_AT);
+    fbBuilder.addInt8(12, _STATUS?.value);
+    fbBuilder.addUint32(13, _HELPFUL_COUNT);
+    fbBuilder.addUint32(14, _NOT_HELPFUL_COUNT);
+    fbBuilder.addOffset(15, PROVIDER_RESPONSEOffset);
+    fbBuilder.addUint64(16, _PROVIDER_RESPONSE_AT);
+    fbBuilder.addUint32(17, _FLAGGED_COUNT);
+    fbBuilder.addOffset(18, MODERATION_NOTESOffset);
     return fbBuilder.endTable();
   }
 

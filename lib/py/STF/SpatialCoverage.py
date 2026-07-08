@@ -79,8 +79,52 @@ class SpatialCoverage(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
+    # Minimum altitude in kilometers for altitude-bounded offerings
+    # SpatialCoverage
+    def MIN_ALTITUDE_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum altitude in kilometers for altitude-bounded offerings
+    # SpatialCoverage
+    def MAX_ALTITUDE_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Bounding box as [min_lat, min_lon, max_lat, max_lon]
+    # SpatialCoverage
+    def GEO_BOUNDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SpatialCoverage
+    def GEO_BOUNDSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SpatialCoverage
+    def GEO_BOUNDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SpatialCoverage
+    def GEO_BOUNDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
 def SpatialCoverageStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(6)
 
 def Start(builder):
     SpatialCoverageStart(builder)
@@ -127,6 +171,40 @@ def SpatialCoverageCreateOBJECT_IDSVector(builder, data):
 def CreateOBJECT_IDSVector(builder, data):
     SpatialCoverageCreateOBJECT_IDSVector(builder, data)
 
+def SpatialCoverageAddMIN_ALTITUDE_KM(builder, MIN_ALTITUDE_KM):
+    builder.PrependFloat64Slot(3, MIN_ALTITUDE_KM, 0.0)
+
+def AddMIN_ALTITUDE_KM(builder, MIN_ALTITUDE_KM):
+    SpatialCoverageAddMIN_ALTITUDE_KM(builder, MIN_ALTITUDE_KM)
+
+def SpatialCoverageAddMAX_ALTITUDE_KM(builder, MAX_ALTITUDE_KM):
+    builder.PrependFloat64Slot(4, MAX_ALTITUDE_KM, 0.0)
+
+def AddMAX_ALTITUDE_KM(builder, MAX_ALTITUDE_KM):
+    SpatialCoverageAddMAX_ALTITUDE_KM(builder, MAX_ALTITUDE_KM)
+
+def SpatialCoverageAddGEO_BOUNDS(builder, GEO_BOUNDS):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(GEO_BOUNDS), 0)
+
+def AddGEO_BOUNDS(builder, GEO_BOUNDS):
+    SpatialCoverageAddGEO_BOUNDS(builder, GEO_BOUNDS)
+
+def SpatialCoverageStartGEO_BOUNDSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartGEO_BOUNDSVector(builder, numElems):
+    return SpatialCoverageStartGEO_BOUNDSVector(builder, numElems)
+
+def SpatialCoverageCreateGEO_BOUNDSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateGEO_BOUNDSVector(builder, data):
+    SpatialCoverageCreateGEO_BOUNDSVector(builder, data)
+
 def SpatialCoverageEnd(builder):
     return builder.EndObject()
 
@@ -146,10 +224,16 @@ class SpatialCoverageT(object):
         TYPE = None,
         REGIONS = None,
         OBJECT_IDS = None,
+        MIN_ALTITUDE_KM = 0.0,
+        MAX_ALTITUDE_KM = 0.0,
+        GEO_BOUNDS = None,
     ):
         self.TYPE = TYPE  # type: Optional[str]
         self.REGIONS = REGIONS  # type: Optional[List[Optional[str]]]
         self.OBJECT_IDS = OBJECT_IDS  # type: Optional[List[Optional[str]]]
+        self.MIN_ALTITUDE_KM = MIN_ALTITUDE_KM  # type: float
+        self.MAX_ALTITUDE_KM = MAX_ALTITUDE_KM  # type: float
+        self.GEO_BOUNDS = GEO_BOUNDS  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -181,6 +265,15 @@ class SpatialCoverageT(object):
             self.OBJECT_IDS = []
             for i in range(SpatialCoverage.OBJECT_IDSLength()):
                 self.OBJECT_IDS.append(SpatialCoverage.OBJECT_IDS(i))
+        self.MIN_ALTITUDE_KM = SpatialCoverage.MIN_ALTITUDE_KM()
+        self.MAX_ALTITUDE_KM = SpatialCoverage.MAX_ALTITUDE_KM()
+        if not SpatialCoverage.GEO_BOUNDSIsNone():
+            if np is None:
+                self.GEO_BOUNDS = []
+                for i in range(SpatialCoverage.GEO_BOUNDSLength()):
+                    self.GEO_BOUNDS.append(SpatialCoverage.GEO_BOUNDS(i))
+            else:
+                self.GEO_BOUNDS = SpatialCoverage.GEO_BOUNDSAsNumpy()
 
     # SpatialCoverageT
     def Pack(self, builder):
@@ -202,6 +295,14 @@ class SpatialCoverageT(object):
             for i in reversed(range(len(self.OBJECT_IDS))):
                 builder.PrependUOffsetTRelative(OBJECT_IDSlist[i])
             OBJECT_IDS = builder.EndVector()
+        if self.GEO_BOUNDS is not None:
+            if np is not None and type(self.GEO_BOUNDS) is np.ndarray:
+                GEO_BOUNDS = builder.CreateNumpyVector(self.GEO_BOUNDS)
+            else:
+                SpatialCoverageStartGEO_BOUNDSVector(builder, len(self.GEO_BOUNDS))
+                for i in reversed(range(len(self.GEO_BOUNDS))):
+                    builder.PrependFloat64(self.GEO_BOUNDS[i])
+                GEO_BOUNDS = builder.EndVector()
         SpatialCoverageStart(builder)
         if self.TYPE is not None:
             SpatialCoverageAddTYPE(builder, TYPE)
@@ -209,5 +310,9 @@ class SpatialCoverageT(object):
             SpatialCoverageAddREGIONS(builder, REGIONS)
         if self.OBJECT_IDS is not None:
             SpatialCoverageAddOBJECT_IDS(builder, OBJECT_IDS)
+        SpatialCoverageAddMIN_ALTITUDE_KM(builder, self.MIN_ALTITUDE_KM)
+        SpatialCoverageAddMAX_ALTITUDE_KM(builder, self.MAX_ALTITUDE_KM)
+        if self.GEO_BOUNDS is not None:
+            SpatialCoverageAddGEO_BOUNDS(builder, GEO_BOUNDS)
         SpatialCoverage = SpatialCoverageEnd(builder)
         return SpatialCoverage
