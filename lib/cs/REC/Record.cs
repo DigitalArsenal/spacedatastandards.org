@@ -178,7 +178,9 @@ public struct Record : IFlatbufferObject
   public TKG valueAsTKG() { return value<TKG>().Value; }
   public TME valueAsTME() { return value<TME>().Value; }
   public TMF valueAsTMF() { return value<TMF>().Value; }
+  public TNR valueAsTNR() { return value<TNR>().Value; }
   public TPN valueAsTPN() { return value<TPN>().Value; }
+  public TRE valueAsTRE() { return value<TRE>().Value; }
   public TRK valueAsTRK() { return value<TRK>().Value; }
   public TRN valueAsTRN() { return value<TRN>().Value; }
   public VCM valueAsVCM() { return value<VCM>().Value; }
@@ -704,8 +706,14 @@ public struct Record : IFlatbufferObject
       case RecordType.TMF:
         _o.value.Value = this.value<TMF>().HasValue ? this.value<TMF>().Value.UnPack() : null;
         break;
+      case RecordType.TNR:
+        _o.value.Value = this.value<TNR>().HasValue ? this.value<TNR>().Value.UnPack() : null;
+        break;
       case RecordType.TPN:
         _o.value.Value = this.value<TPN>().HasValue ? this.value<TPN>().Value.UnPack() : null;
+        break;
+      case RecordType.TRE:
+        _o.value.Value = this.value<TRE>().HasValue ? this.value<TRE>().Value.UnPack() : null;
         break;
       case RecordType.TRK:
         _o.value.Value = this.value<TRK>().HasValue ? this.value<TRK>().Value.UnPack() : null;

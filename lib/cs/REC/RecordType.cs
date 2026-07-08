@@ -163,20 +163,22 @@ public enum RecordType : byte
   TKG = 156,
   TME = 157,
   TMF = 158,
-  TPN = 159,
-  TRK = 160,
-  TRN = 161,
-  VCM = 162,
-  WPN = 163,
-  WTH = 164,
-  XTC = 165,
-  SCV = 166,
-  FSM = 167,
-  FSP = 168,
-  SCC = 169,
-  SCN = 170,
-  VST = 171,
-  ENT = 172,
+  TNR = 159,
+  TPN = 160,
+  TRE = 161,
+  TRK = 162,
+  TRN = 163,
+  VCM = 164,
+  WPN = 165,
+  WTH = 166,
+  XTC = 167,
+  SCV = 168,
+  FSM = 169,
+  FSP = 170,
+  SCC = 171,
+  SCN = 172,
+  VST = 173,
+  ENT = 174,
 };
 
 public class RecordTypeUnion {
@@ -505,8 +507,12 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromTME(TMET _tme) { return new RecordTypeUnion{ Type = RecordType.TME, Value = _tme }; }
   public TMFT AsTMF() { return this.As<TMFT>(); }
   public static RecordTypeUnion FromTMF(TMFT _tmf) { return new RecordTypeUnion{ Type = RecordType.TMF, Value = _tmf }; }
+  public TNRT AsTNR() { return this.As<TNRT>(); }
+  public static RecordTypeUnion FromTNR(TNRT _tnr) { return new RecordTypeUnion{ Type = RecordType.TNR, Value = _tnr }; }
   public TPNT AsTPN() { return this.As<TPNT>(); }
   public static RecordTypeUnion FromTPN(TPNT _tpn) { return new RecordTypeUnion{ Type = RecordType.TPN, Value = _tpn }; }
+  public TRET AsTRE() { return this.As<TRET>(); }
+  public static RecordTypeUnion FromTRE(TRET _tre) { return new RecordTypeUnion{ Type = RecordType.TRE, Value = _tre }; }
   public TRKT AsTRK() { return this.As<TRKT>(); }
   public static RecordTypeUnion FromTRK(TRKT _trk) { return new RecordTypeUnion{ Type = RecordType.TRK, Value = _trk }; }
   public TRNT AsTRN() { return this.As<TRNT>(); }
@@ -695,7 +701,9 @@ public class RecordTypeUnion {
       case RecordType.TKG: return TKG.Pack(builder, _o.AsTKG()).Value;
       case RecordType.TME: return TME.Pack(builder, _o.AsTME()).Value;
       case RecordType.TMF: return TMF.Pack(builder, _o.AsTMF()).Value;
+      case RecordType.TNR: return TNR.Pack(builder, _o.AsTNR()).Value;
       case RecordType.TPN: return TPN.Pack(builder, _o.AsTPN()).Value;
+      case RecordType.TRE: return TRE.Pack(builder, _o.AsTRE()).Value;
       case RecordType.TRK: return TRK.Pack(builder, _o.AsTRK()).Value;
       case RecordType.TRN: return TRN.Pack(builder, _o.AsTRN()).Value;
       case RecordType.VCM: return VCM.Pack(builder, _o.AsVCM()).Value;
@@ -1196,8 +1204,14 @@ static public class RecordTypeVerify
       case RecordType.TMF:
         result = TMFVerify.Verify(verifier, tablePos);
         break;
+      case RecordType.TNR:
+        result = TNRVerify.Verify(verifier, tablePos);
+        break;
       case RecordType.TPN:
         result = TPNVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.TRE:
+        result = TREVerify.Verify(verifier, tablePos);
         break;
       case RecordType.TRK:
         result = TRKVerify.Verify(verifier, tablePos);

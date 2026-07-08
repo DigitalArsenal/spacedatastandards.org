@@ -1,0 +1,25 @@
+// Hash: 57020fc6d9880ddffbc253c5796c48ebc6310b80bbeecfa97a1d02ddc9561b01
+// Version: 1.144.0
+// -----------------------------------END_HEADER
+/// Trust Node Record - Durable node membership state for an SDN trust graph.
+///
+/// TNR records preserve isolated trust graph nodes that do not currently have
+/// an active trust edge. The current graph is a projection over the latest TNR
+/// and TRE records, where deleted records are tombstones.
+table TNR {
+  /// Stable trust graph node identifier, normally an SDN peer ID or account id.
+  NODE_ID: string (required);
+  /// Unix timestamp in milliseconds when this node record was created.
+  CREATED_AT: uint64;
+  /// Unix timestamp in milliseconds when this node record was last updated.
+  UPDATED_AT: uint64;
+  /// True when this record tombstones the node from the current graph.
+  DELETED: bool;
+  /// Peer ID of the node/provider that issued this trust graph record.
+  PROVIDER_PEER_ID: string;
+  /// Provider signature over the trust node record.
+  PROVIDER_SIGNATURE: [ubyte];
+}
+
+root_type TNR;
+file_identifier "$TNR";

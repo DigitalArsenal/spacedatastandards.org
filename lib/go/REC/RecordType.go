@@ -166,20 +166,22 @@ const (
 	RecordTypeTKG  RecordType = 156
 	RecordTypeTME  RecordType = 157
 	RecordTypeTMF  RecordType = 158
-	RecordTypeTPN  RecordType = 159
-	RecordTypeTRK  RecordType = 160
-	RecordTypeTRN  RecordType = 161
-	RecordTypeVCM  RecordType = 162
-	RecordTypeWPN  RecordType = 163
-	RecordTypeWTH  RecordType = 164
-	RecordTypeXTC  RecordType = 165
-	RecordTypeSCV  RecordType = 166
-	RecordTypeFSM  RecordType = 167
-	RecordTypeFSP  RecordType = 168
-	RecordTypeSCC  RecordType = 169
-	RecordTypeSCN  RecordType = 170
-	RecordTypeVST  RecordType = 171
-	RecordTypeENT  RecordType = 172
+	RecordTypeTNR  RecordType = 159
+	RecordTypeTPN  RecordType = 160
+	RecordTypeTRE  RecordType = 161
+	RecordTypeTRK  RecordType = 162
+	RecordTypeTRN  RecordType = 163
+	RecordTypeVCM  RecordType = 164
+	RecordTypeWPN  RecordType = 165
+	RecordTypeWTH  RecordType = 166
+	RecordTypeXTC  RecordType = 167
+	RecordTypeSCV  RecordType = 168
+	RecordTypeFSM  RecordType = 169
+	RecordTypeFSP  RecordType = 170
+	RecordTypeSCC  RecordType = 171
+	RecordTypeSCN  RecordType = 172
+	RecordTypeVST  RecordType = 173
+	RecordTypeENT  RecordType = 174
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -342,7 +344,9 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeTKG:  "TKG",
 	RecordTypeTME:  "TME",
 	RecordTypeTMF:  "TMF",
+	RecordTypeTNR:  "TNR",
 	RecordTypeTPN:  "TPN",
+	RecordTypeTRE:  "TRE",
 	RecordTypeTRK:  "TRK",
 	RecordTypeTRN:  "TRN",
 	RecordTypeVCM:  "VCM",
@@ -518,7 +522,9 @@ var EnumValuesRecordType = map[string]RecordType{
 	"TKG":  RecordTypeTKG,
 	"TME":  RecordTypeTME,
 	"TMF":  RecordTypeTMF,
+	"TNR":  RecordTypeTNR,
 	"TPN":  RecordTypeTPN,
+	"TRE":  RecordTypeTRE,
 	"TRK":  RecordTypeTRK,
 	"TRN":  RecordTypeTRN,
 	"VCM":  RecordTypeVCM,

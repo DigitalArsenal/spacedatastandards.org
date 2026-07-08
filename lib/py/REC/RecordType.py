@@ -162,20 +162,22 @@ class RecordType(object):
     TKG = 156
     TME = 157
     TMF = 158
-    TPN = 159
-    TRK = 160
-    TRN = 161
-    VCM = 162
-    WPN = 163
-    WTH = 164
-    XTC = 165
-    SCV = 166
-    FSM = 167
-    FSP = 168
-    SCC = 169
-    SCN = 170
-    VST = 171
-    ENT = 172
+    TNR = 159
+    TPN = 160
+    TRE = 161
+    TRK = 162
+    TRN = 163
+    VCM = 164
+    WPN = 165
+    WTH = 166
+    XTC = 167
+    SCV = 168
+    FSM = 169
+    FSP = 170
+    SCC = 171
+    SCN = 172
+    VST = 173
+    ENT = 174
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -655,9 +657,15 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.TMF:
         import TMF
         return TMF.TMFT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TNR:
+        import TNR
+        return TNR.TNRT.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TPN:
         import TPN
         return TPN.TPNT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.TRE:
+        import TRE
+        return TRE.TRET.InitFromBuf(table.Bytes, table.Pos)
     if unionType == RecordType.TRK:
         import TRK
         return TRK.TRKT.InitFromBuf(table.Bytes, table.Pos)

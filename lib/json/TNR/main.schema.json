@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TNR" : {
+      "type" : "object",
+      "description" : "Trust Node Record - Durable node membership state for an SDN trust graph.\n\nTNR records preserve isolated trust graph nodes that do not currently have\nan active trust edge. The current graph is a projection over the latest TNR\nand TRE records, where deleted records are tombstones.",
+      "properties" : {
+        "NODE_ID" : {
+                "type" : "string",
+                "description" : "Stable trust graph node identifier, normally an SDN peer ID or account id."
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this node record was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this node record was last updated."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True when this record tombstones the node from the current graph."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the node/provider that issued this trust graph record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the trust node record."
+              }
+      },
+      "required" : ["NODE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TNR"
+}

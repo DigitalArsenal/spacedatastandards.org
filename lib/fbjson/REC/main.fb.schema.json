@@ -56426,6 +56426,50 @@
       },
       "description": "Telemetry Transfer Frame (CCSDS 132.0-B-2)"
     },
+    "TNR": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NODE_ID": {
+          "type": "string",
+          "description": "Stable trust graph node identifier, normally an SDN peer ID or account id.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this node record was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this node record was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the node from the current graph.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this trust graph record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Provider signature over the trust node record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Trust Node Record - Durable node membership state for an SDN trust graph.  TNR records preserve isolated trust graph nodes that do not currently have an active trust edge. The current graph is a projection over the latest TNR and TRE records, where deleted records are tombstones.",
+      "required": [
+        "NODE_ID"
+      ]
+    },
     "TPN": {
       "type": "object",
       "additionalProperties": false,
@@ -56479,6 +56523,62 @@
         }
       },
       "description": "Transponder"
+    },
+    "TRE": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EDGE_ID": {
+          "type": "string",
+          "description": "Stable edge identifier, normally \"truster->trustee\".",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUSTER_ID": {
+          "type": "string",
+          "description": "Trusting node identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TRUSTEE_ID": {
+          "type": "string",
+          "description": "Trusted node identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "WEIGHT": {
+          "type": "number",
+          "description": "Truster-assigned edge weight in the range [0, 1].",
+          "x-flatbuffer-type": "double"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix timestamp in milliseconds when this edge was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DELETED": {
+          "type": "boolean",
+          "description": "True when this record tombstones the edge from the current graph.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the node/provider that issued this trust edge record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Provider signature over the trust edge record.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Trust Edge Record - Durable directed trust assertion for an SDN trust graph.  A TRE records one directed truster -> trustee assertion. The current trust graph is a projection over the latest TRE records by EDGE_ID, with deleted records acting as tombstones. Implementations must still validate the projected graph for acyclicity before accepting it.",
+      "required": [
+        "TRUSTER_ID",
+        "TRUSTEE_ID"
+      ]
     },
     "TRK": {
       "type": "object",

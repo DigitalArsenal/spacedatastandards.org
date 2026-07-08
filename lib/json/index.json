@@ -12721,6 +12721,55 @@
             },
             "$ref": "#/definitions/FSP"
         },
+        "TNR": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "TNR": {
+                    "type": "object",
+                    "description": "Trust Node Record - Durable node membership state for an SDN trust graph.\n\nTNR records preserve isolated trust graph nodes that do not currently have\nan active trust edge. The current graph is a projection over the latest TNR\nand TRE records, where deleted records are tombstones.",
+                    "properties": {
+                        "NODE_ID": {
+                            "type": "string",
+                            "description": "Stable trust graph node identifier, normally an SDN peer ID or account id."
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this node record was created."
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this node record was last updated."
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the node from the current graph."
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer ID of the node/provider that issued this trust graph record."
+                        },
+                        "PROVIDER_SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider signature over the trust node record."
+                        }
+                    },
+                    "required": [
+                        "NODE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TNR"
+        },
         "MET": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -30672,6 +30721,62 @@
                 }
             },
             "$ref": "#/definitions/TRK"
+        },
+        "TRE": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "TRE": {
+                    "type": "object",
+                    "description": "Trust Edge Record - Durable directed trust assertion for an SDN trust graph.\n\nA TRE records one directed truster -> trustee assertion. The current trust\ngraph is a projection over the latest TRE records by EDGE_ID, with deleted\nrecords acting as tombstones. Implementations must still validate the\nprojected graph for acyclicity before accepting it.",
+                    "properties": {
+                        "EDGE_ID": {
+                            "type": "string",
+                            "description": "Stable edge identifier, normally \"truster->trustee\"."
+                        },
+                        "TRUSTER_ID": {
+                            "type": "string",
+                            "description": "Trusting node identifier."
+                        },
+                        "TRUSTEE_ID": {
+                            "type": "string",
+                            "description": "Trusted node identifier."
+                        },
+                        "WEIGHT": {
+                            "type": "number",
+                            "description": "Truster-assigned edge weight in the range [0, 1]."
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp in milliseconds when this edge was last updated."
+                        },
+                        "DELETED": {
+                            "type": "boolean",
+                            "description": "True when this record tombstones the edge from the current graph."
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer ID of the node/provider that issued this trust edge record."
+                        },
+                        "PROVIDER_SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Provider signature over the trust edge record."
+                        }
+                    },
+                    "required": [
+                        "TRUSTER_ID",
+                        "TRUSTEE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/TRE"
         },
         "SOI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

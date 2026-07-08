@@ -173,6 +173,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -307,10 +309,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 172;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 174;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 173] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 175] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -470,7 +472,9 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 173] = [
   RecordType::TKG,
   RecordType::TME,
   RecordType::TMF,
+  RecordType::TNR,
   RecordType::TPN,
+  RecordType::TRE,
   RecordType::TRK,
   RecordType::TRN,
   RecordType::VCM,
@@ -650,23 +654,25 @@ impl RecordType {
   pub const TKG: Self = Self(156);
   pub const TME: Self = Self(157);
   pub const TMF: Self = Self(158);
-  pub const TPN: Self = Self(159);
-  pub const TRK: Self = Self(160);
-  pub const TRN: Self = Self(161);
-  pub const VCM: Self = Self(162);
-  pub const WPN: Self = Self(163);
-  pub const WTH: Self = Self(164);
-  pub const XTC: Self = Self(165);
-  pub const SCV: Self = Self(166);
-  pub const FSM: Self = Self(167);
-  pub const FSP: Self = Self(168);
-  pub const SCC: Self = Self(169);
-  pub const SCN: Self = Self(170);
-  pub const VST: Self = Self(171);
-  pub const ENT: Self = Self(172);
+  pub const TNR: Self = Self(159);
+  pub const TPN: Self = Self(160);
+  pub const TRE: Self = Self(161);
+  pub const TRK: Self = Self(162);
+  pub const TRN: Self = Self(163);
+  pub const VCM: Self = Self(164);
+  pub const WPN: Self = Self(165);
+  pub const WTH: Self = Self(166);
+  pub const XTC: Self = Self(167);
+  pub const SCV: Self = Self(168);
+  pub const FSM: Self = Self(169);
+  pub const FSP: Self = Self(170);
+  pub const SCC: Self = Self(171);
+  pub const SCN: Self = Self(172);
+  pub const VST: Self = Self(173);
+  pub const ENT: Self = Self(174);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 172;
+  pub const ENUM_MAX: u8 = 174;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -827,7 +833,9 @@ impl RecordType {
     Self::TKG,
     Self::TME,
     Self::TMF,
+    Self::TNR,
     Self::TPN,
+    Self::TRE,
     Self::TRK,
     Self::TRN,
     Self::VCM,
@@ -1004,7 +1012,9 @@ impl RecordType {
       Self::TKG => Some("TKG"),
       Self::TME => Some("TME"),
       Self::TMF => Some("TMF"),
+      Self::TNR => Some("TNR"),
       Self::TPN => Some("TPN"),
+      Self::TRE => Some("TRE"),
       Self::TRK => Some("TRK"),
       Self::TRN => Some("TRN"),
       Self::VCM => Some("VCM"),
@@ -1237,7 +1247,9 @@ pub enum RecordTypeT {
   TKG(alloc::boxed::Box<TKGT>),
   TME(alloc::boxed::Box<TMET>),
   TMF(alloc::boxed::Box<TMFT>),
+  TNR(alloc::boxed::Box<TNRT>),
   TPN(alloc::boxed::Box<TPNT>),
+  TRE(alloc::boxed::Box<TRET>),
   TRK(alloc::boxed::Box<TRKT>),
   TRN(alloc::boxed::Box<TRNT>),
   VCM(alloc::boxed::Box<VCMT>),
@@ -1419,7 +1431,9 @@ impl RecordTypeT {
       Self::TKG(_) => RecordType::TKG,
       Self::TME(_) => RecordType::TME,
       Self::TMF(_) => RecordType::TMF,
+      Self::TNR(_) => RecordType::TNR,
       Self::TPN(_) => RecordType::TPN,
+      Self::TRE(_) => RecordType::TRE,
       Self::TRK(_) => RecordType::TRK,
       Self::TRN(_) => RecordType::TRN,
       Self::VCM(_) => RecordType::VCM,
@@ -1596,7 +1610,9 @@ impl RecordTypeT {
       Self::TKG(v) => Some(v.pack(fbb).as_union_value()),
       Self::TME(v) => Some(v.pack(fbb).as_union_value()),
       Self::TMF(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TNR(v) => Some(v.pack(fbb).as_union_value()),
       Self::TPN(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TRE(v) => Some(v.pack(fbb).as_union_value()),
       Self::TRK(v) => Some(v.pack(fbb).as_union_value()),
       Self::TRN(v) => Some(v.pack(fbb).as_union_value()),
       Self::VCM(v) => Some(v.pack(fbb).as_union_value()),
@@ -4930,6 +4946,27 @@ impl RecordTypeT {
   pub fn as_tmf_mut(&mut self) -> Option<&mut TMFT> {
     if let Self::TMF(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned TNRT, setting the union to NONE.
+  pub fn take_tnr(&mut self) -> Option<alloc::boxed::Box<TNRT>> {
+    if let Self::TNR(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TNR(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TNRT.
+  pub fn as_tnr(&self) -> Option<&TNRT> {
+    if let Self::TNR(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TNRT.
+  pub fn as_tnr_mut(&mut self) -> Option<&mut TNRT> {
+    if let Self::TNR(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned TPNT, setting the union to NONE.
   pub fn take_tpn(&mut self) -> Option<alloc::boxed::Box<TPNT>> {
     if let Self::TPN(_) = self {
@@ -4950,6 +4987,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the TPNT.
   pub fn as_tpn_mut(&mut self) -> Option<&mut TPNT> {
     if let Self::TPN(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned TRET, setting the union to NONE.
+  pub fn take_tre(&mut self) -> Option<alloc::boxed::Box<TRET>> {
+    if let Self::TRE(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TRE(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TRET.
+  pub fn as_tre(&self) -> Option<&TRET> {
+    if let Self::TRE(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TRET.
+  pub fn as_tre_mut(&mut self) -> Option<&mut TRET> {
+    if let Self::TRE(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned TRKT, setting the union to NONE.
   pub fn take_trk(&mut self) -> Option<alloc::boxed::Box<TRKT>> {
@@ -6055,9 +6113,19 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::TMF`.")
             .unpack()
       )),
+      RecordType::TNR => RecordTypeT::TNR(alloc::boxed::Box::new(
+        self.value_as_tnr()
+            .expect("Invalid union table, expected `RecordType::TNR`.")
+            .unpack()
+      )),
       RecordType::TPN => RecordTypeT::TPN(alloc::boxed::Box::new(
         self.value_as_tpn()
             .expect("Invalid union table, expected `RecordType::TPN`.")
+            .unpack()
+      )),
+      RecordType::TRE => RecordTypeT::TRE(alloc::boxed::Box::new(
+        self.value_as_tre()
+            .expect("Invalid union table, expected `RecordType::TRE`.")
             .unpack()
       )),
       RecordType::TRK => RecordTypeT::TRK(alloc::boxed::Box::new(
@@ -8531,6 +8599,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_tnr(&self) -> Option<TNR<'a>> {
+    if self.value_type() == RecordType::TNR {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TNR::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_tpn(&self) -> Option<TPN<'a>> {
     if self.value_type() == RecordType::TPN {
       self.value().map(|t| {
@@ -8538,6 +8621,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { TPN::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_tre(&self) -> Option<TRE<'a>> {
+    if self.value_type() == RecordType::TRE {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TRE::init_from_table(t) }
      })
     } else {
       None
@@ -8907,7 +9005,9 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::TKG => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TKG>>("RecordType::TKG", pos),
           RecordType::TME => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TME>>("RecordType::TME", pos),
           RecordType::TMF => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TMF>>("RecordType::TMF", pos),
+          RecordType::TNR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TNR>>("RecordType::TNR", pos),
           RecordType::TPN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TPN>>("RecordType::TPN", pos),
+          RecordType::TRE => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRE>>("RecordType::TRE", pos),
           RecordType::TRK => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRK>>("RecordType::TRK", pos),
           RecordType::TRN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TRN>>("RecordType::TRN", pos),
           RecordType::VCM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VCM>>("RecordType::VCM", pos),
@@ -10088,8 +10188,22 @@ impl ::core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::TNR => {
+          if let Some(x) = self.value_as_tnr() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::TPN => {
           if let Some(x) = self.value_as_tpn() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TRE => {
+          if let Some(x) = self.value_as_tre() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

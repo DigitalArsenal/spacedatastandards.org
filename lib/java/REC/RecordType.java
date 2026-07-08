@@ -162,22 +162,24 @@ public final class RecordType {
   public static final byte TKG = 156;
   public static final byte TME = 157;
   public static final byte TMF = 158;
-  public static final byte TPN = 159;
-  public static final byte TRK = 160;
-  public static final byte TRN = 161;
-  public static final byte VCM = 162;
-  public static final byte WPN = 163;
-  public static final byte WTH = 164;
-  public static final byte XTC = 165;
-  public static final byte SCV = 166;
-  public static final byte FSM = 167;
-  public static final byte FSP = 168;
-  public static final byte SCC = 169;
-  public static final byte SCN = 170;
-  public static final byte VST = 171;
-  public static final byte ENT = 172;
+  public static final byte TNR = 159;
+  public static final byte TPN = 160;
+  public static final byte TRE = 161;
+  public static final byte TRK = 162;
+  public static final byte TRN = 163;
+  public static final byte VCM = 164;
+  public static final byte WPN = 165;
+  public static final byte WTH = 166;
+  public static final byte XTC = 167;
+  public static final byte SCV = 168;
+  public static final byte FSM = 169;
+  public static final byte FSP = 170;
+  public static final byte SCC = 171;
+  public static final byte SCN = 172;
+  public static final byte VST = 173;
+  public static final byte ENT = 174;
 
-  public static final String[] names = { "NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TPN", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", };
+  public static final String[] names = { "NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", };
 
   public static String name(int e) { return names[e]; }
 }

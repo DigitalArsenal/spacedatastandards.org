@@ -310,4 +310,11 @@ export const landingFeatureCategories: LandingFeatureCategory[] = [
     description: "STF, PUR, REV, ACL, ENT - storefronts, purchases, reviews, access grants, and provider entitlements for data commerce",
     schemas: ["STF", "PUR", "REV", "ACL", "ENT"],
   },
+  {
+    icon: "network",
+    iconClass: "icon-blue",
+    title: "Network Operations",
+    description: "TNR, TRE - trust graph node state and directed trust assertions for SDN operational state",
+    schemas: ["TNR", "TRE"],
+  },
 ];

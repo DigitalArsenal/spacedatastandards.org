@@ -162,19 +162,21 @@ class RecordType private constructor() {
         const val TKG: UByte = 156u
         const val TME: UByte = 157u
         const val TMF: UByte = 158u
-        const val TPN: UByte = 159u
-        const val TRK: UByte = 160u
-        const val TRN: UByte = 161u
-        const val VCM: UByte = 162u
-        const val WPN: UByte = 163u
-        const val WTH: UByte = 164u
-        const val XTC: UByte = 165u
-        const val SCV: UByte = 166u
-        const val FSM: UByte = 167u
-        const val FSP: UByte = 168u
-        const val SCC: UByte = 169u
-        const val SCN: UByte = 170u
-        const val VST: UByte = 171u
-        const val ENT: UByte = 172u
+        const val TNR: UByte = 159u
+        const val TPN: UByte = 160u
+        const val TRE: UByte = 161u
+        const val TRK: UByte = 162u
+        const val TRN: UByte = 163u
+        const val VCM: UByte = 164u
+        const val WPN: UByte = 165u
+        const val WTH: UByte = 166u
+        const val XTC: UByte = 167u
+        const val SCV: UByte = 168u
+        const val FSM: UByte = 169u
+        const val FSP: UByte = 170u
+        const val SCC: UByte = 171u
+        const val SCN: UByte = 172u
+        const val VST: UByte = 173u
+        const val ENT: UByte = 174u
     }
 }

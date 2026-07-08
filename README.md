@@ -68,6 +68,10 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **STF, PLG, PLK, PUR, REV, ACL, ENT** — Storefront listings, canonical plugin marketplace manifests, licenses, purchases, reviews, access control, and provider entitlement state for data commerce
 
+### Network Operations
+
+**TNR, TRE** — Trust graph node state and directed trust edge assertions for SDN operational state
+
 ### Geospatial
 
 **GJN, CZM, KML, GPX, COT** — GeoJSON, CZML, KML, GPX, and Cursor on Target for geospatial data exchange

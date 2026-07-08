@@ -185,6 +185,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -352,25 +354,27 @@ enum RecordType : uint8_t {
   RecordType_TKG = 156,
   RecordType_TME = 157,
   RecordType_TMF = 158,
-  RecordType_TPN = 159,
-  RecordType_TRK = 160,
-  RecordType_TRN = 161,
-  RecordType_VCM = 162,
-  RecordType_WPN = 163,
-  RecordType_WTH = 164,
-  RecordType_XTC = 165,
-  RecordType_SCV = 166,
-  RecordType_FSM = 167,
-  RecordType_FSP = 168,
-  RecordType_SCC = 169,
-  RecordType_SCN = 170,
-  RecordType_VST = 171,
-  RecordType_ENT = 172,
+  RecordType_TNR = 159,
+  RecordType_TPN = 160,
+  RecordType_TRE = 161,
+  RecordType_TRK = 162,
+  RecordType_TRN = 163,
+  RecordType_VCM = 164,
+  RecordType_WPN = 165,
+  RecordType_WTH = 166,
+  RecordType_XTC = 167,
+  RecordType_SCV = 168,
+  RecordType_FSM = 169,
+  RecordType_FSP = 170,
+  RecordType_SCC = 171,
+  RecordType_SCN = 172,
+  RecordType_VST = 173,
+  RecordType_ENT = 174,
   RecordType_MIN = RecordType_NONE,
   RecordType_MAX = RecordType_ENT
 };
 
-inline const RecordType (&EnumValuesRecordType())[173] {
+inline const RecordType (&EnumValuesRecordType())[175] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -531,7 +535,9 @@ inline const RecordType (&EnumValuesRecordType())[173] {
     RecordType_TKG,
     RecordType_TME,
     RecordType_TMF,
+    RecordType_TNR,
     RecordType_TPN,
+    RecordType_TRE,
     RecordType_TRK,
     RecordType_TRN,
     RecordType_VCM,
@@ -550,7 +556,7 @@ inline const RecordType (&EnumValuesRecordType())[173] {
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[174] = {
+  static const char * const names[176] = {
     "NONE",
     "ACL",
     "ACM",
@@ -710,7 +716,9 @@ inline const char * const *EnumNamesRecordType() {
     "TKG",
     "TME",
     "TMF",
+    "TNR",
     "TPN",
+    "TRE",
     "TRK",
     "TRN",
     "VCM",
@@ -1371,8 +1379,16 @@ template<> struct RecordTypeTraits<TMF> {
   static const RecordType enum_value = RecordType_TMF;
 };
 
+template<> struct RecordTypeTraits<TNR> {
+  static const RecordType enum_value = RecordType_TNR;
+};
+
 template<> struct RecordTypeTraits<TPN> {
   static const RecordType enum_value = RecordType_TPN;
+};
+
+template<> struct RecordTypeTraits<TRE> {
+  static const RecordType enum_value = RecordType_TRE;
 };
 
 template<> struct RecordTypeTraits<TRK> {
@@ -1922,8 +1938,14 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const TMF *value_as_TMF() const {
     return value_type() == RecordType_TMF ? static_cast<const TMF *>(value()) : nullptr;
   }
+  const TNR *value_as_TNR() const {
+    return value_type() == RecordType_TNR ? static_cast<const TNR *>(value()) : nullptr;
+  }
   const TPN *value_as_TPN() const {
     return value_type() == RecordType_TPN ? static_cast<const TPN *>(value()) : nullptr;
+  }
+  const TRE *value_as_TRE() const {
+    return value_type() == RecordType_TRE ? static_cast<const TRE *>(value()) : nullptr;
   }
   const TRK *value_as_TRK() const {
     return value_type() == RecordType_TRK ? static_cast<const TRK *>(value()) : nullptr;
@@ -2612,8 +2634,16 @@ template<> inline const TMF *Record::value_as<TMF>() const {
   return value_as_TMF();
 }
 
+template<> inline const TNR *Record::value_as<TNR>() const {
+  return value_as_TNR();
+}
+
 template<> inline const TPN *Record::value_as<TPN>() const {
   return value_as_TPN();
+}
+
+template<> inline const TRE *Record::value_as<TRE>() const {
+  return value_as_TRE();
 }
 
 template<> inline const TRK *Record::value_as<TRK>() const {
@@ -3425,8 +3455,16 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
       auto ptr = reinterpret_cast<const TMF *>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case RecordType_TNR: {
+      auto ptr = reinterpret_cast<const TNR *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     case RecordType_TPN: {
       auto ptr = reinterpret_cast<const TPN *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_TRE: {
+      auto ptr = reinterpret_cast<const TRE *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case RecordType_TRK: {

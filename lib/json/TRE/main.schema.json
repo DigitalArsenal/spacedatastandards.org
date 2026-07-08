@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "TRE" : {
+      "type" : "object",
+      "description" : "Trust Edge Record - Durable directed trust assertion for an SDN trust graph.\n\nA TRE records one directed truster -> trustee assertion. The current trust\ngraph is a projection over the latest TRE records by EDGE_ID, with deleted\nrecords acting as tombstones. Implementations must still validate the\nprojected graph for acyclicity before accepting it.",
+      "properties" : {
+        "EDGE_ID" : {
+                "type" : "string",
+                "description" : "Stable edge identifier, normally \"truster->trustee\"."
+              },
+        "TRUSTER_ID" : {
+                "type" : "string",
+                "description" : "Trusting node identifier."
+              },
+        "TRUSTEE_ID" : {
+                "type" : "string",
+                "description" : "Trusted node identifier."
+              },
+        "WEIGHT" : {
+                "type" : "number",
+                "description" : "Truster-assigned edge weight in the range [0, 1]."
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp in milliseconds when this edge was last updated."
+              },
+        "DELETED" : {
+                "type" : "boolean",
+                "description" : "True when this record tombstones the edge from the current graph."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the node/provider that issued this trust edge record."
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Provider signature over the trust edge record."
+              }
+      },
+      "required" : ["TRUSTER_ID", "TRUSTEE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/TRE"
+}

@@ -38,6 +38,8 @@ const descriptionOverrides = {
   "TKG": "Tracking Filters - Kalman, IMM, JPDA, MHT with motion models",
   "STF": "Data Storefront - marketplace listings with pricing and access types",
   "PLG": "Plugin Marketplace Manifest - canonical signed storefront and WASM distribution metadata",
+  "TNR": "Trust Node Record - durable SDN trust graph node state and tombstones",
+  "TRE": "Trust Edge Record - directed SDN trust assertions, weights, and tombstones",
   "REC": "Record Union - universal polymorphic record type for all standards",
   "ACR": "Aircraft - types, flight phases, engines, aerodynamics",
   "ARM": "Armor Penetration - materials, ammunition types, penetration calculations",
@@ -204,6 +206,7 @@ const categories = [
   { tag: "Security", types: ["EME","ENC","EPM","PLK"] },
   { tag: "Reference", types: ["RFM","CRD","TIM","TME","MET","LCC","CTR","SIT","SCM"] },
   { tag: "Exchange", types: ["CRM","PNM","ACL","PUR","REV","REC","STF","PLG"] },
+  { tag: "Network Operations", types: ["TNR","TRE"] },
   { tag: "Geospatial", types: ["GJN","CZM","KML","GPX","COT"] },
 ];
 for (const cat of categories) {
