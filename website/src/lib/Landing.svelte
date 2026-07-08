@@ -760,6 +760,7 @@ CN_N           = 6.789e-3`
 
     const gridSize = 60;
     const dataStrings: { x: number; y: number; text: string; opacity: number; speed: number }[] = [];
+    let isActive = true;
 
     // Sample hex/binary data strings
     const dataFragments = [
@@ -770,6 +771,7 @@ CN_N           = 6.789e-3`
     ];
 
     function resize() {
+      if (!isActive || !canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       initDataStrings();
@@ -790,6 +792,8 @@ CN_N           = 6.789e-3`
     }
 
     function draw() {
+      if (!isActive || !canvas) return;
+
       // Clear with dark background
       ctx.fillStyle = '#030308';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -854,27 +858,31 @@ CN_N           = 6.789e-3`
     draw();
 
     return () => {
+      isActive = false;
       window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrame);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
     };
   }
 
-  onMount(async () => {
+  onMount(() => {
     // Fetch actual schema count from manifest
-    try {
-      const response = await fetch('/dist/manifest.json');
-      const manifest = await response.json();
-      schemaCount = Object.keys(manifest.STANDARDS || {}).length;
-    } catch (e) {
-      schemaCount = 166; // Fallback count
-    }
+    void (async () => {
+      try {
+        const response = await fetch('/dist/manifest.json');
+        const manifest = await response.json();
+        schemaCount = Object.keys(manifest.STANDARDS || {}).length;
+      } catch (e) {
+        schemaCount = 166; // Fallback count
+      }
+    })();
+
     const cleanup = initTechBackground();
     loadEditorSample('tle');
     return cleanup;
   });
 </script>
 
-<canvas bind:this={canvas} class="starfield"></canvas>
+<canvas bind:this={canvas} class="tech-grid-background"></canvas>
 
 <section class="hero">
   <h1 class="hero-title">Space Data Standards</h1>
@@ -1597,7 +1605,7 @@ CN_N           = 6.789e-3`
 </section>
 
 <style>
-  .starfield {
+  .tech-grid-background {
     position: fixed;
     top: 0;
     left: 0;

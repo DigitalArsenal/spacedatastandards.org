@@ -38,7 +38,7 @@
   });
 </script>
 
-<div class="starfield"></div>
+<div class="site-grid-background" aria-hidden="true"></div>
 <Nav {currentPath} />
 <main>
   <Router {routes} />

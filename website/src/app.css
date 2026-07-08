@@ -76,71 +76,32 @@ a {
 }
 
 /* ============================================
-   STARFIELD BACKGROUND
+   SITE GRID BACKGROUND
    ============================================ */
-.starfield {
+.site-grid-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: -2;
-  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  background:
+    radial-gradient(ellipse at center, rgba(0, 119, 182, 0.14) 0%, rgba(3, 3, 8, 0) 58%),
+    linear-gradient(rgba(0, 119, 182, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 119, 182, 0.08) 1px, transparent 1px),
+    #030308;
+  background-size: 100% 100%, 60px 60px, 60px 60px, 100% 100%;
   overflow: hidden;
+  pointer-events: none;
 }
 
-.starfield::before,
-.starfield::after {
+.site-grid-background::before {
   content: '';
   position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow:
-    50vw 20vh 0 0 rgba(255,255,255,0.8),
-    10vw 40vh 0 0 rgba(255,255,255,0.6),
-    80vw 10vh 0 0 rgba(255,255,255,0.4),
-    30vw 70vh 0 0 rgba(255,255,255,0.5),
-    60vw 50vh 0 0 rgba(255,255,255,0.7),
-    90vw 80vh 0 0 rgba(255,255,255,0.3),
-    15vw 90vh 0 0 rgba(255,255,255,0.6),
-    45vw 30vh 0 0 rgba(255,255,255,0.4),
-    75vw 60vh 0 0 rgba(255,255,255,0.5),
-    25vw 15vh 0 0 rgba(255,255,255,0.7),
-    5vw 55vh 0 0 rgba(255,255,255,0.4),
-    85vw 35vh 0 0 rgba(255,255,255,0.6),
-    40vw 85vh 0 0 rgba(255,255,255,0.5),
-    70vw 25vh 0 0 rgba(255,255,255,0.3),
-    20vw 60vh 0 0 rgba(255,255,255,0.7),
-    55vw 75vh 0 0 rgba(255,255,255,0.4),
-    95vw 45vh 0 0 rgba(255,255,255,0.5),
-    35vw 5vh 0 0 rgba(255,255,255,0.6),
-    65vw 95vh 0 0 rgba(255,255,255,0.4),
-    8vw 25vh 0 0 rgba(255,255,255,0.8);
-  animation: twinkle 4s ease-in-out infinite;
-}
-
-.starfield::after {
-  width: 1px;
-  height: 1px;
-  box-shadow:
-    12vw 18vh 0 0 rgba(255,255,255,0.5),
-    28vw 42vh 0 0 rgba(255,255,255,0.4),
-    48vw 8vh 0 0 rgba(255,255,255,0.3),
-    62vw 68vh 0 0 rgba(255,255,255,0.4),
-    78vw 28vh 0 0 rgba(255,255,255,0.5),
-    92vw 58vh 0 0 rgba(255,255,255,0.3),
-    18vw 78vh 0 0 rgba(255,255,255,0.4),
-    38vw 38vh 0 0 rgba(255,255,255,0.3),
-    58vw 88vh 0 0 rgba(255,255,255,0.4),
-    82vw 12vh 0 0 rgba(255,255,255,0.5);
-  animation: twinkle 6s ease-in-out infinite reverse;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0, 119, 182, 0.18) 1px, transparent 1.5px);
+  background-size: 60px 60px;
+  opacity: 0.75;
 }
 
 /* ============================================
