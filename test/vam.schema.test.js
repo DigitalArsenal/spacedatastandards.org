@@ -34,19 +34,20 @@ describe("VAM schema generation", () => {
       "table VAMQualityDimension",
       "table VAMVariant",
       "table VAMReview",
+      "table VAMMetadataOnlyReview",
       "table VAMAnnotation",
       "SCALE:VAMScale3",
       "REDISTRIBUTION_PERMISSION:visualAssetPermissionDecision = UNKNOWN",
       "DERIVATIVE_PERMISSION:visualAssetPermissionDecision = UNKNOWN",
       "REVIEWER_ID:string (required)",
-      "CAPABILITY_ID:string (required)",
+      "CAPABILITY_ID:string;",
       "REVIEWER_ROLE:visualAssetReviewerRole = VIEWER",
       "REPOSITORY:string (required)",
       "ISSUE_NUMBER:string (required)",
       "VAM_ID:string (required)",
       "NONCE:string (required)",
       "CANDIDATE_ID:string (required)",
-      "CANDIDATE_SHA256:string;",
+      "CANDIDATE_SHA256:string (required)",
       "CANDIDATE_METADATA_SHA256:string (required)",
       "DECIDED_AT:string (required)",
       "REVIEWED_TRANSFORM:VAMTransform",
@@ -72,13 +73,14 @@ describe("VAM schema generation", () => {
       "role authorization",
       "VARIANTS:[VAMVariant]",
       "REVIEW:VAMReview",
+      "METADATA_REVIEW:VAMMetadataOnlyReview",
       "root_type VAM;",
       'file_identifier "$VAM";',
     ]) {
       assert.match(source, escapedTokenRegex(token));
     }
     assert.match(source, /\btable\s+VAM\s*\{/);
-    assert.doesNotMatch(source, /CANDIDATE_SHA256:string\s*\(required\)/);
+    assert.doesNotMatch(source, /table\s+VAMReview\s*\{[^}]*CAPABILITY_ID:string\s*\(required\)/);
     assert.match(source, /table\s+VAMAnnotation\s*\{\s*ID:string \(required\);\s*KIND:string \(required\);\s*MESSAGE:string \(required\);\s*POSITION:VAMVector3;/s);
     assert.match(source, /table\s+VAMReview\s*\{[\s\S]*?REPOSITORY:string \(required\);[\s\S]*?ENTITY_ID:string \(required\);[\s\S]*?VAM_ID:string \(required\);/);
 
@@ -96,8 +98,14 @@ describe("VAM schema generation", () => {
       "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256",
       "DECIDED_AT", "REASONS", "COMMENT", "ENVELOPE_SHA256", "SIGNATURE", "SIGNATURE_TYPE",
       "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
-      "CANDIDATE_METADATA_SHA256", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
+      "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
     ]);
+    assert.deepEqual(tableFields("VAMMetadataOnlyReview"), [
+      "REVIEWER_ID", "CAPABILITY_ID", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
+      "DECISION", "CANDIDATE_ID", "CANDIDATE_METADATA_SHA256", "DECIDED_AT", "REASONS", "COMMENT", "ANNOTATIONS",
+      "ENVELOPE_SHA256", "SIGNATURE", "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256",
+    ]);
+    assert.equal(tableFields("VAM").at(-1), "METADATA_REVIEW");
     assert.match(source, /RFC 8785[^\n]*VAMSource projection/);
 
     const reviewProjection = source.slice(source.indexOf("/// The review-envelope projection"), source.indexOf("table VAMReview"));
@@ -105,7 +113,7 @@ describe("VAM schema generation", () => {
     for (const field of [
       "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "DECIDED_AT",
       "REASONS", "COMMENT", "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER",
-      "ENTITY_ID", "VAM_ID", "NONCE", "CANDIDATE_METADATA_SHA256", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID",
+      "ENTITY_ID", "VAM_ID", "NONCE", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID",
       "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
     ]) {
       const nextOffset = reviewProjection.indexOf(field, projectionOffset + 1);

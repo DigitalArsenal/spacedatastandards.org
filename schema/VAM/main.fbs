@@ -186,21 +186,20 @@ table VAMVariant {
   RANK:uint;
 }
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256 when present; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; CANDIDATE_METADATA_SHA256; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
 /// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
 /// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
-/// Before trusting DECISION, a verifier must enforce conditional decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate and metadata binding.
-/// APPROVE_METADATA_ONLY requires CANDIDATE_METADATA_SHA256 and, when bytes were not acquired, absent CANDIDATE_CID and CANDIDATE_SHA256. Binary approval requires both CANDIDATE_CID and CANDIDATE_SHA256.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. The binary-backed validation profile requires CAPABILITY_ID even though its wire slot remains optional for compatibility. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 table VAMReview {
   REVIEWER_ID:string (required);
-  CAPABILITY_ID:string (required);
+  CAPABILITY_ID:string;
   DECISION:visualAssetDecisionKind = NONE;
   CANDIDATE_ID:string (required);
   /// Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
   CANDIDATE_CID:string;
-  /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes. Validation profiles require it for approve, reject, or request-changes decisions on an acquired binary; it MUST be absent for a metadata-only source with no acquired bytes.
-  CANDIDATE_SHA256:string;
+  /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
+  CANDIDATE_SHA256:string (required);
   /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
   DECIDED_AT:string (required);
   REASONS:[string];
@@ -222,14 +221,39 @@ table VAMReview {
   VAM_ID:string (required);
   /// Unique opaque identifier containing at least 128 bits of entropy.
   NONCE:string (required);
-  /// 64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
-  /// The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
-  /// A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
-  CANDIDATE_METADATA_SHA256:string (required);
   REVIEWED_TRANSFORM:VAMTransform;
   CANONICAL_VARIANT_ID:string;
   ALTERNATE_VARIANT_IDS:[string];
   ANNOTATIONS:[VAMAnnotation];
+}
+
+/// Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+/// The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+/// Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+/// The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+table VAMMetadataOnlyReview {
+  REVIEWER_ID:string (required);
+  CAPABILITY_ID:string (required);
+  REVIEWER_ROLE:visualAssetReviewerRole = VIEWER;
+  REPOSITORY:string (required);
+  ISSUE_NUMBER:string (required);
+  ENTITY_ID:string (required);
+  VAM_ID:string (required);
+  NONCE:string (required);
+  DECISION:visualAssetDecisionKind = APPROVE_METADATA_ONLY;
+  CANDIDATE_ID:string (required);
+  /// 64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+  /// The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+  /// A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+  CANDIDATE_METADATA_SHA256:string (required);
+  DECIDED_AT:string (required);
+  REASONS:[string];
+  COMMENT:string;
+  ANNOTATIONS:[VAMAnnotation];
+  ENVELOPE_SHA256:string (required);
+  SIGNATURE:[ubyte] (required);
+  SIGNATURE_TYPE:string (required);
+  PREVIOUS_DECISION_SHA256:string;
 }
 
 /// Visual Asset Manifest — ranked visual representations for one stable entity.
@@ -254,6 +278,8 @@ table VAM {
   SUPERSEDES_VAM_CID:string;
   /// CIDv1 containing a multihash of the exact referenced DPM bytes.
   DPM_CID:string;
+  /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  METADATA_REVIEW:VAMMetadataOnlyReview;
 }
 
 root_type VAM;
