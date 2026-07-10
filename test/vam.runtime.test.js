@@ -4,6 +4,7 @@ import { readFB, standards, writeFB } from '../index.js';
 describe('VAM runtime', () => {
   it('round-trips a reviewed IPFS GLB variant', () => {
     const {
+      VAMAnnotationT,
       VAMMetricsT,
       VAMQualityDimensionT,
       VAMQuaternionT,
@@ -18,6 +19,7 @@ describe('VAM runtime', () => {
       visualAssetDecisionKind,
       visualAssetLicenseClass,
       visualAssetPermissionDecision,
+      visualAssetReviewerRole,
       visualAssetReviewState,
       visualAssetUpAxis,
       visualAssetVariantKind
@@ -106,7 +108,16 @@ describe('VAM runtime', () => {
       METRICS: metrics,
       VALIDATION: validation,
       QUALITY: [quality],
-      REVIEW_STATE: visualAssetReviewState.APPROVED
+      REVIEW_STATE: visualAssetReviewState.APPROVED,
+      RANK: 0
+    });
+
+    const annotation = new VAMAnnotationT();
+    Object.assign(annotation, {
+      ID: 'annotation-001',
+      KIND: 'review-note',
+      MESSAGE: 'Canonical orientation confirmed',
+      POSITION: new VAMVector3T(0, 0, 0)
     });
 
     const review = new VAMReviewT();
@@ -122,7 +133,17 @@ describe('VAM runtime', () => {
       COMMENT: 'Approved for canonical visual asset publication',
       ENVELOPE_SHA256: envelopeSha256,
       SIGNATURE: [1, 2, 3, 4],
-      SIGNATURE_TYPE: 'Ed25519'
+      SIGNATURE_TYPE: 'Ed25519',
+      REVIEWER_ROLE: visualAssetReviewerRole.REVIEWER,
+      REPOSITORY: 'DigitalArsenal/asset-models',
+      ISSUE_NUMBER: '42',
+      ENTITY_ID: 'nasa/cassini',
+      VAM_ID: 'vam-cassini-001',
+      NONCE: '018f47a2-6b8d-7c91-a234-567890abcdef',
+      REVIEWED_TRANSFORM: transform,
+      CANONICAL_VARIANT_ID: variant.ID,
+      ALTERNATE_VARIANT_IDS: [],
+      ANNOTATIONS: [annotation]
     });
 
     const manifest = new VAMT();
@@ -132,6 +153,7 @@ describe('VAM runtime', () => {
       ENTITY_ID: 'nasa/cassini',
       ENTITY_KIND: 'spacecraft',
       CANONICAL_VARIANT_ID: variant.ID,
+      ALTERNATE_VARIANT_IDS: [],
       VARIANTS: [variant],
       REVIEW: review,
       REVIEW_STATE: visualAssetReviewState.APPROVED,
@@ -146,9 +168,11 @@ describe('VAM runtime', () => {
     assert.equal(decoded.ENTITY_ID, manifest.ENTITY_ID);
     assert.equal(decoded.ENTITY_KIND, manifest.ENTITY_KIND);
     assert.equal(decoded.CANONICAL_VARIANT_ID, variant.ID);
+    assert.deepEqual(decoded.ALTERNATE_VARIANT_IDS, []);
     assert.equal(decoded.REVIEW_STATE, visualAssetReviewState.APPROVED);
     assert.equal(decoded.CREATED_AT, manifest.CREATED_AT);
     assert.equal(decoded.UPDATED_AT, manifest.UPDATED_AT);
+    assert.equal(decoded.METADATA_REVIEW, null);
     assert.equal(decoded.VARIANTS.length, 1);
 
     const decodedVariant = decoded.VARIANTS[0];
@@ -162,6 +186,7 @@ describe('VAM runtime', () => {
     assert.equal(decodedVariant.MULTIFORMAT_ADDRESS, `/ipfs/${cid}`);
     assert.equal(decodedVariant.GLTF_VERSION, '2.0');
     assert.equal(decodedVariant.REVIEW_STATE, visualAssetReviewState.APPROVED);
+    assert.equal(decodedVariant.RANK, 0);
 
     const decodedSource = decodedVariant.SOURCE;
     assert.equal(decodedSource.SOURCE_RECORD_ID, 'nasa/cassini');
@@ -255,5 +280,33 @@ describe('VAM runtime', () => {
     assert.equal(decodedReview.ENVELOPE_SHA256, envelopeSha256);
     assert.deepEqual(decodedReview.SIGNATURE, [1, 2, 3, 4]);
     assert.equal(decodedReview.SIGNATURE_TYPE, 'Ed25519');
+    assert.equal(decodedReview.REVIEWER_ROLE, visualAssetReviewerRole.REVIEWER);
+    assert.equal(decodedReview.REPOSITORY, 'DigitalArsenal/asset-models');
+    assert.equal(decodedReview.ISSUE_NUMBER, '42');
+    assert.equal(decodedReview.ENTITY_ID, manifest.ENTITY_ID);
+    assert.equal(decodedReview.VAM_ID, manifest.ID);
+    assert.equal(decodedReview.NONCE, '018f47a2-6b8d-7c91-a234-567890abcdef');
+    assert.deepEqual(
+      [
+        decodedReview.REVIEWED_TRANSFORM.SCALE.X,
+        decodedReview.REVIEWED_TRANSFORM.SCALE.Y,
+        decodedReview.REVIEWED_TRANSFORM.SCALE.Z
+      ],
+      [1, 1, 1]
+    );
+    assert.equal(decodedReview.CANONICAL_VARIANT_ID, variant.ID);
+    assert.deepEqual(decodedReview.ALTERNATE_VARIANT_IDS, []);
+    assert.equal(decodedReview.ANNOTATIONS.length, 1);
+    assert.equal(decodedReview.ANNOTATIONS[0].ID, 'annotation-001');
+    assert.equal(decodedReview.ANNOTATIONS[0].KIND, 'review-note');
+    assert.equal(decodedReview.ANNOTATIONS[0].MESSAGE, 'Canonical orientation confirmed');
+    assert.deepEqual(
+      [
+        decodedReview.ANNOTATIONS[0].POSITION.X,
+        decodedReview.ANNOTATIONS[0].POSITION.Y,
+        decodedReview.ANNOTATIONS[0].POSITION.Z
+      ],
+      [0, 0, 0]
+    );
   });
 });
