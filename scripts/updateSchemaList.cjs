@@ -51,7 +51,7 @@ const CATEGORY_MAP = {
   'BOV': 'Spacecraft', 'PLD': 'Spacecraft', 'ROC': 'Spacecraft', 'SIT': 'Spacecraft',
   'SCM': 'Spacecraft', 'PRG': 'Spacecraft', 'MFE': 'Spacecraft',
   'BUS': 'Spacecraft', 'OOA': 'Spacecraft', 'OOB': 'Spacecraft',
-  'OOS': 'Spacecraft', 'OOT': 'Spacecraft',
+  'OOS': 'Spacecraft', 'OOT': 'Spacecraft', 'VAM': 'Spacecraft',
 
   // Communications
   'COM': 'Communications', 'CHN': 'Communications', 'SPP': 'Communications',

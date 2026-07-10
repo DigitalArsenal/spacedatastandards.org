@@ -43,6 +43,7 @@ const descriptionOverrides = {
   "PGM": "Peer Group Membership Record - durable SDN peer group membership state and tombstones",
   "PRR": "Peer Registry Record - durable SDN trusted-peer registry state and tombstones",
   "REC": "Record Union - universal polymorphic record type for all standards",
+  "VAM": "Visual Asset Manifest - ranked 3D models, LODs, transforms, provenance, licensing, review, and IPFS content identity",
   "ACR": "Aircraft - types, flight phases, engines, aerodynamics",
   "ARM": "Armor Penetration - materials, ammunition types, penetration calculations",
   "BAL": "Ballistics - drag models, projectile types, trajectory computation",
@@ -55,6 +56,7 @@ const descriptionOverrides = {
 };
 
 const keywordsMap = {
+  "VAM": ["visual asset", "3D model", "GLB", "glTF", "LOD", "IPFS", "CID", "license", "review"],
   "OMM": ["orbit", "satellite", "TLE", "two-line element", "keplerian", "mean motion", "SGP4", "NORAD", "propagation", "ephemeris", "inclination", "eccentricity", "BSTAR", "space-track"],
   "OEM": ["orbit", "ephemeris", "trajectory", "position", "velocity", "propagation", "state vector", "CCSDS"],
   "OPM": ["orbit", "parameter", "state vector", "keplerian", "maneuver", "delta-v", "CCSDS"],
@@ -202,7 +204,7 @@ const categories = [
   { tag: "Comms", types: ["COM","CMS","CHN","TPN","RFB","RFE","LKS","BEM","BMC"] },
   { tag: "Environment", types: ["ENV","SEO","SEV","ION","ATM","SPW","WTH","GRV","EOP","PHY","TRN","STR"] },
   { tag: "Launch", types: ["LDM","LND","LNE","ROC","RDM"] },
-  { tag: "Vehicle", types: ["BUS","PLD","GEO","DFH","PRG"] },
+  { tag: "Vehicle", types: ["BUS","PLD","GEO","DFH","PRG","VAM"] },
   { tag: "Defense", types: ["ACR","GVH","HEL","MSL","MST","NAV","ARM","BAL","DMG","EWR","FCS","WPN","SON"] },
   { tag: "Protocol", types: ["SPP","AOF","TCF","TMF","CFP","CLT","RAF","RCF","SDL","XTC"] },
   { tag: "Security", types: ["EME","ENC","EPM","PLK"] },

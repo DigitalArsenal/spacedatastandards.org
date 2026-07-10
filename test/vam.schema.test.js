@@ -61,6 +61,21 @@ describe("VAM schema generation", () => {
     assert.match(source, /\btable\s+VAM\s*\{/);
   });
 
+  it("registers VAM for visual-asset discovery", async () => {
+    const [embeddingsSource, schemaListSource] = await Promise.all([
+      readUtf8("scripts/generateSchemaEmbeddings.js"),
+      readUtf8("scripts/updateSchemaList.cjs"),
+    ]);
+
+    assert.match(embeddingsSource, /"VAM": "Visual Asset Manifest/);
+    assert.match(
+      embeddingsSource,
+      /"VAM": \["visual asset", "3D model", "GLB", "glTF", "LOD", "IPFS", "CID", "license", "review"\]/,
+    );
+    assert.match(embeddingsSource, /\{ tag: "Vehicle", types: \[[^\]]*"VAM"[^\]]*\]/);
+    assert.match(schemaListSource, /'VAM': 'Spacecraft'/);
+  });
+
   it("generates VAM bindings and augmented schema metadata", async function () {
     const source = await readUtf8("schema/VAM/main.fbs");
     // Generated checks become mandatory once generateVersion.py marks the schema as built; after the header exists, any missing artifact remains a failure.
