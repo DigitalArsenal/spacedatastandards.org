@@ -25,6 +25,9 @@ struct VAMQuaternionBuilder;
 struct VAMTransform;
 struct VAMTransformBuilder;
 
+struct VAMAnnotation;
+struct VAMAnnotationBuilder;
+
 struct VAMSource;
 struct VAMSourceBuilder;
 
@@ -42,6 +45,9 @@ struct VAMVariantBuilder;
 
 struct VAMReview;
 struct VAMReviewBuilder;
+
+struct VAMMetadataOnlyReview;
+struct VAMMetadataOnlyReviewBuilder;
 
 struct VAM;
 struct VAMBuilder;
@@ -287,6 +293,40 @@ inline const char *EnumNamevisualAssetDecisionKind(visualAssetDecisionKind e) {
   if (::flatbuffers::IsOutRange(e, visualAssetDecisionKind_NONE, visualAssetDecisionKind_SELECT_ALTERNATE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesvisualAssetDecisionKind()[index];
+}
+
+/// Reviewer authorization role. Append new values only; never reorder or reuse existing values.
+enum visualAssetReviewerRole : int8_t {
+  visualAssetReviewerRole_VIEWER = 0,
+  visualAssetReviewerRole_REVIEWER = 1,
+  visualAssetReviewerRole_ADMIN = 2,
+  visualAssetReviewerRole_MIN = visualAssetReviewerRole_VIEWER,
+  visualAssetReviewerRole_MAX = visualAssetReviewerRole_ADMIN
+};
+
+inline const visualAssetReviewerRole (&EnumValuesvisualAssetReviewerRole())[3] {
+  static const visualAssetReviewerRole values[] = {
+    visualAssetReviewerRole_VIEWER,
+    visualAssetReviewerRole_REVIEWER,
+    visualAssetReviewerRole_ADMIN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesvisualAssetReviewerRole() {
+  static const char * const names[4] = {
+    "VIEWER",
+    "REVIEWER",
+    "ADMIN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamevisualAssetReviewerRole(visualAssetReviewerRole e) {
+  if (::flatbuffers::IsOutRange(e, visualAssetReviewerRole_VIEWER, visualAssetReviewerRole_ADMIN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesvisualAssetReviewerRole()[index];
 }
 
 /// Three-dimensional vector.
@@ -616,6 +656,103 @@ inline ::flatbuffers::Offset<VAMTransform> CreateVAMTransformDirect(
       SOURCE_UNITS__,
       METERS_PER_SOURCE_UNIT,
       ORIGIN_NOTE__);
+}
+
+/// Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
+struct VAMAnnotation FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VAMAnnotationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_KIND = 6,
+    VT_MESSAGE = 8,
+    VT_POSITION = 10
+  };
+  const ::flatbuffers::String *ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID);
+  }
+  const ::flatbuffers::String *KIND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KIND);
+  }
+  const ::flatbuffers::String *MESSAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE);
+  }
+  const VAMVector3 *POSITION() const {
+    return GetPointer<const VAMVector3 *>(VT_POSITION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_ID) &&
+           verifier.VerifyString(ID()) &&
+           VerifyOffsetRequired(verifier, VT_KIND) &&
+           verifier.VerifyString(KIND()) &&
+           VerifyOffsetRequired(verifier, VT_MESSAGE) &&
+           verifier.VerifyString(MESSAGE()) &&
+           VerifyOffset(verifier, VT_POSITION) &&
+           verifier.VerifyTable(POSITION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct VAMAnnotationBuilder {
+  typedef VAMAnnotation Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
+    fbb_.AddOffset(VAMAnnotation::VT_ID, ID);
+  }
+  void add_KIND(::flatbuffers::Offset<::flatbuffers::String> KIND) {
+    fbb_.AddOffset(VAMAnnotation::VT_KIND, KIND);
+  }
+  void add_MESSAGE(::flatbuffers::Offset<::flatbuffers::String> MESSAGE) {
+    fbb_.AddOffset(VAMAnnotation::VT_MESSAGE, MESSAGE);
+  }
+  void add_POSITION(::flatbuffers::Offset<VAMVector3> POSITION) {
+    fbb_.AddOffset(VAMAnnotation::VT_POSITION, POSITION);
+  }
+  explicit VAMAnnotationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VAMAnnotation> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VAMAnnotation>(end);
+    fbb_.Required(o, VAMAnnotation::VT_ID);
+    fbb_.Required(o, VAMAnnotation::VT_KIND);
+    fbb_.Required(o, VAMAnnotation::VT_MESSAGE);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VAMAnnotation> CreateVAMAnnotation(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> KIND = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0,
+    ::flatbuffers::Offset<VAMVector3> POSITION = 0) {
+  VAMAnnotationBuilder builder_(_fbb);
+  builder_.add_POSITION(POSITION);
+  builder_.add_MESSAGE(MESSAGE);
+  builder_.add_KIND(KIND);
+  builder_.add_ID(ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<VAMAnnotation> CreateVAMAnnotationDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ID = nullptr,
+    const char *KIND = nullptr,
+    const char *MESSAGE = nullptr,
+    ::flatbuffers::Offset<VAMVector3> POSITION = 0) {
+  auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto KIND__ = KIND ? _fbb.CreateString(KIND) : 0;
+  auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
+  return CreateVAMAnnotation(
+      _fbb,
+      ID__,
+      KIND__,
+      MESSAGE__,
+      POSITION);
 }
 
 /// Provenance and license metadata for an asset source.
@@ -1187,7 +1324,8 @@ struct VAMVariant FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_VALIDATION = 42,
     VT_QUALITY = 44,
     VT_REVIEW_STATE = 46,
-    VT_SUPERSEDES_VARIANT_ID = 48
+    VT_SUPERSEDES_VARIANT_ID = 48,
+    VT_RANK = 50
   };
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
@@ -1264,6 +1402,10 @@ struct VAMVariant FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SUPERSEDES_VARIANT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SUPERSEDES_VARIANT_ID);
   }
+  /// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+  uint32_t RANK() const {
+    return GetField<uint32_t>(VT_RANK, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1310,6 +1452,7 @@ struct VAMVariant FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<int8_t>(verifier, VT_REVIEW_STATE, 1) &&
            VerifyOffset(verifier, VT_SUPERSEDES_VARIANT_ID) &&
            verifier.VerifyString(SUPERSEDES_VARIANT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_RANK, 4) &&
            verifier.EndTable();
   }
 };
@@ -1387,6 +1530,9 @@ struct VAMVariantBuilder {
   void add_SUPERSEDES_VARIANT_ID(::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_VARIANT_ID) {
     fbb_.AddOffset(VAMVariant::VT_SUPERSEDES_VARIANT_ID, SUPERSEDES_VARIANT_ID);
   }
+  void add_RANK(uint32_t RANK) {
+    fbb_.AddElement<uint32_t>(VAMVariant::VT_RANK, RANK, 0);
+  }
   explicit VAMVariantBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1423,9 +1569,11 @@ inline ::flatbuffers::Offset<VAMVariant> CreateVAMVariant(
     ::flatbuffers::Offset<VAMValidation> VALIDATION = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMQualityDimension>>> QUALITY = 0,
     visualAssetReviewState REVIEW_STATE = visualAssetReviewState_DISCOVERED,
-    ::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_VARIANT_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_VARIANT_ID = 0,
+    uint32_t RANK = 0) {
   VAMVariantBuilder builder_(_fbb);
   builder_.add_BYTE_LENGTH(BYTE_LENGTH);
+  builder_.add_RANK(RANK);
   builder_.add_SUPERSEDES_VARIANT_ID(SUPERSEDES_VARIANT_ID);
   builder_.add_QUALITY(QUALITY);
   builder_.add_VALIDATION(VALIDATION);
@@ -1475,7 +1623,8 @@ inline ::flatbuffers::Offset<VAMVariant> CreateVAMVariantDirect(
     ::flatbuffers::Offset<VAMValidation> VALIDATION = 0,
     const std::vector<::flatbuffers::Offset<VAMQualityDimension>> *QUALITY = nullptr,
     visualAssetReviewState REVIEW_STATE = visualAssetReviewState_DISCOVERED,
-    const char *SUPERSEDES_VARIANT_ID = nullptr) {
+    const char *SUPERSEDES_VARIANT_ID = nullptr,
+    uint32_t RANK = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto PARENT_VARIANT_ID__ = PARENT_VARIANT_ID ? _fbb.CreateString(PARENT_VARIANT_ID) : 0;
   auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
@@ -1515,12 +1664,16 @@ inline ::flatbuffers::Offset<VAMVariant> CreateVAMVariantDirect(
       VALIDATION,
       QUALITY__,
       REVIEW_STATE,
-      SUPERSEDES_VARIANT_ID__);
+      SUPERSEDES_VARIANT_ID__,
+      RANK);
 }
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VAMReviewBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1536,7 +1689,17 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ENVELOPE_SHA256 = 22,
     VT_SIGNATURE = 24,
     VT_SIGNATURE_TYPE = 26,
-    VT_PREVIOUS_DECISION_SHA256 = 28
+    VT_PREVIOUS_DECISION_SHA256 = 28,
+    VT_REVIEWER_ROLE = 30,
+    VT_REPOSITORY = 32,
+    VT_ISSUE_NUMBER = 34,
+    VT_ENTITY_ID = 36,
+    VT_VAM_ID = 38,
+    VT_NONCE = 40,
+    VT_REVIEWED_TRANSFORM = 42,
+    VT_CANONICAL_VARIANT_ID = 44,
+    VT_ALTERNATE_VARIANT_IDS = 46,
+    VT_ANNOTATIONS = 48
   };
   const ::flatbuffers::String *REVIEWER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REVIEWER_ID);
@@ -1554,7 +1717,7 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CANDIDATE_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CANDIDATE_CID);
   }
-  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
   const ::flatbuffers::String *CANDIDATE_SHA256() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CANDIDATE_SHA256);
   }
@@ -1583,6 +1746,39 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// 64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
   const ::flatbuffers::String *PREVIOUS_DECISION_SHA256() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PREVIOUS_DECISION_SHA256);
+  }
+  visualAssetReviewerRole REVIEWER_ROLE() const {
+    return static_cast<visualAssetReviewerRole>(GetField<int8_t>(VT_REVIEWER_ROLE, 0));
+  }
+  /// Canonical repository identifier in owner/name form.
+  const ::flatbuffers::String *REPOSITORY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REPOSITORY);
+  }
+  /// Positive base-10 issue number digits with no leading zero.
+  const ::flatbuffers::String *ISSUE_NUMBER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ISSUE_NUMBER);
+  }
+  const ::flatbuffers::String *ENTITY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_ID);
+  }
+  const ::flatbuffers::String *VAM_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VAM_ID);
+  }
+  /// Unique opaque identifier containing at least 128 bits of entropy.
+  const ::flatbuffers::String *NONCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NONCE);
+  }
+  const VAMTransform *REVIEWED_TRANSFORM() const {
+    return GetPointer<const VAMTransform *>(VT_REVIEWED_TRANSFORM);
+  }
+  const ::flatbuffers::String *CANONICAL_VARIANT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CANONICAL_VARIANT_ID);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_VARIANT_IDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALTERNATE_VARIANT_IDS);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *>(VT_ANNOTATIONS);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1613,6 +1809,27 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SIGNATURE_TYPE()) &&
            VerifyOffset(verifier, VT_PREVIOUS_DECISION_SHA256) &&
            verifier.VerifyString(PREVIOUS_DECISION_SHA256()) &&
+           VerifyField<int8_t>(verifier, VT_REVIEWER_ROLE, 1) &&
+           VerifyOffset(verifier, VT_REPOSITORY) &&
+           verifier.VerifyString(REPOSITORY()) &&
+           VerifyOffset(verifier, VT_ISSUE_NUMBER) &&
+           verifier.VerifyString(ISSUE_NUMBER()) &&
+           VerifyOffset(verifier, VT_ENTITY_ID) &&
+           verifier.VerifyString(ENTITY_ID()) &&
+           VerifyOffset(verifier, VT_VAM_ID) &&
+           verifier.VerifyString(VAM_ID()) &&
+           VerifyOffset(verifier, VT_NONCE) &&
+           verifier.VerifyString(NONCE()) &&
+           VerifyOffset(verifier, VT_REVIEWED_TRANSFORM) &&
+           verifier.VerifyTable(REVIEWED_TRANSFORM()) &&
+           VerifyOffset(verifier, VT_CANONICAL_VARIANT_ID) &&
+           verifier.VerifyString(CANONICAL_VARIANT_ID()) &&
+           VerifyOffset(verifier, VT_ALTERNATE_VARIANT_IDS) &&
+           verifier.VerifyVector(ALTERNATE_VARIANT_IDS()) &&
+           verifier.VerifyVectorOfStrings(ALTERNATE_VARIANT_IDS()) &&
+           VerifyOffset(verifier, VT_ANNOTATIONS) &&
+           verifier.VerifyVector(ANNOTATIONS()) &&
+           verifier.VerifyVectorOfTables(ANNOTATIONS()) &&
            verifier.EndTable();
   }
 };
@@ -1660,6 +1877,36 @@ struct VAMReviewBuilder {
   void add_PREVIOUS_DECISION_SHA256(::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_DECISION_SHA256) {
     fbb_.AddOffset(VAMReview::VT_PREVIOUS_DECISION_SHA256, PREVIOUS_DECISION_SHA256);
   }
+  void add_REVIEWER_ROLE(visualAssetReviewerRole REVIEWER_ROLE) {
+    fbb_.AddElement<int8_t>(VAMReview::VT_REVIEWER_ROLE, static_cast<int8_t>(REVIEWER_ROLE), 0);
+  }
+  void add_REPOSITORY(::flatbuffers::Offset<::flatbuffers::String> REPOSITORY) {
+    fbb_.AddOffset(VAMReview::VT_REPOSITORY, REPOSITORY);
+  }
+  void add_ISSUE_NUMBER(::flatbuffers::Offset<::flatbuffers::String> ISSUE_NUMBER) {
+    fbb_.AddOffset(VAMReview::VT_ISSUE_NUMBER, ISSUE_NUMBER);
+  }
+  void add_ENTITY_ID(::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID) {
+    fbb_.AddOffset(VAMReview::VT_ENTITY_ID, ENTITY_ID);
+  }
+  void add_VAM_ID(::flatbuffers::Offset<::flatbuffers::String> VAM_ID) {
+    fbb_.AddOffset(VAMReview::VT_VAM_ID, VAM_ID);
+  }
+  void add_NONCE(::flatbuffers::Offset<::flatbuffers::String> NONCE) {
+    fbb_.AddOffset(VAMReview::VT_NONCE, NONCE);
+  }
+  void add_REVIEWED_TRANSFORM(::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM) {
+    fbb_.AddOffset(VAMReview::VT_REVIEWED_TRANSFORM, REVIEWED_TRANSFORM);
+  }
+  void add_CANONICAL_VARIANT_ID(::flatbuffers::Offset<::flatbuffers::String> CANONICAL_VARIANT_ID) {
+    fbb_.AddOffset(VAMReview::VT_CANONICAL_VARIANT_ID, CANONICAL_VARIANT_ID);
+  }
+  void add_ALTERNATE_VARIANT_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_VARIANT_IDS) {
+    fbb_.AddOffset(VAMReview::VT_ALTERNATE_VARIANT_IDS, ALTERNATE_VARIANT_IDS);
+  }
+  void add_ANNOTATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS) {
+    fbb_.AddOffset(VAMReview::VT_ANNOTATIONS, ANNOTATIONS);
+  }
   explicit VAMReviewBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1692,8 +1939,27 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReview(
     ::flatbuffers::Offset<::flatbuffers::String> ENVELOPE_SHA256 = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_DECISION_SHA256 = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_DECISION_SHA256 = 0,
+    visualAssetReviewerRole REVIEWER_ROLE = visualAssetReviewerRole_VIEWER,
+    ::flatbuffers::Offset<::flatbuffers::String> REPOSITORY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ISSUE_NUMBER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VAM_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NONCE = 0,
+    ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CANONICAL_VARIANT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_VARIANT_IDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS = 0) {
   VAMReviewBuilder builder_(_fbb);
+  builder_.add_ANNOTATIONS(ANNOTATIONS);
+  builder_.add_ALTERNATE_VARIANT_IDS(ALTERNATE_VARIANT_IDS);
+  builder_.add_CANONICAL_VARIANT_ID(CANONICAL_VARIANT_ID);
+  builder_.add_REVIEWED_TRANSFORM(REVIEWED_TRANSFORM);
+  builder_.add_NONCE(NONCE);
+  builder_.add_VAM_ID(VAM_ID);
+  builder_.add_ENTITY_ID(ENTITY_ID);
+  builder_.add_ISSUE_NUMBER(ISSUE_NUMBER);
+  builder_.add_REPOSITORY(REPOSITORY);
   builder_.add_PREVIOUS_DECISION_SHA256(PREVIOUS_DECISION_SHA256);
   builder_.add_SIGNATURE_TYPE(SIGNATURE_TYPE);
   builder_.add_SIGNATURE(SIGNATURE);
@@ -1706,6 +1972,7 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReview(
   builder_.add_CANDIDATE_ID(CANDIDATE_ID);
   builder_.add_CAPABILITY_ID(CAPABILITY_ID);
   builder_.add_REVIEWER_ID(REVIEWER_ID);
+  builder_.add_REVIEWER_ROLE(REVIEWER_ROLE);
   builder_.add_DECISION(DECISION);
   return builder_.Finish();
 }
@@ -1724,7 +1991,17 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
     const char *ENVELOPE_SHA256 = nullptr,
     const std::vector<uint8_t> *SIGNATURE = nullptr,
     const char *SIGNATURE_TYPE = nullptr,
-    const char *PREVIOUS_DECISION_SHA256 = nullptr) {
+    const char *PREVIOUS_DECISION_SHA256 = nullptr,
+    visualAssetReviewerRole REVIEWER_ROLE = visualAssetReviewerRole_VIEWER,
+    const char *REPOSITORY = nullptr,
+    const char *ISSUE_NUMBER = nullptr,
+    const char *ENTITY_ID = nullptr,
+    const char *VAM_ID = nullptr,
+    const char *NONCE = nullptr,
+    ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
+    const char *CANONICAL_VARIANT_ID = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_VARIANT_IDS = nullptr,
+    const std::vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS = nullptr) {
   auto REVIEWER_ID__ = REVIEWER_ID ? _fbb.CreateString(REVIEWER_ID) : 0;
   auto CAPABILITY_ID__ = CAPABILITY_ID ? _fbb.CreateString(CAPABILITY_ID) : 0;
   auto CANDIDATE_ID__ = CANDIDATE_ID ? _fbb.CreateString(CANDIDATE_ID) : 0;
@@ -1737,6 +2014,14 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
   auto SIGNATURE_TYPE__ = SIGNATURE_TYPE ? _fbb.CreateString(SIGNATURE_TYPE) : 0;
   auto PREVIOUS_DECISION_SHA256__ = PREVIOUS_DECISION_SHA256 ? _fbb.CreateString(PREVIOUS_DECISION_SHA256) : 0;
+  auto REPOSITORY__ = REPOSITORY ? _fbb.CreateString(REPOSITORY) : 0;
+  auto ISSUE_NUMBER__ = ISSUE_NUMBER ? _fbb.CreateString(ISSUE_NUMBER) : 0;
+  auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
+  auto VAM_ID__ = VAM_ID ? _fbb.CreateString(VAM_ID) : 0;
+  auto NONCE__ = NONCE ? _fbb.CreateString(NONCE) : 0;
+  auto CANONICAL_VARIANT_ID__ = CANONICAL_VARIANT_ID ? _fbb.CreateString(CANONICAL_VARIANT_ID) : 0;
+  auto ALTERNATE_VARIANT_IDS__ = ALTERNATE_VARIANT_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALTERNATE_VARIANT_IDS) : 0;
+  auto ANNOTATIONS__ = ANNOTATIONS ? _fbb.CreateVector<::flatbuffers::Offset<VAMAnnotation>>(*ANNOTATIONS) : 0;
   return CreateVAMReview(
       _fbb,
       REVIEWER_ID__,
@@ -1748,6 +2033,338 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
       DECIDED_AT__,
       REASONS__,
       COMMENT__,
+      ENVELOPE_SHA256__,
+      SIGNATURE__,
+      SIGNATURE_TYPE__,
+      PREVIOUS_DECISION_SHA256__,
+      REVIEWER_ROLE,
+      REPOSITORY__,
+      ISSUE_NUMBER__,
+      ENTITY_ID__,
+      VAM_ID__,
+      NONCE__,
+      REVIEWED_TRANSFORM,
+      CANONICAL_VARIANT_ID__,
+      ALTERNATE_VARIANT_IDS__,
+      ANNOTATIONS__);
+}
+
+/// Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+/// The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+/// Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+/// The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+struct VAMMetadataOnlyReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VAMMetadataOnlyReviewBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_REVIEWER_ID = 4,
+    VT_CAPABILITY_ID = 6,
+    VT_REVIEWER_ROLE = 8,
+    VT_REPOSITORY = 10,
+    VT_ISSUE_NUMBER = 12,
+    VT_ENTITY_ID = 14,
+    VT_VAM_ID = 16,
+    VT_NONCE = 18,
+    VT_DECISION = 20,
+    VT_CANDIDATE_ID = 22,
+    VT_CANDIDATE_METADATA_SHA256 = 24,
+    VT_DECIDED_AT = 26,
+    VT_REASONS = 28,
+    VT_COMMENT = 30,
+    VT_ANNOTATIONS = 32,
+    VT_ENVELOPE_SHA256 = 34,
+    VT_SIGNATURE = 36,
+    VT_SIGNATURE_TYPE = 38,
+    VT_PREVIOUS_DECISION_SHA256 = 40
+  };
+  const ::flatbuffers::String *REVIEWER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REVIEWER_ID);
+  }
+  const ::flatbuffers::String *CAPABILITY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CAPABILITY_ID);
+  }
+  visualAssetReviewerRole REVIEWER_ROLE() const {
+    return static_cast<visualAssetReviewerRole>(GetField<int8_t>(VT_REVIEWER_ROLE, 0));
+  }
+  const ::flatbuffers::String *REPOSITORY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REPOSITORY);
+  }
+  const ::flatbuffers::String *ISSUE_NUMBER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ISSUE_NUMBER);
+  }
+  const ::flatbuffers::String *ENTITY_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_ID);
+  }
+  const ::flatbuffers::String *VAM_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VAM_ID);
+  }
+  const ::flatbuffers::String *NONCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NONCE);
+  }
+  visualAssetDecisionKind DECISION() const {
+    return static_cast<visualAssetDecisionKind>(GetField<int8_t>(VT_DECISION, 4));
+  }
+  const ::flatbuffers::String *CANDIDATE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CANDIDATE_ID);
+  }
+  /// 64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+  /// The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+  /// A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+  const ::flatbuffers::String *CANDIDATE_METADATA_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CANDIDATE_METADATA_SHA256);
+  }
+  const ::flatbuffers::String *DECIDED_AT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DECIDED_AT);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *REASONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_REASONS);
+  }
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *>(VT_ANNOTATIONS);
+  }
+  const ::flatbuffers::String *ENVELOPE_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENVELOPE_SHA256);
+  }
+  const ::flatbuffers::Vector<uint8_t> *SIGNATURE() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_SIGNATURE);
+  }
+  const ::flatbuffers::String *SIGNATURE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE_TYPE);
+  }
+  const ::flatbuffers::String *PREVIOUS_DECISION_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PREVIOUS_DECISION_SHA256);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_REVIEWER_ID) &&
+           verifier.VerifyString(REVIEWER_ID()) &&
+           VerifyOffsetRequired(verifier, VT_CAPABILITY_ID) &&
+           verifier.VerifyString(CAPABILITY_ID()) &&
+           VerifyField<int8_t>(verifier, VT_REVIEWER_ROLE, 1) &&
+           VerifyOffsetRequired(verifier, VT_REPOSITORY) &&
+           verifier.VerifyString(REPOSITORY()) &&
+           VerifyOffsetRequired(verifier, VT_ISSUE_NUMBER) &&
+           verifier.VerifyString(ISSUE_NUMBER()) &&
+           VerifyOffsetRequired(verifier, VT_ENTITY_ID) &&
+           verifier.VerifyString(ENTITY_ID()) &&
+           VerifyOffsetRequired(verifier, VT_VAM_ID) &&
+           verifier.VerifyString(VAM_ID()) &&
+           VerifyOffsetRequired(verifier, VT_NONCE) &&
+           verifier.VerifyString(NONCE()) &&
+           VerifyField<int8_t>(verifier, VT_DECISION, 1) &&
+           VerifyOffsetRequired(verifier, VT_CANDIDATE_ID) &&
+           verifier.VerifyString(CANDIDATE_ID()) &&
+           VerifyOffsetRequired(verifier, VT_CANDIDATE_METADATA_SHA256) &&
+           verifier.VerifyString(CANDIDATE_METADATA_SHA256()) &&
+           VerifyOffsetRequired(verifier, VT_DECIDED_AT) &&
+           verifier.VerifyString(DECIDED_AT()) &&
+           VerifyOffset(verifier, VT_REASONS) &&
+           verifier.VerifyVector(REASONS()) &&
+           verifier.VerifyVectorOfStrings(REASONS()) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
+           VerifyOffset(verifier, VT_ANNOTATIONS) &&
+           verifier.VerifyVector(ANNOTATIONS()) &&
+           verifier.VerifyVectorOfTables(ANNOTATIONS()) &&
+           VerifyOffsetRequired(verifier, VT_ENVELOPE_SHA256) &&
+           verifier.VerifyString(ENVELOPE_SHA256()) &&
+           VerifyOffsetRequired(verifier, VT_SIGNATURE) &&
+           verifier.VerifyVector(SIGNATURE()) &&
+           VerifyOffsetRequired(verifier, VT_SIGNATURE_TYPE) &&
+           verifier.VerifyString(SIGNATURE_TYPE()) &&
+           VerifyOffset(verifier, VT_PREVIOUS_DECISION_SHA256) &&
+           verifier.VerifyString(PREVIOUS_DECISION_SHA256()) &&
+           verifier.EndTable();
+  }
+};
+
+struct VAMMetadataOnlyReviewBuilder {
+  typedef VAMMetadataOnlyReview Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_REVIEWER_ID(::flatbuffers::Offset<::flatbuffers::String> REVIEWER_ID) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_REVIEWER_ID, REVIEWER_ID);
+  }
+  void add_CAPABILITY_ID(::flatbuffers::Offset<::flatbuffers::String> CAPABILITY_ID) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_CAPABILITY_ID, CAPABILITY_ID);
+  }
+  void add_REVIEWER_ROLE(visualAssetReviewerRole REVIEWER_ROLE) {
+    fbb_.AddElement<int8_t>(VAMMetadataOnlyReview::VT_REVIEWER_ROLE, static_cast<int8_t>(REVIEWER_ROLE), 0);
+  }
+  void add_REPOSITORY(::flatbuffers::Offset<::flatbuffers::String> REPOSITORY) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_REPOSITORY, REPOSITORY);
+  }
+  void add_ISSUE_NUMBER(::flatbuffers::Offset<::flatbuffers::String> ISSUE_NUMBER) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_ISSUE_NUMBER, ISSUE_NUMBER);
+  }
+  void add_ENTITY_ID(::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_ENTITY_ID, ENTITY_ID);
+  }
+  void add_VAM_ID(::flatbuffers::Offset<::flatbuffers::String> VAM_ID) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_VAM_ID, VAM_ID);
+  }
+  void add_NONCE(::flatbuffers::Offset<::flatbuffers::String> NONCE) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_NONCE, NONCE);
+  }
+  void add_DECISION(visualAssetDecisionKind DECISION) {
+    fbb_.AddElement<int8_t>(VAMMetadataOnlyReview::VT_DECISION, static_cast<int8_t>(DECISION), 4);
+  }
+  void add_CANDIDATE_ID(::flatbuffers::Offset<::flatbuffers::String> CANDIDATE_ID) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_CANDIDATE_ID, CANDIDATE_ID);
+  }
+  void add_CANDIDATE_METADATA_SHA256(::flatbuffers::Offset<::flatbuffers::String> CANDIDATE_METADATA_SHA256) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_CANDIDATE_METADATA_SHA256, CANDIDATE_METADATA_SHA256);
+  }
+  void add_DECIDED_AT(::flatbuffers::Offset<::flatbuffers::String> DECIDED_AT) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_DECIDED_AT, DECIDED_AT);
+  }
+  void add_REASONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REASONS) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_REASONS, REASONS);
+  }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_COMMENT, COMMENT);
+  }
+  void add_ANNOTATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_ANNOTATIONS, ANNOTATIONS);
+  }
+  void add_ENVELOPE_SHA256(::flatbuffers::Offset<::flatbuffers::String> ENVELOPE_SHA256) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_ENVELOPE_SHA256, ENVELOPE_SHA256);
+  }
+  void add_SIGNATURE(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_SIGNATURE, SIGNATURE);
+  }
+  void add_SIGNATURE_TYPE(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_SIGNATURE_TYPE, SIGNATURE_TYPE);
+  }
+  void add_PREVIOUS_DECISION_SHA256(::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_DECISION_SHA256) {
+    fbb_.AddOffset(VAMMetadataOnlyReview::VT_PREVIOUS_DECISION_SHA256, PREVIOUS_DECISION_SHA256);
+  }
+  explicit VAMMetadataOnlyReviewBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VAMMetadataOnlyReview> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VAMMetadataOnlyReview>(end);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_REVIEWER_ID);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_CAPABILITY_ID);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_REPOSITORY);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_ISSUE_NUMBER);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_ENTITY_ID);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_VAM_ID);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_NONCE);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_CANDIDATE_ID);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_CANDIDATE_METADATA_SHA256);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_DECIDED_AT);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_ENVELOPE_SHA256);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_SIGNATURE);
+    fbb_.Required(o, VAMMetadataOnlyReview::VT_SIGNATURE_TYPE);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VAMMetadataOnlyReview> CreateVAMMetadataOnlyReview(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> REVIEWER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CAPABILITY_ID = 0,
+    visualAssetReviewerRole REVIEWER_ROLE = visualAssetReviewerRole_VIEWER,
+    ::flatbuffers::Offset<::flatbuffers::String> REPOSITORY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ISSUE_NUMBER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENTITY_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VAM_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NONCE = 0,
+    visualAssetDecisionKind DECISION = visualAssetDecisionKind_APPROVE_METADATA_ONLY,
+    ::flatbuffers::Offset<::flatbuffers::String> CANDIDATE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CANDIDATE_METADATA_SHA256 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DECIDED_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REASONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENVELOPE_SHA256 = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SIGNATURE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PREVIOUS_DECISION_SHA256 = 0) {
+  VAMMetadataOnlyReviewBuilder builder_(_fbb);
+  builder_.add_PREVIOUS_DECISION_SHA256(PREVIOUS_DECISION_SHA256);
+  builder_.add_SIGNATURE_TYPE(SIGNATURE_TYPE);
+  builder_.add_SIGNATURE(SIGNATURE);
+  builder_.add_ENVELOPE_SHA256(ENVELOPE_SHA256);
+  builder_.add_ANNOTATIONS(ANNOTATIONS);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_REASONS(REASONS);
+  builder_.add_DECIDED_AT(DECIDED_AT);
+  builder_.add_CANDIDATE_METADATA_SHA256(CANDIDATE_METADATA_SHA256);
+  builder_.add_CANDIDATE_ID(CANDIDATE_ID);
+  builder_.add_NONCE(NONCE);
+  builder_.add_VAM_ID(VAM_ID);
+  builder_.add_ENTITY_ID(ENTITY_ID);
+  builder_.add_ISSUE_NUMBER(ISSUE_NUMBER);
+  builder_.add_REPOSITORY(REPOSITORY);
+  builder_.add_CAPABILITY_ID(CAPABILITY_ID);
+  builder_.add_REVIEWER_ID(REVIEWER_ID);
+  builder_.add_DECISION(DECISION);
+  builder_.add_REVIEWER_ROLE(REVIEWER_ROLE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<VAMMetadataOnlyReview> CreateVAMMetadataOnlyReviewDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *REVIEWER_ID = nullptr,
+    const char *CAPABILITY_ID = nullptr,
+    visualAssetReviewerRole REVIEWER_ROLE = visualAssetReviewerRole_VIEWER,
+    const char *REPOSITORY = nullptr,
+    const char *ISSUE_NUMBER = nullptr,
+    const char *ENTITY_ID = nullptr,
+    const char *VAM_ID = nullptr,
+    const char *NONCE = nullptr,
+    visualAssetDecisionKind DECISION = visualAssetDecisionKind_APPROVE_METADATA_ONLY,
+    const char *CANDIDATE_ID = nullptr,
+    const char *CANDIDATE_METADATA_SHA256 = nullptr,
+    const char *DECIDED_AT = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REASONS = nullptr,
+    const char *COMMENT = nullptr,
+    const std::vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS = nullptr,
+    const char *ENVELOPE_SHA256 = nullptr,
+    const std::vector<uint8_t> *SIGNATURE = nullptr,
+    const char *SIGNATURE_TYPE = nullptr,
+    const char *PREVIOUS_DECISION_SHA256 = nullptr) {
+  auto REVIEWER_ID__ = REVIEWER_ID ? _fbb.CreateString(REVIEWER_ID) : 0;
+  auto CAPABILITY_ID__ = CAPABILITY_ID ? _fbb.CreateString(CAPABILITY_ID) : 0;
+  auto REPOSITORY__ = REPOSITORY ? _fbb.CreateString(REPOSITORY) : 0;
+  auto ISSUE_NUMBER__ = ISSUE_NUMBER ? _fbb.CreateString(ISSUE_NUMBER) : 0;
+  auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
+  auto VAM_ID__ = VAM_ID ? _fbb.CreateString(VAM_ID) : 0;
+  auto NONCE__ = NONCE ? _fbb.CreateString(NONCE) : 0;
+  auto CANDIDATE_ID__ = CANDIDATE_ID ? _fbb.CreateString(CANDIDATE_ID) : 0;
+  auto CANDIDATE_METADATA_SHA256__ = CANDIDATE_METADATA_SHA256 ? _fbb.CreateString(CANDIDATE_METADATA_SHA256) : 0;
+  auto DECIDED_AT__ = DECIDED_AT ? _fbb.CreateString(DECIDED_AT) : 0;
+  auto REASONS__ = REASONS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REASONS) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
+  auto ANNOTATIONS__ = ANNOTATIONS ? _fbb.CreateVector<::flatbuffers::Offset<VAMAnnotation>>(*ANNOTATIONS) : 0;
+  auto ENVELOPE_SHA256__ = ENVELOPE_SHA256 ? _fbb.CreateString(ENVELOPE_SHA256) : 0;
+  auto SIGNATURE__ = SIGNATURE ? _fbb.CreateVector<uint8_t>(*SIGNATURE) : 0;
+  auto SIGNATURE_TYPE__ = SIGNATURE_TYPE ? _fbb.CreateString(SIGNATURE_TYPE) : 0;
+  auto PREVIOUS_DECISION_SHA256__ = PREVIOUS_DECISION_SHA256 ? _fbb.CreateString(PREVIOUS_DECISION_SHA256) : 0;
+  return CreateVAMMetadataOnlyReview(
+      _fbb,
+      REVIEWER_ID__,
+      CAPABILITY_ID__,
+      REVIEWER_ROLE,
+      REPOSITORY__,
+      ISSUE_NUMBER__,
+      ENTITY_ID__,
+      VAM_ID__,
+      NONCE__,
+      DECISION,
+      CANDIDATE_ID__,
+      CANDIDATE_METADATA_SHA256__,
+      DECIDED_AT__,
+      REASONS__,
+      COMMENT__,
+      ANNOTATIONS__,
       ENVELOPE_SHA256__,
       SIGNATURE__,
       SIGNATURE_TYPE__,
@@ -1770,7 +2387,8 @@ struct VAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CREATED_AT = 22,
     VT_UPDATED_AT = 24,
     VT_SUPERSEDES_VAM_CID = 26,
-    VT_DPM_CID = 28
+    VT_DPM_CID = 28,
+    VT_METADATA_REVIEW = 30
   };
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
@@ -1785,12 +2403,14 @@ struct VAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ENTITY_KIND() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENTITY_KIND);
   }
+  /// Identifies the approved canonical variant; alternate variants preserve their ranks.
   const ::flatbuffers::String *CANONICAL_VARIANT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CANONICAL_VARIANT_ID);
   }
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_VARIANT_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ALTERNATE_VARIANT_IDS);
   }
+  /// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
   const ::flatbuffers::Vector<::flatbuffers::Offset<VAMVariant>> *VARIANTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VAMVariant>> *>(VT_VARIANTS);
   }
@@ -1815,6 +2435,10 @@ struct VAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// CIDv1 containing a multihash of the exact referenced DPM bytes.
   const ::flatbuffers::String *DPM_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DPM_CID);
+  }
+  /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  const VAMMetadataOnlyReview *METADATA_REVIEW() const {
+    return GetPointer<const VAMMetadataOnlyReview *>(VT_METADATA_REVIEW);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -1846,6 +2470,8 @@ struct VAM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SUPERSEDES_VAM_CID()) &&
            VerifyOffset(verifier, VT_DPM_CID) &&
            verifier.VerifyString(DPM_CID()) &&
+           VerifyOffset(verifier, VT_METADATA_REVIEW) &&
+           verifier.VerifyTable(METADATA_REVIEW()) &&
            verifier.EndTable();
   }
 };
@@ -1893,6 +2519,9 @@ struct VAMBuilder {
   void add_DPM_CID(::flatbuffers::Offset<::flatbuffers::String> DPM_CID) {
     fbb_.AddOffset(VAM::VT_DPM_CID, DPM_CID);
   }
+  void add_METADATA_REVIEW(::flatbuffers::Offset<VAMMetadataOnlyReview> METADATA_REVIEW) {
+    fbb_.AddOffset(VAM::VT_METADATA_REVIEW, METADATA_REVIEW);
+  }
   explicit VAMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1920,8 +2549,10 @@ inline ::flatbuffers::Offset<VAM> CreateVAM(
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_VAM_CID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DPM_CID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> DPM_CID = 0,
+    ::flatbuffers::Offset<VAMMetadataOnlyReview> METADATA_REVIEW = 0) {
   VAMBuilder builder_(_fbb);
+  builder_.add_METADATA_REVIEW(METADATA_REVIEW);
   builder_.add_DPM_CID(DPM_CID);
   builder_.add_SUPERSEDES_VAM_CID(SUPERSEDES_VAM_CID);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -1952,7 +2583,8 @@ inline ::flatbuffers::Offset<VAM> CreateVAMDirect(
     const char *CREATED_AT = nullptr,
     const char *UPDATED_AT = nullptr,
     const char *SUPERSEDES_VAM_CID = nullptr,
-    const char *DPM_CID = nullptr) {
+    const char *DPM_CID = nullptr,
+    ::flatbuffers::Offset<VAMMetadataOnlyReview> METADATA_REVIEW = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
@@ -1978,7 +2610,8 @@ inline ::flatbuffers::Offset<VAM> CreateVAMDirect(
       CREATED_AT__,
       UPDATED_AT__,
       SUPERSEDES_VAM_CID__,
-      DPM_CID__);
+      DPM_CID__,
+      METADATA_REVIEW);
 }
 
 inline const VAM *GetVAM(const void *buf) {

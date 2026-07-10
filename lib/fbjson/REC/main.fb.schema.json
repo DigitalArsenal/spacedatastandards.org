@@ -16795,6 +16795,28 @@
         }
       }
     },
+    "visualAssetReviewerRole": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Reviewer authorization role. Append new values only; never reorder or reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "VIEWER": {
+          "value": 0
+        },
+        "REVIEWER": {
+          "value": 1
+        },
+        "ADMIN": {
+          "value": 2
+        }
+      }
+    },
     "elementType": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -57641,6 +57663,37 @@
       },
       "description": "Transform from source coordinates into canonical meters. Absent SCALE and omitted scale components mean identity scale; translation and bounds use VAMVector3 zero defaults."
     },
+    "VAMAnnotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "POSITION": {
+          "$ref": "#/definitions/VAMVector3",
+          "x-flatbuffer-type": "VAMVector3"
+        }
+      },
+      "description": "Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.",
+      "required": [
+        "ID",
+        "KIND",
+        "MESSAGE"
+      ]
+    },
     "VAMSource": {
       "type": "object",
       "additionalProperties": false,
@@ -58009,6 +58062,11 @@
         "SUPERSEDES_VARIANT_ID": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        },
+        "RANK": {
+          "type": "integer",
+          "description": "Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.",
+          "x-flatbuffer-type": "uint"
         }
       },
       "description": "One source, optimized, LOD, or alternate visual representation.",
@@ -58070,7 +58128,7 @@
         },
         "CANDIDATE_SHA256": {
           "type": "string",
-          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.",
+          "description": "64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },
@@ -58116,13 +58174,234 @@
           "type": "string",
           "description": "64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.",
           "x-flatbuffer-type": "string"
+        },
+        "REVIEWER_ROLE": {
+          "$ref": "#/definitions/visualAssetReviewerRole",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "VIEWER",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "VIEWER": {
+              "value": 0
+            },
+            "REVIEWER": {
+              "value": 1
+            },
+            "ADMIN": {
+              "value": 2
+            }
+          }
+        },
+        "REPOSITORY": {
+          "type": "string",
+          "description": "Canonical repository identifier in owner/name form.",
+          "x-flatbuffer-type": "string"
+        },
+        "ISSUE_NUMBER": {
+          "type": "string",
+          "description": "Positive base-10 issue number digits with no leading zero.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NONCE": {
+          "type": "string",
+          "description": "Unique opaque identifier containing at least 128 bits of entropy.",
+          "x-flatbuffer-type": "string"
+        },
+        "REVIEWED_TRANSFORM": {
+          "$ref": "#/definitions/VAMTransform",
+          "x-flatbuffer-type": "VAMTransform"
+        },
+        "CANONICAL_VARIANT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTERNATE_VARIANT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "ANNOTATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VAMAnnotation"
+          },
+          "x-flatbuffer-type": "[VAMAnnotation]"
         }
       },
-      "description": "Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence. The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present. Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.",
+      "description": "Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence. The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS. Projection order is descriptive; RFC 8785 sorts object keys during canonicalization. Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest. Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility. Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.",
       "required": [
         "REVIEWER_ID",
         "CANDIDATE_ID",
         "CANDIDATE_SHA256",
+        "DECIDED_AT",
+        "ENVELOPE_SHA256",
+        "SIGNATURE",
+        "SIGNATURE_TYPE"
+      ]
+    },
+    "VAMMetadataOnlyReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REVIEWER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CAPABILITY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REVIEWER_ROLE": {
+          "$ref": "#/definitions/visualAssetReviewerRole",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "VIEWER",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "VIEWER": {
+              "value": 0
+            },
+            "REVIEWER": {
+              "value": 1
+            },
+            "ADMIN": {
+              "value": 2
+            }
+          }
+        },
+        "REPOSITORY": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ISSUE_NUMBER": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NONCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DECISION": {
+          "$ref": "#/definitions/visualAssetDecisionKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "APPROVE_METADATA_ONLY",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "APPROVE": {
+              "value": 1
+            },
+            "REJECT": {
+              "value": 2
+            },
+            "REQUEST_CHANGES": {
+              "value": 3
+            },
+            "APPROVE_METADATA_ONLY": {
+              "value": 4
+            },
+            "ESCALATE_LICENSE": {
+              "value": 5
+            },
+            "SELECT_ALTERNATE": {
+              "value": 6
+            }
+          }
+        },
+        "CANDIDATE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CANDIDATE_METADATA_SHA256": {
+          "type": "string",
+          "description": "A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DECIDED_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REASONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COMMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ANNOTATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VAMAnnotation"
+          },
+          "x-flatbuffer-type": "[VAMAnnotation]"
+        },
+        "ENVELOPE_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PREVIOUS_DECISION_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist. The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present. Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection. The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.",
+      "required": [
+        "REVIEWER_ID",
+        "CAPABILITY_ID",
+        "REPOSITORY",
+        "ISSUE_NUMBER",
+        "ENTITY_ID",
+        "VAM_ID",
+        "NONCE",
+        "CANDIDATE_ID",
+        "CANDIDATE_METADATA_SHA256",
         "DECIDED_AT",
         "ENVELOPE_SHA256",
         "SIGNATURE",
@@ -58154,6 +58433,7 @@
         },
         "CANONICAL_VARIANT_ID": {
           "type": "string",
+          "description": "Identifies the approved canonical variant; alternate variants preserve their ranks.",
           "x-flatbuffer-type": "string"
         },
         "ALTERNATE_VARIANT_IDS": {
@@ -58168,6 +58448,7 @@
           "items": {
             "$ref": "#/definitions/VAMVariant"
           },
+          "description": "MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.",
           "x-flatbuffer-type": "[VAMVariant]"
         },
         "REVIEW": {
@@ -58234,6 +58515,11 @@
           "type": "string",
           "description": "CIDv1 containing a multihash of the exact referenced DPM bytes.",
           "x-flatbuffer-type": "string"
+        },
+        "METADATA_REVIEW": {
+          "$ref": "#/definitions/VAMMetadataOnlyReview",
+          "description": "Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.",
+          "x-flatbuffer-type": "VAMMetadataOnlyReview"
         }
       },
       "description": "Visual Asset Manifest \u2014 ranked visual representations for one stable entity.",

@@ -76,6 +76,9 @@ class VAM : Table() {
         }
     val entityKindAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun entityKindInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Identifies the approved canonical variant; alternate variants preserve their ranks.
+     */
     val canonicalVariantId : String?
         get() {
             val o = __offset(12)
@@ -99,6 +102,9 @@ class VAM : Table() {
         get() {
             val o = __offset(14); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
+     */
     fun variants(j: Int) : VAMVariant? = variants(VAMVariant(), j)
     fun variants(obj: VAMVariant, j: Int) : VAMVariant? {
         val o = __offset(16)
@@ -182,6 +188,18 @@ class VAM : Table() {
         }
     val dpmCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
     fun dpmCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+     */
+    val metadataReview : VAMMetadataOnlyReview? get() = metadataReview(VAMMetadataOnlyReview())
+    fun metadataReview(obj: VAMMetadataOnlyReview) : VAMMetadataOnlyReview? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVAM(_bb: ByteBuffer): VAM = getRootAsVAM(_bb, VAM())
@@ -190,8 +208,9 @@ class VAM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun VAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VAM")
-        fun createVAM(builder: FlatBufferBuilder, idOffset: Int, versionOffset: Int, entityIdOffset: Int, entityKindOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, variantsOffset: Int, reviewOffset: Int, reviewState: Byte, createdAtOffset: Int, updatedAtOffset: Int, supersedesVamCidOffset: Int, dpmCidOffset: Int) : Int {
-            builder.startTable(13)
+        fun createVAM(builder: FlatBufferBuilder, idOffset: Int, versionOffset: Int, entityIdOffset: Int, entityKindOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, variantsOffset: Int, reviewOffset: Int, reviewState: Byte, createdAtOffset: Int, updatedAtOffset: Int, supersedesVamCidOffset: Int, dpmCidOffset: Int, metadataReviewOffset: Int) : Int {
+            builder.startTable(14)
+            addMETADATAREVIEW(builder, metadataReviewOffset)
             addDPMCID(builder, dpmCidOffset)
             addSUPERSEDESVAMCID(builder, supersedesVamCidOffset)
             addUPDATEDAT(builder, updatedAtOffset)
@@ -207,7 +226,7 @@ class VAM : Table() {
             addREVIEWSTATE(builder, reviewState)
             return endVAM(builder)
         }
-        fun startVAM(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startVAM(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(1, version, 0)
         fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(2, entityId, 0)
@@ -237,6 +256,7 @@ class VAM : Table() {
         fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(10, updatedAt, 0)
         fun addSUPERSEDESVAMCID(builder: FlatBufferBuilder, supersedesVamCid: Int) = builder.addOffset(11, supersedesVamCid, 0)
         fun addDPMCID(builder: FlatBufferBuilder, dpmCid: Int) = builder.addOffset(12, dpmCid, 0)
+        fun addMETADATAREVIEW(builder: FlatBufferBuilder, metadataReview: Int) = builder.addOffset(13, metadataReview, 0)
         fun endVAM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

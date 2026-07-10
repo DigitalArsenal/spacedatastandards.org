@@ -1,9 +1,15 @@
 import * as flatbuffers from 'flatbuffers';
+import { VAMAnnotation, VAMAnnotationT } from './VAMAnnotation.js';
+import { VAMTransform, VAMTransformT } from './VAMTransform.js';
 import { visualAssetDecisionKind } from './visualAssetDecisionKind.js';
+import { visualAssetReviewerRole } from './visualAssetReviewerRole.js';
 /**
- * Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
- * The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
- * Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+ * Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+ * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+ * Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+ * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+ * Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+ * Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
  */
 export declare class VAMReview implements flatbuffers.IUnpackableObject<VAMReviewT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -24,7 +30,7 @@ export declare class VAMReview implements flatbuffers.IUnpackableObject<VAMRevie
     CANDIDATE_CID(): string | null;
     CANDIDATE_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+     * 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
      */
     CANDIDATE_SHA256(): string;
     CANDIDATE_SHA256(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
@@ -59,6 +65,34 @@ export declare class VAMReview implements flatbuffers.IUnpackableObject<VAMRevie
      */
     PREVIOUS_DECISION_SHA256(): string | null;
     PREVIOUS_DECISION_SHA256(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REVIEWER_ROLE(): visualAssetReviewerRole;
+    /**
+     * Canonical repository identifier in owner/name form.
+     */
+    REPOSITORY(): string | null;
+    REPOSITORY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Positive base-10 issue number digits with no leading zero.
+     */
+    ISSUE_NUMBER(): string | null;
+    ISSUE_NUMBER(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ENTITY_ID(): string | null;
+    ENTITY_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    VAM_ID(): string | null;
+    VAM_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Unique opaque identifier containing at least 128 bits of entropy.
+     */
+    NONCE(): string | null;
+    NONCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    REVIEWED_TRANSFORM(obj?: VAMTransform): VAMTransform | null;
+    CANONICAL_VARIANT_ID(): string | null;
+    CANONICAL_VARIANT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    ALTERNATE_VARIANT_IDS(index: number): string;
+    ALTERNATE_VARIANT_IDS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    alternateVariantIdsLength(): number;
+    ANNOTATIONS(index: number, obj?: VAMAnnotation): VAMAnnotation | null;
+    annotationsLength(): number;
     static startVAMReview(builder: flatbuffers.Builder): void;
     static addReviewerId(builder: flatbuffers.Builder, REVIEWER_IDOffset: flatbuffers.Offset): void;
     static addCapabilityId(builder: flatbuffers.Builder, CAPABILITY_IDOffset: flatbuffers.Offset): void;
@@ -77,8 +111,21 @@ export declare class VAMReview implements flatbuffers.IUnpackableObject<VAMRevie
     static startSignatureVector(builder: flatbuffers.Builder, numElems: number): void;
     static addSignatureType(builder: flatbuffers.Builder, SIGNATURE_TYPEOffset: flatbuffers.Offset): void;
     static addPreviousDecisionSha256(builder: flatbuffers.Builder, PREVIOUS_DECISION_SHA256Offset: flatbuffers.Offset): void;
+    static addReviewerRole(builder: flatbuffers.Builder, REVIEWER_ROLE: visualAssetReviewerRole): void;
+    static addRepository(builder: flatbuffers.Builder, REPOSITORYOffset: flatbuffers.Offset): void;
+    static addIssueNumber(builder: flatbuffers.Builder, ISSUE_NUMBEROffset: flatbuffers.Offset): void;
+    static addEntityId(builder: flatbuffers.Builder, ENTITY_IDOffset: flatbuffers.Offset): void;
+    static addVamId(builder: flatbuffers.Builder, VAM_IDOffset: flatbuffers.Offset): void;
+    static addNonce(builder: flatbuffers.Builder, NONCEOffset: flatbuffers.Offset): void;
+    static addReviewedTransform(builder: flatbuffers.Builder, REVIEWED_TRANSFORMOffset: flatbuffers.Offset): void;
+    static addCanonicalVariantId(builder: flatbuffers.Builder, CANONICAL_VARIANT_IDOffset: flatbuffers.Offset): void;
+    static addAlternateVariantIds(builder: flatbuffers.Builder, ALTERNATE_VARIANT_IDSOffset: flatbuffers.Offset): void;
+    static createAlternateVariantIdsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startAlternateVariantIdsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addAnnotations(builder: flatbuffers.Builder, ANNOTATIONSOffset: flatbuffers.Offset): void;
+    static createAnnotationsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startAnnotationsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endVAMReview(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createVAMReview(builder: flatbuffers.Builder, REVIEWER_IDOffset: flatbuffers.Offset, CAPABILITY_IDOffset: flatbuffers.Offset, DECISION: visualAssetDecisionKind, CANDIDATE_IDOffset: flatbuffers.Offset, CANDIDATE_CIDOffset: flatbuffers.Offset, CANDIDATE_SHA256Offset: flatbuffers.Offset, DECIDED_ATOffset: flatbuffers.Offset, REASONSOffset: flatbuffers.Offset, COMMENTOffset: flatbuffers.Offset, ENVELOPE_SHA256Offset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, SIGNATURE_TYPEOffset: flatbuffers.Offset, PREVIOUS_DECISION_SHA256Offset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): VAMReviewT;
     unpackTo(_o: VAMReviewT): void;
 }
@@ -96,7 +143,17 @@ export declare class VAMReviewT implements flatbuffers.IGeneratedObject {
     SIGNATURE: (number)[];
     SIGNATURE_TYPE: string | Uint8Array | null;
     PREVIOUS_DECISION_SHA256: string | Uint8Array | null;
-    constructor(REVIEWER_ID?: string | Uint8Array | null, CAPABILITY_ID?: string | Uint8Array | null, DECISION?: visualAssetDecisionKind, CANDIDATE_ID?: string | Uint8Array | null, CANDIDATE_CID?: string | Uint8Array | null, CANDIDATE_SHA256?: string | Uint8Array | null, DECIDED_AT?: string | Uint8Array | null, REASONS?: (string)[], COMMENT?: string | Uint8Array | null, ENVELOPE_SHA256?: string | Uint8Array | null, SIGNATURE?: (number)[], SIGNATURE_TYPE?: string | Uint8Array | null, PREVIOUS_DECISION_SHA256?: string | Uint8Array | null);
+    REVIEWER_ROLE: visualAssetReviewerRole;
+    REPOSITORY: string | Uint8Array | null;
+    ISSUE_NUMBER: string | Uint8Array | null;
+    ENTITY_ID: string | Uint8Array | null;
+    VAM_ID: string | Uint8Array | null;
+    NONCE: string | Uint8Array | null;
+    REVIEWED_TRANSFORM: VAMTransformT | null;
+    CANONICAL_VARIANT_ID: string | Uint8Array | null;
+    ALTERNATE_VARIANT_IDS: (string)[];
+    ANNOTATIONS: (VAMAnnotationT)[];
+    constructor(REVIEWER_ID?: string | Uint8Array | null, CAPABILITY_ID?: string | Uint8Array | null, DECISION?: visualAssetDecisionKind, CANDIDATE_ID?: string | Uint8Array | null, CANDIDATE_CID?: string | Uint8Array | null, CANDIDATE_SHA256?: string | Uint8Array | null, DECIDED_AT?: string | Uint8Array | null, REASONS?: (string)[], COMMENT?: string | Uint8Array | null, ENVELOPE_SHA256?: string | Uint8Array | null, SIGNATURE?: (number)[], SIGNATURE_TYPE?: string | Uint8Array | null, PREVIOUS_DECISION_SHA256?: string | Uint8Array | null, REVIEWER_ROLE?: visualAssetReviewerRole, REPOSITORY?: string | Uint8Array | null, ISSUE_NUMBER?: string | Uint8Array | null, ENTITY_ID?: string | Uint8Array | null, VAM_ID?: string | Uint8Array | null, NONCE?: string | Uint8Array | null, REVIEWED_TRANSFORM?: VAMTransformT | null, CANONICAL_VARIANT_ID?: string | Uint8Array | null, ALTERNATE_VARIANT_IDS?: (string)[], ANNOTATIONS?: (VAMAnnotationT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=VAMReview.d.ts.map

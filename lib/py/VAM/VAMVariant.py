@@ -230,8 +230,16 @@ class VAMVariant(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+    # VAMVariant
+    def RANK(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
 def VAMVariantStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(24)
 
 def Start(builder):
     VAMVariantStart(builder)
@@ -386,6 +394,12 @@ def VAMVariantAddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_ID):
 def AddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_ID):
     VAMVariantAddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_ID)
 
+def VAMVariantAddRANK(builder, RANK):
+    builder.PrependUint32Slot(23, RANK, 0)
+
+def AddRANK(builder, RANK):
+    VAMVariantAddRANK(builder, RANK)
+
 def VAMVariantEnd(builder):
     return builder.EndObject()
 
@@ -430,6 +444,7 @@ class VAMVariantT(object):
         QUALITY = None,
         REVIEW_STATE = 0,
         SUPERSEDES_VARIANT_ID = None,
+        RANK = 0,
     ):
         self.ID = ID  # type: Optional[str]
         self.PARENT_VARIANT_ID = PARENT_VARIANT_ID  # type: Optional[str]
@@ -454,6 +469,7 @@ class VAMVariantT(object):
         self.QUALITY = QUALITY  # type: Optional[List[VAMQualityDimension.VAMQualityDimensionT]]
         self.REVIEW_STATE = REVIEW_STATE  # type: int
         self.SUPERSEDES_VARIANT_ID = SUPERSEDES_VARIANT_ID  # type: Optional[str]
+        self.RANK = RANK  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -510,6 +526,7 @@ class VAMVariantT(object):
                     self.QUALITY.append(vAMQualityDimension_)
         self.REVIEW_STATE = VAMVariant.REVIEW_STATE()
         self.SUPERSEDES_VARIANT_ID = VAMVariant.SUPERSEDES_VARIANT_ID()
+        self.RANK = VAMVariant.RANK()
 
     # VAMVariantT
     def Pack(self, builder):
@@ -600,5 +617,6 @@ class VAMVariantT(object):
         VAMVariantAddREVIEW_STATE(builder, self.REVIEW_STATE)
         if self.SUPERSEDES_VARIANT_ID is not None:
             VAMVariantAddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_ID)
+        VAMVariantAddRANK(builder, self.RANK)
         VAMVariant = VAMVariantEnd(builder)
         return VAMVariant

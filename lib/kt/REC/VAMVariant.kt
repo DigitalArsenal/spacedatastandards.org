@@ -270,6 +270,14 @@ class VAMVariant : Table() {
         }
     val supersedesVariantIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
     fun supersedesVariantIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+     */
+    val rank : UInt
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVAMVariant(_bb: ByteBuffer): VAMVariant = getRootAsVAMVariant(_bb, VAMVariant())
@@ -277,9 +285,10 @@ class VAMVariant : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVAMVariant(builder: FlatBufferBuilder, idOffset: Int, parentVariantIdOffset: Int, variantKind: Byte, lodLevel: UInt, fileNameOffset: Int, mediaTypeOffset: Int, byteLength: ULong, byteSha256Offset: Int, cidOffset: Int, multiformatAddressOffset: Int, gltfVersionOffset: Int, generatorOffset: Int, conversionToolOffset: Int, conversionVersionOffset: Int, conversionProfileOffset: Int, inputSha256Offset: Int, sourceOffset: Int, transformOffset: Int, metricsOffset: Int, validationOffset: Int, qualityOffset: Int, reviewState: Byte, supersedesVariantIdOffset: Int) : Int {
-            builder.startTable(23)
+        fun createVAMVariant(builder: FlatBufferBuilder, idOffset: Int, parentVariantIdOffset: Int, variantKind: Byte, lodLevel: UInt, fileNameOffset: Int, mediaTypeOffset: Int, byteLength: ULong, byteSha256Offset: Int, cidOffset: Int, multiformatAddressOffset: Int, gltfVersionOffset: Int, generatorOffset: Int, conversionToolOffset: Int, conversionVersionOffset: Int, conversionProfileOffset: Int, inputSha256Offset: Int, sourceOffset: Int, transformOffset: Int, metricsOffset: Int, validationOffset: Int, qualityOffset: Int, reviewState: Byte, supersedesVariantIdOffset: Int, rank: UInt) : Int {
+            builder.startTable(24)
             addBYTELENGTH(builder, byteLength)
+            addRANK(builder, rank)
             addSUPERSEDESVARIANTID(builder, supersedesVariantIdOffset)
             addQUALITY(builder, qualityOffset)
             addVALIDATION(builder, validationOffset)
@@ -304,7 +313,7 @@ class VAMVariant : Table() {
             addVARIANTKIND(builder, variantKind)
             return endVAMVariant(builder)
         }
-        fun startVAMVariant(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startVAMVariant(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addPARENTVARIANTID(builder: FlatBufferBuilder, parentVariantId: Int) = builder.addOffset(1, parentVariantId, 0)
         fun addVARIANTKIND(builder: FlatBufferBuilder, variantKind: Byte) = builder.addByte(2, variantKind, 0)
@@ -336,6 +345,7 @@ class VAMVariant : Table() {
         fun startQualityVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addREVIEWSTATE(builder: FlatBufferBuilder, reviewState: Byte) = builder.addByte(21, reviewState, 0)
         fun addSUPERSEDESVARIANTID(builder: FlatBufferBuilder, supersedesVariantId: Int) = builder.addOffset(22, supersedesVariantId, 0)
+        fun addRANK(builder: FlatBufferBuilder, rank: UInt) = builder.addInt(23, rank.toInt(), 0)
         fun endVAMVariant(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

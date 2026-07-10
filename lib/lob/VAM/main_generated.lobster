@@ -50,6 +50,12 @@ enum visualAssetDecisionKind:
     visualAssetDecisionKind_ESCALATE_LICENSE = 5
     visualAssetDecisionKind_SELECT_ALTERNATE = 6
 
+/// Reviewer authorization role. Append new values only; never reorder or reuse existing values.
+enum visualAssetReviewerRole:
+    visualAssetReviewerRole_VIEWER = 0
+    visualAssetReviewerRole_REVIEWER = 1
+    visualAssetReviewerRole_ADMIN = 2
+
 class VAMVector3
 
 class VAMScale3
@@ -57,6 +63,8 @@ class VAMScale3
 class VAMQuaternion
 
 class VAMTransform
+
+class VAMAnnotation
 
 class VAMSource
 
@@ -69,6 +77,8 @@ class VAMQualityDimension
 class VAMVariant
 
 class VAMReview
+
+class VAMMetadataOnlyReview
 
 class VAM
 
@@ -208,6 +218,40 @@ struct VAMTransformBuilder:
         return this
     def add_ORIGIN_NOTE(ORIGIN_NOTE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, ORIGIN_NOTE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
+class VAMAnnotation : flatbuffers.handle
+    def ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def KIND() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def MESSAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    def POSITION() -> VAMVector3?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: VAMVector3 { buf_, o } else: nil
+
+def GetRootAsVAMAnnotation(buf:string): return VAMAnnotation { buf, flatbuffers.indirect(buf, 0) }
+
+struct VAMAnnotationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_ID(ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, ID)
+        return this
+    def add_KIND(KIND:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, KIND)
+        return this
+    def add_MESSAGE(MESSAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, MESSAGE)
+        return this
+    def add_POSITION(POSITION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, POSITION)
         return this
     def end():
         return b_.EndObject()
@@ -503,13 +547,16 @@ class VAMVariant : flatbuffers.handle
         return visualAssetReviewState(flatbuffers.field_int8(buf_, pos_, 46, 0))
     def SUPERSEDES_VARIANT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 48)
+    /// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+    def RANK() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 50, 0)
 
 def GetRootAsVAMVariant(buf:string): return VAMVariant { buf, flatbuffers.indirect(buf, 0) }
 
 struct VAMVariantBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(24)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -580,6 +627,9 @@ struct VAMVariantBuilder:
     def add_SUPERSEDES_VARIANT_ID(SUPERSEDES_VARIANT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, SUPERSEDES_VARIANT_ID)
         return this
+    def add_RANK(RANK:int):
+        b_.PrependUint32Slot(23, RANK, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -590,9 +640,12 @@ def VAMVariantCreateQUALITYVector(b_:flatbuffers.builder, v_:[flatbuffers.offset
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 class VAMReview : flatbuffers.handle
     def REVIEWER_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
@@ -605,7 +658,7 @@ class VAMReview : flatbuffers.handle
     /// Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
     def CANDIDATE_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
-    /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+    /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
     def CANDIDATE_SHA256() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
     /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
@@ -631,13 +684,41 @@ class VAMReview : flatbuffers.handle
     /// 64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
     def PREVIOUS_DECISION_SHA256() -> string:
         return flatbuffers.field_string(buf_, pos_, 28)
+    def REVIEWER_ROLE() -> visualAssetReviewerRole:
+        return visualAssetReviewerRole(flatbuffers.field_int8(buf_, pos_, 30, 0))
+    /// Canonical repository identifier in owner/name form.
+    def REPOSITORY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 32)
+    /// Positive base-10 issue number digits with no leading zero.
+    def ISSUE_NUMBER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    def ENTITY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    def VAM_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    /// Unique opaque identifier containing at least 128 bits of entropy.
+    def NONCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+    def REVIEWED_TRANSFORM() -> VAMTransform?:
+        let o = flatbuffers.field_table(buf_, pos_, 42)
+        return if o: VAMTransform { buf_, o } else: nil
+    def CANONICAL_VARIANT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    def ALTERNATE_VARIANT_IDS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 4)
+    def ALTERNATE_VARIANT_IDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 46)
+    def ANNOTATIONS(i:int) -> VAMAnnotation:
+        return VAMAnnotation { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 48) + i * 4) }
+    def ANNOTATIONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 48)
 
 def GetRootAsVAMReview(buf:string): return VAMReview { buf, flatbuffers.indirect(buf, 0) }
 
 struct VAMReviewBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(23)
         return this
     def add_REVIEWER_ID(REVIEWER_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, REVIEWER_ID)
@@ -678,6 +759,36 @@ struct VAMReviewBuilder:
     def add_PREVIOUS_DECISION_SHA256(PREVIOUS_DECISION_SHA256:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, PREVIOUS_DECISION_SHA256)
         return this
+    def add_REVIEWER_ROLE(REVIEWER_ROLE:visualAssetReviewerRole):
+        b_.PrependInt8Slot(13, REVIEWER_ROLE, 0)
+        return this
+    def add_REPOSITORY(REPOSITORY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, REPOSITORY)
+        return this
+    def add_ISSUE_NUMBER(ISSUE_NUMBER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, ISSUE_NUMBER)
+        return this
+    def add_ENTITY_ID(ENTITY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, ENTITY_ID)
+        return this
+    def add_VAM_ID(VAM_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, VAM_ID)
+        return this
+    def add_NONCE(NONCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, NONCE)
+        return this
+    def add_REVIEWED_TRANSFORM(REVIEWED_TRANSFORM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, REVIEWED_TRANSFORM)
+        return this
+    def add_CANONICAL_VARIANT_ID(CANONICAL_VARIANT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, CANONICAL_VARIANT_ID)
+        return this
+    def add_ALTERNATE_VARIANT_IDS(ALTERNATE_VARIANT_IDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, ALTERNATE_VARIANT_IDS)
+        return this
+    def add_ANNOTATIONS(ANNOTATIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, ANNOTATIONS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -695,6 +806,161 @@ def VAMReviewCreateSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
     reverse(v_) e_: b_.PrependUint8(e_)
     return b_.EndVector(v_.length)
 
+def VAMReviewStartALTERNATEVARIANTIDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def VAMReviewCreateALTERNATEVARIANTIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def VAMReviewStartANNOTATIONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def VAMReviewCreateANNOTATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+/// The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+/// Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+/// The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+class VAMMetadataOnlyReview : flatbuffers.handle
+    def REVIEWER_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    def CAPABILITY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def REVIEWER_ROLE() -> visualAssetReviewerRole:
+        return visualAssetReviewerRole(flatbuffers.field_int8(buf_, pos_, 8, 0))
+    def REPOSITORY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    def ISSUE_NUMBER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    def ENTITY_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    def VAM_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    def NONCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    def DECISION() -> visualAssetDecisionKind:
+        return visualAssetDecisionKind(flatbuffers.field_int8(buf_, pos_, 20, 4))
+    def CANDIDATE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// 64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+    /// The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+    /// A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+    def CANDIDATE_METADATA_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    def DECIDED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
+    def REASONS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
+    def REASONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    def COMMENT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 30)
+    def ANNOTATIONS(i:int) -> VAMAnnotation:
+        return VAMAnnotation { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 32) + i * 4) }
+    def ANNOTATIONS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+    def ENVELOPE_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 34)
+    def SIGNATURE(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 1)
+    def SIGNATURE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    def SIGNATURE_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 38)
+    def PREVIOUS_DECISION_SHA256() -> string:
+        return flatbuffers.field_string(buf_, pos_, 40)
+
+def GetRootAsVAMMetadataOnlyReview(buf:string): return VAMMetadataOnlyReview { buf, flatbuffers.indirect(buf, 0) }
+
+struct VAMMetadataOnlyReviewBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(19)
+        return this
+    def add_REVIEWER_ID(REVIEWER_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, REVIEWER_ID)
+        return this
+    def add_CAPABILITY_ID(CAPABILITY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, CAPABILITY_ID)
+        return this
+    def add_REVIEWER_ROLE(REVIEWER_ROLE:visualAssetReviewerRole):
+        b_.PrependInt8Slot(2, REVIEWER_ROLE, 0)
+        return this
+    def add_REPOSITORY(REPOSITORY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, REPOSITORY)
+        return this
+    def add_ISSUE_NUMBER(ISSUE_NUMBER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, ISSUE_NUMBER)
+        return this
+    def add_ENTITY_ID(ENTITY_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, ENTITY_ID)
+        return this
+    def add_VAM_ID(VAM_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, VAM_ID)
+        return this
+    def add_NONCE(NONCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, NONCE)
+        return this
+    def add_DECISION(DECISION:visualAssetDecisionKind):
+        b_.PrependInt8Slot(8, DECISION, 4)
+        return this
+    def add_CANDIDATE_ID(CANDIDATE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, CANDIDATE_ID)
+        return this
+    def add_CANDIDATE_METADATA_SHA256(CANDIDATE_METADATA_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, CANDIDATE_METADATA_SHA256)
+        return this
+    def add_DECIDED_AT(DECIDED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, DECIDED_AT)
+        return this
+    def add_REASONS(REASONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, REASONS)
+        return this
+    def add_COMMENT(COMMENT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, COMMENT)
+        return this
+    def add_ANNOTATIONS(ANNOTATIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, ANNOTATIONS)
+        return this
+    def add_ENVELOPE_SHA256(ENVELOPE_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, ENVELOPE_SHA256)
+        return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, SIGNATURE)
+        return this
+    def add_SIGNATURE_TYPE(SIGNATURE_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, SIGNATURE_TYPE)
+        return this
+    def add_PREVIOUS_DECISION_SHA256(PREVIOUS_DECISION_SHA256:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(18, PREVIOUS_DECISION_SHA256)
+        return this
+    def end():
+        return b_.EndObject()
+
+def VAMMetadataOnlyReviewStartREASONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def VAMMetadataOnlyReviewCreateREASONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def VAMMetadataOnlyReviewStartANNOTATIONSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def VAMMetadataOnlyReviewCreateANNOTATIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def VAMMetadataOnlyReviewStartSIGNATUREVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def VAMMetadataOnlyReviewCreateSIGNATUREVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
 /// Visual Asset Manifest — ranked visual representations for one stable entity.
 class VAM : flatbuffers.handle
     def ID() -> string:
@@ -706,12 +972,14 @@ class VAM : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 8)
     def ENTITY_KIND() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
+    /// Identifies the approved canonical variant; alternate variants preserve their ranks.
     def CANONICAL_VARIANT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
     def ALTERNATE_VARIANT_IDS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
     def ALTERNATE_VARIANT_IDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 14)
+    /// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
     def VARIANTS(i:int) -> VAMVariant:
         return VAMVariant { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
     def VARIANTS_length() -> int:
@@ -733,13 +1001,17 @@ class VAM : flatbuffers.handle
     /// CIDv1 containing a multihash of the exact referenced DPM bytes.
     def DPM_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 28)
+    /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+    def METADATA_REVIEW() -> VAMMetadataOnlyReview?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: VAMMetadataOnlyReview { buf_, o } else: nil
 
 def GetRootAsVAM(buf:string): return VAM { buf, flatbuffers.indirect(buf, 0) }
 
 struct VAMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -779,6 +1051,9 @@ struct VAMBuilder:
         return this
     def add_DPM_CID(DPM_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, DPM_CID)
+        return this
+    def add_METADATA_REVIEW(METADATA_REVIEW:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, METADATA_REVIEW)
         return this
     def end():
         return b_.EndObject()

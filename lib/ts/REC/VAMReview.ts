@@ -4,13 +4,19 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { VAMAnnotation, VAMAnnotationT } from './VAMAnnotation.js';
+import { VAMTransform, VAMTransformT } from './VAMTransform.js';
 import { visualAssetDecisionKind } from './visualAssetDecisionKind.js';
+import { visualAssetReviewerRole } from './visualAssetReviewerRole.js';
 
 
 /**
- * Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
- * The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
- * Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+ * Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+ * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+ * Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+ * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+ * Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+ * Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
  */
 export class VAMReview implements flatbuffers.IUnpackableObject<VAMReviewT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -67,7 +73,7 @@ CANDIDATE_CID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+ * 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
  */
 CANDIDATE_SHA256():string
 CANDIDATE_SHA256(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -153,8 +159,91 @@ PREVIOUS_DECISION_SHA256(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+REVIEWER_ROLE():visualAssetReviewerRole {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : visualAssetReviewerRole.VIEWER;
+}
+
+/**
+ * Canonical repository identifier in owner/name form.
+ */
+REPOSITORY():string|null
+REPOSITORY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REPOSITORY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Positive base-10 issue number digits with no leading zero.
+ */
+ISSUE_NUMBER():string|null
+ISSUE_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ISSUE_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+ENTITY_ID():string|null
+ENTITY_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ENTITY_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+VAM_ID():string|null
+VAM_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VAM_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Unique opaque identifier containing at least 128 bits of entropy.
+ */
+NONCE():string|null
+NONCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NONCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+REVIEWED_TRANSFORM(obj?:VAMTransform):VAMTransform|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? (obj || new VAMTransform()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+CANONICAL_VARIANT_ID():string|null
+CANONICAL_VARIANT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CANONICAL_VARIANT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+ALTERNATE_VARIANT_IDS(index: number):string
+ALTERNATE_VARIANT_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+ALTERNATE_VARIANT_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+alternateVariantIdsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+ANNOTATIONS(index: number, obj?:VAMAnnotation):VAMAnnotation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new VAMAnnotation()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+annotationsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startVAMReview(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(23);
 }
 
 static addReviewerId(builder:flatbuffers.Builder, REVIEWER_IDOffset:flatbuffers.Offset) {
@@ -233,6 +322,70 @@ static addPreviousDecisionSha256(builder:flatbuffers.Builder, PREVIOUS_DECISION_
   builder.addFieldOffset(12, PREVIOUS_DECISION_SHA256Offset, 0);
 }
 
+static addReviewerRole(builder:flatbuffers.Builder, REVIEWER_ROLE:visualAssetReviewerRole) {
+  builder.addFieldInt8(13, REVIEWER_ROLE, visualAssetReviewerRole.VIEWER);
+}
+
+static addRepository(builder:flatbuffers.Builder, REPOSITORYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, REPOSITORYOffset, 0);
+}
+
+static addIssueNumber(builder:flatbuffers.Builder, ISSUE_NUMBEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, ISSUE_NUMBEROffset, 0);
+}
+
+static addEntityId(builder:flatbuffers.Builder, ENTITY_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, ENTITY_IDOffset, 0);
+}
+
+static addVamId(builder:flatbuffers.Builder, VAM_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, VAM_IDOffset, 0);
+}
+
+static addNonce(builder:flatbuffers.Builder, NONCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, NONCEOffset, 0);
+}
+
+static addReviewedTransform(builder:flatbuffers.Builder, REVIEWED_TRANSFORMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, REVIEWED_TRANSFORMOffset, 0);
+}
+
+static addCanonicalVariantId(builder:flatbuffers.Builder, CANONICAL_VARIANT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, CANONICAL_VARIANT_IDOffset, 0);
+}
+
+static addAlternateVariantIds(builder:flatbuffers.Builder, ALTERNATE_VARIANT_IDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, ALTERNATE_VARIANT_IDSOffset, 0);
+}
+
+static createAlternateVariantIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAlternateVariantIdsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addAnnotations(builder:flatbuffers.Builder, ANNOTATIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, ANNOTATIONSOffset, 0);
+}
+
+static createAnnotationsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAnnotationsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endVAMReview(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // REVIEWER_ID
@@ -245,23 +398,6 @@ static endVAMReview(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createVAMReview(builder:flatbuffers.Builder, REVIEWER_IDOffset:flatbuffers.Offset, CAPABILITY_IDOffset:flatbuffers.Offset, DECISION:visualAssetDecisionKind, CANDIDATE_IDOffset:flatbuffers.Offset, CANDIDATE_CIDOffset:flatbuffers.Offset, CANDIDATE_SHA256Offset:flatbuffers.Offset, DECIDED_ATOffset:flatbuffers.Offset, REASONSOffset:flatbuffers.Offset, COMMENTOffset:flatbuffers.Offset, ENVELOPE_SHA256Offset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, SIGNATURE_TYPEOffset:flatbuffers.Offset, PREVIOUS_DECISION_SHA256Offset:flatbuffers.Offset):flatbuffers.Offset {
-  VAMReview.startVAMReview(builder);
-  VAMReview.addReviewerId(builder, REVIEWER_IDOffset);
-  VAMReview.addCapabilityId(builder, CAPABILITY_IDOffset);
-  VAMReview.addDecision(builder, DECISION);
-  VAMReview.addCandidateId(builder, CANDIDATE_IDOffset);
-  VAMReview.addCandidateCid(builder, CANDIDATE_CIDOffset);
-  VAMReview.addCandidateSha256(builder, CANDIDATE_SHA256Offset);
-  VAMReview.addDecidedAt(builder, DECIDED_ATOffset);
-  VAMReview.addReasons(builder, REASONSOffset);
-  VAMReview.addComment(builder, COMMENTOffset);
-  VAMReview.addEnvelopeSha256(builder, ENVELOPE_SHA256Offset);
-  VAMReview.addSignature(builder, SIGNATUREOffset);
-  VAMReview.addSignatureType(builder, SIGNATURE_TYPEOffset);
-  VAMReview.addPreviousDecisionSha256(builder, PREVIOUS_DECISION_SHA256Offset);
-  return VAMReview.endVAMReview(builder);
-}
 
 unpack(): VAMReviewT {
   return new VAMReviewT(
@@ -277,7 +413,17 @@ unpack(): VAMReviewT {
     this.ENVELOPE_SHA256(),
     this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength()),
     this.SIGNATURE_TYPE(),
-    this.PREVIOUS_DECISION_SHA256()
+    this.PREVIOUS_DECISION_SHA256(),
+    this.REVIEWER_ROLE(),
+    this.REPOSITORY(),
+    this.ISSUE_NUMBER(),
+    this.ENTITY_ID(),
+    this.VAM_ID(),
+    this.NONCE(),
+    (this.REVIEWED_TRANSFORM() !== null ? this.REVIEWED_TRANSFORM()!.unpack() : null),
+    this.CANONICAL_VARIANT_ID(),
+    this.bb!.createScalarList<string>(this.ALTERNATE_VARIANT_IDS.bind(this), this.alternateVariantIdsLength()),
+    this.bb!.createObjList<VAMAnnotation, VAMAnnotationT>(this.ANNOTATIONS.bind(this), this.annotationsLength())
   );
 }
 
@@ -296,6 +442,16 @@ unpackTo(_o: VAMReviewT): void {
   _o.SIGNATURE = this.bb!.createScalarList<number>(this.SIGNATURE.bind(this), this.signatureLength());
   _o.SIGNATURE_TYPE = this.SIGNATURE_TYPE();
   _o.PREVIOUS_DECISION_SHA256 = this.PREVIOUS_DECISION_SHA256();
+  _o.REVIEWER_ROLE = this.REVIEWER_ROLE();
+  _o.REPOSITORY = this.REPOSITORY();
+  _o.ISSUE_NUMBER = this.ISSUE_NUMBER();
+  _o.ENTITY_ID = this.ENTITY_ID();
+  _o.VAM_ID = this.VAM_ID();
+  _o.NONCE = this.NONCE();
+  _o.REVIEWED_TRANSFORM = (this.REVIEWED_TRANSFORM() !== null ? this.REVIEWED_TRANSFORM()!.unpack() : null);
+  _o.CANONICAL_VARIANT_ID = this.CANONICAL_VARIANT_ID();
+  _o.ALTERNATE_VARIANT_IDS = this.bb!.createScalarList<string>(this.ALTERNATE_VARIANT_IDS.bind(this), this.alternateVariantIdsLength());
+  _o.ANNOTATIONS = this.bb!.createObjList<VAMAnnotation, VAMAnnotationT>(this.ANNOTATIONS.bind(this), this.annotationsLength());
 }
 }
 
@@ -313,7 +469,17 @@ constructor(
   public ENVELOPE_SHA256: string|Uint8Array|null = null,
   public SIGNATURE: (number)[] = [],
   public SIGNATURE_TYPE: string|Uint8Array|null = null,
-  public PREVIOUS_DECISION_SHA256: string|Uint8Array|null = null
+  public PREVIOUS_DECISION_SHA256: string|Uint8Array|null = null,
+  public REVIEWER_ROLE: visualAssetReviewerRole = visualAssetReviewerRole.VIEWER,
+  public REPOSITORY: string|Uint8Array|null = null,
+  public ISSUE_NUMBER: string|Uint8Array|null = null,
+  public ENTITY_ID: string|Uint8Array|null = null,
+  public VAM_ID: string|Uint8Array|null = null,
+  public NONCE: string|Uint8Array|null = null,
+  public REVIEWED_TRANSFORM: VAMTransformT|null = null,
+  public CANONICAL_VARIANT_ID: string|Uint8Array|null = null,
+  public ALTERNATE_VARIANT_IDS: (string)[] = [],
+  public ANNOTATIONS: (VAMAnnotationT)[] = []
 ){}
 
 
@@ -330,21 +496,41 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SIGNATURE = VAMReview.createSignatureVector(builder, this.SIGNATURE);
   const SIGNATURE_TYPE = (this.SIGNATURE_TYPE !== null ? builder.createString(this.SIGNATURE_TYPE!) : 0);
   const PREVIOUS_DECISION_SHA256 = (this.PREVIOUS_DECISION_SHA256 !== null ? builder.createString(this.PREVIOUS_DECISION_SHA256!) : 0);
+  const REPOSITORY = (this.REPOSITORY !== null ? builder.createString(this.REPOSITORY!) : 0);
+  const ISSUE_NUMBER = (this.ISSUE_NUMBER !== null ? builder.createString(this.ISSUE_NUMBER!) : 0);
+  const ENTITY_ID = (this.ENTITY_ID !== null ? builder.createString(this.ENTITY_ID!) : 0);
+  const VAM_ID = (this.VAM_ID !== null ? builder.createString(this.VAM_ID!) : 0);
+  const NONCE = (this.NONCE !== null ? builder.createString(this.NONCE!) : 0);
+  const REVIEWED_TRANSFORM = (this.REVIEWED_TRANSFORM !== null ? this.REVIEWED_TRANSFORM!.pack(builder) : 0);
+  const CANONICAL_VARIANT_ID = (this.CANONICAL_VARIANT_ID !== null ? builder.createString(this.CANONICAL_VARIANT_ID!) : 0);
+  const ALTERNATE_VARIANT_IDS = VAMReview.createAlternateVariantIdsVector(builder, builder.createObjectOffsetList(this.ALTERNATE_VARIANT_IDS));
+  const ANNOTATIONS = VAMReview.createAnnotationsVector(builder, builder.createObjectOffsetList(this.ANNOTATIONS));
 
-  return VAMReview.createVAMReview(builder,
-    REVIEWER_ID,
-    CAPABILITY_ID,
-    this.DECISION,
-    CANDIDATE_ID,
-    CANDIDATE_CID,
-    CANDIDATE_SHA256,
-    DECIDED_AT,
-    REASONS,
-    COMMENT,
-    ENVELOPE_SHA256,
-    SIGNATURE,
-    SIGNATURE_TYPE,
-    PREVIOUS_DECISION_SHA256
-  );
+  VAMReview.startVAMReview(builder);
+  VAMReview.addReviewerId(builder, REVIEWER_ID);
+  VAMReview.addCapabilityId(builder, CAPABILITY_ID);
+  VAMReview.addDecision(builder, this.DECISION);
+  VAMReview.addCandidateId(builder, CANDIDATE_ID);
+  VAMReview.addCandidateCid(builder, CANDIDATE_CID);
+  VAMReview.addCandidateSha256(builder, CANDIDATE_SHA256);
+  VAMReview.addDecidedAt(builder, DECIDED_AT);
+  VAMReview.addReasons(builder, REASONS);
+  VAMReview.addComment(builder, COMMENT);
+  VAMReview.addEnvelopeSha256(builder, ENVELOPE_SHA256);
+  VAMReview.addSignature(builder, SIGNATURE);
+  VAMReview.addSignatureType(builder, SIGNATURE_TYPE);
+  VAMReview.addPreviousDecisionSha256(builder, PREVIOUS_DECISION_SHA256);
+  VAMReview.addReviewerRole(builder, this.REVIEWER_ROLE);
+  VAMReview.addRepository(builder, REPOSITORY);
+  VAMReview.addIssueNumber(builder, ISSUE_NUMBER);
+  VAMReview.addEntityId(builder, ENTITY_ID);
+  VAMReview.addVamId(builder, VAM_ID);
+  VAMReview.addNonce(builder, NONCE);
+  VAMReview.addReviewedTransform(builder, REVIEWED_TRANSFORM);
+  VAMReview.addCanonicalVariantId(builder, CANONICAL_VARIANT_ID);
+  VAMReview.addAlternateVariantIds(builder, ALTERNATE_VARIANT_IDS);
+  VAMReview.addAnnotations(builder, ANNOTATIONS);
+
+  return VAMReview.endVAMReview(builder);
 }
 }

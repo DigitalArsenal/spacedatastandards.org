@@ -200,8 +200,16 @@ SUPERSEDES_VARIANT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+ */
+RANK():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
 static startVAMVariant(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(24);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -308,6 +316,10 @@ static addSupersedesVariantId(builder:flatbuffers.Builder, SUPERSEDES_VARIANT_ID
   builder.addFieldOffset(22, SUPERSEDES_VARIANT_IDOffset, 0);
 }
 
+static addRank(builder:flatbuffers.Builder, RANK:number) {
+  builder.addFieldInt32(23, RANK, 0);
+}
+
 static endVAMVariant(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
@@ -339,7 +351,8 @@ unpack(): VAMVariantT {
     (this.VALIDATION() !== null ? this.VALIDATION()!.unpack() : null),
     this.bb!.createObjList<VAMQualityDimension, VAMQualityDimensionT>(this.QUALITY.bind(this), this.qualityLength()),
     this.REVIEW_STATE(),
-    this.SUPERSEDES_VARIANT_ID()
+    this.SUPERSEDES_VARIANT_ID(),
+    this.RANK()
   );
 }
 
@@ -368,6 +381,7 @@ unpackTo(_o: VAMVariantT): void {
   _o.QUALITY = this.bb!.createObjList<VAMQualityDimension, VAMQualityDimensionT>(this.QUALITY.bind(this), this.qualityLength());
   _o.REVIEW_STATE = this.REVIEW_STATE();
   _o.SUPERSEDES_VARIANT_ID = this.SUPERSEDES_VARIANT_ID();
+  _o.RANK = this.RANK();
 }
 }
 
@@ -395,7 +409,8 @@ constructor(
   public VALIDATION: VAMValidationT|null = null,
   public QUALITY: (VAMQualityDimensionT)[] = [],
   public REVIEW_STATE: visualAssetReviewState = visualAssetReviewState.DISCOVERED,
-  public SUPERSEDES_VARIANT_ID: string|Uint8Array|null = null
+  public SUPERSEDES_VARIANT_ID: string|Uint8Array|null = null,
+  public RANK: number = 0
 ){}
 
 
@@ -444,6 +459,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   VAMVariant.addQuality(builder, QUALITY);
   VAMVariant.addReviewState(builder, this.REVIEW_STATE);
   VAMVariant.addSupersedesVariantId(builder, SUPERSEDES_VARIANT_ID);
+  VAMVariant.addRank(builder, this.RANK);
 
   return VAMVariant.endVAMVariant(builder);
 }

@@ -17,9 +17,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
- * The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
- * Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+ * Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+ * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+ * Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+ * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+ * Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+ * Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
  */
 @SuppressWarnings("unused")
 public final class VAMReview extends com.google.flatbuffers.Table {
@@ -46,7 +49,7 @@ public final class VAMReview extends com.google.flatbuffers.Table {
   public ByteBuffer CANDIDATE_CIDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer CANDIDATE_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+   * 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
    */
   public String CANDIDATE_SHA256() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CANDIDATE_SHA256AsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
@@ -91,6 +94,45 @@ public final class VAMReview extends com.google.flatbuffers.Table {
   public String PREVIOUS_DECISION_SHA256() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PREVIOUS_DECISION_SHA256AsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
   public ByteBuffer PREVIOUS_DECISION_SHA256InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  public byte REVIEWER_ROLE() { int o = __offset(30); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Canonical repository identifier in owner/name form.
+   */
+  public String REPOSITORY() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REPOSITORYAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer REPOSITORYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Positive base-10 issue number digits with no leading zero.
+   */
+  public String ISSUE_NUMBER() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ISSUE_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer ISSUE_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  public String ENTITY_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENTITY_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer ENTITY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public String VAM_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VAM_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer VAM_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Unique opaque identifier containing at least 128 bits of entropy.
+   */
+  public String NONCE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NONCEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer NONCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  public VAMTransform REVIEWED_TRANSFORM() { return REVIEWED_TRANSFORM(new VAMTransform()); }
+  public VAMTransform REVIEWED_TRANSFORM(VAMTransform obj) { int o = __offset(42); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public String CANONICAL_VARIANT_ID() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CANONICAL_VARIANT_IDAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer CANONICAL_VARIANT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  public String ALTERNATE_VARIANT_IDS(int j) { int o = __offset(46); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ALTERNATE_VARIANT_IDSLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector alternateVariantIdsVector() { return alternateVariantIdsVector(new StringVector()); }
+  public StringVector alternateVariantIdsVector(StringVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public VAMAnnotation ANNOTATIONS(int j) { return ANNOTATIONS(new VAMAnnotation(), j); }
+  public VAMAnnotation ANNOTATIONS(VAMAnnotation obj, int j) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ANNOTATIONSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public VAMAnnotation.Vector annotationsVector() { return annotationsVector(new VAMAnnotation.Vector()); }
+  public VAMAnnotation.Vector annotationsVector(VAMAnnotation.Vector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createVAMReview(FlatBufferBuilder builder,
       int REVIEWER_IDOffset,
@@ -105,8 +147,27 @@ public final class VAMReview extends com.google.flatbuffers.Table {
       int ENVELOPE_SHA256Offset,
       int SIGNATUREOffset,
       int SIGNATURE_TYPEOffset,
-      int PREVIOUS_DECISION_SHA256Offset) {
-    builder.startTable(13);
+      int PREVIOUS_DECISION_SHA256Offset,
+      byte REVIEWER_ROLE,
+      int REPOSITORYOffset,
+      int ISSUE_NUMBEROffset,
+      int ENTITY_IDOffset,
+      int VAM_IDOffset,
+      int NONCEOffset,
+      int REVIEWED_TRANSFORMOffset,
+      int CANONICAL_VARIANT_IDOffset,
+      int ALTERNATE_VARIANT_IDSOffset,
+      int ANNOTATIONSOffset) {
+    builder.startTable(23);
+    VAMReview.addAnnotations(builder, ANNOTATIONSOffset);
+    VAMReview.addAlternateVariantIds(builder, ALTERNATE_VARIANT_IDSOffset);
+    VAMReview.addCanonicalVariantId(builder, CANONICAL_VARIANT_IDOffset);
+    VAMReview.addReviewedTransform(builder, REVIEWED_TRANSFORMOffset);
+    VAMReview.addNonce(builder, NONCEOffset);
+    VAMReview.addVamId(builder, VAM_IDOffset);
+    VAMReview.addEntityId(builder, ENTITY_IDOffset);
+    VAMReview.addIssueNumber(builder, ISSUE_NUMBEROffset);
+    VAMReview.addRepository(builder, REPOSITORYOffset);
     VAMReview.addPreviousDecisionSha256(builder, PREVIOUS_DECISION_SHA256Offset);
     VAMReview.addSignatureType(builder, SIGNATURE_TYPEOffset);
     VAMReview.addSignature(builder, SIGNATUREOffset);
@@ -119,11 +180,12 @@ public final class VAMReview extends com.google.flatbuffers.Table {
     VAMReview.addCandidateId(builder, CANDIDATE_IDOffset);
     VAMReview.addCapabilityId(builder, CAPABILITY_IDOffset);
     VAMReview.addReviewerId(builder, REVIEWER_IDOffset);
+    VAMReview.addReviewerRole(builder, REVIEWER_ROLE);
     VAMReview.addDecision(builder, DECISION);
     return VAMReview.endVAMReview(builder);
   }
 
-  public static void startVAMReview(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startVAMReview(FlatBufferBuilder builder) { builder.startTable(23); }
   public static void addReviewerId(FlatBufferBuilder builder, int REVIEWER_IDOffset) { builder.addOffset(0, REVIEWER_IDOffset, 0); }
   public static void addCapabilityId(FlatBufferBuilder builder, int CAPABILITY_IDOffset) { builder.addOffset(1, CAPABILITY_IDOffset, 0); }
   public static void addDecision(FlatBufferBuilder builder, byte DECISION) { builder.addByte(2, DECISION, 0); }
@@ -142,6 +204,20 @@ public final class VAMReview extends com.google.flatbuffers.Table {
   public static void startSignatureVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
   public static void addSignatureType(FlatBufferBuilder builder, int SIGNATURE_TYPEOffset) { builder.addOffset(11, SIGNATURE_TYPEOffset, 0); }
   public static void addPreviousDecisionSha256(FlatBufferBuilder builder, int PREVIOUS_DECISION_SHA256Offset) { builder.addOffset(12, PREVIOUS_DECISION_SHA256Offset, 0); }
+  public static void addReviewerRole(FlatBufferBuilder builder, byte REVIEWER_ROLE) { builder.addByte(13, REVIEWER_ROLE, 0); }
+  public static void addRepository(FlatBufferBuilder builder, int REPOSITORYOffset) { builder.addOffset(14, REPOSITORYOffset, 0); }
+  public static void addIssueNumber(FlatBufferBuilder builder, int ISSUE_NUMBEROffset) { builder.addOffset(15, ISSUE_NUMBEROffset, 0); }
+  public static void addEntityId(FlatBufferBuilder builder, int ENTITY_IDOffset) { builder.addOffset(16, ENTITY_IDOffset, 0); }
+  public static void addVamId(FlatBufferBuilder builder, int VAM_IDOffset) { builder.addOffset(17, VAM_IDOffset, 0); }
+  public static void addNonce(FlatBufferBuilder builder, int NONCEOffset) { builder.addOffset(18, NONCEOffset, 0); }
+  public static void addReviewedTransform(FlatBufferBuilder builder, int REVIEWED_TRANSFORMOffset) { builder.addOffset(19, REVIEWED_TRANSFORMOffset, 0); }
+  public static void addCanonicalVariantId(FlatBufferBuilder builder, int CANONICAL_VARIANT_IDOffset) { builder.addOffset(20, CANONICAL_VARIANT_IDOffset, 0); }
+  public static void addAlternateVariantIds(FlatBufferBuilder builder, int ALTERNATE_VARIANT_IDSOffset) { builder.addOffset(21, ALTERNATE_VARIANT_IDSOffset, 0); }
+  public static int createAlternateVariantIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAlternateVariantIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAnnotations(FlatBufferBuilder builder, int ANNOTATIONSOffset) { builder.addOffset(22, ANNOTATIONSOffset, 0); }
+  public static int createAnnotationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAnnotationsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endVAMReview(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // REVIEWER_ID

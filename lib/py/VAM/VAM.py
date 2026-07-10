@@ -58,6 +58,7 @@ class VAM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Identifies the approved canonical variant; alternate variants preserve their ranks.
     # VAM
     def CANONICAL_VARIANT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -85,6 +86,7 @@ class VAM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
+    # MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
     # VAM
     def VARIANTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -160,8 +162,20 @@ class VAM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+    # VAM
+    def METADATA_REVIEW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from VAMMetadataOnlyReview import VAMMetadataOnlyReview
+            obj = VAMMetadataOnlyReview()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def VAMStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     VAMStart(builder)
@@ -268,12 +282,19 @@ def VAMAddDPM_CID(builder, DPM_CID):
 def AddDPM_CID(builder, DPM_CID):
     VAMAddDPM_CID(builder, DPM_CID)
 
+def VAMAddMETADATA_REVIEW(builder, METADATA_REVIEW):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(METADATA_REVIEW), 0)
+
+def AddMETADATA_REVIEW(builder, METADATA_REVIEW):
+    VAMAddMETADATA_REVIEW(builder, METADATA_REVIEW)
+
 def VAMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return VAMEnd(builder)
 
+import VAMMetadataOnlyReview
 import VAMReview
 import VAMVariant
 try:
@@ -299,6 +320,7 @@ class VAMT(object):
         UPDATED_AT = None,
         SUPERSEDES_VAM_CID = None,
         DPM_CID = None,
+        METADATA_REVIEW = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.VERSION = VERSION  # type: Optional[str]
@@ -313,6 +335,7 @@ class VAMT(object):
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
         self.SUPERSEDES_VAM_CID = SUPERSEDES_VAM_CID  # type: Optional[str]
         self.DPM_CID = DPM_CID  # type: Optional[str]
+        self.METADATA_REVIEW = METADATA_REVIEW  # type: Optional[VAMMetadataOnlyReview.VAMMetadataOnlyReviewT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -359,6 +382,8 @@ class VAMT(object):
         self.UPDATED_AT = VAM.UPDATED_AT()
         self.SUPERSEDES_VAM_CID = VAM.SUPERSEDES_VAM_CID()
         self.DPM_CID = VAM.DPM_CID()
+        if VAM.METADATA_REVIEW() is not None:
+            self.METADATA_REVIEW = VAMMetadataOnlyReview.VAMMetadataOnlyReviewT.InitFromObj(VAM.METADATA_REVIEW())
 
     # VAMT
     def Pack(self, builder):
@@ -398,6 +423,8 @@ class VAMT(object):
             SUPERSEDES_VAM_CID = builder.CreateString(self.SUPERSEDES_VAM_CID)
         if self.DPM_CID is not None:
             DPM_CID = builder.CreateString(self.DPM_CID)
+        if self.METADATA_REVIEW is not None:
+            METADATA_REVIEW = self.METADATA_REVIEW.Pack(builder)
         VAMStart(builder)
         if self.ID is not None:
             VAMAddID(builder, ID)
@@ -424,5 +451,7 @@ class VAMT(object):
             VAMAddSUPERSEDES_VAM_CID(builder, SUPERSEDES_VAM_CID)
         if self.DPM_CID is not None:
             VAMAddDPM_CID(builder, DPM_CID)
+        if self.METADATA_REVIEW is not None:
+            VAMAddMETADATA_REVIEW(builder, METADATA_REVIEW)
         VAM = VAMEnd(builder)
         return VAM

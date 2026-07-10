@@ -6,9 +6,12 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 class VAMReview extends Table
 {
     /**
@@ -77,7 +80,7 @@ class VAMReview extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+    /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
     public function getCANDIDATE_SHA256()
     {
         $o = $this->__offset(14);
@@ -166,21 +169,114 @@ class VAMReview extends Table
     }
 
     /**
+     * @return sbyte
+     */
+    public function getREVIEWER_ROLE()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \visualAssetReviewerRole::VIEWER;
+    }
+
+    /// Canonical repository identifier in owner/name form.
+    public function getREPOSITORY()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Positive base-10 issue number digits with no leading zero.
+    public function getISSUE_NUMBER()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getENTITY_ID()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getVAM_ID()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Unique opaque identifier containing at least 128 bits of entropy.
+    public function getNONCE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    public function getREVIEWED_TRANSFORM()
+    {
+        $obj = new VAMTransform();
+        $o = $this->__offset(42);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    public function getCANONICAL_VARIANT_ID()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getALTERNATE_VARIANT_IDS($j)
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getALTERNATE_VARIANT_IDSLength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @returnVectorOffset
+     */
+    public function getANNOTATIONS($j)
+    {
+        $o = $this->__offset(48);
+        $obj = new VAMAnnotation();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getANNOTATIONSLength()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startVAMReview(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return VAMReview
      */
-    public static function createVAMReview(FlatBufferBuilder $builder, $REVIEWER_ID, $CAPABILITY_ID, $DECISION, $CANDIDATE_ID, $CANDIDATE_CID, $CANDIDATE_SHA256, $DECIDED_AT, $REASONS, $COMMENT, $ENVELOPE_SHA256, $SIGNATURE, $SIGNATURE_TYPE, $PREVIOUS_DECISION_SHA256)
+    public static function createVAMReview(FlatBufferBuilder $builder, $REVIEWER_ID, $CAPABILITY_ID, $DECISION, $CANDIDATE_ID, $CANDIDATE_CID, $CANDIDATE_SHA256, $DECIDED_AT, $REASONS, $COMMENT, $ENVELOPE_SHA256, $SIGNATURE, $SIGNATURE_TYPE, $PREVIOUS_DECISION_SHA256, $REVIEWER_ROLE, $REPOSITORY, $ISSUE_NUMBER, $ENTITY_ID, $VAM_ID, $NONCE, $REVIEWED_TRANSFORM, $CANONICAL_VARIANT_ID, $ALTERNATE_VARIANT_IDS, $ANNOTATIONS)
     {
-        $builder->startObject(13);
+        $builder->startObject(23);
         self::addREVIEWER_ID($builder, $REVIEWER_ID);
         self::addCAPABILITY_ID($builder, $CAPABILITY_ID);
         self::addDECISION($builder, $DECISION);
@@ -194,6 +290,16 @@ class VAMReview extends Table
         self::addSIGNATURE($builder, $SIGNATURE);
         self::addSIGNATURE_TYPE($builder, $SIGNATURE_TYPE);
         self::addPREVIOUS_DECISION_SHA256($builder, $PREVIOUS_DECISION_SHA256);
+        self::addREVIEWER_ROLE($builder, $REVIEWER_ROLE);
+        self::addREPOSITORY($builder, $REPOSITORY);
+        self::addISSUE_NUMBER($builder, $ISSUE_NUMBER);
+        self::addENTITY_ID($builder, $ENTITY_ID);
+        self::addVAM_ID($builder, $VAM_ID);
+        self::addNONCE($builder, $NONCE);
+        self::addREVIEWED_TRANSFORM($builder, $REVIEWED_TRANSFORM);
+        self::addCANONICAL_VARIANT_ID($builder, $CANONICAL_VARIANT_ID);
+        self::addALTERNATE_VARIANT_IDS($builder, $ALTERNATE_VARIANT_IDS);
+        self::addANNOTATIONS($builder, $ANNOTATIONS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // REVIEWER_ID
         $builder->required($o, 10);  // CANDIDATE_ID
@@ -381,6 +487,154 @@ class VAMReview extends Table
     public static function addPREVIOUS_DECISION_SHA256(FlatBufferBuilder $builder, $PREVIOUS_DECISION_SHA256)
     {
         $builder->addOffsetX(12, $PREVIOUS_DECISION_SHA256, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addREVIEWER_ROLE(FlatBufferBuilder $builder, $REVIEWER_ROLE)
+    {
+        $builder->addSbyteX(13, $REVIEWER_ROLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREPOSITORY(FlatBufferBuilder $builder, $REPOSITORY)
+    {
+        $builder->addOffsetX(14, $REPOSITORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addISSUE_NUMBER(FlatBufferBuilder $builder, $ISSUE_NUMBER)
+    {
+        $builder->addOffsetX(15, $ISSUE_NUMBER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addENTITY_ID(FlatBufferBuilder $builder, $ENTITY_ID)
+    {
+        $builder->addOffsetX(16, $ENTITY_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addVAM_ID(FlatBufferBuilder $builder, $VAM_ID)
+    {
+        $builder->addOffsetX(17, $VAM_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNONCE(FlatBufferBuilder $builder, $NONCE)
+    {
+        $builder->addOffsetX(18, $NONCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREVIEWED_TRANSFORM(FlatBufferBuilder $builder, $REVIEWED_TRANSFORM)
+    {
+        $builder->addOffsetX(19, $REVIEWED_TRANSFORM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCANONICAL_VARIANT_ID(FlatBufferBuilder $builder, $CANONICAL_VARIANT_ID)
+    {
+        $builder->addOffsetX(20, $CANONICAL_VARIANT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addALTERNATE_VARIANT_IDS(FlatBufferBuilder $builder, $ALTERNATE_VARIANT_IDS)
+    {
+        $builder->addOffsetX(21, $ALTERNATE_VARIANT_IDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createALTERNATE_VARIANT_IDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startALTERNATE_VARIANT_IDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addANNOTATIONS(FlatBufferBuilder $builder, $ANNOTATIONS)
+    {
+        $builder->addOffsetX(22, $ANNOTATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createANNOTATIONSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startANNOTATIONSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -254,6 +254,43 @@ class _visualAssetDecisionKindReader extends fb.Reader<visualAssetDecisionKind> 
       visualAssetDecisionKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Reviewer authorization role. Append new values only; never reorder or reuse existing values.
+enum visualAssetReviewerRole {
+  VIEWER(0),
+  REVIEWER(1),
+  ADMIN(2);
+
+  final int value;
+  const visualAssetReviewerRole(this.value);
+
+  factory visualAssetReviewerRole.fromValue(int value) {
+    switch (value) {
+      case 0: return visualAssetReviewerRole.VIEWER;
+      case 1: return visualAssetReviewerRole.REVIEWER;
+      case 2: return visualAssetReviewerRole.ADMIN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static visualAssetReviewerRole? _createOrNull(int? value) =>
+      value == null ? null : visualAssetReviewerRole.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<visualAssetReviewerRole> reader = _visualAssetReviewerRoleReader();
+}
+
+class _visualAssetReviewerRoleReader extends fb.Reader<visualAssetReviewerRole> {
+  const _visualAssetReviewerRoleReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  visualAssetReviewerRole read(fb.BufferContext bc, int offset) =>
+      visualAssetReviewerRole.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Three-dimensional vector.
 class VAMVector3 {
   VAMVector3._(this._bc, this._bcOffset);
@@ -663,6 +700,112 @@ class VAMTransformObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, SOURCE_UNITSOffset);
     fbBuilder.addFloat64(5, _METERS_PER_SOURCE_UNIT);
     fbBuilder.addOffset(6, ORIGIN_NOTEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
+class VAMAnnotation {
+  VAMAnnotation._(this._bc, this._bcOffset);
+  factory VAMAnnotation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VAMAnnotation> reader = _VAMAnnotationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get MESSAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  VAMVector3? get POSITION => VAMVector3.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'VAMAnnotation{ID: ${ID}, KIND: ${KIND}, MESSAGE: ${MESSAGE}, POSITION: ${POSITION}}';
+  }
+}
+
+class _VAMAnnotationReader extends fb.TableReader<VAMAnnotation> {
+  const _VAMAnnotationReader();
+
+  @override
+  VAMAnnotation createObject(fb.BufferContext bc, int offset) =>
+    VAMAnnotation._(bc, offset);
+}
+
+class VAMAnnotationBuilder {
+  VAMAnnotationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addKindOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMessageOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VAMAnnotationObjectBuilder extends fb.ObjectBuilder {
+  final String? _ID;
+  final String? _KIND;
+  final String? _MESSAGE;
+  final VAMVector3ObjectBuilder? _POSITION;
+
+  VAMAnnotationObjectBuilder({
+    String? ID,
+    String? KIND,
+    String? MESSAGE,
+    VAMVector3ObjectBuilder? POSITION,
+  })
+      : _ID = ID,
+        _KIND = KIND,
+        _MESSAGE = MESSAGE,
+        _POSITION = POSITION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
+    final int? KINDOffset = _KIND == null ? null
+        : fbBuilder.writeString(_KIND!);
+    final int? MESSAGEOffset = _MESSAGE == null ? null
+        : fbBuilder.writeString(_MESSAGE!);
+    final int? POSITIONOffset = _POSITION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addOffset(0, IDOffset);
+    fbBuilder.addOffset(1, KINDOffset);
+    fbBuilder.addOffset(2, MESSAGEOffset);
+    fbBuilder.addOffset(3, POSITIONOffset);
     return fbBuilder.endTable();
   }
 
@@ -1346,10 +1489,12 @@ class VAMVariant {
   visualAssetReviewState get reviewState => REVIEW_STATE;
   String? get SUPERSEDES_VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
   String? get supersedesVariantId => SUPERSEDES_VARIANT_ID;
+  ///  Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+  int get RANK => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 50, 0);
 
   @override
   String toString() {
-    return 'VAMVariant{ID: ${ID}, parentVariantId: ${parentVariantId}, variantKind: ${variantKind}, lodLevel: ${lodLevel}, fileName: ${fileName}, mediaType: ${mediaType}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, gltfVersion: ${gltfVersion}, GENERATOR: ${GENERATOR}, conversionTool: ${conversionTool}, conversionVersion: ${conversionVersion}, conversionProfile: ${conversionProfile}, inputSha256: ${inputSha256}, SOURCE: ${SOURCE}, TRANSFORM: ${TRANSFORM}, METRICS: ${METRICS}, VALIDATION: ${VALIDATION}, QUALITY: ${QUALITY}, reviewState: ${reviewState}, supersedesVariantId: ${supersedesVariantId}}';
+    return 'VAMVariant{ID: ${ID}, parentVariantId: ${parentVariantId}, variantKind: ${variantKind}, lodLevel: ${lodLevel}, fileName: ${fileName}, mediaType: ${mediaType}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, gltfVersion: ${gltfVersion}, GENERATOR: ${GENERATOR}, conversionTool: ${conversionTool}, conversionVersion: ${conversionVersion}, conversionProfile: ${conversionProfile}, inputSha256: ${inputSha256}, SOURCE: ${SOURCE}, TRANSFORM: ${TRANSFORM}, METRICS: ${METRICS}, VALIDATION: ${VALIDATION}, QUALITY: ${QUALITY}, reviewState: ${reviewState}, supersedesVariantId: ${supersedesVariantId}, RANK: ${RANK}}';
   }
 }
 
@@ -1367,7 +1512,7 @@ class VAMVariantBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(24);
   }
 
   int addIdOffset(int? offset) {
@@ -1462,6 +1607,10 @@ class VAMVariantBuilder {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
+  int addRank(int? RANK) {
+    fbBuilder.addUint32(23, RANK);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1492,6 +1641,7 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
   final List<VAMQualityDimensionObjectBuilder>? _QUALITY;
   final visualAssetReviewState? _REVIEW_STATE;
   final String? _SUPERSEDES_VARIANT_ID;
+  final int? _RANK;
 
   VAMVariantObjectBuilder({
     String? ID,
@@ -1532,6 +1682,7 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
     visualAssetReviewState? reviewState,
     String? SUPERSEDES_VARIANT_ID,
     String? supersedesVariantId,
+    int? RANK,
   })
       : _ID = ID,
         _PARENT_VARIANT_ID = parentVariantId ?? PARENT_VARIANT_ID,
@@ -1555,7 +1706,8 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
         _VALIDATION = VALIDATION,
         _QUALITY = QUALITY,
         _REVIEW_STATE = reviewState ?? REVIEW_STATE,
-        _SUPERSEDES_VARIANT_ID = supersedesVariantId ?? SUPERSEDES_VARIANT_ID;
+        _SUPERSEDES_VARIANT_ID = supersedesVariantId ?? SUPERSEDES_VARIANT_ID,
+        _RANK = RANK;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1594,7 +1746,7 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_QUALITY!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? SUPERSEDES_VARIANT_IDOffset = _SUPERSEDES_VARIANT_ID == null ? null
         : fbBuilder.writeString(_SUPERSEDES_VARIANT_ID!);
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, PARENT_VARIANT_IDOffset);
     fbBuilder.addInt8(2, _VARIANT_KIND?.value);
@@ -1618,6 +1770,7 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, QUALITYOffset);
     fbBuilder.addInt8(21, _REVIEW_STATE?.value);
     fbBuilder.addOffset(22, SUPERSEDES_VARIANT_IDOffset);
+    fbBuilder.addUint32(23, _RANK);
     return fbBuilder.endTable();
   }
 
@@ -1629,9 +1782,12 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-///  The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-///  Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+///  Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+///  Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+///  Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+///  Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 class VAMReview {
   VAMReview._(this._bc, this._bcOffset);
   factory VAMReview(List<int> bytes) {
@@ -1654,7 +1810,7 @@ class VAMReview {
   ///  Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
   String? get CANDIDATE_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get candidateCid => CANDIDATE_CID;
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  ///  64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
   String? get CANDIDATE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get candidateSha256 => CANDIDATE_SHA256;
   ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
@@ -1673,10 +1829,30 @@ class VAMReview {
   ///  64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
   String? get PREVIOUS_DECISION_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get previousDecisionSha256 => PREVIOUS_DECISION_SHA256;
+  visualAssetReviewerRole get REVIEWER_ROLE => visualAssetReviewerRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  visualAssetReviewerRole get reviewerRole => REVIEWER_ROLE;
+  ///  Canonical repository identifier in owner/name form.
+  String? get REPOSITORY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Positive base-10 issue number digits with no leading zero.
+  String? get ISSUE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get issueNumber => ISSUE_NUMBER;
+  String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get entityId => ENTITY_ID;
+  String? get VAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get vamId => VAM_ID;
+  ///  Unique opaque identifier containing at least 128 bits of entropy.
+  String? get NONCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  VAMTransform? get REVIEWED_TRANSFORM => VAMTransform.reader.vTableGetNullable(_bc, _bcOffset, 42);
+  VAMTransform? get reviewedTransform => REVIEWED_TRANSFORM;
+  String? get CANONICAL_VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get canonicalVariantId => CANONICAL_VARIANT_ID;
+  List<String>? get ALTERNATE_VARIANT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
+  List<String>? get alternateVariantIds => ALTERNATE_VARIANT_IDS;
+  List<VAMAnnotation>? get ANNOTATIONS => const fb.ListReader<VAMAnnotation>(VAMAnnotation.reader).vTableGetNullable(_bc, _bcOffset, 48);
 
   @override
   String toString() {
-    return 'VAMReview{reviewerId: ${reviewerId}, capabilityId: ${capabilityId}, DECISION: ${DECISION}, candidateId: ${candidateId}, candidateCid: ${candidateCid}, candidateSha256: ${candidateSha256}, decidedAt: ${decidedAt}, REASONS: ${REASONS}, COMMENT: ${COMMENT}, envelopeSha256: ${envelopeSha256}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, previousDecisionSha256: ${previousDecisionSha256}}';
+    return 'VAMReview{reviewerId: ${reviewerId}, capabilityId: ${capabilityId}, DECISION: ${DECISION}, candidateId: ${candidateId}, candidateCid: ${candidateCid}, candidateSha256: ${candidateSha256}, decidedAt: ${decidedAt}, REASONS: ${REASONS}, COMMENT: ${COMMENT}, envelopeSha256: ${envelopeSha256}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, previousDecisionSha256: ${previousDecisionSha256}, reviewerRole: ${reviewerRole}, REPOSITORY: ${REPOSITORY}, issueNumber: ${issueNumber}, entityId: ${entityId}, vamId: ${vamId}, NONCE: ${NONCE}, reviewedTransform: ${reviewedTransform}, canonicalVariantId: ${canonicalVariantId}, alternateVariantIds: ${alternateVariantIds}, ANNOTATIONS: ${ANNOTATIONS}}';
   }
 }
 
@@ -1694,7 +1870,7 @@ class VAMReviewBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(23);
   }
 
   int addReviewerIdOffset(int? offset) {
@@ -1749,6 +1925,46 @@ class VAMReviewBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addReviewerRole(visualAssetReviewerRole? REVIEWER_ROLE) {
+    fbBuilder.addInt8(13, REVIEWER_ROLE?.value);
+    return fbBuilder.offset;
+  }
+  int addRepositoryOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addIssueNumberOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addEntityIdOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addVamIdOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addNonceOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addReviewedTransformOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addCanonicalVariantIdOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addAlternateVariantIdsOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addAnnotationsOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1769,6 +1985,16 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _SIGNATURE;
   final String? _SIGNATURE_TYPE;
   final String? _PREVIOUS_DECISION_SHA256;
+  final visualAssetReviewerRole? _REVIEWER_ROLE;
+  final String? _REPOSITORY;
+  final String? _ISSUE_NUMBER;
+  final String? _ENTITY_ID;
+  final String? _VAM_ID;
+  final String? _NONCE;
+  final VAMTransformObjectBuilder? _REVIEWED_TRANSFORM;
+  final String? _CANONICAL_VARIANT_ID;
+  final List<String>? _ALTERNATE_VARIANT_IDS;
+  final List<VAMAnnotationObjectBuilder>? _ANNOTATIONS;
 
   VAMReviewObjectBuilder({
     String? REVIEWER_ID,
@@ -1793,6 +2019,23 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
     String? signatureType,
     String? PREVIOUS_DECISION_SHA256,
     String? previousDecisionSha256,
+    visualAssetReviewerRole? REVIEWER_ROLE,
+    visualAssetReviewerRole? reviewerRole,
+    String? REPOSITORY,
+    String? ISSUE_NUMBER,
+    String? issueNumber,
+    String? ENTITY_ID,
+    String? entityId,
+    String? VAM_ID,
+    String? vamId,
+    String? NONCE,
+    VAMTransformObjectBuilder? REVIEWED_TRANSFORM,
+    VAMTransformObjectBuilder? reviewedTransform,
+    String? CANONICAL_VARIANT_ID,
+    String? canonicalVariantId,
+    List<String>? ALTERNATE_VARIANT_IDS,
+    List<String>? alternateVariantIds,
+    List<VAMAnnotationObjectBuilder>? ANNOTATIONS,
   })
       : _REVIEWER_ID = reviewerId ?? REVIEWER_ID,
         _CAPABILITY_ID = capabilityId ?? CAPABILITY_ID,
@@ -1806,7 +2049,17 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
         _ENVELOPE_SHA256 = envelopeSha256 ?? ENVELOPE_SHA256,
         _SIGNATURE = SIGNATURE,
         _SIGNATURE_TYPE = signatureType ?? SIGNATURE_TYPE,
-        _PREVIOUS_DECISION_SHA256 = previousDecisionSha256 ?? PREVIOUS_DECISION_SHA256;
+        _PREVIOUS_DECISION_SHA256 = previousDecisionSha256 ?? PREVIOUS_DECISION_SHA256,
+        _REVIEWER_ROLE = reviewerRole ?? REVIEWER_ROLE,
+        _REPOSITORY = REPOSITORY,
+        _ISSUE_NUMBER = issueNumber ?? ISSUE_NUMBER,
+        _ENTITY_ID = entityId ?? ENTITY_ID,
+        _VAM_ID = vamId ?? VAM_ID,
+        _NONCE = NONCE,
+        _REVIEWED_TRANSFORM = reviewedTransform ?? REVIEWED_TRANSFORM,
+        _CANONICAL_VARIANT_ID = canonicalVariantId ?? CANONICAL_VARIANT_ID,
+        _ALTERNATE_VARIANT_IDS = alternateVariantIds ?? ALTERNATE_VARIANT_IDS,
+        _ANNOTATIONS = ANNOTATIONS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1835,7 +2088,24 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SIGNATURE_TYPE!);
     final int? PREVIOUS_DECISION_SHA256Offset = _PREVIOUS_DECISION_SHA256 == null ? null
         : fbBuilder.writeString(_PREVIOUS_DECISION_SHA256!);
-    fbBuilder.startTable(13);
+    final int? REPOSITORYOffset = _REPOSITORY == null ? null
+        : fbBuilder.writeString(_REPOSITORY!);
+    final int? ISSUE_NUMBEROffset = _ISSUE_NUMBER == null ? null
+        : fbBuilder.writeString(_ISSUE_NUMBER!);
+    final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
+        : fbBuilder.writeString(_ENTITY_ID!);
+    final int? VAM_IDOffset = _VAM_ID == null ? null
+        : fbBuilder.writeString(_VAM_ID!);
+    final int? NONCEOffset = _NONCE == null ? null
+        : fbBuilder.writeString(_NONCE!);
+    final int? REVIEWED_TRANSFORMOffset = _REVIEWED_TRANSFORM?.getOrCreateOffset(fbBuilder);
+    final int? CANONICAL_VARIANT_IDOffset = _CANONICAL_VARIANT_ID == null ? null
+        : fbBuilder.writeString(_CANONICAL_VARIANT_ID!);
+    final int? ALTERNATE_VARIANT_IDSOffset = _ALTERNATE_VARIANT_IDS == null ? null
+        : fbBuilder.writeList(_ALTERNATE_VARIANT_IDS!.map(fbBuilder.writeString).toList());
+    final int? ANNOTATIONSOffset = _ANNOTATIONS == null ? null
+        : fbBuilder.writeList(_ANNOTATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, REVIEWER_IDOffset);
     fbBuilder.addOffset(1, CAPABILITY_IDOffset);
     fbBuilder.addInt8(2, _DECISION?.value);
@@ -1849,6 +2119,314 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, SIGNATUREOffset);
     fbBuilder.addOffset(11, SIGNATURE_TYPEOffset);
     fbBuilder.addOffset(12, PREVIOUS_DECISION_SHA256Offset);
+    fbBuilder.addInt8(13, _REVIEWER_ROLE?.value);
+    fbBuilder.addOffset(14, REPOSITORYOffset);
+    fbBuilder.addOffset(15, ISSUE_NUMBEROffset);
+    fbBuilder.addOffset(16, ENTITY_IDOffset);
+    fbBuilder.addOffset(17, VAM_IDOffset);
+    fbBuilder.addOffset(18, NONCEOffset);
+    fbBuilder.addOffset(19, REVIEWED_TRANSFORMOffset);
+    fbBuilder.addOffset(20, CANONICAL_VARIANT_IDOffset);
+    fbBuilder.addOffset(21, ALTERNATE_VARIANT_IDSOffset);
+    fbBuilder.addOffset(22, ANNOTATIONSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+///  The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+///  Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+///  The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+class VAMMetadataOnlyReview {
+  VAMMetadataOnlyReview._(this._bc, this._bcOffset);
+  factory VAMMetadataOnlyReview(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VAMMetadataOnlyReview> reader = _VAMMetadataOnlyReviewReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get REVIEWER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get reviewerId => REVIEWER_ID;
+  String? get CAPABILITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get capabilityId => CAPABILITY_ID;
+  visualAssetReviewerRole get REVIEWER_ROLE => visualAssetReviewerRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  visualAssetReviewerRole get reviewerRole => REVIEWER_ROLE;
+  String? get REPOSITORY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get ISSUE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get issueNumber => ISSUE_NUMBER;
+  String? get ENTITY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get entityId => ENTITY_ID;
+  String? get VAM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get vamId => VAM_ID;
+  String? get NONCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  visualAssetDecisionKind get DECISION => visualAssetDecisionKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 4));
+  String? get CANDIDATE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  String? get candidateId => CANDIDATE_ID;
+  ///  64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+  ///  The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+  ///  A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+  String? get CANDIDATE_METADATA_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get candidateMetadataSha256 => CANDIDATE_METADATA_SHA256;
+  String? get DECIDED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get decidedAt => DECIDED_AT;
+  List<String>? get REASONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  List<VAMAnnotation>? get ANNOTATIONS => const fb.ListReader<VAMAnnotation>(VAMAnnotation.reader).vTableGetNullable(_bc, _bcOffset, 32);
+  String? get ENVELOPE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  String? get envelopeSha256 => ENVELOPE_SHA256;
+  List<int>? get SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get SIGNATURE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get signatureType => SIGNATURE_TYPE;
+  String? get PREVIOUS_DECISION_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  String? get previousDecisionSha256 => PREVIOUS_DECISION_SHA256;
+
+  @override
+  String toString() {
+    return 'VAMMetadataOnlyReview{reviewerId: ${reviewerId}, capabilityId: ${capabilityId}, reviewerRole: ${reviewerRole}, REPOSITORY: ${REPOSITORY}, issueNumber: ${issueNumber}, entityId: ${entityId}, vamId: ${vamId}, NONCE: ${NONCE}, DECISION: ${DECISION}, candidateId: ${candidateId}, candidateMetadataSha256: ${candidateMetadataSha256}, decidedAt: ${decidedAt}, REASONS: ${REASONS}, COMMENT: ${COMMENT}, ANNOTATIONS: ${ANNOTATIONS}, envelopeSha256: ${envelopeSha256}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, previousDecisionSha256: ${previousDecisionSha256}}';
+  }
+}
+
+class _VAMMetadataOnlyReviewReader extends fb.TableReader<VAMMetadataOnlyReview> {
+  const _VAMMetadataOnlyReviewReader();
+
+  @override
+  VAMMetadataOnlyReview createObject(fb.BufferContext bc, int offset) =>
+    VAMMetadataOnlyReview._(bc, offset);
+}
+
+class VAMMetadataOnlyReviewBuilder {
+  VAMMetadataOnlyReviewBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(19);
+  }
+
+  int addReviewerIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCapabilityIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addReviewerRole(visualAssetReviewerRole? REVIEWER_ROLE) {
+    fbBuilder.addInt8(2, REVIEWER_ROLE?.value);
+    return fbBuilder.offset;
+  }
+  int addRepositoryOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addIssueNumberOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEntityIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addVamIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addNonceOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addDecision(visualAssetDecisionKind? DECISION) {
+    fbBuilder.addInt8(8, DECISION?.value);
+    return fbBuilder.offset;
+  }
+  int addCandidateIdOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addCandidateMetadataSha256Offset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addDecidedAtOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addReasonsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addAnnotationsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addEnvelopeSha256Offset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureTypeOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addPreviousDecisionSha256Offset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VAMMetadataOnlyReviewObjectBuilder extends fb.ObjectBuilder {
+  final String? _REVIEWER_ID;
+  final String? _CAPABILITY_ID;
+  final visualAssetReviewerRole? _REVIEWER_ROLE;
+  final String? _REPOSITORY;
+  final String? _ISSUE_NUMBER;
+  final String? _ENTITY_ID;
+  final String? _VAM_ID;
+  final String? _NONCE;
+  final visualAssetDecisionKind? _DECISION;
+  final String? _CANDIDATE_ID;
+  final String? _CANDIDATE_METADATA_SHA256;
+  final String? _DECIDED_AT;
+  final List<String>? _REASONS;
+  final String? _COMMENT;
+  final List<VAMAnnotationObjectBuilder>? _ANNOTATIONS;
+  final String? _ENVELOPE_SHA256;
+  final List<int>? _SIGNATURE;
+  final String? _SIGNATURE_TYPE;
+  final String? _PREVIOUS_DECISION_SHA256;
+
+  VAMMetadataOnlyReviewObjectBuilder({
+    String? REVIEWER_ID,
+    String? reviewerId,
+    String? CAPABILITY_ID,
+    String? capabilityId,
+    visualAssetReviewerRole? REVIEWER_ROLE,
+    visualAssetReviewerRole? reviewerRole,
+    String? REPOSITORY,
+    String? ISSUE_NUMBER,
+    String? issueNumber,
+    String? ENTITY_ID,
+    String? entityId,
+    String? VAM_ID,
+    String? vamId,
+    String? NONCE,
+    visualAssetDecisionKind? DECISION,
+    String? CANDIDATE_ID,
+    String? candidateId,
+    String? CANDIDATE_METADATA_SHA256,
+    String? candidateMetadataSha256,
+    String? DECIDED_AT,
+    String? decidedAt,
+    List<String>? REASONS,
+    String? COMMENT,
+    List<VAMAnnotationObjectBuilder>? ANNOTATIONS,
+    String? ENVELOPE_SHA256,
+    String? envelopeSha256,
+    List<int>? SIGNATURE,
+    String? SIGNATURE_TYPE,
+    String? signatureType,
+    String? PREVIOUS_DECISION_SHA256,
+    String? previousDecisionSha256,
+  })
+      : _REVIEWER_ID = reviewerId ?? REVIEWER_ID,
+        _CAPABILITY_ID = capabilityId ?? CAPABILITY_ID,
+        _REVIEWER_ROLE = reviewerRole ?? REVIEWER_ROLE,
+        _REPOSITORY = REPOSITORY,
+        _ISSUE_NUMBER = issueNumber ?? ISSUE_NUMBER,
+        _ENTITY_ID = entityId ?? ENTITY_ID,
+        _VAM_ID = vamId ?? VAM_ID,
+        _NONCE = NONCE,
+        _DECISION = DECISION,
+        _CANDIDATE_ID = candidateId ?? CANDIDATE_ID,
+        _CANDIDATE_METADATA_SHA256 = candidateMetadataSha256 ?? CANDIDATE_METADATA_SHA256,
+        _DECIDED_AT = decidedAt ?? DECIDED_AT,
+        _REASONS = REASONS,
+        _COMMENT = COMMENT,
+        _ANNOTATIONS = ANNOTATIONS,
+        _ENVELOPE_SHA256 = envelopeSha256 ?? ENVELOPE_SHA256,
+        _SIGNATURE = SIGNATURE,
+        _SIGNATURE_TYPE = signatureType ?? SIGNATURE_TYPE,
+        _PREVIOUS_DECISION_SHA256 = previousDecisionSha256 ?? PREVIOUS_DECISION_SHA256;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REVIEWER_IDOffset = _REVIEWER_ID == null ? null
+        : fbBuilder.writeString(_REVIEWER_ID!);
+    final int? CAPABILITY_IDOffset = _CAPABILITY_ID == null ? null
+        : fbBuilder.writeString(_CAPABILITY_ID!);
+    final int? REPOSITORYOffset = _REPOSITORY == null ? null
+        : fbBuilder.writeString(_REPOSITORY!);
+    final int? ISSUE_NUMBEROffset = _ISSUE_NUMBER == null ? null
+        : fbBuilder.writeString(_ISSUE_NUMBER!);
+    final int? ENTITY_IDOffset = _ENTITY_ID == null ? null
+        : fbBuilder.writeString(_ENTITY_ID!);
+    final int? VAM_IDOffset = _VAM_ID == null ? null
+        : fbBuilder.writeString(_VAM_ID!);
+    final int? NONCEOffset = _NONCE == null ? null
+        : fbBuilder.writeString(_NONCE!);
+    final int? CANDIDATE_IDOffset = _CANDIDATE_ID == null ? null
+        : fbBuilder.writeString(_CANDIDATE_ID!);
+    final int? CANDIDATE_METADATA_SHA256Offset = _CANDIDATE_METADATA_SHA256 == null ? null
+        : fbBuilder.writeString(_CANDIDATE_METADATA_SHA256!);
+    final int? DECIDED_ATOffset = _DECIDED_AT == null ? null
+        : fbBuilder.writeString(_DECIDED_AT!);
+    final int? REASONSOffset = _REASONS == null ? null
+        : fbBuilder.writeList(_REASONS!.map(fbBuilder.writeString).toList());
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    final int? ANNOTATIONSOffset = _ANNOTATIONS == null ? null
+        : fbBuilder.writeList(_ANNOTATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ENVELOPE_SHA256Offset = _ENVELOPE_SHA256 == null ? null
+        : fbBuilder.writeString(_ENVELOPE_SHA256!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeListUint8(_SIGNATURE!);
+    final int? SIGNATURE_TYPEOffset = _SIGNATURE_TYPE == null ? null
+        : fbBuilder.writeString(_SIGNATURE_TYPE!);
+    final int? PREVIOUS_DECISION_SHA256Offset = _PREVIOUS_DECISION_SHA256 == null ? null
+        : fbBuilder.writeString(_PREVIOUS_DECISION_SHA256!);
+    fbBuilder.startTable(19);
+    fbBuilder.addOffset(0, REVIEWER_IDOffset);
+    fbBuilder.addOffset(1, CAPABILITY_IDOffset);
+    fbBuilder.addInt8(2, _REVIEWER_ROLE?.value);
+    fbBuilder.addOffset(3, REPOSITORYOffset);
+    fbBuilder.addOffset(4, ISSUE_NUMBEROffset);
+    fbBuilder.addOffset(5, ENTITY_IDOffset);
+    fbBuilder.addOffset(6, VAM_IDOffset);
+    fbBuilder.addOffset(7, NONCEOffset);
+    fbBuilder.addInt8(8, _DECISION?.value);
+    fbBuilder.addOffset(9, CANDIDATE_IDOffset);
+    fbBuilder.addOffset(10, CANDIDATE_METADATA_SHA256Offset);
+    fbBuilder.addOffset(11, DECIDED_ATOffset);
+    fbBuilder.addOffset(12, REASONSOffset);
+    fbBuilder.addOffset(13, COMMENTOffset);
+    fbBuilder.addOffset(14, ANNOTATIONSOffset);
+    fbBuilder.addOffset(15, ENVELOPE_SHA256Offset);
+    fbBuilder.addOffset(16, SIGNATUREOffset);
+    fbBuilder.addOffset(17, SIGNATURE_TYPEOffset);
+    fbBuilder.addOffset(18, PREVIOUS_DECISION_SHA256Offset);
     return fbBuilder.endTable();
   }
 
@@ -1880,10 +2458,12 @@ class VAM {
   String? get entityId => ENTITY_ID;
   String? get ENTITY_KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   String? get entityKind => ENTITY_KIND;
+  ///  Identifies the approved canonical variant; alternate variants preserve their ranks.
   String? get CANONICAL_VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get canonicalVariantId => CANONICAL_VARIANT_ID;
   List<String>? get ALTERNATE_VARIANT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
   List<String>? get alternateVariantIds => ALTERNATE_VARIANT_IDS;
+  ///  MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
   List<VAMVariant>? get VARIANTS => const fb.ListReader<VAMVariant>(VAMVariant.reader).vTableGetNullable(_bc, _bcOffset, 16);
   VAMReview? get REVIEW => VAMReview.reader.vTableGetNullable(_bc, _bcOffset, 18);
   visualAssetReviewState get REVIEW_STATE => visualAssetReviewState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
@@ -1900,10 +2480,13 @@ class VAM {
   ///  CIDv1 containing a multihash of the exact referenced DPM bytes.
   String? get DPM_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get dpmCid => DPM_CID;
+  ///  Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  VAMMetadataOnlyReview? get METADATA_REVIEW => VAMMetadataOnlyReview.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  VAMMetadataOnlyReview? get metadataReview => METADATA_REVIEW;
 
   @override
   String toString() {
-    return 'VAM{ID: ${ID}, VERSION: ${VERSION}, entityId: ${entityId}, entityKind: ${entityKind}, canonicalVariantId: ${canonicalVariantId}, alternateVariantIds: ${alternateVariantIds}, VARIANTS: ${VARIANTS}, REVIEW: ${REVIEW}, reviewState: ${reviewState}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, supersedesVamCid: ${supersedesVamCid}, dpmCid: ${dpmCid}}';
+    return 'VAM{ID: ${ID}, VERSION: ${VERSION}, entityId: ${entityId}, entityKind: ${entityKind}, canonicalVariantId: ${canonicalVariantId}, alternateVariantIds: ${alternateVariantIds}, VARIANTS: ${VARIANTS}, REVIEW: ${REVIEW}, reviewState: ${reviewState}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, supersedesVamCid: ${supersedesVamCid}, dpmCid: ${dpmCid}, metadataReview: ${metadataReview}}';
   }
 }
 
@@ -1921,7 +2504,7 @@ class VAMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
   }
 
   int addIdOffset(int? offset) {
@@ -1976,6 +2559,10 @@ class VAMBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addMetadataReviewOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1996,6 +2583,7 @@ class VAMObjectBuilder extends fb.ObjectBuilder {
   final String? _UPDATED_AT;
   final String? _SUPERSEDES_VAM_CID;
   final String? _DPM_CID;
+  final VAMMetadataOnlyReviewObjectBuilder? _METADATA_REVIEW;
 
   VAMObjectBuilder({
     String? ID,
@@ -2020,6 +2608,8 @@ class VAMObjectBuilder extends fb.ObjectBuilder {
     String? supersedesVamCid,
     String? DPM_CID,
     String? dpmCid,
+    VAMMetadataOnlyReviewObjectBuilder? METADATA_REVIEW,
+    VAMMetadataOnlyReviewObjectBuilder? metadataReview,
   })
       : _ID = ID,
         _VERSION = VERSION,
@@ -2033,7 +2623,8 @@ class VAMObjectBuilder extends fb.ObjectBuilder {
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
         _SUPERSEDES_VAM_CID = supersedesVamCid ?? SUPERSEDES_VAM_CID,
-        _DPM_CID = dpmCid ?? DPM_CID;
+        _DPM_CID = dpmCid ?? DPM_CID,
+        _METADATA_REVIEW = metadataReview ?? METADATA_REVIEW;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2061,7 +2652,8 @@ class VAMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SUPERSEDES_VAM_CID!);
     final int? DPM_CIDOffset = _DPM_CID == null ? null
         : fbBuilder.writeString(_DPM_CID!);
-    fbBuilder.startTable(13);
+    final int? METADATA_REVIEWOffset = _METADATA_REVIEW?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, VERSIONOffset);
     fbBuilder.addOffset(2, ENTITY_IDOffset);
@@ -2075,6 +2667,7 @@ class VAMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, UPDATED_ATOffset);
     fbBuilder.addOffset(11, SUPERSEDES_VAM_CIDOffset);
     fbBuilder.addOffset(12, DPM_CIDOffset);
+    fbBuilder.addOffset(13, METADATA_REVIEWOffset);
     return fbBuilder.endTable();
   }
 

@@ -104,6 +104,10 @@ public final class VAMVariant extends com.google.flatbuffers.Table {
   public String SUPERSEDES_VARIANT_ID() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SUPERSEDES_VARIANT_IDAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer SUPERSEDES_VARIANT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+   */
+  public long RANK() { int o = __offset(50); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
 
   public static int createVAMVariant(FlatBufferBuilder builder,
       int IDOffset,
@@ -128,9 +132,11 @@ public final class VAMVariant extends com.google.flatbuffers.Table {
       int VALIDATIONOffset,
       int QUALITYOffset,
       byte REVIEW_STATE,
-      int SUPERSEDES_VARIANT_IDOffset) {
-    builder.startTable(23);
+      int SUPERSEDES_VARIANT_IDOffset,
+      long RANK) {
+    builder.startTable(24);
     VAMVariant.addByteLength(builder, BYTE_LENGTH);
+    VAMVariant.addRank(builder, RANK);
     VAMVariant.addSupersedesVariantId(builder, SUPERSEDES_VARIANT_IDOffset);
     VAMVariant.addQuality(builder, QUALITYOffset);
     VAMVariant.addValidation(builder, VALIDATIONOffset);
@@ -156,7 +162,7 @@ public final class VAMVariant extends com.google.flatbuffers.Table {
     return VAMVariant.endVAMVariant(builder);
   }
 
-  public static void startVAMVariant(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startVAMVariant(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addParentVariantId(FlatBufferBuilder builder, int PARENT_VARIANT_IDOffset) { builder.addOffset(1, PARENT_VARIANT_IDOffset, 0); }
   public static void addVariantKind(FlatBufferBuilder builder, byte VARIANT_KIND) { builder.addByte(2, VARIANT_KIND, 0); }
@@ -182,6 +188,7 @@ public final class VAMVariant extends com.google.flatbuffers.Table {
   public static void startQualityVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addReviewState(FlatBufferBuilder builder, byte REVIEW_STATE) { builder.addByte(21, REVIEW_STATE, 0); }
   public static void addSupersedesVariantId(FlatBufferBuilder builder, int SUPERSEDES_VARIANT_IDOffset) { builder.addOffset(22, SUPERSEDES_VARIANT_IDOffset, 0); }
+  public static void addRank(FlatBufferBuilder builder, long RANK) { builder.addInt(23, (int) RANK, (int) 0L); }
   public static int endVAMVariant(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

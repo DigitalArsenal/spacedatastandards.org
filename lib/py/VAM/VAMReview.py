@@ -6,9 +6,12 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-# The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-# Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+# Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+# The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+# Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+# Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+# Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+# Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 class VAMReview(object):
     __slots__ = ['_tab']
 
@@ -67,7 +70,7 @@ class VAMReview(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+    # 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
     # VAMReview
     def CANDIDATE_SHA256(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -162,8 +165,116 @@ class VAMReview(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # VAMReview
+    def REVIEWER_ROLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Canonical repository identifier in owner/name form.
+    # VAMReview
+    def REPOSITORY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Positive base-10 issue number digits with no leading zero.
+    # VAMReview
+    def ISSUE_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # VAMReview
+    def ENTITY_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # VAMReview
+    def VAM_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Unique opaque identifier containing at least 128 bits of entropy.
+    # VAMReview
+    def NONCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # VAMReview
+    def REVIEWED_TRANSFORM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from VAMTransform import VAMTransform
+            obj = VAMTransform()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # VAMReview
+    def CANONICAL_VARIANT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # VAMReview
+    def ALTERNATE_VARIANT_IDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # VAMReview
+    def ALTERNATE_VARIANT_IDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # VAMReview
+    def ALTERNATE_VARIANT_IDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        return o == 0
+
+    # VAMReview
+    def ANNOTATIONS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from VAMAnnotation import VAMAnnotation
+            obj = VAMAnnotation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # VAMReview
+    def ANNOTATIONSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # VAMReview
+    def ANNOTATIONSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        return o == 0
+
 def VAMReviewStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(23)
 
 def Start(builder):
     VAMReviewStart(builder)
@@ -274,14 +385,100 @@ def VAMReviewAddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256):
 def AddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256):
     VAMReviewAddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256)
 
+def VAMReviewAddREVIEWER_ROLE(builder, REVIEWER_ROLE):
+    builder.PrependInt8Slot(13, REVIEWER_ROLE, 0)
+
+def AddREVIEWER_ROLE(builder, REVIEWER_ROLE):
+    VAMReviewAddREVIEWER_ROLE(builder, REVIEWER_ROLE)
+
+def VAMReviewAddREPOSITORY(builder, REPOSITORY):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(REPOSITORY), 0)
+
+def AddREPOSITORY(builder, REPOSITORY):
+    VAMReviewAddREPOSITORY(builder, REPOSITORY)
+
+def VAMReviewAddISSUE_NUMBER(builder, ISSUE_NUMBER):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ISSUE_NUMBER), 0)
+
+def AddISSUE_NUMBER(builder, ISSUE_NUMBER):
+    VAMReviewAddISSUE_NUMBER(builder, ISSUE_NUMBER)
+
+def VAMReviewAddENTITY_ID(builder, ENTITY_ID):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ENTITY_ID), 0)
+
+def AddENTITY_ID(builder, ENTITY_ID):
+    VAMReviewAddENTITY_ID(builder, ENTITY_ID)
+
+def VAMReviewAddVAM_ID(builder, VAM_ID):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(VAM_ID), 0)
+
+def AddVAM_ID(builder, VAM_ID):
+    VAMReviewAddVAM_ID(builder, VAM_ID)
+
+def VAMReviewAddNONCE(builder, NONCE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE), 0)
+
+def AddNONCE(builder, NONCE):
+    VAMReviewAddNONCE(builder, NONCE)
+
+def VAMReviewAddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORM):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(REVIEWED_TRANSFORM), 0)
+
+def AddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORM):
+    VAMReviewAddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORM)
+
+def VAMReviewAddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_ID):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_VARIANT_ID), 0)
+
+def AddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_ID):
+    VAMReviewAddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_ID)
+
+def VAMReviewAddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ALTERNATE_VARIANT_IDS), 0)
+
+def AddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS):
+    VAMReviewAddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS)
+
+def VAMReviewStartALTERNATE_VARIANT_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartALTERNATE_VARIANT_IDSVector(builder, numElems):
+    return VAMReviewStartALTERNATE_VARIANT_IDSVector(builder, numElems)
+
+def VAMReviewCreateALTERNATE_VARIANT_IDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateALTERNATE_VARIANT_IDSVector(builder, data):
+    VAMReviewCreateALTERNATE_VARIANT_IDSVector(builder, data)
+
+def VAMReviewAddANNOTATIONS(builder, ANNOTATIONS):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ANNOTATIONS), 0)
+
+def AddANNOTATIONS(builder, ANNOTATIONS):
+    VAMReviewAddANNOTATIONS(builder, ANNOTATIONS)
+
+def VAMReviewStartANNOTATIONSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartANNOTATIONSVector(builder, numElems):
+    return VAMReviewStartANNOTATIONSVector(builder, numElems)
+
+def VAMReviewCreateANNOTATIONSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateANNOTATIONSVector(builder, data):
+    VAMReviewCreateANNOTATIONSVector(builder, data)
+
 def VAMReviewEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return VAMReviewEnd(builder)
 
+import VAMAnnotation
+import VAMTransform
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -303,6 +500,16 @@ class VAMReviewT(object):
         SIGNATURE = None,
         SIGNATURE_TYPE = None,
         PREVIOUS_DECISION_SHA256 = None,
+        REVIEWER_ROLE = 0,
+        REPOSITORY = None,
+        ISSUE_NUMBER = None,
+        ENTITY_ID = None,
+        VAM_ID = None,
+        NONCE = None,
+        REVIEWED_TRANSFORM = None,
+        CANONICAL_VARIANT_ID = None,
+        ALTERNATE_VARIANT_IDS = None,
+        ANNOTATIONS = None,
     ):
         self.REVIEWER_ID = REVIEWER_ID  # type: Optional[str]
         self.CAPABILITY_ID = CAPABILITY_ID  # type: Optional[str]
@@ -317,6 +524,16 @@ class VAMReviewT(object):
         self.SIGNATURE = SIGNATURE  # type: Optional[List[int]]
         self.SIGNATURE_TYPE = SIGNATURE_TYPE  # type: Optional[str]
         self.PREVIOUS_DECISION_SHA256 = PREVIOUS_DECISION_SHA256  # type: Optional[str]
+        self.REVIEWER_ROLE = REVIEWER_ROLE  # type: int
+        self.REPOSITORY = REPOSITORY  # type: Optional[str]
+        self.ISSUE_NUMBER = ISSUE_NUMBER  # type: Optional[str]
+        self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
+        self.VAM_ID = VAM_ID  # type: Optional[str]
+        self.NONCE = NONCE  # type: Optional[str]
+        self.REVIEWED_TRANSFORM = REVIEWED_TRANSFORM  # type: Optional[VAMTransform.VAMTransformT]
+        self.CANONICAL_VARIANT_ID = CANONICAL_VARIANT_ID  # type: Optional[str]
+        self.ALTERNATE_VARIANT_IDS = ALTERNATE_VARIANT_IDS  # type: Optional[List[Optional[str]]]
+        self.ANNOTATIONS = ANNOTATIONS  # type: Optional[List[VAMAnnotation.VAMAnnotationT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -361,6 +578,27 @@ class VAMReviewT(object):
                 self.SIGNATURE = VAMReview.SIGNATUREAsNumpy()
         self.SIGNATURE_TYPE = VAMReview.SIGNATURE_TYPE()
         self.PREVIOUS_DECISION_SHA256 = VAMReview.PREVIOUS_DECISION_SHA256()
+        self.REVIEWER_ROLE = VAMReview.REVIEWER_ROLE()
+        self.REPOSITORY = VAMReview.REPOSITORY()
+        self.ISSUE_NUMBER = VAMReview.ISSUE_NUMBER()
+        self.ENTITY_ID = VAMReview.ENTITY_ID()
+        self.VAM_ID = VAMReview.VAM_ID()
+        self.NONCE = VAMReview.NONCE()
+        if VAMReview.REVIEWED_TRANSFORM() is not None:
+            self.REVIEWED_TRANSFORM = VAMTransform.VAMTransformT.InitFromObj(VAMReview.REVIEWED_TRANSFORM())
+        self.CANONICAL_VARIANT_ID = VAMReview.CANONICAL_VARIANT_ID()
+        if not VAMReview.ALTERNATE_VARIANT_IDSIsNone():
+            self.ALTERNATE_VARIANT_IDS = []
+            for i in range(VAMReview.ALTERNATE_VARIANT_IDSLength()):
+                self.ALTERNATE_VARIANT_IDS.append(VAMReview.ALTERNATE_VARIANT_IDS(i))
+        if not VAMReview.ANNOTATIONSIsNone():
+            self.ANNOTATIONS = []
+            for i in range(VAMReview.ANNOTATIONSLength()):
+                if VAMReview.ANNOTATIONS(i) is None:
+                    self.ANNOTATIONS.append(None)
+                else:
+                    vAMAnnotation_ = VAMAnnotation.VAMAnnotationT.InitFromObj(VAMReview.ANNOTATIONS(i))
+                    self.ANNOTATIONS.append(vAMAnnotation_)
 
     # VAMReviewT
     def Pack(self, builder):
@@ -400,6 +638,36 @@ class VAMReviewT(object):
             SIGNATURE_TYPE = builder.CreateString(self.SIGNATURE_TYPE)
         if self.PREVIOUS_DECISION_SHA256 is not None:
             PREVIOUS_DECISION_SHA256 = builder.CreateString(self.PREVIOUS_DECISION_SHA256)
+        if self.REPOSITORY is not None:
+            REPOSITORY = builder.CreateString(self.REPOSITORY)
+        if self.ISSUE_NUMBER is not None:
+            ISSUE_NUMBER = builder.CreateString(self.ISSUE_NUMBER)
+        if self.ENTITY_ID is not None:
+            ENTITY_ID = builder.CreateString(self.ENTITY_ID)
+        if self.VAM_ID is not None:
+            VAM_ID = builder.CreateString(self.VAM_ID)
+        if self.NONCE is not None:
+            NONCE = builder.CreateString(self.NONCE)
+        if self.REVIEWED_TRANSFORM is not None:
+            REVIEWED_TRANSFORM = self.REVIEWED_TRANSFORM.Pack(builder)
+        if self.CANONICAL_VARIANT_ID is not None:
+            CANONICAL_VARIANT_ID = builder.CreateString(self.CANONICAL_VARIANT_ID)
+        if self.ALTERNATE_VARIANT_IDS is not None:
+            ALTERNATE_VARIANT_IDSlist = []
+            for i in range(len(self.ALTERNATE_VARIANT_IDS)):
+                ALTERNATE_VARIANT_IDSlist.append(builder.CreateString(self.ALTERNATE_VARIANT_IDS[i]))
+            VAMReviewStartALTERNATE_VARIANT_IDSVector(builder, len(self.ALTERNATE_VARIANT_IDS))
+            for i in reversed(range(len(self.ALTERNATE_VARIANT_IDS))):
+                builder.PrependUOffsetTRelative(ALTERNATE_VARIANT_IDSlist[i])
+            ALTERNATE_VARIANT_IDS = builder.EndVector()
+        if self.ANNOTATIONS is not None:
+            ANNOTATIONSlist = []
+            for i in range(len(self.ANNOTATIONS)):
+                ANNOTATIONSlist.append(self.ANNOTATIONS[i].Pack(builder))
+            VAMReviewStartANNOTATIONSVector(builder, len(self.ANNOTATIONS))
+            for i in reversed(range(len(self.ANNOTATIONS))):
+                builder.PrependUOffsetTRelative(ANNOTATIONSlist[i])
+            ANNOTATIONS = builder.EndVector()
         VAMReviewStart(builder)
         if self.REVIEWER_ID is not None:
             VAMReviewAddREVIEWER_ID(builder, REVIEWER_ID)
@@ -426,5 +694,24 @@ class VAMReviewT(object):
             VAMReviewAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE)
         if self.PREVIOUS_DECISION_SHA256 is not None:
             VAMReviewAddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256)
+        VAMReviewAddREVIEWER_ROLE(builder, self.REVIEWER_ROLE)
+        if self.REPOSITORY is not None:
+            VAMReviewAddREPOSITORY(builder, REPOSITORY)
+        if self.ISSUE_NUMBER is not None:
+            VAMReviewAddISSUE_NUMBER(builder, ISSUE_NUMBER)
+        if self.ENTITY_ID is not None:
+            VAMReviewAddENTITY_ID(builder, ENTITY_ID)
+        if self.VAM_ID is not None:
+            VAMReviewAddVAM_ID(builder, VAM_ID)
+        if self.NONCE is not None:
+            VAMReviewAddNONCE(builder, NONCE)
+        if self.REVIEWED_TRANSFORM is not None:
+            VAMReviewAddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORM)
+        if self.CANONICAL_VARIANT_ID is not None:
+            VAMReviewAddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_ID)
+        if self.ALTERNATE_VARIANT_IDS is not None:
+            VAMReviewAddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS)
+        if self.ANNOTATIONS is not None:
+            VAMReviewAddANNOTATIONS(builder, ANNOTATIONS)
         VAMReview = VAMReviewEnd(builder)
         return VAMReview

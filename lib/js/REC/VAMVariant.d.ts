@@ -71,6 +71,10 @@ export declare class VAMVariant implements flatbuffers.IUnpackableObject<VAMVari
     REVIEW_STATE(): visualAssetReviewState;
     SUPERSEDES_VARIANT_ID(): string | null;
     SUPERSEDES_VARIANT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+     */
+    RANK(): number;
     static startVAMVariant(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addParentVariantId(builder: flatbuffers.Builder, PARENT_VARIANT_IDOffset: flatbuffers.Offset): void;
@@ -97,6 +101,7 @@ export declare class VAMVariant implements flatbuffers.IUnpackableObject<VAMVari
     static startQualityVector(builder: flatbuffers.Builder, numElems: number): void;
     static addReviewState(builder: flatbuffers.Builder, REVIEW_STATE: visualAssetReviewState): void;
     static addSupersedesVariantId(builder: flatbuffers.Builder, SUPERSEDES_VARIANT_IDOffset: flatbuffers.Offset): void;
+    static addRank(builder: flatbuffers.Builder, RANK: number): void;
     static endVAMVariant(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): VAMVariantT;
     unpackTo(_o: VAMVariantT): void;
@@ -125,7 +130,8 @@ export declare class VAMVariantT implements flatbuffers.IGeneratedObject {
     QUALITY: (VAMQualityDimensionT)[];
     REVIEW_STATE: visualAssetReviewState;
     SUPERSEDES_VARIANT_ID: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, PARENT_VARIANT_ID?: string | Uint8Array | null, VARIANT_KIND?: visualAssetVariantKind, LOD_LEVEL?: number, FILE_NAME?: string | Uint8Array | null, MEDIA_TYPE?: string | Uint8Array | null, BYTE_LENGTH?: bigint, BYTE_SHA256?: string | Uint8Array | null, CID?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: string | Uint8Array | null, GLTF_VERSION?: string | Uint8Array | null, GENERATOR?: string | Uint8Array | null, CONVERSION_TOOL?: string | Uint8Array | null, CONVERSION_VERSION?: string | Uint8Array | null, CONVERSION_PROFILE?: string | Uint8Array | null, INPUT_SHA256?: string | Uint8Array | null, SOURCE?: VAMSourceT | null, TRANSFORM?: VAMTransformT | null, METRICS?: VAMMetricsT | null, VALIDATION?: VAMValidationT | null, QUALITY?: (VAMQualityDimensionT)[], REVIEW_STATE?: visualAssetReviewState, SUPERSEDES_VARIANT_ID?: string | Uint8Array | null);
+    RANK: number;
+    constructor(ID?: string | Uint8Array | null, PARENT_VARIANT_ID?: string | Uint8Array | null, VARIANT_KIND?: visualAssetVariantKind, LOD_LEVEL?: number, FILE_NAME?: string | Uint8Array | null, MEDIA_TYPE?: string | Uint8Array | null, BYTE_LENGTH?: bigint, BYTE_SHA256?: string | Uint8Array | null, CID?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: string | Uint8Array | null, GLTF_VERSION?: string | Uint8Array | null, GENERATOR?: string | Uint8Array | null, CONVERSION_TOOL?: string | Uint8Array | null, CONVERSION_VERSION?: string | Uint8Array | null, CONVERSION_PROFILE?: string | Uint8Array | null, INPUT_SHA256?: string | Uint8Array | null, SOURCE?: VAMSourceT | null, TRANSFORM?: VAMTransformT | null, METRICS?: VAMMetricsT | null, VALIDATION?: VAMValidationT | null, QUALITY?: (VAMQualityDimensionT)[], REVIEW_STATE?: visualAssetReviewState, SUPERSEDES_VARIANT_ID?: string | Uint8Array | null, RANK?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=VAMVariant.d.ts.map

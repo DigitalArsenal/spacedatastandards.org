@@ -214,22 +214,32 @@ class VAMVariant extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+    /**
+     * @return uint
+     */
+    public function getRANK()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startVAMVariant(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return VAMVariant
      */
-    public static function createVAMVariant(FlatBufferBuilder $builder, $ID, $PARENT_VARIANT_ID, $VARIANT_KIND, $LOD_LEVEL, $FILE_NAME, $MEDIA_TYPE, $BYTE_LENGTH, $BYTE_SHA256, $CID, $MULTIFORMAT_ADDRESS, $GLTF_VERSION, $GENERATOR, $CONVERSION_TOOL, $CONVERSION_VERSION, $CONVERSION_PROFILE, $INPUT_SHA256, $SOURCE, $TRANSFORM, $METRICS, $VALIDATION, $QUALITY, $REVIEW_STATE, $SUPERSEDES_VARIANT_ID)
+    public static function createVAMVariant(FlatBufferBuilder $builder, $ID, $PARENT_VARIANT_ID, $VARIANT_KIND, $LOD_LEVEL, $FILE_NAME, $MEDIA_TYPE, $BYTE_LENGTH, $BYTE_SHA256, $CID, $MULTIFORMAT_ADDRESS, $GLTF_VERSION, $GENERATOR, $CONVERSION_TOOL, $CONVERSION_VERSION, $CONVERSION_PROFILE, $INPUT_SHA256, $SOURCE, $TRANSFORM, $METRICS, $VALIDATION, $QUALITY, $REVIEW_STATE, $SUPERSEDES_VARIANT_ID, $RANK)
     {
-        $builder->startObject(23);
+        $builder->startObject(24);
         self::addID($builder, $ID);
         self::addPARENT_VARIANT_ID($builder, $PARENT_VARIANT_ID);
         self::addVARIANT_KIND($builder, $VARIANT_KIND);
@@ -253,6 +263,7 @@ class VAMVariant extends Table
         self::addQUALITY($builder, $QUALITY);
         self::addREVIEW_STATE($builder, $REVIEW_STATE);
         self::addSUPERSEDES_VARIANT_ID($builder, $SUPERSEDES_VARIANT_ID);
+        self::addRANK($builder, $RANK);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         return $o;
@@ -510,6 +521,16 @@ class VAMVariant extends Table
     public static function addSUPERSEDES_VARIANT_ID(FlatBufferBuilder $builder, $SUPERSEDES_VARIANT_ID)
     {
         $builder->addOffsetX(22, $SUPERSEDES_VARIANT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addRANK(FlatBufferBuilder $builder, $RANK)
+    {
+        $builder->addUintX(23, $RANK, 0);
     }
 
     /**

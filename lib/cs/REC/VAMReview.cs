@@ -6,9 +6,12 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 public struct VAMReview : IFlatbufferObject
 {
   private Table __p;
@@ -49,7 +52,7 @@ public struct VAMReview : IFlatbufferObject
   public ArraySegment<byte>? GetCANDIDATE_CIDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetCANDIDATE_CIDArray() { return __p.__vector_as_array<byte>(12); }
-  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
   public string CANDIDATE_SHA256 { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCANDIDATE_SHA256Bytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -107,6 +110,57 @@ public struct VAMReview : IFlatbufferObject
   public ArraySegment<byte>? GetPREVIOUS_DECISION_SHA256Bytes() { return __p.__vector_as_arraysegment(28); }
 #endif
   public byte[] GetPREVIOUS_DECISION_SHA256Array() { return __p.__vector_as_array<byte>(28); }
+  public visualAssetReviewerRole REVIEWER_ROLE { get { int o = __p.__offset(30); return o != 0 ? (visualAssetReviewerRole)__p.bb.GetSbyte(o + __p.bb_pos) : visualAssetReviewerRole.VIEWER; } }
+  /// Canonical repository identifier in owner/name form.
+  public string REPOSITORY { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREPOSITORYBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetREPOSITORYBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetREPOSITORYArray() { return __p.__vector_as_array<byte>(32); }
+  /// Positive base-10 issue number digits with no leading zero.
+  public string ISSUE_NUMBER { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetISSUE_NUMBERBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetISSUE_NUMBERBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetISSUE_NUMBERArray() { return __p.__vector_as_array<byte>(34); }
+  public string ENTITY_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENTITY_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetENTITY_IDBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetENTITY_IDArray() { return __p.__vector_as_array<byte>(36); }
+  public string VAM_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetVAM_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetVAM_IDBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetVAM_IDArray() { return __p.__vector_as_array<byte>(38); }
+  /// Unique opaque identifier containing at least 128 bits of entropy.
+  public string NONCE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNONCEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetNONCEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetNONCEArray() { return __p.__vector_as_array<byte>(40); }
+  public VAMTransform? REVIEWED_TRANSFORM { get { int o = __p.__offset(42); return o != 0 ? (VAMTransform?)(new VAMTransform()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public string CANONICAL_VARIANT_ID { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCANONICAL_VARIANT_IDBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetCANONICAL_VARIANT_IDBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetCANONICAL_VARIANT_IDArray() { return __p.__vector_as_array<byte>(44); }
+  public string ALTERNATE_VARIANT_IDS(int j) { int o = __p.__offset(46); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ALTERNATE_VARIANT_IDSLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public VAMAnnotation? ANNOTATIONS(int j) { int o = __p.__offset(48); return o != 0 ? (VAMAnnotation?)(new VAMAnnotation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ANNOTATIONSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<VAMReview> CreateVAMReview(FlatBufferBuilder builder,
       StringOffset REVIEWER_IDOffset = default(StringOffset),
@@ -121,8 +175,27 @@ public struct VAMReview : IFlatbufferObject
       StringOffset ENVELOPE_SHA256Offset = default(StringOffset),
       VectorOffset SIGNATUREOffset = default(VectorOffset),
       StringOffset SIGNATURE_TYPEOffset = default(StringOffset),
-      StringOffset PREVIOUS_DECISION_SHA256Offset = default(StringOffset)) {
-    builder.StartTable(13);
+      StringOffset PREVIOUS_DECISION_SHA256Offset = default(StringOffset),
+      visualAssetReviewerRole REVIEWER_ROLE = visualAssetReviewerRole.VIEWER,
+      StringOffset REPOSITORYOffset = default(StringOffset),
+      StringOffset ISSUE_NUMBEROffset = default(StringOffset),
+      StringOffset ENTITY_IDOffset = default(StringOffset),
+      StringOffset VAM_IDOffset = default(StringOffset),
+      StringOffset NONCEOffset = default(StringOffset),
+      Offset<VAMTransform> REVIEWED_TRANSFORMOffset = default(Offset<VAMTransform>),
+      StringOffset CANONICAL_VARIANT_IDOffset = default(StringOffset),
+      VectorOffset ALTERNATE_VARIANT_IDSOffset = default(VectorOffset),
+      VectorOffset ANNOTATIONSOffset = default(VectorOffset)) {
+    builder.StartTable(23);
+    VAMReview.AddANNOTATIONS(builder, ANNOTATIONSOffset);
+    VAMReview.AddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDSOffset);
+    VAMReview.AddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_IDOffset);
+    VAMReview.AddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORMOffset);
+    VAMReview.AddNONCE(builder, NONCEOffset);
+    VAMReview.AddVAM_ID(builder, VAM_IDOffset);
+    VAMReview.AddENTITY_ID(builder, ENTITY_IDOffset);
+    VAMReview.AddISSUE_NUMBER(builder, ISSUE_NUMBEROffset);
+    VAMReview.AddREPOSITORY(builder, REPOSITORYOffset);
     VAMReview.AddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256Offset);
     VAMReview.AddSIGNATURE_TYPE(builder, SIGNATURE_TYPEOffset);
     VAMReview.AddSIGNATURE(builder, SIGNATUREOffset);
@@ -135,11 +208,12 @@ public struct VAMReview : IFlatbufferObject
     VAMReview.AddCANDIDATE_ID(builder, CANDIDATE_IDOffset);
     VAMReview.AddCAPABILITY_ID(builder, CAPABILITY_IDOffset);
     VAMReview.AddREVIEWER_ID(builder, REVIEWER_IDOffset);
+    VAMReview.AddREVIEWER_ROLE(builder, REVIEWER_ROLE);
     VAMReview.AddDECISION(builder, DECISION);
     return VAMReview.EndVAMReview(builder);
   }
 
-  public static void StartVAMReview(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartVAMReview(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddREVIEWER_ID(FlatBufferBuilder builder, StringOffset REVIEWER_IDOffset) { builder.AddOffset(0, REVIEWER_IDOffset.Value, 0); }
   public static void AddCAPABILITY_ID(FlatBufferBuilder builder, StringOffset CAPABILITY_IDOffset) { builder.AddOffset(1, CAPABILITY_IDOffset.Value, 0); }
   public static void AddDECISION(FlatBufferBuilder builder, visualAssetDecisionKind DECISION) { builder.AddSbyte(2, (sbyte)DECISION, 0); }
@@ -163,6 +237,26 @@ public struct VAMReview : IFlatbufferObject
   public static void StartSIGNATUREVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
   public static void AddSIGNATURE_TYPE(FlatBufferBuilder builder, StringOffset SIGNATURE_TYPEOffset) { builder.AddOffset(11, SIGNATURE_TYPEOffset.Value, 0); }
   public static void AddPREVIOUS_DECISION_SHA256(FlatBufferBuilder builder, StringOffset PREVIOUS_DECISION_SHA256Offset) { builder.AddOffset(12, PREVIOUS_DECISION_SHA256Offset.Value, 0); }
+  public static void AddREVIEWER_ROLE(FlatBufferBuilder builder, visualAssetReviewerRole REVIEWER_ROLE) { builder.AddSbyte(13, (sbyte)REVIEWER_ROLE, 0); }
+  public static void AddREPOSITORY(FlatBufferBuilder builder, StringOffset REPOSITORYOffset) { builder.AddOffset(14, REPOSITORYOffset.Value, 0); }
+  public static void AddISSUE_NUMBER(FlatBufferBuilder builder, StringOffset ISSUE_NUMBEROffset) { builder.AddOffset(15, ISSUE_NUMBEROffset.Value, 0); }
+  public static void AddENTITY_ID(FlatBufferBuilder builder, StringOffset ENTITY_IDOffset) { builder.AddOffset(16, ENTITY_IDOffset.Value, 0); }
+  public static void AddVAM_ID(FlatBufferBuilder builder, StringOffset VAM_IDOffset) { builder.AddOffset(17, VAM_IDOffset.Value, 0); }
+  public static void AddNONCE(FlatBufferBuilder builder, StringOffset NONCEOffset) { builder.AddOffset(18, NONCEOffset.Value, 0); }
+  public static void AddREVIEWED_TRANSFORM(FlatBufferBuilder builder, Offset<VAMTransform> REVIEWED_TRANSFORMOffset) { builder.AddOffset(19, REVIEWED_TRANSFORMOffset.Value, 0); }
+  public static void AddCANONICAL_VARIANT_ID(FlatBufferBuilder builder, StringOffset CANONICAL_VARIANT_IDOffset) { builder.AddOffset(20, CANONICAL_VARIANT_IDOffset.Value, 0); }
+  public static void AddALTERNATE_VARIANT_IDS(FlatBufferBuilder builder, VectorOffset ALTERNATE_VARIANT_IDSOffset) { builder.AddOffset(21, ALTERNATE_VARIANT_IDSOffset.Value, 0); }
+  public static VectorOffset CreateALTERNATE_VARIANT_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateALTERNATE_VARIANT_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALTERNATE_VARIANT_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateALTERNATE_VARIANT_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartALTERNATE_VARIANT_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddANNOTATIONS(FlatBufferBuilder builder, VectorOffset ANNOTATIONSOffset) { builder.AddOffset(22, ANNOTATIONSOffset.Value, 0); }
+  public static VectorOffset CreateANNOTATIONSVector(FlatBufferBuilder builder, Offset<VAMAnnotation>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateANNOTATIONSVectorBlock(FlatBufferBuilder builder, Offset<VAMAnnotation>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateANNOTATIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<VAMAnnotation>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateANNOTATIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<VAMAnnotation>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartANNOTATIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<VAMReview> EndVAMReview(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // REVIEWER_ID
@@ -195,6 +289,18 @@ public struct VAMReview : IFlatbufferObject
     for (var _j = 0; _j < this.SIGNATURELength; ++_j) {_o.SIGNATURE.Add(this.SIGNATURE(_j));}
     _o.SIGNATURE_TYPE = this.SIGNATURE_TYPE;
     _o.PREVIOUS_DECISION_SHA256 = this.PREVIOUS_DECISION_SHA256;
+    _o.REVIEWER_ROLE = this.REVIEWER_ROLE;
+    _o.REPOSITORY = this.REPOSITORY;
+    _o.ISSUE_NUMBER = this.ISSUE_NUMBER;
+    _o.ENTITY_ID = this.ENTITY_ID;
+    _o.VAM_ID = this.VAM_ID;
+    _o.NONCE = this.NONCE;
+    _o.REVIEWED_TRANSFORM = this.REVIEWED_TRANSFORM.HasValue ? this.REVIEWED_TRANSFORM.Value.UnPack() : null;
+    _o.CANONICAL_VARIANT_ID = this.CANONICAL_VARIANT_ID;
+    _o.ALTERNATE_VARIANT_IDS = new List<string>();
+    for (var _j = 0; _j < this.ALTERNATE_VARIANT_IDSLength; ++_j) {_o.ALTERNATE_VARIANT_IDS.Add(this.ALTERNATE_VARIANT_IDS(_j));}
+    _o.ANNOTATIONS = new List<VAMAnnotationT>();
+    for (var _j = 0; _j < this.ANNOTATIONSLength; ++_j) {_o.ANNOTATIONS.Add(this.ANNOTATIONS(_j).HasValue ? this.ANNOTATIONS(_j).Value.UnPack() : null);}
   }
   public static Offset<VAMReview> Pack(FlatBufferBuilder builder, VAMReviewT _o) {
     if (_o == null) return default(Offset<VAMReview>);
@@ -219,6 +325,25 @@ public struct VAMReview : IFlatbufferObject
     }
     var _SIGNATURE_TYPE = _o.SIGNATURE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE_TYPE);
     var _PREVIOUS_DECISION_SHA256 = _o.PREVIOUS_DECISION_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.PREVIOUS_DECISION_SHA256);
+    var _REPOSITORY = _o.REPOSITORY == null ? default(StringOffset) : builder.CreateString(_o.REPOSITORY);
+    var _ISSUE_NUMBER = _o.ISSUE_NUMBER == null ? default(StringOffset) : builder.CreateString(_o.ISSUE_NUMBER);
+    var _ENTITY_ID = _o.ENTITY_ID == null ? default(StringOffset) : builder.CreateString(_o.ENTITY_ID);
+    var _VAM_ID = _o.VAM_ID == null ? default(StringOffset) : builder.CreateString(_o.VAM_ID);
+    var _NONCE = _o.NONCE == null ? default(StringOffset) : builder.CreateString(_o.NONCE);
+    var _REVIEWED_TRANSFORM = _o.REVIEWED_TRANSFORM == null ? default(Offset<VAMTransform>) : VAMTransform.Pack(builder, _o.REVIEWED_TRANSFORM);
+    var _CANONICAL_VARIANT_ID = _o.CANONICAL_VARIANT_ID == null ? default(StringOffset) : builder.CreateString(_o.CANONICAL_VARIANT_ID);
+    var _ALTERNATE_VARIANT_IDS = default(VectorOffset);
+    if (_o.ALTERNATE_VARIANT_IDS != null) {
+      var __ALTERNATE_VARIANT_IDS = new StringOffset[_o.ALTERNATE_VARIANT_IDS.Count];
+      for (var _j = 0; _j < __ALTERNATE_VARIANT_IDS.Length; ++_j) { __ALTERNATE_VARIANT_IDS[_j] = builder.CreateString(_o.ALTERNATE_VARIANT_IDS[_j]); }
+      _ALTERNATE_VARIANT_IDS = CreateALTERNATE_VARIANT_IDSVector(builder, __ALTERNATE_VARIANT_IDS);
+    }
+    var _ANNOTATIONS = default(VectorOffset);
+    if (_o.ANNOTATIONS != null) {
+      var __ANNOTATIONS = new Offset<VAMAnnotation>[_o.ANNOTATIONS.Count];
+      for (var _j = 0; _j < __ANNOTATIONS.Length; ++_j) { __ANNOTATIONS[_j] = VAMAnnotation.Pack(builder, _o.ANNOTATIONS[_j]); }
+      _ANNOTATIONS = CreateANNOTATIONSVector(builder, __ANNOTATIONS);
+    }
     return CreateVAMReview(
       builder,
       _REVIEWER_ID,
@@ -233,7 +358,17 @@ public struct VAMReview : IFlatbufferObject
       _ENVELOPE_SHA256,
       _SIGNATURE,
       _SIGNATURE_TYPE,
-      _PREVIOUS_DECISION_SHA256);
+      _PREVIOUS_DECISION_SHA256,
+      _o.REVIEWER_ROLE,
+      _REPOSITORY,
+      _ISSUE_NUMBER,
+      _ENTITY_ID,
+      _VAM_ID,
+      _NONCE,
+      _REVIEWED_TRANSFORM,
+      _CANONICAL_VARIANT_ID,
+      _ALTERNATE_VARIANT_IDS,
+      _ANNOTATIONS);
   }
 }
 
@@ -252,6 +387,16 @@ public class VAMReviewT
   public List<byte> SIGNATURE { get; set; }
   public string SIGNATURE_TYPE { get; set; }
   public string PREVIOUS_DECISION_SHA256 { get; set; }
+  public visualAssetReviewerRole REVIEWER_ROLE { get; set; }
+  public string REPOSITORY { get; set; }
+  public string ISSUE_NUMBER { get; set; }
+  public string ENTITY_ID { get; set; }
+  public string VAM_ID { get; set; }
+  public string NONCE { get; set; }
+  public VAMTransformT REVIEWED_TRANSFORM { get; set; }
+  public string CANONICAL_VARIANT_ID { get; set; }
+  public List<string> ALTERNATE_VARIANT_IDS { get; set; }
+  public List<VAMAnnotationT> ANNOTATIONS { get; set; }
 
   public VAMReviewT() {
     this.REVIEWER_ID = null;
@@ -267,6 +412,16 @@ public class VAMReviewT
     this.SIGNATURE = null;
     this.SIGNATURE_TYPE = null;
     this.PREVIOUS_DECISION_SHA256 = null;
+    this.REVIEWER_ROLE = visualAssetReviewerRole.VIEWER;
+    this.REPOSITORY = null;
+    this.ISSUE_NUMBER = null;
+    this.ENTITY_ID = null;
+    this.VAM_ID = null;
+    this.NONCE = null;
+    this.REVIEWED_TRANSFORM = null;
+    this.CANONICAL_VARIANT_ID = null;
+    this.ALTERNATE_VARIANT_IDS = null;
+    this.ANNOTATIONS = null;
   }
 }
 
@@ -289,6 +444,16 @@ static public class VAMReviewVerify
       && verifier.VerifyVectorOfData(tablePos, 24 /*SIGNATURE*/, 1 /*byte*/, true)
       && verifier.VerifyString(tablePos, 26 /*SIGNATURE_TYPE*/, true)
       && verifier.VerifyString(tablePos, 28 /*PREVIOUS_DECISION_SHA256*/, false)
+      && verifier.VerifyField(tablePos, 30 /*REVIEWER_ROLE*/, 1 /*visualAssetReviewerRole*/, 1, false)
+      && verifier.VerifyString(tablePos, 32 /*REPOSITORY*/, false)
+      && verifier.VerifyString(tablePos, 34 /*ISSUE_NUMBER*/, false)
+      && verifier.VerifyString(tablePos, 36 /*ENTITY_ID*/, false)
+      && verifier.VerifyString(tablePos, 38 /*VAM_ID*/, false)
+      && verifier.VerifyString(tablePos, 40 /*NONCE*/, false)
+      && verifier.VerifyTable(tablePos, 42 /*REVIEWED_TRANSFORM*/, VAMTransformVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 44 /*CANONICAL_VARIANT_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 46 /*ALTERNATE_VARIANT_IDS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 48 /*ANNOTATIONS*/, VAMAnnotationVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

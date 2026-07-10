@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export * from './VAM.js';
+export * from './VAMAnnotation.js';
+export * from './VAMMetadataOnlyReview.js';
 export * from './VAMMetrics.js';
 export * from './VAMQualityDimension.js';
 export * from './VAMQuaternion.js';
@@ -16,6 +18,7 @@ export * from './VAMVector3.js';
 export * from './visualAssetDecisionKind.js';
 export * from './visualAssetLicenseClass.js';
 export * from './visualAssetPermissionDecision.js';
+export * from './visualAssetReviewerRole.js';
 export * from './visualAssetReviewState.js';
 export * from './visualAssetUpAxis.js';
 export * from './visualAssetVariantKind.js';

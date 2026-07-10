@@ -6,9 +6,12 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 type VAMReview struct {
 	_tab flatbuffers.Table
 }
@@ -114,7 +117,7 @@ func (rcv *VAMReview) CandidateCid() []byte {
 }
 
 /// Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
-/// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+/// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
 func (rcv *VAMReview) CANDIDATE_SHA256() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -127,7 +130,7 @@ func (rcv *VAMReview) CandidateSha256() []byte {
 	return rcv.CANDIDATE_SHA256()
 }
 
-/// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+/// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
 /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
 func (rcv *VAMReview) DECIDED_AT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -273,8 +276,179 @@ func (rcv *VAMReview) PreviousDecisionSha256() []byte {
 }
 
 /// 64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
+func (rcv *VAMReview) REVIEWER_ROLE() visualAssetReviewerRole {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return visualAssetReviewerRole(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *VAMReview) ReviewerRole() visualAssetReviewerRole {
+	return rcv.REVIEWER_ROLE()
+}
+
+func (rcv *VAMReview) MutateREVIEWER_ROLE(n visualAssetReviewerRole) bool {
+	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+func (rcv *VAMReview) MutateReviewerRole(n visualAssetReviewerRole) bool {
+	return rcv.MutateREVIEWER_ROLE(n)
+}
+
+/// Canonical repository identifier in owner/name form.
+func (rcv *VAMReview) REPOSITORY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) Repository() []byte {
+	return rcv.REPOSITORY()
+}
+
+/// Canonical repository identifier in owner/name form.
+/// Positive base-10 issue number digits with no leading zero.
+func (rcv *VAMReview) ISSUE_NUMBER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) IssueNumber() []byte {
+	return rcv.ISSUE_NUMBER()
+}
+
+/// Positive base-10 issue number digits with no leading zero.
+func (rcv *VAMReview) ENTITY_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) EntityId() []byte {
+	return rcv.ENTITY_ID()
+}
+
+func (rcv *VAMReview) VAM_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) VamId() []byte {
+	return rcv.VAM_ID()
+}
+
+/// Unique opaque identifier containing at least 128 bits of entropy.
+func (rcv *VAMReview) NONCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) Nonce() []byte {
+	return rcv.NONCE()
+}
+
+/// Unique opaque identifier containing at least 128 bits of entropy.
+func (rcv *VAMReview) REVIEWED_TRANSFORM(obj *VAMTransform) *VAMTransform {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(VAMTransform)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *VAMReview) ReviewedTransform(obj *VAMTransform) *VAMTransform {
+	return rcv.REVIEWED_TRANSFORM(obj)
+}
+
+func (rcv *VAMReview) CANONICAL_VARIANT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *VAMReview) CanonicalVariantId() []byte {
+	return rcv.CANONICAL_VARIANT_ID()
+}
+
+func (rcv *VAMReview) ALTERNATE_VARIANT_IDS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *VAMReview) AlternateVariantIds(j int) []byte {
+	return rcv.ALTERNATE_VARIANT_IDS(j)
+}
+
+func (rcv *VAMReview) ALTERNATE_VARIANT_IDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *VAMReview) AlternateVariantIdsLength() int {
+	return rcv.ALTERNATE_VARIANT_IDSLength()
+}
+
+func (rcv *VAMReview) ANNOTATIONS(obj *VAMAnnotation, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(VAMAnnotation)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *VAMReview) Annotations(obj *VAMAnnotation, j int) bool {
+	return rcv.ANNOTATIONS(obj, j)
+}
+
+func (rcv *VAMReview) ANNOTATIONSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *VAMReview) AnnotationsLength() int {
+	return rcv.ANNOTATIONSLength()
+}
+
 func VAMReviewStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(23)
 }
 func VAMReviewAddREVIEWER_ID(builder *flatbuffers.Builder, REVIEWER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REVIEWER_ID), 0)
@@ -365,6 +539,78 @@ func VAMReviewAddPREVIOUS_DECISION_SHA256(builder *flatbuffers.Builder, PREVIOUS
 }
 func VAMReviewAddPreviousDecisionSha256(builder *flatbuffers.Builder, PREVIOUS_DECISION_SHA256 flatbuffers.UOffsetT) {
 	VAMReviewAddPREVIOUS_DECISION_SHA256(builder, PREVIOUS_DECISION_SHA256)
+}
+func VAMReviewAddREVIEWER_ROLE(builder *flatbuffers.Builder, REVIEWER_ROLE visualAssetReviewerRole) {
+	builder.PrependInt8Slot(13, int8(REVIEWER_ROLE), 0)
+}
+func VAMReviewAddReviewerRole(builder *flatbuffers.Builder, REVIEWER_ROLE visualAssetReviewerRole) {
+	VAMReviewAddREVIEWER_ROLE(builder, REVIEWER_ROLE)
+}
+func VAMReviewAddREPOSITORY(builder *flatbuffers.Builder, REPOSITORY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(REPOSITORY), 0)
+}
+func VAMReviewAddRepository(builder *flatbuffers.Builder, REPOSITORY flatbuffers.UOffsetT) {
+	VAMReviewAddREPOSITORY(builder, REPOSITORY)
+}
+func VAMReviewAddISSUE_NUMBER(builder *flatbuffers.Builder, ISSUE_NUMBER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ISSUE_NUMBER), 0)
+}
+func VAMReviewAddIssueNumber(builder *flatbuffers.Builder, ISSUE_NUMBER flatbuffers.UOffsetT) {
+	VAMReviewAddISSUE_NUMBER(builder, ISSUE_NUMBER)
+}
+func VAMReviewAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ENTITY_ID), 0)
+}
+func VAMReviewAddEntityId(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
+	VAMReviewAddENTITY_ID(builder, ENTITY_ID)
+}
+func VAMReviewAddVAM_ID(builder *flatbuffers.Builder, VAM_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(VAM_ID), 0)
+}
+func VAMReviewAddVamId(builder *flatbuffers.Builder, VAM_ID flatbuffers.UOffsetT) {
+	VAMReviewAddVAM_ID(builder, VAM_ID)
+}
+func VAMReviewAddNONCE(builder *flatbuffers.Builder, NONCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(NONCE), 0)
+}
+func VAMReviewAddNonce(builder *flatbuffers.Builder, NONCE flatbuffers.UOffsetT) {
+	VAMReviewAddNONCE(builder, NONCE)
+}
+func VAMReviewAddREVIEWED_TRANSFORM(builder *flatbuffers.Builder, REVIEWED_TRANSFORM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(REVIEWED_TRANSFORM), 0)
+}
+func VAMReviewAddReviewedTransform(builder *flatbuffers.Builder, REVIEWED_TRANSFORM flatbuffers.UOffsetT) {
+	VAMReviewAddREVIEWED_TRANSFORM(builder, REVIEWED_TRANSFORM)
+}
+func VAMReviewAddCANONICAL_VARIANT_ID(builder *flatbuffers.Builder, CANONICAL_VARIANT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(CANONICAL_VARIANT_ID), 0)
+}
+func VAMReviewAddCanonicalVariantId(builder *flatbuffers.Builder, CANONICAL_VARIANT_ID flatbuffers.UOffsetT) {
+	VAMReviewAddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_ID)
+}
+func VAMReviewAddALTERNATE_VARIANT_IDS(builder *flatbuffers.Builder, ALTERNATE_VARIANT_IDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ALTERNATE_VARIANT_IDS), 0)
+}
+func VAMReviewAddAlternateVariantIds(builder *flatbuffers.Builder, ALTERNATE_VARIANT_IDS flatbuffers.UOffsetT) {
+	VAMReviewAddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS)
+}
+func VAMReviewStartALTERNATE_VARIANT_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func VAMReviewStartAlternateVariantIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return VAMReviewStartALTERNATE_VARIANT_IDSVector(builder, numElems)
+}
+func VAMReviewAddANNOTATIONS(builder *flatbuffers.Builder, ANNOTATIONS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(ANNOTATIONS), 0)
+}
+func VAMReviewAddAnnotations(builder *flatbuffers.Builder, ANNOTATIONS flatbuffers.UOffsetT) {
+	VAMReviewAddANNOTATIONS(builder, ANNOTATIONS)
+}
+func VAMReviewStartANNOTATIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func VAMReviewStartAnnotationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return VAMReviewStartANNOTATIONSVector(builder, numElems)
 }
 func VAMReviewEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

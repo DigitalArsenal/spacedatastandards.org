@@ -105,6 +105,20 @@ public enum visualAssetDecisionKind: Int8, FlatbuffersVectorInitializable, Enum,
 }
 
 
+///  Reviewer authorization role. Append new values only; never reorder or reuse existing values.
+public enum visualAssetReviewerRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case viewer = 0
+  case reviewer = 1
+  case admin = 2
+
+  public static var max: visualAssetReviewerRole { return .admin }
+  public static var min: visualAssetReviewerRole { return .viewer }
+}
+
+
 ///  Three-dimensional vector.
 public struct VAMVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -325,6 +339,63 @@ public struct VAMTransform: FlatBufferTable, FlatbuffersVectorInitializable, Ver
     try _v.visit(field: VT.SOURCE_UNITS, fieldName: "SOURCE_UNITS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.METERS_PER_SOURCE_UNIT, fieldName: "METERS_PER_SOURCE_UNIT", required: false, type: Double.self)
     try _v.visit(field: VT.ORIGIN_NOTE, fieldName: "ORIGIN_NOTE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
+public struct VAMAnnotation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VAMAnnotation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ID: VOffset = 4
+    static let KIND: VOffset = 6
+    static let MESSAGE: VOffset = 8
+    static let POSITION: VOffset = 10
+  }
+
+  public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
+  public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
+  public var KIND: String! { let o = _accessor.offset(VT.KIND); return _accessor.string(at: o) }
+  public var KINDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.KIND) }
+  public var MESSAGE: String! { let o = _accessor.offset(VT.MESSAGE); return _accessor.string(at: o) }
+  public var MESSAGESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.MESSAGE) }
+  public var POSITION: VAMVector3? { let o = _accessor.offset(VT.POSITION); return o == 0 ? nil : VAMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startVAMAnnotation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
+  public static func add(KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KIND, at: VT.KIND) }
+  public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
+  public static func add(POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION, at: VT.POSITION) }
+  public static func endVAMAnnotation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8]); return end }
+  public static func createVAMAnnotation(
+    _ fbb: inout FlatBufferBuilder,
+    IDOffset ID: Offset,
+    KINDOffset KIND: Offset,
+    MESSAGEOffset MESSAGE: Offset,
+    POSITIONOffset POSITION: Offset = Offset()
+  ) -> Offset {
+    let __start = VAMAnnotation.startVAMAnnotation(&fbb)
+    VAMAnnotation.add(ID: ID, &fbb)
+    VAMAnnotation.add(KIND: KIND, &fbb)
+    VAMAnnotation.add(MESSAGE: MESSAGE, &fbb)
+    VAMAnnotation.add(POSITION: POSITION, &fbb)
+    return VAMAnnotation.endVAMAnnotation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ID, fieldName: "ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.POSITION, fieldName: "POSITION", required: false, type: ForwardOffset<VAMVector3>.self)
     _v.finish()
   }
 }
@@ -688,6 +759,7 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     static let QUALITY: VOffset = 44
     static let REVIEW_STATE: VOffset = 46
     static let SUPERSEDES_VARIANT_ID: VOffset = 48
+    static let RANK: VOffset = 50
   }
 
   public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
@@ -733,7 +805,9 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public var REVIEW_STATE: visualAssetReviewState { let o = _accessor.offset(VT.REVIEW_STATE); return o == 0 ? .discovered : visualAssetReviewState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .discovered }
   public var SUPERSEDES_VARIANT_ID: String? { let o = _accessor.offset(VT.SUPERSEDES_VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var SUPERSEDES_VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SUPERSEDES_VARIANT_ID) }
-  public static func startVAMVariant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  ///  Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+  public var RANK: UInt32 { let o = _accessor.offset(VT.RANK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startVAMVariant(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(PARENT_VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARENT_VARIANT_ID, at: VT.PARENT_VARIANT_ID) }
   public static func add(VARIANT_KIND: visualAssetVariantKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIANT_KIND.rawValue, def: 0, at: VT.VARIANT_KIND) }
@@ -757,6 +831,7 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public static func addVectorOf(QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUALITY, at: VT.QUALITY) }
   public static func add(REVIEW_STATE: visualAssetReviewState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REVIEW_STATE.rawValue, def: 0, at: VT.REVIEW_STATE) }
   public static func add(SUPERSEDES_VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPERSEDES_VARIANT_ID, at: VT.SUPERSEDES_VARIANT_ID) }
+  public static func add(RANK: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANK, def: 0, at: VT.RANK) }
   public static func endVAMVariant(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createVAMVariant(
     _ fbb: inout FlatBufferBuilder,
@@ -782,7 +857,8 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     VALIDATIONOffset VALIDATION: Offset = Offset(),
     QUALITYVectorOffset QUALITY: Offset = Offset(),
     REVIEW_STATE: visualAssetReviewState = .discovered,
-    SUPERSEDES_VARIANT_IDOffset SUPERSEDES_VARIANT_ID: Offset = Offset()
+    SUPERSEDES_VARIANT_IDOffset SUPERSEDES_VARIANT_ID: Offset = Offset(),
+    RANK: UInt32 = 0
   ) -> Offset {
     let __start = VAMVariant.startVAMVariant(&fbb)
     VAMVariant.add(ID: ID, &fbb)
@@ -808,6 +884,7 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     VAMVariant.addVectorOf(QUALITY: QUALITY, &fbb)
     VAMVariant.add(REVIEW_STATE: REVIEW_STATE, &fbb)
     VAMVariant.add(SUPERSEDES_VARIANT_ID: SUPERSEDES_VARIANT_ID, &fbb)
+    VAMVariant.add(RANK: RANK, &fbb)
     return VAMVariant.endVAMVariant(&fbb, start: __start)
   }
 
@@ -836,13 +913,17 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
     try _v.visit(field: VT.QUALITY, fieldName: "QUALITY", required: false, type: ForwardOffset<Vector<ForwardOffset<VAMQualityDimension>, VAMQualityDimension>>.self)
     try _v.visit(field: VT.REVIEW_STATE, fieldName: "REVIEW_STATE", required: false, type: visualAssetReviewState.self)
     try _v.visit(field: VT.SUPERSEDES_VARIANT_ID, fieldName: "SUPERSEDES_VARIANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RANK, fieldName: "RANK", required: false, type: UInt32.self)
     _v.finish()
   }
 }
 
-///  Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-///  The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-///  Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+///  Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+///  Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+///  Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+///  Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -868,6 +949,16 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let SIGNATURE: VOffset = 24
     static let SIGNATURE_TYPE: VOffset = 26
     static let PREVIOUS_DECISION_SHA256: VOffset = 28
+    static let REVIEWER_ROLE: VOffset = 30
+    static let REPOSITORY: VOffset = 32
+    static let ISSUE_NUMBER: VOffset = 34
+    static let ENTITY_ID: VOffset = 36
+    static let VAM_ID: VOffset = 38
+    static let NONCE: VOffset = 40
+    static let REVIEWED_TRANSFORM: VOffset = 42
+    static let CANONICAL_VARIANT_ID: VOffset = 44
+    static let ALTERNATE_VARIANT_IDS: VOffset = 46
+    static let ANNOTATIONS: VOffset = 48
   }
 
   public var REVIEWER_ID: String! { let o = _accessor.offset(VT.REVIEWER_ID); return _accessor.string(at: o) }
@@ -880,7 +971,7 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   ///  Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
   public var CANDIDATE_CID: String? { let o = _accessor.offset(VT.CANDIDATE_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CANDIDATE_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANDIDATE_CID) }
-  ///  64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  ///  64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
   public var CANDIDATE_SHA256: String! { let o = _accessor.offset(VT.CANDIDATE_SHA256); return _accessor.string(at: o) }
   public var CANDIDATE_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CANDIDATE_SHA256) }
   ///  RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
@@ -901,7 +992,26 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   ///  64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
   public var PREVIOUS_DECISION_SHA256: String? { let o = _accessor.offset(VT.PREVIOUS_DECISION_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
   public var PREVIOUS_DECISION_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREVIOUS_DECISION_SHA256) }
-  public static func startVAMReview(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public var REVIEWER_ROLE: visualAssetReviewerRole { let o = _accessor.offset(VT.REVIEWER_ROLE); return o == 0 ? .viewer : visualAssetReviewerRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .viewer }
+  ///  Canonical repository identifier in owner/name form.
+  public var REPOSITORY: String? { let o = _accessor.offset(VT.REPOSITORY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REPOSITORYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REPOSITORY) }
+  ///  Positive base-10 issue number digits with no leading zero.
+  public var ISSUE_NUMBER: String? { let o = _accessor.offset(VT.ISSUE_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ISSUE_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ISSUE_NUMBER) }
+  public var ENTITY_ID: String? { let o = _accessor.offset(VT.ENTITY_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENTITY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_ID) }
+  public var VAM_ID: String? { let o = _accessor.offset(VT.VAM_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var VAM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VAM_ID) }
+  ///  Unique opaque identifier containing at least 128 bits of entropy.
+  public var NONCE: String? { let o = _accessor.offset(VT.NONCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NONCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NONCE) }
+  public var REVIEWED_TRANSFORM: VAMTransform? { let o = _accessor.offset(VT.REVIEWED_TRANSFORM); return o == 0 ? nil : VAMTransform(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CANONICAL_VARIANT_ID: String? { let o = _accessor.offset(VT.CANONICAL_VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CANONICAL_VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_VARIANT_ID) }
+  public var ALTERNATE_VARIANT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALTERNATE_VARIANT_IDS, byteSize: 4) }
+  public var ANNOTATIONS: FlatbufferVector<VAMAnnotation> { return _accessor.vector(at: VT.ANNOTATIONS, byteSize: 4) }
+  public static func startVAMReview(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(REVIEWER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_ID, at: VT.REVIEWER_ID) }
   public static func add(CAPABILITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_ID, at: VT.CAPABILITY_ID) }
   public static func add(DECISION: visualAssetDecisionKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECISION.rawValue, def: 0, at: VT.DECISION) }
@@ -915,6 +1025,16 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
   public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
   public static func add(PREVIOUS_DECISION_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_DECISION_SHA256, at: VT.PREVIOUS_DECISION_SHA256) }
+  public static func add(REVIEWER_ROLE: visualAssetReviewerRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REVIEWER_ROLE.rawValue, def: 0, at: VT.REVIEWER_ROLE) }
+  public static func add(REPOSITORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPOSITORY, at: VT.REPOSITORY) }
+  public static func add(ISSUE_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUE_NUMBER, at: VT.ISSUE_NUMBER) }
+  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
+  public static func add(VAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VAM_ID, at: VT.VAM_ID) }
+  public static func add(NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE, at: VT.NONCE) }
+  public static func add(REVIEWED_TRANSFORM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWED_TRANSFORM, at: VT.REVIEWED_TRANSFORM) }
+  public static func add(CANONICAL_VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_VARIANT_ID, at: VT.CANONICAL_VARIANT_ID) }
+  public static func addVectorOf(ALTERNATE_VARIANT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_VARIANT_IDS, at: VT.ALTERNATE_VARIANT_IDS) }
+  public static func addVectorOf(ANNOTATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATIONS, at: VT.ANNOTATIONS) }
   public static func endVAMReview(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 14, 16, 22, 24, 26]); return end }
   public static func createVAMReview(
     _ fbb: inout FlatBufferBuilder,
@@ -930,7 +1050,17 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     ENVELOPE_SHA256Offset ENVELOPE_SHA256: Offset,
     SIGNATUREVectorOffset SIGNATURE: Offset,
     SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset,
-    PREVIOUS_DECISION_SHA256Offset PREVIOUS_DECISION_SHA256: Offset = Offset()
+    PREVIOUS_DECISION_SHA256Offset PREVIOUS_DECISION_SHA256: Offset = Offset(),
+    REVIEWER_ROLE: visualAssetReviewerRole = .viewer,
+    REPOSITORYOffset REPOSITORY: Offset = Offset(),
+    ISSUE_NUMBEROffset ISSUE_NUMBER: Offset = Offset(),
+    ENTITY_IDOffset ENTITY_ID: Offset = Offset(),
+    VAM_IDOffset VAM_ID: Offset = Offset(),
+    NONCEOffset NONCE: Offset = Offset(),
+    REVIEWED_TRANSFORMOffset REVIEWED_TRANSFORM: Offset = Offset(),
+    CANONICAL_VARIANT_IDOffset CANONICAL_VARIANT_ID: Offset = Offset(),
+    ALTERNATE_VARIANT_IDSVectorOffset ALTERNATE_VARIANT_IDS: Offset = Offset(),
+    ANNOTATIONSVectorOffset ANNOTATIONS: Offset = Offset()
   ) -> Offset {
     let __start = VAMReview.startVAMReview(&fbb)
     VAMReview.add(REVIEWER_ID: REVIEWER_ID, &fbb)
@@ -946,6 +1076,16 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     VAMReview.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
     VAMReview.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
     VAMReview.add(PREVIOUS_DECISION_SHA256: PREVIOUS_DECISION_SHA256, &fbb)
+    VAMReview.add(REVIEWER_ROLE: REVIEWER_ROLE, &fbb)
+    VAMReview.add(REPOSITORY: REPOSITORY, &fbb)
+    VAMReview.add(ISSUE_NUMBER: ISSUE_NUMBER, &fbb)
+    VAMReview.add(ENTITY_ID: ENTITY_ID, &fbb)
+    VAMReview.add(VAM_ID: VAM_ID, &fbb)
+    VAMReview.add(NONCE: NONCE, &fbb)
+    VAMReview.add(REVIEWED_TRANSFORM: REVIEWED_TRANSFORM, &fbb)
+    VAMReview.add(CANONICAL_VARIANT_ID: CANONICAL_VARIANT_ID, &fbb)
+    VAMReview.addVectorOf(ALTERNATE_VARIANT_IDS: ALTERNATE_VARIANT_IDS, &fbb)
+    VAMReview.addVectorOf(ANNOTATIONS: ANNOTATIONS, &fbb)
     return VAMReview.endVAMReview(&fbb, start: __start)
   }
 
@@ -960,6 +1100,181 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.DECIDED_AT, fieldName: "DECIDED_AT", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.REASONS, fieldName: "REASONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENVELOPE_SHA256, fieldName: "ENVELOPE_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PREVIOUS_DECISION_SHA256, fieldName: "PREVIOUS_DECISION_SHA256", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REVIEWER_ROLE, fieldName: "REVIEWER_ROLE", required: false, type: visualAssetReviewerRole.self)
+    try _v.visit(field: VT.REPOSITORY, fieldName: "REPOSITORY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ISSUE_NUMBER, fieldName: "ISSUE_NUMBER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VAM_ID, fieldName: "VAM_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NONCE, fieldName: "NONCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REVIEWED_TRANSFORM, fieldName: "REVIEWED_TRANSFORM", required: false, type: ForwardOffset<VAMTransform>.self)
+    try _v.visit(field: VT.CANONICAL_VARIANT_ID, fieldName: "CANONICAL_VARIANT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALTERNATE_VARIANT_IDS, fieldName: "ALTERNATE_VARIANT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.ANNOTATIONS, fieldName: "ANNOTATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<VAMAnnotation>, VAMAnnotation>>.self)
+    _v.finish()
+  }
+}
+
+///  Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+///  The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+///  Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+///  The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+public struct VAMMetadataOnlyReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VAMMetadataOnlyReview.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let REVIEWER_ID: VOffset = 4
+    static let CAPABILITY_ID: VOffset = 6
+    static let REVIEWER_ROLE: VOffset = 8
+    static let REPOSITORY: VOffset = 10
+    static let ISSUE_NUMBER: VOffset = 12
+    static let ENTITY_ID: VOffset = 14
+    static let VAM_ID: VOffset = 16
+    static let NONCE: VOffset = 18
+    static let DECISION: VOffset = 20
+    static let CANDIDATE_ID: VOffset = 22
+    static let CANDIDATE_METADATA_SHA256: VOffset = 24
+    static let DECIDED_AT: VOffset = 26
+    static let REASONS: VOffset = 28
+    static let COMMENT: VOffset = 30
+    static let ANNOTATIONS: VOffset = 32
+    static let ENVELOPE_SHA256: VOffset = 34
+    static let SIGNATURE: VOffset = 36
+    static let SIGNATURE_TYPE: VOffset = 38
+    static let PREVIOUS_DECISION_SHA256: VOffset = 40
+  }
+
+  public var REVIEWER_ID: String! { let o = _accessor.offset(VT.REVIEWER_ID); return _accessor.string(at: o) }
+  public var REVIEWER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REVIEWER_ID) }
+  public var CAPABILITY_ID: String! { let o = _accessor.offset(VT.CAPABILITY_ID); return _accessor.string(at: o) }
+  public var CAPABILITY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CAPABILITY_ID) }
+  public var REVIEWER_ROLE: visualAssetReviewerRole { let o = _accessor.offset(VT.REVIEWER_ROLE); return o == 0 ? .viewer : visualAssetReviewerRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .viewer }
+  public var REPOSITORY: String! { let o = _accessor.offset(VT.REPOSITORY); return _accessor.string(at: o) }
+  public var REPOSITORYSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.REPOSITORY) }
+  public var ISSUE_NUMBER: String! { let o = _accessor.offset(VT.ISSUE_NUMBER); return _accessor.string(at: o) }
+  public var ISSUE_NUMBERSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ISSUE_NUMBER) }
+  public var ENTITY_ID: String! { let o = _accessor.offset(VT.ENTITY_ID); return _accessor.string(at: o) }
+  public var ENTITY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ENTITY_ID) }
+  public var VAM_ID: String! { let o = _accessor.offset(VT.VAM_ID); return _accessor.string(at: o) }
+  public var VAM_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VAM_ID) }
+  public var NONCE: String! { let o = _accessor.offset(VT.NONCE); return _accessor.string(at: o) }
+  public var NONCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NONCE) }
+  public var DECISION: visualAssetDecisionKind { let o = _accessor.offset(VT.DECISION); return o == 0 ? .approveMetadataOnly : visualAssetDecisionKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .approveMetadataOnly }
+  public var CANDIDATE_ID: String! { let o = _accessor.offset(VT.CANDIDATE_ID); return _accessor.string(at: o) }
+  public var CANDIDATE_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CANDIDATE_ID) }
+  ///  64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+  ///  The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+  ///  A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+  public var CANDIDATE_METADATA_SHA256: String! { let o = _accessor.offset(VT.CANDIDATE_METADATA_SHA256); return _accessor.string(at: o) }
+  public var CANDIDATE_METADATA_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CANDIDATE_METADATA_SHA256) }
+  public var DECIDED_AT: String! { let o = _accessor.offset(VT.DECIDED_AT); return _accessor.string(at: o) }
+  public var DECIDED_ATSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.DECIDED_AT) }
+  public var REASONS: FlatbufferVector<String?> { return _accessor.vector(at: VT.REASONS, byteSize: 4) }
+  public var COMMENT: String? { let o = _accessor.offset(VT.COMMENT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COMMENT) }
+  public var ANNOTATIONS: FlatbufferVector<VAMAnnotation> { return _accessor.vector(at: VT.ANNOTATIONS, byteSize: 4) }
+  public var ENVELOPE_SHA256: String! { let o = _accessor.offset(VT.ENVELOPE_SHA256); return _accessor.string(at: o) }
+  public var ENVELOPE_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ENVELOPE_SHA256) }
+  public var SIGNATURE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SIGNATURE, byteSize: 1) }
+  public func withUnsafePointerToSignature<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SIGNATURE, body: body) }
+  public var SIGNATURE_TYPE: String! { let o = _accessor.offset(VT.SIGNATURE_TYPE); return _accessor.string(at: o) }
+  public var SIGNATURE_TYPESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
+  public var PREVIOUS_DECISION_SHA256: String? { let o = _accessor.offset(VT.PREVIOUS_DECISION_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREVIOUS_DECISION_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PREVIOUS_DECISION_SHA256) }
+  public static func startVAMMetadataOnlyReview(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  public static func add(REVIEWER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_ID, at: VT.REVIEWER_ID) }
+  public static func add(CAPABILITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_ID, at: VT.CAPABILITY_ID) }
+  public static func add(REVIEWER_ROLE: visualAssetReviewerRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REVIEWER_ROLE.rawValue, def: 0, at: VT.REVIEWER_ROLE) }
+  public static func add(REPOSITORY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REPOSITORY, at: VT.REPOSITORY) }
+  public static func add(ISSUE_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ISSUE_NUMBER, at: VT.ISSUE_NUMBER) }
+  public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
+  public static func add(VAM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VAM_ID, at: VT.VAM_ID) }
+  public static func add(NONCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NONCE, at: VT.NONCE) }
+  public static func add(DECISION: visualAssetDecisionKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECISION.rawValue, def: 4, at: VT.DECISION) }
+  public static func add(CANDIDATE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANDIDATE_ID, at: VT.CANDIDATE_ID) }
+  public static func add(CANDIDATE_METADATA_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANDIDATE_METADATA_SHA256, at: VT.CANDIDATE_METADATA_SHA256) }
+  public static func add(DECIDED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECIDED_AT, at: VT.DECIDED_AT) }
+  public static func addVectorOf(REASONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REASONS, at: VT.REASONS) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
+  public static func addVectorOf(ANNOTATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATIONS, at: VT.ANNOTATIONS) }
+  public static func add(ENVELOPE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVELOPE_SHA256, at: VT.ENVELOPE_SHA256) }
+  public static func addVectorOf(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(SIGNATURE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_TYPE, at: VT.SIGNATURE_TYPE) }
+  public static func add(PREVIOUS_DECISION_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_DECISION_SHA256, at: VT.PREVIOUS_DECISION_SHA256) }
+  public static func endVAMMetadataOnlyReview(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 10, 12, 14, 16, 18, 22, 24, 26, 34, 36, 38]); return end }
+  public static func createVAMMetadataOnlyReview(
+    _ fbb: inout FlatBufferBuilder,
+    REVIEWER_IDOffset REVIEWER_ID: Offset,
+    CAPABILITY_IDOffset CAPABILITY_ID: Offset,
+    REVIEWER_ROLE: visualAssetReviewerRole = .viewer,
+    REPOSITORYOffset REPOSITORY: Offset,
+    ISSUE_NUMBEROffset ISSUE_NUMBER: Offset,
+    ENTITY_IDOffset ENTITY_ID: Offset,
+    VAM_IDOffset VAM_ID: Offset,
+    NONCEOffset NONCE: Offset,
+    DECISION: visualAssetDecisionKind = .approveMetadataOnly,
+    CANDIDATE_IDOffset CANDIDATE_ID: Offset,
+    CANDIDATE_METADATA_SHA256Offset CANDIDATE_METADATA_SHA256: Offset,
+    DECIDED_ATOffset DECIDED_AT: Offset,
+    REASONSVectorOffset REASONS: Offset = Offset(),
+    COMMENTOffset COMMENT: Offset = Offset(),
+    ANNOTATIONSVectorOffset ANNOTATIONS: Offset = Offset(),
+    ENVELOPE_SHA256Offset ENVELOPE_SHA256: Offset,
+    SIGNATUREVectorOffset SIGNATURE: Offset,
+    SIGNATURE_TYPEOffset SIGNATURE_TYPE: Offset,
+    PREVIOUS_DECISION_SHA256Offset PREVIOUS_DECISION_SHA256: Offset = Offset()
+  ) -> Offset {
+    let __start = VAMMetadataOnlyReview.startVAMMetadataOnlyReview(&fbb)
+    VAMMetadataOnlyReview.add(REVIEWER_ID: REVIEWER_ID, &fbb)
+    VAMMetadataOnlyReview.add(CAPABILITY_ID: CAPABILITY_ID, &fbb)
+    VAMMetadataOnlyReview.add(REVIEWER_ROLE: REVIEWER_ROLE, &fbb)
+    VAMMetadataOnlyReview.add(REPOSITORY: REPOSITORY, &fbb)
+    VAMMetadataOnlyReview.add(ISSUE_NUMBER: ISSUE_NUMBER, &fbb)
+    VAMMetadataOnlyReview.add(ENTITY_ID: ENTITY_ID, &fbb)
+    VAMMetadataOnlyReview.add(VAM_ID: VAM_ID, &fbb)
+    VAMMetadataOnlyReview.add(NONCE: NONCE, &fbb)
+    VAMMetadataOnlyReview.add(DECISION: DECISION, &fbb)
+    VAMMetadataOnlyReview.add(CANDIDATE_ID: CANDIDATE_ID, &fbb)
+    VAMMetadataOnlyReview.add(CANDIDATE_METADATA_SHA256: CANDIDATE_METADATA_SHA256, &fbb)
+    VAMMetadataOnlyReview.add(DECIDED_AT: DECIDED_AT, &fbb)
+    VAMMetadataOnlyReview.addVectorOf(REASONS: REASONS, &fbb)
+    VAMMetadataOnlyReview.add(COMMENT: COMMENT, &fbb)
+    VAMMetadataOnlyReview.addVectorOf(ANNOTATIONS: ANNOTATIONS, &fbb)
+    VAMMetadataOnlyReview.add(ENVELOPE_SHA256: ENVELOPE_SHA256, &fbb)
+    VAMMetadataOnlyReview.addVectorOf(SIGNATURE: SIGNATURE, &fbb)
+    VAMMetadataOnlyReview.add(SIGNATURE_TYPE: SIGNATURE_TYPE, &fbb)
+    VAMMetadataOnlyReview.add(PREVIOUS_DECISION_SHA256: PREVIOUS_DECISION_SHA256, &fbb)
+    return VAMMetadataOnlyReview.endVAMMetadataOnlyReview(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.REVIEWER_ID, fieldName: "REVIEWER_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CAPABILITY_ID, fieldName: "CAPABILITY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REVIEWER_ROLE, fieldName: "REVIEWER_ROLE", required: false, type: visualAssetReviewerRole.self)
+    try _v.visit(field: VT.REPOSITORY, fieldName: "REPOSITORY", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ISSUE_NUMBER, fieldName: "ISSUE_NUMBER", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENTITY_ID, fieldName: "ENTITY_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.VAM_ID, fieldName: "VAM_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NONCE, fieldName: "NONCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECISION, fieldName: "DECISION", required: false, type: visualAssetDecisionKind.self)
+    try _v.visit(field: VT.CANDIDATE_ID, fieldName: "CANDIDATE_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CANDIDATE_METADATA_SHA256, fieldName: "CANDIDATE_METADATA_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DECIDED_AT, fieldName: "DECIDED_AT", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REASONS, fieldName: "REASONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.COMMENT, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANNOTATIONS, fieldName: "ANNOTATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<VAMAnnotation>, VAMAnnotation>>.self)
     try _v.visit(field: VT.ENVELOPE_SHA256, fieldName: "ENVELOPE_SHA256", required: true, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: true, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.SIGNATURE_TYPE, fieldName: "SIGNATURE_TYPE", required: true, type: ForwardOffset<String>.self)
@@ -994,6 +1309,7 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let UPDATED_AT: VOffset = 24
     static let SUPERSEDES_VAM_CID: VOffset = 26
     static let DPM_CID: VOffset = 28
+    static let METADATA_REVIEW: VOffset = 30
   }
 
   public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
@@ -1005,9 +1321,11 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var ENTITY_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ENTITY_ID) }
   public var ENTITY_KIND: String? { let o = _accessor.offset(VT.ENTITY_KIND); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENTITY_KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENTITY_KIND) }
+  ///  Identifies the approved canonical variant; alternate variants preserve their ranks.
   public var CANONICAL_VARIANT_ID: String? { let o = _accessor.offset(VT.CANONICAL_VARIANT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CANONICAL_VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_VARIANT_ID) }
   public var ALTERNATE_VARIANT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALTERNATE_VARIANT_IDS, byteSize: 4) }
+  ///  MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
   public var VARIANTS: FlatbufferVector<VAMVariant> { return _accessor.vector(at: VT.VARIANTS, byteSize: 4) }
   public var REVIEW: VAMReview? { let o = _accessor.offset(VT.REVIEW); return o == 0 ? nil : VAMReview(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var REVIEW_STATE: visualAssetReviewState { let o = _accessor.offset(VT.REVIEW_STATE); return o == 0 ? .discovered : visualAssetReviewState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .discovered }
@@ -1023,7 +1341,9 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  CIDv1 containing a multihash of the exact referenced DPM bytes.
   public var DPM_CID: String? { let o = _accessor.offset(VT.DPM_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var DPM_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DPM_CID) }
-  public static func startVAM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  public var METADATA_REVIEW: VAMMetadataOnlyReview? { let o = _accessor.offset(VT.METADATA_REVIEW); return o == 0 ? nil : VAMMetadataOnlyReview(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startVAM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
   public static func add(ENTITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY_ID, at: VT.ENTITY_ID) }
@@ -1037,6 +1357,7 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
   public static func add(SUPERSEDES_VAM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUPERSEDES_VAM_CID, at: VT.SUPERSEDES_VAM_CID) }
   public static func add(DPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DPM_CID, at: VT.DPM_CID) }
+  public static func add(METADATA_REVIEW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METADATA_REVIEW, at: VT.METADATA_REVIEW) }
   public static func endVAM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
   public static func createVAM(
     _ fbb: inout FlatBufferBuilder,
@@ -1052,7 +1373,8 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
     UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
     SUPERSEDES_VAM_CIDOffset SUPERSEDES_VAM_CID: Offset = Offset(),
-    DPM_CIDOffset DPM_CID: Offset = Offset()
+    DPM_CIDOffset DPM_CID: Offset = Offset(),
+    METADATA_REVIEWOffset METADATA_REVIEW: Offset = Offset()
   ) -> Offset {
     let __start = VAM.startVAM(&fbb)
     VAM.add(ID: ID, &fbb)
@@ -1068,6 +1390,7 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     VAM.add(UPDATED_AT: UPDATED_AT, &fbb)
     VAM.add(SUPERSEDES_VAM_CID: SUPERSEDES_VAM_CID, &fbb)
     VAM.add(DPM_CID: DPM_CID, &fbb)
+    VAM.add(METADATA_REVIEW: METADATA_REVIEW, &fbb)
     return VAM.endVAM(&fbb, start: __start)
   }
 
@@ -1086,6 +1409,7 @@ public struct VAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SUPERSEDES_VAM_CID, fieldName: "SUPERSEDES_VAM_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DPM_CID, fieldName: "DPM_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METADATA_REVIEW, fieldName: "METADATA_REVIEW", required: false, type: ForwardOffset<VAMMetadataOnlyReview>.self)
     _v.finish()
   }
 }

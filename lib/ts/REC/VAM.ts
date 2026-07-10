@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { VAMMetadataOnlyReview, VAMMetadataOnlyReviewT } from './VAMMetadataOnlyReview.js';
 import { VAMReview, VAMReviewT } from './VAMReview.js';
 import { VAMVariant, VAMVariantT } from './VAMVariant.js';
 import { visualAssetReviewState } from './visualAssetReviewState.js';
@@ -65,6 +66,9 @@ ENTITY_KIND(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Identifies the approved canonical variant; alternate variants preserve their ranks.
+ */
 CANONICAL_VARIANT_ID():string|null
 CANONICAL_VARIANT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CANONICAL_VARIANT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -84,6 +88,9 @@ alternateVariantIdsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
+ */
 VARIANTS(index: number, obj?:VAMVariant):VAMVariant|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new VAMVariant()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
@@ -144,8 +151,16 @@ DPM_CID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+ */
+METADATA_REVIEW(obj?:VAMMetadataOnlyReview):VAMMetadataOnlyReview|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new VAMMetadataOnlyReview()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startVAM(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -224,6 +239,10 @@ static addDpmCid(builder:flatbuffers.Builder, DPM_CIDOffset:flatbuffers.Offset) 
   builder.addFieldOffset(12, DPM_CIDOffset, 0);
 }
 
+static addMetadataReview(builder:flatbuffers.Builder, METADATA_REVIEWOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, METADATA_REVIEWOffset, 0);
+}
+
 static endVAM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
@@ -254,7 +273,8 @@ unpack(): VAMT {
     this.CREATED_AT(),
     this.UPDATED_AT(),
     this.SUPERSEDES_VAM_CID(),
-    this.DPM_CID()
+    this.DPM_CID(),
+    (this.METADATA_REVIEW() !== null ? this.METADATA_REVIEW()!.unpack() : null)
   );
 }
 
@@ -273,6 +293,7 @@ unpackTo(_o: VAMT): void {
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.SUPERSEDES_VAM_CID = this.SUPERSEDES_VAM_CID();
   _o.DPM_CID = this.DPM_CID();
+  _o.METADATA_REVIEW = (this.METADATA_REVIEW() !== null ? this.METADATA_REVIEW()!.unpack() : null);
 }
 }
 
@@ -290,7 +311,8 @@ constructor(
   public CREATED_AT: string|Uint8Array|null = null,
   public UPDATED_AT: string|Uint8Array|null = null,
   public SUPERSEDES_VAM_CID: string|Uint8Array|null = null,
-  public DPM_CID: string|Uint8Array|null = null
+  public DPM_CID: string|Uint8Array|null = null,
+  public METADATA_REVIEW: VAMMetadataOnlyReviewT|null = null
 ){}
 
 
@@ -307,6 +329,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
   const SUPERSEDES_VAM_CID = (this.SUPERSEDES_VAM_CID !== null ? builder.createString(this.SUPERSEDES_VAM_CID!) : 0);
   const DPM_CID = (this.DPM_CID !== null ? builder.createString(this.DPM_CID!) : 0);
+  const METADATA_REVIEW = (this.METADATA_REVIEW !== null ? this.METADATA_REVIEW!.pack(builder) : 0);
 
   VAM.startVAM(builder);
   VAM.addId(builder, ID);
@@ -322,6 +345,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   VAM.addUpdatedAt(builder, UPDATED_AT);
   VAM.addSupersedesVamCid(builder, SUPERSEDES_VAM_CID);
   VAM.addDpmCid(builder, DPM_CID);
+  VAM.addMetadataReview(builder, METADATA_REVIEW);
 
   return VAM.endVAM(builder);
 }

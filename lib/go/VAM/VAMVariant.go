@@ -401,8 +401,30 @@ func (rcv *VAMVariant) SupersedesVariantId() []byte {
 	return rcv.SUPERSEDES_VARIANT_ID()
 }
 
+/// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+func (rcv *VAMVariant) RANK() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *VAMVariant) Rank() uint32 {
+	return rcv.RANK()
+}
+
+/// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+func (rcv *VAMVariant) MutateRANK(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(50, n)
+}
+
+func (rcv *VAMVariant) MutateRank(n uint32) bool {
+	return rcv.MutateRANK(n)
+}
+
 func VAMVariantStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(24)
 }
 func VAMVariantAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -547,6 +569,12 @@ func VAMVariantAddSUPERSEDES_VARIANT_ID(builder *flatbuffers.Builder, SUPERSEDES
 }
 func VAMVariantAddSupersedesVariantId(builder *flatbuffers.Builder, SUPERSEDES_VARIANT_ID flatbuffers.UOffsetT) {
 	VAMVariantAddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_ID)
+}
+func VAMVariantAddRANK(builder *flatbuffers.Builder, RANK uint32) {
+	builder.PrependUint32Slot(23, RANK, 0)
+}
+func VAMVariantAddRank(builder *flatbuffers.Builder, RANK uint32) {
+	VAMVariantAddRANK(builder, RANK)
 }
 func VAMVariantEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

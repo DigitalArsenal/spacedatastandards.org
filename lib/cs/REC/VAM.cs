@@ -48,6 +48,7 @@ public struct VAM : IFlatbufferObject
   public ArraySegment<byte>? GetENTITY_KINDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetENTITY_KINDArray() { return __p.__vector_as_array<byte>(10); }
+  /// Identifies the approved canonical variant; alternate variants preserve their ranks.
   public string CANONICAL_VARIANT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCANONICAL_VARIANT_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -57,6 +58,7 @@ public struct VAM : IFlatbufferObject
   public byte[] GetCANONICAL_VARIANT_IDArray() { return __p.__vector_as_array<byte>(12); }
   public string ALTERNATE_VARIANT_IDS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int ALTERNATE_VARIANT_IDSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
   public VAMVariant? VARIANTS(int j) { int o = __p.__offset(16); return o != 0 ? (VAMVariant?)(new VAMVariant()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int VARIANTSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
   public VAMReview? REVIEW { get { int o = __p.__offset(18); return o != 0 ? (VAMReview?)(new VAMReview()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -93,6 +95,8 @@ public struct VAM : IFlatbufferObject
   public ArraySegment<byte>? GetDPM_CIDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
   public byte[] GetDPM_CIDArray() { return __p.__vector_as_array<byte>(28); }
+  /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  public VAMMetadataOnlyReview? METADATA_REVIEW { get { int o = __p.__offset(30); return o != 0 ? (VAMMetadataOnlyReview?)(new VAMMetadataOnlyReview()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<VAM> CreateVAM(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -107,8 +111,10 @@ public struct VAM : IFlatbufferObject
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset UPDATED_ATOffset = default(StringOffset),
       StringOffset SUPERSEDES_VAM_CIDOffset = default(StringOffset),
-      StringOffset DPM_CIDOffset = default(StringOffset)) {
-    builder.StartTable(13);
+      StringOffset DPM_CIDOffset = default(StringOffset),
+      Offset<VAMMetadataOnlyReview> METADATA_REVIEWOffset = default(Offset<VAMMetadataOnlyReview>)) {
+    builder.StartTable(14);
+    VAM.AddMETADATA_REVIEW(builder, METADATA_REVIEWOffset);
     VAM.AddDPM_CID(builder, DPM_CIDOffset);
     VAM.AddSUPERSEDES_VAM_CID(builder, SUPERSEDES_VAM_CIDOffset);
     VAM.AddUPDATED_AT(builder, UPDATED_ATOffset);
@@ -125,7 +131,7 @@ public struct VAM : IFlatbufferObject
     return VAM.EndVAM(builder);
   }
 
-  public static void StartVAM(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartVAM(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(1, VERSIONOffset.Value, 0); }
   public static void AddENTITY_ID(FlatBufferBuilder builder, StringOffset ENTITY_IDOffset) { builder.AddOffset(2, ENTITY_IDOffset.Value, 0); }
@@ -149,6 +155,7 @@ public struct VAM : IFlatbufferObject
   public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(10, UPDATED_ATOffset.Value, 0); }
   public static void AddSUPERSEDES_VAM_CID(FlatBufferBuilder builder, StringOffset SUPERSEDES_VAM_CIDOffset) { builder.AddOffset(11, SUPERSEDES_VAM_CIDOffset.Value, 0); }
   public static void AddDPM_CID(FlatBufferBuilder builder, StringOffset DPM_CIDOffset) { builder.AddOffset(12, DPM_CIDOffset.Value, 0); }
+  public static void AddMETADATA_REVIEW(FlatBufferBuilder builder, Offset<VAMMetadataOnlyReview> METADATA_REVIEWOffset) { builder.AddOffset(13, METADATA_REVIEWOffset.Value, 0); }
   public static Offset<VAM> EndVAM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -178,6 +185,7 @@ public struct VAM : IFlatbufferObject
     _o.UPDATED_AT = this.UPDATED_AT;
     _o.SUPERSEDES_VAM_CID = this.SUPERSEDES_VAM_CID;
     _o.DPM_CID = this.DPM_CID;
+    _o.METADATA_REVIEW = this.METADATA_REVIEW.HasValue ? this.METADATA_REVIEW.Value.UnPack() : null;
   }
   public static Offset<VAM> Pack(FlatBufferBuilder builder, VAMT _o) {
     if (_o == null) return default(Offset<VAM>);
@@ -203,6 +211,7 @@ public struct VAM : IFlatbufferObject
     var _UPDATED_AT = _o.UPDATED_AT == null ? default(StringOffset) : builder.CreateString(_o.UPDATED_AT);
     var _SUPERSEDES_VAM_CID = _o.SUPERSEDES_VAM_CID == null ? default(StringOffset) : builder.CreateString(_o.SUPERSEDES_VAM_CID);
     var _DPM_CID = _o.DPM_CID == null ? default(StringOffset) : builder.CreateString(_o.DPM_CID);
+    var _METADATA_REVIEW = _o.METADATA_REVIEW == null ? default(Offset<VAMMetadataOnlyReview>) : VAMMetadataOnlyReview.Pack(builder, _o.METADATA_REVIEW);
     return CreateVAM(
       builder,
       _ID,
@@ -217,7 +226,8 @@ public struct VAM : IFlatbufferObject
       _CREATED_AT,
       _UPDATED_AT,
       _SUPERSEDES_VAM_CID,
-      _DPM_CID);
+      _DPM_CID,
+      _METADATA_REVIEW);
   }
 }
 
@@ -236,6 +246,7 @@ public class VAMT
   public string UPDATED_AT { get; set; }
   public string SUPERSEDES_VAM_CID { get; set; }
   public string DPM_CID { get; set; }
+  public VAMMetadataOnlyReviewT METADATA_REVIEW { get; set; }
 
   public VAMT() {
     this.ID = null;
@@ -251,6 +262,7 @@ public class VAMT
     this.UPDATED_AT = null;
     this.SUPERSEDES_VAM_CID = null;
     this.DPM_CID = null;
+    this.METADATA_REVIEW = null;
   }
   public static VAMT DeserializeFromBinary(byte[] fbBuffer) {
     return VAM.GetRootAsVAM(new ByteBuffer(fbBuffer)).UnPack();
@@ -281,6 +293,7 @@ static public class VAMVerify
       && verifier.VerifyString(tablePos, 24 /*UPDATED_AT*/, false)
       && verifier.VerifyString(tablePos, 26 /*SUPERSEDES_VAM_CID*/, false)
       && verifier.VerifyString(tablePos, 28 /*DPM_CID*/, false)
+      && verifier.VerifyTable(tablePos, 30 /*METADATA_REVIEW*/, VAMMetadataOnlyReviewVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

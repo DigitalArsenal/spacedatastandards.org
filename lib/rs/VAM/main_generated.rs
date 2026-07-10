@@ -589,6 +589,95 @@ impl<'a> ::flatbuffers::Verifiable for visualAssetDecisionKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for visualAssetDecisionKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_VISUAL_ASSET_REVIEWER_ROLE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_VISUAL_ASSET_REVIEWER_ROLE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_VISUAL_ASSET_REVIEWER_ROLE: [visualAssetReviewerRole; 3] = [
+  visualAssetReviewerRole::VIEWER,
+  visualAssetReviewerRole::REVIEWER,
+  visualAssetReviewerRole::ADMIN,
+];
+
+/// Reviewer authorization role. Append new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct visualAssetReviewerRole(pub i8);
+#[allow(non_upper_case_globals)]
+impl visualAssetReviewerRole {
+  pub const VIEWER: Self = Self(0);
+  pub const REVIEWER: Self = Self(1);
+  pub const ADMIN: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::VIEWER,
+    Self::REVIEWER,
+    Self::ADMIN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::VIEWER => Some("VIEWER"),
+      Self::REVIEWER => Some("REVIEWER"),
+      Self::ADMIN => Some("ADMIN"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for visualAssetReviewerRole {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for visualAssetReviewerRole {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for visualAssetReviewerRole {
+    type Output = visualAssetReviewerRole;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for visualAssetReviewerRole {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for visualAssetReviewerRole {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for visualAssetReviewerRole {}
 pub enum VAMVector3Offset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1409,6 +1498,226 @@ impl VAMTransformT {
       SOURCE_UNITS,
       METERS_PER_SOURCE_UNIT,
       ORIGIN_NOTE,
+    })
+  }
+}
+pub enum VAMAnnotationOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Coordinate pin or general structured annotation in canonical model-meter coordinates. POSITION is absent for a general note.
+pub struct VAMAnnotation<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for VAMAnnotation<'a> {
+  type Inner = VAMAnnotation<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> VAMAnnotation<'a> {
+  pub const VT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 6;
+  pub const VT_MESSAGE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_POSITION: ::flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    VAMAnnotation { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args VAMAnnotationArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<VAMAnnotation<'bldr>> {
+    let mut builder = VAMAnnotationBuilder::new(_fbb);
+    if let Some(x) = args.POSITION { builder.add_POSITION(x); }
+    if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
+    if let Some(x) = args.KIND { builder.add_KIND(x); }
+    if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> VAMAnnotationT {
+    let ID = {
+      let x = self.ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let KIND = {
+      let x = self.KIND();
+      alloc::string::ToString::to_string(x)
+    };
+    let MESSAGE = {
+      let x = self.MESSAGE();
+      alloc::string::ToString::to_string(x)
+    };
+    let POSITION = self.POSITION().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    VAMAnnotationT {
+      ID,
+      KIND,
+      MESSAGE,
+      POSITION,
+    }
+  }
+
+  #[inline]
+  pub fn ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMAnnotation::VT_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn KIND(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMAnnotation::VT_KIND, None).unwrap()}
+  }
+  #[inline]
+  pub fn MESSAGE(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMAnnotation::VT_MESSAGE, None).unwrap()}
+  }
+  #[inline]
+  pub fn POSITION(&self) -> Option<VAMVector3<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VAMVector3>>(VAMAnnotation::VT_POSITION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for VAMAnnotation<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KIND", Self::VT_KIND, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE", Self::VT_MESSAGE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<VAMVector3>>("POSITION", Self::VT_POSITION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct VAMAnnotationArgs<'a> {
+    pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub POSITION: Option<::flatbuffers::WIPOffset<VAMVector3<'a>>>,
+}
+impl<'a> Default for VAMAnnotationArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    VAMAnnotationArgs {
+      ID: None, // required field
+      KIND: None, // required field
+      MESSAGE: None, // required field
+      POSITION: None,
+    }
+  }
+}
+
+pub struct VAMAnnotationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMAnnotationBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ID(&mut self, ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMAnnotation::VT_ID, ID);
+  }
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMAnnotation::VT_KIND, KIND);
+  }
+  #[inline]
+  pub fn add_MESSAGE(&mut self, MESSAGE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMAnnotation::VT_MESSAGE, MESSAGE);
+  }
+  #[inline]
+  pub fn add_POSITION(&mut self, POSITION: ::flatbuffers::WIPOffset<VAMVector3<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<VAMVector3>>(VAMAnnotation::VT_POSITION, POSITION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMAnnotationBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    VAMAnnotationBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<VAMAnnotation<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, VAMAnnotation::VT_ID,"ID");
+    self.fbb_.required(o, VAMAnnotation::VT_KIND,"KIND");
+    self.fbb_.required(o, VAMAnnotation::VT_MESSAGE,"MESSAGE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for VAMAnnotation<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("VAMAnnotation");
+      ds.field("ID", &self.ID());
+      ds.field("KIND", &self.KIND());
+      ds.field("MESSAGE", &self.MESSAGE());
+      ds.field("POSITION", &self.POSITION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct VAMAnnotationT {
+  pub ID: alloc::string::String,
+  pub KIND: alloc::string::String,
+  pub MESSAGE: alloc::string::String,
+  pub POSITION: Option<alloc::boxed::Box<VAMVector3T>>,
+}
+impl Default for VAMAnnotationT {
+  fn default() -> Self {
+    Self {
+      ID: alloc::string::ToString::to_string(""),
+      KIND: alloc::string::ToString::to_string(""),
+      MESSAGE: alloc::string::ToString::to_string(""),
+      POSITION: None,
+    }
+  }
+}
+impl VAMAnnotationT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<VAMAnnotation<'b>> {
+    let ID = Some({
+      let x = &self.ID;
+      _fbb.create_string(x)
+    });
+    let KIND = Some({
+      let x = &self.KIND;
+      _fbb.create_string(x)
+    });
+    let MESSAGE = Some({
+      let x = &self.MESSAGE;
+      _fbb.create_string(x)
+    });
+    let POSITION = self.POSITION.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    VAMAnnotation::create(_fbb, &VAMAnnotationArgs{
+      ID,
+      KIND,
+      MESSAGE,
+      POSITION,
     })
   }
 }
@@ -2665,6 +2974,7 @@ impl<'a> VAMVariant<'a> {
   pub const VT_QUALITY: ::flatbuffers::VOffsetT = 44;
   pub const VT_REVIEW_STATE: ::flatbuffers::VOffsetT = 46;
   pub const VT_SUPERSEDES_VARIANT_ID: ::flatbuffers::VOffsetT = 48;
+  pub const VT_RANK: ::flatbuffers::VOffsetT = 50;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2677,6 +2987,7 @@ impl<'a> VAMVariant<'a> {
   ) -> ::flatbuffers::WIPOffset<VAMVariant<'bldr>> {
     let mut builder = VAMVariantBuilder::new(_fbb);
     builder.add_BYTE_LENGTH(args.BYTE_LENGTH);
+    builder.add_RANK(args.RANK);
     if let Some(x) = args.SUPERSEDES_VARIANT_ID { builder.add_SUPERSEDES_VARIANT_ID(x); }
     if let Some(x) = args.QUALITY { builder.add_QUALITY(x); }
     if let Some(x) = args.VALIDATION { builder.add_VALIDATION(x); }
@@ -2765,6 +3076,7 @@ impl<'a> VAMVariant<'a> {
     let SUPERSEDES_VARIANT_ID = self.SUPERSEDES_VARIANT_ID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let RANK = self.RANK();
     VAMVariantT {
       ID,
       PARENT_VARIANT_ID,
@@ -2789,6 +3101,7 @@ impl<'a> VAMVariant<'a> {
       QUALITY,
       REVIEW_STATE,
       SUPERSEDES_VARIANT_ID,
+      RANK,
     }
   }
 
@@ -2959,6 +3272,14 @@ impl<'a> VAMVariant<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMVariant::VT_SUPERSEDES_VARIANT_ID, None)}
   }
+  /// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+  #[inline]
+  pub fn RANK(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(VAMVariant::VT_RANK, Some(0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for VAMVariant<'_> {
@@ -2990,6 +3311,7 @@ impl ::flatbuffers::Verifiable for VAMVariant<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<VAMQualityDimension>>>>("QUALITY", Self::VT_QUALITY, false)?
      .visit_field::<visualAssetReviewState>("REVIEW_STATE", Self::VT_REVIEW_STATE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPERSEDES_VARIANT_ID", Self::VT_SUPERSEDES_VARIANT_ID, false)?
+     .visit_field::<u32>("RANK", Self::VT_RANK, false)?
      .finish();
     Ok(())
   }
@@ -3018,6 +3340,7 @@ pub struct VAMVariantArgs<'a> {
     pub QUALITY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMQualityDimension<'a>>>>>,
     pub REVIEW_STATE: visualAssetReviewState,
     pub SUPERSEDES_VARIANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub RANK: u32,
 }
 impl<'a> Default for VAMVariantArgs<'a> {
   #[inline]
@@ -3046,6 +3369,7 @@ impl<'a> Default for VAMVariantArgs<'a> {
       QUALITY: None,
       REVIEW_STATE: visualAssetReviewState::DISCOVERED,
       SUPERSEDES_VARIANT_ID: None,
+      RANK: 0,
     }
   }
 }
@@ -3148,6 +3472,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMVariantBuilder<'a, 'b, A> 
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMVariant::VT_SUPERSEDES_VARIANT_ID, SUPERSEDES_VARIANT_ID);
   }
   #[inline]
+  pub fn add_RANK(&mut self, RANK: u32) {
+    self.fbb_.push_slot::<u32>(VAMVariant::VT_RANK, RANK, 0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMVariantBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     VAMVariantBuilder {
@@ -3189,6 +3517,7 @@ impl ::core::fmt::Debug for VAMVariant<'_> {
       ds.field("QUALITY", &self.QUALITY());
       ds.field("REVIEW_STATE", &self.REVIEW_STATE());
       ds.field("SUPERSEDES_VARIANT_ID", &self.SUPERSEDES_VARIANT_ID());
+      ds.field("RANK", &self.RANK());
       ds.finish()
   }
 }
@@ -3218,6 +3547,7 @@ pub struct VAMVariantT {
   pub QUALITY: Option<alloc::vec::Vec<VAMQualityDimensionT>>,
   pub REVIEW_STATE: visualAssetReviewState,
   pub SUPERSEDES_VARIANT_ID: Option<alloc::string::String>,
+  pub RANK: u32,
 }
 impl Default for VAMVariantT {
   fn default() -> Self {
@@ -3245,6 +3575,7 @@ impl Default for VAMVariantT {
       QUALITY: None,
       REVIEW_STATE: visualAssetReviewState::DISCOVERED,
       SUPERSEDES_VARIANT_ID: None,
+      RANK: 0,
     }
   }
 }
@@ -3315,6 +3646,7 @@ impl VAMVariantT {
     let SUPERSEDES_VARIANT_ID = self.SUPERSEDES_VARIANT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let RANK = self.RANK;
     VAMVariant::create(_fbb, &VAMVariantArgs{
       ID,
       PARENT_VARIANT_ID,
@@ -3339,15 +3671,19 @@ impl VAMVariantT {
       QUALITY,
       REVIEW_STATE,
       SUPERSEDES_VARIANT_ID,
+      RANK,
     })
   }
 }
 pub enum VAMReviewOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
-/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+/// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+/// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 pub struct VAMReview<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -3374,6 +3710,16 @@ impl<'a> VAMReview<'a> {
   pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 24;
   pub const VT_SIGNATURE_TYPE: ::flatbuffers::VOffsetT = 26;
   pub const VT_PREVIOUS_DECISION_SHA256: ::flatbuffers::VOffsetT = 28;
+  pub const VT_REVIEWER_ROLE: ::flatbuffers::VOffsetT = 30;
+  pub const VT_REPOSITORY: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ISSUE_NUMBER: ::flatbuffers::VOffsetT = 34;
+  pub const VT_ENTITY_ID: ::flatbuffers::VOffsetT = 36;
+  pub const VT_VAM_ID: ::flatbuffers::VOffsetT = 38;
+  pub const VT_NONCE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_REVIEWED_TRANSFORM: ::flatbuffers::VOffsetT = 42;
+  pub const VT_CANONICAL_VARIANT_ID: ::flatbuffers::VOffsetT = 44;
+  pub const VT_ALTERNATE_VARIANT_IDS: ::flatbuffers::VOffsetT = 46;
+  pub const VT_ANNOTATIONS: ::flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3385,6 +3731,15 @@ impl<'a> VAMReview<'a> {
     args: &'args VAMReviewArgs<'args>
   ) -> ::flatbuffers::WIPOffset<VAMReview<'bldr>> {
     let mut builder = VAMReviewBuilder::new(_fbb);
+    if let Some(x) = args.ANNOTATIONS { builder.add_ANNOTATIONS(x); }
+    if let Some(x) = args.ALTERNATE_VARIANT_IDS { builder.add_ALTERNATE_VARIANT_IDS(x); }
+    if let Some(x) = args.CANONICAL_VARIANT_ID { builder.add_CANONICAL_VARIANT_ID(x); }
+    if let Some(x) = args.REVIEWED_TRANSFORM { builder.add_REVIEWED_TRANSFORM(x); }
+    if let Some(x) = args.NONCE { builder.add_NONCE(x); }
+    if let Some(x) = args.VAM_ID { builder.add_VAM_ID(x); }
+    if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
+    if let Some(x) = args.ISSUE_NUMBER { builder.add_ISSUE_NUMBER(x); }
+    if let Some(x) = args.REPOSITORY { builder.add_REPOSITORY(x); }
     if let Some(x) = args.PREVIOUS_DECISION_SHA256 { builder.add_PREVIOUS_DECISION_SHA256(x); }
     if let Some(x) = args.SIGNATURE_TYPE { builder.add_SIGNATURE_TYPE(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
@@ -3397,6 +3752,7 @@ impl<'a> VAMReview<'a> {
     if let Some(x) = args.CANDIDATE_ID { builder.add_CANDIDATE_ID(x); }
     if let Some(x) = args.CAPABILITY_ID { builder.add_CAPABILITY_ID(x); }
     if let Some(x) = args.REVIEWER_ID { builder.add_REVIEWER_ID(x); }
+    builder.add_REVIEWER_ROLE(args.REVIEWER_ROLE);
     builder.add_DECISION(args.DECISION);
     builder.finish()
   }
@@ -3446,6 +3802,34 @@ impl<'a> VAMReview<'a> {
     let PREVIOUS_DECISION_SHA256 = self.PREVIOUS_DECISION_SHA256().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let REVIEWER_ROLE = self.REVIEWER_ROLE();
+    let REPOSITORY = self.REPOSITORY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ISSUE_NUMBER = self.ISSUE_NUMBER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENTITY_ID = self.ENTITY_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let VAM_ID = self.VAM_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let NONCE = self.NONCE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REVIEWED_TRANSFORM = self.REVIEWED_TRANSFORM().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CANONICAL_VARIANT_ID = self.CANONICAL_VARIANT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALTERNATE_VARIANT_IDS = self.ALTERNATE_VARIANT_IDS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let ANNOTATIONS = self.ANNOTATIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     VAMReviewT {
       REVIEWER_ID,
       CAPABILITY_ID,
@@ -3460,6 +3844,16 @@ impl<'a> VAMReview<'a> {
       SIGNATURE,
       SIGNATURE_TYPE,
       PREVIOUS_DECISION_SHA256,
+      REVIEWER_ROLE,
+      REPOSITORY,
+      ISSUE_NUMBER,
+      ENTITY_ID,
+      VAM_ID,
+      NONCE,
+      REVIEWED_TRANSFORM,
+      CANONICAL_VARIANT_ID,
+      ALTERNATE_VARIANT_IDS,
+      ANNOTATIONS,
     }
   }
 
@@ -3499,7 +3893,7 @@ impl<'a> VAMReview<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_CANDIDATE_CID, None)}
   }
-  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  /// 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
   #[inline]
   pub fn CANDIDATE_SHA256(&self) -> &'a str {
     // Safety:
@@ -3561,6 +3955,79 @@ impl<'a> VAMReview<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_PREVIOUS_DECISION_SHA256, None)}
   }
+  #[inline]
+  pub fn REVIEWER_ROLE(&self) -> visualAssetReviewerRole {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<visualAssetReviewerRole>(VAMReview::VT_REVIEWER_ROLE, Some(visualAssetReviewerRole::VIEWER)).unwrap()}
+  }
+  /// Canonical repository identifier in owner/name form.
+  #[inline]
+  pub fn REPOSITORY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_REPOSITORY, None)}
+  }
+  /// Positive base-10 issue number digits with no leading zero.
+  #[inline]
+  pub fn ISSUE_NUMBER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_ISSUE_NUMBER, None)}
+  }
+  #[inline]
+  pub fn ENTITY_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_ENTITY_ID, None)}
+  }
+  #[inline]
+  pub fn VAM_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_VAM_ID, None)}
+  }
+  /// Unique opaque identifier containing at least 128 bits of entropy.
+  #[inline]
+  pub fn NONCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_NONCE, None)}
+  }
+  #[inline]
+  pub fn REVIEWED_TRANSFORM(&self) -> Option<VAMTransform<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VAMTransform>>(VAMReview::VT_REVIEWED_TRANSFORM, None)}
+  }
+  #[inline]
+  pub fn CANONICAL_VARIANT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMReview::VT_CANONICAL_VARIANT_ID, None)}
+  }
+  #[inline]
+  pub fn ALTERNATE_VARIANT_IDS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(VAMReview::VT_ALTERNATE_VARIANT_IDS, None)}
+  }
+  #[inline]
+  pub fn ANNOTATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>(VAMReview::VT_ANNOTATIONS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for VAMReview<'_> {
@@ -3582,6 +4049,16 @@ impl ::flatbuffers::Verifiable for VAMReview<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_TYPE", Self::VT_SIGNATURE_TYPE, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREVIOUS_DECISION_SHA256", Self::VT_PREVIOUS_DECISION_SHA256, false)?
+     .visit_field::<visualAssetReviewerRole>("REVIEWER_ROLE", Self::VT_REVIEWER_ROLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REPOSITORY", Self::VT_REPOSITORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ISSUE_NUMBER", Self::VT_ISSUE_NUMBER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENTITY_ID", Self::VT_ENTITY_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VAM_ID", Self::VT_VAM_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NONCE", Self::VT_NONCE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<VAMTransform>>("REVIEWED_TRANSFORM", Self::VT_REVIEWED_TRANSFORM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANONICAL_VARIANT_ID", Self::VT_CANONICAL_VARIANT_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_VARIANT_IDS", Self::VT_ALTERNATE_VARIANT_IDS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>("ANNOTATIONS", Self::VT_ANNOTATIONS, false)?
      .finish();
     Ok(())
   }
@@ -3600,6 +4077,16 @@ pub struct VAMReviewArgs<'a> {
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub SIGNATURE_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PREVIOUS_DECISION_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REVIEWER_ROLE: visualAssetReviewerRole,
+    pub REPOSITORY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ISSUE_NUMBER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENTITY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VAM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NONCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REVIEWED_TRANSFORM: Option<::flatbuffers::WIPOffset<VAMTransform<'a>>>,
+    pub CANONICAL_VARIANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALTERNATE_VARIANT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ANNOTATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation<'a>>>>>,
 }
 impl<'a> Default for VAMReviewArgs<'a> {
   #[inline]
@@ -3618,6 +4105,16 @@ impl<'a> Default for VAMReviewArgs<'a> {
       SIGNATURE: None, // required field
       SIGNATURE_TYPE: None, // required field
       PREVIOUS_DECISION_SHA256: None,
+      REVIEWER_ROLE: visualAssetReviewerRole::VIEWER,
+      REPOSITORY: None,
+      ISSUE_NUMBER: None,
+      ENTITY_ID: None,
+      VAM_ID: None,
+      NONCE: None,
+      REVIEWED_TRANSFORM: None,
+      CANONICAL_VARIANT_ID: None,
+      ALTERNATE_VARIANT_IDS: None,
+      ANNOTATIONS: None,
     }
   }
 }
@@ -3680,6 +4177,46 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMReviewBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_PREVIOUS_DECISION_SHA256, PREVIOUS_DECISION_SHA256);
   }
   #[inline]
+  pub fn add_REVIEWER_ROLE(&mut self, REVIEWER_ROLE: visualAssetReviewerRole) {
+    self.fbb_.push_slot::<visualAssetReviewerRole>(VAMReview::VT_REVIEWER_ROLE, REVIEWER_ROLE, visualAssetReviewerRole::VIEWER);
+  }
+  #[inline]
+  pub fn add_REPOSITORY(&mut self, REPOSITORY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_REPOSITORY, REPOSITORY);
+  }
+  #[inline]
+  pub fn add_ISSUE_NUMBER(&mut self, ISSUE_NUMBER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_ISSUE_NUMBER, ISSUE_NUMBER);
+  }
+  #[inline]
+  pub fn add_ENTITY_ID(&mut self, ENTITY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_ENTITY_ID, ENTITY_ID);
+  }
+  #[inline]
+  pub fn add_VAM_ID(&mut self, VAM_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_VAM_ID, VAM_ID);
+  }
+  #[inline]
+  pub fn add_NONCE(&mut self, NONCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_NONCE, NONCE);
+  }
+  #[inline]
+  pub fn add_REVIEWED_TRANSFORM(&mut self, REVIEWED_TRANSFORM: ::flatbuffers::WIPOffset<VAMTransform<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<VAMTransform>>(VAMReview::VT_REVIEWED_TRANSFORM, REVIEWED_TRANSFORM);
+  }
+  #[inline]
+  pub fn add_CANONICAL_VARIANT_ID(&mut self, CANONICAL_VARIANT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_CANONICAL_VARIANT_ID, CANONICAL_VARIANT_ID);
+  }
+  #[inline]
+  pub fn add_ALTERNATE_VARIANT_IDS(&mut self, ALTERNATE_VARIANT_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_ALTERNATE_VARIANT_IDS, ALTERNATE_VARIANT_IDS);
+  }
+  #[inline]
+  pub fn add_ANNOTATIONS(&mut self, ANNOTATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<VAMAnnotation<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_ANNOTATIONS, ANNOTATIONS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMReviewBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     VAMReviewBuilder {
@@ -3717,6 +4254,16 @@ impl ::core::fmt::Debug for VAMReview<'_> {
       ds.field("SIGNATURE", &self.SIGNATURE());
       ds.field("SIGNATURE_TYPE", &self.SIGNATURE_TYPE());
       ds.field("PREVIOUS_DECISION_SHA256", &self.PREVIOUS_DECISION_SHA256());
+      ds.field("REVIEWER_ROLE", &self.REVIEWER_ROLE());
+      ds.field("REPOSITORY", &self.REPOSITORY());
+      ds.field("ISSUE_NUMBER", &self.ISSUE_NUMBER());
+      ds.field("ENTITY_ID", &self.ENTITY_ID());
+      ds.field("VAM_ID", &self.VAM_ID());
+      ds.field("NONCE", &self.NONCE());
+      ds.field("REVIEWED_TRANSFORM", &self.REVIEWED_TRANSFORM());
+      ds.field("CANONICAL_VARIANT_ID", &self.CANONICAL_VARIANT_ID());
+      ds.field("ALTERNATE_VARIANT_IDS", &self.ALTERNATE_VARIANT_IDS());
+      ds.field("ANNOTATIONS", &self.ANNOTATIONS());
       ds.finish()
   }
 }
@@ -3736,6 +4283,16 @@ pub struct VAMReviewT {
   pub SIGNATURE: alloc::vec::Vec<u8>,
   pub SIGNATURE_TYPE: alloc::string::String,
   pub PREVIOUS_DECISION_SHA256: Option<alloc::string::String>,
+  pub REVIEWER_ROLE: visualAssetReviewerRole,
+  pub REPOSITORY: Option<alloc::string::String>,
+  pub ISSUE_NUMBER: Option<alloc::string::String>,
+  pub ENTITY_ID: Option<alloc::string::String>,
+  pub VAM_ID: Option<alloc::string::String>,
+  pub NONCE: Option<alloc::string::String>,
+  pub REVIEWED_TRANSFORM: Option<alloc::boxed::Box<VAMTransformT>>,
+  pub CANONICAL_VARIANT_ID: Option<alloc::string::String>,
+  pub ALTERNATE_VARIANT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub ANNOTATIONS: Option<alloc::vec::Vec<VAMAnnotationT>>,
 }
 impl Default for VAMReviewT {
   fn default() -> Self {
@@ -3753,6 +4310,16 @@ impl Default for VAMReviewT {
       SIGNATURE: Default::default(),
       SIGNATURE_TYPE: alloc::string::ToString::to_string(""),
       PREVIOUS_DECISION_SHA256: None,
+      REVIEWER_ROLE: visualAssetReviewerRole::VIEWER,
+      REPOSITORY: None,
+      ISSUE_NUMBER: None,
+      ENTITY_ID: None,
+      VAM_ID: None,
+      NONCE: None,
+      REVIEWED_TRANSFORM: None,
+      CANONICAL_VARIANT_ID: None,
+      ALTERNATE_VARIANT_IDS: None,
+      ANNOTATIONS: None,
     }
   }
 }
@@ -3805,6 +4372,34 @@ impl VAMReviewT {
     let PREVIOUS_DECISION_SHA256 = self.PREVIOUS_DECISION_SHA256.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let REVIEWER_ROLE = self.REVIEWER_ROLE;
+    let REPOSITORY = self.REPOSITORY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ISSUE_NUMBER = self.ISSUE_NUMBER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENTITY_ID = self.ENTITY_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let VAM_ID = self.VAM_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NONCE = self.NONCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REVIEWED_TRANSFORM = self.REVIEWED_TRANSFORM.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CANONICAL_VARIANT_ID = self.CANONICAL_VARIANT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALTERNATE_VARIANT_IDS = self.ALTERNATE_VARIANT_IDS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let ANNOTATIONS = self.ANNOTATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     VAMReview::create(_fbb, &VAMReviewArgs{
       REVIEWER_ID,
       CAPABILITY_ID,
@@ -3815,6 +4410,669 @@ impl VAMReviewT {
       DECIDED_AT,
       REASONS,
       COMMENT,
+      ENVELOPE_SHA256,
+      SIGNATURE,
+      SIGNATURE_TYPE,
+      PREVIOUS_DECISION_SHA256,
+      REVIEWER_ROLE,
+      REPOSITORY,
+      ISSUE_NUMBER,
+      ENTITY_ID,
+      VAM_ID,
+      NONCE,
+      REVIEWED_TRANSFORM,
+      CANONICAL_VARIANT_ID,
+      ALTERNATE_VARIANT_IDS,
+      ANNOTATIONS,
+    })
+  }
+}
+pub enum VAMMetadataOnlyReviewOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.
+/// The metadata-review signed projection contains uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_METADATA_SHA256; DECIDED_AT; REASONS; COMMENT when present; ANNOTATIONS; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+/// Absent optional fields are omitted and arrays preserve order. A verifier reconstructs exactly this projection, applies RFC 8785 JCS, hashes the UTF-8 serialization bytes, compares ENVELOPE_SHA256, and verifies SIGNATURE over the raw 32-byte digest. ENVELOPE_SHA256 and SIGNATURE are excluded from the projection.
+/// The verifier must also enforce repository, issue, entity, and VAM equality; nonce single use; role authorization; exact metadata binding; and DECISION equal to APPROVE_METADATA_ONLY before trusting the decision.
+pub struct VAMMetadataOnlyReview<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for VAMMetadataOnlyReview<'a> {
+  type Inner = VAMMetadataOnlyReview<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> VAMMetadataOnlyReview<'a> {
+  pub const VT_REVIEWER_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CAPABILITY_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_REVIEWER_ROLE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_REPOSITORY: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ISSUE_NUMBER: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ENTITY_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_VAM_ID: ::flatbuffers::VOffsetT = 16;
+  pub const VT_NONCE: ::flatbuffers::VOffsetT = 18;
+  pub const VT_DECISION: ::flatbuffers::VOffsetT = 20;
+  pub const VT_CANDIDATE_ID: ::flatbuffers::VOffsetT = 22;
+  pub const VT_CANDIDATE_METADATA_SHA256: ::flatbuffers::VOffsetT = 24;
+  pub const VT_DECIDED_AT: ::flatbuffers::VOffsetT = 26;
+  pub const VT_REASONS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_COMMENT: ::flatbuffers::VOffsetT = 30;
+  pub const VT_ANNOTATIONS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_ENVELOPE_SHA256: ::flatbuffers::VOffsetT = 34;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 36;
+  pub const VT_SIGNATURE_TYPE: ::flatbuffers::VOffsetT = 38;
+  pub const VT_PREVIOUS_DECISION_SHA256: ::flatbuffers::VOffsetT = 40;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    VAMMetadataOnlyReview { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args VAMMetadataOnlyReviewArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<VAMMetadataOnlyReview<'bldr>> {
+    let mut builder = VAMMetadataOnlyReviewBuilder::new(_fbb);
+    if let Some(x) = args.PREVIOUS_DECISION_SHA256 { builder.add_PREVIOUS_DECISION_SHA256(x); }
+    if let Some(x) = args.SIGNATURE_TYPE { builder.add_SIGNATURE_TYPE(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.ENVELOPE_SHA256 { builder.add_ENVELOPE_SHA256(x); }
+    if let Some(x) = args.ANNOTATIONS { builder.add_ANNOTATIONS(x); }
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    if let Some(x) = args.REASONS { builder.add_REASONS(x); }
+    if let Some(x) = args.DECIDED_AT { builder.add_DECIDED_AT(x); }
+    if let Some(x) = args.CANDIDATE_METADATA_SHA256 { builder.add_CANDIDATE_METADATA_SHA256(x); }
+    if let Some(x) = args.CANDIDATE_ID { builder.add_CANDIDATE_ID(x); }
+    if let Some(x) = args.NONCE { builder.add_NONCE(x); }
+    if let Some(x) = args.VAM_ID { builder.add_VAM_ID(x); }
+    if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
+    if let Some(x) = args.ISSUE_NUMBER { builder.add_ISSUE_NUMBER(x); }
+    if let Some(x) = args.REPOSITORY { builder.add_REPOSITORY(x); }
+    if let Some(x) = args.CAPABILITY_ID { builder.add_CAPABILITY_ID(x); }
+    if let Some(x) = args.REVIEWER_ID { builder.add_REVIEWER_ID(x); }
+    builder.add_DECISION(args.DECISION);
+    builder.add_REVIEWER_ROLE(args.REVIEWER_ROLE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> VAMMetadataOnlyReviewT {
+    let REVIEWER_ID = {
+      let x = self.REVIEWER_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let CAPABILITY_ID = {
+      let x = self.CAPABILITY_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let REVIEWER_ROLE = self.REVIEWER_ROLE();
+    let REPOSITORY = {
+      let x = self.REPOSITORY();
+      alloc::string::ToString::to_string(x)
+    };
+    let ISSUE_NUMBER = {
+      let x = self.ISSUE_NUMBER();
+      alloc::string::ToString::to_string(x)
+    };
+    let ENTITY_ID = {
+      let x = self.ENTITY_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let VAM_ID = {
+      let x = self.VAM_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let NONCE = {
+      let x = self.NONCE();
+      alloc::string::ToString::to_string(x)
+    };
+    let DECISION = self.DECISION();
+    let CANDIDATE_ID = {
+      let x = self.CANDIDATE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let CANDIDATE_METADATA_SHA256 = {
+      let x = self.CANDIDATE_METADATA_SHA256();
+      alloc::string::ToString::to_string(x)
+    };
+    let DECIDED_AT = {
+      let x = self.DECIDED_AT();
+      alloc::string::ToString::to_string(x)
+    };
+    let REASONS = self.REASONS().map(|x| {
+      x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+    });
+    let COMMENT = self.COMMENT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ANNOTATIONS = self.ANNOTATIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let ENVELOPE_SHA256 = {
+      let x = self.ENVELOPE_SHA256();
+      alloc::string::ToString::to_string(x)
+    };
+    let SIGNATURE = {
+      let x = self.SIGNATURE();
+      x.into_iter().collect()
+    };
+    let SIGNATURE_TYPE = {
+      let x = self.SIGNATURE_TYPE();
+      alloc::string::ToString::to_string(x)
+    };
+    let PREVIOUS_DECISION_SHA256 = self.PREVIOUS_DECISION_SHA256().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    VAMMetadataOnlyReviewT {
+      REVIEWER_ID,
+      CAPABILITY_ID,
+      REVIEWER_ROLE,
+      REPOSITORY,
+      ISSUE_NUMBER,
+      ENTITY_ID,
+      VAM_ID,
+      NONCE,
+      DECISION,
+      CANDIDATE_ID,
+      CANDIDATE_METADATA_SHA256,
+      DECIDED_AT,
+      REASONS,
+      COMMENT,
+      ANNOTATIONS,
+      ENVELOPE_SHA256,
+      SIGNATURE,
+      SIGNATURE_TYPE,
+      PREVIOUS_DECISION_SHA256,
+    }
+  }
+
+  #[inline]
+  pub fn REVIEWER_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_REVIEWER_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn CAPABILITY_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_CAPABILITY_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn REVIEWER_ROLE(&self) -> visualAssetReviewerRole {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<visualAssetReviewerRole>(VAMMetadataOnlyReview::VT_REVIEWER_ROLE, Some(visualAssetReviewerRole::VIEWER)).unwrap()}
+  }
+  #[inline]
+  pub fn REPOSITORY(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_REPOSITORY, None).unwrap()}
+  }
+  #[inline]
+  pub fn ISSUE_NUMBER(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_ISSUE_NUMBER, None).unwrap()}
+  }
+  #[inline]
+  pub fn ENTITY_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_ENTITY_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn VAM_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_VAM_ID, None).unwrap()}
+  }
+  #[inline]
+  pub fn NONCE(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_NONCE, None).unwrap()}
+  }
+  #[inline]
+  pub fn DECISION(&self) -> visualAssetDecisionKind {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<visualAssetDecisionKind>(VAMMetadataOnlyReview::VT_DECISION, Some(visualAssetDecisionKind::APPROVE_METADATA_ONLY)).unwrap()}
+  }
+  #[inline]
+  pub fn CANDIDATE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_CANDIDATE_ID, None).unwrap()}
+  }
+  /// 64 lowercase hexadecimal SHA-256 of the RFC 8785 JCS canonical JSON VAMSource projection using uppercase field names.
+  /// The VAMSource projection always includes SOURCE_RECORD_ID and SOURCE_URL; includes SOURCE_NAME, OBSERVED_AT, LICENSE_NAME, ATTRIBUTION, SOURCE_METADATA_SHA256, and NOTES only when present; and always includes LICENSE_CLASS, REDISTRIBUTION_PERMISSION, and DERIVATIVE_PERMISSION as unsigned enum integers. It contains no other fields.
+  /// A verifier reconstructs this projection from the candidate SOURCE and compares the digest before trusting DECISION.
+  #[inline]
+  pub fn CANDIDATE_METADATA_SHA256(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_CANDIDATE_METADATA_SHA256, None).unwrap()}
+  }
+  #[inline]
+  pub fn DECIDED_AT(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_DECIDED_AT, None).unwrap()}
+  }
+  #[inline]
+  pub fn REASONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(VAMMetadataOnlyReview::VT_REASONS, None)}
+  }
+  #[inline]
+  pub fn COMMENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_COMMENT, None)}
+  }
+  #[inline]
+  pub fn ANNOTATIONS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>(VAMMetadataOnlyReview::VT_ANNOTATIONS, None)}
+  }
+  #[inline]
+  pub fn ENVELOPE_SHA256(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_ENVELOPE_SHA256, None).unwrap()}
+  }
+  #[inline]
+  pub fn SIGNATURE(&self) -> ::flatbuffers::Vector<'a, u8> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(VAMMetadataOnlyReview::VT_SIGNATURE, None).unwrap()}
+  }
+  #[inline]
+  pub fn SIGNATURE_TYPE(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_SIGNATURE_TYPE, None).unwrap()}
+  }
+  #[inline]
+  pub fn PREVIOUS_DECISION_SHA256(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMMetadataOnlyReview::VT_PREVIOUS_DECISION_SHA256, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for VAMMetadataOnlyReview<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REVIEWER_ID", Self::VT_REVIEWER_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CAPABILITY_ID", Self::VT_CAPABILITY_ID, true)?
+     .visit_field::<visualAssetReviewerRole>("REVIEWER_ROLE", Self::VT_REVIEWER_ROLE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REPOSITORY", Self::VT_REPOSITORY, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ISSUE_NUMBER", Self::VT_ISSUE_NUMBER, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENTITY_ID", Self::VT_ENTITY_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VAM_ID", Self::VT_VAM_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NONCE", Self::VT_NONCE, true)?
+     .visit_field::<visualAssetDecisionKind>("DECISION", Self::VT_DECISION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANDIDATE_ID", Self::VT_CANDIDATE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANDIDATE_METADATA_SHA256", Self::VT_CANDIDATE_METADATA_SHA256, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DECIDED_AT", Self::VT_DECIDED_AT, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("REASONS", Self::VT_REASONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>("ANNOTATIONS", Self::VT_ANNOTATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENVELOPE_SHA256", Self::VT_ENVELOPE_SHA256, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SIGNATURE", Self::VT_SIGNATURE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_TYPE", Self::VT_SIGNATURE_TYPE, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PREVIOUS_DECISION_SHA256", Self::VT_PREVIOUS_DECISION_SHA256, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct VAMMetadataOnlyReviewArgs<'a> {
+    pub REVIEWER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CAPABILITY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REVIEWER_ROLE: visualAssetReviewerRole,
+    pub REPOSITORY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ISSUE_NUMBER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENTITY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub VAM_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub NONCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DECISION: visualAssetDecisionKind,
+    pub CANDIDATE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CANDIDATE_METADATA_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DECIDED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REASONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub COMMENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ANNOTATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation<'a>>>>>,
+    pub ENVELOPE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub SIGNATURE_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PREVIOUS_DECISION_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for VAMMetadataOnlyReviewArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    VAMMetadataOnlyReviewArgs {
+      REVIEWER_ID: None, // required field
+      CAPABILITY_ID: None, // required field
+      REVIEWER_ROLE: visualAssetReviewerRole::VIEWER,
+      REPOSITORY: None, // required field
+      ISSUE_NUMBER: None, // required field
+      ENTITY_ID: None, // required field
+      VAM_ID: None, // required field
+      NONCE: None, // required field
+      DECISION: visualAssetDecisionKind::APPROVE_METADATA_ONLY,
+      CANDIDATE_ID: None, // required field
+      CANDIDATE_METADATA_SHA256: None, // required field
+      DECIDED_AT: None, // required field
+      REASONS: None,
+      COMMENT: None,
+      ANNOTATIONS: None,
+      ENVELOPE_SHA256: None, // required field
+      SIGNATURE: None, // required field
+      SIGNATURE_TYPE: None, // required field
+      PREVIOUS_DECISION_SHA256: None,
+    }
+  }
+}
+
+pub struct VAMMetadataOnlyReviewBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMMetadataOnlyReviewBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_REVIEWER_ID(&mut self, REVIEWER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_REVIEWER_ID, REVIEWER_ID);
+  }
+  #[inline]
+  pub fn add_CAPABILITY_ID(&mut self, CAPABILITY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_CAPABILITY_ID, CAPABILITY_ID);
+  }
+  #[inline]
+  pub fn add_REVIEWER_ROLE(&mut self, REVIEWER_ROLE: visualAssetReviewerRole) {
+    self.fbb_.push_slot::<visualAssetReviewerRole>(VAMMetadataOnlyReview::VT_REVIEWER_ROLE, REVIEWER_ROLE, visualAssetReviewerRole::VIEWER);
+  }
+  #[inline]
+  pub fn add_REPOSITORY(&mut self, REPOSITORY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_REPOSITORY, REPOSITORY);
+  }
+  #[inline]
+  pub fn add_ISSUE_NUMBER(&mut self, ISSUE_NUMBER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_ISSUE_NUMBER, ISSUE_NUMBER);
+  }
+  #[inline]
+  pub fn add_ENTITY_ID(&mut self, ENTITY_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_ENTITY_ID, ENTITY_ID);
+  }
+  #[inline]
+  pub fn add_VAM_ID(&mut self, VAM_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_VAM_ID, VAM_ID);
+  }
+  #[inline]
+  pub fn add_NONCE(&mut self, NONCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_NONCE, NONCE);
+  }
+  #[inline]
+  pub fn add_DECISION(&mut self, DECISION: visualAssetDecisionKind) {
+    self.fbb_.push_slot::<visualAssetDecisionKind>(VAMMetadataOnlyReview::VT_DECISION, DECISION, visualAssetDecisionKind::APPROVE_METADATA_ONLY);
+  }
+  #[inline]
+  pub fn add_CANDIDATE_ID(&mut self, CANDIDATE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_CANDIDATE_ID, CANDIDATE_ID);
+  }
+  #[inline]
+  pub fn add_CANDIDATE_METADATA_SHA256(&mut self, CANDIDATE_METADATA_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_CANDIDATE_METADATA_SHA256, CANDIDATE_METADATA_SHA256);
+  }
+  #[inline]
+  pub fn add_DECIDED_AT(&mut self, DECIDED_AT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_DECIDED_AT, DECIDED_AT);
+  }
+  #[inline]
+  pub fn add_REASONS(&mut self, REASONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_REASONS, REASONS);
+  }
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_COMMENT, COMMENT);
+  }
+  #[inline]
+  pub fn add_ANNOTATIONS(&mut self, ANNOTATIONS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<VAMAnnotation<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_ANNOTATIONS, ANNOTATIONS);
+  }
+  #[inline]
+  pub fn add_ENVELOPE_SHA256(&mut self, ENVELOPE_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_ENVELOPE_SHA256, ENVELOPE_SHA256);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_SIGNATURE_TYPE(&mut self, SIGNATURE_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_SIGNATURE_TYPE, SIGNATURE_TYPE);
+  }
+  #[inline]
+  pub fn add_PREVIOUS_DECISION_SHA256(&mut self, PREVIOUS_DECISION_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMMetadataOnlyReview::VT_PREVIOUS_DECISION_SHA256, PREVIOUS_DECISION_SHA256);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMMetadataOnlyReviewBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    VAMMetadataOnlyReviewBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<VAMMetadataOnlyReview<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_REVIEWER_ID,"REVIEWER_ID");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_CAPABILITY_ID,"CAPABILITY_ID");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_REPOSITORY,"REPOSITORY");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_ISSUE_NUMBER,"ISSUE_NUMBER");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_ENTITY_ID,"ENTITY_ID");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_VAM_ID,"VAM_ID");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_NONCE,"NONCE");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_CANDIDATE_ID,"CANDIDATE_ID");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_CANDIDATE_METADATA_SHA256,"CANDIDATE_METADATA_SHA256");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_DECIDED_AT,"DECIDED_AT");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_ENVELOPE_SHA256,"ENVELOPE_SHA256");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_SIGNATURE,"SIGNATURE");
+    self.fbb_.required(o, VAMMetadataOnlyReview::VT_SIGNATURE_TYPE,"SIGNATURE_TYPE");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for VAMMetadataOnlyReview<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("VAMMetadataOnlyReview");
+      ds.field("REVIEWER_ID", &self.REVIEWER_ID());
+      ds.field("CAPABILITY_ID", &self.CAPABILITY_ID());
+      ds.field("REVIEWER_ROLE", &self.REVIEWER_ROLE());
+      ds.field("REPOSITORY", &self.REPOSITORY());
+      ds.field("ISSUE_NUMBER", &self.ISSUE_NUMBER());
+      ds.field("ENTITY_ID", &self.ENTITY_ID());
+      ds.field("VAM_ID", &self.VAM_ID());
+      ds.field("NONCE", &self.NONCE());
+      ds.field("DECISION", &self.DECISION());
+      ds.field("CANDIDATE_ID", &self.CANDIDATE_ID());
+      ds.field("CANDIDATE_METADATA_SHA256", &self.CANDIDATE_METADATA_SHA256());
+      ds.field("DECIDED_AT", &self.DECIDED_AT());
+      ds.field("REASONS", &self.REASONS());
+      ds.field("COMMENT", &self.COMMENT());
+      ds.field("ANNOTATIONS", &self.ANNOTATIONS());
+      ds.field("ENVELOPE_SHA256", &self.ENVELOPE_SHA256());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("SIGNATURE_TYPE", &self.SIGNATURE_TYPE());
+      ds.field("PREVIOUS_DECISION_SHA256", &self.PREVIOUS_DECISION_SHA256());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct VAMMetadataOnlyReviewT {
+  pub REVIEWER_ID: alloc::string::String,
+  pub CAPABILITY_ID: alloc::string::String,
+  pub REVIEWER_ROLE: visualAssetReviewerRole,
+  pub REPOSITORY: alloc::string::String,
+  pub ISSUE_NUMBER: alloc::string::String,
+  pub ENTITY_ID: alloc::string::String,
+  pub VAM_ID: alloc::string::String,
+  pub NONCE: alloc::string::String,
+  pub DECISION: visualAssetDecisionKind,
+  pub CANDIDATE_ID: alloc::string::String,
+  pub CANDIDATE_METADATA_SHA256: alloc::string::String,
+  pub DECIDED_AT: alloc::string::String,
+  pub REASONS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub COMMENT: Option<alloc::string::String>,
+  pub ANNOTATIONS: Option<alloc::vec::Vec<VAMAnnotationT>>,
+  pub ENVELOPE_SHA256: alloc::string::String,
+  pub SIGNATURE: alloc::vec::Vec<u8>,
+  pub SIGNATURE_TYPE: alloc::string::String,
+  pub PREVIOUS_DECISION_SHA256: Option<alloc::string::String>,
+}
+impl Default for VAMMetadataOnlyReviewT {
+  fn default() -> Self {
+    Self {
+      REVIEWER_ID: alloc::string::ToString::to_string(""),
+      CAPABILITY_ID: alloc::string::ToString::to_string(""),
+      REVIEWER_ROLE: visualAssetReviewerRole::VIEWER,
+      REPOSITORY: alloc::string::ToString::to_string(""),
+      ISSUE_NUMBER: alloc::string::ToString::to_string(""),
+      ENTITY_ID: alloc::string::ToString::to_string(""),
+      VAM_ID: alloc::string::ToString::to_string(""),
+      NONCE: alloc::string::ToString::to_string(""),
+      DECISION: visualAssetDecisionKind::APPROVE_METADATA_ONLY,
+      CANDIDATE_ID: alloc::string::ToString::to_string(""),
+      CANDIDATE_METADATA_SHA256: alloc::string::ToString::to_string(""),
+      DECIDED_AT: alloc::string::ToString::to_string(""),
+      REASONS: None,
+      COMMENT: None,
+      ANNOTATIONS: None,
+      ENVELOPE_SHA256: alloc::string::ToString::to_string(""),
+      SIGNATURE: Default::default(),
+      SIGNATURE_TYPE: alloc::string::ToString::to_string(""),
+      PREVIOUS_DECISION_SHA256: None,
+    }
+  }
+}
+impl VAMMetadataOnlyReviewT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<VAMMetadataOnlyReview<'b>> {
+    let REVIEWER_ID = Some({
+      let x = &self.REVIEWER_ID;
+      _fbb.create_string(x)
+    });
+    let CAPABILITY_ID = Some({
+      let x = &self.CAPABILITY_ID;
+      _fbb.create_string(x)
+    });
+    let REVIEWER_ROLE = self.REVIEWER_ROLE;
+    let REPOSITORY = Some({
+      let x = &self.REPOSITORY;
+      _fbb.create_string(x)
+    });
+    let ISSUE_NUMBER = Some({
+      let x = &self.ISSUE_NUMBER;
+      _fbb.create_string(x)
+    });
+    let ENTITY_ID = Some({
+      let x = &self.ENTITY_ID;
+      _fbb.create_string(x)
+    });
+    let VAM_ID = Some({
+      let x = &self.VAM_ID;
+      _fbb.create_string(x)
+    });
+    let NONCE = Some({
+      let x = &self.NONCE;
+      _fbb.create_string(x)
+    });
+    let DECISION = self.DECISION;
+    let CANDIDATE_ID = Some({
+      let x = &self.CANDIDATE_ID;
+      _fbb.create_string(x)
+    });
+    let CANDIDATE_METADATA_SHA256 = Some({
+      let x = &self.CANDIDATE_METADATA_SHA256;
+      _fbb.create_string(x)
+    });
+    let DECIDED_AT = Some({
+      let x = &self.DECIDED_AT;
+      _fbb.create_string(x)
+    });
+    let REASONS = self.REASONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANNOTATIONS = self.ANNOTATIONS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let ENVELOPE_SHA256 = Some({
+      let x = &self.ENVELOPE_SHA256;
+      _fbb.create_string(x)
+    });
+    let SIGNATURE = Some({
+      let x = &self.SIGNATURE;
+      _fbb.create_vector(x)
+    });
+    let SIGNATURE_TYPE = Some({
+      let x = &self.SIGNATURE_TYPE;
+      _fbb.create_string(x)
+    });
+    let PREVIOUS_DECISION_SHA256 = self.PREVIOUS_DECISION_SHA256.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    VAMMetadataOnlyReview::create(_fbb, &VAMMetadataOnlyReviewArgs{
+      REVIEWER_ID,
+      CAPABILITY_ID,
+      REVIEWER_ROLE,
+      REPOSITORY,
+      ISSUE_NUMBER,
+      ENTITY_ID,
+      VAM_ID,
+      NONCE,
+      DECISION,
+      CANDIDATE_ID,
+      CANDIDATE_METADATA_SHA256,
+      DECIDED_AT,
+      REASONS,
+      COMMENT,
+      ANNOTATIONS,
       ENVELOPE_SHA256,
       SIGNATURE,
       SIGNATURE_TYPE,
@@ -3852,6 +5110,7 @@ impl<'a> VAM<'a> {
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 24;
   pub const VT_SUPERSEDES_VAM_CID: ::flatbuffers::VOffsetT = 26;
   pub const VT_DPM_CID: ::flatbuffers::VOffsetT = 28;
+  pub const VT_METADATA_REVIEW: ::flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3863,6 +5122,7 @@ impl<'a> VAM<'a> {
     args: &'args VAMArgs<'args>
   ) -> ::flatbuffers::WIPOffset<VAM<'bldr>> {
     let mut builder = VAMBuilder::new(_fbb);
+    if let Some(x) = args.METADATA_REVIEW { builder.add_METADATA_REVIEW(x); }
     if let Some(x) = args.DPM_CID { builder.add_DPM_CID(x); }
     if let Some(x) = args.SUPERSEDES_VAM_CID { builder.add_SUPERSEDES_VAM_CID(x); }
     if let Some(x) = args.UPDATED_AT { builder.add_UPDATED_AT(x); }
@@ -3919,6 +5179,9 @@ impl<'a> VAM<'a> {
     let DPM_CID = self.DPM_CID().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let METADATA_REVIEW = self.METADATA_REVIEW().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     VAMT {
       ID,
       VERSION,
@@ -3933,6 +5196,7 @@ impl<'a> VAM<'a> {
       UPDATED_AT,
       SUPERSEDES_VAM_CID,
       DPM_CID,
+      METADATA_REVIEW,
     }
   }
 
@@ -3965,6 +5229,7 @@ impl<'a> VAM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAM::VT_ENTITY_KIND, None)}
   }
+  /// Identifies the approved canonical variant; alternate variants preserve their ranks.
   #[inline]
   pub fn CANONICAL_VARIANT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -3979,6 +5244,7 @@ impl<'a> VAM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(VAM::VT_ALTERNATE_VARIANT_IDS, None)}
   }
+  /// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
   #[inline]
   pub fn VARIANTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMVariant<'a>>>> {
     // Safety:
@@ -4032,6 +5298,14 @@ impl<'a> VAM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAM::VT_DPM_CID, None)}
   }
+  /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+  #[inline]
+  pub fn METADATA_REVIEW(&self) -> Option<VAMMetadataOnlyReview<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VAMMetadataOnlyReview>>(VAM::VT_METADATA_REVIEW, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for VAM<'_> {
@@ -4053,6 +5327,7 @@ impl ::flatbuffers::Verifiable for VAM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPERSEDES_VAM_CID", Self::VT_SUPERSEDES_VAM_CID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DPM_CID", Self::VT_DPM_CID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<VAMMetadataOnlyReview>>("METADATA_REVIEW", Self::VT_METADATA_REVIEW, false)?
      .finish();
     Ok(())
   }
@@ -4071,6 +5346,7 @@ pub struct VAMArgs<'a> {
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SUPERSEDES_VAM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DPM_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub METADATA_REVIEW: Option<::flatbuffers::WIPOffset<VAMMetadataOnlyReview<'a>>>,
 }
 impl<'a> Default for VAMArgs<'a> {
   #[inline]
@@ -4089,6 +5365,7 @@ impl<'a> Default for VAMArgs<'a> {
       UPDATED_AT: None,
       SUPERSEDES_VAM_CID: None,
       DPM_CID: None,
+      METADATA_REVIEW: None,
     }
   }
 }
@@ -4151,6 +5428,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAM::VT_DPM_CID, DPM_CID);
   }
   #[inline]
+  pub fn add_METADATA_REVIEW(&mut self, METADATA_REVIEW: ::flatbuffers::WIPOffset<VAMMetadataOnlyReview<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<VAMMetadataOnlyReview>>(VAM::VT_METADATA_REVIEW, METADATA_REVIEW);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     VAMBuilder {
@@ -4183,6 +5464,7 @@ impl ::core::fmt::Debug for VAM<'_> {
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("SUPERSEDES_VAM_CID", &self.SUPERSEDES_VAM_CID());
       ds.field("DPM_CID", &self.DPM_CID());
+      ds.field("METADATA_REVIEW", &self.METADATA_REVIEW());
       ds.finish()
   }
 }
@@ -4202,6 +5484,7 @@ pub struct VAMT {
   pub UPDATED_AT: Option<alloc::string::String>,
   pub SUPERSEDES_VAM_CID: Option<alloc::string::String>,
   pub DPM_CID: Option<alloc::string::String>,
+  pub METADATA_REVIEW: Option<alloc::boxed::Box<VAMMetadataOnlyReviewT>>,
 }
 impl Default for VAMT {
   fn default() -> Self {
@@ -4219,6 +5502,7 @@ impl Default for VAMT {
       UPDATED_AT: None,
       SUPERSEDES_VAM_CID: None,
       DPM_CID: None,
+      METADATA_REVIEW: None,
     }
   }
 }
@@ -4266,6 +5550,9 @@ impl VAMT {
     let DPM_CID = self.DPM_CID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let METADATA_REVIEW = self.METADATA_REVIEW.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     VAM::create(_fbb, &VAMArgs{
       ID,
       VERSION,
@@ -4280,6 +5567,7 @@ impl VAMT {
       UPDATED_AT,
       SUPERSEDES_VAM_CID,
       DPM_CID,
+      METADATA_REVIEW,
     })
   }
 }

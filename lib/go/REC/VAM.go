@@ -104,6 +104,7 @@ func (rcv *VAM) EntityKind() []byte {
 	return rcv.ENTITY_KIND()
 }
 
+/// Identifies the approved canonical variant; alternate variants preserve their ranks.
 func (rcv *VAM) CANONICAL_VARIANT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -116,6 +117,7 @@ func (rcv *VAM) CanonicalVariantId() []byte {
 	return rcv.CANONICAL_VARIANT_ID()
 }
 
+/// Identifies the approved canonical variant; alternate variants preserve their ranks.
 func (rcv *VAM) ALTERNATE_VARIANT_IDS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -141,6 +143,7 @@ func (rcv *VAM) AlternateVariantIdsLength() int {
 	return rcv.ALTERNATE_VARIANT_IDSLength()
 }
 
+/// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
 func (rcv *VAM) VARIANTS(obj *VAMVariant, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -172,6 +175,7 @@ func (rcv *VAM) VariantsLength() int {
 	return rcv.VARIANTSLength()
 }
 
+/// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
 func (rcv *VAM) REVIEW(obj *VAMReview) *VAMReview {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -265,8 +269,27 @@ func (rcv *VAM) DpmCid() []byte {
 }
 
 /// CIDv1 containing a multihash of the exact referenced DPM bytes.
+/// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+func (rcv *VAM) METADATA_REVIEW(obj *VAMMetadataOnlyReview) *VAMMetadataOnlyReview {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(VAMMetadataOnlyReview)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *VAM) MetadataReview(obj *VAMMetadataOnlyReview) *VAMMetadataOnlyReview {
+	return rcv.METADATA_REVIEW(obj)
+}
+
+/// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
 func VAMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func VAMAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -357,6 +380,12 @@ func VAMAddDPM_CID(builder *flatbuffers.Builder, DPM_CID flatbuffers.UOffsetT) {
 }
 func VAMAddDpmCid(builder *flatbuffers.Builder, DPM_CID flatbuffers.UOffsetT) {
 	VAMAddDPM_CID(builder, DPM_CID)
+}
+func VAMAddMETADATA_REVIEW(builder *flatbuffers.Builder, METADATA_REVIEW flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(METADATA_REVIEW), 0)
+}
+func VAMAddMetadataReview(builder *flatbuffers.Builder, METADATA_REVIEW flatbuffers.UOffsetT) {
+	VAMAddMETADATA_REVIEW(builder, METADATA_REVIEW)
 }
 func VAMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

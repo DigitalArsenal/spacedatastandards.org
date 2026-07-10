@@ -66,6 +66,7 @@ class VAM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Identifies the approved canonical variant; alternate variants preserve their ranks.
     public function getCANONICAL_VARIANT_ID()
     {
         $o = $this->__offset(12);
@@ -91,6 +92,7 @@ class VAM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
     /**
      * @returnVectorOffset
      */
@@ -154,22 +156,30 @@ class VAM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+    public function getMETADATA_REVIEW()
+    {
+        $obj = new VAMMetadataOnlyReview();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startVAM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return VAM
      */
-    public static function createVAM(FlatBufferBuilder $builder, $ID, $VERSION, $ENTITY_ID, $ENTITY_KIND, $CANONICAL_VARIANT_ID, $ALTERNATE_VARIANT_IDS, $VARIANTS, $REVIEW, $REVIEW_STATE, $CREATED_AT, $UPDATED_AT, $SUPERSEDES_VAM_CID, $DPM_CID)
+    public static function createVAM(FlatBufferBuilder $builder, $ID, $VERSION, $ENTITY_ID, $ENTITY_KIND, $CANONICAL_VARIANT_ID, $ALTERNATE_VARIANT_IDS, $VARIANTS, $REVIEW, $REVIEW_STATE, $CREATED_AT, $UPDATED_AT, $SUPERSEDES_VAM_CID, $DPM_CID, $METADATA_REVIEW)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addID($builder, $ID);
         self::addVERSION($builder, $VERSION);
         self::addENTITY_ID($builder, $ENTITY_ID);
@@ -183,6 +193,7 @@ class VAM extends Table
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addSUPERSEDES_VAM_CID($builder, $SUPERSEDES_VAM_CID);
         self::addDPM_CID($builder, $DPM_CID);
+        self::addMETADATA_REVIEW($builder, $METADATA_REVIEW);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         $builder->required($o, 8);  // ENTITY_ID
@@ -365,6 +376,16 @@ class VAM extends Table
     public static function addDPM_CID(FlatBufferBuilder $builder, $DPM_CID)
     {
         $builder->addOffsetX(12, $DPM_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMETADATA_REVIEW(FlatBufferBuilder $builder, $METADATA_REVIEW)
+    {
+        $builder->addOffsetX(13, $METADATA_REVIEW, 0);
     }
 
     /**

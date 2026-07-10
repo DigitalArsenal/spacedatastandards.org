@@ -131,6 +131,8 @@ public struct VAMVariant : IFlatbufferObject
   public ArraySegment<byte>? GetSUPERSEDES_VARIANT_IDBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
   public byte[] GetSUPERSEDES_VARIANT_IDArray() { return __p.__vector_as_array<byte>(48); }
+  /// Priority within the VAM; zero is highest priority and ranks must be unique within a VAM.
+  public uint RANK { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<VAMVariant> CreateVAMVariant(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -155,9 +157,11 @@ public struct VAMVariant : IFlatbufferObject
       Offset<VAMValidation> VALIDATIONOffset = default(Offset<VAMValidation>),
       VectorOffset QUALITYOffset = default(VectorOffset),
       visualAssetReviewState REVIEW_STATE = visualAssetReviewState.DISCOVERED,
-      StringOffset SUPERSEDES_VARIANT_IDOffset = default(StringOffset)) {
-    builder.StartTable(23);
+      StringOffset SUPERSEDES_VARIANT_IDOffset = default(StringOffset),
+      uint RANK = 0) {
+    builder.StartTable(24);
     VAMVariant.AddBYTE_LENGTH(builder, BYTE_LENGTH);
+    VAMVariant.AddRANK(builder, RANK);
     VAMVariant.AddSUPERSEDES_VARIANT_ID(builder, SUPERSEDES_VARIANT_IDOffset);
     VAMVariant.AddQUALITY(builder, QUALITYOffset);
     VAMVariant.AddVALIDATION(builder, VALIDATIONOffset);
@@ -183,7 +187,7 @@ public struct VAMVariant : IFlatbufferObject
     return VAMVariant.EndVAMVariant(builder);
   }
 
-  public static void StartVAMVariant(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartVAMVariant(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddPARENT_VARIANT_ID(FlatBufferBuilder builder, StringOffset PARENT_VARIANT_IDOffset) { builder.AddOffset(1, PARENT_VARIANT_IDOffset.Value, 0); }
   public static void AddVARIANT_KIND(FlatBufferBuilder builder, visualAssetVariantKind VARIANT_KIND) { builder.AddSbyte(2, (sbyte)VARIANT_KIND, 0); }
@@ -212,6 +216,7 @@ public struct VAMVariant : IFlatbufferObject
   public static void StartQUALITYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddREVIEW_STATE(FlatBufferBuilder builder, visualAssetReviewState REVIEW_STATE) { builder.AddSbyte(21, (sbyte)REVIEW_STATE, 0); }
   public static void AddSUPERSEDES_VARIANT_ID(FlatBufferBuilder builder, StringOffset SUPERSEDES_VARIANT_IDOffset) { builder.AddOffset(22, SUPERSEDES_VARIANT_IDOffset.Value, 0); }
+  public static void AddRANK(FlatBufferBuilder builder, uint RANK) { builder.AddUint(23, RANK, 0); }
   public static Offset<VAMVariant> EndVAMVariant(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -247,6 +252,7 @@ public struct VAMVariant : IFlatbufferObject
     for (var _j = 0; _j < this.QUALITYLength; ++_j) {_o.QUALITY.Add(this.QUALITY(_j).HasValue ? this.QUALITY(_j).Value.UnPack() : null);}
     _o.REVIEW_STATE = this.REVIEW_STATE;
     _o.SUPERSEDES_VARIANT_ID = this.SUPERSEDES_VARIANT_ID;
+    _o.RANK = this.RANK;
   }
   public static Offset<VAMVariant> Pack(FlatBufferBuilder builder, VAMVariantT _o) {
     if (_o == null) return default(Offset<VAMVariant>);
@@ -298,7 +304,8 @@ public struct VAMVariant : IFlatbufferObject
       _VALIDATION,
       _QUALITY,
       _o.REVIEW_STATE,
-      _SUPERSEDES_VARIANT_ID);
+      _SUPERSEDES_VARIANT_ID,
+      _o.RANK);
   }
 }
 
@@ -327,6 +334,7 @@ public class VAMVariantT
   public List<VAMQualityDimensionT> QUALITY { get; set; }
   public visualAssetReviewState REVIEW_STATE { get; set; }
   public string SUPERSEDES_VARIANT_ID { get; set; }
+  public uint RANK { get; set; }
 
   public VAMVariantT() {
     this.ID = null;
@@ -352,6 +360,7 @@ public class VAMVariantT
     this.QUALITY = null;
     this.REVIEW_STATE = visualAssetReviewState.DISCOVERED;
     this.SUPERSEDES_VARIANT_ID = null;
+    this.RANK = 0;
   }
 }
 
@@ -384,6 +393,7 @@ static public class VAMVariantVerify
       && verifier.VerifyVectorOfTables(tablePos, 44 /*QUALITY*/, VAMQualityDimensionVerify.Verify, false)
       && verifier.VerifyField(tablePos, 46 /*REVIEW_STATE*/, 1 /*visualAssetReviewState*/, 1, false)
       && verifier.VerifyString(tablePos, 48 /*SUPERSEDES_VARIANT_ID*/, false)
+      && verifier.VerifyField(tablePos, 50 /*RANK*/, 4 /*uint*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

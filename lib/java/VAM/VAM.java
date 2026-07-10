@@ -43,6 +43,9 @@ public final class VAM extends com.google.flatbuffers.Table {
   public String ENTITY_KIND() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENTITY_KINDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer ENTITY_KINDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Identifies the approved canonical variant; alternate variants preserve their ranks.
+   */
   public String CANONICAL_VARIANT_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CANONICAL_VARIANT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer CANONICAL_VARIANT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
@@ -50,6 +53,9 @@ public final class VAM extends com.google.flatbuffers.Table {
   public int ALTERNATE_VARIANT_IDSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
   public StringVector alternateVariantIdsVector() { return alternateVariantIdsVector(new StringVector()); }
   public StringVector alternateVariantIdsVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * MUST be sorted ascending RANK. Ranks must be unique; tie-break bytewise ID only for invalid or legacy duplicate ranks.
+   */
   public VAMVariant VARIANTS(int j) { return VARIANTS(new VAMVariant(), j); }
   public VAMVariant VARIANTS(VAMVariant obj, int j) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int VARIANTSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
@@ -82,6 +88,11 @@ public final class VAM extends com.google.flatbuffers.Table {
   public String DPM_CID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DPM_CIDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
   public ByteBuffer DPM_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Mutually exclusive with REVIEW; metadata-only decisions use METADATA_REVIEW.
+   */
+  public VAMMetadataOnlyReview METADATA_REVIEW() { return METADATA_REVIEW(new VAMMetadataOnlyReview()); }
+  public VAMMetadataOnlyReview METADATA_REVIEW(VAMMetadataOnlyReview obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createVAM(FlatBufferBuilder builder,
       int IDOffset,
@@ -96,8 +107,10 @@ public final class VAM extends com.google.flatbuffers.Table {
       int CREATED_ATOffset,
       int UPDATED_ATOffset,
       int SUPERSEDES_VAM_CIDOffset,
-      int DPM_CIDOffset) {
-    builder.startTable(13);
+      int DPM_CIDOffset,
+      int METADATA_REVIEWOffset) {
+    builder.startTable(14);
+    VAM.addMetadataReview(builder, METADATA_REVIEWOffset);
     VAM.addDpmCid(builder, DPM_CIDOffset);
     VAM.addSupersedesVamCid(builder, SUPERSEDES_VAM_CIDOffset);
     VAM.addUpdatedAt(builder, UPDATED_ATOffset);
@@ -114,7 +127,7 @@ public final class VAM extends com.google.flatbuffers.Table {
     return VAM.endVAM(builder);
   }
 
-  public static void startVAM(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startVAM(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(1, VERSIONOffset, 0); }
   public static void addEntityId(FlatBufferBuilder builder, int ENTITY_IDOffset) { builder.addOffset(2, ENTITY_IDOffset, 0); }
@@ -132,6 +145,7 @@ public final class VAM extends com.google.flatbuffers.Table {
   public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(10, UPDATED_ATOffset, 0); }
   public static void addSupersedesVamCid(FlatBufferBuilder builder, int SUPERSEDES_VAM_CIDOffset) { builder.addOffset(11, SUPERSEDES_VAM_CIDOffset, 0); }
   public static void addDpmCid(FlatBufferBuilder builder, int DPM_CIDOffset) { builder.addOffset(12, DPM_CIDOffset, 0); }
+  public static void addMetadataReview(FlatBufferBuilder builder, int METADATA_REVIEWOffset) { builder.addOffset(13, METADATA_REVIEWOffset, 0); }
   public static int endVAM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

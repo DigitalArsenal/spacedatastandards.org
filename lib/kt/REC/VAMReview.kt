@@ -17,9 +17,12 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
- * The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
- * Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
+ * Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
+ * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+ * Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
+ * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+ * Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
+ * Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
  */
 @Suppress("unused")
 class VAMReview : Table() {
@@ -84,7 +87,7 @@ class VAMReview : Table() {
     val candidateCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun candidateCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+     * 64 lowercase hexadecimal SHA-256 of exact candidate bytes, required for every binary-backed decision.
      */
     val candidateSha256 : String
         get() {
@@ -193,6 +196,120 @@ class VAMReview : Table() {
         }
     val previousDecisionSha256AsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
     fun previousDecisionSha256InByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    val reviewerRole : Byte
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Canonical repository identifier in owner/name form.
+     */
+    val repository : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val repositoryAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
+    fun repositoryInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Positive base-10 issue number digits with no leading zero.
+     */
+    val issueNumber : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val issueNumberAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 1)
+    fun issueNumberInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 1)
+    val entityId : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val entityIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun entityIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    val vamId : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val vamIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun vamIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Unique opaque identifier containing at least 128 bits of entropy.
+     */
+    val nonce : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val nonceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(40, 1)
+    fun nonceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 40, 1)
+    val reviewedTransform : VAMTransform? get() = reviewedTransform(VAMTransform())
+    fun reviewedTransform(obj: VAMTransform) : VAMTransform? {
+        val o = __offset(42)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val canonicalVariantId : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val canonicalVariantIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun canonicalVariantIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    fun alternateVariantIds(j: Int) : String? {
+        val o = __offset(46)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val alternateVariantIdsLength : Int
+        get() {
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+        }
+    fun annotations(j: Int) : VAMAnnotation? = annotations(VAMAnnotation(), j)
+    fun annotations(obj: VAMAnnotation, j: Int) : VAMAnnotation? {
+        val o = __offset(48)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val annotationsLength : Int
+        get() {
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVAMReview(_bb: ByteBuffer): VAMReview = getRootAsVAMReview(_bb, VAMReview())
@@ -200,8 +317,17 @@ class VAMReview : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVAMReview(builder: FlatBufferBuilder, reviewerIdOffset: Int, capabilityIdOffset: Int, decision: Byte, candidateIdOffset: Int, candidateCidOffset: Int, candidateSha256Offset: Int, decidedAtOffset: Int, reasonsOffset: Int, commentOffset: Int, envelopeSha256Offset: Int, signatureOffset: Int, signatureTypeOffset: Int, previousDecisionSha256Offset: Int) : Int {
-            builder.startTable(13)
+        fun createVAMReview(builder: FlatBufferBuilder, reviewerIdOffset: Int, capabilityIdOffset: Int, decision: Byte, candidateIdOffset: Int, candidateCidOffset: Int, candidateSha256Offset: Int, decidedAtOffset: Int, reasonsOffset: Int, commentOffset: Int, envelopeSha256Offset: Int, signatureOffset: Int, signatureTypeOffset: Int, previousDecisionSha256Offset: Int, reviewerRole: Byte, repositoryOffset: Int, issueNumberOffset: Int, entityIdOffset: Int, vamIdOffset: Int, nonceOffset: Int, reviewedTransformOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, annotationsOffset: Int) : Int {
+            builder.startTable(23)
+            addANNOTATIONS(builder, annotationsOffset)
+            addALTERNATEVARIANTIDS(builder, alternateVariantIdsOffset)
+            addCANONICALVARIANTID(builder, canonicalVariantIdOffset)
+            addREVIEWEDTRANSFORM(builder, reviewedTransformOffset)
+            addNONCE(builder, nonceOffset)
+            addVAMID(builder, vamIdOffset)
+            addENTITYID(builder, entityIdOffset)
+            addISSUENUMBER(builder, issueNumberOffset)
+            addREPOSITORY(builder, repositoryOffset)
             addPREVIOUSDECISIONSHA256(builder, previousDecisionSha256Offset)
             addSIGNATURETYPE(builder, signatureTypeOffset)
             addSIGNATURE(builder, signatureOffset)
@@ -214,10 +340,11 @@ class VAMReview : Table() {
             addCANDIDATEID(builder, candidateIdOffset)
             addCAPABILITYID(builder, capabilityIdOffset)
             addREVIEWERID(builder, reviewerIdOffset)
+            addREVIEWERROLE(builder, reviewerRole)
             addDECISION(builder, decision)
             return endVAMReview(builder)
         }
-        fun startVAMReview(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startVAMReview(builder: FlatBufferBuilder) = builder.startTable(23)
         fun addREVIEWERID(builder: FlatBufferBuilder, reviewerId: Int) = builder.addOffset(0, reviewerId, 0)
         fun addCAPABILITYID(builder: FlatBufferBuilder, capabilityId: Int) = builder.addOffset(1, capabilityId, 0)
         fun addDECISION(builder: FlatBufferBuilder, decision: Byte) = builder.addByte(2, decision, 0)
@@ -248,6 +375,32 @@ class VAMReview : Table() {
         fun startSignatureVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
         fun addSIGNATURETYPE(builder: FlatBufferBuilder, signatureType: Int) = builder.addOffset(11, signatureType, 0)
         fun addPREVIOUSDECISIONSHA256(builder: FlatBufferBuilder, previousDecisionSha256: Int) = builder.addOffset(12, previousDecisionSha256, 0)
+        fun addREVIEWERROLE(builder: FlatBufferBuilder, reviewerRole: Byte) = builder.addByte(13, reviewerRole, 0)
+        fun addREPOSITORY(builder: FlatBufferBuilder, repository: Int) = builder.addOffset(14, repository, 0)
+        fun addISSUENUMBER(builder: FlatBufferBuilder, issueNumber: Int) = builder.addOffset(15, issueNumber, 0)
+        fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(16, entityId, 0)
+        fun addVAMID(builder: FlatBufferBuilder, vamId: Int) = builder.addOffset(17, vamId, 0)
+        fun addNONCE(builder: FlatBufferBuilder, nonce: Int) = builder.addOffset(18, nonce, 0)
+        fun addREVIEWEDTRANSFORM(builder: FlatBufferBuilder, reviewedTransform: Int) = builder.addOffset(19, reviewedTransform, 0)
+        fun addCANONICALVARIANTID(builder: FlatBufferBuilder, canonicalVariantId: Int) = builder.addOffset(20, canonicalVariantId, 0)
+        fun addALTERNATEVARIANTIDS(builder: FlatBufferBuilder, alternateVariantIds: Int) = builder.addOffset(21, alternateVariantIds, 0)
+        fun createAlternateVariantIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAlternateVariantIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addANNOTATIONS(builder: FlatBufferBuilder, annotations: Int) = builder.addOffset(22, annotations, 0)
+        fun createAnnotationsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAnnotationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endVAMReview(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)
