@@ -36,6 +36,7 @@ describe("website schema field explorer", () => {
     ["CAT", ["OBJECT_NAME", "NORAD_CAT_ID", "PAYLOADS"]],
     ["PLG", ["PLUGIN_ID", "NAME", "VERSION"]],
     ["OEM", ["CCSDS_OEM_VERS", "EPHEMERIS_DATA_BLOCK"]],
+    ["VAM", ["ENTITY_ID", "CANONICAL_VARIANT_ID", "VARIANTS", "REVIEW"]],
   ]) {
     it(`resolves ${name} fields from augmented FlatBuffers schema metadata`, () => {
       const schema = loadFbJsonSchema(name);
