@@ -288,7 +288,19 @@ const validatesSignedBinaryReview = (manifest, publicKey, context, usedNonces) =
   const authorized = review.REVIEWER_ROLE === visualAssetReviewerRole.REVIEWER
     || review.REVIEWER_ROLE === visualAssetReviewerRole.ADMIN;
   if (!authorized || review.DECISION !== visualAssetDecisionKind.APPROVE) return false;
-  if (!review.CANDIDATE_CID || !review.CANDIDATE_SHA256 || !review.CAPABILITY_ID
+  const requiredProfileFields = [
+    'CAPABILITY_ID',
+    'REPOSITORY',
+    'ISSUE_NUMBER',
+    'ENTITY_ID',
+    'VAM_ID',
+    'NONCE'
+  ];
+  if (requiredProfileFields.some((field) => (
+    typeof review[field] !== 'string' || review[field].length === 0
+  ))) return false;
+  if (!/^[1-9][0-9]*$/.test(review.ISSUE_NUMBER)) return false;
+  if (!review.CANDIDATE_CID || !review.CANDIDATE_SHA256
     || review.REVIEWED_TRANSFORM === null || !review.CANONICAL_VARIANT_ID) return false;
   if (review.CANONICAL_VARIANT_ID !== review.CANDIDATE_ID) return false;
   if (review.REPOSITORY !== context.repository
@@ -544,6 +556,52 @@ describe('VAM signed review profiles', () => {
     const nonceRegistry = new Set();
     assert.equal(validatesSignedBinaryReview(reviewer, publicKey, expectedContext, nonceRegistry), true);
     assert.equal(validatesSignedBinaryReview(reviewer, publicKey, expectedContext, nonceRegistry), false);
+  });
+
+  it('rejects empty or non-string approval profile context before signature trust', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const fields = [
+      { field: 'CAPABILITY_ID' },
+      { field: 'REPOSITORY', contextKey: 'repository' },
+      { field: 'ISSUE_NUMBER', contextKey: 'issueNumber' },
+      { field: 'ENTITY_ID', contextKey: 'entityId', manifestKey: 'ENTITY_ID' },
+      { field: 'VAM_ID', contextKey: 'vamId', manifestKey: 'ID' },
+      { field: 'NONCE' }
+    ];
+
+    for (const invalidValue of ['', 42]) {
+      for (const { field, contextKey, manifestKey } of fields) {
+        const decoded = decodeBinaryManifest(privateKey);
+        const context = { ...expectedContext };
+        decoded.REVIEW[field] = invalidValue;
+        if (contextKey) context[contextKey] = invalidValue;
+        if (manifestKey) decoded[manifestKey] = invalidValue;
+        signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+
+        assert.equal(
+          verifyReviewSignature(decoded.REVIEW, binaryReviewProjection, publicKey),
+          true,
+          `${field} fixture must remain cryptographically valid`
+        );
+        assert.equal(
+          validatesSignedBinaryReview(decoded, publicKey, context, new Set()),
+          false,
+          `${field} must be a non-empty string`
+        );
+      }
+    }
+
+    for (const invalidIssue of ['042', '0']) {
+      const decoded = decodeBinaryManifest(privateKey);
+      decoded.REVIEW.ISSUE_NUMBER = invalidIssue;
+      signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+      assert.equal(verifyReviewSignature(
+        decoded.REVIEW, binaryReviewProjection, publicKey
+      ), true);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, { ...expectedContext, issueNumber: invalidIssue }, new Set()
+      ), false);
+    }
   });
 
   it('binds a metadata-only signature to the exact source metadata', () => {
