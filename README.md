@@ -52,7 +52,7 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **EPM, PNM** — Entity profiles and publish notifications for identity management
 
-**VAM** — Visual Asset Manifest for ranked 3D models, LODs, reviewed transforms, provenance, licensing, and IPFS content identity.
+**VAM** — Visual Asset Manifest for ranked 3D models, LODs, transforms, provenance, licensing, review, and IPFS content identity
 
 ### Tracking
 
