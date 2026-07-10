@@ -31,6 +31,8 @@ const fixture = {
   sha256: '3'.repeat(64),
   alternateCid: 'bafkreialternatevariantcid',
   alternateSha256: '5'.repeat(64),
+  secondAlternateCid: 'bafkreisecondalternatecid',
+  secondAlternateSha256: '6'.repeat(64),
   nonce: '018f47a2-6b8d-7c91-a234-567890abcdef'
 };
 
@@ -225,7 +227,7 @@ const makeBinaryReview = (privateKey, role = visualAssetReviewerRole.REVIEWER) =
     NONCE: fixture.nonce,
     REVIEWED_TRANSFORM: makeTransform(),
     CANONICAL_VARIANT_ID: fixture.variantId,
-    ALTERNATE_VARIANT_IDS: ['cassini-low-poly'],
+    ALTERNATE_VARIANT_IDS: ['cassini-low-poly', 'cassini-wireframe'],
     ANNOTATIONS: [makeAnnotation()]
   });
   signReview(review, binaryReviewProjection, privateKey);
@@ -238,7 +240,7 @@ const makeBinaryManifest = (review) => new VAMT(
   fixture.entityId,
   'spacecraft',
   fixture.variantId,
-  ['cassini-low-poly'],
+  ['cassini-low-poly', 'cassini-wireframe'],
   [
     Object.assign(new VAMVariantT(), {
       ID: fixture.variantId,
@@ -252,6 +254,13 @@ const makeBinaryManifest = (review) => new VAMT(
       RANK: 1,
       CID: fixture.alternateCid,
       BYTE_SHA256: fixture.alternateSha256,
+      TRANSFORM: makeTransform()
+    }),
+    Object.assign(new VAMVariantT(), {
+      ID: 'cassini-wireframe',
+      RANK: 2,
+      CID: fixture.secondAlternateCid,
+      BYTE_SHA256: fixture.secondAlternateSha256,
       TRANSFORM: makeTransform()
     })
   ],
@@ -310,6 +319,23 @@ const validatesSignedBinaryReview = (manifest, publicKey, context, usedNonces) =
   if (manifest.ID !== review.VAM_ID
     || manifest.ENTITY_ID !== review.ENTITY_ID
     || manifest.CANONICAL_VARIANT_ID !== review.CANONICAL_VARIANT_ID) return false;
+  const alternates = review.ALTERNATE_VARIANT_IDS;
+  if (!Array.isArray(alternates)
+    || !Array.isArray(manifest.ALTERNATE_VARIANT_IDS)
+    || alternates.length !== manifest.ALTERNATE_VARIANT_IDS.length
+    || alternates.some((id, index) => id !== manifest.ALTERNATE_VARIANT_IDS[index])) {
+    return false;
+  }
+  const alternateIds = new Set();
+  let previousRank = -1;
+  for (const id of alternates) {
+    if (typeof id !== 'string' || id.length === 0
+      || id === review.CANONICAL_VARIANT_ID || alternateIds.has(id)) return false;
+    alternateIds.add(id);
+    const variant = manifest.VARIANTS.find((candidate) => candidate.ID === id);
+    if (!variant || variant.RANK <= previousRank) return false;
+    previousRank = variant.RANK;
+  }
   const selectedVariant = manifest.VARIANTS.find(({ ID }) => ID === review.CANDIDATE_ID);
   if (!selectedVariant
     || selectedVariant.CID !== review.CANDIDATE_CID
@@ -512,12 +538,13 @@ describe('VAM signed review profiles', () => {
 
     const canonicalChange = decodeBinaryManifest(privateKey);
     canonicalChange.CANONICAL_VARIANT_ID = 'cassini-low-poly';
+    canonicalChange.ALTERNATE_VARIANT_IDS = [fixture.variantId, 'cassini-wireframe'];
     Object.assign(canonicalChange.REVIEW, {
       CANDIDATE_ID: 'cassini-low-poly',
       CANDIDATE_CID: fixture.alternateCid,
       CANDIDATE_SHA256: fixture.alternateSha256,
       CANONICAL_VARIANT_ID: 'cassini-low-poly',
-      ALTERNATE_VARIANT_IDS: [fixture.variantId]
+      ALTERNATE_VARIANT_IDS: [fixture.variantId, 'cassini-wireframe']
     });
     assert.equal(verifyReviewSignature(
       canonicalChange.REVIEW, binaryReviewProjection, publicKey
@@ -529,6 +556,80 @@ describe('VAM signed review profiles', () => {
     signReview(canonicalChange.REVIEW, binaryReviewProjection, privateKey);
     assert.equal(validatesSignedBinaryReview(
       canonicalChange, publicKey, expectedContext, new Set()
+    ), true);
+  });
+
+  it('binds ordered alternate selections to distinct ranked manifest variants', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const valid = decodeBinaryManifest(privateKey);
+    assert.equal(validatesSignedBinaryReview(
+      valid, publicKey, expectedContext, new Set()
+    ), true);
+
+    const noAlternates = decodeBinaryManifest(privateKey);
+    noAlternates.REVIEW.ALTERNATE_VARIANT_IDS = [];
+    noAlternates.ALTERNATE_VARIANT_IDS = [];
+    signReview(noAlternates.REVIEW, binaryReviewProjection, privateKey);
+    assert.equal(validatesSignedBinaryReview(
+      noAlternates, publicKey, expectedContext, new Set()
+    ), true);
+
+    const manifestMismatch = decodeBinaryManifest(privateKey);
+    manifestMismatch.ALTERNATE_VARIANT_IDS = ['cassini-low-poly'];
+    assert.equal(verifyReviewSignature(
+      manifestMismatch.REVIEW, binaryReviewProjection, publicKey
+    ), true);
+    assert.equal(validatesSignedBinaryReview(
+      manifestMismatch, publicKey, expectedContext, new Set()
+    ), false);
+
+    const invalidSelections = [
+      ['cassini-wireframe', 'cassini-low-poly'],
+      ['cassini-low-poly', 'cassini-low-poly'],
+      [fixture.variantId, 'cassini-low-poly'],
+      ['missing-variant'],
+      [42]
+    ];
+    for (const alternateIds of invalidSelections) {
+      const decoded = decodeBinaryManifest(privateKey);
+      decoded.REVIEW.ALTERNATE_VARIANT_IDS = alternateIds;
+      decoded.ALTERNATE_VARIANT_IDS = [...alternateIds];
+      signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+      assert.equal(verifyReviewSignature(
+        decoded.REVIEW, binaryReviewProjection, publicKey
+      ), true);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, expectedContext, new Set()
+      ), false);
+    }
+
+    const nonAscendingRanks = decodeBinaryManifest(privateKey);
+    nonAscendingRanks.VARIANTS[1].RANK = 2;
+    nonAscendingRanks.VARIANTS[2].RANK = 1;
+    assert.equal(validatesSignedBinaryReview(
+      nonAscendingRanks, publicKey, expectedContext, new Set()
+    ), false);
+  });
+
+  it('requires re-signing and matching VAM state after alternate selection changes', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const decoded = decodeBinaryManifest(privateKey);
+    decoded.REVIEW.ALTERNATE_VARIANT_IDS = ['cassini-low-poly'];
+
+    assert.equal(verifyReviewSignature(decoded.REVIEW, binaryReviewProjection, publicKey), false);
+    assert.equal(validatesSignedBinaryReview(
+      decoded, publicKey, expectedContext, new Set()
+    ), false);
+
+    signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+    assert.equal(verifyReviewSignature(decoded.REVIEW, binaryReviewProjection, publicKey), true);
+    assert.equal(validatesSignedBinaryReview(
+      decoded, publicKey, expectedContext, new Set()
+    ), false);
+
+    decoded.ALTERNATE_VARIANT_IDS = ['cassini-low-poly'];
+    assert.equal(validatesSignedBinaryReview(
+      decoded, publicKey, expectedContext, new Set()
     ), true);
   });
 
