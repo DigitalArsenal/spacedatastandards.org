@@ -91,7 +91,7 @@ table VAMSource {
   SOURCE_RECORD_ID:string (required);
   SOURCE_NAME:string;
   SOURCE_URL:string (required);
-  /// ISO 8601 UTC timestamp when the source was observed.
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the source was observed.
   OBSERVED_AT:string;
   LICENSE_CLASS:visualAssetLicenseClass = MANUAL_REVIEW;
   LICENSE_NAME:string;
@@ -123,7 +123,7 @@ table VAMValidation {
   STATUS:string;
   VALIDATOR_NAME:string;
   VALIDATOR_VERSION:string;
-  /// ISO 8601 UTC timestamp when validation completed.
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when validation completed.
   VALIDATED_AT:string;
   ERRORS:[string];
   WARNINGS:[string];
@@ -151,9 +151,11 @@ table VAMVariant {
   /// CIDv1 containing a multihash of the exact variant file bytes.
   CID:string;
   MULTIFORMAT_ADDRESS:string;
+  /// MAJOR.MINOR glTF specification version, such as 2.0.
   GLTF_VERSION:string;
   GENERATOR:string;
   CONVERSION_TOOL:string;
+  /// CONVERSION_VERSION is the exact version identifier reported by CONVERSION_TOOL without normalization.
   CONVERSION_VERSION:string;
   CONVERSION_PROFILE:string;
   /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact conversion input bytes.
@@ -168,7 +170,8 @@ table VAMVariant {
 }
 
 /// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
-/// A verifier must hash canonical bytes, compare the digest, then verify the signature before trusting DECISION.
+/// The review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.
+/// Absent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.
 table VAMReview {
   REVIEWER_ID:string (required);
   CAPABILITY_ID:string;
@@ -178,24 +181,24 @@ table VAMReview {
   CANDIDATE_CID:string;
   /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
   CANDIDATE_SHA256:string (required);
-  /// ISO 8601 UTC timestamp when the decision was made.
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.
   DECIDED_AT:string (required);
   REASONS:[string];
   COMMENT:string;
-  /// 64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON review-envelope bytes excluding SIGNATURE.
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the RFC 8785 JCS serialization of the projected review object, excluding ENVELOPE_SHA256 and SIGNATURE.
   ENVELOPE_SHA256:string (required);
   /// Signature over the raw 32-byte SHA-256 digest represented by ENVELOPE_SHA256.
   SIGNATURE:[ubyte] (required);
   /// Signature algorithm and profile; initially Ed25519.
   SIGNATURE_TYPE:string (required);
-  /// 64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON prior review-envelope bytes excluding SIGNATURE.
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.
   PREVIOUS_DECISION_SHA256:string;
 }
 
 /// Visual Asset Manifest — ranked visual representations for one stable entity.
 table VAM {
   ID:string (required);
-  /// Manifest format version.
+  /// SemVer 2.0.0 manifest-format version, not a content revision.
   VERSION:string;
   ENTITY_ID:string (required);
   ENTITY_KIND:string;
@@ -204,9 +207,9 @@ table VAM {
   VARIANTS:[VAMVariant];
   REVIEW:VAMReview;
   REVIEW_STATE:visualAssetReviewState = DISCOVERED;
-  /// ISO 8601 UTC timestamp when the manifest was created.
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was created.
   CREATED_AT:string;
-  /// ISO 8601 UTC timestamp when the manifest was last updated.
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was last updated.
   UPDATED_AT:string;
   /// CIDv1 containing a multihash of the exact superseded VAM bytes.
   SUPERSEDES_VAM_CID:string;
