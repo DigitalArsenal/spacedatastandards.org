@@ -1,0 +1,184 @@
+/// Role of one visual asset variant.
+enum visualAssetVariantKind : byte {
+  SOURCE,
+  OPTIMIZED,
+  LOD,
+  ALTERNATE
+}
+
+/// Lifecycle state.
+enum visualAssetReviewState : byte {
+  DISCOVERED,
+  METADATA_VALIDATED,
+  LICENSE_CLEARED,
+  STAGED,
+  REVIEW_OPEN,
+  APPROVED,
+  REJECTED,
+  CHANGES_REQUESTED,
+  OPTIMIZED,
+  PUBLISHED,
+  SUPERSEDED
+}
+
+/// License gate.
+enum visualAssetLicenseClass : byte {
+  USABLE_NOW,
+  CANDIDATE_NEEDS_LICENSE,
+  MANUAL_REVIEW
+}
+
+/// Up axis.
+enum visualAssetUpAxis : byte {
+  X_UP,
+  Y_UP,
+  Z_UP
+}
+
+/// Review decision.
+enum visualAssetDecisionKind : byte {
+  NONE,
+  APPROVE,
+  REJECT,
+  REQUEST_CHANGES,
+  APPROVE_METADATA_ONLY,
+  ESCALATE_LICENSE,
+  SELECT_ALTERNATE
+}
+
+/// Three-dimensional vector.
+table VAMVector3 {
+  X:double;
+  Y:double;
+  Z:double;
+}
+
+/// Rotation quaternion.
+table VAMQuaternion {
+  X:double;
+  Y:double;
+  Z:double;
+  W:double = 1.0;
+}
+
+/// Transform from source coordinates into canonical meters.
+table VAMTransform {
+  TRANSLATION:VAMVector3;
+  ROTATION:VAMQuaternion;
+  SCALE:VAMVector3;
+  UP_AXIS:visualAssetUpAxis = Y_UP;
+  SOURCE_UNITS:string;
+  METERS_PER_SOURCE_UNIT:double = 1.0;
+  ORIGIN_NOTE:string;
+}
+
+/// Provenance and license metadata for an asset source.
+table VAMSource {
+  SOURCE_RECORD_ID:string (required);
+  SOURCE_NAME:string;
+  SOURCE_URL:string (required);
+  OBSERVED_AT:string;
+  LICENSE_CLASS:visualAssetLicenseClass = MANUAL_REVIEW;
+  LICENSE_NAME:string;
+  ATTRIBUTION:string;
+  REDISTRIBUTION_ALLOWED:bool;
+  DERIVATIVES_ALLOWED:bool;
+  SOURCE_METADATA_SHA256:string;
+  NOTES:string;
+}
+
+/// Geometry, material, texture, and bounds measurements.
+table VAMMetrics {
+  TRIANGLE_COUNT:uint64;
+  VERTEX_COUNT:uint64;
+  PRIMITIVE_COUNT:uint;
+  DRAW_CALL_COUNT:uint;
+  MATERIAL_COUNT:uint;
+  TEXTURE_COUNT:uint;
+  TEXTURE_BYTES:uint64;
+  ANIMATION_COUNT:uint;
+  BOUNDING_BOX_MIN:VAMVector3;
+  BOUNDING_BOX_MAX:VAMVector3;
+  DIMENSIONS_METERS:VAMVector3;
+}
+
+/// Validation result for one asset variant.
+table VAMValidation {
+  STATUS:string;
+  VALIDATOR_NAME:string;
+  VALIDATOR_VERSION:string;
+  VALIDATED_AT:string;
+  ERRORS:[string];
+  WARNINGS:[string];
+}
+
+/// One named quality score and its basis.
+table VAMQualityDimension {
+  NAME:string (required);
+  SCORE:double;
+  BASIS:string;
+}
+
+/// One source, optimized, LOD, or alternate visual representation.
+table VAMVariant {
+  ID:string (required);
+  PARENT_VARIANT_ID:string;
+  VARIANT_KIND:visualAssetVariantKind = SOURCE;
+  LOD_LEVEL:uint;
+  FILE_NAME:string;
+  MEDIA_TYPE:string;
+  BYTE_LENGTH:uint64;
+  BYTE_SHA256:string;
+  CID:string;
+  MULTIFORMAT_ADDRESS:string;
+  GLTF_VERSION:string;
+  GENERATOR:string;
+  CONVERSION_TOOL:string;
+  CONVERSION_VERSION:string;
+  CONVERSION_PROFILE:string;
+  INPUT_SHA256:string;
+  SOURCE:VAMSource;
+  TRANSFORM:VAMTransform;
+  METRICS:VAMMetrics;
+  VALIDATION:VAMValidation;
+  QUALITY:[VAMQualityDimension];
+  REVIEW_STATE:visualAssetReviewState = DISCOVERED;
+  SUPERSEDES_VARIANT_ID:string;
+}
+
+/// Signed review decision over a specific candidate.
+table VAMReview {
+  REVIEWER_ID:string;
+  CAPABILITY_ID:string;
+  DECISION:visualAssetDecisionKind = NONE;
+  CANDIDATE_ID:string;
+  CANDIDATE_CID:string;
+  CANDIDATE_SHA256:string;
+  DECIDED_AT:string;
+  REASONS:[string];
+  COMMENT:string;
+  ENVELOPE_SHA256:string;
+  SIGNATURE:[ubyte];
+  SIGNATURE_TYPE:string;
+  PREVIOUS_DECISION_SHA256:string;
+}
+
+/// Visual Asset Manifest — ranked visual representations for one stable entity.
+table VAM {
+  ID:string (required);
+  VERSION:string;
+  ENTITY_ID:string (required);
+  ENTITY_KIND:string;
+  CANONICAL_VARIANT_ID:string;
+  ALTERNATE_VARIANT_IDS:[string];
+  VARIANTS:[VAMVariant];
+  REVIEW:VAMReview;
+  REVIEW_STATE:visualAssetReviewState = DISCOVERED;
+  CREATED_AT:string;
+  UPDATED_AT:string;
+  SUPERSEDES_VAM_CID:string;
+  DPM_CID:string;
+}
+
+root_type VAM;
+file_identifier "$VAM";
