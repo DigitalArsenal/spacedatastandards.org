@@ -79,8 +79,8 @@ describe('VAM runtime', () => {
       VALIDATOR_NAME: 'gltf-validator',
       VALIDATOR_VERSION: '2.0.0',
       VALIDATED_AT: '2026-01-11T09:30:00.000Z',
-      ERRORS: [],
-      WARNINGS: []
+      ERRORS: ['mesh/primitive/0: invalid tangent'],
+      WARNINGS: ['texture/0: oversized for browser profile']
     });
 
     const quality = new VAMQualityDimensionT();
@@ -180,6 +180,7 @@ describe('VAM runtime', () => {
       visualAssetPermissionDecision.ALLOWED
     );
     assert.equal(decodedSource.SOURCE_METADATA_SHA256, sourceMetadataSha256);
+    assert.equal(decodedSource.NOTES, source.NOTES);
 
     const decodedTransform = decodedVariant.TRANSFORM;
     assert.deepEqual(
@@ -231,8 +232,10 @@ describe('VAM runtime', () => {
     assert.equal(decodedValidation.VALIDATOR_NAME, 'gltf-validator');
     assert.equal(decodedValidation.VALIDATOR_VERSION, '2.0.0');
     assert.equal(decodedValidation.VALIDATED_AT, validation.VALIDATED_AT);
-    assert.deepEqual(decodedValidation.ERRORS, []);
-    assert.deepEqual(decodedValidation.WARNINGS, []);
+    assert.deepEqual(decodedValidation.ERRORS, ['mesh/primitive/0: invalid tangent']);
+    assert.deepEqual(decodedValidation.WARNINGS, [
+      'texture/0: oversized for browser profile'
+    ]);
 
     assert.equal(decodedVariant.QUALITY.length, 1);
     assert.equal(decodedVariant.QUALITY[0].NAME, 'runtime_cost');
