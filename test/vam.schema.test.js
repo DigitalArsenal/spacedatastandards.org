@@ -31,7 +31,6 @@ describe("VAM schema generation", () => {
       "table VAMQualityDimension",
       "table VAMVariant",
       "table VAMReview",
-      "table VAM",
       "ENTITY_ID:string (required)",
       "CANONICAL_VARIANT_ID:string",
       "VARIANTS:[VAMVariant]",
@@ -41,6 +40,7 @@ describe("VAM schema generation", () => {
     ]) {
       assert.match(source, escapedTokenRegex(token));
     }
+    assert.match(source, /\btable\s+VAM\s*\{/);
   });
 
   it("generates VAM bindings and augmented schema metadata", async () => {
@@ -69,7 +69,7 @@ describe("VAM schema generation", () => {
     assert.match(goVam, /type VAM struct/);
     assert.match(cppVam, /struct VAM\b/);
     assert.match(recSource, /include "\.\.\/VAM\/main\.fbs";/);
-    assert.match(recSource, /\bVAM\b/);
+    assert.match(recSource, /union\s+RecordType\s*\{[^}]*\bVAM\b[^}]*\}/s);
 
     const jsonSchema = JSON.parse(jsonText);
     const fbjson = JSON.parse(fbjsonText);
