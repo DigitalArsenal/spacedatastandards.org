@@ -80,16 +80,33 @@ describe("VAM schema generation", () => {
     assert.match(source, /\btable\s+VAM\s*\{/);
     assert.doesNotMatch(source, /CANDIDATE_SHA256:string\s*\(required\)/);
     assert.match(source, /table\s+VAMAnnotation\s*\{\s*ID:string \(required\);\s*KIND:string \(required\);\s*MESSAGE:string \(required\);\s*POSITION:VAMVector3;/s);
-    assert.match(source, /table\s+VAMVariant\s*\{\s*ID:string \(required\);\s*PARENT_VARIANT_ID:string;[\s\S]*?RANK:uint;/);
     assert.match(source, /table\s+VAMReview\s*\{[\s\S]*?REPOSITORY:string \(required\);[\s\S]*?ENTITY_ID:string \(required\);[\s\S]*?VAM_ID:string \(required\);/);
+
+    const tableFields = (name) => {
+      const body = source.match(new RegExp(`table\\s+${name}\\s*\\{([\\s\\S]*?)\\n\\}`))[1];
+      return [...body.matchAll(/^\s+([A-Z][A-Z0-9_]*):/gm)].map((match) => match[1]);
+    };
+    assert.deepEqual(tableFields("VAMVariant"), [
+      "ID", "PARENT_VARIANT_ID", "VARIANT_KIND", "LOD_LEVEL", "FILE_NAME", "MEDIA_TYPE", "BYTE_LENGTH",
+      "BYTE_SHA256", "CID", "MULTIFORMAT_ADDRESS", "GLTF_VERSION", "GENERATOR", "CONVERSION_TOOL",
+      "CONVERSION_VERSION", "CONVERSION_PROFILE", "INPUT_SHA256", "SOURCE", "TRANSFORM", "METRICS", "VALIDATION",
+      "QUALITY", "REVIEW_STATE", "SUPERSEDES_VARIANT_ID", "RANK",
+    ]);
+    assert.deepEqual(tableFields("VAMReview"), [
+      "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256",
+      "DECIDED_AT", "REASONS", "COMMENT", "ENVELOPE_SHA256", "SIGNATURE", "SIGNATURE_TYPE",
+      "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
+      "CANDIDATE_METADATA_SHA256", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
+    ]);
+    assert.match(source, /RFC 8785[^\n]*VAMSource projection/);
 
     const reviewProjection = source.slice(source.indexOf("/// The review-envelope projection"), source.indexOf("table VAMReview"));
     let projectionOffset = -1;
     for (const field of [
-      "REVIEWER_ID", "CAPABILITY_ID", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
-      "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "CANDIDATE_METADATA_SHA256", "DECIDED_AT",
-      "REASONS", "COMMENT", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
-      "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256",
+      "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "DECIDED_AT",
+      "REASONS", "COMMENT", "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER",
+      "ENTITY_ID", "VAM_ID", "NONCE", "CANDIDATE_METADATA_SHA256", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID",
+      "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
     ]) {
       const nextOffset = reviewProjection.indexOf(field, projectionOffset + 1);
       assert.ok(nextOffset > projectionOffset, `${field} should appear in signed projection order`);
