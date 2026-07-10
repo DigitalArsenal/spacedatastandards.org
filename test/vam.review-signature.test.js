@@ -4,6 +4,7 @@ import { readFB, standards, writeFB } from '../index.js';
 
 const {
   VAMAnnotationT,
+  VAMApprovedAlternateT,
   VAMMetadataOnlyReviewT,
   VAMQuaternionT,
   VAMReviewT,
@@ -29,9 +30,9 @@ const fixture = {
   variantId: 'cassini-source-glb',
   cid: 'bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku',
   sha256: '3'.repeat(64),
-  alternateCid: 'bafkreialternatevariantcid',
+  alternateCid: 'bafkreicvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvku',
   alternateSha256: '5'.repeat(64),
-  secondAlternateCid: 'bafkreisecondalternatecid',
+  secondAlternateCid: 'bafkreidgmztgmztgmztgmztgmztgmztgmztgmztgmztgmztgmztgmztgmy',
   secondAlternateSha256: '6'.repeat(64),
   nonce: '018f47a2-6b8d-7c91-a234-567890abcdef'
 };
@@ -99,6 +100,14 @@ const annotationProjection = (annotation) => {
   return projection;
 };
 
+const approvedAlternateProjection = (alternate) => ({
+  VARIANT_ID: alternate.VARIANT_ID,
+  CID: alternate.CID,
+  BYTE_SHA256: alternate.BYTE_SHA256,
+  REVIEWED_TRANSFORM: normalizedTransform(alternate.REVIEWED_TRANSFORM),
+  RANK: alternate.RANK
+});
+
 const sourceMetadataProjection = (source) => {
   const projection = {
     SOURCE_RECORD_ID: source.SOURCE_RECORD_ID,
@@ -136,7 +145,8 @@ const binaryReviewProjection = (review) => {
     VAM_ID: review.VAM_ID,
     NONCE: review.NONCE,
     ALTERNATE_VARIANT_IDS: review.ALTERNATE_VARIANT_IDS,
-    ANNOTATIONS: review.ANNOTATIONS.map(annotationProjection)
+    ANNOTATIONS: review.ANNOTATIONS.map(annotationProjection),
+    APPROVED_ALTERNATES: review.APPROVED_ALTERNATES.map(approvedAlternateProjection)
   };
   for (const field of [
     'CAPABILITY_ID',
@@ -206,6 +216,10 @@ const makeAnnotation = () => new VAMAnnotationT(
   new VAMVector3T(0, 0, 0)
 );
 
+const makeApprovedAlternate = (variantId, cid, byteSha256, rank) => (
+  new VAMApprovedAlternateT(variantId, cid, byteSha256, makeTransform(), rank)
+);
+
 const makeBinaryReview = (privateKey, role = visualAssetReviewerRole.REVIEWER) => {
   const review = new VAMReviewT();
   Object.assign(review, {
@@ -228,7 +242,15 @@ const makeBinaryReview = (privateKey, role = visualAssetReviewerRole.REVIEWER) =
     REVIEWED_TRANSFORM: makeTransform(),
     CANONICAL_VARIANT_ID: fixture.variantId,
     ALTERNATE_VARIANT_IDS: ['cassini-low-poly', 'cassini-wireframe'],
-    ANNOTATIONS: [makeAnnotation()]
+    ANNOTATIONS: [makeAnnotation()],
+    APPROVED_ALTERNATES: [
+      makeApprovedAlternate(
+        'cassini-low-poly', fixture.alternateCid, fixture.alternateSha256, 1
+      ),
+      makeApprovedAlternate(
+        'cassini-wireframe', fixture.secondAlternateCid, fixture.secondAlternateSha256, 2
+      )
+    ]
   });
   signReview(review, binaryReviewProjection, privateKey);
   return review;
@@ -327,14 +349,27 @@ const validatesSignedBinaryReview = (manifest, publicKey, context, usedNonces) =
     || alternates.some((id, index) => id !== manifest.ALTERNATE_VARIANT_IDS[index])) {
     return false;
   }
+  const approvedAlternates = review.APPROVED_ALTERNATES;
+  if (!Array.isArray(approvedAlternates)
+    || approvedAlternates.length !== alternates.length) return false;
   const alternateIds = new Set();
   let previousRank = -1;
-  for (const id of alternates) {
+  for (const [index, id] of alternates.entries()) {
     if (typeof id !== 'string' || id.length === 0
       || id === review.CANONICAL_VARIANT_ID || alternateIds.has(id)) return false;
     alternateIds.add(id);
     const variant = manifest.VARIANTS.find((candidate) => candidate.ID === id);
     if (!variant || variant.RANK <= previousRank) return false;
+    const descriptor = approvedAlternates[index];
+    if (descriptor.VARIANT_ID !== id
+      || typeof descriptor.CID !== 'string' || descriptor.CID.length === 0
+      || !/^[0-9a-f]{64}$/.test(descriptor.BYTE_SHA256)
+      || descriptor.REVIEWED_TRANSFORM === null
+      || descriptor.CID !== variant.CID
+      || descriptor.BYTE_SHA256 !== variant.BYTE_SHA256
+      || descriptor.RANK !== variant.RANK
+      || canonicalizeJcs(normalizedTransform(descriptor.REVIEWED_TRANSFORM))
+        !== canonicalizeJcs(normalizedTransform(variant.TRANSFORM))) return false;
     previousRank = variant.RANK;
   }
   const selectedVariant = manifest.VARIANTS.find(({ ID }) => ID === review.CANDIDATE_ID);
@@ -545,7 +580,13 @@ describe('VAM signed review profiles', () => {
       CANDIDATE_CID: fixture.alternateCid,
       CANDIDATE_SHA256: fixture.alternateSha256,
       CANONICAL_VARIANT_ID: 'cassini-low-poly',
-      ALTERNATE_VARIANT_IDS: [fixture.variantId, 'cassini-wireframe']
+      ALTERNATE_VARIANT_IDS: [fixture.variantId, 'cassini-wireframe'],
+      APPROVED_ALTERNATES: [
+        makeApprovedAlternate(fixture.variantId, fixture.cid, fixture.sha256, 0),
+        makeApprovedAlternate(
+          'cassini-wireframe', fixture.secondAlternateCid, fixture.secondAlternateSha256, 2
+        )
+      ]
     });
     assert.equal(verifyReviewSignature(
       canonicalChange.REVIEW, binaryReviewProjection, publicKey
@@ -569,6 +610,7 @@ describe('VAM signed review profiles', () => {
 
     const noAlternates = decodeBinaryManifest(privateKey);
     noAlternates.REVIEW.ALTERNATE_VARIANT_IDS = [];
+    noAlternates.REVIEW.APPROVED_ALTERNATES = [];
     noAlternates.ALTERNATE_VARIANT_IDS = [];
     signReview(noAlternates.REVIEW, binaryReviewProjection, privateKey);
     assert.equal(validatesSignedBinaryReview(
@@ -631,6 +673,81 @@ describe('VAM signed review profiles', () => {
     decoded.ALTERNATE_VARIANT_IDS = ['cassini-low-poly'];
     assert.equal(validatesSignedBinaryReview(
       decoded, publicKey, expectedContext, new Set()
+    ), false);
+
+    decoded.REVIEW.APPROVED_ALTERNATES = [makeApprovedAlternate(
+      'cassini-low-poly', fixture.alternateCid, fixture.alternateSha256, 1
+    )];
+    assert.equal(verifyReviewSignature(decoded.REVIEW, binaryReviewProjection, publicKey), false);
+    signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+    assert.equal(validatesSignedBinaryReview(
+      decoded, publicKey, expectedContext, new Set()
+    ), true);
+  });
+
+  it('binds approved alternate descriptors to exact manifest assets', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const manifestMutations = [
+      (manifest) => { manifest.VARIANTS[1].CID = fixture.secondAlternateCid; },
+      (manifest) => { manifest.VARIANTS[1].BYTE_SHA256 = '7'.repeat(64); },
+      (manifest) => { manifest.VARIANTS[1].TRANSFORM.SCALE.X = 2; },
+      (manifest) => {
+        manifest.VARIANTS[1].RANK = 2;
+        manifest.VARIANTS[2].RANK = 3;
+      }
+    ];
+    for (const mutate of manifestMutations) {
+      const decoded = decodeBinaryManifest(privateKey);
+      mutate(decoded);
+      assert.equal(hasValidRanking(decoded), true);
+      assert.equal(verifyReviewSignature(
+        decoded.REVIEW, binaryReviewProjection, publicKey
+      ), true);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, expectedContext, new Set()
+      ), false);
+    }
+
+    const descriptorMutations = [
+      (descriptor) => { descriptor.CID = fixture.secondAlternateCid; },
+      (descriptor) => { descriptor.BYTE_SHA256 = '7'.repeat(64); },
+      (descriptor) => { descriptor.REVIEWED_TRANSFORM.SCALE.X = 2; },
+      (descriptor) => { descriptor.RANK = 9; }
+    ];
+    for (const mutate of descriptorMutations) {
+      const decoded = decodeBinaryManifest(privateKey);
+      mutate(decoded.REVIEW.APPROVED_ALTERNATES[0]);
+      assert.equal(verifyReviewSignature(
+        decoded.REVIEW, binaryReviewProjection, publicKey
+      ), false);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, expectedContext, new Set()
+      ), false);
+    }
+
+    for (const mutate of [
+      (descriptor) => { descriptor.CID = ''; },
+      (descriptor) => { descriptor.BYTE_SHA256 = 'A'.repeat(64); },
+      (descriptor) => { descriptor.BYTE_SHA256 = '7'.repeat(63); }
+    ]) {
+      const decoded = decodeBinaryManifest(privateKey);
+      mutate(decoded.REVIEW.APPROVED_ALTERNATES[0]);
+      signReview(decoded.REVIEW, binaryReviewProjection, privateKey);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, expectedContext, new Set()
+      ), false);
+    }
+
+    const synchronized = decodeBinaryManifest(privateKey);
+    synchronized.REVIEW.APPROVED_ALTERNATES[0].CID = fixture.secondAlternateCid;
+    signReview(synchronized.REVIEW, binaryReviewProjection, privateKey);
+    assert.equal(validatesSignedBinaryReview(
+      synchronized, publicKey, expectedContext, new Set()
+    ), false);
+    synchronized.VARIANTS[1].CID = fixture.secondAlternateCid;
+    assert.equal(hasValidRanking(synchronized), true);
+    assert.equal(validatesSignedBinaryReview(
+      synchronized, publicKey, expectedContext, new Set()
     ), true);
   });
 

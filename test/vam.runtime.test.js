@@ -5,6 +5,7 @@ describe('VAM runtime', () => {
   it('round-trips a reviewed IPFS GLB variant', () => {
     const {
       VAMAnnotationT,
+      VAMApprovedAlternateT,
       VAMMetricsT,
       VAMQualityDimensionT,
       VAMQuaternionT,
@@ -120,6 +121,32 @@ describe('VAM runtime', () => {
       POSITION: new VAMVector3T(0, 0, 0)
     });
 
+    const alternateCid = 'bafkreicvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvkvku';
+    const alternateSha256 = '5'.repeat(64);
+    const alternateTransform = new VAMTransformT(
+      new VAMVector3T(0, 0, 0),
+      new VAMQuaternionT(0, 0, 0, 1),
+      new VAMScale3T(1, 1, 1),
+      visualAssetUpAxis.Y_UP,
+      'meter',
+      1,
+      'Origin centered on the spacecraft body'
+    );
+    const alternateVariant = Object.assign(new VAMVariantT(), {
+      ID: 'cassini-low-poly',
+      CID: alternateCid,
+      BYTE_SHA256: alternateSha256,
+      TRANSFORM: alternateTransform,
+      RANK: 1
+    });
+    const approvedAlternate = new VAMApprovedAlternateT(
+      alternateVariant.ID,
+      alternateCid,
+      alternateSha256,
+      alternateTransform,
+      alternateVariant.RANK
+    );
+
     const review = new VAMReviewT();
     Object.assign(review, {
       REVIEWER_ID: 'reviewer-alice',
@@ -142,8 +169,9 @@ describe('VAM runtime', () => {
       NONCE: '018f47a2-6b8d-7c91-a234-567890abcdef',
       REVIEWED_TRANSFORM: transform,
       CANONICAL_VARIANT_ID: variant.ID,
-      ALTERNATE_VARIANT_IDS: [],
-      ANNOTATIONS: [annotation]
+      ALTERNATE_VARIANT_IDS: [alternateVariant.ID],
+      ANNOTATIONS: [annotation],
+      APPROVED_ALTERNATES: [approvedAlternate]
     });
 
     const manifest = new VAMT();
@@ -153,8 +181,8 @@ describe('VAM runtime', () => {
       ENTITY_ID: 'nasa/cassini',
       ENTITY_KIND: 'spacecraft',
       CANONICAL_VARIANT_ID: variant.ID,
-      ALTERNATE_VARIANT_IDS: [],
-      VARIANTS: [variant],
+      ALTERNATE_VARIANT_IDS: [alternateVariant.ID],
+      VARIANTS: [variant, alternateVariant],
       REVIEW: review,
       REVIEW_STATE: visualAssetReviewState.APPROVED,
       CREATED_AT: '2026-01-10T12:00:00.000Z',
@@ -168,12 +196,12 @@ describe('VAM runtime', () => {
     assert.equal(decoded.ENTITY_ID, manifest.ENTITY_ID);
     assert.equal(decoded.ENTITY_KIND, manifest.ENTITY_KIND);
     assert.equal(decoded.CANONICAL_VARIANT_ID, variant.ID);
-    assert.deepEqual(decoded.ALTERNATE_VARIANT_IDS, []);
+    assert.deepEqual(decoded.ALTERNATE_VARIANT_IDS, [alternateVariant.ID]);
     assert.equal(decoded.REVIEW_STATE, visualAssetReviewState.APPROVED);
     assert.equal(decoded.CREATED_AT, manifest.CREATED_AT);
     assert.equal(decoded.UPDATED_AT, manifest.UPDATED_AT);
     assert.equal(decoded.METADATA_REVIEW, null);
-    assert.equal(decoded.VARIANTS.length, 1);
+    assert.equal(decoded.VARIANTS.length, 2);
 
     const decodedVariant = decoded.VARIANTS[0];
     assert.equal(decodedVariant.ID, variant.ID);
@@ -295,7 +323,21 @@ describe('VAM runtime', () => {
       [1, 1, 1]
     );
     assert.equal(decodedReview.CANONICAL_VARIANT_ID, variant.ID);
-    assert.deepEqual(decodedReview.ALTERNATE_VARIANT_IDS, []);
+    assert.deepEqual(decodedReview.ALTERNATE_VARIANT_IDS, [alternateVariant.ID]);
+    assert.equal(decodedReview.APPROVED_ALTERNATES.length, 1);
+    assert.equal(decodedReview.APPROVED_ALTERNATES[0].VARIANT_ID, alternateVariant.ID);
+    assert.equal(decodedReview.APPROVED_ALTERNATES[0].CID, alternateCid);
+    assert.equal(decodedReview.APPROVED_ALTERNATES[0].BYTE_SHA256, alternateSha256);
+    assert.equal(decodedReview.APPROVED_ALTERNATES[0].RANK, 1);
+    assert.deepEqual(
+      decodedReview.APPROVED_ALTERNATES[0].REVIEWED_TRANSFORM,
+      alternateTransform
+    );
+    assert.equal(decoded.VARIANTS[1].ID, alternateVariant.ID);
+    assert.equal(decoded.VARIANTS[1].CID, alternateCid);
+    assert.equal(decoded.VARIANTS[1].BYTE_SHA256, alternateSha256);
+    assert.equal(decoded.VARIANTS[1].RANK, 1);
+    assert.deepEqual(decoded.VARIANTS[1].TRANSFORM, alternateTransform);
     assert.equal(decodedReview.ANNOTATIONS.length, 1);
     assert.equal(decodedReview.ANNOTATIONS[0].ID, 'annotation-001');
     assert.equal(decodedReview.ANNOTATIONS[0].KIND, 'review-note');
