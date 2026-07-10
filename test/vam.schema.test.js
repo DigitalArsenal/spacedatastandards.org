@@ -23,6 +23,7 @@ describe("VAM schema generation", () => {
       "enum visualAssetPermissionDecision : byte",
       "enum visualAssetUpAxis : byte",
       "enum visualAssetDecisionKind : byte",
+      "enum visualAssetReviewerRole : byte",
       "table VAMVector3",
       "table VAMScale3",
       "table VAMQuaternion",
@@ -33,13 +34,24 @@ describe("VAM schema generation", () => {
       "table VAMQualityDimension",
       "table VAMVariant",
       "table VAMReview",
+      "table VAMAnnotation",
       "SCALE:VAMScale3",
       "REDISTRIBUTION_PERMISSION:visualAssetPermissionDecision = UNKNOWN",
       "DERIVATIVE_PERMISSION:visualAssetPermissionDecision = UNKNOWN",
       "REVIEWER_ID:string (required)",
+      "CAPABILITY_ID:string (required)",
+      "REVIEWER_ROLE:visualAssetReviewerRole = VIEWER",
+      "REPOSITORY:string (required)",
+      "ISSUE_NUMBER:string (required)",
+      "VAM_ID:string (required)",
+      "NONCE:string (required)",
       "CANDIDATE_ID:string (required)",
-      "CANDIDATE_SHA256:string (required)",
+      "CANDIDATE_SHA256:string;",
+      "CANDIDATE_METADATA_SHA256:string (required)",
       "DECIDED_AT:string (required)",
+      "REVIEWED_TRANSFORM:VAMTransform",
+      "ALTERNATE_VARIANT_IDS:[string]",
+      "ANNOTATIONS:[VAMAnnotation]",
       "ENVELOPE_SHA256:string (required)",
       "SIGNATURE:[ubyte] (required)",
       "SIGNATURE_TYPE:string (required)",
@@ -51,6 +63,13 @@ describe("VAM schema generation", () => {
       "exact version identifier reported by CONVERSION_TOOL without normalization",
       "ENTITY_ID:string (required)",
       "CANONICAL_VARIANT_ID:string",
+      "RANK:uint",
+      "sorted ascending RANK",
+      "tie-break bytewise ID",
+      "arrays preserve order",
+      "nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums",
+      "nonce single use",
+      "role authorization",
       "VARIANTS:[VAMVariant]",
       "REVIEW:VAMReview",
       "root_type VAM;",
@@ -59,6 +78,23 @@ describe("VAM schema generation", () => {
       assert.match(source, escapedTokenRegex(token));
     }
     assert.match(source, /\btable\s+VAM\s*\{/);
+    assert.doesNotMatch(source, /CANDIDATE_SHA256:string\s*\(required\)/);
+    assert.match(source, /table\s+VAMAnnotation\s*\{\s*ID:string \(required\);\s*KIND:string \(required\);\s*MESSAGE:string \(required\);\s*POSITION:VAMVector3;/s);
+    assert.match(source, /table\s+VAMVariant\s*\{\s*ID:string \(required\);\s*PARENT_VARIANT_ID:string;[\s\S]*?RANK:uint;/);
+    assert.match(source, /table\s+VAMReview\s*\{[\s\S]*?REPOSITORY:string \(required\);[\s\S]*?ENTITY_ID:string \(required\);[\s\S]*?VAM_ID:string \(required\);/);
+
+    const reviewProjection = source.slice(source.indexOf("/// The review-envelope projection"), source.indexOf("table VAMReview"));
+    let projectionOffset = -1;
+    for (const field of [
+      "REVIEWER_ID", "CAPABILITY_ID", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
+      "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "CANDIDATE_METADATA_SHA256", "DECIDED_AT",
+      "REASONS", "COMMENT", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
+      "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256",
+    ]) {
+      const nextOffset = reviewProjection.indexOf(field, projectionOffset + 1);
+      assert.ok(nextOffset > projectionOffset, `${field} should appear in signed projection order`);
+      projectionOffset = nextOffset;
+    }
   });
 
   it("registers VAM for visual-asset discovery", async () => {
