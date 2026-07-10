@@ -15,7 +15,9 @@ using global::Google.FlatBuffers;
 /// Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
 /// The enclosing VAM.ID MUST equal VAM_ID; the enclosing VAM.ENTITY_ID MUST equal review ENTITY_ID; and the enclosing VAM.CANONICAL_VARIANT_ID MUST equal review CANONICAL_VARIANT_ID.
 /// The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
-/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform or canonical-variant changes require a new signed review and envelope.
+/// The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
+/// Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
+/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
 public struct VAMReview : IFlatbufferObject
 {
   private Table __p;
