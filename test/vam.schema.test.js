@@ -122,8 +122,13 @@ describe("VAM schema generation", () => {
       /referenced VAMVariant\.ID MUST equal CANDIDATE_ID/,
       /variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256/,
       /TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults/,
+      /enclosing VAM\.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS/,
+      /same IDs in the same order; empty equals empty/,
+      /Each alternate ID MUST resolve to an existing VAMVariant/,
+      /alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID/,
+      /alternates retain their signed canonical rank ordering as represented by the manifest list/,
       /rejects any omission or mismatch before signature trust or publication/,
-      /Later transform or canonical-variant changes require a new signed review and envelope/,
+      /Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope/,
     ]) {
       assert.match(reviewProjection, approvalSemantic);
     }
