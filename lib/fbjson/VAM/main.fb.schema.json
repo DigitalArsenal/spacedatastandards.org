@@ -1,0 +1,923 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "visualAssetVariantKind": {
+      "type": "string",
+      "enum": [
+        "SOURCE",
+        "OPTIMIZED",
+        "LOD",
+        "ALTERNATE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SOURCE": {
+          "value": 0
+        },
+        "OPTIMIZED": {
+          "value": 1
+        },
+        "LOD": {
+          "value": 2
+        },
+        "ALTERNATE": {
+          "value": 3
+        }
+      }
+    },
+    "visualAssetReviewState": {
+      "type": "string",
+      "enum": [
+        "DISCOVERED",
+        "METADATA_VALIDATED",
+        "LICENSE_CLEARED",
+        "STAGED",
+        "REVIEW_OPEN",
+        "APPROVED",
+        "REJECTED",
+        "CHANGES_REQUESTED",
+        "OPTIMIZED",
+        "PUBLISHED",
+        "SUPERSEDED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DISCOVERED": {
+          "value": 0
+        },
+        "METADATA_VALIDATED": {
+          "value": 1
+        },
+        "LICENSE_CLEARED": {
+          "value": 2
+        },
+        "STAGED": {
+          "value": 3
+        },
+        "REVIEW_OPEN": {
+          "value": 4
+        },
+        "APPROVED": {
+          "value": 5
+        },
+        "REJECTED": {
+          "value": 6
+        },
+        "CHANGES_REQUESTED": {
+          "value": 7
+        },
+        "OPTIMIZED": {
+          "value": 8
+        },
+        "PUBLISHED": {
+          "value": 9
+        },
+        "SUPERSEDED": {
+          "value": 10
+        }
+      }
+    },
+    "visualAssetLicenseClass": {
+      "type": "string",
+      "enum": [
+        "USABLE_NOW",
+        "CANDIDATE_NEEDS_LICENSE",
+        "MANUAL_REVIEW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "USABLE_NOW": {
+          "value": 0
+        },
+        "CANDIDATE_NEEDS_LICENSE": {
+          "value": 1
+        },
+        "MANUAL_REVIEW": {
+          "value": 2
+        }
+      }
+    },
+    "visualAssetPermissionDecision": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "ALLOWED",
+        "PROHIBITED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ALLOWED": {
+          "value": 1
+        },
+        "PROHIBITED": {
+          "value": 2
+        }
+      }
+    },
+    "visualAssetUpAxis": {
+      "type": "string",
+      "enum": [
+        "X_UP",
+        "Y_UP",
+        "Z_UP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "X_UP": {
+          "value": 0
+        },
+        "Y_UP": {
+          "value": 1
+        },
+        "Z_UP": {
+          "value": 2
+        }
+      }
+    },
+    "visualAssetDecisionKind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "APPROVE",
+        "REJECT",
+        "REQUEST_CHANGES",
+        "APPROVE_METADATA_ONLY",
+        "ESCALATE_LICENSE",
+        "SELECT_ALTERNATE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "APPROVE": {
+          "value": 1
+        },
+        "REJECT": {
+          "value": 2
+        },
+        "REQUEST_CHANGES": {
+          "value": 3
+        },
+        "APPROVE_METADATA_ONLY": {
+          "value": 4
+        },
+        "ESCALATE_LICENSE": {
+          "value": 5
+        },
+        "SELECT_ALTERNATE": {
+          "value": 6
+        }
+      }
+    },
+    "VAMVector3": {
+      "type": "object",
+      "description": "Three-dimensional vector.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMScale3": {
+      "type": "object",
+      "description": "Scale with identity defaults for every component.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMQuaternion": {
+      "type": "object",
+      "description": "Rotation quaternion.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "W": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMTransform": {
+      "type": "object",
+      "description": "Transform from source coordinates into canonical meters. Absent SCALE and omitted scale components mean identity scale; translation and bounds use VAMVector3 zero defaults.",
+      "properties": {
+        "TRANSLATION": {
+          "$ref": "#/definitions/VAMVector3",
+          "x-flatbuffer-type": "VAMVector3"
+        },
+        "ROTATION": {
+          "$ref": "#/definitions/VAMQuaternion",
+          "x-flatbuffer-type": "VAMQuaternion"
+        },
+        "SCALE": {
+          "$ref": "#/definitions/VAMScale3",
+          "x-flatbuffer-type": "VAMScale3"
+        },
+        "UP_AXIS": {
+          "$ref": "#/definitions/visualAssetUpAxis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "X_UP": {
+              "value": 0
+            },
+            "Y_UP": {
+              "value": 1
+            },
+            "Z_UP": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "Y_UP"
+        },
+        "SOURCE_UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "METERS_PER_SOURCE_UNIT": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "ORIGIN_NOTE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMSource": {
+      "type": "object",
+      "description": "Provenance and license metadata for an asset source.",
+      "properties": {
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "OBSERVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the source was observed.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/visualAssetLicenseClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "USABLE_NOW": {
+              "value": 0
+            },
+            "CANDIDATE_NEEDS_LICENSE": {
+              "value": 1
+            },
+            "MANUAL_REVIEW": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "MANUAL_REVIEW"
+        },
+        "LICENSE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REDISTRIBUTION_PERMISSION": {
+          "$ref": "#/definitions/visualAssetPermissionDecision",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ALLOWED": {
+              "value": 1
+            },
+            "PROHIBITED": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "DERIVATIVE_PERMISSION": {
+          "$ref": "#/definitions/visualAssetPermissionDecision",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ALLOWED": {
+              "value": 1
+            },
+            "PROHIBITED": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "SOURCE_METADATA_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON source-metadata bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SOURCE_RECORD_ID",
+        "SOURCE_URL"
+      ],
+      "additionalProperties": false
+    },
+    "VAMMetrics": {
+      "type": "object",
+      "description": "Geometry, material, texture, and bounds measurements.",
+      "properties": {
+        "TRIANGLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "VERTEX_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRIMITIVE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "DRAW_CALL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "MATERIAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "TEXTURE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "TEXTURE_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "ANIMATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "BOUNDING_BOX_MIN": {
+          "$ref": "#/definitions/VAMVector3",
+          "x-flatbuffer-type": "VAMVector3"
+        },
+        "BOUNDING_BOX_MAX": {
+          "$ref": "#/definitions/VAMVector3",
+          "x-flatbuffer-type": "VAMVector3"
+        },
+        "DIMENSIONS_METERS": {
+          "$ref": "#/definitions/VAMVector3",
+          "x-flatbuffer-type": "VAMVector3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMValidation": {
+      "type": "object",
+      "description": "Validation result for one asset variant.",
+      "properties": {
+        "STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALIDATOR_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALIDATOR_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VALIDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when validation completed.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERRORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "WARNINGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "VAMQualityDimension": {
+      "type": "object",
+      "description": "One named quality score and its basis.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SCORE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BASIS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "NAME"
+      ],
+      "additionalProperties": false
+    },
+    "VAMVariant": {
+      "type": "object",
+      "description": "One source, optimized, LOD, or alternate visual representation.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PARENT_VARIANT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIANT_KIND": {
+          "$ref": "#/definitions/visualAssetVariantKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SOURCE": {
+              "value": 0
+            },
+            "OPTIMIZED": {
+              "value": 1
+            },
+            "LOD": {
+              "value": 2
+            },
+            "ALTERNATE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "SOURCE"
+        },
+        "LOD_LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "FILE_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEDIA_TYPE": {
+          "type": "string",
+          "description": "IANA media type of the exact variant bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTE_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact variant file bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "CID": {
+          "type": "string",
+          "description": "CIDv1 containing a multihash of the exact variant file bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GLTF_VERSION": {
+          "type": "string",
+          "description": "MAJOR.MINOR glTF specification version, such as 2.0.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATOR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERSION_TOOL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERSION_VERSION": {
+          "type": "string",
+          "description": "CONVERSION_VERSION is the exact version identifier reported by CONVERSION_TOOL without normalization.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERSION_PROFILE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "INPUT_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact conversion input bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/VAMSource",
+          "x-flatbuffer-type": "VAMSource"
+        },
+        "TRANSFORM": {
+          "$ref": "#/definitions/VAMTransform",
+          "x-flatbuffer-type": "VAMTransform"
+        },
+        "METRICS": {
+          "$ref": "#/definitions/VAMMetrics",
+          "x-flatbuffer-type": "VAMMetrics"
+        },
+        "VALIDATION": {
+          "$ref": "#/definitions/VAMValidation",
+          "x-flatbuffer-type": "VAMValidation"
+        },
+        "QUALITY": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VAMQualityDimension"
+          },
+          "x-flatbuffer-type": "[VAMQualityDimension]"
+        },
+        "REVIEW_STATE": {
+          "$ref": "#/definitions/visualAssetReviewState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DISCOVERED": {
+              "value": 0
+            },
+            "METADATA_VALIDATED": {
+              "value": 1
+            },
+            "LICENSE_CLEARED": {
+              "value": 2
+            },
+            "STAGED": {
+              "value": 3
+            },
+            "REVIEW_OPEN": {
+              "value": 4
+            },
+            "APPROVED": {
+              "value": 5
+            },
+            "REJECTED": {
+              "value": 6
+            },
+            "CHANGES_REQUESTED": {
+              "value": 7
+            },
+            "OPTIMIZED": {
+              "value": 8
+            },
+            "PUBLISHED": {
+              "value": 9
+            },
+            "SUPERSEDED": {
+              "value": 10
+            }
+          },
+          "x-flatbuffer-default": "DISCOVERED"
+        },
+        "SUPERSEDES_VARIANT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
+      "additionalProperties": false
+    },
+    "VAMReview": {
+      "type": "object",
+      "description": "Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.\nThe review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.\nAbsent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.",
+      "properties": {
+        "REVIEWER_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CAPABILITY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DECISION": {
+          "$ref": "#/definitions/visualAssetDecisionKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "APPROVE": {
+              "value": 1
+            },
+            "REJECT": {
+              "value": 2
+            },
+            "REQUEST_CHANGES": {
+              "value": 3
+            },
+            "APPROVE_METADATA_ONLY": {
+              "value": 4
+            },
+            "ESCALATE_LICENSE": {
+              "value": 5
+            },
+            "SELECT_ALTERNATE": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "CANDIDATE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CANDIDATE_CID": {
+          "type": "string",
+          "description": "Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.",
+          "x-flatbuffer-type": "string"
+        },
+        "CANDIDATE_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DECIDED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REASONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "COMMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ENVELOPE_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the RFC 8785 JCS serialization of the projected review object, excluding ENVELOPE_SHA256 and SIGNATURE.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Signature over the raw 32-byte SHA-256 digest represented by ENVELOPE_SHA256.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "description": "Signature algorithm and profile; initially Ed25519.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PREVIOUS_DECISION_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "REVIEWER_ID",
+        "CANDIDATE_ID",
+        "CANDIDATE_SHA256",
+        "DECIDED_AT",
+        "ENVELOPE_SHA256",
+        "SIGNATURE",
+        "SIGNATURE_TYPE"
+      ],
+      "additionalProperties": false
+    },
+    "VAM": {
+      "type": "object",
+      "description": "Visual Asset Manifest \u2014 ranked visual representations for one stable entity.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "SemVer 2.0.0 manifest-format version, not a content revision.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ENTITY_KIND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CANONICAL_VARIANT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTERNATE_VARIANT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "VARIANTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VAMVariant"
+          },
+          "x-flatbuffer-type": "[VAMVariant]"
+        },
+        "REVIEW": {
+          "$ref": "#/definitions/VAMReview",
+          "x-flatbuffer-type": "VAMReview"
+        },
+        "REVIEW_STATE": {
+          "$ref": "#/definitions/visualAssetReviewState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DISCOVERED": {
+              "value": 0
+            },
+            "METADATA_VALIDATED": {
+              "value": 1
+            },
+            "LICENSE_CLEARED": {
+              "value": 2
+            },
+            "STAGED": {
+              "value": 3
+            },
+            "REVIEW_OPEN": {
+              "value": 4
+            },
+            "APPROVED": {
+              "value": 5
+            },
+            "REJECTED": {
+              "value": 6
+            },
+            "CHANGES_REQUESTED": {
+              "value": 7
+            },
+            "OPTIMIZED": {
+              "value": 8
+            },
+            "PUBLISHED": {
+              "value": 9
+            },
+            "SUPERSEDED": {
+              "value": 10
+            }
+          },
+          "x-flatbuffer-default": "DISCOVERED"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was created.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was last updated.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_VAM_CID": {
+          "type": "string",
+          "description": "CIDv1 containing a multihash of the exact superseded VAM bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "DPM_CID": {
+          "type": "string",
+          "description": "CIDv1 containing a multihash of the exact referenced DPM bytes.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID",
+        "ENTITY_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/VAM",
+  "x-flatbuffer-root-type": "VAM",
+  "x-flatbuffer-file-identifier": "$VAM"
+}

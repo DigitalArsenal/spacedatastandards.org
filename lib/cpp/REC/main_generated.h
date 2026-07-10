@@ -189,6 +189,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -374,11 +375,12 @@ enum RecordType : uint8_t {
   RecordType_SCN = 174,
   RecordType_VST = 175,
   RecordType_ENT = 176,
+  RecordType_VAM = 177,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_ENT
+  RecordType_MAX = RecordType_VAM
 };
 
-inline const RecordType (&EnumValuesRecordType())[177] {
+inline const RecordType (&EnumValuesRecordType())[178] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -556,13 +558,14 @@ inline const RecordType (&EnumValuesRecordType())[177] {
     RecordType_SCC,
     RecordType_SCN,
     RecordType_VST,
-    RecordType_ENT
+    RecordType_ENT,
+    RecordType_VAM
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[178] = {
+  static const char * const names[179] = {
     "NONE",
     "ACL",
     "ACM",
@@ -740,13 +743,14 @@ inline const char * const *EnumNamesRecordType() {
     "SCN",
     "VST",
     "ENT",
+    "VAM",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_ENT)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_VAM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1459,6 +1463,10 @@ template<> struct RecordTypeTraits<ENT> {
   static const RecordType enum_value = RecordType_ENT;
 };
 
+template<> struct RecordTypeTraits<VAM> {
+  static const RecordType enum_value = RecordType_VAM;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2007,6 +2015,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const ENT *value_as_ENT() const {
     return value_type() == RecordType_ENT ? static_cast<const ENT *>(value()) : nullptr;
+  }
+  const VAM *value_as_VAM() const {
+    return value_type() == RecordType_VAM ? static_cast<const VAM *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -2726,6 +2737,10 @@ template<> inline const VST *Record::value_as<VST>() const {
 
 template<> inline const ENT *Record::value_as<ENT>() const {
   return value_as_ENT();
+}
+
+template<> inline const VAM *Record::value_as<VAM>() const {
+  return value_as_VAM();
 }
 
 struct RecordBuilder {
@@ -3555,6 +3570,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_ENT: {
       auto ptr = reinterpret_cast<const ENT *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_VAM: {
+      auto ptr = reinterpret_cast<const VAM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;

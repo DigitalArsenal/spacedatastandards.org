@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "visualAssetVariantKind" : {
+      "type" : "string",
+      "enum": ["SOURCE", "OPTIMIZED", "LOD", "ALTERNATE"]
+    },
+    "visualAssetReviewState" : {
+      "type" : "string",
+      "enum": ["DISCOVERED", "METADATA_VALIDATED", "LICENSE_CLEARED", "STAGED", "REVIEW_OPEN", "APPROVED", "REJECTED", "CHANGES_REQUESTED", "OPTIMIZED", "PUBLISHED", "SUPERSEDED"]
+    },
+    "visualAssetLicenseClass" : {
+      "type" : "string",
+      "enum": ["USABLE_NOW", "CANDIDATE_NEEDS_LICENSE", "MANUAL_REVIEW"]
+    },
+    "visualAssetPermissionDecision" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "ALLOWED", "PROHIBITED"]
+    },
+    "visualAssetUpAxis" : {
+      "type" : "string",
+      "enum": ["X_UP", "Y_UP", "Z_UP"]
+    },
+    "visualAssetDecisionKind" : {
+      "type" : "string",
+      "enum": ["NONE", "APPROVE", "REJECT", "REQUEST_CHANGES", "APPROVE_METADATA_ONLY", "ESCALATE_LICENSE", "SELECT_ALTERNATE"]
+    },
+    "VAMVector3" : {
+      "type" : "object",
+      "description" : "Three-dimensional vector.",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMScale3" : {
+      "type" : "object",
+      "description" : "Scale with identity defaults for every component.",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMQuaternion" : {
+      "type" : "object",
+      "description" : "Rotation quaternion.",
+      "properties" : {
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "W" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMTransform" : {
+      "type" : "object",
+      "description" : "Transform from source coordinates into canonical meters. Absent SCALE and omitted scale components mean identity scale; translation and bounds use VAMVector3 zero defaults.",
+      "properties" : {
+        "TRANSLATION" : {
+                "$ref" : "#/definitions/VAMVector3"
+              },
+        "ROTATION" : {
+                "$ref" : "#/definitions/VAMQuaternion"
+              },
+        "SCALE" : {
+                "$ref" : "#/definitions/VAMScale3"
+              },
+        "UP_AXIS" : {
+                "$ref" : "#/definitions/visualAssetUpAxis"
+              },
+        "SOURCE_UNITS" : {
+                "type" : "string"
+              },
+        "METERS_PER_SOURCE_UNIT" : {
+                "type" : "number"
+              },
+        "ORIGIN_NOTE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMSource" : {
+      "type" : "object",
+      "description" : "Provenance and license metadata for an asset source.",
+      "properties" : {
+        "SOURCE_RECORD_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "SOURCE_URL" : {
+                "type" : "string"
+              },
+        "OBSERVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the source was observed."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/visualAssetLicenseClass"
+              },
+        "LICENSE_NAME" : {
+                "type" : "string"
+              },
+        "ATTRIBUTION" : {
+                "type" : "string"
+              },
+        "REDISTRIBUTION_PERMISSION" : {
+                "$ref" : "#/definitions/visualAssetPermissionDecision"
+              },
+        "DERIVATIVE_PERMISSION" : {
+                "$ref" : "#/definitions/visualAssetPermissionDecision"
+              },
+        "SOURCE_METADATA_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON source-metadata bytes."
+              },
+        "NOTES" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["SOURCE_RECORD_ID", "SOURCE_URL"],
+      "additionalProperties" : false
+    },
+    "VAMMetrics" : {
+      "type" : "object",
+      "description" : "Geometry, material, texture, and bounds measurements.",
+      "properties" : {
+        "TRIANGLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "VERTEX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "PRIMITIVE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DRAW_CALL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MATERIAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TEXTURE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TEXTURE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "ANIMATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "BOUNDING_BOX_MIN" : {
+                "$ref" : "#/definitions/VAMVector3"
+              },
+        "BOUNDING_BOX_MAX" : {
+                "$ref" : "#/definitions/VAMVector3"
+              },
+        "DIMENSIONS_METERS" : {
+                "$ref" : "#/definitions/VAMVector3"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMValidation" : {
+      "type" : "object",
+      "description" : "Validation result for one asset variant.",
+      "properties" : {
+        "STATUS" : {
+                "type" : "string"
+              },
+        "VALIDATOR_NAME" : {
+                "type" : "string"
+              },
+        "VALIDATOR_VERSION" : {
+                "type" : "string"
+              },
+        "VALIDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when validation completed."
+              },
+        "ERRORS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "WARNINGS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VAMQualityDimension" : {
+      "type" : "object",
+      "description" : "One named quality score and its basis.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string"
+              },
+        "SCORE" : {
+                "type" : "number"
+              },
+        "BASIS" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "VAMVariant" : {
+      "type" : "object",
+      "description" : "One source, optimized, LOD, or alternate visual representation.",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "PARENT_VARIANT_ID" : {
+                "type" : "string"
+              },
+        "VARIANT_KIND" : {
+                "$ref" : "#/definitions/visualAssetVariantKind"
+              },
+        "LOD_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FILE_NAME" : {
+                "type" : "string"
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "IANA media type of the exact variant bytes."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTE_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the exact variant file bytes."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "CIDv1 containing a multihash of the exact variant file bytes."
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "string"
+              },
+        "GLTF_VERSION" : {
+                "type" : "string",
+                "description" : "MAJOR.MINOR glTF specification version, such as 2.0."
+              },
+        "GENERATOR" : {
+                "type" : "string"
+              },
+        "CONVERSION_TOOL" : {
+                "type" : "string"
+              },
+        "CONVERSION_VERSION" : {
+                "type" : "string",
+                "description" : "CONVERSION_VERSION is the exact version identifier reported by CONVERSION_TOOL without normalization."
+              },
+        "CONVERSION_PROFILE" : {
+                "type" : "string"
+              },
+        "INPUT_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the exact conversion input bytes."
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/VAMSource"
+              },
+        "TRANSFORM" : {
+                "$ref" : "#/definitions/VAMTransform"
+              },
+        "METRICS" : {
+                "$ref" : "#/definitions/VAMMetrics"
+              },
+        "VALIDATION" : {
+                "$ref" : "#/definitions/VAMValidation"
+              },
+        "QUALITY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/VAMQualityDimension"}
+              },
+        "REVIEW_STATE" : {
+                "$ref" : "#/definitions/visualAssetReviewState"
+              },
+        "SUPERSEDES_VARIANT_ID" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["ID"],
+      "additionalProperties" : false
+    },
+    "VAMReview" : {
+      "type" : "object",
+      "description" : "Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.\nThe review-envelope projection contains uppercase schema field names: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS in original array order; COMMENT when present; SIGNATURE_TYPE; and PREVIOUS_DECISION_SHA256 when present.\nAbsent optional fields are omitted. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest before trusting DECISION.",
+      "properties" : {
+        "REVIEWER_ID" : {
+                "type" : "string"
+              },
+        "CAPABILITY_ID" : {
+                "type" : "string"
+              },
+        "DECISION" : {
+                "$ref" : "#/definitions/visualAssetDecisionKind"
+              },
+        "CANDIDATE_ID" : {
+                "type" : "string"
+              },
+        "CANDIDATE_CID" : {
+                "type" : "string",
+                "description" : "Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID."
+              },
+        "CANDIDATE_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes."
+              },
+        "DECIDED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the decision was made."
+              },
+        "REASONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "COMMENT" : {
+                "type" : "string"
+              },
+        "ENVELOPE_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the RFC 8785 JCS serialization of the projected review object, excluding ENVELOPE_SHA256 and SIGNATURE."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Signature over the raw 32-byte SHA-256 digest represented by ENVELOPE_SHA256."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string",
+                "description" : "Signature algorithm and profile; initially Ed25519."
+              },
+        "PREVIOUS_DECISION_SHA256" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the prior projected review object's RFC 8785 JCS serialization, excluding its ENVELOPE_SHA256 and SIGNATURE."
+              }
+      },
+      "required" : ["REVIEWER_ID", "CANDIDATE_ID", "CANDIDATE_SHA256", "DECIDED_AT", "ENVELOPE_SHA256", "SIGNATURE", "SIGNATURE_TYPE"],
+      "additionalProperties" : false
+    },
+    "VAM" : {
+      "type" : "object",
+      "description" : "Visual Asset Manifest — ranked visual representations for one stable entity.",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "SemVer 2.0.0 manifest-format version, not a content revision."
+              },
+        "ENTITY_ID" : {
+                "type" : "string"
+              },
+        "ENTITY_KIND" : {
+                "type" : "string"
+              },
+        "CANONICAL_VARIANT_ID" : {
+                "type" : "string"
+              },
+        "ALTERNATE_VARIANT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "VARIANTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/VAMVariant"}
+              },
+        "REVIEW" : {
+                "$ref" : "#/definitions/VAMReview"
+              },
+        "REVIEW_STATE" : {
+                "$ref" : "#/definitions/visualAssetReviewState"
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when the manifest was last updated."
+              },
+        "SUPERSEDES_VAM_CID" : {
+                "type" : "string",
+                "description" : "CIDv1 containing a multihash of the exact superseded VAM bytes."
+              },
+        "DPM_CID" : {
+                "type" : "string",
+                "description" : "CIDv1 containing a multihash of the exact referenced DPM bytes."
+              }
+      },
+      "required" : ["ID", "ENTITY_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/VAM"
+}

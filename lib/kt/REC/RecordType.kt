@@ -180,5 +180,6 @@ class RecordType private constructor() {
         const val SCN: UByte = 174u
         const val VST: UByte = 175u
         const val ENT: UByte = 176u
+        const val VAM: UByte = 177u
     }
 }

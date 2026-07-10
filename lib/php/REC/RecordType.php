@@ -180,6 +180,7 @@ class RecordType
     const SCN = 174;
     const VST = 175;
     const ENT = 176;
+    const VAM = 177;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -359,6 +360,7 @@ class RecordType
         RecordType::SCN=>"SCN",
         RecordType::VST=>"VST",
         RecordType::ENT=>"ENT",
+        RecordType::VAM=>"VAM",
     );
 
     public static function Name($e)

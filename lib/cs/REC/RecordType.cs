@@ -181,6 +181,7 @@ public enum RecordType : byte
   SCN = 174,
   VST = 175,
   ENT = 176,
+  VAM = 177,
 };
 
 public class RecordTypeUnion {
@@ -545,6 +546,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromVST(VSTT _vst) { return new RecordTypeUnion{ Type = RecordType.VST, Value = _vst }; }
   public ENTT AsENT() { return this.As<ENTT>(); }
   public static RecordTypeUnion FromENT(ENTT _ent) { return new RecordTypeUnion{ Type = RecordType.ENT, Value = _ent }; }
+  public VAMT AsVAM() { return this.As<VAMT>(); }
+  public static RecordTypeUnion FromVAM(VAMT _vam) { return new RecordTypeUnion{ Type = RecordType.VAM, Value = _vam }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -725,6 +728,7 @@ public class RecordTypeUnion {
       case RecordType.SCN: return SCN.Pack(builder, _o.AsSCN()).Value;
       case RecordType.VST: return VST.Pack(builder, _o.AsVST()).Value;
       case RecordType.ENT: return ENT.Pack(builder, _o.AsENT()).Value;
+      case RecordType.VAM: return VAM.Pack(builder, _o.AsVAM()).Value;
     }
   }
 }
@@ -1265,6 +1269,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.ENT:
         result = ENTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.VAM:
+        result = VAMVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

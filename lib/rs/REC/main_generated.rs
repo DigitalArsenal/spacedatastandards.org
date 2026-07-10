@@ -177,6 +177,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -311,10 +312,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 176;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 177;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 177] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 178] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -492,6 +493,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 177] = [
   RecordType::SCN,
   RecordType::VST,
   RecordType::ENT,
+  RecordType::VAM,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -676,9 +678,10 @@ impl RecordType {
   pub const SCN: Self = Self(174);
   pub const VST: Self = Self(175);
   pub const ENT: Self = Self(176);
+  pub const VAM: Self = Self(177);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 176;
+  pub const ENUM_MAX: u8 = 177;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -857,6 +860,7 @@ impl RecordType {
     Self::SCN,
     Self::VST,
     Self::ENT,
+    Self::VAM,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1038,6 +1042,7 @@ impl RecordType {
       Self::SCN => Some("SCN"),
       Self::VST => Some("VST"),
       Self::ENT => Some("ENT"),
+      Self::VAM => Some("VAM"),
       _ => None,
     }
   }
@@ -1275,6 +1280,7 @@ pub enum RecordTypeT {
   SCN(alloc::boxed::Box<SCNT>),
   VST(alloc::boxed::Box<VSTT>),
   ENT(alloc::boxed::Box<ENTT>),
+  VAM(alloc::boxed::Box<VAMT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1461,6 +1467,7 @@ impl RecordTypeT {
       Self::SCN(_) => RecordType::SCN,
       Self::VST(_) => RecordType::VST,
       Self::ENT(_) => RecordType::ENT,
+      Self::VAM(_) => RecordType::VAM,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1642,6 +1649,7 @@ impl RecordTypeT {
       Self::SCN(v) => Some(v.pack(fbb).as_union_value()),
       Self::VST(v) => Some(v.pack(fbb).as_union_value()),
       Self::ENT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::VAM(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5340,6 +5348,27 @@ impl RecordTypeT {
   pub fn as_ent_mut(&mut self) -> Option<&mut ENTT> {
     if let Self::ENT(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned VAMT, setting the union to NONE.
+  pub fn take_vam(&mut self) -> Option<alloc::boxed::Box<VAMT>> {
+    if let Self::VAM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::VAM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the VAMT.
+  pub fn as_vam(&self) -> Option<&VAMT> {
+    if let Self::VAM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the VAMT.
+  pub fn as_vam_mut(&mut self) -> Option<&mut VAMT> {
+    if let Self::VAM(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6259,6 +6288,11 @@ impl<'a> Record<'a> {
       RecordType::ENT => RecordTypeT::ENT(alloc::boxed::Box::new(
         self.value_as_ent()
             .expect("Invalid union table, expected `RecordType::ENT`.")
+            .unpack()
+      )),
+      RecordType::VAM => RecordTypeT::VAM(alloc::boxed::Box::new(
+        self.value_as_vam()
+            .expect("Invalid union table, expected `RecordType::VAM`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -8935,6 +8969,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_vam(&self) -> Option<VAM<'a>> {
+    if self.value_type() == RecordType::VAM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { VAM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -9121,6 +9170,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::SCN => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SCN>>("RecordType::SCN", pos),
           RecordType::VST => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VST>>("RecordType::VST", pos),
           RecordType::ENT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ENT>>("RecordType::ENT", pos),
+          RecordType::VAM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VAM>>("RecordType::VAM", pos),
           _ => Ok(()),
         }
      })?
@@ -10409,6 +10459,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::ENT => {
           if let Some(x) = self.value_as_ent() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::VAM => {
+          if let Some(x) = self.value_as_vam() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
