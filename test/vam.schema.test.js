@@ -112,6 +112,21 @@ describe("VAM schema generation", () => {
     assert.match(source, /RFC 8785[^\n]*VAMSource projection/);
 
     const reviewProjection = source.slice(source.indexOf("/// The review-envelope projection"), source.indexOf("table VAMReview"));
+    for (const approvalSemantic of [
+      /when DECISION is APPROVE[^\n]*CANDIDATE_CID MUST be present/,
+      /REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present/,
+      /CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID/,
+      /enclosing VAM\.ID MUST equal VAM_ID/,
+      /enclosing VAM\.ENTITY_ID MUST equal review ENTITY_ID/,
+      /enclosing VAM\.CANONICAL_VARIANT_ID MUST equal review CANONICAL_VARIANT_ID/,
+      /referenced VAMVariant\.ID MUST equal CANDIDATE_ID/,
+      /variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256/,
+      /TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults/,
+      /rejects any omission or mismatch before signature trust or publication/,
+      /Later transform or canonical-variant changes require a new signed review and envelope/,
+    ]) {
+      assert.match(reviewProjection, approvalSemantic);
+    }
     let projectionOffset = -1;
     for (const field of [
       "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "DECIDED_AT",
