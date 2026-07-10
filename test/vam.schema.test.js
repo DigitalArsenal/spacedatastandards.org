@@ -84,10 +84,13 @@ describe("VAM schema generation", () => {
     assert.match(source, /table\s+VAMAnnotation\s*\{\s*ID:string \(required\);\s*KIND:string \(required\);\s*MESSAGE:string \(required\);\s*POSITION:VAMVector3;/s);
     assert.match(source, /table\s+VAMReview\s*\{[\s\S]*?REPOSITORY:string \(required\);[\s\S]*?ENTITY_ID:string \(required\);[\s\S]*?VAM_ID:string \(required\);/);
 
-    const tableFields = (name) => {
-      const body = source.match(new RegExp(`table\\s+${name}\\s*\\{([\\s\\S]*?)\\n\\}`))[1];
-      return [...body.matchAll(/^\s+([A-Z][A-Z0-9_]*):/gm)].map((match) => match[1]);
-    };
+    const tableBody = (name) => source.match(new RegExp(`table\\s+${name}\\s*\\{([\\s\\S]*?)\\n\\}`))[1];
+    const tableFields = (name) => [...tableBody(name).matchAll(/^\s+([A-Z][A-Z0-9_]*):/gm)].map((match) => match[1]);
+    const binaryReviewBody = tableBody("VAMReview");
+    for (const field of ["REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE"]) {
+      assert.match(binaryReviewBody, new RegExp(`^\\s+${field}:string;$`, "m"));
+    }
+    assert.match(source, /required by the binary validation profile/);
     assert.deepEqual(tableFields("VAMVariant"), [
       "ID", "PARENT_VARIANT_ID", "VARIANT_KIND", "LOD_LEVEL", "FILE_NAME", "MEDIA_TYPE", "BYTE_LENGTH",
       "BYTE_SHA256", "CID", "MULTIFORMAT_ADDRESS", "GLTF_VERSION", "GENERATOR", "CONVERSION_TOOL",
