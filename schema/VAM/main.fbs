@@ -1,3 +1,6 @@
+// Hash: 295def0ac0f0bef998485b9cd677a46848d0c02f0e9126b6293105a036ebed77
+// Version: 1.148.0
+// -----------------------------------END_HEADER
 /// Role of one visual asset variant.
 enum visualAssetVariantKind : byte {
   SOURCE,
