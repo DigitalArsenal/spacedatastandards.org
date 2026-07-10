@@ -314,31 +314,68 @@ describe('VAM signed review profiles', () => {
 
   it('rejects every signed security-relevant binary review mutation', () => {
     const { privateKey, publicKey } = generateKeyPairSync('ed25519');
-    const [decoded] = readFB(writeFB(makeBinaryManifest(makeBinaryReview(privateKey))));
-    const signedProjection = binaryReviewProjection(decoded.REVIEW);
+    const signedBuffer = writeFB(makeBinaryManifest(makeBinaryReview(privateKey)));
     const mutations = [
-      (value) => { value.REPOSITORY = 'attacker/example'; },
-      (value) => { value.ISSUE_NUMBER = '43'; },
-      (value) => { value.ENTITY_ID = 'nasa/voyager'; },
-      (value) => { value.VAM_ID = 'vam-other'; },
-      (value) => { value.NONCE = 'ffffffff-ffff-ffff-ffff-ffffffffffff'; },
-      (value) => { value.REVIEWED_TRANSFORM.SCALE.X = 2; },
-      (value) => { value.REVIEWED_TRANSFORM.ROTATION.W = 0.5; },
-      (value) => { value.CANONICAL_VARIANT_ID = 'cassini-low-poly'; },
-      (value) => { value.ALTERNATE_VARIANT_IDS[0] = 'tampered-alternate'; },
-      (value) => { value.ANNOTATIONS[0].MESSAGE = 'Changed after signing'; },
-      (value) => { value.CANDIDATE_SHA256 = '9'.repeat(64); }
+      { key: 'REPOSITORY', mutate: (review) => { review.REPOSITORY = 'attacker/example'; } },
+      { key: 'ISSUE_NUMBER', mutate: (review) => { review.ISSUE_NUMBER = '43'; } },
+      { key: 'ENTITY_ID', mutate: (review) => { review.ENTITY_ID = 'nasa/voyager'; } },
+      { key: 'VAM_ID', mutate: (review) => { review.VAM_ID = 'vam-other'; } },
+      { key: 'NONCE', mutate: (review) => {
+        review.NONCE = 'ffffffff-ffff-ffff-ffff-ffffffffffff';
+      } },
+      { key: 'REVIEWED_TRANSFORM', mutate: (review) => {
+        review.REVIEWED_TRANSFORM.SCALE.X = 2;
+      } },
+      { key: 'REVIEWED_TRANSFORM', mutate: (review) => {
+        review.REVIEWED_TRANSFORM.ROTATION.W = 0.5;
+      } },
+      { key: 'CANONICAL_VARIANT_ID', mutate: (review) => {
+        review.CANONICAL_VARIANT_ID = 'cassini-low-poly';
+      } },
+      { key: 'ALTERNATE_VARIANT_IDS', mutate: (review) => {
+        review.ALTERNATE_VARIANT_IDS[0] = 'tampered-alternate';
+      } },
+      { key: 'ANNOTATIONS', mutate: (review) => {
+        review.ANNOTATIONS[0].MESSAGE = 'Changed after signing';
+      } },
+      { key: 'CANDIDATE_SHA256', mutate: (review) => {
+        review.CANDIDATE_SHA256 = '9'.repeat(64);
+      } }
     ];
 
-    for (const mutate of mutations) {
-      const changed = JSON.parse(JSON.stringify(signedProjection));
-      mutate(changed);
-      const changedDigest = digestProjection(changed);
+    for (const { key, mutate } of mutations) {
+      const [decoded] = readFB(signedBuffer);
+      const review = decoded.REVIEW;
+      const originalProjection = structuredClone(binaryReviewProjection(review));
+      assert.equal(Object.hasOwn(originalProjection, key), true, `${key} must be signed`);
+
+      mutate(review);
+      const changedProjection = binaryReviewProjection(review);
+      assert.notDeepEqual(changedProjection, originalProjection, `${key} projection must change`);
       assert.equal(
-        verify(null, changedDigest, publicKey, Buffer.from(decoded.REVIEW.SIGNATURE)),
-        false
+        verifyReviewSignature(review, binaryReviewProjection, publicKey),
+        false,
+        `${key} mutation must invalidate the signature`
       );
     }
+  });
+
+  it('rejects an omitted required binary review profile field', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const [decoded] = readFB(writeFB(makeBinaryManifest(makeBinaryReview(privateKey))));
+    const review = decoded.REVIEW;
+    const originalProjection = binaryReviewProjection(review);
+    assert.equal(Object.hasOwn(originalProjection, 'CAPABILITY_ID'), true);
+
+    review.CAPABILITY_ID = null;
+    const changedProjection = binaryReviewProjection(review);
+    assert.equal(Object.hasOwn(changedProjection, 'CAPABILITY_ID'), false);
+    assert.notDeepEqual(changedProjection, originalProjection);
+    assert.equal(verifyReviewSignature(review, binaryReviewProjection, publicKey), false);
+    assert.equal(
+      validatesSignedBinaryReview(review, publicKey, expectedContext, new Set()),
+      false
+    );
   });
 
   it('enforces reviewer role, context equality, and nonce single use', () => {
