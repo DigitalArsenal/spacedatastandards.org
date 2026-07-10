@@ -35,6 +35,7 @@ describe("VAM schema generation", () => {
       "table VAMVariant",
       "table VAMReview",
       "table VAMMetadataOnlyReview",
+      "table VAMApprovedAlternate",
       "table VAMAnnotation",
       "SCALE:VAMScale3",
       "REDISTRIBUTION_PERMISSION:visualAssetPermissionDecision = UNKNOWN",
@@ -53,6 +54,7 @@ describe("VAM schema generation", () => {
       "REVIEWED_TRANSFORM:VAMTransform",
       "ALTERNATE_VARIANT_IDS:[string]",
       "ANNOTATIONS:[VAMAnnotation]",
+      "APPROVED_ALTERNATES:[VAMApprovedAlternate]",
       "ENVELOPE_SHA256:string (required)",
       "SIGNATURE:[ubyte] (required)",
       "SIGNATURE_TYPE:string (required)",
@@ -102,6 +104,10 @@ describe("VAM schema generation", () => {
       "DECIDED_AT", "REASONS", "COMMENT", "ENVELOPE_SHA256", "SIGNATURE", "SIGNATURE_TYPE",
       "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
       "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID", "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
+      "APPROVED_ALTERNATES",
+    ]);
+    assert.deepEqual(tableFields("VAMApprovedAlternate"), [
+      "VARIANT_ID", "CID", "BYTE_SHA256", "REVIEWED_TRANSFORM", "RANK",
     ]);
     assert.deepEqual(tableFields("VAMMetadataOnlyReview"), [
       "REVIEWER_ID", "CAPABILITY_ID", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER", "ENTITY_ID", "VAM_ID", "NONCE",
@@ -127,8 +133,13 @@ describe("VAM schema generation", () => {
       /Each alternate ID MUST resolve to an existing VAMVariant/,
       /alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID/,
       /alternates retain their signed canonical rank ordering as represented by the manifest list/,
+      /APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order/,
+      /descriptor VARIANT_ID MUST equal the corresponding alternate ID/,
+      /descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant/,
+      /Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES/,
+      /BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty/,
       /rejects any omission or mismatch before signature trust or publication/,
-      /Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope/,
+      /Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope/,
     ]) {
       assert.match(reviewProjection, approvalSemantic);
     }
@@ -137,7 +148,7 @@ describe("VAM schema generation", () => {
       "REVIEWER_ID", "CAPABILITY_ID", "DECISION", "CANDIDATE_ID", "CANDIDATE_CID", "CANDIDATE_SHA256", "DECIDED_AT",
       "REASONS", "COMMENT", "SIGNATURE_TYPE", "PREVIOUS_DECISION_SHA256", "REVIEWER_ROLE", "REPOSITORY", "ISSUE_NUMBER",
       "ENTITY_ID", "VAM_ID", "NONCE", "REVIEWED_TRANSFORM", "CANONICAL_VARIANT_ID",
-      "ALTERNATE_VARIANT_IDS", "ANNOTATIONS",
+      "ALTERNATE_VARIANT_IDS", "ANNOTATIONS", "APPROVED_ALTERNATES",
     ]) {
       const nextOffset = reviewProjection.indexOf(field, projectionOffset + 1);
       assert.ok(nextOffset > projectionOffset, `${field} should appear in signed projection order`);
