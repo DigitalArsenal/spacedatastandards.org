@@ -40,6 +40,7 @@
     "STF": "Data Storefront - marketplace listings with pricing and access types",
     "PLG": "Plugin System - WASM plugins for sensors, propagators, renderers",
     "REC": "Record Union - universal polymorphic record type for all standards",
+    "VAM": "Visual Asset Manifest - ranked 3D models, LODs, transforms, provenance, licensing, review, and IPFS content identity",
     "ACR": "Aircraft - types, flight phases, engines, aerodynamics",
     "ARM": "Armor Penetration - materials, ammunition types, penetration calculations",
     "BAL": "Ballistics - drag models, projectile types, trajectory computation",
@@ -147,6 +148,7 @@
     "GEO": ["geostationary", "GEO", "status", "longitude", "drift", "station-keeping"],
     "DFH": ["GEO", "drift", "history", "geostationary", "longitude", "station-keeping", "slot"],
     "PRG": ["program", "description", "HD key path", "permission", "user assignment"],
+    "VAM": ["visual asset", "3D model", "GLB", "glTF", "LOD", "IPFS", "CID", "license", "review"],
     // Defense & EW
     "ACR": ["aircraft", "fighter", "bomber", "transport", "UAV", "drone", "flight", "engine", "aerodynamics"],
     "GVH": ["ground vehicle", "tank", "IFV", "APC", "tracked", "wheeled", "armor", "weapons"],

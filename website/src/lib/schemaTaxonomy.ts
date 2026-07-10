@@ -152,6 +152,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "GEO", desc: "GEO Spacecraft Status" },
       { abbr: "DFH", desc: "GEO Drift History" },
       { abbr: "PRG", desc: "Program Description" },
+      { abbr: "VAM", desc: "Visual Asset Manifest" },
       { abbr: "ACR", desc: "Aircraft Dynamics" },
       { abbr: "GVH", desc: "Ground Vehicles" },
       { abbr: "HEL", desc: "Helicopter Dynamics" },

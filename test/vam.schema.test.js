@@ -62,18 +62,25 @@ describe("VAM schema generation", () => {
   });
 
   it("registers VAM for visual-asset discovery", async () => {
-    const [embeddingsSource, schemaListSource] = await Promise.all([
+    const [embeddingsSource, schemaListSource, schemasComponentSource, taxonomySource] = await Promise.all([
       readUtf8("scripts/generateSchemaEmbeddings.js"),
       readUtf8("scripts/updateSchemaList.cjs"),
+      readUtf8("website/src/lib/Schemas.svelte"),
+      readUtf8("website/src/lib/schemaTaxonomy.ts"),
     ]);
 
-    assert.match(embeddingsSource, /"VAM": "Visual Asset Manifest/);
-    assert.match(
-      embeddingsSource,
-      /"VAM": \["visual asset", "3D model", "GLB", "glTF", "LOD", "IPFS", "CID", "license", "review"\]/,
-    );
+    const descriptionPattern = /"VAM": "Visual Asset Manifest - ranked 3D models, LODs, transforms, provenance, licensing, review, and IPFS content identity"/;
+    const keywordsPattern = /"VAM": \["visual asset", "3D model", "GLB", "glTF", "LOD", "IPFS", "CID", "license", "review"\]/;
+    assert.match(embeddingsSource, descriptionPattern);
+    assert.match(embeddingsSource, keywordsPattern);
     assert.match(embeddingsSource, /\{ tag: "Vehicle", types: \[[^\]]*"VAM"[^\]]*\]/);
     assert.match(schemaListSource, /'VAM': 'Spacecraft'/);
+    assert.match(schemasComponentSource, descriptionPattern);
+    assert.match(schemasComponentSource, keywordsPattern);
+    assert.match(
+      taxonomySource,
+      /tag: "Vehicle",\s*types: \[[^\]]*\{ abbr: "VAM", desc: "Visual Asset Manifest" \}/,
+    );
   });
 
   it("generates VAM bindings and augmented schema metadata", async function () {
