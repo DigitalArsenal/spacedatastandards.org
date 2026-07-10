@@ -918,10 +918,75 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   }
 }
 
+///  Exact approved alternate asset bytes and reviewed state.
+public struct VAMApprovedAlternate: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$VAM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: VAMApprovedAlternate.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let VARIANT_ID: VOffset = 4
+    static let CID: VOffset = 6
+    static let BYTE_SHA256: VOffset = 8
+    static let REVIEWED_TRANSFORM: VOffset = 10
+    static let RANK: VOffset = 12
+  }
+
+  public var VARIANT_ID: String! { let o = _accessor.offset(VT.VARIANT_ID); return _accessor.string(at: o) }
+  public var VARIANT_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.VARIANT_ID) }
+  ///  Nonempty CIDv1 identifying the exact approved alternate bytes.
+  public var CID: String! { let o = _accessor.offset(VT.CID); return _accessor.string(at: o) }
+  public var CIDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.CID) }
+  ///  SHA-256 of the exact approved alternate bytes as 64 lowercase hexadecimal characters.
+  public var BYTE_SHA256: String! { let o = _accessor.offset(VT.BYTE_SHA256); return _accessor.string(at: o) }
+  public var BYTE_SHA256SegmentArray: [UInt8]! { return _accessor.getVector(at: VT.BYTE_SHA256) }
+  public var REVIEWED_TRANSFORM: VAMTransform! { let o = _accessor.offset(VT.REVIEWED_TRANSFORM); return VAMTransform(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var RANK: UInt32 { let o = _accessor.offset(VT.RANK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startVAMApprovedAlternate(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VARIANT_ID, at: VT.VARIANT_ID) }
+  public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
+  public static func add(BYTE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTE_SHA256, at: VT.BYTE_SHA256) }
+  public static func add(REVIEWED_TRANSFORM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWED_TRANSFORM, at: VT.REVIEWED_TRANSFORM) }
+  public static func add(RANK: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANK, def: 0, at: VT.RANK) }
+  public static func endVAMApprovedAlternate(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 10]); return end }
+  public static func createVAMApprovedAlternate(
+    _ fbb: inout FlatBufferBuilder,
+    VARIANT_IDOffset VARIANT_ID: Offset,
+    CIDOffset CID: Offset,
+    BYTE_SHA256Offset BYTE_SHA256: Offset,
+    REVIEWED_TRANSFORMOffset REVIEWED_TRANSFORM: Offset,
+    RANK: UInt32 = 0
+  ) -> Offset {
+    let __start = VAMApprovedAlternate.startVAMApprovedAlternate(&fbb)
+    VAMApprovedAlternate.add(VARIANT_ID: VARIANT_ID, &fbb)
+    VAMApprovedAlternate.add(CID: CID, &fbb)
+    VAMApprovedAlternate.add(BYTE_SHA256: BYTE_SHA256, &fbb)
+    VAMApprovedAlternate.add(REVIEWED_TRANSFORM: REVIEWED_TRANSFORM, &fbb)
+    VAMApprovedAlternate.add(RANK: RANK, &fbb)
+    return VAMApprovedAlternate.endVAMApprovedAlternate(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.VARIANT_ID, fieldName: "VARIANT_ID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CID, fieldName: "CID", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTE_SHA256, fieldName: "BYTE_SHA256", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REVIEWED_TRANSFORM, fieldName: "REVIEWED_TRANSFORM", required: true, type: ForwardOffset<VAMTransform>.self)
+    try _v.visit(field: VT.RANK, fieldName: "RANK", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
 ///  Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 ///  Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 ///  Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 ///  Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 ///  Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -929,7 +994,9 @@ public struct VAMVariant: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 ///  The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 ///  The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 ///  Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-///  The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+///  APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+///  Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+///  The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -965,6 +1032,7 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let CANONICAL_VARIANT_ID: VOffset = 44
     static let ALTERNATE_VARIANT_IDS: VOffset = 46
     static let ANNOTATIONS: VOffset = 48
+    static let APPROVED_ALTERNATES: VOffset = 50
   }
 
   public var REVIEWER_ID: String! { let o = _accessor.offset(VT.REVIEWER_ID); return _accessor.string(at: o) }
@@ -1017,7 +1085,8 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var CANONICAL_VARIANT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CANONICAL_VARIANT_ID) }
   public var ALTERNATE_VARIANT_IDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALTERNATE_VARIANT_IDS, byteSize: 4) }
   public var ANNOTATIONS: FlatbufferVector<VAMAnnotation> { return _accessor.vector(at: VT.ANNOTATIONS, byteSize: 4) }
-  public static func startVAMReview(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  public var APPROVED_ALTERNATES: FlatbufferVector<VAMApprovedAlternate> { return _accessor.vector(at: VT.APPROVED_ALTERNATES, byteSize: 4) }
+  public static func startVAMReview(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(REVIEWER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REVIEWER_ID, at: VT.REVIEWER_ID) }
   public static func add(CAPABILITY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_ID, at: VT.CAPABILITY_ID) }
   public static func add(DECISION: visualAssetDecisionKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECISION.rawValue, def: 0, at: VT.DECISION) }
@@ -1041,6 +1110,7 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func add(CANONICAL_VARIANT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANONICAL_VARIANT_ID, at: VT.CANONICAL_VARIANT_ID) }
   public static func addVectorOf(ALTERNATE_VARIANT_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_VARIANT_IDS, at: VT.ALTERNATE_VARIANT_IDS) }
   public static func addVectorOf(ANNOTATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANNOTATIONS, at: VT.ANNOTATIONS) }
+  public static func addVectorOf(APPROVED_ALTERNATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APPROVED_ALTERNATES, at: VT.APPROVED_ALTERNATES) }
   public static func endVAMReview(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10, 14, 16, 22, 24, 26]); return end }
   public static func createVAMReview(
     _ fbb: inout FlatBufferBuilder,
@@ -1066,7 +1136,8 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     REVIEWED_TRANSFORMOffset REVIEWED_TRANSFORM: Offset = Offset(),
     CANONICAL_VARIANT_IDOffset CANONICAL_VARIANT_ID: Offset = Offset(),
     ALTERNATE_VARIANT_IDSVectorOffset ALTERNATE_VARIANT_IDS: Offset = Offset(),
-    ANNOTATIONSVectorOffset ANNOTATIONS: Offset = Offset()
+    ANNOTATIONSVectorOffset ANNOTATIONS: Offset = Offset(),
+    APPROVED_ALTERNATESVectorOffset APPROVED_ALTERNATES: Offset = Offset()
   ) -> Offset {
     let __start = VAMReview.startVAMReview(&fbb)
     VAMReview.add(REVIEWER_ID: REVIEWER_ID, &fbb)
@@ -1092,6 +1163,7 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     VAMReview.add(CANONICAL_VARIANT_ID: CANONICAL_VARIANT_ID, &fbb)
     VAMReview.addVectorOf(ALTERNATE_VARIANT_IDS: ALTERNATE_VARIANT_IDS, &fbb)
     VAMReview.addVectorOf(ANNOTATIONS: ANNOTATIONS, &fbb)
+    VAMReview.addVectorOf(APPROVED_ALTERNATES: APPROVED_ALTERNATES, &fbb)
     return VAMReview.endVAMReview(&fbb, start: __start)
   }
 
@@ -1120,6 +1192,7 @@ public struct VAMReview: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.CANONICAL_VARIANT_ID, fieldName: "CANONICAL_VARIANT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ALTERNATE_VARIANT_IDS, fieldName: "ALTERNATE_VARIANT_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.ANNOTATIONS, fieldName: "ANNOTATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<VAMAnnotation>, VAMAnnotation>>.self)
+    try _v.visit(field: VT.APPROVED_ALTERNATES, fieldName: "APPROVED_ALTERNATES", required: false, type: ForwardOffset<Vector<ForwardOffset<VAMApprovedAlternate>, VAMApprovedAlternate>>.self)
     _v.finish()
   }
 }

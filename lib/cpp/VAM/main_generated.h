@@ -43,6 +43,9 @@ struct VAMQualityDimensionBuilder;
 struct VAMVariant;
 struct VAMVariantBuilder;
 
+struct VAMApprovedAlternate;
+struct VAMApprovedAlternateBuilder;
+
 struct VAMReview;
 struct VAMReviewBuilder;
 
@@ -1668,10 +1671,122 @@ inline ::flatbuffers::Offset<VAMVariant> CreateVAMVariantDirect(
       RANK);
 }
 
+/// Exact approved alternate asset bytes and reviewed state.
+struct VAMApprovedAlternate FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef VAMApprovedAlternateBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_VARIANT_ID = 4,
+    VT_CID = 6,
+    VT_BYTE_SHA256 = 8,
+    VT_REVIEWED_TRANSFORM = 10,
+    VT_RANK = 12
+  };
+  const ::flatbuffers::String *VARIANT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VARIANT_ID);
+  }
+  /// Nonempty CIDv1 identifying the exact approved alternate bytes.
+  const ::flatbuffers::String *CID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CID);
+  }
+  /// SHA-256 of the exact approved alternate bytes as 64 lowercase hexadecimal characters.
+  const ::flatbuffers::String *BYTE_SHA256() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BYTE_SHA256);
+  }
+  const VAMTransform *REVIEWED_TRANSFORM() const {
+    return GetPointer<const VAMTransform *>(VT_REVIEWED_TRANSFORM);
+  }
+  uint32_t RANK() const {
+    return GetField<uint32_t>(VT_RANK, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_VARIANT_ID) &&
+           verifier.VerifyString(VARIANT_ID()) &&
+           VerifyOffsetRequired(verifier, VT_CID) &&
+           verifier.VerifyString(CID()) &&
+           VerifyOffsetRequired(verifier, VT_BYTE_SHA256) &&
+           verifier.VerifyString(BYTE_SHA256()) &&
+           VerifyOffsetRequired(verifier, VT_REVIEWED_TRANSFORM) &&
+           verifier.VerifyTable(REVIEWED_TRANSFORM()) &&
+           VerifyField<uint32_t>(verifier, VT_RANK, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct VAMApprovedAlternateBuilder {
+  typedef VAMApprovedAlternate Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_VARIANT_ID(::flatbuffers::Offset<::flatbuffers::String> VARIANT_ID) {
+    fbb_.AddOffset(VAMApprovedAlternate::VT_VARIANT_ID, VARIANT_ID);
+  }
+  void add_CID(::flatbuffers::Offset<::flatbuffers::String> CID) {
+    fbb_.AddOffset(VAMApprovedAlternate::VT_CID, CID);
+  }
+  void add_BYTE_SHA256(::flatbuffers::Offset<::flatbuffers::String> BYTE_SHA256) {
+    fbb_.AddOffset(VAMApprovedAlternate::VT_BYTE_SHA256, BYTE_SHA256);
+  }
+  void add_REVIEWED_TRANSFORM(::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM) {
+    fbb_.AddOffset(VAMApprovedAlternate::VT_REVIEWED_TRANSFORM, REVIEWED_TRANSFORM);
+  }
+  void add_RANK(uint32_t RANK) {
+    fbb_.AddElement<uint32_t>(VAMApprovedAlternate::VT_RANK, RANK, 0);
+  }
+  explicit VAMApprovedAlternateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<VAMApprovedAlternate> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<VAMApprovedAlternate>(end);
+    fbb_.Required(o, VAMApprovedAlternate::VT_VARIANT_ID);
+    fbb_.Required(o, VAMApprovedAlternate::VT_CID);
+    fbb_.Required(o, VAMApprovedAlternate::VT_BYTE_SHA256);
+    fbb_.Required(o, VAMApprovedAlternate::VT_REVIEWED_TRANSFORM);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<VAMApprovedAlternate> CreateVAMApprovedAlternate(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> VARIANT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BYTE_SHA256 = 0,
+    ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
+    uint32_t RANK = 0) {
+  VAMApprovedAlternateBuilder builder_(_fbb);
+  builder_.add_RANK(RANK);
+  builder_.add_REVIEWED_TRANSFORM(REVIEWED_TRANSFORM);
+  builder_.add_BYTE_SHA256(BYTE_SHA256);
+  builder_.add_CID(CID);
+  builder_.add_VARIANT_ID(VARIANT_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<VAMApprovedAlternate> CreateVAMApprovedAlternateDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *VARIANT_ID = nullptr,
+    const char *CID = nullptr,
+    const char *BYTE_SHA256 = nullptr,
+    ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
+    uint32_t RANK = 0) {
+  auto VARIANT_ID__ = VARIANT_ID ? _fbb.CreateString(VARIANT_ID) : 0;
+  auto CID__ = CID ? _fbb.CreateString(CID) : 0;
+  auto BYTE_SHA256__ = BYTE_SHA256 ? _fbb.CreateString(BYTE_SHA256) : 0;
+  return CreateVAMApprovedAlternate(
+      _fbb,
+      VARIANT_ID__,
+      CID__,
+      BYTE_SHA256__,
+      REVIEWED_TRANSFORM,
+      RANK);
+}
+
 /// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 /// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 /// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 /// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 /// Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -1679,7 +1794,9 @@ inline ::flatbuffers::Offset<VAMVariant> CreateVAMVariantDirect(
 /// The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 /// The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 /// Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+/// APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+/// Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+/// The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef VAMReviewBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1705,7 +1822,8 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_REVIEWED_TRANSFORM = 42,
     VT_CANONICAL_VARIANT_ID = 44,
     VT_ALTERNATE_VARIANT_IDS = 46,
-    VT_ANNOTATIONS = 48
+    VT_ANNOTATIONS = 48,
+    VT_APPROVED_ALTERNATES = 50
   };
   const ::flatbuffers::String *REVIEWER_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REVIEWER_ID);
@@ -1786,6 +1904,9 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>> *>(VT_ANNOTATIONS);
   }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<VAMApprovedAlternate>> *APPROVED_ALTERNATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<VAMApprovedAlternate>> *>(VT_APPROVED_ALTERNATES);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1836,6 +1957,9 @@ struct VAMReview FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_ANNOTATIONS) &&
            verifier.VerifyVector(ANNOTATIONS()) &&
            verifier.VerifyVectorOfTables(ANNOTATIONS()) &&
+           VerifyOffset(verifier, VT_APPROVED_ALTERNATES) &&
+           verifier.VerifyVector(APPROVED_ALTERNATES()) &&
+           verifier.VerifyVectorOfTables(APPROVED_ALTERNATES()) &&
            verifier.EndTable();
   }
 };
@@ -1913,6 +2037,9 @@ struct VAMReviewBuilder {
   void add_ANNOTATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS) {
     fbb_.AddOffset(VAMReview::VT_ANNOTATIONS, ANNOTATIONS);
   }
+  void add_APPROVED_ALTERNATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMApprovedAlternate>>> APPROVED_ALTERNATES) {
+    fbb_.AddOffset(VAMReview::VT_APPROVED_ALTERNATES, APPROVED_ALTERNATES);
+  }
   explicit VAMReviewBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1955,8 +2082,10 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReview(
     ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CANONICAL_VARIANT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ALTERNATE_VARIANT_IDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMAnnotation>>> ANNOTATIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<VAMApprovedAlternate>>> APPROVED_ALTERNATES = 0) {
   VAMReviewBuilder builder_(_fbb);
+  builder_.add_APPROVED_ALTERNATES(APPROVED_ALTERNATES);
   builder_.add_ANNOTATIONS(ANNOTATIONS);
   builder_.add_ALTERNATE_VARIANT_IDS(ALTERNATE_VARIANT_IDS);
   builder_.add_CANONICAL_VARIANT_ID(CANONICAL_VARIANT_ID);
@@ -2007,7 +2136,8 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
     ::flatbuffers::Offset<VAMTransform> REVIEWED_TRANSFORM = 0,
     const char *CANONICAL_VARIANT_ID = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ALTERNATE_VARIANT_IDS = nullptr,
-    const std::vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS = nullptr) {
+    const std::vector<::flatbuffers::Offset<VAMAnnotation>> *ANNOTATIONS = nullptr,
+    const std::vector<::flatbuffers::Offset<VAMApprovedAlternate>> *APPROVED_ALTERNATES = nullptr) {
   auto REVIEWER_ID__ = REVIEWER_ID ? _fbb.CreateString(REVIEWER_ID) : 0;
   auto CAPABILITY_ID__ = CAPABILITY_ID ? _fbb.CreateString(CAPABILITY_ID) : 0;
   auto CANDIDATE_ID__ = CANDIDATE_ID ? _fbb.CreateString(CANDIDATE_ID) : 0;
@@ -2028,6 +2158,7 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
   auto CANONICAL_VARIANT_ID__ = CANONICAL_VARIANT_ID ? _fbb.CreateString(CANONICAL_VARIANT_ID) : 0;
   auto ALTERNATE_VARIANT_IDS__ = ALTERNATE_VARIANT_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ALTERNATE_VARIANT_IDS) : 0;
   auto ANNOTATIONS__ = ANNOTATIONS ? _fbb.CreateVector<::flatbuffers::Offset<VAMAnnotation>>(*ANNOTATIONS) : 0;
+  auto APPROVED_ALTERNATES__ = APPROVED_ALTERNATES ? _fbb.CreateVector<::flatbuffers::Offset<VAMApprovedAlternate>>(*APPROVED_ALTERNATES) : 0;
   return CreateVAMReview(
       _fbb,
       REVIEWER_ID__,
@@ -2052,7 +2183,8 @@ inline ::flatbuffers::Offset<VAMReview> CreateVAMReviewDirect(
       REVIEWED_TRANSFORM,
       CANONICAL_VARIANT_ID__,
       ALTERNATE_VARIANT_IDS__,
-      ANNOTATIONS__);
+      ANNOTATIONS__,
+      APPROVED_ALTERNATES__);
 }
 
 /// Signed metadata-only review. DECISION validation MUST equal APPROVE_METADATA_ONLY; no candidate binary or CID fields exist.

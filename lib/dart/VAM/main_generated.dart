@@ -1782,10 +1782,133 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Exact approved alternate asset bytes and reviewed state.
+class VAMApprovedAlternate {
+  VAMApprovedAlternate._(this._bc, this._bcOffset);
+  factory VAMApprovedAlternate(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<VAMApprovedAlternate> reader = _VAMApprovedAlternateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  String? get VARIANT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get variantId => VARIANT_ID;
+  ///  Nonempty CIDv1 identifying the exact approved alternate bytes.
+  String? get CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  SHA-256 of the exact approved alternate bytes as 64 lowercase hexadecimal characters.
+  String? get BYTE_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get byteSha256 => BYTE_SHA256;
+  VAMTransform? get REVIEWED_TRANSFORM => VAMTransform.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  VAMTransform? get reviewedTransform => REVIEWED_TRANSFORM;
+  int get RANK => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+
+  @override
+  String toString() {
+    return 'VAMApprovedAlternate{variantId: ${variantId}, CID: ${CID}, byteSha256: ${byteSha256}, reviewedTransform: ${reviewedTransform}, RANK: ${RANK}}';
+  }
+}
+
+class _VAMApprovedAlternateReader extends fb.TableReader<VAMApprovedAlternate> {
+  const _VAMApprovedAlternateReader();
+
+  @override
+  VAMApprovedAlternate createObject(fb.BufferContext bc, int offset) =>
+    VAMApprovedAlternate._(bc, offset);
+}
+
+class VAMApprovedAlternateBuilder {
+  VAMApprovedAlternateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addVariantIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addCidOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addByteSha256Offset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addReviewedTransformOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addRank(int? RANK) {
+    fbBuilder.addUint32(4, RANK);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class VAMApprovedAlternateObjectBuilder extends fb.ObjectBuilder {
+  final String? _VARIANT_ID;
+  final String? _CID;
+  final String? _BYTE_SHA256;
+  final VAMTransformObjectBuilder? _REVIEWED_TRANSFORM;
+  final int? _RANK;
+
+  VAMApprovedAlternateObjectBuilder({
+    String? VARIANT_ID,
+    String? variantId,
+    String? CID,
+    String? BYTE_SHA256,
+    String? byteSha256,
+    VAMTransformObjectBuilder? REVIEWED_TRANSFORM,
+    VAMTransformObjectBuilder? reviewedTransform,
+    int? RANK,
+  })
+      : _VARIANT_ID = variantId ?? VARIANT_ID,
+        _CID = CID,
+        _BYTE_SHA256 = byteSha256 ?? BYTE_SHA256,
+        _REVIEWED_TRANSFORM = reviewedTransform ?? REVIEWED_TRANSFORM,
+        _RANK = RANK;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? VARIANT_IDOffset = _VARIANT_ID == null ? null
+        : fbBuilder.writeString(_VARIANT_ID!);
+    final int? CIDOffset = _CID == null ? null
+        : fbBuilder.writeString(_CID!);
+    final int? BYTE_SHA256Offset = _BYTE_SHA256 == null ? null
+        : fbBuilder.writeString(_BYTE_SHA256!);
+    final int? REVIEWED_TRANSFORMOffset = _REVIEWED_TRANSFORM?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, VARIANT_IDOffset);
+    fbBuilder.addOffset(1, CIDOffset);
+    fbBuilder.addOffset(2, BYTE_SHA256Offset);
+    fbBuilder.addOffset(3, REVIEWED_TRANSFORMOffset);
+    fbBuilder.addUint32(4, _RANK);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+///  The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 ///  Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+///  Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 ///  Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 ///  Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 ///  Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -1793,7 +1916,9 @@ class VAMVariantObjectBuilder extends fb.ObjectBuilder {
 ///  The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 ///  The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 ///  Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-///  The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+///  APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+///  Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+///  The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 class VAMReview {
   VAMReview._(this._bc, this._bcOffset);
   factory VAMReview(List<int> bytes) {
@@ -1855,10 +1980,12 @@ class VAMReview {
   List<String>? get ALTERNATE_VARIANT_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
   List<String>? get alternateVariantIds => ALTERNATE_VARIANT_IDS;
   List<VAMAnnotation>? get ANNOTATIONS => const fb.ListReader<VAMAnnotation>(VAMAnnotation.reader).vTableGetNullable(_bc, _bcOffset, 48);
+  List<VAMApprovedAlternate>? get APPROVED_ALTERNATES => const fb.ListReader<VAMApprovedAlternate>(VAMApprovedAlternate.reader).vTableGetNullable(_bc, _bcOffset, 50);
+  List<VAMApprovedAlternate>? get approvedAlternates => APPROVED_ALTERNATES;
 
   @override
   String toString() {
-    return 'VAMReview{reviewerId: ${reviewerId}, capabilityId: ${capabilityId}, DECISION: ${DECISION}, candidateId: ${candidateId}, candidateCid: ${candidateCid}, candidateSha256: ${candidateSha256}, decidedAt: ${decidedAt}, REASONS: ${REASONS}, COMMENT: ${COMMENT}, envelopeSha256: ${envelopeSha256}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, previousDecisionSha256: ${previousDecisionSha256}, reviewerRole: ${reviewerRole}, REPOSITORY: ${REPOSITORY}, issueNumber: ${issueNumber}, entityId: ${entityId}, vamId: ${vamId}, NONCE: ${NONCE}, reviewedTransform: ${reviewedTransform}, canonicalVariantId: ${canonicalVariantId}, alternateVariantIds: ${alternateVariantIds}, ANNOTATIONS: ${ANNOTATIONS}}';
+    return 'VAMReview{reviewerId: ${reviewerId}, capabilityId: ${capabilityId}, DECISION: ${DECISION}, candidateId: ${candidateId}, candidateCid: ${candidateCid}, candidateSha256: ${candidateSha256}, decidedAt: ${decidedAt}, REASONS: ${REASONS}, COMMENT: ${COMMENT}, envelopeSha256: ${envelopeSha256}, SIGNATURE: ${SIGNATURE}, signatureType: ${signatureType}, previousDecisionSha256: ${previousDecisionSha256}, reviewerRole: ${reviewerRole}, REPOSITORY: ${REPOSITORY}, issueNumber: ${issueNumber}, entityId: ${entityId}, vamId: ${vamId}, NONCE: ${NONCE}, reviewedTransform: ${reviewedTransform}, canonicalVariantId: ${canonicalVariantId}, alternateVariantIds: ${alternateVariantIds}, ANNOTATIONS: ${ANNOTATIONS}, approvedAlternates: ${approvedAlternates}}';
   }
 }
 
@@ -1876,7 +2003,7 @@ class VAMReviewBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(24);
   }
 
   int addReviewerIdOffset(int? offset) {
@@ -1971,6 +2098,10 @@ class VAMReviewBuilder {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
+  int addApprovedAlternatesOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2001,6 +2132,7 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
   final String? _CANONICAL_VARIANT_ID;
   final List<String>? _ALTERNATE_VARIANT_IDS;
   final List<VAMAnnotationObjectBuilder>? _ANNOTATIONS;
+  final List<VAMApprovedAlternateObjectBuilder>? _APPROVED_ALTERNATES;
 
   VAMReviewObjectBuilder({
     String? REVIEWER_ID,
@@ -2042,6 +2174,8 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
     List<String>? ALTERNATE_VARIANT_IDS,
     List<String>? alternateVariantIds,
     List<VAMAnnotationObjectBuilder>? ANNOTATIONS,
+    List<VAMApprovedAlternateObjectBuilder>? APPROVED_ALTERNATES,
+    List<VAMApprovedAlternateObjectBuilder>? approvedAlternates,
   })
       : _REVIEWER_ID = reviewerId ?? REVIEWER_ID,
         _CAPABILITY_ID = capabilityId ?? CAPABILITY_ID,
@@ -2065,7 +2199,8 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
         _REVIEWED_TRANSFORM = reviewedTransform ?? REVIEWED_TRANSFORM,
         _CANONICAL_VARIANT_ID = canonicalVariantId ?? CANONICAL_VARIANT_ID,
         _ALTERNATE_VARIANT_IDS = alternateVariantIds ?? ALTERNATE_VARIANT_IDS,
-        _ANNOTATIONS = ANNOTATIONS;
+        _ANNOTATIONS = ANNOTATIONS,
+        _APPROVED_ALTERNATES = approvedAlternates ?? APPROVED_ALTERNATES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2111,7 +2246,9 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ALTERNATE_VARIANT_IDS!.map(fbBuilder.writeString).toList());
     final int? ANNOTATIONSOffset = _ANNOTATIONS == null ? null
         : fbBuilder.writeList(_ANNOTATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(23);
+    final int? APPROVED_ALTERNATESOffset = _APPROVED_ALTERNATES == null ? null
+        : fbBuilder.writeList(_APPROVED_ALTERNATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, REVIEWER_IDOffset);
     fbBuilder.addOffset(1, CAPABILITY_IDOffset);
     fbBuilder.addInt8(2, _DECISION?.value);
@@ -2135,6 +2272,7 @@ class VAMReviewObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, CANONICAL_VARIANT_IDOffset);
     fbBuilder.addOffset(21, ALTERNATE_VARIANT_IDSOffset);
     fbBuilder.addOffset(22, ANNOTATIONSOffset);
+    fbBuilder.addOffset(23, APPROVED_ALTERNATESOffset);
     return fbBuilder.endTable();
   }
 

@@ -1,5 +1,6 @@
 export * from './VAM.js';
 export * from './VAMAnnotation.js';
+export * from './VAMApprovedAlternate.js';
 export * from './VAMMetadataOnlyReview.js';
 export * from './VAMMetrics.js';
 export * from './VAMQualityDimension.js';

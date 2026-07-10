@@ -7,9 +7,9 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-# The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+# The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 # Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-# Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+# Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 # Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 # Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 # Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -17,7 +17,9 @@ np = import_numpy()
 # The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 # The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 # Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-# The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+# APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+# Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+# The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 class VAMReview(object):
     __slots__ = ['_tab']
 
@@ -279,8 +281,33 @@ class VAMReview(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
+    # VAMReview
+    def APPROVED_ALTERNATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from VAMApprovedAlternate import VAMApprovedAlternate
+            obj = VAMApprovedAlternate()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # VAMReview
+    def APPROVED_ALTERNATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # VAMReview
+    def APPROVED_ALTERNATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        return o == 0
+
 def VAMReviewStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(24)
 
 def Start(builder):
     VAMReviewStart(builder)
@@ -475,6 +502,24 @@ def VAMReviewCreateANNOTATIONSVector(builder, data):
 def CreateANNOTATIONSVector(builder, data):
     VAMReviewCreateANNOTATIONSVector(builder, data)
 
+def VAMReviewAddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(APPROVED_ALTERNATES), 0)
+
+def AddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES):
+    VAMReviewAddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES)
+
+def VAMReviewStartAPPROVED_ALTERNATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartAPPROVED_ALTERNATESVector(builder, numElems):
+    return VAMReviewStartAPPROVED_ALTERNATESVector(builder, numElems)
+
+def VAMReviewCreateAPPROVED_ALTERNATESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateAPPROVED_ALTERNATESVector(builder, data):
+    VAMReviewCreateAPPROVED_ALTERNATESVector(builder, data)
+
 def VAMReviewEnd(builder):
     return builder.EndObject()
 
@@ -482,6 +527,7 @@ def End(builder):
     return VAMReviewEnd(builder)
 
 import VAMAnnotation
+import VAMApprovedAlternate
 import VAMTransform
 try:
     from typing import List, Optional
@@ -516,6 +562,7 @@ class VAMReviewT(object):
         CANONICAL_VARIANT_ID = None,
         ALTERNATE_VARIANT_IDS = None,
         ANNOTATIONS = None,
+        APPROVED_ALTERNATES = None,
     ):
         self.REVIEWER_ID = REVIEWER_ID  # type: Optional[str]
         self.CAPABILITY_ID = CAPABILITY_ID  # type: Optional[str]
@@ -540,6 +587,7 @@ class VAMReviewT(object):
         self.CANONICAL_VARIANT_ID = CANONICAL_VARIANT_ID  # type: Optional[str]
         self.ALTERNATE_VARIANT_IDS = ALTERNATE_VARIANT_IDS  # type: Optional[List[Optional[str]]]
         self.ANNOTATIONS = ANNOTATIONS  # type: Optional[List[VAMAnnotation.VAMAnnotationT]]
+        self.APPROVED_ALTERNATES = APPROVED_ALTERNATES  # type: Optional[List[VAMApprovedAlternate.VAMApprovedAlternateT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -605,6 +653,14 @@ class VAMReviewT(object):
                 else:
                     vAMAnnotation_ = VAMAnnotation.VAMAnnotationT.InitFromObj(VAMReview.ANNOTATIONS(i))
                     self.ANNOTATIONS.append(vAMAnnotation_)
+        if not VAMReview.APPROVED_ALTERNATESIsNone():
+            self.APPROVED_ALTERNATES = []
+            for i in range(VAMReview.APPROVED_ALTERNATESLength()):
+                if VAMReview.APPROVED_ALTERNATES(i) is None:
+                    self.APPROVED_ALTERNATES.append(None)
+                else:
+                    vAMApprovedAlternate_ = VAMApprovedAlternate.VAMApprovedAlternateT.InitFromObj(VAMReview.APPROVED_ALTERNATES(i))
+                    self.APPROVED_ALTERNATES.append(vAMApprovedAlternate_)
 
     # VAMReviewT
     def Pack(self, builder):
@@ -674,6 +730,14 @@ class VAMReviewT(object):
             for i in reversed(range(len(self.ANNOTATIONS))):
                 builder.PrependUOffsetTRelative(ANNOTATIONSlist[i])
             ANNOTATIONS = builder.EndVector()
+        if self.APPROVED_ALTERNATES is not None:
+            APPROVED_ALTERNATESlist = []
+            for i in range(len(self.APPROVED_ALTERNATES)):
+                APPROVED_ALTERNATESlist.append(self.APPROVED_ALTERNATES[i].Pack(builder))
+            VAMReviewStartAPPROVED_ALTERNATESVector(builder, len(self.APPROVED_ALTERNATES))
+            for i in reversed(range(len(self.APPROVED_ALTERNATES))):
+                builder.PrependUOffsetTRelative(APPROVED_ALTERNATESlist[i])
+            APPROVED_ALTERNATES = builder.EndVector()
         VAMReviewStart(builder)
         if self.REVIEWER_ID is not None:
             VAMReviewAddREVIEWER_ID(builder, REVIEWER_ID)
@@ -719,5 +783,7 @@ class VAMReviewT(object):
             VAMReviewAddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDS)
         if self.ANNOTATIONS is not None:
             VAMReviewAddANNOTATIONS(builder, ANNOTATIONS)
+        if self.APPROVED_ALTERNATES is not None:
+            VAMReviewAddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES)
         VAMReview = VAMReviewEnd(builder)
         return VAMReview

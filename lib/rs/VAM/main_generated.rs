@@ -3675,13 +3675,261 @@ impl VAMVariantT {
     })
   }
 }
+pub enum VAMApprovedAlternateOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Exact approved alternate asset bytes and reviewed state.
+pub struct VAMApprovedAlternate<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for VAMApprovedAlternate<'a> {
+  type Inner = VAMApprovedAlternate<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> VAMApprovedAlternate<'a> {
+  pub const VT_VARIANT_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_CID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_BYTE_SHA256: ::flatbuffers::VOffsetT = 8;
+  pub const VT_REVIEWED_TRANSFORM: ::flatbuffers::VOffsetT = 10;
+  pub const VT_RANK: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    VAMApprovedAlternate { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args VAMApprovedAlternateArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<VAMApprovedAlternate<'bldr>> {
+    let mut builder = VAMApprovedAlternateBuilder::new(_fbb);
+    builder.add_RANK(args.RANK);
+    if let Some(x) = args.REVIEWED_TRANSFORM { builder.add_REVIEWED_TRANSFORM(x); }
+    if let Some(x) = args.BYTE_SHA256 { builder.add_BYTE_SHA256(x); }
+    if let Some(x) = args.CID { builder.add_CID(x); }
+    if let Some(x) = args.VARIANT_ID { builder.add_VARIANT_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> VAMApprovedAlternateT {
+    let VARIANT_ID = {
+      let x = self.VARIANT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let CID = {
+      let x = self.CID();
+      alloc::string::ToString::to_string(x)
+    };
+    let BYTE_SHA256 = {
+      let x = self.BYTE_SHA256();
+      alloc::string::ToString::to_string(x)
+    };
+    let REVIEWED_TRANSFORM = {
+      let x = self.REVIEWED_TRANSFORM();
+      alloc::boxed::Box::new(x.unpack())
+    };
+    let RANK = self.RANK();
+    VAMApprovedAlternateT {
+      VARIANT_ID,
+      CID,
+      BYTE_SHA256,
+      REVIEWED_TRANSFORM,
+      RANK,
+    }
+  }
+
+  #[inline]
+  pub fn VARIANT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMApprovedAlternate::VT_VARIANT_ID, None).unwrap()}
+  }
+  /// Nonempty CIDv1 identifying the exact approved alternate bytes.
+  #[inline]
+  pub fn CID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMApprovedAlternate::VT_CID, None).unwrap()}
+  }
+  /// SHA-256 of the exact approved alternate bytes as 64 lowercase hexadecimal characters.
+  #[inline]
+  pub fn BYTE_SHA256(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(VAMApprovedAlternate::VT_BYTE_SHA256, None).unwrap()}
+  }
+  #[inline]
+  pub fn REVIEWED_TRANSFORM(&self) -> VAMTransform<'a> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<VAMTransform>>(VAMApprovedAlternate::VT_REVIEWED_TRANSFORM, None).unwrap()}
+  }
+  #[inline]
+  pub fn RANK(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(VAMApprovedAlternate::VT_RANK, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for VAMApprovedAlternate<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("VARIANT_ID", Self::VT_VARIANT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CID", Self::VT_CID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("BYTE_SHA256", Self::VT_BYTE_SHA256, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<VAMTransform>>("REVIEWED_TRANSFORM", Self::VT_REVIEWED_TRANSFORM, true)?
+     .visit_field::<u32>("RANK", Self::VT_RANK, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct VAMApprovedAlternateArgs<'a> {
+    pub VARIANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub BYTE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REVIEWED_TRANSFORM: Option<::flatbuffers::WIPOffset<VAMTransform<'a>>>,
+    pub RANK: u32,
+}
+impl<'a> Default for VAMApprovedAlternateArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    VAMApprovedAlternateArgs {
+      VARIANT_ID: None, // required field
+      CID: None, // required field
+      BYTE_SHA256: None, // required field
+      REVIEWED_TRANSFORM: None, // required field
+      RANK: 0,
+    }
+  }
+}
+
+pub struct VAMApprovedAlternateBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMApprovedAlternateBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_VARIANT_ID(&mut self, VARIANT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMApprovedAlternate::VT_VARIANT_ID, VARIANT_ID);
+  }
+  #[inline]
+  pub fn add_CID(&mut self, CID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMApprovedAlternate::VT_CID, CID);
+  }
+  #[inline]
+  pub fn add_BYTE_SHA256(&mut self, BYTE_SHA256: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMApprovedAlternate::VT_BYTE_SHA256, BYTE_SHA256);
+  }
+  #[inline]
+  pub fn add_REVIEWED_TRANSFORM(&mut self, REVIEWED_TRANSFORM: ::flatbuffers::WIPOffset<VAMTransform<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<VAMTransform>>(VAMApprovedAlternate::VT_REVIEWED_TRANSFORM, REVIEWED_TRANSFORM);
+  }
+  #[inline]
+  pub fn add_RANK(&mut self, RANK: u32) {
+    self.fbb_.push_slot::<u32>(VAMApprovedAlternate::VT_RANK, RANK, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMApprovedAlternateBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    VAMApprovedAlternateBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<VAMApprovedAlternate<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, VAMApprovedAlternate::VT_VARIANT_ID,"VARIANT_ID");
+    self.fbb_.required(o, VAMApprovedAlternate::VT_CID,"CID");
+    self.fbb_.required(o, VAMApprovedAlternate::VT_BYTE_SHA256,"BYTE_SHA256");
+    self.fbb_.required(o, VAMApprovedAlternate::VT_REVIEWED_TRANSFORM,"REVIEWED_TRANSFORM");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for VAMApprovedAlternate<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("VAMApprovedAlternate");
+      ds.field("VARIANT_ID", &self.VARIANT_ID());
+      ds.field("CID", &self.CID());
+      ds.field("BYTE_SHA256", &self.BYTE_SHA256());
+      ds.field("REVIEWED_TRANSFORM", &self.REVIEWED_TRANSFORM());
+      ds.field("RANK", &self.RANK());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct VAMApprovedAlternateT {
+  pub VARIANT_ID: alloc::string::String,
+  pub CID: alloc::string::String,
+  pub BYTE_SHA256: alloc::string::String,
+  pub REVIEWED_TRANSFORM: alloc::boxed::Box<VAMTransformT>,
+  pub RANK: u32,
+}
+impl Default for VAMApprovedAlternateT {
+  fn default() -> Self {
+    Self {
+      VARIANT_ID: alloc::string::ToString::to_string(""),
+      CID: alloc::string::ToString::to_string(""),
+      BYTE_SHA256: alloc::string::ToString::to_string(""),
+      REVIEWED_TRANSFORM: Default::default(),
+      RANK: 0,
+    }
+  }
+}
+impl VAMApprovedAlternateT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<VAMApprovedAlternate<'b>> {
+    let VARIANT_ID = Some({
+      let x = &self.VARIANT_ID;
+      _fbb.create_string(x)
+    });
+    let CID = Some({
+      let x = &self.CID;
+      _fbb.create_string(x)
+    });
+    let BYTE_SHA256 = Some({
+      let x = &self.BYTE_SHA256;
+      _fbb.create_string(x)
+    });
+    let REVIEWED_TRANSFORM = Some({
+      let x = &self.REVIEWED_TRANSFORM;
+      x.pack(_fbb)
+    });
+    let RANK = self.RANK;
+    VAMApprovedAlternate::create(_fbb, &VAMApprovedAlternateArgs{
+      VARIANT_ID,
+      CID,
+      BYTE_SHA256,
+      REVIEWED_TRANSFORM,
+      RANK,
+    })
+  }
+}
 pub enum VAMReviewOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
 /// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 /// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 /// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 /// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 /// Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -3689,7 +3937,9 @@ pub enum VAMReviewOffset {}
 /// The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 /// The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 /// Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+/// APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+/// Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+/// The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 pub struct VAMReview<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -3726,6 +3976,7 @@ impl<'a> VAMReview<'a> {
   pub const VT_CANONICAL_VARIANT_ID: ::flatbuffers::VOffsetT = 44;
   pub const VT_ALTERNATE_VARIANT_IDS: ::flatbuffers::VOffsetT = 46;
   pub const VT_ANNOTATIONS: ::flatbuffers::VOffsetT = 48;
+  pub const VT_APPROVED_ALTERNATES: ::flatbuffers::VOffsetT = 50;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3737,6 +3988,7 @@ impl<'a> VAMReview<'a> {
     args: &'args VAMReviewArgs<'args>
   ) -> ::flatbuffers::WIPOffset<VAMReview<'bldr>> {
     let mut builder = VAMReviewBuilder::new(_fbb);
+    if let Some(x) = args.APPROVED_ALTERNATES { builder.add_APPROVED_ALTERNATES(x); }
     if let Some(x) = args.ANNOTATIONS { builder.add_ANNOTATIONS(x); }
     if let Some(x) = args.ALTERNATE_VARIANT_IDS { builder.add_ALTERNATE_VARIANT_IDS(x); }
     if let Some(x) = args.CANONICAL_VARIANT_ID { builder.add_CANONICAL_VARIANT_ID(x); }
@@ -3836,6 +4088,9 @@ impl<'a> VAMReview<'a> {
     let ANNOTATIONS = self.ANNOTATIONS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let APPROVED_ALTERNATES = self.APPROVED_ALTERNATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     VAMReviewT {
       REVIEWER_ID,
       CAPABILITY_ID,
@@ -3860,6 +4115,7 @@ impl<'a> VAMReview<'a> {
       CANONICAL_VARIANT_ID,
       ALTERNATE_VARIANT_IDS,
       ANNOTATIONS,
+      APPROVED_ALTERNATES,
     }
   }
 
@@ -4034,6 +4290,13 @@ impl<'a> VAMReview<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>(VAMReview::VT_ANNOTATIONS, None)}
   }
+  #[inline]
+  pub fn APPROVED_ALTERNATES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMApprovedAlternate<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMApprovedAlternate>>>>(VAMReview::VT_APPROVED_ALTERNATES, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for VAMReview<'_> {
@@ -4065,6 +4328,7 @@ impl ::flatbuffers::Verifiable for VAMReview<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CANONICAL_VARIANT_ID", Self::VT_CANONICAL_VARIANT_ID, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALTERNATE_VARIANT_IDS", Self::VT_ALTERNATE_VARIANT_IDS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<VAMAnnotation>>>>("ANNOTATIONS", Self::VT_ANNOTATIONS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<VAMApprovedAlternate>>>>("APPROVED_ALTERNATES", Self::VT_APPROVED_ALTERNATES, false)?
      .finish();
     Ok(())
   }
@@ -4093,6 +4357,7 @@ pub struct VAMReviewArgs<'a> {
     pub CANONICAL_VARIANT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ALTERNATE_VARIANT_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub ANNOTATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMAnnotation<'a>>>>>,
+    pub APPROVED_ALTERNATES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<VAMApprovedAlternate<'a>>>>>,
 }
 impl<'a> Default for VAMReviewArgs<'a> {
   #[inline]
@@ -4121,6 +4386,7 @@ impl<'a> Default for VAMReviewArgs<'a> {
       CANONICAL_VARIANT_ID: None,
       ALTERNATE_VARIANT_IDS: None,
       ANNOTATIONS: None,
+      APPROVED_ALTERNATES: None,
     }
   }
 }
@@ -4223,6 +4489,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> VAMReviewBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_ANNOTATIONS, ANNOTATIONS);
   }
   #[inline]
+  pub fn add_APPROVED_ALTERNATES(&mut self, APPROVED_ALTERNATES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<VAMApprovedAlternate<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(VAMReview::VT_APPROVED_ALTERNATES, APPROVED_ALTERNATES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> VAMReviewBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     VAMReviewBuilder {
@@ -4270,6 +4540,7 @@ impl ::core::fmt::Debug for VAMReview<'_> {
       ds.field("CANONICAL_VARIANT_ID", &self.CANONICAL_VARIANT_ID());
       ds.field("ALTERNATE_VARIANT_IDS", &self.ALTERNATE_VARIANT_IDS());
       ds.field("ANNOTATIONS", &self.ANNOTATIONS());
+      ds.field("APPROVED_ALTERNATES", &self.APPROVED_ALTERNATES());
       ds.finish()
   }
 }
@@ -4299,6 +4570,7 @@ pub struct VAMReviewT {
   pub CANONICAL_VARIANT_ID: Option<alloc::string::String>,
   pub ALTERNATE_VARIANT_IDS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub ANNOTATIONS: Option<alloc::vec::Vec<VAMAnnotationT>>,
+  pub APPROVED_ALTERNATES: Option<alloc::vec::Vec<VAMApprovedAlternateT>>,
 }
 impl Default for VAMReviewT {
   fn default() -> Self {
@@ -4326,6 +4598,7 @@ impl Default for VAMReviewT {
       CANONICAL_VARIANT_ID: None,
       ALTERNATE_VARIANT_IDS: None,
       ANNOTATIONS: None,
+      APPROVED_ALTERNATES: None,
     }
   }
 }
@@ -4406,6 +4679,9 @@ impl VAMReviewT {
     let ANNOTATIONS = self.ANNOTATIONS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let APPROVED_ALTERNATES = self.APPROVED_ALTERNATES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     VAMReview::create(_fbb, &VAMReviewArgs{
       REVIEWER_ID,
       CAPABILITY_ID,
@@ -4430,6 +4706,7 @@ impl VAMReviewT {
       CANONICAL_VARIANT_ID,
       ALTERNATE_VARIANT_IDS,
       ANNOTATIONS,
+      APPROVED_ALTERNATES,
     })
   }
 }

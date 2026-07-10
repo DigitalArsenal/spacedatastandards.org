@@ -18,9 +18,9 @@ import kotlin.math.sign
 
 /**
  * Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
- * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+ * The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
  * Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
- * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+ * Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
  * Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
  * Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
  * Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -28,7 +28,9 @@ import kotlin.math.sign
  * The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
  * The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
  * Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
- * The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+ * APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+ * Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+ * The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
  */
 @Suppress("unused")
 class VAMReview : Table() {
@@ -316,6 +318,19 @@ class VAMReview : Table() {
         get() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
+    fun approvedAlternates(j: Int) : VAMApprovedAlternate? = approvedAlternates(VAMApprovedAlternate(), j)
+    fun approvedAlternates(obj: VAMApprovedAlternate, j: Int) : VAMApprovedAlternate? {
+        val o = __offset(50)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val approvedAlternatesLength : Int
+        get() {
+            val o = __offset(50); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsVAMReview(_bb: ByteBuffer): VAMReview = getRootAsVAMReview(_bb, VAMReview())
@@ -323,8 +338,9 @@ class VAMReview : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createVAMReview(builder: FlatBufferBuilder, reviewerIdOffset: Int, capabilityIdOffset: Int, decision: Byte, candidateIdOffset: Int, candidateCidOffset: Int, candidateSha256Offset: Int, decidedAtOffset: Int, reasonsOffset: Int, commentOffset: Int, envelopeSha256Offset: Int, signatureOffset: Int, signatureTypeOffset: Int, previousDecisionSha256Offset: Int, reviewerRole: Byte, repositoryOffset: Int, issueNumberOffset: Int, entityIdOffset: Int, vamIdOffset: Int, nonceOffset: Int, reviewedTransformOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, annotationsOffset: Int) : Int {
-            builder.startTable(23)
+        fun createVAMReview(builder: FlatBufferBuilder, reviewerIdOffset: Int, capabilityIdOffset: Int, decision: Byte, candidateIdOffset: Int, candidateCidOffset: Int, candidateSha256Offset: Int, decidedAtOffset: Int, reasonsOffset: Int, commentOffset: Int, envelopeSha256Offset: Int, signatureOffset: Int, signatureTypeOffset: Int, previousDecisionSha256Offset: Int, reviewerRole: Byte, repositoryOffset: Int, issueNumberOffset: Int, entityIdOffset: Int, vamIdOffset: Int, nonceOffset: Int, reviewedTransformOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, annotationsOffset: Int, approvedAlternatesOffset: Int) : Int {
+            builder.startTable(24)
+            addAPPROVEDALTERNATES(builder, approvedAlternatesOffset)
             addANNOTATIONS(builder, annotationsOffset)
             addALTERNATEVARIANTIDS(builder, alternateVariantIdsOffset)
             addCANONICALVARIANTID(builder, canonicalVariantIdOffset)
@@ -350,7 +366,7 @@ class VAMReview : Table() {
             addDECISION(builder, decision)
             return endVAMReview(builder)
         }
-        fun startVAMReview(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startVAMReview(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addREVIEWERID(builder: FlatBufferBuilder, reviewerId: Int) = builder.addOffset(0, reviewerId, 0)
         fun addCAPABILITYID(builder: FlatBufferBuilder, capabilityId: Int) = builder.addOffset(1, capabilityId, 0)
         fun addDECISION(builder: FlatBufferBuilder, decision: Byte) = builder.addByte(2, decision, 0)
@@ -407,6 +423,15 @@ class VAMReview : Table() {
             return builder.endVector()
         }
         fun startAnnotationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addAPPROVEDALTERNATES(builder: FlatBufferBuilder, approvedAlternates: Int) = builder.addOffset(23, approvedAlternates, 0)
+        fun createApprovedAlternatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startApprovedAlternatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endVAMReview(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

@@ -7,9 +7,9 @@ import (
 )
 
 /// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 /// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 /// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 /// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 /// Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -17,7 +17,9 @@ import (
 /// The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 /// The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 /// Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+/// APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+/// Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+/// The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 type VAMReview struct {
 	_tab flatbuffers.Table
 }
@@ -453,8 +455,39 @@ func (rcv *VAMReview) AnnotationsLength() int {
 	return rcv.ANNOTATIONSLength()
 }
 
+func (rcv *VAMReview) APPROVED_ALTERNATES(obj *VAMApprovedAlternate, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(VAMApprovedAlternate)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *VAMReview) ApprovedAlternates(obj *VAMApprovedAlternate, j int) bool {
+	return rcv.APPROVED_ALTERNATES(obj, j)
+}
+
+func (rcv *VAMReview) APPROVED_ALTERNATESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *VAMReview) ApprovedAlternatesLength() int {
+	return rcv.APPROVED_ALTERNATESLength()
+}
+
 func VAMReviewStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(24)
 }
 func VAMReviewAddREVIEWER_ID(builder *flatbuffers.Builder, REVIEWER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REVIEWER_ID), 0)
@@ -617,6 +650,18 @@ func VAMReviewStartANNOTATIONSVector(builder *flatbuffers.Builder, numElems int)
 }
 func VAMReviewStartAnnotationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return VAMReviewStartANNOTATIONSVector(builder, numElems)
+}
+func VAMReviewAddAPPROVED_ALTERNATES(builder *flatbuffers.Builder, APPROVED_ALTERNATES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(APPROVED_ALTERNATES), 0)
+}
+func VAMReviewAddApprovedAlternates(builder *flatbuffers.Builder, APPROVED_ALTERNATES flatbuffers.UOffsetT) {
+	VAMReviewAddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES)
+}
+func VAMReviewStartAPPROVED_ALTERNATESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func VAMReviewStartApprovedAlternatesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return VAMReviewStartAPPROVED_ALTERNATESVector(builder, numElems)
 }
 func VAMReviewEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -7,9 +7,9 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Signed binary-backed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE and APPROVE_METADATA_ONLY are not accepted VAMReview evidence.
-/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; and ANNOTATIONS.
+/// The review-envelope projection contains these uppercase schema field names in schema declaration order: REVIEWER_ID; CAPABILITY_ID when present; DECISION encoded as its unsigned enum integer; CANDIDATE_ID; CANDIDATE_CID when present; CANDIDATE_SHA256; DECIDED_AT; REASONS; COMMENT when present; SIGNATURE_TYPE; PREVIOUS_DECISION_SHA256 when present; REVIEWER_ROLE encoded as its unsigned enum integer; REPOSITORY; ISSUE_NUMBER; ENTITY_ID; VAM_ID; NONCE; REVIEWED_TRANSFORM when present; CANONICAL_VARIANT_ID when present; ALTERNATE_VARIANT_IDS; ANNOTATIONS; and APPROVED_ALTERNATES.
 /// Projection order is descriptive; RFC 8785 sorts object keys during canonicalization.
-/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
+/// Absent optional fields are omitted and arrays preserve order; nested VAMTransform and VAMAnnotation use uppercase schema field names and numeric enums. Nested VAMApprovedAlternate uses uppercase schema field names, numeric RANK, and transforms normalized by decoding schema defaults. A verifier reconstructs exactly this projection, applies RFC 8785 JSON Canonicalization Scheme (JCS), hashes the UTF-8 serialization bytes, compares the digest, then verifies SIGNATURE over the raw 32-byte digest.
 /// Before trusting DECISION, a verifier must enforce binary decision invariants; repository, issue, entity, and VAM equality; nonce single use; role authorization; and exact candidate binding. CAPABILITY_ID, REPOSITORY, ISSUE_NUMBER, ENTITY_ID, VAM_ID, and NONCE MUST be present and nonempty for any new binary-backed signed decision and are required by the binary validation profile; their wire slots are optional only for backward compatibility.
 /// Legacy buffers lacking those six fields remain decodable but are not valid new publication approvals. For these compatibility fields, the projection omits absent optionals only when decoding legacy records; the new validation profile rejects absence before signature trust. APPROVE requires CANDIDATE_CID; every binary decision requires exact CANDIDATE_SHA256.
 /// Under the validation profile, when DECISION is APPROVE, CANDIDATE_CID MUST be present; REVIEWED_TRANSFORM and CANONICAL_VARIANT_ID MUST be present; and CANONICAL_VARIANT_ID MUST equal CANDIDATE_ID. These fields remain optional on the wire for compatibility.
@@ -17,7 +17,9 @@ using global::Google.FlatBuffers;
 /// The referenced VAMVariant.ID MUST equal CANDIDATE_ID; that variant CID and BYTE_SHA256 MUST equal signed CANDIDATE_CID and CANDIDATE_SHA256; and its TRANSFORM MUST be field-for-field equal to REVIEWED_TRANSFORM after decoding schema defaults.
 /// The enclosing VAM.ALTERNATE_VARIANT_IDS MUST exactly equal signed review ALTERNATE_VARIANT_IDS, with the same IDs in the same order; empty equals empty.
 /// Each alternate ID MUST resolve to an existing VAMVariant; alternate IDs MUST be distinct and MUST NOT equal CANONICAL_VARIANT_ID. The referenced alternates retain their signed canonical rank ordering as represented by the manifest list.
-/// The publication validator rejects any omission or mismatch before signature trust or publication. Later transform, canonical-variant, or alternate addition, removal, or reorder changes require a new signed review and envelope.
+/// APPROVED_ALTERNATES MUST correspond one-for-one with ALTERNATE_VARIANT_IDS in the same order; each descriptor VARIANT_ID MUST equal the corresponding alternate ID. Empty ALTERNATE_VARIANT_IDS requires empty APPROVED_ALTERNATES.
+/// Each descriptor CID, BYTE_SHA256, REVIEWED_TRANSFORM, and RANK MUST be field-for-field equal to the resolved VAMVariant. BYTE_SHA256 MUST be 64 lowercase hexadecimal characters and CID MUST be nonempty.
+/// The publication validator rejects any omission or mismatch before signature trust or publication. Any alternate byte, CID, BYTE_SHA256, transform, or rank change requires a new signed review and envelope.
 public struct VAMReview : IFlatbufferObject
 {
   private Table __p;
@@ -167,6 +169,8 @@ public struct VAMReview : IFlatbufferObject
   public int ALTERNATE_VARIANT_IDSLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
   public VAMAnnotation? ANNOTATIONS(int j) { int o = __p.__offset(48); return o != 0 ? (VAMAnnotation?)(new VAMAnnotation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ANNOTATIONSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public VAMApprovedAlternate? APPROVED_ALTERNATES(int j) { int o = __p.__offset(50); return o != 0 ? (VAMApprovedAlternate?)(new VAMApprovedAlternate()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int APPROVED_ALTERNATESLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<VAMReview> CreateVAMReview(FlatBufferBuilder builder,
       StringOffset REVIEWER_IDOffset = default(StringOffset),
@@ -191,8 +195,10 @@ public struct VAMReview : IFlatbufferObject
       Offset<VAMTransform> REVIEWED_TRANSFORMOffset = default(Offset<VAMTransform>),
       StringOffset CANONICAL_VARIANT_IDOffset = default(StringOffset),
       VectorOffset ALTERNATE_VARIANT_IDSOffset = default(VectorOffset),
-      VectorOffset ANNOTATIONSOffset = default(VectorOffset)) {
-    builder.StartTable(23);
+      VectorOffset ANNOTATIONSOffset = default(VectorOffset),
+      VectorOffset APPROVED_ALTERNATESOffset = default(VectorOffset)) {
+    builder.StartTable(24);
+    VAMReview.AddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATESOffset);
     VAMReview.AddANNOTATIONS(builder, ANNOTATIONSOffset);
     VAMReview.AddALTERNATE_VARIANT_IDS(builder, ALTERNATE_VARIANT_IDSOffset);
     VAMReview.AddCANONICAL_VARIANT_ID(builder, CANONICAL_VARIANT_IDOffset);
@@ -219,7 +225,7 @@ public struct VAMReview : IFlatbufferObject
     return VAMReview.EndVAMReview(builder);
   }
 
-  public static void StartVAMReview(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartVAMReview(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddREVIEWER_ID(FlatBufferBuilder builder, StringOffset REVIEWER_IDOffset) { builder.AddOffset(0, REVIEWER_IDOffset.Value, 0); }
   public static void AddCAPABILITY_ID(FlatBufferBuilder builder, StringOffset CAPABILITY_IDOffset) { builder.AddOffset(1, CAPABILITY_IDOffset.Value, 0); }
   public static void AddDECISION(FlatBufferBuilder builder, visualAssetDecisionKind DECISION) { builder.AddSbyte(2, (sbyte)DECISION, 0); }
@@ -263,6 +269,12 @@ public struct VAMReview : IFlatbufferObject
   public static VectorOffset CreateANNOTATIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<VAMAnnotation>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateANNOTATIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<VAMAnnotation>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartANNOTATIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddAPPROVED_ALTERNATES(FlatBufferBuilder builder, VectorOffset APPROVED_ALTERNATESOffset) { builder.AddOffset(23, APPROVED_ALTERNATESOffset.Value, 0); }
+  public static VectorOffset CreateAPPROVED_ALTERNATESVector(FlatBufferBuilder builder, Offset<VAMApprovedAlternate>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateAPPROVED_ALTERNATESVectorBlock(FlatBufferBuilder builder, Offset<VAMApprovedAlternate>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateAPPROVED_ALTERNATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<VAMApprovedAlternate>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateAPPROVED_ALTERNATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<VAMApprovedAlternate>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartAPPROVED_ALTERNATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<VAMReview> EndVAMReview(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // REVIEWER_ID
@@ -307,6 +319,8 @@ public struct VAMReview : IFlatbufferObject
     for (var _j = 0; _j < this.ALTERNATE_VARIANT_IDSLength; ++_j) {_o.ALTERNATE_VARIANT_IDS.Add(this.ALTERNATE_VARIANT_IDS(_j));}
     _o.ANNOTATIONS = new List<VAMAnnotationT>();
     for (var _j = 0; _j < this.ANNOTATIONSLength; ++_j) {_o.ANNOTATIONS.Add(this.ANNOTATIONS(_j).HasValue ? this.ANNOTATIONS(_j).Value.UnPack() : null);}
+    _o.APPROVED_ALTERNATES = new List<VAMApprovedAlternateT>();
+    for (var _j = 0; _j < this.APPROVED_ALTERNATESLength; ++_j) {_o.APPROVED_ALTERNATES.Add(this.APPROVED_ALTERNATES(_j).HasValue ? this.APPROVED_ALTERNATES(_j).Value.UnPack() : null);}
   }
   public static Offset<VAMReview> Pack(FlatBufferBuilder builder, VAMReviewT _o) {
     if (_o == null) return default(Offset<VAMReview>);
@@ -350,6 +364,12 @@ public struct VAMReview : IFlatbufferObject
       for (var _j = 0; _j < __ANNOTATIONS.Length; ++_j) { __ANNOTATIONS[_j] = VAMAnnotation.Pack(builder, _o.ANNOTATIONS[_j]); }
       _ANNOTATIONS = CreateANNOTATIONSVector(builder, __ANNOTATIONS);
     }
+    var _APPROVED_ALTERNATES = default(VectorOffset);
+    if (_o.APPROVED_ALTERNATES != null) {
+      var __APPROVED_ALTERNATES = new Offset<VAMApprovedAlternate>[_o.APPROVED_ALTERNATES.Count];
+      for (var _j = 0; _j < __APPROVED_ALTERNATES.Length; ++_j) { __APPROVED_ALTERNATES[_j] = VAMApprovedAlternate.Pack(builder, _o.APPROVED_ALTERNATES[_j]); }
+      _APPROVED_ALTERNATES = CreateAPPROVED_ALTERNATESVector(builder, __APPROVED_ALTERNATES);
+    }
     return CreateVAMReview(
       builder,
       _REVIEWER_ID,
@@ -374,7 +394,8 @@ public struct VAMReview : IFlatbufferObject
       _REVIEWED_TRANSFORM,
       _CANONICAL_VARIANT_ID,
       _ALTERNATE_VARIANT_IDS,
-      _ANNOTATIONS);
+      _ANNOTATIONS,
+      _APPROVED_ALTERNATES);
   }
 }
 
@@ -403,6 +424,7 @@ public class VAMReviewT
   public string CANONICAL_VARIANT_ID { get; set; }
   public List<string> ALTERNATE_VARIANT_IDS { get; set; }
   public List<VAMAnnotationT> ANNOTATIONS { get; set; }
+  public List<VAMApprovedAlternateT> APPROVED_ALTERNATES { get; set; }
 
   public VAMReviewT() {
     this.REVIEWER_ID = null;
@@ -428,6 +450,7 @@ public class VAMReviewT
     this.CANONICAL_VARIANT_ID = null;
     this.ALTERNATE_VARIANT_IDS = null;
     this.ANNOTATIONS = null;
+    this.APPROVED_ALTERNATES = null;
   }
 }
 
@@ -460,6 +483,7 @@ static public class VAMReviewVerify
       && verifier.VerifyString(tablePos, 44 /*CANONICAL_VARIANT_ID*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 46 /*ALTERNATE_VARIANT_IDS*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 48 /*ANNOTATIONS*/, VAMAnnotationVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 50 /*APPROVED_ALTERNATES*/, VAMApprovedAlternateVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }
