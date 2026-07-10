@@ -297,6 +297,7 @@ const validatesSignedBinaryReview = (manifest, publicKey, context, usedNonces) =
   const authorized = review.REVIEWER_ROLE === visualAssetReviewerRole.REVIEWER
     || review.REVIEWER_ROLE === visualAssetReviewerRole.ADMIN;
   if (!authorized || review.DECISION !== visualAssetDecisionKind.APPROVE) return false;
+  if (!hasValidRanking(manifest)) return false;
   const requiredProfileFields = [
     'CAPABILITY_ID',
     'REPOSITORY',
@@ -631,6 +632,48 @@ describe('VAM signed review profiles', () => {
     assert.equal(validatesSignedBinaryReview(
       decoded, publicKey, expectedContext, new Set()
     ), true);
+  });
+
+  it('requires full physical VAM rank order and uniqueness for approval', () => {
+    const { privateKey, publicKey } = generateKeyPairSync('ed25519');
+    const valid = decodeBinaryManifest(privateKey);
+    assert.deepEqual(valid.VARIANTS.map(({ RANK }) => RANK), [0, 1, 2]);
+    assert.equal(hasValidRanking(valid), true);
+    assert.equal(validatesSignedBinaryReview(
+      valid, publicKey, expectedContext, new Set()
+    ), true);
+
+    const invalidRankings = [
+      (manifest) => {
+        manifest.VARIANTS = [manifest.VARIANTS[0], manifest.VARIANTS[2], manifest.VARIANTS[1]];
+      },
+      (manifest) => { manifest.VARIANTS[1].RANK = 0; },
+      (manifest) => {
+        manifest.VARIANTS.push(Object.assign(new VAMVariantT(), {
+          ID: 'unselected-duplicate-rank', RANK: 2
+        }));
+      },
+      (manifest) => {
+        manifest.VARIANTS[0].RANK = 1;
+        manifest.VARIANTS[1].RANK = 2;
+        manifest.VARIANTS[2].RANK = 3;
+        manifest.VARIANTS.push(Object.assign(new VAMVariantT(), {
+          ID: 'unselected-descending-rank', RANK: 0
+        }));
+      }
+    ];
+
+    for (const mutate of invalidRankings) {
+      const decoded = decodeBinaryManifest(privateKey);
+      mutate(decoded);
+      assert.equal(verifyReviewSignature(
+        decoded.REVIEW, binaryReviewProjection, publicKey
+      ), true);
+      assert.equal(hasValidRanking(decoded), false);
+      assert.equal(validatesSignedBinaryReview(
+        decoded, publicKey, expectedContext, new Set()
+      ), false);
+    }
   });
 
   it('enforces reviewer role, context equality, and nonce single use', () => {
