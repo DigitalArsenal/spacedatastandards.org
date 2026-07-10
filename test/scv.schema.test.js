@@ -523,12 +523,12 @@ describe("SCV sensor coverage schema", () => {
       return Number(match[1]);
     };
 
-    assert.equal(valueFor("SDF"), 132);
-    assert.equal(valueFor("SDL"), 133);
-    assert.equal(valueFor("SDR"), 134);
-    assert.equal(valueFor("SEN"), 135);
-    assert.equal(valueFor("SEO"), 136);
-    assert.equal(valueFor("XTC"), 165);
+    assert.equal(valueFor("SDF"), 134);
+    assert.equal(valueFor("SDL"), 135);
+    assert.equal(valueFor("SDR"), 136);
+    assert.equal(valueFor("SEN"), 137);
+    assert.equal(valueFor("SEO"), 138);
+    assert.equal(valueFor("XTC"), 169);
     assert.ok(valueFor("SCV") > valueFor("XTC"));
     assert.match(
       recSchemaSource,
