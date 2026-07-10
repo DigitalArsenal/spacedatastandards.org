@@ -6,7 +6,7 @@ enum visualAssetVariantKind : byte {
   ALTERNATE
 }
 
-/// Lifecycle state.
+/// Lifecycle state. Append new values only; never reorder or reuse existing values.
 enum visualAssetReviewState : byte {
   DISCOVERED,
   METADATA_VALIDATED,
@@ -26,6 +26,13 @@ enum visualAssetLicenseClass : byte {
   USABLE_NOW,
   CANDIDATE_NEEDS_LICENSE,
   MANUAL_REVIEW
+}
+
+/// Permission determination: UNKNOWN means no determination, ALLOWED means the license permits it, and PROHIBITED means the license explicitly forbids it.
+enum visualAssetPermissionDecision : byte {
+  UNKNOWN,
+  ALLOWED,
+  PROHIBITED
 }
 
 /// Up axis.
@@ -53,6 +60,13 @@ table VAMVector3 {
   Z:double;
 }
 
+/// Scale with identity defaults for every component.
+table VAMScale3 {
+  X:double = 1.0;
+  Y:double = 1.0;
+  Z:double = 1.0;
+}
+
 /// Rotation quaternion.
 table VAMQuaternion {
   X:double;
@@ -61,11 +75,11 @@ table VAMQuaternion {
   W:double = 1.0;
 }
 
-/// Transform from source coordinates into canonical meters.
+/// Transform from source coordinates into canonical meters. Absent SCALE and omitted scale components mean identity scale; translation and bounds use VAMVector3 zero defaults.
 table VAMTransform {
   TRANSLATION:VAMVector3;
   ROTATION:VAMQuaternion;
-  SCALE:VAMVector3;
+  SCALE:VAMScale3;
   UP_AXIS:visualAssetUpAxis = Y_UP;
   SOURCE_UNITS:string;
   METERS_PER_SOURCE_UNIT:double = 1.0;
@@ -77,12 +91,14 @@ table VAMSource {
   SOURCE_RECORD_ID:string (required);
   SOURCE_NAME:string;
   SOURCE_URL:string (required);
+  /// ISO 8601 UTC timestamp when the source was observed.
   OBSERVED_AT:string;
   LICENSE_CLASS:visualAssetLicenseClass = MANUAL_REVIEW;
   LICENSE_NAME:string;
   ATTRIBUTION:string;
-  REDISTRIBUTION_ALLOWED:bool;
-  DERIVATIVES_ALLOWED:bool;
+  REDISTRIBUTION_PERMISSION:visualAssetPermissionDecision = UNKNOWN;
+  DERIVATIVE_PERMISSION:visualAssetPermissionDecision = UNKNOWN;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON source-metadata bytes.
   SOURCE_METADATA_SHA256:string;
   NOTES:string;
 }
@@ -107,6 +123,7 @@ table VAMValidation {
   STATUS:string;
   VALIDATOR_NAME:string;
   VALIDATOR_VERSION:string;
+  /// ISO 8601 UTC timestamp when validation completed.
   VALIDATED_AT:string;
   ERRORS:[string];
   WARNINGS:[string];
@@ -126,9 +143,12 @@ table VAMVariant {
   VARIANT_KIND:visualAssetVariantKind = SOURCE;
   LOD_LEVEL:uint;
   FILE_NAME:string;
+  /// IANA media type of the exact variant bytes.
   MEDIA_TYPE:string;
   BYTE_LENGTH:uint64;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact variant file bytes.
   BYTE_SHA256:string;
+  /// CIDv1 containing a multihash of the exact variant file bytes.
   CID:string;
   MULTIFORMAT_ADDRESS:string;
   GLTF_VERSION:string;
@@ -136,6 +156,7 @@ table VAMVariant {
   CONVERSION_TOOL:string;
   CONVERSION_VERSION:string;
   CONVERSION_PROFILE:string;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact conversion input bytes.
   INPUT_SHA256:string;
   SOURCE:VAMSource;
   TRANSFORM:VAMTransform;
@@ -146,26 +167,35 @@ table VAMVariant {
   SUPERSEDES_VARIANT_ID:string;
 }
 
-/// Signed review decision over a specific candidate.
+/// Signed review decision over a specific candidate. This table exists only for a submitted decision; DECISION NONE is not accepted publication evidence.
+/// A verifier must hash canonical bytes, compare the digest, then verify the signature before trusting DECISION.
 table VAMReview {
-  REVIEWER_ID:string;
+  REVIEWER_ID:string (required);
   CAPABILITY_ID:string;
   DECISION:visualAssetDecisionKind = NONE;
-  CANDIDATE_ID:string;
+  CANDIDATE_ID:string (required);
+  /// Optional CIDv1 containing a multihash of exact candidate bytes; metadata-only candidates may not have a CID.
   CANDIDATE_CID:string;
-  CANDIDATE_SHA256:string;
-  DECIDED_AT:string;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact candidate bytes.
+  CANDIDATE_SHA256:string (required);
+  /// ISO 8601 UTC timestamp when the decision was made.
+  DECIDED_AT:string (required);
   REASONS:[string];
   COMMENT:string;
-  ENVELOPE_SHA256:string;
-  SIGNATURE:[ubyte];
-  SIGNATURE_TYPE:string;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON review-envelope bytes excluding SIGNATURE.
+  ENVELOPE_SHA256:string (required);
+  /// Signature over the raw 32-byte SHA-256 digest represented by ENVELOPE_SHA256.
+  SIGNATURE:[ubyte] (required);
+  /// Signature algorithm and profile; initially Ed25519.
+  SIGNATURE_TYPE:string (required);
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of canonical UTF-8 JSON prior review-envelope bytes excluding SIGNATURE.
   PREVIOUS_DECISION_SHA256:string;
 }
 
 /// Visual Asset Manifest — ranked visual representations for one stable entity.
 table VAM {
   ID:string (required);
+  /// Manifest format version.
   VERSION:string;
   ENTITY_ID:string (required);
   ENTITY_KIND:string;
@@ -174,9 +204,13 @@ table VAM {
   VARIANTS:[VAMVariant];
   REVIEW:VAMReview;
   REVIEW_STATE:visualAssetReviewState = DISCOVERED;
+  /// ISO 8601 UTC timestamp when the manifest was created.
   CREATED_AT:string;
+  /// ISO 8601 UTC timestamp when the manifest was last updated.
   UPDATED_AT:string;
+  /// CIDv1 containing a multihash of the exact superseded VAM bytes.
   SUPERSEDES_VAM_CID:string;
+  /// CIDv1 containing a multihash of the exact referenced DPM bytes.
   DPM_CID:string;
 }
 
