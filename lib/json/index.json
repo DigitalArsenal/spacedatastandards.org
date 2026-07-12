@@ -3905,6 +3905,271 @@
             },
             "$ref": "#/definitions/EPM"
         },
+        "APP": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "appContentEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "UTF8",
+                        "BASE64",
+                        "BASE64_GZIP",
+                        "BASE64_BROTLI"
+                    ]
+                },
+                "appDataDirection": {
+                    "type": "string",
+                    "enum": [
+                        "PRODUCES",
+                        "CONSUMES",
+                        "BOTH"
+                    ]
+                },
+                "appSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "MODULE",
+                        "EXTERNAL_API",
+                        "DATASET"
+                    ]
+                },
+                "APPModuleRef": {
+                    "type": "object",
+                    "description": "One member WASM module of the app. References module identity; never\nembeds the module artifact itself (delivery is the module-bundle lane).",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "App-local stable reference for this module. Required, unique within\nthe manifest."
+                        },
+                        "PLUGIN_ID": {
+                            "type": "string",
+                            "description": "Plugin identifier of the module as published in its plugin listing."
+                        },
+                        "CONTENT_HASH": {
+                            "type": "string",
+                            "description": "64 lowercase hexadecimal characters encoding SHA-256 of the module's\nportable (pre-AOT, publication-trailer-stripped) WASM bytes. This is\nthe identity capability policies and signature policies key on."
+                        },
+                        "VERSION": {
+                            "type": "string",
+                            "description": "Module version expected by the app."
+                        },
+                        "ROLE": {
+                            "type": "string",
+                            "description": "Free-text launcher hint, for example primary, worker, or ui-host."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable summary."
+                        },
+                        "MAX_WALL_CLOCK_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Per-invocation wall-clock budget override in milliseconds. Zero means\nthe host runtime default applies."
+                        },
+                        "MAX_COST_UNITS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Per-invocation execution-cost (fuel) budget override. Zero means the\nhost runtime default applies."
+                        },
+                        "MAX_MEMORY_PAGES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Linear-memory ceiling override in 64 KiB WASM pages. Zero means the\nhost runtime default applies."
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "APPDataRef": {
+                    "type": "object",
+                    "description": "One SDS record type the app produces and/or consumes. Names an existing\nspacedatastandards.org schema by its established code; the app manifest\ndefines no data schemas of its own.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "App-local stable reference for this data binding. Required, unique\nwithin the manifest."
+                        },
+                        "SDS_TYPE": {
+                            "type": "string",
+                            "description": "Existing SDS schema code, for example OMM, CDM, or EPM. Required."
+                        },
+                        "DIRECTION": {
+                            "$ref": "#/definitions/appDataDirection",
+                            "description": "Data flow relative to the app."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "When present, must equal an APPModuleRef.ID in the same manifest \u2014 the\nmember module responsible for this data binding."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable summary."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "SDS_TYPE"
+                    ],
+                    "additionalProperties": false
+                },
+                "APPSourceRef": {
+                    "type": "object",
+                    "description": "One upstream data source the app depends on.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "App-local stable reference for this source. Required, unique within\nthe manifest."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/appSourceKind",
+                            "description": "Classifies REF."
+                        },
+                        "REF": {
+                            "type": "string",
+                            "description": "Source identifier: an APPModuleRef.ID when KIND is MODULE, otherwise a\nURL or dataset identifier. Required."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable summary."
+                        }
+                    },
+                    "required": [
+                        "ID",
+                        "REF"
+                    ],
+                    "additionalProperties": false
+                },
+                "APPUIPage": {
+                    "type": "object",
+                    "description": "One UI page of the app. Exactly one of the two delivery mechanisms must\nbe populated: inline CONTENT (with ENCODING describing its string form),\nor MODULE_ID plus URL for a page served by a member module. Inline pages\nmust be fully self-contained \u2014 CSS and JS inlined, all assets embedded\nas data URIs, zero external requests.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "App-local stable reference for this page. Required, unique within the\nmanifest."
+                        },
+                        "TITLE": {
+                            "type": "string",
+                            "description": "Display title. Falls back to the app NAME when empty."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable summary. Falls back to the app DESCRIPTION when empty."
+                        },
+                        "ICON": {
+                            "type": "string",
+                            "description": "Launcher icon identifier or inline data URI."
+                        },
+                        "COLOR": {
+                            "type": "string",
+                            "description": "Launcher accent color, CSS color syntax."
+                        },
+                        "TEXT_COLOR": {
+                            "type": "string",
+                            "description": "Launcher text color, CSS color syntax."
+                        },
+                        "CONTENT": {
+                            "type": "string",
+                            "description": "Inlined, self-contained page in the string form declared by ENCODING.\nEmpty when the page is module-served via MODULE_ID and URL."
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/appContentEncoding",
+                            "description": "String form of CONTENT."
+                        },
+                        "MEDIA_TYPE": {
+                            "type": "string",
+                            "description": "IANA media type of the decoded page bytes, for example text/html."
+                        },
+                        "CONTENT_SHA256": {
+                            "type": "string",
+                            "description": "64 lowercase hexadecimal characters encoding SHA-256 of the decoded\npage bytes, so a launcher can verify inline content after decoding."
+                        },
+                        "ENTRY": {
+                            "type": "boolean",
+                            "description": "True for the page the launcher opens first. Exactly one page in an\napp must set this when UI is present."
+                        },
+                        "MODULE_ID": {
+                            "type": "string",
+                            "description": "When module-served, must equal an APPModuleRef.ID in the same\nmanifest \u2014 the member module that serves this page."
+                        },
+                        "URL": {
+                            "type": "string",
+                            "description": "When module-served, the path or entrypoint the module serves the page\nat."
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "APP": {
+                    "type": "object",
+                    "description": "Application Package Manifest \u2014 one launchable app.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Stable app identity, unique per publisher. Required."
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Display name."
+                        },
+                        "VERSION": {
+                            "type": "string",
+                            "description": "SemVer 2.0.0 app version."
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable summary."
+                        },
+                        "MODULES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/APPModuleRef"
+                            },
+                            "description": "Member WASM modules. Referential integrity: every MODULE_ID and every\nMODULE-kind REF elsewhere in the manifest must resolve into this list."
+                        },
+                        "DATA": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/APPDataRef"
+                            },
+                            "description": "SDS record types produced and consumed."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/APPSourceRef"
+                            },
+                            "description": "Upstream sources depended on."
+                        },
+                        "UI": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/APPUIPage"
+                            },
+                            "description": "UI pages. Exactly one entry page when nonempty."
+                        },
+                        "CREATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nwhen the manifest was created."
+                        },
+                        "UPDATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nwhen the manifest was last updated."
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/APP"
+        },
         "SDF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {

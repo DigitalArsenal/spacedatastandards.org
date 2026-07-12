@@ -181,6 +181,7 @@ class RecordType(object):
     VST = 175
     ENT = 176
     VAM = 177
+    APP = 178
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -717,4 +718,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.VAM:
         import VAM
         return VAM.VAMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.APP:
+        import APP
+        return APP.APPT.InitFromBuf(table.Bytes, table.Pos)
     return None

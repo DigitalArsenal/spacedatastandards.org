@@ -6,6 +6,7 @@ export * as AEM from './AEM/main.js';
 export * as ANI from './ANI/main.js';
 export * as AOF from './AOF/main.js';
 export * as APM from './APM/main.js';
+export * as APP from './APP/main.js';
 export * as ARM from './ARM/main.js';
 export * as AST from './AST/main.js';
 export * as ATD from './ATD/main.js';

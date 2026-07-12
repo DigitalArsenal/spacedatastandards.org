@@ -4113,6 +4113,83 @@
         }
       }
     },
+    "appContentEncoding": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "value they do not recognize rather than guessing.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "UTF8": {
+          "value": 0,
+          "description": "CONTENT is the literal page text, UTF-8."
+        },
+        "BASE64": {
+          "value": 1,
+          "description": "CONTENT is RFC 4648 standard base64 (with padding) of the page bytes."
+        },
+        "BASE64_GZIP": {
+          "value": 2,
+          "description": "CONTENT is base64 of the gzip-compressed page bytes."
+        },
+        "BASE64_BROTLI": {
+          "value": 3,
+          "description": "CONTENT is base64 of the Brotli-compressed page bytes."
+        }
+      }
+    },
+    "appDataDirection": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "Data flow of a referenced SDS record type relative to the app.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "PRODUCES": {
+          "value": 0
+        },
+        "CONSUMES": {
+          "value": 1
+        },
+        "BOTH": {
+          "value": 2
+        }
+      }
+    },
+    "appSourceKind": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "Kind of upstream source an APPSourceRef names.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "MODULE": {
+          "value": 0,
+          "description": "REF is an APPModuleRef.ID in the same manifest \u2014 one member module is itself the source for another."
+        },
+        "EXTERNAL_API": {
+          "value": 1,
+          "description": "REF is a URL or endpoint identifier outside the app."
+        },
+        "DATASET": {
+          "value": 2,
+          "description": "REF is a dataset or catalog identifier."
+        }
+      }
+    },
     "ArmorMaterial": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -19185,6 +19262,331 @@
         }
       },
       "description": "Attitude Parameter Message"
+    },
+    "APPModuleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "the manifest.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Plugin identifier of the module as published in its plugin listing.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_HASH": {
+          "type": "string",
+          "description": "the identity capability policies and signature policies key on.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Module version expected by the app.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "type": "string",
+          "description": "Free-text launcher hint, for example primary, worker, or ui-host.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAX_WALL_CLOCK_MS": {
+          "type": "integer",
+          "description": "the host runtime default applies.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_COST_UNITS": {
+          "type": "integer",
+          "description": "host runtime default applies.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_MEMORY_PAGES": {
+          "type": "integer",
+          "description": "host runtime default applies.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "description": "One member WASM module of the app. References module identity; never embeds the module artifact itself (delivery is the module-bundle lane).",
+      "required": [
+        "ID"
+      ]
+    },
+    "APPDataRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "within the manifest.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SDS_TYPE": {
+          "type": "string",
+          "description": "Existing SDS schema code, for example OMM, CDM, or EPM. Required.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DIRECTION": {
+          "$ref": "#/definitions/appDataDirection",
+          "description": "Data flow relative to the app.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "PRODUCES",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "PRODUCES": {
+              "value": 0
+            },
+            "CONSUMES": {
+              "value": 1
+            },
+            "BOTH": {
+              "value": 2
+            }
+          }
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "description": "member module responsible for this data binding.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One SDS record type the app produces and/or consumes. Names an existing spacedatastandards.org schema by its established code; the app manifest defines no data schemas of its own.",
+      "required": [
+        "ID",
+        "SDS_TYPE"
+      ]
+    },
+    "APPSourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "the manifest.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/appSourceKind",
+          "description": "Classifies REF.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "MODULE",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "MODULE": {
+              "value": 0,
+              "description": "REF is an APPModuleRef.ID in the same manifest \u2014 one member module is itself the source for another."
+            },
+            "EXTERNAL_API": {
+              "value": 1,
+              "description": "REF is a URL or endpoint identifier outside the app."
+            },
+            "DATASET": {
+              "value": 2,
+              "description": "REF is a dataset or catalog identifier."
+            }
+          }
+        },
+        "REF": {
+          "type": "string",
+          "description": "URL or dataset identifier. Required.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One upstream data source the app depends on.",
+      "required": [
+        "ID",
+        "REF"
+      ]
+    },
+    "APPUIPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "manifest.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Display title. Falls back to the app NAME when empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary. Falls back to the app DESCRIPTION when empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "ICON": {
+          "type": "string",
+          "description": "Launcher icon identifier or inline data URI.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLOR": {
+          "type": "string",
+          "description": "Launcher accent color, CSS color syntax.",
+          "x-flatbuffer-type": "string"
+        },
+        "TEXT_COLOR": {
+          "type": "string",
+          "description": "Launcher text color, CSS color syntax.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT": {
+          "type": "string",
+          "description": "Empty when the page is module-served via MODULE_ID and URL.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/appContentEncoding",
+          "description": "String form of CONTENT.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "UTF8",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UTF8": {
+              "value": 0,
+              "description": "CONTENT is the literal page text, UTF-8."
+            },
+            "BASE64": {
+              "value": 1,
+              "description": "CONTENT is RFC 4648 standard base64 (with padding) of the page bytes."
+            },
+            "BASE64_GZIP": {
+              "value": 2,
+              "description": "CONTENT is base64 of the gzip-compressed page bytes."
+            },
+            "BASE64_BROTLI": {
+              "value": 3,
+              "description": "CONTENT is base64 of the Brotli-compressed page bytes."
+            }
+          }
+        },
+        "MEDIA_TYPE": {
+          "type": "string",
+          "description": "IANA media type of the decoded page bytes, for example text/html.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_SHA256": {
+          "type": "string",
+          "description": "page bytes, so a launcher can verify inline content after decoding.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTRY": {
+          "type": "boolean",
+          "description": "app must set this when UI is present.",
+          "x-flatbuffer-type": "bool"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "description": "manifest \u2014 the member module that serves this page.",
+          "x-flatbuffer-type": "string"
+        },
+        "URL": {
+          "type": "string",
+          "description": "at.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One UI page of the app. Exactly one of the two delivery mechanisms must be populated: inline CONTENT (with ENCODING describing its string form), or MODULE_ID plus URL for a page served by a member module. Inline pages must be fully self-contained \u2014 CSS and JS inlined, all assets embedded as data URIs, zero external requests.",
+      "required": [
+        "ID"
+      ]
+    },
+    "APP": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable app identity, unique per publisher. Required.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "SemVer 2.0.0 app version.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APPModuleRef"
+          },
+          "description": "MODULE-kind REF elsewhere in the manifest must resolve into this list.",
+          "x-flatbuffer-type": "[APPModuleRef]"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APPDataRef"
+          },
+          "description": "SDS record types produced and consumed.",
+          "x-flatbuffer-type": "[APPDataRef]"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APPSourceRef"
+          },
+          "description": "Upstream sources depended on.",
+          "x-flatbuffer-type": "[APPSourceRef]"
+        },
+        "UI": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APPUIPage"
+          },
+          "description": "UI pages. Exactly one entry page when nonempty.",
+          "x-flatbuffer-type": "[APPUIPage]"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "when the manifest was created.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "when the manifest was last updated.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Application Package Manifest \u2014 one launchable app.",
+      "required": [
+        "ID"
+      ]
     },
     "ARM": {
       "type": "object",
