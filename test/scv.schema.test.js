@@ -26,6 +26,66 @@ const archiveLanguages = [
 ];
 
 const headerMarker = "// -----------------------------------END_HEADER";
+const rasterProductKindEntries = [
+  ["CELL_BOUNDS_DEG", 0],
+  ["CELL_CENTERS_DEG", 1],
+  ["PERCENT_COVERAGE", 2],
+  ["PASS_COUNT", 3],
+  ["CONTACT_DURATION_SECONDS", 4],
+  ["REVISIT_SECONDS", 5],
+  ["GAP_SECONDS", 6],
+  ["REDUNDANCY", 7],
+  ["CURRENT_ACCESS_BITSET", 8],
+  ["BUCKET_START_SECONDS", 9],
+  ["BUCKET_STOP_SECONDS", 10],
+  ["BUCKET_ACTIVE_CELL_COUNT", 11],
+  ["PASS_COUNT_RGBA", 12],
+  ["CURRENT_ACCESS_RGBA", 13],
+  ["LATITUDE_BAND_COVERAGE", 14],
+  ["BUCKET_PASS_START_COUNT", 15],
+  ["WINDOW_START_ACCESS_BITSET", 16],
+  ["WINDOW_STOP_ACCESS_BITSET", 17],
+];
+
+function parseSchemaEnum(source, enumName) {
+  const enumMatch = source.match(
+    new RegExp(`enum\\s+${enumName}\\s*:\\s*\\w+\\s*\\{([\\s\\S]*?)\\}`),
+  );
+  assert.ok(enumMatch, `schema should define ${enumName}`);
+
+  let nextValue = 0;
+  return enumMatch[1]
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const entryMatch = entry.match(/^([A-Z][A-Z0-9_]*)(?:\s*=\s*(\d+))?$/);
+      assert.ok(entryMatch, `could not parse ${enumName} entry: ${entry}`);
+      const value = entryMatch[2] === undefined ? nextValue : Number(entryMatch[2]);
+      nextValue = value + 1;
+      return [entryMatch[1], value];
+    });
+}
+
+function parseGeneratedJsEnum(source, enumName) {
+  const entryPattern = new RegExp(
+    `${enumName}\\[${enumName}\\["([A-Z][A-Z0-9_]*)"\\]\\s*=\\s*(\\d+)\\]`,
+    "g",
+  );
+  return [...source.matchAll(entryPattern)].map((match) => [match[1], Number(match[2])]);
+}
+
+function parseGeneratedCppEnum(source, enumName) {
+  const enumMatch = source.match(
+    new RegExp(`enum\\s+${enumName}\\s*:\\s*\\w+\\s*\\{([\\s\\S]*?)\\};`),
+  );
+  assert.ok(enumMatch, `C++ binding should define ${enumName}`);
+  const entryPattern = new RegExp(`${enumName}_([A-Z][A-Z0-9_]*)\\s*=\\s*(\\d+)`, "g");
+  return [...enumMatch[1].matchAll(entryPattern)].map((match) => [
+    match[1],
+    Number(match[2]),
+  ]);
+}
 
 function parseSchemaHeader(schemaSource) {
   const [header, body] = schemaSource.split(headerMarker);
@@ -264,6 +324,34 @@ describe("SCV sensor coverage schema", () => {
         /\bLATITUDE_BAND_COVERAGE\b/,
         "scvRasterProductKind must expose LATITUDE_BAND_COVERAGE in schema and generated bindings",
       );
+    }
+  });
+
+  it("appends exact pass continuity raster products without renumbering existing values", async () => {
+    const schemaSource = await fs.readFile(
+      path.join(repoRoot, "schema", "SCV", "main.fbs"),
+      "utf8",
+    );
+
+    assert.deepEqual(
+      parseSchemaEnum(schemaSource, "scvRasterProductKind"),
+      rasterProductKindEntries,
+    );
+  });
+
+  it("generates exact pass continuity raster product values in JS and C++ bindings", async () => {
+    const [scvJsSource, scvCppSource, recJsSource] = await Promise.all([
+      fs.readFile(path.join(repoRoot, "lib", "js", "SCV", "scvRasterProductKind.js"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "cpp", "SCV", "main_generated.h"), "utf8"),
+      fs.readFile(path.join(repoRoot, "lib", "js", "REC", "scvRasterProductKind.js"), "utf8"),
+    ]);
+
+    for (const [label, entries] of [
+      ["SCV JavaScript", parseGeneratedJsEnum(scvJsSource, "scvRasterProductKind")],
+      ["SCV C++", parseGeneratedCppEnum(scvCppSource, "scvRasterProductKind")],
+      ["REC JavaScript", parseGeneratedJsEnum(recJsSource, "scvRasterProductKind")],
+    ]) {
+      assert.deepEqual(entries, rasterProductKindEntries, `${label} enum values`);
     }
   });
 

@@ -18,5 +18,8 @@ class scvRasterProductKind private constructor() {
         const val PASS_COUNT_RGBA: UShort = 12u
         const val CURRENT_ACCESS_RGBA: UShort = 13u
         const val LATITUDE_BAND_COVERAGE: UShort = 14u
+        const val BUCKET_PASS_START_COUNT: UShort = 15u
+        const val WINDOW_START_ACCESS_BITSET: UShort = 16u
+        const val WINDOW_STOP_ACCESS_BITSET: UShort = 17u
     }
 }

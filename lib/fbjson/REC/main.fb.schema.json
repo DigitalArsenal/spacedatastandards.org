@@ -14939,7 +14939,10 @@
         11,
         12,
         13,
-        14
+        14,
+        15,
+        16,
+        17
       ],
       "x-flatbuffer-enum-values": {
         "CELL_BOUNDS_DEG": {
@@ -14986,6 +14989,15 @@
         },
         "LATITUDE_BAND_COVERAGE": {
           "value": 14
+        },
+        "BUCKET_PASS_START_COUNT": {
+          "value": 15
+        },
+        "WINDOW_START_ACCESS_BITSET": {
+          "value": 16
+        },
+        "WINDOW_STOP_ACCESS_BITSET": {
+          "value": 17
         }
       }
     },
@@ -53612,6 +53624,15 @@
             },
             "LATITUDE_BAND_COVERAGE": {
               "value": 14
+            },
+            "BUCKET_PASS_START_COUNT": {
+              "value": 15
+            },
+            "WINDOW_START_ACCESS_BITSET": {
+              "value": 16
+            },
+            "WINDOW_STOP_ACCESS_BITSET": {
+              "value": 17
             }
           }
         },

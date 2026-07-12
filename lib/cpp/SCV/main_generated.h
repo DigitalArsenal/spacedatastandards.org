@@ -509,11 +509,14 @@ enum scvRasterProductKind : uint16_t {
   scvRasterProductKind_PASS_COUNT_RGBA = 12,
   scvRasterProductKind_CURRENT_ACCESS_RGBA = 13,
   scvRasterProductKind_LATITUDE_BAND_COVERAGE = 14,
+  scvRasterProductKind_BUCKET_PASS_START_COUNT = 15,
+  scvRasterProductKind_WINDOW_START_ACCESS_BITSET = 16,
+  scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET = 17,
   scvRasterProductKind_MIN = scvRasterProductKind_CELL_BOUNDS_DEG,
-  scvRasterProductKind_MAX = scvRasterProductKind_LATITUDE_BAND_COVERAGE
+  scvRasterProductKind_MAX = scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET
 };
 
-inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[15] {
+inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[18] {
   static const scvRasterProductKind values[] = {
     scvRasterProductKind_CELL_BOUNDS_DEG,
     scvRasterProductKind_CELL_CENTERS_DEG,
@@ -529,13 +532,16 @@ inline const scvRasterProductKind (&EnumValuesscvRasterProductKind())[15] {
     scvRasterProductKind_BUCKET_ACTIVE_CELL_COUNT,
     scvRasterProductKind_PASS_COUNT_RGBA,
     scvRasterProductKind_CURRENT_ACCESS_RGBA,
-    scvRasterProductKind_LATITUDE_BAND_COVERAGE
+    scvRasterProductKind_LATITUDE_BAND_COVERAGE,
+    scvRasterProductKind_BUCKET_PASS_START_COUNT,
+    scvRasterProductKind_WINDOW_START_ACCESS_BITSET,
+    scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET
   };
   return values;
 }
 
 inline const char * const *EnumNamesscvRasterProductKind() {
-  static const char * const names[16] = {
+  static const char * const names[19] = {
     "CELL_BOUNDS_DEG",
     "CELL_CENTERS_DEG",
     "PERCENT_COVERAGE",
@@ -551,13 +557,16 @@ inline const char * const *EnumNamesscvRasterProductKind() {
     "PASS_COUNT_RGBA",
     "CURRENT_ACCESS_RGBA",
     "LATITUDE_BAND_COVERAGE",
+    "BUCKET_PASS_START_COUNT",
+    "WINDOW_START_ACCESS_BITSET",
+    "WINDOW_STOP_ACCESS_BITSET",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamescvRasterProductKind(scvRasterProductKind e) {
-  if (::flatbuffers::IsOutRange(e, scvRasterProductKind_CELL_BOUNDS_DEG, scvRasterProductKind_LATITUDE_BAND_COVERAGE)) return "";
+  if (::flatbuffers::IsOutRange(e, scvRasterProductKind_CELL_BOUNDS_DEG, scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvRasterProductKind()[index];
 }

@@ -1,5 +1,5 @@
-// Hash: 3350c182409b2285bf99d97c89f8b9530719c1b4f7a93568f90c5144ac2c50c1
-// Version: 1.101.3
+// Hash: 45add17cde528ca740fb64d5f1280b86d35bd31ffdbc27071bf6e0b5dca7ab29
+// Version: 1.101.4
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -102,7 +102,10 @@ enum scvRasterProductKind : ushort {
   BUCKET_ACTIVE_CELL_COUNT,
   PASS_COUNT_RGBA,
   CURRENT_ACCESS_RGBA,
-  LATITUDE_BAND_COVERAGE
+  LATITUDE_BAND_COVERAGE,
+  BUCKET_PASS_START_COUNT,
+  WINDOW_START_ACCESS_BITSET,
+  WINDOW_STOP_ACCESS_BITSET
 }
 
 enum scvRasterProductEncoding : ubyte {

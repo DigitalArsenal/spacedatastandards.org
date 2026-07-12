@@ -452,7 +452,10 @@ enum scvRasterProductKind {
   BUCKET_ACTIVE_CELL_COUNT(11),
   PASS_COUNT_RGBA(12),
   CURRENT_ACCESS_RGBA(13),
-  LATITUDE_BAND_COVERAGE(14);
+  LATITUDE_BAND_COVERAGE(14),
+  BUCKET_PASS_START_COUNT(15),
+  WINDOW_START_ACCESS_BITSET(16),
+  WINDOW_STOP_ACCESS_BITSET(17);
 
   final int value;
   const scvRasterProductKind(this.value);
@@ -474,6 +477,9 @@ enum scvRasterProductKind {
       case 12: return scvRasterProductKind.PASS_COUNT_RGBA;
       case 13: return scvRasterProductKind.CURRENT_ACCESS_RGBA;
       case 14: return scvRasterProductKind.LATITUDE_BAND_COVERAGE;
+      case 15: return scvRasterProductKind.BUCKET_PASS_START_COUNT;
+      case 16: return scvRasterProductKind.WINDOW_START_ACCESS_BITSET;
+      case 17: return scvRasterProductKind.WINDOW_STOP_ACCESS_BITSET;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -482,7 +488,7 @@ enum scvRasterProductKind {
       value == null ? null : scvRasterProductKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 14;
+  static const int maxValue = 17;
   static const fb.Reader<scvRasterProductKind> reader = _scvRasterProductKindReader();
 }
 

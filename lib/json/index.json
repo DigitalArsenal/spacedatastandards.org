@@ -33737,7 +33737,10 @@
                         "BUCKET_ACTIVE_CELL_COUNT",
                         "PASS_COUNT_RGBA",
                         "CURRENT_ACCESS_RGBA",
-                        "LATITUDE_BAND_COVERAGE"
+                        "LATITUDE_BAND_COVERAGE",
+                        "BUCKET_PASS_START_COUNT",
+                        "WINDOW_START_ACCESS_BITSET",
+                        "WINDOW_STOP_ACCESS_BITSET"
                     ]
                 },
                 "scvRasterProductEncoding": {

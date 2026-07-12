@@ -189,8 +189,11 @@ public enum scvRasterProductKind: UInt16, FlatbuffersVectorInitializable, Enum, 
   case passCountRgba = 12
   case currentAccessRgba = 13
   case latitudeBandCoverage = 14
+  case bucketPassStartCount = 15
+  case windowStartAccessBitset = 16
+  case windowStopAccessBitset = 17
 
-  public static var max: scvRasterProductKind { return .latitudeBandCoverage }
+  public static var max: scvRasterProductKind { return .windowStopAccessBitset }
   public static var min: scvRasterProductKind { return .cellBoundsDeg }
 }
 

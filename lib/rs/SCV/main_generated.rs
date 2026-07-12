@@ -1041,10 +1041,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for scvGeometryEncoding {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_RASTER_PRODUCT_KIND: u16 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SCV_RASTER_PRODUCT_KIND: u16 = 14;
+pub const ENUM_MAX_SCV_RASTER_PRODUCT_KIND: u16 = 17;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SCV_RASTER_PRODUCT_KIND: [scvRasterProductKind; 15] = [
+pub const ENUM_VALUES_SCV_RASTER_PRODUCT_KIND: [scvRasterProductKind; 18] = [
   scvRasterProductKind::CELL_BOUNDS_DEG,
   scvRasterProductKind::CELL_CENTERS_DEG,
   scvRasterProductKind::PERCENT_COVERAGE,
@@ -1060,6 +1060,9 @@ pub const ENUM_VALUES_SCV_RASTER_PRODUCT_KIND: [scvRasterProductKind; 15] = [
   scvRasterProductKind::PASS_COUNT_RGBA,
   scvRasterProductKind::CURRENT_ACCESS_RGBA,
   scvRasterProductKind::LATITUDE_BAND_COVERAGE,
+  scvRasterProductKind::BUCKET_PASS_START_COUNT,
+  scvRasterProductKind::WINDOW_START_ACCESS_BITSET,
+  scvRasterProductKind::WINDOW_STOP_ACCESS_BITSET,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -1082,9 +1085,12 @@ impl scvRasterProductKind {
   pub const PASS_COUNT_RGBA: Self = Self(12);
   pub const CURRENT_ACCESS_RGBA: Self = Self(13);
   pub const LATITUDE_BAND_COVERAGE: Self = Self(14);
+  pub const BUCKET_PASS_START_COUNT: Self = Self(15);
+  pub const WINDOW_START_ACCESS_BITSET: Self = Self(16);
+  pub const WINDOW_STOP_ACCESS_BITSET: Self = Self(17);
 
   pub const ENUM_MIN: u16 = 0;
-  pub const ENUM_MAX: u16 = 14;
+  pub const ENUM_MAX: u16 = 17;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::CELL_BOUNDS_DEG,
     Self::CELL_CENTERS_DEG,
@@ -1101,6 +1107,9 @@ impl scvRasterProductKind {
     Self::PASS_COUNT_RGBA,
     Self::CURRENT_ACCESS_RGBA,
     Self::LATITUDE_BAND_COVERAGE,
+    Self::BUCKET_PASS_START_COUNT,
+    Self::WINDOW_START_ACCESS_BITSET,
+    Self::WINDOW_STOP_ACCESS_BITSET,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1120,6 +1129,9 @@ impl scvRasterProductKind {
       Self::PASS_COUNT_RGBA => Some("PASS_COUNT_RGBA"),
       Self::CURRENT_ACCESS_RGBA => Some("CURRENT_ACCESS_RGBA"),
       Self::LATITUDE_BAND_COVERAGE => Some("LATITUDE_BAND_COVERAGE"),
+      Self::BUCKET_PASS_START_COUNT => Some("BUCKET_PASS_START_COUNT"),
+      Self::WINDOW_START_ACCESS_BITSET => Some("WINDOW_START_ACCESS_BITSET"),
+      Self::WINDOW_STOP_ACCESS_BITSET => Some("WINDOW_STOP_ACCESS_BITSET"),
       _ => None,
     }
   }

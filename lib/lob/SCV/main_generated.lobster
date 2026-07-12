@@ -91,6 +91,9 @@ enum scvRasterProductKind:
     scvRasterProductKind_PASS_COUNT_RGBA = 12
     scvRasterProductKind_CURRENT_ACCESS_RGBA = 13
     scvRasterProductKind_LATITUDE_BAND_COVERAGE = 14
+    scvRasterProductKind_BUCKET_PASS_START_COUNT = 15
+    scvRasterProductKind_WINDOW_START_ACCESS_BITSET = 16
+    scvRasterProductKind_WINDOW_STOP_ACCESS_BITSET = 17
 
 enum scvRasterProductEncoding:
     scvRasterProductEncoding_FLOAT32 = 0

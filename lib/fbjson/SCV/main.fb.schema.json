@@ -313,7 +313,10 @@
         "BUCKET_ACTIVE_CELL_COUNT",
         "PASS_COUNT_RGBA",
         "CURRENT_ACCESS_RGBA",
-        "LATITUDE_BAND_COVERAGE"
+        "LATITUDE_BAND_COVERAGE",
+        "BUCKET_PASS_START_COUNT",
+        "WINDOW_START_ACCESS_BITSET",
+        "WINDOW_STOP_ACCESS_BITSET"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -362,6 +365,15 @@
         },
         "LATITUDE_BAND_COVERAGE": {
           "value": 14
+        },
+        "BUCKET_PASS_START_COUNT": {
+          "value": 15
+        },
+        "WINDOW_START_ACCESS_BITSET": {
+          "value": 16
+        },
+        "WINDOW_STOP_ACCESS_BITSET": {
+          "value": 17
         }
       }
     },
@@ -1786,6 +1798,15 @@
             },
             "LATITUDE_BAND_COVERAGE": {
               "value": 14
+            },
+            "BUCKET_PASS_START_COUNT": {
+              "value": 15
+            },
+            "WINDOW_START_ACCESS_BITSET": {
+              "value": 16
+            },
+            "WINDOW_STOP_ACCESS_BITSET": {
+              "value": 17
             }
           }
         },
