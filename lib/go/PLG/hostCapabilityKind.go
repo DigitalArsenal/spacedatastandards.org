@@ -46,6 +46,11 @@ const (
 	hostCapabilityKindCRYPTO_KEY_AGREEMENT hostCapabilityKind = 33
 	hostCapabilityKindCRYPTO_KDF           hostCapabilityKind = 34
 	hostCapabilityKindSCHEDULE_CRON        hostCapabilityKind = 35
+	/// Batch record ingest with source provenance tags (provider id, source
+	/// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+	/// single record without source attribution. Hosts gate
+	/// storage.ingest_with_source on this capability specifically.
+	hostCapabilityKindSTORAGE_INGEST       hostCapabilityKind = 36
 )
 
 var EnumNameshostCapabilityKind = map[hostCapabilityKind]string{
@@ -85,6 +90,7 @@ var EnumNameshostCapabilityKind = map[hostCapabilityKind]string{
 	hostCapabilityKindCRYPTO_KEY_AGREEMENT: "CRYPTO_KEY_AGREEMENT",
 	hostCapabilityKindCRYPTO_KDF:           "CRYPTO_KDF",
 	hostCapabilityKindSCHEDULE_CRON:        "SCHEDULE_CRON",
+	hostCapabilityKindSTORAGE_INGEST:       "STORAGE_INGEST",
 }
 
 var EnumValueshostCapabilityKind = map[string]hostCapabilityKind{
@@ -124,6 +130,7 @@ var EnumValueshostCapabilityKind = map[string]hostCapabilityKind{
 	"CRYPTO_KEY_AGREEMENT": hostCapabilityKindCRYPTO_KEY_AGREEMENT,
 	"CRYPTO_KDF":           hostCapabilityKindCRYPTO_KDF,
 	"SCHEDULE_CRON":        hostCapabilityKindSCHEDULE_CRON,
+	"STORAGE_INGEST":       hostCapabilityKindSTORAGE_INGEST,
 }
 
 func (v hostCapabilityKind) String() string {

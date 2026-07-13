@@ -42,6 +42,11 @@ class hostCapabilityKind
     const CRYPTO_KEY_AGREEMENT = 33;
     const CRYPTO_KDF = 34;
     const SCHEDULE_CRON = 35;
+    /// Batch record ingest with source provenance tags (provider id, source
+    /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+    /// single record without source attribution. Hosts gate
+    /// storage.ingest_with_source on this capability specifically.
+    const STORAGE_INGEST = 36;
 
     private static $names = array(
         hostCapabilityKind::CLOCK=>"CLOCK",
@@ -80,6 +85,7 @@ class hostCapabilityKind
         hostCapabilityKind::CRYPTO_KEY_AGREEMENT=>"CRYPTO_KEY_AGREEMENT",
         hostCapabilityKind::CRYPTO_KDF=>"CRYPTO_KDF",
         hostCapabilityKind::SCHEDULE_CRON=>"SCHEDULE_CRON",
+        hostCapabilityKind::STORAGE_INGEST=>"STORAGE_INGEST",
     );
 
     public static function Name($e)

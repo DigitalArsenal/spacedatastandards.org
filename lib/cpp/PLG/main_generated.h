@@ -336,11 +336,16 @@ enum hostCapabilityKind : uint16_t {
   hostCapabilityKind_CRYPTO_KEY_AGREEMENT = 33,
   hostCapabilityKind_CRYPTO_KDF = 34,
   hostCapabilityKind_SCHEDULE_CRON = 35,
+  /// Batch record ingest with source provenance tags (provider id, source
+  /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+  /// single record without source attribution. Hosts gate
+  /// storage.ingest_with_source on this capability specifically.
+  hostCapabilityKind_STORAGE_INGEST = 36,
   hostCapabilityKind_MIN = hostCapabilityKind_CLOCK,
-  hostCapabilityKind_MAX = hostCapabilityKind_SCHEDULE_CRON
+  hostCapabilityKind_MAX = hostCapabilityKind_STORAGE_INGEST
 };
 
-inline const hostCapabilityKind (&EnumValueshostCapabilityKind())[36] {
+inline const hostCapabilityKind (&EnumValueshostCapabilityKind())[37] {
   static const hostCapabilityKind values[] = {
     hostCapabilityKind_CLOCK,
     hostCapabilityKind_RANDOM,
@@ -377,13 +382,14 @@ inline const hostCapabilityKind (&EnumValueshostCapabilityKind())[36] {
     hostCapabilityKind_CRYPTO_DECRYPT,
     hostCapabilityKind_CRYPTO_KEY_AGREEMENT,
     hostCapabilityKind_CRYPTO_KDF,
-    hostCapabilityKind_SCHEDULE_CRON
+    hostCapabilityKind_SCHEDULE_CRON,
+    hostCapabilityKind_STORAGE_INGEST
   };
   return values;
 }
 
 inline const char * const *EnumNameshostCapabilityKind() {
-  static const char * const names[37] = {
+  static const char * const names[38] = {
     "CLOCK",
     "RANDOM",
     "LOGGING",
@@ -420,13 +426,14 @@ inline const char * const *EnumNameshostCapabilityKind() {
     "CRYPTO_KEY_AGREEMENT",
     "CRYPTO_KDF",
     "SCHEDULE_CRON",
+    "STORAGE_INGEST",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamehostCapabilityKind(hostCapabilityKind e) {
-  if (::flatbuffers::IsOutRange(e, hostCapabilityKind_CLOCK, hostCapabilityKind_SCHEDULE_CRON)) return "";
+  if (::flatbuffers::IsOutRange(e, hostCapabilityKind_CLOCK, hostCapabilityKind_STORAGE_INGEST)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameshostCapabilityKind()[index];
 }

@@ -44,8 +44,15 @@ public final class hostCapabilityKind {
   public static final int CRYPTO_KEY_AGREEMENT = 33;
   public static final int CRYPTO_KDF = 34;
   public static final int SCHEDULE_CRON = 35;
+  /**
+   * Batch record ingest with source provenance tags (provider id, source
+   * name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+   * single record without source attribution. Hosts gate
+   * storage.ingest_with_source on this capability specifically.
+   */
+  public static final int STORAGE_INGEST = 36;
 
-  public static final String[] names = { "CLOCK", "RANDOM", "LOGGING", "TIMERS", "PUBSUB", "PROTOCOL_DIAL", "PROTOCOL_HANDLE", "STORAGE_QUERY", "SCENE_ACCESS", "ENTITY_ACCESS", "RENDER_HOOKS", "HTTP", "FILESYSTEM", "PIPE", "NETWORK", "DATABASE", "STORAGE_ADAPTER", "STORAGE_WRITE", "WALLET_SIGN", "IPFS", "TLS", "MQTT", "WEBSOCKET", "TCP", "UDP", "PROCESS_EXEC", "CONTEXT_READ", "CONTEXT_WRITE", "CRYPTO_HASH", "CRYPTO_SIGN", "CRYPTO_VERIFY", "CRYPTO_ENCRYPT", "CRYPTO_DECRYPT", "CRYPTO_KEY_AGREEMENT", "CRYPTO_KDF", "SCHEDULE_CRON", };
+  public static final String[] names = { "CLOCK", "RANDOM", "LOGGING", "TIMERS", "PUBSUB", "PROTOCOL_DIAL", "PROTOCOL_HANDLE", "STORAGE_QUERY", "SCENE_ACCESS", "ENTITY_ACCESS", "RENDER_HOOKS", "HTTP", "FILESYSTEM", "PIPE", "NETWORK", "DATABASE", "STORAGE_ADAPTER", "STORAGE_WRITE", "WALLET_SIGN", "IPFS", "TLS", "MQTT", "WEBSOCKET", "TCP", "UDP", "PROCESS_EXEC", "CONTEXT_READ", "CONTEXT_WRITE", "CRYPTO_HASH", "CRYPTO_SIGN", "CRYPTO_VERIFY", "CRYPTO_ENCRYPT", "CRYPTO_DECRYPT", "CRYPTO_KEY_AGREEMENT", "CRYPTO_KDF", "SCHEDULE_CRON", "STORAGE_INGEST", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -491,7 +491,8 @@
         32,
         33,
         34,
-        35
+        35,
+        36
       ],
       "x-flatbuffer-enum-values": {
         "CLOCK": {
@@ -601,6 +602,10 @@
         },
         "SCHEDULE_CRON": {
           "value": 35
+        },
+        "STORAGE_INGEST": {
+          "value": 36,
+          "description": "Batch record ingest with source provenance tags (provider id, source name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a single record without source attribution. Hosts gate storage.ingest_with_source on this capability specifically."
         }
       }
     },
@@ -831,6 +836,10 @@
             },
             "SCHEDULE_CRON": {
               "value": 35
+            },
+            "STORAGE_INGEST": {
+              "value": 36,
+              "description": "Batch record ingest with source provenance tags (provider id, source name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a single record without source attribution. Hosts gate storage.ingest_with_source on this capability specifically."
             }
           }
         },

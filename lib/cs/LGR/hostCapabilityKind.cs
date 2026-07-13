@@ -43,4 +43,9 @@ public enum hostCapabilityKind : ushort
   CRYPTO_KEY_AGREEMENT = 33,
   CRYPTO_KDF = 34,
   SCHEDULE_CRON = 35,
+  /// Batch record ingest with source provenance tags (provider id, source
+  /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+  /// single record without source attribution. Hosts gate
+  /// storage.ingest_with_source on this capability specifically.
+  STORAGE_INGEST = 36,
 };

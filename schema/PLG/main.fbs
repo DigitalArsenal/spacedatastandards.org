@@ -1,5 +1,5 @@
-// Hash: 030f073b28283868e236aa81858ea1d80836d9bee704c01fdce6b6486838ae91
-// Version: 1.0.10
+// Hash: 03fb793fc663f732b339295614da2e1ca0d7ffbcf53880ccb0147ad9eb9dc093
+// Version: 1.0.11
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -135,7 +135,12 @@ enum hostCapabilityKind : ushort {
   CRYPTO_DECRYPT,
   CRYPTO_KEY_AGREEMENT,
   CRYPTO_KDF,
-  SCHEDULE_CRON
+  SCHEDULE_CRON,
+  /// Batch record ingest with source provenance tags (provider id, source
+  /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+  /// single record without source attribution. Hosts gate
+  /// storage.ingest_with_source on this capability specifically.
+  STORAGE_INGEST
 }
 
 /// Accepted schema family for a port. When a port accepts multiple wire

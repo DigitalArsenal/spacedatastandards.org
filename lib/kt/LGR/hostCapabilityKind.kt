@@ -44,5 +44,12 @@ class hostCapabilityKind private constructor() {
         const val CRYPTO_KEY_AGREEMENT: UShort = 33u
         const val CRYPTO_KDF: UShort = 34u
         const val SCHEDULE_CRON: UShort = 35u
+        /**
+         * Batch record ingest with source provenance tags (provider id, source
+         * name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+         * single record without source attribution. Hosts gate
+         * storage.ingest_with_source on this capability specifically.
+         */
+        const val STORAGE_INGEST: UShort = 36u
     }
 }

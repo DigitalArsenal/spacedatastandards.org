@@ -545,10 +545,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for drainBehavior {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_HOST_CAPABILITY_KIND: u16 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_HOST_CAPABILITY_KIND: u16 = 35;
+pub const ENUM_MAX_HOST_CAPABILITY_KIND: u16 = 36;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_HOST_CAPABILITY_KIND: [hostCapabilityKind; 36] = [
+pub const ENUM_VALUES_HOST_CAPABILITY_KIND: [hostCapabilityKind; 37] = [
   hostCapabilityKind::CLOCK,
   hostCapabilityKind::RANDOM,
   hostCapabilityKind::LOGGING,
@@ -585,6 +585,7 @@ pub const ENUM_VALUES_HOST_CAPABILITY_KIND: [hostCapabilityKind; 36] = [
   hostCapabilityKind::CRYPTO_KEY_AGREEMENT,
   hostCapabilityKind::CRYPTO_KDF,
   hostCapabilityKind::SCHEDULE_CRON,
+  hostCapabilityKind::STORAGE_INGEST,
 ];
 
 /// Host capability classes a plugin may request. Extends the simpler
@@ -631,9 +632,14 @@ impl hostCapabilityKind {
   pub const CRYPTO_KEY_AGREEMENT: Self = Self(33);
   pub const CRYPTO_KDF: Self = Self(34);
   pub const SCHEDULE_CRON: Self = Self(35);
+  /// Batch record ingest with source provenance tags (provider id, source
+  /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
+  /// single record without source attribution. Hosts gate
+  /// storage.ingest_with_source on this capability specifically.
+  pub const STORAGE_INGEST: Self = Self(36);
 
   pub const ENUM_MIN: u16 = 0;
-  pub const ENUM_MAX: u16 = 35;
+  pub const ENUM_MAX: u16 = 36;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::CLOCK,
     Self::RANDOM,
@@ -671,6 +677,7 @@ impl hostCapabilityKind {
     Self::CRYPTO_KEY_AGREEMENT,
     Self::CRYPTO_KDF,
     Self::SCHEDULE_CRON,
+    Self::STORAGE_INGEST,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -711,6 +718,7 @@ impl hostCapabilityKind {
       Self::CRYPTO_KEY_AGREEMENT => Some("CRYPTO_KEY_AGREEMENT"),
       Self::CRYPTO_KDF => Some("CRYPTO_KDF"),
       Self::SCHEDULE_CRON => Some("SCHEDULE_CRON"),
+      Self::STORAGE_INGEST => Some("STORAGE_INGEST"),
       _ => None,
     }
   }
