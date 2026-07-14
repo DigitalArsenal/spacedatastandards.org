@@ -166,22 +166,45 @@ class APP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The page's declarative data contract: what data enters and leaves the
+    /// running page and how. Referential integrity: every MODULE_ID here must
+    /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+    /// name a method port advertised by that module's PLG manifest.
+    /**
+     * @returnVectorOffset
+     */
+    public function getDATAFLOW($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new APPDataflow();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDATAFLOWLength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAPP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return APP
      */
-    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT)
+    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT, $DATAFLOW)
     {
-        $builder->startObject(10);
+        $builder->startObject(11);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -192,6 +215,7 @@ class APP extends Table
         self::addUI($builder, $UI);
         self::addCREATED_AT($builder, $CREATED_AT);
         self::addUPDATED_AT($builder, $UPDATED_AT);
+        self::addDATAFLOW($builder, $DATAFLOW);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         return $o;
@@ -391,6 +415,40 @@ class APP extends Table
     public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
     {
         $builder->addOffsetX(9, $UPDATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDATAFLOW(FlatBufferBuilder $builder, $DATAFLOW)
+    {
+        $builder->addOffsetX(10, $DATAFLOW, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDATAFLOWVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDATAFLOWVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

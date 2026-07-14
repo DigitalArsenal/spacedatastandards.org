@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { APPDataRef, APPDataRefT } from './APPDataRef.js';
+import { APPDataflow, APPDataflowT } from './APPDataflow.js';
 import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
@@ -66,6 +67,14 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
      */
     UPDATED_AT(): string | null;
     UPDATED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The page's declarative data contract: what data enters and leaves the
+     * running page and how. Referential integrity: every MODULE_ID here must
+     * resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+     * name a method port advertised by that module's PLG manifest.
+     */
+    DATAFLOW(index: number, obj?: APPDataflow): APPDataflow | null;
+    dataflowLength(): number;
     static startAPP(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -85,10 +94,13 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
     static startUiVector(builder: flatbuffers.Builder, numElems: number): void;
     static addCreatedAt(builder: flatbuffers.Builder, CREATED_ATOffset: flatbuffers.Offset): void;
     static addUpdatedAt(builder: flatbuffers.Builder, UPDATED_ATOffset: flatbuffers.Offset): void;
+    static addDataflow(builder: flatbuffers.Builder, DATAFLOWOffset: flatbuffers.Offset): void;
+    static createDataflowVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startDataflowVector(builder: flatbuffers.Builder, numElems: number): void;
     static endAPP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, DATAFLOWOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): APPT;
     unpackTo(_o: APPT): void;
 }
@@ -103,7 +115,8 @@ export declare class APPT implements flatbuffers.IGeneratedObject {
     UI: (APPUIPageT)[];
     CREATED_AT: string | Uint8Array | null;
     UPDATED_AT: string | Uint8Array | null;
-    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null);
+    DATAFLOW: (APPDataflowT)[];
+    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, DATAFLOW?: (APPDataflowT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=APP.d.ts.map

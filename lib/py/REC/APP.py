@@ -184,8 +184,37 @@ class APP(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The page's declarative data contract: what data enters and leaves the
+    # running page and how. Referential integrity: every MODULE_ID here must
+    # resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+    # name a method port advertised by that module's PLG manifest.
+    # APP
+    def DATAFLOW(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from APPDataflow import APPDataflow
+            obj = APPDataflow()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # APP
+    def DATAFLOWLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # APP
+    def DATAFLOWIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
 def APPStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(11)
 
 def Start(builder):
     APPStart(builder)
@@ -298,6 +327,24 @@ def APPAddUPDATED_AT(builder, UPDATED_AT):
 def AddUPDATED_AT(builder, UPDATED_AT):
     APPAddUPDATED_AT(builder, UPDATED_AT)
 
+def APPAddDATAFLOW(builder, DATAFLOW):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DATAFLOW), 0)
+
+def AddDATAFLOW(builder, DATAFLOW):
+    APPAddDATAFLOW(builder, DATAFLOW)
+
+def APPStartDATAFLOWVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDATAFLOWVector(builder, numElems):
+    return APPStartDATAFLOWVector(builder, numElems)
+
+def APPCreateDATAFLOWVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDATAFLOWVector(builder, data):
+    APPCreateDATAFLOWVector(builder, data)
+
 def APPEnd(builder):
     return builder.EndObject()
 
@@ -305,6 +352,7 @@ def End(builder):
     return APPEnd(builder)
 
 import APPDataRef
+import APPDataflow
 import APPModuleRef
 import APPSourceRef
 import APPUIPage
@@ -328,6 +376,7 @@ class APPT(object):
         UI = None,
         CREATED_AT = None,
         UPDATED_AT = None,
+        DATAFLOW = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -339,6 +388,7 @@ class APPT(object):
         self.UI = UI  # type: Optional[List[APPUIPage.APPUIPageT]]
         self.CREATED_AT = CREATED_AT  # type: Optional[str]
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
+        self.DATAFLOW = DATAFLOW  # type: Optional[List[APPDataflow.APPDataflowT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -399,6 +449,14 @@ class APPT(object):
                     self.UI.append(aPPUIPage_)
         self.CREATED_AT = APP.CREATED_AT()
         self.UPDATED_AT = APP.UPDATED_AT()
+        if not APP.DATAFLOWIsNone():
+            self.DATAFLOW = []
+            for i in range(APP.DATAFLOWLength()):
+                if APP.DATAFLOW(i) is None:
+                    self.DATAFLOW.append(None)
+                else:
+                    aPPDataflow_ = APPDataflow.APPDataflowT.InitFromObj(APP.DATAFLOW(i))
+                    self.DATAFLOW.append(aPPDataflow_)
 
     # APPT
     def Pack(self, builder):
@@ -446,6 +504,14 @@ class APPT(object):
             CREATED_AT = builder.CreateString(self.CREATED_AT)
         if self.UPDATED_AT is not None:
             UPDATED_AT = builder.CreateString(self.UPDATED_AT)
+        if self.DATAFLOW is not None:
+            DATAFLOWlist = []
+            for i in range(len(self.DATAFLOW)):
+                DATAFLOWlist.append(self.DATAFLOW[i].Pack(builder))
+            APPStartDATAFLOWVector(builder, len(self.DATAFLOW))
+            for i in reversed(range(len(self.DATAFLOW))):
+                builder.PrependUOffsetTRelative(DATAFLOWlist[i])
+            DATAFLOW = builder.EndVector()
         APPStart(builder)
         if self.ID is not None:
             APPAddID(builder, ID)
@@ -467,5 +533,7 @@ class APPT(object):
             APPAddCREATED_AT(builder, CREATED_AT)
         if self.UPDATED_AT is not None:
             APPAddUPDATED_AT(builder, UPDATED_AT)
+        if self.DATAFLOW is not None:
+            APPAddDATAFLOW(builder, DATAFLOW)
         APP = APPEnd(builder)
         return APP

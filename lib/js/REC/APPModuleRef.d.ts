@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { appRuntimeTarget } from './appRuntimeTarget.js';
 /**
  * One member WASM module of the app. References module identity; never
  * embeds the module artifact itself (delivery is the module-bundle lane).
@@ -57,6 +58,15 @@ export declare class APPModuleRef implements flatbuffers.IUnpackableObject<APPMo
      * host runtime default applies.
      */
     MAX_MEMORY_PAGES(): number;
+    /**
+     * Where this module is instantiated. PAGE or BOTH means the module also
+     * loads in the browser: the page resolves its bytes by CONTENT_HASH over
+     * IPFS and instantiates it through the SAME isomorphic module-sdk harness
+     * ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+     * a bespoke page-only loader. Defaults to NODE to preserve the prior
+     * node-only behavior of manifests written before this field existed.
+     */
+    RUNTIME_TARGET(): appRuntimeTarget;
     static startAPPModuleRef(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addPluginId(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset): void;
@@ -67,8 +77,9 @@ export declare class APPModuleRef implements flatbuffers.IUnpackableObject<APPMo
     static addMaxWallClockMs(builder: flatbuffers.Builder, MAX_WALL_CLOCK_MS: bigint): void;
     static addMaxCostUnits(builder: flatbuffers.Builder, MAX_COST_UNITS: bigint): void;
     static addMaxMemoryPages(builder: flatbuffers.Builder, MAX_MEMORY_PAGES: number): void;
+    static addRuntimeTarget(builder: flatbuffers.Builder, RUNTIME_TARGET: appRuntimeTarget): void;
     static endAPPModuleRef(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createAPPModuleRef(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, CONTENT_HASHOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MAX_WALL_CLOCK_MS: bigint, MAX_COST_UNITS: bigint, MAX_MEMORY_PAGES: number): flatbuffers.Offset;
+    static createAPPModuleRef(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, CONTENT_HASHOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MAX_WALL_CLOCK_MS: bigint, MAX_COST_UNITS: bigint, MAX_MEMORY_PAGES: number, RUNTIME_TARGET: appRuntimeTarget): flatbuffers.Offset;
     unpack(): APPModuleRefT;
     unpackTo(_o: APPModuleRefT): void;
 }
@@ -82,7 +93,8 @@ export declare class APPModuleRefT implements flatbuffers.IGeneratedObject {
     MAX_WALL_CLOCK_MS: bigint;
     MAX_COST_UNITS: bigint;
     MAX_MEMORY_PAGES: number;
-    constructor(ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, CONTENT_HASH?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MAX_WALL_CLOCK_MS?: bigint, MAX_COST_UNITS?: bigint, MAX_MEMORY_PAGES?: number);
+    RUNTIME_TARGET: appRuntimeTarget;
+    constructor(ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, CONTENT_HASH?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MAX_WALL_CLOCK_MS?: bigint, MAX_COST_UNITS?: bigint, MAX_MEMORY_PAGES?: number, RUNTIME_TARGET?: appRuntimeTarget);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=APPModuleRef.d.ts.map

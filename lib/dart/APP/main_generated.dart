@@ -20,6 +20,26 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 ///  text, base64, or a compressed base64 form. A page may instead be served
 ///  by a member module; exactly one of the two mechanisms must be populated
 ///  per page.
+///
+///  The page's data contract is described declaratively by DATAFLOW: every
+///  unit of data that enters or leaves the running page, the SDS standard it
+///  carries, the transport that moves it, and — when applicable — the loaded
+///  module method port that produces or consumes it. Standards-only rule:
+///  every page payload is an SDS record (a canonical size-prefixed
+///  FlatBuffer) or a content identifier pointing at one; the app manifest
+///  carries no bespoke page-only data shapes. Locators are content-addressed
+///  and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+///  node's IPFS gateway wherever the payload can be published as an immutable
+///  object, falling back to a live gossip topic or a same-origin gateway
+///  route only for streaming or request-scoped delivery.
+///
+///  Member modules run isomorphically. A module ref may declare, via
+///  RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+///  the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+///  over IPFS and instantiates them in the shared isomorphic JS harness
+///  (manifest + plugin_invoke_stream), exactly as a server-side node would.
+///  There is no bespoke browser loader; the browser and the node are two
+///  hosts of one harness ABI.
 ///  Content encoding applied to APPUIPage.CONTENT. Append new values only;
 ///  never reorder or reuse existing values. Decoders must reject an encoding
 ///  value they do not recognize rather than guessing.
@@ -135,6 +155,130 @@ class _appSourceKindReader extends fb.Reader<appSourceKind> {
       appSourceKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
+///  Direction of an APPDataflow entry relative to the running page. Distinct
+///  from appDataDirection, which is producer/consumer relative to the app as
+///  a whole; this enum is page-relative — which way bytes cross the page
+///  boundary at runtime. Append new values only; never reorder or reuse
+///  existing values.
+enum appFlowDirection {
+  TO_PAGE(0),
+  FROM_PAGE(1),
+  BIDIRECTIONAL(2);
+
+  final int value;
+  const appFlowDirection(this.value);
+
+  factory appFlowDirection.fromValue(int value) {
+    switch (value) {
+      case 0: return appFlowDirection.TO_PAGE;
+      case 1: return appFlowDirection.FROM_PAGE;
+      case 2: return appFlowDirection.BIDIRECTIONAL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static appFlowDirection? _createOrNull(int? value) =>
+      value == null ? null : appFlowDirection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<appFlowDirection> reader = _appFlowDirectionReader();
+}
+
+class _appFlowDirectionReader extends fb.Reader<appFlowDirection> {
+  const _appFlowDirectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  appFlowDirection read(fb.BufferContext bc, int offset) =>
+      appFlowDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Transport that moves an APPDataflow payload. Locators are content-
+///  addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+///  immutable published object, and use the live or request-scoped transports
+///  only for streaming or same-origin request/response delivery. Append new
+///  values only; never reorder or reuse existing values.
+enum appFlowTransport {
+  IPFS_CID(0),
+  PUBSUB_TOPIC(1),
+  GATEWAY_ROUTE(2);
+
+  final int value;
+  const appFlowTransport(this.value);
+
+  factory appFlowTransport.fromValue(int value) {
+    switch (value) {
+      case 0: return appFlowTransport.IPFS_CID;
+      case 1: return appFlowTransport.PUBSUB_TOPIC;
+      case 2: return appFlowTransport.GATEWAY_ROUTE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static appFlowTransport? _createOrNull(int? value) =>
+      value == null ? null : appFlowTransport.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<appFlowTransport> reader = _appFlowTransportReader();
+}
+
+class _appFlowTransportReader extends fb.Reader<appFlowTransport> {
+  const _appFlowTransportReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  appFlowTransport read(fb.BufferContext bc, int offset) =>
+      appFlowTransport.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Where a member module is instantiated. PAGE and BOTH assert the module
+///  loads in the browser through the SAME module-sdk harness ABI the SDN
+///  nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+///  IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+///  page loader. Append new values only; never reorder or reuse existing
+///  values.
+enum appRuntimeTarget {
+  NODE(0),
+  PAGE(1),
+  BOTH(2);
+
+  final int value;
+  const appRuntimeTarget(this.value);
+
+  factory appRuntimeTarget.fromValue(int value) {
+    switch (value) {
+      case 0: return appRuntimeTarget.NODE;
+      case 1: return appRuntimeTarget.PAGE;
+      case 2: return appRuntimeTarget.BOTH;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static appRuntimeTarget? _createOrNull(int? value) =>
+      value == null ? null : appRuntimeTarget.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<appRuntimeTarget> reader = _appRuntimeTargetReader();
+}
+
+class _appRuntimeTargetReader extends fb.Reader<appRuntimeTarget> {
+  const _appRuntimeTargetReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  appRuntimeTarget read(fb.BufferContext bc, int offset) =>
+      appRuntimeTarget.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 ///  One member WASM module of the app. References module identity; never
 ///  embeds the module artifact itself (delivery is the module-bundle lane).
 class APPModuleRef {
@@ -178,10 +322,18 @@ class APPModuleRef {
   ///  host runtime default applies.
   int get MAX_MEMORY_PAGES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
   int get maxMemoryPages => MAX_MEMORY_PAGES;
+  ///  Where this module is instantiated. PAGE or BOTH means the module also
+  ///  loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  ///  IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  ///  ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  ///  a bespoke page-only loader. Defaults to NODE to preserve the prior
+  ///  node-only behavior of manifests written before this field existed.
+  appRuntimeTarget get RUNTIME_TARGET => appRuntimeTarget.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  appRuntimeTarget get runtimeTarget => RUNTIME_TARGET;
 
   @override
   String toString() {
-    return 'APPModuleRef{ID: ${ID}, pluginId: ${pluginId}, contentHash: ${contentHash}, VERSION: ${VERSION}, ROLE: ${ROLE}, DESCRIPTION: ${DESCRIPTION}, maxWallClockMs: ${maxWallClockMs}, maxCostUnits: ${maxCostUnits}, maxMemoryPages: ${maxMemoryPages}}';
+    return 'APPModuleRef{ID: ${ID}, pluginId: ${pluginId}, contentHash: ${contentHash}, VERSION: ${VERSION}, ROLE: ${ROLE}, DESCRIPTION: ${DESCRIPTION}, maxWallClockMs: ${maxWallClockMs}, maxCostUnits: ${maxCostUnits}, maxMemoryPages: ${maxMemoryPages}, runtimeTarget: ${runtimeTarget}}';
   }
 }
 
@@ -199,7 +351,7 @@ class APPModuleRefBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
   }
 
   int addIdOffset(int? offset) {
@@ -238,6 +390,10 @@ class APPModuleRefBuilder {
     fbBuilder.addUint32(8, MAX_MEMORY_PAGES);
     return fbBuilder.offset;
   }
+  int addRuntimeTarget(appRuntimeTarget? RUNTIME_TARGET) {
+    fbBuilder.addUint8(9, RUNTIME_TARGET?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -254,6 +410,7 @@ class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
   final int? _MAX_WALL_CLOCK_MS;
   final int? _MAX_COST_UNITS;
   final int? _MAX_MEMORY_PAGES;
+  final appRuntimeTarget? _RUNTIME_TARGET;
 
   APPModuleRefObjectBuilder({
     String? ID,
@@ -270,6 +427,8 @@ class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
     int? maxCostUnits,
     int? MAX_MEMORY_PAGES,
     int? maxMemoryPages,
+    appRuntimeTarget? RUNTIME_TARGET,
+    appRuntimeTarget? runtimeTarget,
   })
       : _ID = ID,
         _PLUGIN_ID = pluginId ?? PLUGIN_ID,
@@ -279,7 +438,8 @@ class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
         _DESCRIPTION = DESCRIPTION,
         _MAX_WALL_CLOCK_MS = maxWallClockMs ?? MAX_WALL_CLOCK_MS,
         _MAX_COST_UNITS = maxCostUnits ?? MAX_COST_UNITS,
-        _MAX_MEMORY_PAGES = maxMemoryPages ?? MAX_MEMORY_PAGES;
+        _MAX_MEMORY_PAGES = maxMemoryPages ?? MAX_MEMORY_PAGES,
+        _RUNTIME_TARGET = runtimeTarget ?? RUNTIME_TARGET;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -296,7 +456,7 @@ class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ROLE!);
     final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
         : fbBuilder.writeString(_DESCRIPTION!);
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, PLUGIN_IDOffset);
     fbBuilder.addOffset(2, CONTENT_HASHOffset);
@@ -306,6 +466,7 @@ class APPModuleRefObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(6, _MAX_WALL_CLOCK_MS);
     fbBuilder.addUint64(7, _MAX_COST_UNITS);
     fbBuilder.addUint32(8, _MAX_MEMORY_PAGES);
+    fbBuilder.addUint8(9, _RUNTIME_TARGET?.value);
     return fbBuilder.endTable();
   }
 
@@ -790,6 +951,215 @@ class APPUIPageObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One unit of the page's data contract: a named flow describing what data
+///  enters or leaves the running page, the SDS standard it carries, how it is
+///  transported, and — when applicable — the loaded module method port bound
+///  to it. Standards-only rule: every flow payload is an SDS record (a
+///  canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+///  defines no data shapes of its own, it only references an existing
+///  spacedatastandards.org schema by its established code. Locators are
+///  content-addressed and IPFS-first.
+class APPDataflow {
+  APPDataflow._(this._bc, this._bcOffset);
+  factory APPDataflow(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<APPDataflow> reader = _APPDataflowReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  App-local stable name for this flow. Required, unique within the
+  ///  manifest.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Which way the payload crosses the page boundary at runtime.
+  appFlowDirection get DIRECTION => appFlowDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Existing SDS schema code carried by this flow, for example OMM, OEM, or
+  ///  PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+  ///  the flow carries; the app defines no schema of its own.
+  String? get SDS_SCHEMA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sdsSchema => SDS_SCHEMA;
+  ///  Transport that moves the payload. Defaults to IPFS_CID per the
+  ///  content-addressed, IPFS-first rule.
+  appFlowTransport get TRANSPORT => appFlowTransport.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+  ///  for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+  ///  route template for GATEWAY_ROUTE.
+  String? get LOCATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
+  ///  loaded module that produces or consumes this flow. Binds the flow to a
+  ///  specific module method port together with METHOD_ID and PORT_ID.
+  String? get MODULE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get moduleId => MODULE_ID;
+  ///  When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+  ///  this flow is bound to.
+  String? get METHOD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get methodId => METHOD_ID;
+  ///  When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+  ///  flow is bound to.
+  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get portId => PORT_ID;
+  ///  String/compression form of the payload as it crosses the channel,
+  ///  reusing the page content-encoding vocabulary. For flows carrying
+  ///  canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+  ///  bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+  ///  BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+  ///  applied when the channel is text-only.
+  appContentEncoding get CONTENT_ENCODING => appContentEncoding.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  appContentEncoding get contentEncoding => CONTENT_ENCODING;
+  ///  Human-readable summary.
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+
+  @override
+  String toString() {
+    return 'APPDataflow{NAME: ${NAME}, DIRECTION: ${DIRECTION}, sdsSchema: ${sdsSchema}, TRANSPORT: ${TRANSPORT}, LOCATOR: ${LOCATOR}, moduleId: ${moduleId}, methodId: ${methodId}, portId: ${portId}, contentEncoding: ${contentEncoding}, DESCRIPTION: ${DESCRIPTION}}';
+  }
+}
+
+class _APPDataflowReader extends fb.TableReader<APPDataflow> {
+  const _APPDataflowReader();
+
+  @override
+  APPDataflow createObject(fb.BufferContext bc, int offset) =>
+    APPDataflow._(bc, offset);
+}
+
+class APPDataflowBuilder {
+  APPDataflowBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDirection(appFlowDirection? DIRECTION) {
+    fbBuilder.addUint8(1, DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addSdsSchemaOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTransport(appFlowTransport? TRANSPORT) {
+    fbBuilder.addUint8(3, TRANSPORT?.value);
+    return fbBuilder.offset;
+  }
+  int addLocatorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addModuleIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addMethodIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPortIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addContentEncoding(appContentEncoding? CONTENT_ENCODING) {
+    fbBuilder.addUint8(8, CONTENT_ENCODING?.value);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class APPDataflowObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final appFlowDirection? _DIRECTION;
+  final String? _SDS_SCHEMA;
+  final appFlowTransport? _TRANSPORT;
+  final String? _LOCATOR;
+  final String? _MODULE_ID;
+  final String? _METHOD_ID;
+  final String? _PORT_ID;
+  final appContentEncoding? _CONTENT_ENCODING;
+  final String? _DESCRIPTION;
+
+  APPDataflowObjectBuilder({
+    String? NAME,
+    appFlowDirection? DIRECTION,
+    String? SDS_SCHEMA,
+    String? sdsSchema,
+    appFlowTransport? TRANSPORT,
+    String? LOCATOR,
+    String? MODULE_ID,
+    String? moduleId,
+    String? METHOD_ID,
+    String? methodId,
+    String? PORT_ID,
+    String? portId,
+    appContentEncoding? CONTENT_ENCODING,
+    appContentEncoding? contentEncoding,
+    String? DESCRIPTION,
+  })
+      : _NAME = NAME,
+        _DIRECTION = DIRECTION,
+        _SDS_SCHEMA = sdsSchema ?? SDS_SCHEMA,
+        _TRANSPORT = TRANSPORT,
+        _LOCATOR = LOCATOR,
+        _MODULE_ID = moduleId ?? MODULE_ID,
+        _METHOD_ID = methodId ?? METHOD_ID,
+        _PORT_ID = portId ?? PORT_ID,
+        _CONTENT_ENCODING = contentEncoding ?? CONTENT_ENCODING,
+        _DESCRIPTION = DESCRIPTION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? SDS_SCHEMAOffset = _SDS_SCHEMA == null ? null
+        : fbBuilder.writeString(_SDS_SCHEMA!);
+    final int? LOCATOROffset = _LOCATOR == null ? null
+        : fbBuilder.writeString(_LOCATOR!);
+    final int? MODULE_IDOffset = _MODULE_ID == null ? null
+        : fbBuilder.writeString(_MODULE_ID!);
+    final int? METHOD_IDOffset = _METHOD_ID == null ? null
+        : fbBuilder.writeString(_METHOD_ID!);
+    final int? PORT_IDOffset = _PORT_ID == null ? null
+        : fbBuilder.writeString(_PORT_ID!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addUint8(1, _DIRECTION?.value);
+    fbBuilder.addOffset(2, SDS_SCHEMAOffset);
+    fbBuilder.addUint8(3, _TRANSPORT?.value);
+    fbBuilder.addOffset(4, LOCATOROffset);
+    fbBuilder.addOffset(5, MODULE_IDOffset);
+    fbBuilder.addOffset(6, METHOD_IDOffset);
+    fbBuilder.addOffset(7, PORT_IDOffset);
+    fbBuilder.addUint8(8, _CONTENT_ENCODING?.value);
+    fbBuilder.addOffset(9, DESCRIPTIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Application Package Manifest — one launchable app.
 class APP {
   APP._(this._bc, this._bcOffset);
@@ -828,10 +1198,15 @@ class APP {
   ///  when the manifest was last updated.
   String? get UPDATED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   String? get updatedAt => UPDATED_AT;
+  ///  The page's declarative data contract: what data enters and leaves the
+  ///  running page and how. Referential integrity: every MODULE_ID here must
+  ///  resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  ///  name a method port advertised by that module's PLG manifest.
+  List<APPDataflow>? get DATAFLOW => const fb.ListReader<APPDataflow>(APPDataflow.reader).vTableGetNullable(_bc, _bcOffset, 24);
 
   @override
   String toString() {
-    return 'APP{ID: ${ID}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, MODULES: ${MODULES}, DATA: ${DATA}, SOURCES: ${SOURCES}, UI: ${UI}, createdAt: ${createdAt}, updatedAt: ${updatedAt}}';
+    return 'APP{ID: ${ID}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, MODULES: ${MODULES}, DATA: ${DATA}, SOURCES: ${SOURCES}, UI: ${UI}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, DATAFLOW: ${DATAFLOW}}';
   }
 }
 
@@ -849,7 +1224,7 @@ class APPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(10);
+    fbBuilder.startTable(11);
   }
 
   int addIdOffset(int? offset) {
@@ -892,6 +1267,10 @@ class APPBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
+  int addDataflowOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -909,6 +1288,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
   final List<APPUIPageObjectBuilder>? _UI;
   final String? _CREATED_AT;
   final String? _UPDATED_AT;
+  final List<APPDataflowObjectBuilder>? _DATAFLOW;
 
   APPObjectBuilder({
     String? ID,
@@ -923,6 +1303,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
     String? createdAt,
     String? UPDATED_AT,
     String? updatedAt,
+    List<APPDataflowObjectBuilder>? DATAFLOW,
   })
       : _ID = ID,
         _NAME = NAME,
@@ -933,7 +1314,8 @@ class APPObjectBuilder extends fb.ObjectBuilder {
         _SOURCES = SOURCES,
         _UI = UI,
         _CREATED_AT = createdAt ?? CREATED_AT,
-        _UPDATED_AT = updatedAt ?? UPDATED_AT;
+        _UPDATED_AT = updatedAt ?? UPDATED_AT,
+        _DATAFLOW = DATAFLOW;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -958,7 +1340,9 @@ class APPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CREATED_AT!);
     final int? UPDATED_ATOffset = _UPDATED_AT == null ? null
         : fbBuilder.writeString(_UPDATED_AT!);
-    fbBuilder.startTable(10);
+    final int? DATAFLOWOffset = _DATAFLOW == null ? null
+        : fbBuilder.writeList(_DATAFLOW!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(11);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, VERSIONOffset);
@@ -969,6 +1353,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(7, UIOffset);
     fbBuilder.addOffset(8, CREATED_ATOffset);
     fbBuilder.addOffset(9, UPDATED_ATOffset);
+    fbBuilder.addOffset(10, DATAFLOWOffset);
     return fbBuilder.endTable();
   }
 

@@ -120,22 +120,37 @@ class APPModuleRef extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Where this module is instantiated. PAGE or BOTH means the module also
+    /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+    /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+    /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+    /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+    /// node-only behavior of manifests written before this field existed.
+    /**
+     * @return byte
+     */
+    public function getRUNTIME_TARGET()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \appRuntimeTarget::NODE;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAPPModuleRef(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return APPModuleRef
      */
-    public static function createAPPModuleRef(FlatBufferBuilder $builder, $ID, $PLUGIN_ID, $CONTENT_HASH, $VERSION, $ROLE, $DESCRIPTION, $MAX_WALL_CLOCK_MS, $MAX_COST_UNITS, $MAX_MEMORY_PAGES)
+    public static function createAPPModuleRef(FlatBufferBuilder $builder, $ID, $PLUGIN_ID, $CONTENT_HASH, $VERSION, $ROLE, $DESCRIPTION, $MAX_WALL_CLOCK_MS, $MAX_COST_UNITS, $MAX_MEMORY_PAGES, $RUNTIME_TARGET)
     {
-        $builder->startObject(9);
+        $builder->startObject(10);
         self::addID($builder, $ID);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addCONTENT_HASH($builder, $CONTENT_HASH);
@@ -145,6 +160,7 @@ class APPModuleRef extends Table
         self::addMAX_WALL_CLOCK_MS($builder, $MAX_WALL_CLOCK_MS);
         self::addMAX_COST_UNITS($builder, $MAX_COST_UNITS);
         self::addMAX_MEMORY_PAGES($builder, $MAX_MEMORY_PAGES);
+        self::addRUNTIME_TARGET($builder, $RUNTIME_TARGET);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         return $o;
@@ -238,6 +254,16 @@ class APPModuleRef extends Table
     public static function addMAX_MEMORY_PAGES(FlatBufferBuilder $builder, $MAX_MEMORY_PAGES)
     {
         $builder->addUintX(8, $MAX_MEMORY_PAGES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addRUNTIME_TARGET(FlatBufferBuilder $builder, $RUNTIME_TARGET)
+    {
+        $builder->addByteX(9, $RUNTIME_TARGET, 0);
     }
 
     /**

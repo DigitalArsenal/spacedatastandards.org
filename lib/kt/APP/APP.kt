@@ -244,6 +244,41 @@ class APP : Table() {
         }
     val updatedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
     fun updatedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * The page's declarative data contract: what data enters and leaves the
+     * running page and how. Referential integrity: every MODULE_ID here must
+     * resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+     * name a method port advertised by that module's PLG manifest.
+     */
+    fun dataflow(j: Int) : APPDataflow? = dataflow(APPDataflow(), j)
+    fun dataflow(obj: APPDataflow, j: Int) : APPDataflow? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val dataflowLength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    fun dataflowByKey(key: String) : APPDataflow? {
+        val o = __offset(24)
+        return if (o != 0) {
+            APPDataflow.__lookup_by_key(null, __vector(o), key, bb)
+        } else {
+            null
+        }
+    }
+    fun dataflowByKey(obj: APPDataflow, key: String) : APPDataflow? {
+        val o = __offset(24)
+        return if (o != 0) {
+            APPDataflow.__lookup_by_key(obj, __vector(o), key, bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAPP(_bb: ByteBuffer): APP = getRootAsAPP(_bb, APP())
@@ -252,8 +287,9 @@ class APP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun APPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APP")
-        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int) : Int {
-            builder.startTable(10)
+        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int) : Int {
+            builder.startTable(11)
+            addDATAFLOW(builder, dataflowOffset)
             addUPDATEDAT(builder, updatedAtOffset)
             addCREATEDAT(builder, createdAtOffset)
             addUI(builder, uiOffset)
@@ -266,7 +302,7 @@ class APP : Table() {
             addID(builder, idOffset)
             return endAPP(builder)
         }
-        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -309,6 +345,15 @@ class APP : Table() {
         fun startUiVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addCREATEDAT(builder: FlatBufferBuilder, createdAt: Int) = builder.addOffset(8, createdAt, 0)
         fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(9, updatedAt, 0)
+        fun addDATAFLOW(builder: FlatBufferBuilder, dataflow: Int) = builder.addOffset(10, dataflow, 0)
+        fun createDataflowVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDataflowVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endAPP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

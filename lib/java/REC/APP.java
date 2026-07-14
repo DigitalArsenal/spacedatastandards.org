@@ -107,6 +107,19 @@ public final class APP extends com.google.flatbuffers.Table {
   public String UPDATED_AT() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer UPDATED_ATAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer UPDATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * The page's declarative data contract: what data enters and leaves the
+   * running page and how. Referential integrity: every MODULE_ID here must
+   * resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+   * name a method port advertised by that module's PLG manifest.
+   */
+  public APPDataflow DATAFLOW(int j) { return DATAFLOW(new APPDataflow(), j); }
+  public APPDataflow DATAFLOW(APPDataflow obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DATAFLOWLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public APPDataflow DATAFLOWByKey(String key) { int o = __offset(24); return o != 0 ? APPDataflow.__lookup_by_key(null, __vector(o), key, bb) : null; }
+  public APPDataflow DATAFLOWByKey(APPDataflow obj, String key) { int o = __offset(24); return o != 0 ? APPDataflow.__lookup_by_key(obj, __vector(o), key, bb) : null; }
+  public APPDataflow.Vector dataflowVector() { return dataflowVector(new APPDataflow.Vector()); }
+  public APPDataflow.Vector dataflowVector(APPDataflow.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createAPP(FlatBufferBuilder builder,
       int IDOffset,
@@ -118,8 +131,10 @@ public final class APP extends com.google.flatbuffers.Table {
       int SOURCESOffset,
       int UIOffset,
       int CREATED_ATOffset,
-      int UPDATED_ATOffset) {
-    builder.startTable(10);
+      int UPDATED_ATOffset,
+      int DATAFLOWOffset) {
+    builder.startTable(11);
+    APP.addDataflow(builder, DATAFLOWOffset);
     APP.addUpdatedAt(builder, UPDATED_ATOffset);
     APP.addCreatedAt(builder, CREATED_ATOffset);
     APP.addUi(builder, UIOffset);
@@ -133,7 +148,7 @@ public final class APP extends com.google.flatbuffers.Table {
     return APP.endAPP(builder);
   }
 
-  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(11); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -152,6 +167,9 @@ public final class APP extends com.google.flatbuffers.Table {
   public static void startUiVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addCreatedAt(FlatBufferBuilder builder, int CREATED_ATOffset) { builder.addOffset(8, CREATED_ATOffset, 0); }
   public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(9, UPDATED_ATOffset, 0); }
+  public static void addDataflow(FlatBufferBuilder builder, int DATAFLOWOffset) { builder.addOffset(10, DATAFLOWOffset, 0); }
+  public static int createDataflowVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDataflowVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endAPP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

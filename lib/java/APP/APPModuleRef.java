@@ -82,6 +82,15 @@ public final class APPModuleRef extends com.google.flatbuffers.Table {
    * host runtime default applies.
    */
   public long MAX_MEMORY_PAGES() { int o = __offset(20); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Where this module is instantiated. PAGE or BOTH means the module also
+   * loads in the browser: the page resolves its bytes by CONTENT_HASH over
+   * IPFS and instantiates it through the SAME isomorphic module-sdk harness
+   * ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+   * a bespoke page-only loader. Defaults to NODE to preserve the prior
+   * node-only behavior of manifests written before this field existed.
+   */
+  public int RUNTIME_TARGET() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createAPPModuleRef(FlatBufferBuilder builder,
       int IDOffset,
@@ -92,8 +101,9 @@ public final class APPModuleRef extends com.google.flatbuffers.Table {
       int DESCRIPTIONOffset,
       long MAX_WALL_CLOCK_MS,
       long MAX_COST_UNITS,
-      long MAX_MEMORY_PAGES) {
-    builder.startTable(9);
+      long MAX_MEMORY_PAGES,
+      int RUNTIME_TARGET) {
+    builder.startTable(10);
     APPModuleRef.addMaxCostUnits(builder, MAX_COST_UNITS);
     APPModuleRef.addMaxWallClockMs(builder, MAX_WALL_CLOCK_MS);
     APPModuleRef.addMaxMemoryPages(builder, MAX_MEMORY_PAGES);
@@ -103,10 +113,11 @@ public final class APPModuleRef extends com.google.flatbuffers.Table {
     APPModuleRef.addContentHash(builder, CONTENT_HASHOffset);
     APPModuleRef.addPluginId(builder, PLUGIN_IDOffset);
     APPModuleRef.addId(builder, IDOffset);
+    APPModuleRef.addRuntimeTarget(builder, RUNTIME_TARGET);
     return APPModuleRef.endAPPModuleRef(builder);
   }
 
-  public static void startAPPModuleRef(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startAPPModuleRef(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(IDOffset); builder.slot(0); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(1, PLUGIN_IDOffset, 0); }
   public static void addContentHash(FlatBufferBuilder builder, int CONTENT_HASHOffset) { builder.addOffset(2, CONTENT_HASHOffset, 0); }
@@ -116,6 +127,7 @@ public final class APPModuleRef extends com.google.flatbuffers.Table {
   public static void addMaxWallClockMs(FlatBufferBuilder builder, long MAX_WALL_CLOCK_MS) { builder.addLong(6, MAX_WALL_CLOCK_MS, 0L); }
   public static void addMaxCostUnits(FlatBufferBuilder builder, long MAX_COST_UNITS) { builder.addLong(7, MAX_COST_UNITS, 0L); }
   public static void addMaxMemoryPages(FlatBufferBuilder builder, long MAX_MEMORY_PAGES) { builder.addInt(8, (int) MAX_MEMORY_PAGES, (int) 0L); }
+  public static void addRuntimeTarget(FlatBufferBuilder builder, int RUNTIME_TARGET) { builder.addByte(9, (byte) RUNTIME_TARGET, (byte) 0); }
   public static int endAPPModuleRef(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

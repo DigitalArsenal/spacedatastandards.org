@@ -78,6 +78,13 @@ public struct APPModuleRef : IFlatbufferObject
   /// Linear-memory ceiling override in 64 KiB WASM pages. Zero means the
   /// host runtime default applies.
   public uint MAX_MEMORY_PAGES { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Where this module is instantiated. PAGE or BOTH means the module also
+  /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+  /// node-only behavior of manifests written before this field existed.
+  public appRuntimeTarget RUNTIME_TARGET { get { int o = __p.__offset(22); return o != 0 ? (appRuntimeTarget)__p.bb.Get(o + __p.bb_pos) : appRuntimeTarget.NODE; } }
 
   public static Offset<APPModuleRef> CreateAPPModuleRef(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -88,8 +95,9 @@ public struct APPModuleRef : IFlatbufferObject
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       ulong MAX_WALL_CLOCK_MS = 0,
       ulong MAX_COST_UNITS = 0,
-      uint MAX_MEMORY_PAGES = 0) {
-    builder.StartTable(9);
+      uint MAX_MEMORY_PAGES = 0,
+      appRuntimeTarget RUNTIME_TARGET = appRuntimeTarget.NODE) {
+    builder.StartTable(10);
     APPModuleRef.AddMAX_COST_UNITS(builder, MAX_COST_UNITS);
     APPModuleRef.AddMAX_WALL_CLOCK_MS(builder, MAX_WALL_CLOCK_MS);
     APPModuleRef.AddMAX_MEMORY_PAGES(builder, MAX_MEMORY_PAGES);
@@ -99,10 +107,11 @@ public struct APPModuleRef : IFlatbufferObject
     APPModuleRef.AddCONTENT_HASH(builder, CONTENT_HASHOffset);
     APPModuleRef.AddPLUGIN_ID(builder, PLUGIN_IDOffset);
     APPModuleRef.AddID(builder, IDOffset);
+    APPModuleRef.AddRUNTIME_TARGET(builder, RUNTIME_TARGET);
     return APPModuleRef.EndAPPModuleRef(builder);
   }
 
-  public static void StartAPPModuleRef(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartAPPModuleRef(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(1, PLUGIN_IDOffset.Value, 0); }
   public static void AddCONTENT_HASH(FlatBufferBuilder builder, StringOffset CONTENT_HASHOffset) { builder.AddOffset(2, CONTENT_HASHOffset.Value, 0); }
@@ -112,6 +121,7 @@ public struct APPModuleRef : IFlatbufferObject
   public static void AddMAX_WALL_CLOCK_MS(FlatBufferBuilder builder, ulong MAX_WALL_CLOCK_MS) { builder.AddUlong(6, MAX_WALL_CLOCK_MS, 0); }
   public static void AddMAX_COST_UNITS(FlatBufferBuilder builder, ulong MAX_COST_UNITS) { builder.AddUlong(7, MAX_COST_UNITS, 0); }
   public static void AddMAX_MEMORY_PAGES(FlatBufferBuilder builder, uint MAX_MEMORY_PAGES) { builder.AddUint(8, MAX_MEMORY_PAGES, 0); }
+  public static void AddRUNTIME_TARGET(FlatBufferBuilder builder, appRuntimeTarget RUNTIME_TARGET) { builder.AddByte(9, (byte)RUNTIME_TARGET, 0); }
   public static Offset<APPModuleRef> EndAPPModuleRef(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -161,6 +171,7 @@ public struct APPModuleRef : IFlatbufferObject
     _o.MAX_WALL_CLOCK_MS = this.MAX_WALL_CLOCK_MS;
     _o.MAX_COST_UNITS = this.MAX_COST_UNITS;
     _o.MAX_MEMORY_PAGES = this.MAX_MEMORY_PAGES;
+    _o.RUNTIME_TARGET = this.RUNTIME_TARGET;
   }
   public static Offset<APPModuleRef> Pack(FlatBufferBuilder builder, APPModuleRefT _o) {
     if (_o == null) return default(Offset<APPModuleRef>);
@@ -180,7 +191,8 @@ public struct APPModuleRef : IFlatbufferObject
       _DESCRIPTION,
       _o.MAX_WALL_CLOCK_MS,
       _o.MAX_COST_UNITS,
-      _o.MAX_MEMORY_PAGES);
+      _o.MAX_MEMORY_PAGES,
+      _o.RUNTIME_TARGET);
   }
 }
 
@@ -195,6 +207,7 @@ public class APPModuleRefT
   public ulong MAX_WALL_CLOCK_MS { get; set; }
   public ulong MAX_COST_UNITS { get; set; }
   public uint MAX_MEMORY_PAGES { get; set; }
+  public appRuntimeTarget RUNTIME_TARGET { get; set; }
 
   public APPModuleRefT() {
     this.ID = null;
@@ -206,6 +219,7 @@ public class APPModuleRefT
     this.MAX_WALL_CLOCK_MS = 0;
     this.MAX_COST_UNITS = 0;
     this.MAX_MEMORY_PAGES = 0;
+    this.RUNTIME_TARGET = appRuntimeTarget.NODE;
   }
 }
 
@@ -224,6 +238,7 @@ static public class APPModuleRefVerify
       && verifier.VerifyField(tablePos, 16 /*MAX_WALL_CLOCK_MS*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*MAX_COST_UNITS*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*MAX_MEMORY_PAGES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 22 /*RUNTIME_TARGET*/, 1 /*appRuntimeTarget*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

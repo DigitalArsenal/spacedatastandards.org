@@ -15,6 +15,26 @@ import flatbuffers
 /// text, base64, or a compressed base64 form. A page may instead be served
 /// by a member module; exactly one of the two mechanisms must be populated
 /// per page.
+///
+/// The page's data contract is described declaratively by DATAFLOW: every
+/// unit of data that enters or leaves the running page, the SDS standard it
+/// carries, the transport that moves it, and — when applicable — the loaded
+/// module method port that produces or consumes it. Standards-only rule:
+/// every page payload is an SDS record (a canonical size-prefixed
+/// FlatBuffer) or a content identifier pointing at one; the app manifest
+/// carries no bespoke page-only data shapes. Locators are content-addressed
+/// and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+/// node's IPFS gateway wherever the payload can be published as an immutable
+/// object, falling back to a live gossip topic or a same-origin gateway
+/// route only for streaming or request-scoped delivery.
+///
+/// Member modules run isomorphically. A module ref may declare, via
+/// RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+/// the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+/// over IPFS and instantiates them in the shared isomorphic JS harness
+/// (manifest + plugin_invoke_stream), exactly as a server-side node would.
+/// There is no bespoke browser loader; the browser and the node are two
+/// hosts of one harness ABI.
 /// Content encoding applied to APPUIPage.CONTENT. Append new values only;
 /// never reorder or reuse existing values. Decoders must reject an encoding
 /// value they do not recognize rather than guessing.
@@ -44,6 +64,50 @@ enum appSourceKind:
     /// REF is a dataset or catalog identifier.
     appSourceKind_DATASET = 2
 
+/// Direction of an APPDataflow entry relative to the running page. Distinct
+/// from appDataDirection, which is producer/consumer relative to the app as
+/// a whole; this enum is page-relative — which way bytes cross the page
+/// boundary at runtime. Append new values only; never reorder or reuse
+/// existing values.
+enum appFlowDirection:
+    /// Data is delivered into the page for display or module input.
+    appFlowDirection_TO_PAGE = 0
+    /// Data is emitted by the page (a module output or user action) for
+    /// publication or upstream consumption.
+    appFlowDirection_FROM_PAGE = 1
+    /// Data crosses in both directions over the same channel.
+    appFlowDirection_BIDIRECTIONAL = 2
+
+/// Transport that moves an APPDataflow payload. Locators are content-
+/// addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+/// immutable published object, and use the live or request-scoped transports
+/// only for streaming or same-origin request/response delivery. Append new
+/// values only; never reorder or reuse existing values.
+enum appFlowTransport:
+    /// LOCATOR is a CID; the page fetches the SDS record bytes by content
+    /// through the serving node's IPFS gateway.
+    appFlowTransport_IPFS_CID = 0
+    /// LOCATOR is a gossip topic name; live SDS records arrive on the topic
+    /// via the node's pubsub bus.
+    appFlowTransport_PUBSUB_TOPIC = 1
+    /// LOCATOR is a same-origin HTTP route template served by the node that
+    /// serves the page (used for request-scoped queries and streaming).
+    appFlowTransport_GATEWAY_ROUTE = 2
+
+/// Where a member module is instantiated. PAGE and BOTH assert the module
+/// loads in the browser through the SAME module-sdk harness ABI the SDN
+/// nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+/// IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+/// page loader. Append new values only; never reorder or reuse existing
+/// values.
+enum appRuntimeTarget:
+    /// Loads only in the desktop/server node runtime.
+    appRuntimeTarget_NODE = 0
+    /// Loads in the page through the isomorphic JS harness.
+    appRuntimeTarget_PAGE = 1
+    /// Loads in both hosts from the same content-addressed bytes and ABI.
+    appRuntimeTarget_BOTH = 2
+
 class APPModuleRef
 
 class APPDataRef
@@ -51,6 +115,8 @@ class APPDataRef
 class APPSourceRef
 
 class APPUIPage
+
+class APPDataflow
 
 class APP
 
@@ -90,13 +156,21 @@ class APPModuleRef : flatbuffers.handle
     /// host runtime default applies.
     def MAX_MEMORY_PAGES() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 20, 0)
+    /// Where this module is instantiated. PAGE or BOTH means the module also
+    /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+    /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+    /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+    /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+    /// node-only behavior of manifests written before this field existed.
+    def RUNTIME_TARGET() -> appRuntimeTarget:
+        return appRuntimeTarget(flatbuffers.field_uint8(buf_, pos_, 22, 0))
 
 def GetRootAsAPPModuleRef(buf:string): return APPModuleRef { buf, flatbuffers.indirect(buf, 0) }
 
 struct APPModuleRefBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(10)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -124,6 +198,9 @@ struct APPModuleRefBuilder:
         return this
     def add_MAX_MEMORY_PAGES(MAX_MEMORY_PAGES:int):
         b_.PrependUint32Slot(8, MAX_MEMORY_PAGES, 0)
+        return this
+    def add_RUNTIME_TARGET(RUNTIME_TARGET:appRuntimeTarget):
+        b_.PrependUint8Slot(9, RUNTIME_TARGET, 0)
         return this
     def end():
         return b_.EndObject()
@@ -315,6 +392,101 @@ struct APPUIPageBuilder:
     def end():
         return b_.EndObject()
 
+/// One unit of the page's data contract: a named flow describing what data
+/// enters or leaves the running page, the SDS standard it carries, how it is
+/// transported, and — when applicable — the loaded module method port bound
+/// to it. Standards-only rule: every flow payload is an SDS record (a
+/// canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+/// defines no data shapes of its own, it only references an existing
+/// spacedatastandards.org schema by its established code. Locators are
+/// content-addressed and IPFS-first.
+class APPDataflow : flatbuffers.handle
+    /// App-local stable name for this flow. Required, unique within the
+    /// manifest.
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Which way the payload crosses the page boundary at runtime.
+    def DIRECTION() -> appFlowDirection:
+        return appFlowDirection(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    /// Existing SDS schema code carried by this flow, for example OMM, OEM, or
+    /// PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+    /// the flow carries; the app defines no schema of its own.
+    def SDS_SCHEMA() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Transport that moves the payload. Defaults to IPFS_CID per the
+    /// content-addressed, IPFS-first rule.
+    def TRANSPORT() -> appFlowTransport:
+        return appFlowTransport(flatbuffers.field_uint8(buf_, pos_, 10, 0))
+    /// Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+    /// for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+    /// route template for GATEWAY_ROUTE.
+    def LOCATOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// When present, must equal an APPModuleRef.ID in the same manifest — the
+    /// loaded module that produces or consumes this flow. Binds the flow to a
+    /// specific module method port together with METHOD_ID and PORT_ID.
+    def MODULE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+    /// this flow is bound to.
+    def METHOD_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+    /// flow is bound to.
+    def PORT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// String/compression form of the payload as it crosses the channel,
+    /// reusing the page content-encoding vocabulary. For flows carrying
+    /// canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+    /// bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+    /// BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+    /// applied when the channel is text-only.
+    def CONTENT_ENCODING() -> appContentEncoding:
+        return appContentEncoding(flatbuffers.field_uint8(buf_, pos_, 20, 0))
+    /// Human-readable summary.
+    def DESCRIPTION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+
+def GetRootAsAPPDataflow(buf:string): return APPDataflow { buf, flatbuffers.indirect(buf, 0) }
+
+struct APPDataflowBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(10)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_DIRECTION(DIRECTION:appFlowDirection):
+        b_.PrependUint8Slot(1, DIRECTION, 0)
+        return this
+    def add_SDS_SCHEMA(SDS_SCHEMA:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SDS_SCHEMA)
+        return this
+    def add_TRANSPORT(TRANSPORT:appFlowTransport):
+        b_.PrependUint8Slot(3, TRANSPORT, 0)
+        return this
+    def add_LOCATOR(LOCATOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, LOCATOR)
+        return this
+    def add_MODULE_ID(MODULE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, MODULE_ID)
+        return this
+    def add_METHOD_ID(METHOD_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, METHOD_ID)
+        return this
+    def add_PORT_ID(PORT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, PORT_ID)
+        return this
+    def add_CONTENT_ENCODING(CONTENT_ENCODING:appContentEncoding):
+        b_.PrependUint8Slot(8, CONTENT_ENCODING, 0)
+        return this
+    def add_DESCRIPTION(DESCRIPTION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, DESCRIPTION)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Application Package Manifest — one launchable app.
 class APP : flatbuffers.handle
     /// Stable app identity, unique per publisher. Required.
@@ -358,13 +530,21 @@ class APP : flatbuffers.handle
     /// when the manifest was last updated.
     def UPDATED_AT() -> string:
         return flatbuffers.field_string(buf_, pos_, 22)
+    /// The page's declarative data contract: what data enters and leaves the
+    /// running page and how. Referential integrity: every MODULE_ID here must
+    /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+    /// name a method port advertised by that module's PLG manifest.
+    def DATAFLOW(i:int) -> APPDataflow:
+        return APPDataflow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
+    def DATAFLOW_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
 
 def GetRootAsAPP(buf:string): return APP { buf, flatbuffers.indirect(buf, 0) }
 
 struct APPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(11)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -396,6 +576,9 @@ struct APPBuilder:
     def add_UPDATED_AT(UPDATED_AT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(9, UPDATED_AT)
         return this
+    def add_DATAFLOW(DATAFLOW:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, DATAFLOW)
+        return this
     def end():
         return b_.EndObject()
 
@@ -423,6 +606,13 @@ def APPCreateSOURCESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def APPStartUIVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def APPCreateUIVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def APPStartDATAFLOWVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def APPCreateDATAFLOWVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

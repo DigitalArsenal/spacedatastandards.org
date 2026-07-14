@@ -86,6 +86,13 @@ public struct APP : IFlatbufferObject
   public ArraySegment<byte>? GetUPDATED_ATBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetUPDATED_ATArray() { return __p.__vector_as_array<byte>(22); }
+  /// The page's declarative data contract: what data enters and leaves the
+  /// running page and how. Referential integrity: every MODULE_ID here must
+  /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  /// name a method port advertised by that module's PLG manifest.
+  public APPDataflow? DATAFLOW(int j) { int o = __p.__offset(24); return o != 0 ? (APPDataflow?)(new APPDataflow()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DATAFLOWLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public APPDataflow? DATAFLOWByKey(string key) { int o = __p.__offset(24); return o != 0 ? APPDataflow.__lookup_by_key(__p.__vector(o), key, __p.bb) : null; }
 
   public static Offset<APP> CreateAPP(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -97,8 +104,10 @@ public struct APP : IFlatbufferObject
       VectorOffset SOURCESOffset = default(VectorOffset),
       VectorOffset UIOffset = default(VectorOffset),
       StringOffset CREATED_ATOffset = default(StringOffset),
-      StringOffset UPDATED_ATOffset = default(StringOffset)) {
-    builder.StartTable(10);
+      StringOffset UPDATED_ATOffset = default(StringOffset),
+      VectorOffset DATAFLOWOffset = default(VectorOffset)) {
+    builder.StartTable(11);
+    APP.AddDATAFLOW(builder, DATAFLOWOffset);
     APP.AddUPDATED_AT(builder, UPDATED_ATOffset);
     APP.AddCREATED_AT(builder, CREATED_ATOffset);
     APP.AddUI(builder, UIOffset);
@@ -112,7 +121,7 @@ public struct APP : IFlatbufferObject
     return APP.EndAPP(builder);
   }
 
-  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(10); }
+  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(11); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -143,6 +152,12 @@ public struct APP : IFlatbufferObject
   public static void StartUIVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddCREATED_AT(FlatBufferBuilder builder, StringOffset CREATED_ATOffset) { builder.AddOffset(8, CREATED_ATOffset.Value, 0); }
   public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(9, UPDATED_ATOffset.Value, 0); }
+  public static void AddDATAFLOW(FlatBufferBuilder builder, VectorOffset DATAFLOWOffset) { builder.AddOffset(10, DATAFLOWOffset.Value, 0); }
+  public static VectorOffset CreateDATAFLOWVector(FlatBufferBuilder builder, Offset<APPDataflow>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, Offset<APPDataflow>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APPDataflow>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APPDataflow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDATAFLOWVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<APP> EndAPP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -170,6 +185,8 @@ public struct APP : IFlatbufferObject
     for (var _j = 0; _j < this.UILength; ++_j) {_o.UI.Add(this.UI(_j).HasValue ? this.UI(_j).Value.UnPack() : null);}
     _o.CREATED_AT = this.CREATED_AT;
     _o.UPDATED_AT = this.UPDATED_AT;
+    _o.DATAFLOW = new List<APPDataflowT>();
+    for (var _j = 0; _j < this.DATAFLOWLength; ++_j) {_o.DATAFLOW.Add(this.DATAFLOW(_j).HasValue ? this.DATAFLOW(_j).Value.UnPack() : null);}
   }
   public static Offset<APP> Pack(FlatBufferBuilder builder, APPT _o) {
     if (_o == null) return default(Offset<APP>);
@@ -203,6 +220,12 @@ public struct APP : IFlatbufferObject
     }
     var _CREATED_AT = _o.CREATED_AT == null ? default(StringOffset) : builder.CreateString(_o.CREATED_AT);
     var _UPDATED_AT = _o.UPDATED_AT == null ? default(StringOffset) : builder.CreateString(_o.UPDATED_AT);
+    var _DATAFLOW = default(VectorOffset);
+    if (_o.DATAFLOW != null) {
+      var __DATAFLOW = new Offset<APPDataflow>[_o.DATAFLOW.Count];
+      for (var _j = 0; _j < __DATAFLOW.Length; ++_j) { __DATAFLOW[_j] = APPDataflow.Pack(builder, _o.DATAFLOW[_j]); }
+      _DATAFLOW = CreateDATAFLOWVector(builder, __DATAFLOW);
+    }
     return CreateAPP(
       builder,
       _ID,
@@ -214,7 +237,8 @@ public struct APP : IFlatbufferObject
       _SOURCES,
       _UI,
       _CREATED_AT,
-      _UPDATED_AT);
+      _UPDATED_AT,
+      _DATAFLOW);
   }
 }
 
@@ -230,6 +254,7 @@ public class APPT
   public List<APPUIPageT> UI { get; set; }
   public string CREATED_AT { get; set; }
   public string UPDATED_AT { get; set; }
+  public List<APPDataflowT> DATAFLOW { get; set; }
 
   public APPT() {
     this.ID = null;
@@ -242,6 +267,7 @@ public class APPT
     this.UI = null;
     this.CREATED_AT = null;
     this.UPDATED_AT = null;
+    this.DATAFLOW = null;
   }
   public static APPT DeserializeFromBinary(byte[] fbBuffer) {
     return APP.GetRootAsAPP(new ByteBuffer(fbBuffer)).UnPack();
@@ -269,6 +295,7 @@ static public class APPVerify
       && verifier.VerifyVectorOfTables(tablePos, 18 /*UI*/, APPUIPageVerify.Verify, false)
       && verifier.VerifyString(tablePos, 20 /*CREATED_AT*/, false)
       && verifier.VerifyString(tablePos, 22 /*UPDATED_AT*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*DATAFLOW*/, APPDataflowVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,5 +1,5 @@
-// Hash: 015ac57d97b89e6b2d59877c56ba3b342d05dae8339adbe91d06eca852442f47
-// Version: 1.151.0
+// Hash: af1f13b9b0b5da3fe376a8baf001da07b05f005cbba735c6de9760318fe44883
+// Version: 1.151.1
 // -----------------------------------END_HEADER
 /// Application Package Manifest
 ///
@@ -15,6 +15,26 @@
 /// text, base64, or a compressed base64 form. A page may instead be served
 /// by a member module; exactly one of the two mechanisms must be populated
 /// per page.
+///
+/// The page's data contract is described declaratively by DATAFLOW: every
+/// unit of data that enters or leaves the running page, the SDS standard it
+/// carries, the transport that moves it, and — when applicable — the loaded
+/// module method port that produces or consumes it. Standards-only rule:
+/// every page payload is an SDS record (a canonical size-prefixed
+/// FlatBuffer) or a content identifier pointing at one; the app manifest
+/// carries no bespoke page-only data shapes. Locators are content-addressed
+/// and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+/// node's IPFS gateway wherever the payload can be published as an immutable
+/// object, falling back to a live gossip topic or a same-origin gateway
+/// route only for streaming or request-scoped delivery.
+///
+/// Member modules run isomorphically. A module ref may declare, via
+/// RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+/// the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+/// over IPFS and instantiates them in the shared isomorphic JS harness
+/// (manifest + plugin_invoke_stream), exactly as a server-side node would.
+/// There is no bespoke browser loader; the browser and the node are two
+/// hosts of one harness ABI.
 
 /// Content encoding applied to APPUIPage.CONTENT. Append new values only;
 /// never reorder or reuse existing values. Decoders must reject an encoding
@@ -48,6 +68,53 @@ enum appSourceKind : ubyte {
   DATASET = 2
 }
 
+/// Direction of an APPDataflow entry relative to the running page. Distinct
+/// from appDataDirection, which is producer/consumer relative to the app as
+/// a whole; this enum is page-relative — which way bytes cross the page
+/// boundary at runtime. Append new values only; never reorder or reuse
+/// existing values.
+enum appFlowDirection : ubyte {
+  /// Data is delivered into the page for display or module input.
+  TO_PAGE = 0,
+  /// Data is emitted by the page (a module output or user action) for
+  /// publication or upstream consumption.
+  FROM_PAGE = 1,
+  /// Data crosses in both directions over the same channel.
+  BIDIRECTIONAL = 2
+}
+
+/// Transport that moves an APPDataflow payload. Locators are content-
+/// addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+/// immutable published object, and use the live or request-scoped transports
+/// only for streaming or same-origin request/response delivery. Append new
+/// values only; never reorder or reuse existing values.
+enum appFlowTransport : ubyte {
+  /// LOCATOR is a CID; the page fetches the SDS record bytes by content
+  /// through the serving node's IPFS gateway.
+  IPFS_CID = 0,
+  /// LOCATOR is a gossip topic name; live SDS records arrive on the topic
+  /// via the node's pubsub bus.
+  PUBSUB_TOPIC = 1,
+  /// LOCATOR is a same-origin HTTP route template served by the node that
+  /// serves the page (used for request-scoped queries and streaming).
+  GATEWAY_ROUTE = 2
+}
+
+/// Where a member module is instantiated. PAGE and BOTH assert the module
+/// loads in the browser through the SAME module-sdk harness ABI the SDN
+/// nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+/// IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+/// page loader. Append new values only; never reorder or reuse existing
+/// values.
+enum appRuntimeTarget : ubyte {
+  /// Loads only in the desktop/server node runtime.
+  NODE = 0,
+  /// Loads in the page through the isomorphic JS harness.
+  PAGE = 1,
+  /// Loads in both hosts from the same content-addressed bytes and ABI.
+  BOTH = 2
+}
+
 /// One member WASM module of the app. References module identity; never
 /// embeds the module artifact itself (delivery is the module-bundle lane).
 table APPModuleRef {
@@ -75,6 +142,13 @@ table APPModuleRef {
   /// Linear-memory ceiling override in 64 KiB WASM pages. Zero means the
   /// host runtime default applies.
   MAX_MEMORY_PAGES:uint32;
+  /// Where this module is instantiated. PAGE or BOTH means the module also
+  /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+  /// node-only behavior of manifests written before this field existed.
+  RUNTIME_TARGET:appRuntimeTarget = NODE;
 }
 
 /// One SDS record type the app produces and/or consumes. Names an existing
@@ -149,6 +223,52 @@ table APPUIPage {
   URL:string;
 }
 
+/// One unit of the page's data contract: a named flow describing what data
+/// enters or leaves the running page, the SDS standard it carries, how it is
+/// transported, and — when applicable — the loaded module method port bound
+/// to it. Standards-only rule: every flow payload is an SDS record (a
+/// canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+/// defines no data shapes of its own, it only references an existing
+/// spacedatastandards.org schema by its established code. Locators are
+/// content-addressed and IPFS-first.
+table APPDataflow {
+  /// App-local stable name for this flow. Required, unique within the
+  /// manifest.
+  NAME:string (required, key);
+  /// Which way the payload crosses the page boundary at runtime.
+  DIRECTION:appFlowDirection = TO_PAGE;
+  /// Existing SDS schema code carried by this flow, for example OMM, OEM, or
+  /// PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+  /// the flow carries; the app defines no schema of its own.
+  SDS_SCHEMA:string (required);
+  /// Transport that moves the payload. Defaults to IPFS_CID per the
+  /// content-addressed, IPFS-first rule.
+  TRANSPORT:appFlowTransport = IPFS_CID;
+  /// Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+  /// for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+  /// route template for GATEWAY_ROUTE.
+  LOCATOR:string;
+  /// When present, must equal an APPModuleRef.ID in the same manifest — the
+  /// loaded module that produces or consumes this flow. Binds the flow to a
+  /// specific module method port together with METHOD_ID and PORT_ID.
+  MODULE_ID:string;
+  /// When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+  /// this flow is bound to.
+  METHOD_ID:string;
+  /// When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+  /// flow is bound to.
+  PORT_ID:string;
+  /// String/compression form of the payload as it crosses the channel,
+  /// reusing the page content-encoding vocabulary. For flows carrying
+  /// canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+  /// bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+  /// BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+  /// applied when the channel is text-only.
+  CONTENT_ENCODING:appContentEncoding = UTF8;
+  /// Human-readable summary.
+  DESCRIPTION:string;
+}
+
 /// Application Package Manifest — one launchable app.
 table APP {
   /// Stable app identity, unique per publisher. Required.
@@ -174,6 +294,11 @@ table APP {
   /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
   /// when the manifest was last updated.
   UPDATED_AT:string;
+  /// The page's declarative data contract: what data enters and leaves the
+  /// running page and how. Referential integrity: every MODULE_ID here must
+  /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  /// name a method port advertised by that module's PLG manifest.
+  DATAFLOW:[APPDataflow];
 }
 
 root_type APP;

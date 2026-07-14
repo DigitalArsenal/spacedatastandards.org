@@ -22,6 +22,26 @@ import FlatBuffers
 ///  text, base64, or a compressed base64 form. A page may instead be served
 ///  by a member module; exactly one of the two mechanisms must be populated
 ///  per page.
+///
+///  The page's data contract is described declaratively by DATAFLOW: every
+///  unit of data that enters or leaves the running page, the SDS standard it
+///  carries, the transport that moves it, and — when applicable — the loaded
+///  module method port that produces or consumes it. Standards-only rule:
+///  every page payload is an SDS record (a canonical size-prefixed
+///  FlatBuffer) or a content identifier pointing at one; the app manifest
+///  carries no bespoke page-only data shapes. Locators are content-addressed
+///  and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+///  node's IPFS gateway wherever the payload can be published as an immutable
+///  object, falling back to a live gossip topic or a same-origin gateway
+///  route only for streaming or request-scoped delivery.
+///
+///  Member modules run isomorphically. A module ref may declare, via
+///  RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+///  the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+///  over IPFS and instantiates them in the shared isomorphic JS harness
+///  (manifest + plugin_invoke_stream), exactly as a server-side node would.
+///  There is no bespoke browser loader; the browser and the node are two
+///  hosts of one harness ABI.
 ///  Content encoding applied to APPUIPage.CONTENT. Append new values only;
 ///  never reorder or reuse existing values. Decoders must reject an encoding
 ///  value they do not recognize rather than guessing.
@@ -75,6 +95,74 @@ public enum appSourceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
 }
 
 
+///  Direction of an APPDataflow entry relative to the running page. Distinct
+///  from appDataDirection, which is producer/consumer relative to the app as
+///  a whole; this enum is page-relative — which way bytes cross the page
+///  boundary at runtime. Append new values only; never reorder or reuse
+///  existing values.
+public enum appFlowDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Data is delivered into the page for display or module input.
+  case toPage = 0
+  ///  Data is emitted by the page (a module output or user action) for
+  ///  publication or upstream consumption.
+  case fromPage = 1
+  ///  Data crosses in both directions over the same channel.
+  case bidirectional = 2
+
+  public static var max: appFlowDirection { return .bidirectional }
+  public static var min: appFlowDirection { return .toPage }
+}
+
+
+///  Transport that moves an APPDataflow payload. Locators are content-
+///  addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+///  immutable published object, and use the live or request-scoped transports
+///  only for streaming or same-origin request/response delivery. Append new
+///  values only; never reorder or reuse existing values.
+public enum appFlowTransport: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  LOCATOR is a CID; the page fetches the SDS record bytes by content
+  ///  through the serving node's IPFS gateway.
+  case ipfsCid = 0
+  ///  LOCATOR is a gossip topic name; live SDS records arrive on the topic
+  ///  via the node's pubsub bus.
+  case pubsubTopic = 1
+  ///  LOCATOR is a same-origin HTTP route template served by the node that
+  ///  serves the page (used for request-scoped queries and streaming).
+  case gatewayRoute = 2
+
+  public static var max: appFlowTransport { return .gatewayRoute }
+  public static var min: appFlowTransport { return .ipfsCid }
+}
+
+
+///  Where a member module is instantiated. PAGE and BOTH assert the module
+///  loads in the browser through the SAME module-sdk harness ABI the SDN
+///  nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+///  IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+///  page loader. Append new values only; never reorder or reuse existing
+///  values.
+public enum appRuntimeTarget: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Loads only in the desktop/server node runtime.
+  case node = 0
+  ///  Loads in the page through the isomorphic JS harness.
+  case page = 1
+  ///  Loads in both hosts from the same content-addressed bytes and ABI.
+  case both = 2
+
+  public static var max: appRuntimeTarget { return .both }
+  public static var min: appRuntimeTarget { return .node }
+}
+
+
 ///  One member WASM module of the app. References module identity; never
 ///  embeds the module artifact itself (delivery is the module-bundle lane).
 public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
@@ -98,6 +186,7 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
     static let MAX_WALL_CLOCK_MS: VOffset = 16
     static let MAX_COST_UNITS: VOffset = 18
     static let MAX_MEMORY_PAGES: VOffset = 20
+    static let RUNTIME_TARGET: VOffset = 22
   }
 
   ///  App-local stable reference for this module. Required, unique within
@@ -130,7 +219,14 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   ///  Linear-memory ceiling override in 64 KiB WASM pages. Zero means the
   ///  host runtime default applies.
   public var MAX_MEMORY_PAGES: UInt32 { let o = _accessor.offset(VT.MAX_MEMORY_PAGES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startAPPModuleRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  ///  Where this module is instantiated. PAGE or BOTH means the module also
+  ///  loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  ///  IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  ///  ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  ///  a bespoke page-only loader. Defaults to NODE to preserve the prior
+  ///  node-only behavior of manifests written before this field existed.
+  public var RUNTIME_TARGET: appRuntimeTarget { let o = _accessor.offset(VT.RUNTIME_TARGET); return o == 0 ? .node : appRuntimeTarget(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .node }
+  public static func startAPPModuleRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(PLUGIN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLUGIN_ID, at: VT.PLUGIN_ID) }
   public static func add(CONTENT_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_HASH, at: VT.CONTENT_HASH) }
@@ -140,6 +236,7 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   public static func add(MAX_WALL_CLOCK_MS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_WALL_CLOCK_MS, def: 0, at: VT.MAX_WALL_CLOCK_MS) }
   public static func add(MAX_COST_UNITS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_COST_UNITS, def: 0, at: VT.MAX_COST_UNITS) }
   public static func add(MAX_MEMORY_PAGES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_MEMORY_PAGES, def: 0, at: VT.MAX_MEMORY_PAGES) }
+  public static func add(RUNTIME_TARGET: appRuntimeTarget, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUNTIME_TARGET.rawValue, def: 0, at: VT.RUNTIME_TARGET) }
   public static func endAPPModuleRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createAPPModuleRef(
     _ fbb: inout FlatBufferBuilder,
@@ -151,7 +248,8 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
     MAX_WALL_CLOCK_MS: UInt64 = 0,
     MAX_COST_UNITS: UInt64 = 0,
-    MAX_MEMORY_PAGES: UInt32 = 0
+    MAX_MEMORY_PAGES: UInt32 = 0,
+    RUNTIME_TARGET: appRuntimeTarget = .node
   ) -> Offset {
     let __start = APPModuleRef.startAPPModuleRef(&fbb)
     APPModuleRef.add(ID: ID, &fbb)
@@ -163,6 +261,7 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
     APPModuleRef.add(MAX_WALL_CLOCK_MS: MAX_WALL_CLOCK_MS, &fbb)
     APPModuleRef.add(MAX_COST_UNITS: MAX_COST_UNITS, &fbb)
     APPModuleRef.add(MAX_MEMORY_PAGES: MAX_MEMORY_PAGES, &fbb)
+    APPModuleRef.add(RUNTIME_TARGET: RUNTIME_TARGET, &fbb)
     return APPModuleRef.endAPPModuleRef(&fbb, start: __start)
   }
   public static func sortVectorOfAppmoduleRef(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
@@ -202,6 +301,7 @@ public struct APPModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
     try _v.visit(field: VT.MAX_WALL_CLOCK_MS, fieldName: "MAX_WALL_CLOCK_MS", required: false, type: UInt64.self)
     try _v.visit(field: VT.MAX_COST_UNITS, fieldName: "MAX_COST_UNITS", required: false, type: UInt64.self)
     try _v.visit(field: VT.MAX_MEMORY_PAGES, fieldName: "MAX_MEMORY_PAGES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.RUNTIME_TARGET, fieldName: "RUNTIME_TARGET", required: false, type: appRuntimeTarget.self)
     _v.finish()
   }
 }
@@ -560,6 +660,160 @@ public struct APPUIPage: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   }
 }
 
+///  One unit of the page's data contract: a named flow describing what data
+///  enters or leaves the running page, the SDS standard it carries, how it is
+///  transported, and — when applicable — the loaded module method port bound
+///  to it. Standards-only rule: every flow payload is an SDS record (a
+///  canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+///  defines no data shapes of its own, it only references an existing
+///  spacedatastandards.org schema by its established code. Locators are
+///  content-addressed and IPFS-first.
+public struct APPDataflow: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$APP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: APPDataflow.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let DIRECTION: VOffset = 6
+    static let SDS_SCHEMA: VOffset = 8
+    static let TRANSPORT: VOffset = 10
+    static let LOCATOR: VOffset = 12
+    static let MODULE_ID: VOffset = 14
+    static let METHOD_ID: VOffset = 16
+    static let PORT_ID: VOffset = 18
+    static let CONTENT_ENCODING: VOffset = 20
+    static let DESCRIPTION: VOffset = 22
+  }
+
+  ///  App-local stable name for this flow. Required, unique within the
+  ///  manifest.
+  public var NAME: String! { let o = _accessor.offset(VT.NAME); return _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.NAME) }
+  ///  Which way the payload crosses the page boundary at runtime.
+  public var DIRECTION: appFlowDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .toPage : appFlowDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .toPage }
+  ///  Existing SDS schema code carried by this flow, for example OMM, OEM, or
+  ///  PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+  ///  the flow carries; the app defines no schema of its own.
+  public var SDS_SCHEMA: String! { let o = _accessor.offset(VT.SDS_SCHEMA); return _accessor.string(at: o) }
+  public var SDS_SCHEMASegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SDS_SCHEMA) }
+  ///  Transport that moves the payload. Defaults to IPFS_CID per the
+  ///  content-addressed, IPFS-first rule.
+  public var TRANSPORT: appFlowTransport { let o = _accessor.offset(VT.TRANSPORT); return o == 0 ? .ipfsCid : appFlowTransport(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .ipfsCid }
+  ///  Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+  ///  for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+  ///  route template for GATEWAY_ROUTE.
+  public var LOCATOR: String? { let o = _accessor.offset(VT.LOCATOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LOCATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LOCATOR) }
+  ///  When present, must equal an APPModuleRef.ID in the same manifest — the
+  ///  loaded module that produces or consumes this flow. Binds the flow to a
+  ///  specific module method port together with METHOD_ID and PORT_ID.
+  public var MODULE_ID: String? { let o = _accessor.offset(VT.MODULE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MODULE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODULE_ID) }
+  ///  When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+  ///  this flow is bound to.
+  public var METHOD_ID: String? { let o = _accessor.offset(VT.METHOD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var METHOD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.METHOD_ID) }
+  ///  When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+  ///  flow is bound to.
+  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
+  ///  String/compression form of the payload as it crosses the channel,
+  ///  reusing the page content-encoding vocabulary. For flows carrying
+  ///  canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+  ///  bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+  ///  BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+  ///  applied when the channel is text-only.
+  public var CONTENT_ENCODING: appContentEncoding { let o = _accessor.offset(VT.CONTENT_ENCODING); return o == 0 ? .utf8 : appContentEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .utf8 }
+  ///  Human-readable summary.
+  public var DESCRIPTION: String? { let o = _accessor.offset(VT.DESCRIPTION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION) }
+  public static func startAPPDataflow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(DIRECTION: appFlowDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(SDS_SCHEMA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SDS_SCHEMA, at: VT.SDS_SCHEMA) }
+  public static func add(TRANSPORT: appFlowTransport, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT.rawValue, def: 0, at: VT.TRANSPORT) }
+  public static func add(LOCATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCATOR, at: VT.LOCATOR) }
+  public static func add(MODULE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODULE_ID, at: VT.MODULE_ID) }
+  public static func add(METHOD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_ID, at: VT.METHOD_ID) }
+  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
+  public static func add(CONTENT_ENCODING: appContentEncoding, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONTENT_ENCODING.rawValue, def: 0, at: VT.CONTENT_ENCODING) }
+  public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VT.DESCRIPTION) }
+  public static func endAPPDataflow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 8]); return end }
+  public static func createAPPDataflow(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset,
+    DIRECTION: appFlowDirection = .toPage,
+    SDS_SCHEMAOffset SDS_SCHEMA: Offset,
+    TRANSPORT: appFlowTransport = .ipfsCid,
+    LOCATOROffset LOCATOR: Offset = Offset(),
+    MODULE_IDOffset MODULE_ID: Offset = Offset(),
+    METHOD_IDOffset METHOD_ID: Offset = Offset(),
+    PORT_IDOffset PORT_ID: Offset = Offset(),
+    CONTENT_ENCODING: appContentEncoding = .utf8,
+    DESCRIPTIONOffset DESCRIPTION: Offset = Offset()
+  ) -> Offset {
+    let __start = APPDataflow.startAPPDataflow(&fbb)
+    APPDataflow.add(NAME: NAME, &fbb)
+    APPDataflow.add(DIRECTION: DIRECTION, &fbb)
+    APPDataflow.add(SDS_SCHEMA: SDS_SCHEMA, &fbb)
+    APPDataflow.add(TRANSPORT: TRANSPORT, &fbb)
+    APPDataflow.add(LOCATOR: LOCATOR, &fbb)
+    APPDataflow.add(MODULE_ID: MODULE_ID, &fbb)
+    APPDataflow.add(METHOD_ID: METHOD_ID, &fbb)
+    APPDataflow.add(PORT_ID: PORT_ID, &fbb)
+    APPDataflow.add(CONTENT_ENCODING: CONTENT_ENCODING, &fbb)
+    APPDataflow.add(DESCRIPTION: DESCRIPTION, &fbb)
+    return APPDataflow.endAPPDataflow(&fbb, start: __start)
+  }
+  public static func sortVectorOfAppdataflow(offsets:[Offset], _ fbb: inout FlatBufferBuilder) -> Offset {
+    var off = offsets
+    off.sort { Table.compare(Table.offset(Int32($1.o), vOffset: 4, fbb: &fbb), Table.offset(Int32($0.o), vOffset: 4, fbb: &fbb), fbb: &fbb) < 0 }
+    return fbb.createVector(ofOffsets: off)
+  }
+  fileprivate static func lookupByKey(vector: Int32, key: String, fbb: ByteBuffer) -> APPDataflow? {
+    let key = key.utf8.map { $0 }
+    var span = fbb.read(def: Int32.self, position: Int(vector - 4))
+    var start: Int32 = 0
+    while span != 0 {
+      var middle = span / 2
+      let tableOffset = Table.indirect(vector + 4 * (start + middle), fbb)
+      let comp = Table.compare(Table.offset(Int32(fbb.capacity) - tableOffset, vOffset: 4, fbb: fbb), key, fbb: fbb)
+      if comp > 0 {
+        span = middle
+      } else if comp < 0 {
+        middle += 1
+        start += middle
+        span -= middle
+      } else {
+        return APPDataflow(fbb, o: tableOffset)
+      }
+    }
+    return nil
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: appFlowDirection.self)
+    try _v.visit(field: VT.SDS_SCHEMA, fieldName: "SDS_SCHEMA", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TRANSPORT, fieldName: "TRANSPORT", required: false, type: appFlowTransport.self)
+    try _v.visit(field: VT.LOCATOR, fieldName: "LOCATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MODULE_ID, fieldName: "MODULE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.METHOD_ID, fieldName: "METHOD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CONTENT_ENCODING, fieldName: "CONTENT_ENCODING", required: false, type: appContentEncoding.self)
+    try _v.visit(field: VT.DESCRIPTION, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Application Package Manifest — one launchable app.
 public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -583,6 +837,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let UI: VOffset = 18
     static let CREATED_AT: VOffset = 20
     static let UPDATED_AT: VOffset = 22
+    static let DATAFLOW: VOffset = 24
   }
 
   ///  Stable app identity, unique per publisher. Required.
@@ -618,7 +873,13 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  when the manifest was last updated.
   public var UPDATED_AT: String? { let o = _accessor.offset(VT.UPDATED_AT); return o == 0 ? nil : _accessor.string(at: o) }
   public var UPDATED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UPDATED_AT) }
-  public static func startAPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  The page's declarative data contract: what data enters and leaves the
+  ///  running page and how. Referential integrity: every MODULE_ID here must
+  ///  resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  ///  name a method port advertised by that module's PLG manifest.
+  public var DATAFLOW: FlatbufferVector<APPDataflow> { return _accessor.vector(at: VT.DATAFLOW, byteSize: 4) }
+  public func DATAFLOWBy(key: String) -> APPDataflow? { let o = _accessor.offset(VT.DATAFLOW); return o == 0 ? nil : APPDataflow.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
+  public static func startAPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
@@ -629,6 +890,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(UI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UI, at: VT.UI) }
   public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
   public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
+  public static func addVectorOf(DATAFLOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATAFLOW, at: VT.DATAFLOW) }
   public static func endAPP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createAPP(
     _ fbb: inout FlatBufferBuilder,
@@ -641,7 +903,8 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SOURCESVectorOffset SOURCES: Offset = Offset(),
     UIVectorOffset UI: Offset = Offset(),
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
-    UPDATED_ATOffset UPDATED_AT: Offset = Offset()
+    UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
+    DATAFLOWVectorOffset DATAFLOW: Offset = Offset()
   ) -> Offset {
     let __start = APP.startAPP(&fbb)
     APP.add(ID: ID, &fbb)
@@ -654,6 +917,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     APP.addVectorOf(UI: UI, &fbb)
     APP.add(CREATED_AT: CREATED_AT, &fbb)
     APP.add(UPDATED_AT: UPDATED_AT, &fbb)
+    APP.addVectorOf(DATAFLOW: DATAFLOW, &fbb)
     return APP.endAPP(&fbb, start: __start)
   }
 
@@ -669,6 +933,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.UI, fieldName: "UI", required: false, type: ForwardOffset<Vector<ForwardOffset<APPUIPage>, APPUIPage>>.self)
     try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATAFLOW, fieldName: "DATAFLOW", required: false, type: ForwardOffset<Vector<ForwardOffset<APPDataflow>, APPDataflow>>.self)
     _v.finish()
   }
 }

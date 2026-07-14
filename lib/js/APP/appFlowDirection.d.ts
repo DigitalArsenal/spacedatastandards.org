@@ -1,0 +1,23 @@
+/**
+ * Direction of an APPDataflow entry relative to the running page. Distinct
+ * from appDataDirection, which is producer/consumer relative to the app as
+ * a whole; this enum is page-relative — which way bytes cross the page
+ * boundary at runtime. Append new values only; never reorder or reuse
+ * existing values.
+ */
+export declare enum appFlowDirection {
+    /**
+     * Data is delivered into the page for display or module input.
+     */
+    TO_PAGE = 0,
+    /**
+     * Data is emitted by the page (a module output or user action) for
+     * publication or upstream consumption.
+     */
+    FROM_PAGE = 1,
+    /**
+     * Data crosses in both directions over the same channel.
+     */
+    BIDIRECTIONAL = 2
+}
+//# sourceMappingURL=appFlowDirection.d.ts.map

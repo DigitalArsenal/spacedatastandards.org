@@ -25,6 +25,9 @@ struct APPSourceRefBuilder;
 struct APPUIPage;
 struct APPUIPageBuilder;
 
+struct APPDataflow;
+struct APPDataflowBuilder;
+
 struct APP;
 struct APPBuilder;
 
@@ -42,6 +45,26 @@ struct APPBuilder;
 /// text, base64, or a compressed base64 form. A page may instead be served
 /// by a member module; exactly one of the two mechanisms must be populated
 /// per page.
+///
+/// The page's data contract is described declaratively by DATAFLOW: every
+/// unit of data that enters or leaves the running page, the SDS standard it
+/// carries, the transport that moves it, and — when applicable — the loaded
+/// module method port that produces or consumes it. Standards-only rule:
+/// every page payload is an SDS record (a canonical size-prefixed
+/// FlatBuffer) or a content identifier pointing at one; the app manifest
+/// carries no bespoke page-only data shapes. Locators are content-addressed
+/// and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+/// node's IPFS gateway wherever the payload can be published as an immutable
+/// object, falling back to a live gossip topic or a same-origin gateway
+/// route only for streaming or request-scoped delivery.
+///
+/// Member modules run isomorphically. A module ref may declare, via
+/// RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+/// the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+/// over IPFS and instantiates them in the shared isomorphic JS harness
+/// (manifest + plugin_invoke_stream), exactly as a server-side node would.
+/// There is no bespoke browser loader; the browser and the node are two
+/// hosts of one harness ABI.
 /// Content encoding applied to APPUIPage.CONTENT. Append new values only;
 /// never reorder or reuse existing values. Decoders must reject an encoding
 /// value they do not recognize rather than guessing.
@@ -157,6 +180,134 @@ inline const char *EnumNameappSourceKind(appSourceKind e) {
   return EnumNamesappSourceKind()[index];
 }
 
+/// Direction of an APPDataflow entry relative to the running page. Distinct
+/// from appDataDirection, which is producer/consumer relative to the app as
+/// a whole; this enum is page-relative — which way bytes cross the page
+/// boundary at runtime. Append new values only; never reorder or reuse
+/// existing values.
+enum appFlowDirection : uint8_t {
+  /// Data is delivered into the page for display or module input.
+  appFlowDirection_TO_PAGE = 0,
+  /// Data is emitted by the page (a module output or user action) for
+  /// publication or upstream consumption.
+  appFlowDirection_FROM_PAGE = 1,
+  /// Data crosses in both directions over the same channel.
+  appFlowDirection_BIDIRECTIONAL = 2,
+  appFlowDirection_MIN = appFlowDirection_TO_PAGE,
+  appFlowDirection_MAX = appFlowDirection_BIDIRECTIONAL
+};
+
+inline const appFlowDirection (&EnumValuesappFlowDirection())[3] {
+  static const appFlowDirection values[] = {
+    appFlowDirection_TO_PAGE,
+    appFlowDirection_FROM_PAGE,
+    appFlowDirection_BIDIRECTIONAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesappFlowDirection() {
+  static const char * const names[4] = {
+    "TO_PAGE",
+    "FROM_PAGE",
+    "BIDIRECTIONAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameappFlowDirection(appFlowDirection e) {
+  if (::flatbuffers::IsOutRange(e, appFlowDirection_TO_PAGE, appFlowDirection_BIDIRECTIONAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesappFlowDirection()[index];
+}
+
+/// Transport that moves an APPDataflow payload. Locators are content-
+/// addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+/// immutable published object, and use the live or request-scoped transports
+/// only for streaming or same-origin request/response delivery. Append new
+/// values only; never reorder or reuse existing values.
+enum appFlowTransport : uint8_t {
+  /// LOCATOR is a CID; the page fetches the SDS record bytes by content
+  /// through the serving node's IPFS gateway.
+  appFlowTransport_IPFS_CID = 0,
+  /// LOCATOR is a gossip topic name; live SDS records arrive on the topic
+  /// via the node's pubsub bus.
+  appFlowTransport_PUBSUB_TOPIC = 1,
+  /// LOCATOR is a same-origin HTTP route template served by the node that
+  /// serves the page (used for request-scoped queries and streaming).
+  appFlowTransport_GATEWAY_ROUTE = 2,
+  appFlowTransport_MIN = appFlowTransport_IPFS_CID,
+  appFlowTransport_MAX = appFlowTransport_GATEWAY_ROUTE
+};
+
+inline const appFlowTransport (&EnumValuesappFlowTransport())[3] {
+  static const appFlowTransport values[] = {
+    appFlowTransport_IPFS_CID,
+    appFlowTransport_PUBSUB_TOPIC,
+    appFlowTransport_GATEWAY_ROUTE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesappFlowTransport() {
+  static const char * const names[4] = {
+    "IPFS_CID",
+    "PUBSUB_TOPIC",
+    "GATEWAY_ROUTE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameappFlowTransport(appFlowTransport e) {
+  if (::flatbuffers::IsOutRange(e, appFlowTransport_IPFS_CID, appFlowTransport_GATEWAY_ROUTE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesappFlowTransport()[index];
+}
+
+/// Where a member module is instantiated. PAGE and BOTH assert the module
+/// loads in the browser through the SAME module-sdk harness ABI the SDN
+/// nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+/// IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+/// page loader. Append new values only; never reorder or reuse existing
+/// values.
+enum appRuntimeTarget : uint8_t {
+  /// Loads only in the desktop/server node runtime.
+  appRuntimeTarget_NODE = 0,
+  /// Loads in the page through the isomorphic JS harness.
+  appRuntimeTarget_PAGE = 1,
+  /// Loads in both hosts from the same content-addressed bytes and ABI.
+  appRuntimeTarget_BOTH = 2,
+  appRuntimeTarget_MIN = appRuntimeTarget_NODE,
+  appRuntimeTarget_MAX = appRuntimeTarget_BOTH
+};
+
+inline const appRuntimeTarget (&EnumValuesappRuntimeTarget())[3] {
+  static const appRuntimeTarget values[] = {
+    appRuntimeTarget_NODE,
+    appRuntimeTarget_PAGE,
+    appRuntimeTarget_BOTH
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesappRuntimeTarget() {
+  static const char * const names[4] = {
+    "NODE",
+    "PAGE",
+    "BOTH",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameappRuntimeTarget(appRuntimeTarget e) {
+  if (::flatbuffers::IsOutRange(e, appRuntimeTarget_NODE, appRuntimeTarget_BOTH)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesappRuntimeTarget()[index];
+}
+
 /// One member WASM module of the app. References module identity; never
 /// embeds the module artifact itself (delivery is the module-bundle lane).
 struct APPModuleRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -170,7 +321,8 @@ struct APPModuleRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DESCRIPTION = 14,
     VT_MAX_WALL_CLOCK_MS = 16,
     VT_MAX_COST_UNITS = 18,
-    VT_MAX_MEMORY_PAGES = 20
+    VT_MAX_MEMORY_PAGES = 20,
+    VT_RUNTIME_TARGET = 22
   };
   /// App-local stable reference for this module. Required, unique within
   /// the manifest.
@@ -226,6 +378,15 @@ struct APPModuleRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint32_t MAX_MEMORY_PAGES() const {
     return GetField<uint32_t>(VT_MAX_MEMORY_PAGES, 0);
   }
+  /// Where this module is instantiated. PAGE or BOTH means the module also
+  /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+  /// node-only behavior of manifests written before this field existed.
+  appRuntimeTarget RUNTIME_TARGET() const {
+    return static_cast<appRuntimeTarget>(GetField<uint8_t>(VT_RUNTIME_TARGET, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -244,6 +405,7 @@ struct APPModuleRef FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint64_t>(verifier, VT_MAX_WALL_CLOCK_MS, 8) &&
            VerifyField<uint64_t>(verifier, VT_MAX_COST_UNITS, 8) &&
            VerifyField<uint32_t>(verifier, VT_MAX_MEMORY_PAGES, 4) &&
+           VerifyField<uint8_t>(verifier, VT_RUNTIME_TARGET, 1) &&
            verifier.EndTable();
   }
 };
@@ -279,6 +441,9 @@ struct APPModuleRefBuilder {
   void add_MAX_MEMORY_PAGES(uint32_t MAX_MEMORY_PAGES) {
     fbb_.AddElement<uint32_t>(APPModuleRef::VT_MAX_MEMORY_PAGES, MAX_MEMORY_PAGES, 0);
   }
+  void add_RUNTIME_TARGET(appRuntimeTarget RUNTIME_TARGET) {
+    fbb_.AddElement<uint8_t>(APPModuleRef::VT_RUNTIME_TARGET, static_cast<uint8_t>(RUNTIME_TARGET), 0);
+  }
   explicit APPModuleRefBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -301,7 +466,8 @@ inline ::flatbuffers::Offset<APPModuleRef> CreateAPPModuleRef(
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     uint64_t MAX_WALL_CLOCK_MS = 0,
     uint64_t MAX_COST_UNITS = 0,
-    uint32_t MAX_MEMORY_PAGES = 0) {
+    uint32_t MAX_MEMORY_PAGES = 0,
+    appRuntimeTarget RUNTIME_TARGET = appRuntimeTarget_NODE) {
   APPModuleRefBuilder builder_(_fbb);
   builder_.add_MAX_COST_UNITS(MAX_COST_UNITS);
   builder_.add_MAX_WALL_CLOCK_MS(MAX_WALL_CLOCK_MS);
@@ -312,6 +478,7 @@ inline ::flatbuffers::Offset<APPModuleRef> CreateAPPModuleRef(
   builder_.add_CONTENT_HASH(CONTENT_HASH);
   builder_.add_PLUGIN_ID(PLUGIN_ID);
   builder_.add_ID(ID);
+  builder_.add_RUNTIME_TARGET(RUNTIME_TARGET);
   return builder_.Finish();
 }
 
@@ -325,7 +492,8 @@ inline ::flatbuffers::Offset<APPModuleRef> CreateAPPModuleRefDirect(
     const char *DESCRIPTION = nullptr,
     uint64_t MAX_WALL_CLOCK_MS = 0,
     uint64_t MAX_COST_UNITS = 0,
-    uint32_t MAX_MEMORY_PAGES = 0) {
+    uint32_t MAX_MEMORY_PAGES = 0,
+    appRuntimeTarget RUNTIME_TARGET = appRuntimeTarget_NODE) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto CONTENT_HASH__ = CONTENT_HASH ? _fbb.CreateString(CONTENT_HASH) : 0;
@@ -342,7 +510,8 @@ inline ::flatbuffers::Offset<APPModuleRef> CreateAPPModuleRefDirect(
       DESCRIPTION__,
       MAX_WALL_CLOCK_MS,
       MAX_COST_UNITS,
-      MAX_MEMORY_PAGES);
+      MAX_MEMORY_PAGES,
+      RUNTIME_TARGET);
 }
 
 /// One SDS record type the app produces and/or consumes. Names an existing
@@ -841,6 +1010,225 @@ inline ::flatbuffers::Offset<APPUIPage> CreateAPPUIPageDirect(
       URL__);
 }
 
+/// One unit of the page's data contract: a named flow describing what data
+/// enters or leaves the running page, the SDS standard it carries, how it is
+/// transported, and — when applicable — the loaded module method port bound
+/// to it. Standards-only rule: every flow payload is an SDS record (a
+/// canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+/// defines no data shapes of its own, it only references an existing
+/// spacedatastandards.org schema by its established code. Locators are
+/// content-addressed and IPFS-first.
+struct APPDataflow FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef APPDataflowBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_DIRECTION = 6,
+    VT_SDS_SCHEMA = 8,
+    VT_TRANSPORT = 10,
+    VT_LOCATOR = 12,
+    VT_MODULE_ID = 14,
+    VT_METHOD_ID = 16,
+    VT_PORT_ID = 18,
+    VT_CONTENT_ENCODING = 20,
+    VT_DESCRIPTION = 22
+  };
+  /// App-local stable name for this flow. Required, unique within the
+  /// manifest.
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  bool KeyCompareLessThan(const APPDataflow * const o) const {
+    return *NAME() < *o->NAME();
+  }
+  int KeyCompareWithValue(const char *_NAME) const {
+    return strcmp(NAME()->c_str(), _NAME);
+  }
+  template<typename StringType>
+  int KeyCompareWithValue(const StringType& _NAME) const {
+    if (NAME()->c_str() < _NAME) return -1;
+    if (_NAME < NAME()->c_str()) return 1;
+    return 0;
+  }
+  /// Which way the payload crosses the page boundary at runtime.
+  appFlowDirection DIRECTION() const {
+    return static_cast<appFlowDirection>(GetField<uint8_t>(VT_DIRECTION, 0));
+  }
+  /// Existing SDS schema code carried by this flow, for example OMM, OEM, or
+  /// PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+  /// the flow carries; the app defines no schema of its own.
+  const ::flatbuffers::String *SDS_SCHEMA() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SDS_SCHEMA);
+  }
+  /// Transport that moves the payload. Defaults to IPFS_CID per the
+  /// content-addressed, IPFS-first rule.
+  appFlowTransport TRANSPORT() const {
+    return static_cast<appFlowTransport>(GetField<uint8_t>(VT_TRANSPORT, 0));
+  }
+  /// Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+  /// for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+  /// route template for GATEWAY_ROUTE.
+  const ::flatbuffers::String *LOCATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LOCATOR);
+  }
+  /// When present, must equal an APPModuleRef.ID in the same manifest — the
+  /// loaded module that produces or consumes this flow. Binds the flow to a
+  /// specific module method port together with METHOD_ID and PORT_ID.
+  const ::flatbuffers::String *MODULE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULE_ID);
+  }
+  /// When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+  /// this flow is bound to.
+  const ::flatbuffers::String *METHOD_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_METHOD_ID);
+  }
+  /// When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+  /// flow is bound to.
+  const ::flatbuffers::String *PORT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PORT_ID);
+  }
+  /// String/compression form of the payload as it crosses the channel,
+  /// reusing the page content-encoding vocabulary. For flows carrying
+  /// canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+  /// bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+  /// BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+  /// applied when the channel is text-only.
+  appContentEncoding CONTENT_ENCODING() const {
+    return static_cast<appContentEncoding>(GetField<uint8_t>(VT_CONTENT_ENCODING, 0));
+  }
+  /// Human-readable summary.
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffsetRequired(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyField<uint8_t>(verifier, VT_DIRECTION, 1) &&
+           VerifyOffsetRequired(verifier, VT_SDS_SCHEMA) &&
+           verifier.VerifyString(SDS_SCHEMA()) &&
+           VerifyField<uint8_t>(verifier, VT_TRANSPORT, 1) &&
+           VerifyOffset(verifier, VT_LOCATOR) &&
+           verifier.VerifyString(LOCATOR()) &&
+           VerifyOffset(verifier, VT_MODULE_ID) &&
+           verifier.VerifyString(MODULE_ID()) &&
+           VerifyOffset(verifier, VT_METHOD_ID) &&
+           verifier.VerifyString(METHOD_ID()) &&
+           VerifyOffset(verifier, VT_PORT_ID) &&
+           verifier.VerifyString(PORT_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_CONTENT_ENCODING, 1) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct APPDataflowBuilder {
+  typedef APPDataflow Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(APPDataflow::VT_NAME, NAME);
+  }
+  void add_DIRECTION(appFlowDirection DIRECTION) {
+    fbb_.AddElement<uint8_t>(APPDataflow::VT_DIRECTION, static_cast<uint8_t>(DIRECTION), 0);
+  }
+  void add_SDS_SCHEMA(::flatbuffers::Offset<::flatbuffers::String> SDS_SCHEMA) {
+    fbb_.AddOffset(APPDataflow::VT_SDS_SCHEMA, SDS_SCHEMA);
+  }
+  void add_TRANSPORT(appFlowTransport TRANSPORT) {
+    fbb_.AddElement<uint8_t>(APPDataflow::VT_TRANSPORT, static_cast<uint8_t>(TRANSPORT), 0);
+  }
+  void add_LOCATOR(::flatbuffers::Offset<::flatbuffers::String> LOCATOR) {
+    fbb_.AddOffset(APPDataflow::VT_LOCATOR, LOCATOR);
+  }
+  void add_MODULE_ID(::flatbuffers::Offset<::flatbuffers::String> MODULE_ID) {
+    fbb_.AddOffset(APPDataflow::VT_MODULE_ID, MODULE_ID);
+  }
+  void add_METHOD_ID(::flatbuffers::Offset<::flatbuffers::String> METHOD_ID) {
+    fbb_.AddOffset(APPDataflow::VT_METHOD_ID, METHOD_ID);
+  }
+  void add_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> PORT_ID) {
+    fbb_.AddOffset(APPDataflow::VT_PORT_ID, PORT_ID);
+  }
+  void add_CONTENT_ENCODING(appContentEncoding CONTENT_ENCODING) {
+    fbb_.AddElement<uint8_t>(APPDataflow::VT_CONTENT_ENCODING, static_cast<uint8_t>(CONTENT_ENCODING), 0);
+  }
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(APPDataflow::VT_DESCRIPTION, DESCRIPTION);
+  }
+  explicit APPDataflowBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<APPDataflow> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<APPDataflow>(end);
+    fbb_.Required(o, APPDataflow::VT_NAME);
+    fbb_.Required(o, APPDataflow::VT_SDS_SCHEMA);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<APPDataflow> CreateAPPDataflow(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    appFlowDirection DIRECTION = appFlowDirection_TO_PAGE,
+    ::flatbuffers::Offset<::flatbuffers::String> SDS_SCHEMA = 0,
+    appFlowTransport TRANSPORT = appFlowTransport_IPFS_CID,
+    ::flatbuffers::Offset<::flatbuffers::String> LOCATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PORT_ID = 0,
+    appContentEncoding CONTENT_ENCODING = appContentEncoding_UTF8,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0) {
+  APPDataflowBuilder builder_(_fbb);
+  builder_.add_DESCRIPTION(DESCRIPTION);
+  builder_.add_PORT_ID(PORT_ID);
+  builder_.add_METHOD_ID(METHOD_ID);
+  builder_.add_MODULE_ID(MODULE_ID);
+  builder_.add_LOCATOR(LOCATOR);
+  builder_.add_SDS_SCHEMA(SDS_SCHEMA);
+  builder_.add_NAME(NAME);
+  builder_.add_CONTENT_ENCODING(CONTENT_ENCODING);
+  builder_.add_TRANSPORT(TRANSPORT);
+  builder_.add_DIRECTION(DIRECTION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<APPDataflow> CreateAPPDataflowDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    appFlowDirection DIRECTION = appFlowDirection_TO_PAGE,
+    const char *SDS_SCHEMA = nullptr,
+    appFlowTransport TRANSPORT = appFlowTransport_IPFS_CID,
+    const char *LOCATOR = nullptr,
+    const char *MODULE_ID = nullptr,
+    const char *METHOD_ID = nullptr,
+    const char *PORT_ID = nullptr,
+    appContentEncoding CONTENT_ENCODING = appContentEncoding_UTF8,
+    const char *DESCRIPTION = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto SDS_SCHEMA__ = SDS_SCHEMA ? _fbb.CreateString(SDS_SCHEMA) : 0;
+  auto LOCATOR__ = LOCATOR ? _fbb.CreateString(LOCATOR) : 0;
+  auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
+  auto METHOD_ID__ = METHOD_ID ? _fbb.CreateString(METHOD_ID) : 0;
+  auto PORT_ID__ = PORT_ID ? _fbb.CreateString(PORT_ID) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  return CreateAPPDataflow(
+      _fbb,
+      NAME__,
+      DIRECTION,
+      SDS_SCHEMA__,
+      TRANSPORT,
+      LOCATOR__,
+      MODULE_ID__,
+      METHOD_ID__,
+      PORT_ID__,
+      CONTENT_ENCODING,
+      DESCRIPTION__);
+}
+
 /// Application Package Manifest — one launchable app.
 struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef APPBuilder Builder;
@@ -854,7 +1242,8 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SOURCES = 16,
     VT_UI = 18,
     VT_CREATED_AT = 20,
-    VT_UPDATED_AT = 22
+    VT_UPDATED_AT = 22,
+    VT_DATAFLOW = 24
   };
   /// Stable app identity, unique per publisher. Required.
   const ::flatbuffers::String *ID() const {
@@ -899,6 +1288,13 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *UPDATED_AT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATED_AT);
   }
+  /// The page's declarative data contract: what data enters and leaves the
+  /// running page and how. Referential integrity: every MODULE_ID here must
+  /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  /// name a method port advertised by that module's PLG manifest.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>> *>(VT_DATAFLOW);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -926,6 +1322,9 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(CREATED_AT()) &&
            VerifyOffset(verifier, VT_UPDATED_AT) &&
            verifier.VerifyString(UPDATED_AT()) &&
+           VerifyOffset(verifier, VT_DATAFLOW) &&
+           verifier.VerifyVector(DATAFLOW()) &&
+           verifier.VerifyVectorOfTables(DATAFLOW()) &&
            verifier.EndTable();
   }
 };
@@ -964,6 +1363,9 @@ struct APPBuilder {
   void add_UPDATED_AT(::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT) {
     fbb_.AddOffset(APP::VT_UPDATED_AT, UPDATED_AT);
   }
+  void add_DATAFLOW(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW) {
+    fbb_.AddOffset(APP::VT_DATAFLOW, DATAFLOW);
+  }
   explicit APPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -987,8 +1389,10 @@ inline ::flatbuffers::Offset<APP> CreateAPP(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPSourceRef>>> SOURCES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPUIPage>>> UI = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW = 0) {
   APPBuilder builder_(_fbb);
+  builder_.add_DATAFLOW(DATAFLOW);
   builder_.add_UPDATED_AT(UPDATED_AT);
   builder_.add_CREATED_AT(CREATED_AT);
   builder_.add_UI(UI);
@@ -1013,7 +1417,8 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
     std::vector<::flatbuffers::Offset<APPSourceRef>> *SOURCES = nullptr,
     std::vector<::flatbuffers::Offset<APPUIPage>> *UI = nullptr,
     const char *CREATED_AT = nullptr,
-    const char *UPDATED_AT = nullptr) {
+    const char *UPDATED_AT = nullptr,
+    std::vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
@@ -1024,6 +1429,7 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
   auto UI__ = UI ? _fbb.CreateVectorOfSortedTables<APPUIPage>(UI) : 0;
   auto CREATED_AT__ = CREATED_AT ? _fbb.CreateString(CREATED_AT) : 0;
   auto UPDATED_AT__ = UPDATED_AT ? _fbb.CreateString(UPDATED_AT) : 0;
+  auto DATAFLOW__ = DATAFLOW ? _fbb.CreateVectorOfSortedTables<APPDataflow>(DATAFLOW) : 0;
   return CreateAPP(
       _fbb,
       ID__,
@@ -1035,7 +1441,8 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
       SOURCES__,
       UI__,
       CREATED_AT__,
-      UPDATED_AT__);
+      UPDATED_AT__,
+      DATAFLOW__);
 }
 
 inline const APP *GetAPP(const void *buf) {

@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { APPDataRef, APPDataRefT } from './APPDataRef.js';
+import { APPDataflow, APPDataflowT } from './APPDataflow.js';
 import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
@@ -150,8 +151,24 @@ UPDATED_AT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The page's declarative data contract: what data enters and leaves the
+ * running page and how. Referential integrity: every MODULE_ID here must
+ * resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+ * name a method port advertised by that module's PLG manifest.
+ */
+DATAFLOW(index: number, obj?:APPDataflow):APPDataflow|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new APPDataflow()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+dataflowLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startAPP(builder:flatbuffers.Builder) {
-  builder.startObject(10);
+  builder.startObject(11);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -242,6 +259,22 @@ static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_ATOffset:flatbuffers.Of
   builder.addFieldOffset(9, UPDATED_ATOffset, 0);
 }
 
+static addDataflow(builder:flatbuffers.Builder, DATAFLOWOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, DATAFLOWOffset, 0);
+}
+
+static createDataflowVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDataflowVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endAPP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
@@ -256,7 +289,7 @@ static finishSizePrefixedAPPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$APP', true);
 }
 
-static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, DATAFLOWOffset:flatbuffers.Offset):flatbuffers.Offset {
   APP.startAPP(builder);
   APP.addId(builder, IDOffset);
   APP.addName(builder, NAMEOffset);
@@ -268,6 +301,7 @@ static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEO
   APP.addUi(builder, UIOffset);
   APP.addCreatedAt(builder, CREATED_ATOffset);
   APP.addUpdatedAt(builder, UPDATED_ATOffset);
+  APP.addDataflow(builder, DATAFLOWOffset);
   return APP.endAPP(builder);
 }
 
@@ -282,7 +316,8 @@ unpack(): APPT {
     this.bb!.createObjList<APPSourceRef, APPSourceRefT>(this.SOURCES.bind(this), this.sourcesLength()),
     this.bb!.createObjList<APPUIPage, APPUIPageT>(this.UI.bind(this), this.uiLength()),
     this.CREATED_AT(),
-    this.UPDATED_AT()
+    this.UPDATED_AT(),
+    this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength())
   );
 }
 
@@ -298,6 +333,7 @@ unpackTo(_o: APPT): void {
   _o.UI = this.bb!.createObjList<APPUIPage, APPUIPageT>(this.UI.bind(this), this.uiLength());
   _o.CREATED_AT = this.CREATED_AT();
   _o.UPDATED_AT = this.UPDATED_AT();
+  _o.DATAFLOW = this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength());
 }
 }
 
@@ -312,7 +348,8 @@ constructor(
   public SOURCES: (APPSourceRefT)[] = [],
   public UI: (APPUIPageT)[] = [],
   public CREATED_AT: string|Uint8Array|null = null,
-  public UPDATED_AT: string|Uint8Array|null = null
+  public UPDATED_AT: string|Uint8Array|null = null,
+  public DATAFLOW: (APPDataflowT)[] = []
 ){}
 
 
@@ -327,6 +364,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const UI = APP.createUiVector(builder, builder.createObjectOffsetList(this.UI));
   const CREATED_AT = (this.CREATED_AT !== null ? builder.createString(this.CREATED_AT!) : 0);
   const UPDATED_AT = (this.UPDATED_AT !== null ? builder.createString(this.UPDATED_AT!) : 0);
+  const DATAFLOW = APP.createDataflowVector(builder, builder.createObjectOffsetList(this.DATAFLOW));
 
   return APP.createAPP(builder,
     ID,
@@ -338,7 +376,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SOURCES,
     UI,
     CREATED_AT,
-    UPDATED_AT
+    UPDATED_AT,
+    DATAFLOW
   );
 }
 }

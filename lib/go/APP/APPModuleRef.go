@@ -238,8 +238,40 @@ func (rcv *APPModuleRef) MutateMaxMemoryPages(n uint32) bool {
 	return rcv.MutateMAX_MEMORY_PAGES(n)
 }
 
+/// Where this module is instantiated. PAGE or BOTH means the module also
+/// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+/// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+/// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+/// a bespoke page-only loader. Defaults to NODE to preserve the prior
+/// node-only behavior of manifests written before this field existed.
+func (rcv *APPModuleRef) RUNTIME_TARGET() appRuntimeTarget {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return appRuntimeTarget(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *APPModuleRef) RuntimeTarget() appRuntimeTarget {
+	return rcv.RUNTIME_TARGET()
+}
+
+/// Where this module is instantiated. PAGE or BOTH means the module also
+/// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+/// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+/// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+/// a bespoke page-only loader. Defaults to NODE to preserve the prior
+/// node-only behavior of manifests written before this field existed.
+func (rcv *APPModuleRef) MutateRUNTIME_TARGET(n appRuntimeTarget) bool {
+	return rcv._tab.MutateByteSlot(22, byte(n))
+}
+
+func (rcv *APPModuleRef) MutateRuntimeTarget(n appRuntimeTarget) bool {
+	return rcv.MutateRUNTIME_TARGET(n)
+}
+
 func APPModuleRefStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(10)
 }
 func APPModuleRefAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -294,6 +326,12 @@ func APPModuleRefAddMAX_MEMORY_PAGES(builder *flatbuffers.Builder, MAX_MEMORY_PA
 }
 func APPModuleRefAddMaxMemoryPages(builder *flatbuffers.Builder, MAX_MEMORY_PAGES uint32) {
 	APPModuleRefAddMAX_MEMORY_PAGES(builder, MAX_MEMORY_PAGES)
+}
+func APPModuleRefAddRUNTIME_TARGET(builder *flatbuffers.Builder, RUNTIME_TARGET appRuntimeTarget) {
+	builder.PrependByteSlot(9, byte(RUNTIME_TARGET), 0)
+}
+func APPModuleRefAddRuntimeTarget(builder *flatbuffers.Builder, RUNTIME_TARGET appRuntimeTarget) {
+	APPModuleRefAddRUNTIME_TARGET(builder, RUNTIME_TARGET)
 }
 func APPModuleRefEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

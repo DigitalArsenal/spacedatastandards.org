@@ -328,8 +328,60 @@ func (rcv *APP) UpdatedAt() []byte {
 
 /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)
 /// when the manifest was last updated.
+/// The page's declarative data contract: what data enters and leaves the
+/// running page and how. Referential integrity: every MODULE_ID here must
+/// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+/// name a method port advertised by that module's PLG manifest.
+func (rcv *APP) DATAFLOW(obj *APPDataflow, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(APPDataflow)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *APP) Dataflow(obj *APPDataflow, j int) bool {
+	return rcv.DATAFLOW(obj, j)
+}
+
+func (rcv *APP) DATAFLOWByKey(obj *APPDataflow, key string) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		return obj.LookupByKey(key, x, rcv._tab.Bytes)
+	}
+	return false
+}
+
+func (rcv *APP) DataflowByKey(obj *APPDataflow, key string) bool {
+	return rcv.DATAFLOWByKey(obj, key)
+}
+
+func (rcv *APP) DATAFLOWLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *APP) DataflowLength() int {
+	return rcv.DATAFLOWLength()
+}
+
+/// The page's declarative data contract: what data enters and leaves the
+/// running page and how. Referential integrity: every MODULE_ID here must
+/// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+/// name a method port advertised by that module's PLG manifest.
 func APPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(11)
 }
 func APPAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -414,6 +466,18 @@ func APPAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffs
 }
 func APPAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
 	APPAddUPDATED_AT(builder, UPDATED_AT)
+}
+func APPAddDATAFLOW(builder *flatbuffers.Builder, DATAFLOW flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(DATAFLOW), 0)
+}
+func APPAddDataflow(builder *flatbuffers.Builder, DATAFLOW flatbuffers.UOffsetT) {
+	APPAddDATAFLOW(builder, DATAFLOW)
+}
+func APPStartDATAFLOWVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func APPStartDataflowVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return APPStartDATAFLOWVector(builder, numElems)
 }
 func APPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { appRuntimeTarget } from './appRuntimeTarget.js';
 
 
 /**
@@ -118,8 +119,21 @@ MAX_MEMORY_PAGES():number {
   return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Where this module is instantiated. PAGE or BOTH means the module also
+ * loads in the browser: the page resolves its bytes by CONTENT_HASH over
+ * IPFS and instantiates it through the SAME isomorphic module-sdk harness
+ * ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+ * a bespoke page-only loader. Defaults to NODE to preserve the prior
+ * node-only behavior of manifests written before this field existed.
+ */
+RUNTIME_TARGET():appRuntimeTarget {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : appRuntimeTarget.NODE;
+}
+
 static startAPPModuleRef(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(10);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -158,13 +172,17 @@ static addMaxMemoryPages(builder:flatbuffers.Builder, MAX_MEMORY_PAGES:number) {
   builder.addFieldInt32(8, MAX_MEMORY_PAGES, 0);
 }
 
+static addRuntimeTarget(builder:flatbuffers.Builder, RUNTIME_TARGET:appRuntimeTarget) {
+  builder.addFieldInt8(9, RUNTIME_TARGET, appRuntimeTarget.NODE);
+}
+
 static endAPPModuleRef(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
   return offset;
 }
 
-static createAPPModuleRef(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, CONTENT_HASHOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MAX_WALL_CLOCK_MS:bigint, MAX_COST_UNITS:bigint, MAX_MEMORY_PAGES:number):flatbuffers.Offset {
+static createAPPModuleRef(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, CONTENT_HASHOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MAX_WALL_CLOCK_MS:bigint, MAX_COST_UNITS:bigint, MAX_MEMORY_PAGES:number, RUNTIME_TARGET:appRuntimeTarget):flatbuffers.Offset {
   APPModuleRef.startAPPModuleRef(builder);
   APPModuleRef.addId(builder, IDOffset);
   APPModuleRef.addPluginId(builder, PLUGIN_IDOffset);
@@ -175,6 +193,7 @@ static createAPPModuleRef(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offs
   APPModuleRef.addMaxWallClockMs(builder, MAX_WALL_CLOCK_MS);
   APPModuleRef.addMaxCostUnits(builder, MAX_COST_UNITS);
   APPModuleRef.addMaxMemoryPages(builder, MAX_MEMORY_PAGES);
+  APPModuleRef.addRuntimeTarget(builder, RUNTIME_TARGET);
   return APPModuleRef.endAPPModuleRef(builder);
 }
 
@@ -188,7 +207,8 @@ unpack(): APPModuleRefT {
     this.DESCRIPTION(),
     this.MAX_WALL_CLOCK_MS(),
     this.MAX_COST_UNITS(),
-    this.MAX_MEMORY_PAGES()
+    this.MAX_MEMORY_PAGES(),
+    this.RUNTIME_TARGET()
   );
 }
 
@@ -203,6 +223,7 @@ unpackTo(_o: APPModuleRefT): void {
   _o.MAX_WALL_CLOCK_MS = this.MAX_WALL_CLOCK_MS();
   _o.MAX_COST_UNITS = this.MAX_COST_UNITS();
   _o.MAX_MEMORY_PAGES = this.MAX_MEMORY_PAGES();
+  _o.RUNTIME_TARGET = this.RUNTIME_TARGET();
 }
 }
 
@@ -216,7 +237,8 @@ constructor(
   public DESCRIPTION: string|Uint8Array|null = null,
   public MAX_WALL_CLOCK_MS: bigint = BigInt('0'),
   public MAX_COST_UNITS: bigint = BigInt('0'),
-  public MAX_MEMORY_PAGES: number = 0
+  public MAX_MEMORY_PAGES: number = 0,
+  public RUNTIME_TARGET: appRuntimeTarget = appRuntimeTarget.NODE
 ){}
 
 
@@ -237,7 +259,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DESCRIPTION,
     this.MAX_WALL_CLOCK_MS,
     this.MAX_COST_UNITS,
-    this.MAX_MEMORY_PAGES
+    this.MAX_MEMORY_PAGES,
+    this.RUNTIME_TARGET
   );
 }
 }

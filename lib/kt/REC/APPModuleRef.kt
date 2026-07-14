@@ -144,6 +144,19 @@ class APPModuleRef : Table() {
             val o = __offset(20)
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Where this module is instantiated. PAGE or BOTH means the module also
+     * loads in the browser: the page resolves its bytes by CONTENT_HASH over
+     * IPFS and instantiates it through the SAME isomorphic module-sdk harness
+     * ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+     * a bespoke page-only loader. Defaults to NODE to preserve the prior
+     * node-only behavior of manifests written before this field existed.
+     */
+    val runtimeTarget : UByte
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer) : Int {
          return compareStrings(__offset(4, o1, _bb), __offset(4, o2, _bb), _bb)
     }
@@ -154,8 +167,8 @@ class APPModuleRef : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createAPPModuleRef(builder: FlatBufferBuilder, idOffset: Int, pluginIdOffset: Int, contentHashOffset: Int, versionOffset: Int, roleOffset: Int, descriptionOffset: Int, maxWallClockMs: ULong, maxCostUnits: ULong, maxMemoryPages: UInt) : Int {
-            builder.startTable(9)
+        fun createAPPModuleRef(builder: FlatBufferBuilder, idOffset: Int, pluginIdOffset: Int, contentHashOffset: Int, versionOffset: Int, roleOffset: Int, descriptionOffset: Int, maxWallClockMs: ULong, maxCostUnits: ULong, maxMemoryPages: UInt, runtimeTarget: UByte) : Int {
+            builder.startTable(10)
             addMAXCOSTUNITS(builder, maxCostUnits)
             addMAXWALLCLOCKMS(builder, maxWallClockMs)
             addMAXMEMORYPAGES(builder, maxMemoryPages)
@@ -165,9 +178,10 @@ class APPModuleRef : Table() {
             addCONTENTHASH(builder, contentHashOffset)
             addPLUGINID(builder, pluginIdOffset)
             addID(builder, idOffset)
+            addRUNTIMETARGET(builder, runtimeTarget)
             return endAPPModuleRef(builder)
         }
-        fun startAPPModuleRef(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startAPPModuleRef(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addID(builder: FlatBufferBuilder, id: Int)  {
             builder.addOffset(id)
             builder.slot(0)
@@ -180,6 +194,7 @@ class APPModuleRef : Table() {
         fun addMAXWALLCLOCKMS(builder: FlatBufferBuilder, maxWallClockMs: ULong) = builder.addLong(6, maxWallClockMs.toLong(), 0)
         fun addMAXCOSTUNITS(builder: FlatBufferBuilder, maxCostUnits: ULong) = builder.addLong(7, maxCostUnits.toLong(), 0)
         fun addMAXMEMORYPAGES(builder: FlatBufferBuilder, maxMemoryPages: UInt) = builder.addInt(8, maxMemoryPages.toInt(), 0)
+        fun addRUNTIMETARGET(builder: FlatBufferBuilder, runtimeTarget: UByte) = builder.addByte(9, runtimeTarget.toByte(), 0)
         fun endAPPModuleRef(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

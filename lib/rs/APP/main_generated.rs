@@ -30,6 +30,26 @@ pub const ENUM_VALUES_APP_CONTENT_ENCODING: [appContentEncoding; 4] = [
 /// text, base64, or a compressed base64 form. A page may instead be served
 /// by a member module; exactly one of the two mechanisms must be populated
 /// per page.
+///
+/// The page's data contract is described declaratively by DATAFLOW: every
+/// unit of data that enters or leaves the running page, the SDS standard it
+/// carries, the transport that moves it, and — when applicable — the loaded
+/// module method port that produces or consumes it. Standards-only rule:
+/// every page payload is an SDS record (a canonical size-prefixed
+/// FlatBuffer) or a content identifier pointing at one; the app manifest
+/// carries no bespoke page-only data shapes. Locators are content-addressed
+/// and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+/// node's IPFS gateway wherever the payload can be published as an immutable
+/// object, falling back to a live gossip topic or a same-origin gateway
+/// route only for streaming or request-scoped delivery.
+///
+/// Member modules run isomorphically. A module ref may declare, via
+/// RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+/// the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+/// over IPFS and instantiates them in the shared isomorphic JS harness
+/// (manifest + plugin_invoke_stream), exactly as a server-side node would.
+/// There is no bespoke browser loader; the browser and the node are two
+/// hosts of one harness ABI.
 /// Content encoding applied to APPUIPage.CONTENT. Append new values only;
 /// never reorder or reuse existing values. Decoders must reject an encoding
 /// value they do not recognize rather than guessing.
@@ -298,6 +318,299 @@ impl<'a> ::flatbuffers::Verifiable for appSourceKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for appSourceKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_APP_FLOW_DIRECTION: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_APP_FLOW_DIRECTION: u8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_APP_FLOW_DIRECTION: [appFlowDirection; 3] = [
+  appFlowDirection::TO_PAGE,
+  appFlowDirection::FROM_PAGE,
+  appFlowDirection::BIDIRECTIONAL,
+];
+
+/// Direction of an APPDataflow entry relative to the running page. Distinct
+/// from appDataDirection, which is producer/consumer relative to the app as
+/// a whole; this enum is page-relative — which way bytes cross the page
+/// boundary at runtime. Append new values only; never reorder or reuse
+/// existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct appFlowDirection(pub u8);
+#[allow(non_upper_case_globals)]
+impl appFlowDirection {
+  /// Data is delivered into the page for display or module input.
+  pub const TO_PAGE: Self = Self(0);
+  /// Data is emitted by the page (a module output or user action) for
+  /// publication or upstream consumption.
+  pub const FROM_PAGE: Self = Self(1);
+  /// Data crosses in both directions over the same channel.
+  pub const BIDIRECTIONAL: Self = Self(2);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::TO_PAGE,
+    Self::FROM_PAGE,
+    Self::BIDIRECTIONAL,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::TO_PAGE => Some("TO_PAGE"),
+      Self::FROM_PAGE => Some("FROM_PAGE"),
+      Self::BIDIRECTIONAL => Some("BIDIRECTIONAL"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for appFlowDirection {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for appFlowDirection {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for appFlowDirection {
+    type Output = appFlowDirection;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for appFlowDirection {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for appFlowDirection {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for appFlowDirection {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_APP_FLOW_TRANSPORT: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_APP_FLOW_TRANSPORT: u8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_APP_FLOW_TRANSPORT: [appFlowTransport; 3] = [
+  appFlowTransport::IPFS_CID,
+  appFlowTransport::PUBSUB_TOPIC,
+  appFlowTransport::GATEWAY_ROUTE,
+];
+
+/// Transport that moves an APPDataflow payload. Locators are content-
+/// addressed and IPFS-first: prefer IPFS_CID wherever the payload is an
+/// immutable published object, and use the live or request-scoped transports
+/// only for streaming or same-origin request/response delivery. Append new
+/// values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct appFlowTransport(pub u8);
+#[allow(non_upper_case_globals)]
+impl appFlowTransport {
+  /// LOCATOR is a CID; the page fetches the SDS record bytes by content
+  /// through the serving node's IPFS gateway.
+  pub const IPFS_CID: Self = Self(0);
+  /// LOCATOR is a gossip topic name; live SDS records arrive on the topic
+  /// via the node's pubsub bus.
+  pub const PUBSUB_TOPIC: Self = Self(1);
+  /// LOCATOR is a same-origin HTTP route template served by the node that
+  /// serves the page (used for request-scoped queries and streaming).
+  pub const GATEWAY_ROUTE: Self = Self(2);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::IPFS_CID,
+    Self::PUBSUB_TOPIC,
+    Self::GATEWAY_ROUTE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::IPFS_CID => Some("IPFS_CID"),
+      Self::PUBSUB_TOPIC => Some("PUBSUB_TOPIC"),
+      Self::GATEWAY_ROUTE => Some("GATEWAY_ROUTE"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for appFlowTransport {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for appFlowTransport {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for appFlowTransport {
+    type Output = appFlowTransport;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for appFlowTransport {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for appFlowTransport {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for appFlowTransport {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_APP_RUNTIME_TARGET: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_APP_RUNTIME_TARGET: u8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_APP_RUNTIME_TARGET: [appRuntimeTarget; 3] = [
+  appRuntimeTarget::NODE,
+  appRuntimeTarget::PAGE,
+  appRuntimeTarget::BOTH,
+];
+
+/// Where a member module is instantiated. PAGE and BOTH assert the module
+/// loads in the browser through the SAME module-sdk harness ABI the SDN
+/// nodes use — page bytes are resolved by APPModuleRef.CONTENT_HASH over
+/// IPFS and driven through manifest + plugin_invoke_stream, with no bespoke
+/// page loader. Append new values only; never reorder or reuse existing
+/// values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct appRuntimeTarget(pub u8);
+#[allow(non_upper_case_globals)]
+impl appRuntimeTarget {
+  /// Loads only in the desktop/server node runtime.
+  pub const NODE: Self = Self(0);
+  /// Loads in the page through the isomorphic JS harness.
+  pub const PAGE: Self = Self(1);
+  /// Loads in both hosts from the same content-addressed bytes and ABI.
+  pub const BOTH: Self = Self(2);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NODE,
+    Self::PAGE,
+    Self::BOTH,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NODE => Some("NODE"),
+      Self::PAGE => Some("PAGE"),
+      Self::BOTH => Some("BOTH"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for appRuntimeTarget {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for appRuntimeTarget {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for appRuntimeTarget {
+    type Output = appRuntimeTarget;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for appRuntimeTarget {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for appRuntimeTarget {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for appRuntimeTarget {}
 pub enum APPModuleRefOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -325,6 +638,7 @@ impl<'a> APPModuleRef<'a> {
   pub const VT_MAX_WALL_CLOCK_MS: ::flatbuffers::VOffsetT = 16;
   pub const VT_MAX_COST_UNITS: ::flatbuffers::VOffsetT = 18;
   pub const VT_MAX_MEMORY_PAGES: ::flatbuffers::VOffsetT = 20;
+  pub const VT_RUNTIME_TARGET: ::flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -345,6 +659,7 @@ impl<'a> APPModuleRef<'a> {
     if let Some(x) = args.CONTENT_HASH { builder.add_CONTENT_HASH(x); }
     if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_RUNTIME_TARGET(args.RUNTIME_TARGET);
     builder.finish()
   }
 
@@ -371,6 +686,7 @@ impl<'a> APPModuleRef<'a> {
     let MAX_WALL_CLOCK_MS = self.MAX_WALL_CLOCK_MS();
     let MAX_COST_UNITS = self.MAX_COST_UNITS();
     let MAX_MEMORY_PAGES = self.MAX_MEMORY_PAGES();
+    let RUNTIME_TARGET = self.RUNTIME_TARGET();
     APPModuleRefT {
       ID,
       PLUGIN_ID,
@@ -381,6 +697,7 @@ impl<'a> APPModuleRef<'a> {
       MAX_WALL_CLOCK_MS,
       MAX_COST_UNITS,
       MAX_MEMORY_PAGES,
+      RUNTIME_TARGET,
     }
   }
 
@@ -472,6 +789,19 @@ impl<'a> APPModuleRef<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(APPModuleRef::VT_MAX_MEMORY_PAGES, Some(0)).unwrap()}
   }
+  /// Where this module is instantiated. PAGE or BOTH means the module also
+  /// loads in the browser: the page resolves its bytes by CONTENT_HASH over
+  /// IPFS and instantiates it through the SAME isomorphic module-sdk harness
+  /// ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+  /// a bespoke page-only loader. Defaults to NODE to preserve the prior
+  /// node-only behavior of manifests written before this field existed.
+  #[inline]
+  pub fn RUNTIME_TARGET(&self) -> appRuntimeTarget {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<appRuntimeTarget>(APPModuleRef::VT_RUNTIME_TARGET, Some(appRuntimeTarget::NODE)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for APPModuleRef<'_> {
@@ -489,6 +819,7 @@ impl ::flatbuffers::Verifiable for APPModuleRef<'_> {
      .visit_field::<u64>("MAX_WALL_CLOCK_MS", Self::VT_MAX_WALL_CLOCK_MS, false)?
      .visit_field::<u64>("MAX_COST_UNITS", Self::VT_MAX_COST_UNITS, false)?
      .visit_field::<u32>("MAX_MEMORY_PAGES", Self::VT_MAX_MEMORY_PAGES, false)?
+     .visit_field::<appRuntimeTarget>("RUNTIME_TARGET", Self::VT_RUNTIME_TARGET, false)?
      .finish();
     Ok(())
   }
@@ -503,6 +834,7 @@ pub struct APPModuleRefArgs<'a> {
     pub MAX_WALL_CLOCK_MS: u64,
     pub MAX_COST_UNITS: u64,
     pub MAX_MEMORY_PAGES: u32,
+    pub RUNTIME_TARGET: appRuntimeTarget,
 }
 impl<'a> Default for APPModuleRefArgs<'a> {
   #[inline]
@@ -517,6 +849,7 @@ impl<'a> Default for APPModuleRefArgs<'a> {
       MAX_WALL_CLOCK_MS: 0,
       MAX_COST_UNITS: 0,
       MAX_MEMORY_PAGES: 0,
+      RUNTIME_TARGET: appRuntimeTarget::NODE,
     }
   }
 }
@@ -563,6 +896,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> APPModuleRefBuilder<'a, 'b, A
     self.fbb_.push_slot::<u32>(APPModuleRef::VT_MAX_MEMORY_PAGES, MAX_MEMORY_PAGES, 0);
   }
   #[inline]
+  pub fn add_RUNTIME_TARGET(&mut self, RUNTIME_TARGET: appRuntimeTarget) {
+    self.fbb_.push_slot::<appRuntimeTarget>(APPModuleRef::VT_RUNTIME_TARGET, RUNTIME_TARGET, appRuntimeTarget::NODE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> APPModuleRefBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     APPModuleRefBuilder {
@@ -590,6 +927,7 @@ impl ::core::fmt::Debug for APPModuleRef<'_> {
       ds.field("MAX_WALL_CLOCK_MS", &self.MAX_WALL_CLOCK_MS());
       ds.field("MAX_COST_UNITS", &self.MAX_COST_UNITS());
       ds.field("MAX_MEMORY_PAGES", &self.MAX_MEMORY_PAGES());
+      ds.field("RUNTIME_TARGET", &self.RUNTIME_TARGET());
       ds.finish()
   }
 }
@@ -605,6 +943,7 @@ pub struct APPModuleRefT {
   pub MAX_WALL_CLOCK_MS: u64,
   pub MAX_COST_UNITS: u64,
   pub MAX_MEMORY_PAGES: u32,
+  pub RUNTIME_TARGET: appRuntimeTarget,
 }
 impl Default for APPModuleRefT {
   fn default() -> Self {
@@ -618,6 +957,7 @@ impl Default for APPModuleRefT {
       MAX_WALL_CLOCK_MS: 0,
       MAX_COST_UNITS: 0,
       MAX_MEMORY_PAGES: 0,
+      RUNTIME_TARGET: appRuntimeTarget::NODE,
     }
   }
 }
@@ -648,6 +988,7 @@ impl APPModuleRefT {
     let MAX_WALL_CLOCK_MS = self.MAX_WALL_CLOCK_MS;
     let MAX_COST_UNITS = self.MAX_COST_UNITS;
     let MAX_MEMORY_PAGES = self.MAX_MEMORY_PAGES;
+    let RUNTIME_TARGET = self.RUNTIME_TARGET;
     APPModuleRef::create(_fbb, &APPModuleRefArgs{
       ID,
       PLUGIN_ID,
@@ -658,6 +999,7 @@ impl APPModuleRefT {
       MAX_WALL_CLOCK_MS,
       MAX_COST_UNITS,
       MAX_MEMORY_PAGES,
+      RUNTIME_TARGET,
     })
   }
 }
@@ -1631,6 +1973,415 @@ impl APPUIPageT {
     })
   }
 }
+pub enum APPDataflowOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One unit of the page's data contract: a named flow describing what data
+/// enters or leaves the running page, the SDS standard it carries, how it is
+/// transported, and — when applicable — the loaded module method port bound
+/// to it. Standards-only rule: every flow payload is an SDS record (a
+/// canonical size-prefixed FlatBuffer) or a CID pointing at one; this table
+/// defines no data shapes of its own, it only references an existing
+/// spacedatastandards.org schema by its established code. Locators are
+/// content-addressed and IPFS-first.
+pub struct APPDataflow<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for APPDataflow<'a> {
+  type Inner = APPDataflow<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> APPDataflow<'a> {
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DIRECTION: ::flatbuffers::VOffsetT = 6;
+  pub const VT_SDS_SCHEMA: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TRANSPORT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_LOCATOR: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MODULE_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 16;
+  pub const VT_PORT_ID: ::flatbuffers::VOffsetT = 18;
+  pub const VT_CONTENT_ENCODING: ::flatbuffers::VOffsetT = 20;
+  pub const VT_DESCRIPTION: ::flatbuffers::VOffsetT = 22;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    APPDataflow { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args APPDataflowArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<APPDataflow<'bldr>> {
+    let mut builder = APPDataflowBuilder::new(_fbb);
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.PORT_ID { builder.add_PORT_ID(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
+    if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    if let Some(x) = args.LOCATOR { builder.add_LOCATOR(x); }
+    if let Some(x) = args.SDS_SCHEMA { builder.add_SDS_SCHEMA(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_CONTENT_ENCODING(args.CONTENT_ENCODING);
+    builder.add_TRANSPORT(args.TRANSPORT);
+    builder.add_DIRECTION(args.DIRECTION);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> APPDataflowT {
+    let NAME = {
+      let x = self.NAME();
+      alloc::string::ToString::to_string(x)
+    };
+    let DIRECTION = self.DIRECTION();
+    let SDS_SCHEMA = {
+      let x = self.SDS_SCHEMA();
+      alloc::string::ToString::to_string(x)
+    };
+    let TRANSPORT = self.TRANSPORT();
+    let LOCATOR = self.LOCATOR().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let METHOD_ID = self.METHOD_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PORT_ID = self.PORT_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONTENT_ENCODING = self.CONTENT_ENCODING();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    APPDataflowT {
+      NAME,
+      DIRECTION,
+      SDS_SCHEMA,
+      TRANSPORT,
+      LOCATOR,
+      MODULE_ID,
+      METHOD_ID,
+      PORT_ID,
+      CONTENT_ENCODING,
+      DESCRIPTION,
+    }
+  }
+
+  /// App-local stable name for this flow. Required, unique within the
+  /// manifest.
+  #[inline]
+  pub fn NAME(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_NAME, None).unwrap()}
+  }
+  #[inline]
+  pub fn key_compare_less_than(&self, o: &APPDataflow) -> bool {
+    self.NAME() < o.NAME()
+  }
+
+  #[inline]
+  pub fn key_compare_with_value(&self, val: & str) -> ::core::cmp::Ordering {
+    let key = self.NAME();
+    key.cmp(val)
+  }
+  /// Which way the payload crosses the page boundary at runtime.
+  #[inline]
+  pub fn DIRECTION(&self) -> appFlowDirection {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<appFlowDirection>(APPDataflow::VT_DIRECTION, Some(appFlowDirection::TO_PAGE)).unwrap()}
+  }
+  /// Existing SDS schema code carried by this flow, for example OMM, OEM, or
+  /// PNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard
+  /// the flow carries; the app defines no schema of its own.
+  #[inline]
+  pub fn SDS_SCHEMA(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_SDS_SCHEMA, None).unwrap()}
+  }
+  /// Transport that moves the payload. Defaults to IPFS_CID per the
+  /// content-addressed, IPFS-first rule.
+  #[inline]
+  pub fn TRANSPORT(&self) -> appFlowTransport {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<appFlowTransport>(APPDataflow::VT_TRANSPORT, Some(appFlowTransport::IPFS_CID)).unwrap()}
+  }
+  /// Where to fetch or reach the payload, interpreted per TRANSPORT: a CID
+  /// for IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin
+  /// route template for GATEWAY_ROUTE.
+  #[inline]
+  pub fn LOCATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_LOCATOR, None)}
+  }
+  /// When present, must equal an APPModuleRef.ID in the same manifest — the
+  /// loaded module that produces or consumes this flow. Binds the flow to a
+  /// specific module method port together with METHOD_ID and PORT_ID.
+  #[inline]
+  pub fn MODULE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_MODULE_ID, None)}
+  }
+  /// When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that
+  /// this flow is bound to.
+  #[inline]
+  pub fn METHOD_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_METHOD_ID, None)}
+  }
+  /// When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this
+  /// flow is bound to.
+  #[inline]
+  pub fn PORT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_PORT_ID, None)}
+  }
+  /// String/compression form of the payload as it crosses the channel,
+  /// reusing the page content-encoding vocabulary. For flows carrying
+  /// canonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw
+  /// bytes/string with no extra wrapper; BASE64, BASE64_GZIP, and
+  /// BASE64_BROTLI denote a base64 text wrapper (optionally compressed)
+  /// applied when the channel is text-only.
+  #[inline]
+  pub fn CONTENT_ENCODING(&self) -> appContentEncoding {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<appContentEncoding>(APPDataflow::VT_CONTENT_ENCODING, Some(appContentEncoding::UTF8)).unwrap()}
+  }
+  /// Human-readable summary.
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APPDataflow::VT_DESCRIPTION, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for APPDataflow<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, true)?
+     .visit_field::<appFlowDirection>("DIRECTION", Self::VT_DIRECTION, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SDS_SCHEMA", Self::VT_SDS_SCHEMA, true)?
+     .visit_field::<appFlowTransport>("TRANSPORT", Self::VT_TRANSPORT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LOCATOR", Self::VT_LOCATOR, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MODULE_ID", Self::VT_MODULE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PORT_ID", Self::VT_PORT_ID, false)?
+     .visit_field::<appContentEncoding>("CONTENT_ENCODING", Self::VT_CONTENT_ENCODING, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct APPDataflowArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DIRECTION: appFlowDirection,
+    pub SDS_SCHEMA: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSPORT: appFlowTransport,
+    pub LOCATOR: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MODULE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTENT_ENCODING: appContentEncoding,
+    pub DESCRIPTION: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for APPDataflowArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    APPDataflowArgs {
+      NAME: None, // required field
+      DIRECTION: appFlowDirection::TO_PAGE,
+      SDS_SCHEMA: None, // required field
+      TRANSPORT: appFlowTransport::IPFS_CID,
+      LOCATOR: None,
+      MODULE_ID: None,
+      METHOD_ID: None,
+      PORT_ID: None,
+      CONTENT_ENCODING: appContentEncoding::UTF8,
+      DESCRIPTION: None,
+    }
+  }
+}
+
+pub struct APPDataflowBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> APPDataflowBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_DIRECTION(&mut self, DIRECTION: appFlowDirection) {
+    self.fbb_.push_slot::<appFlowDirection>(APPDataflow::VT_DIRECTION, DIRECTION, appFlowDirection::TO_PAGE);
+  }
+  #[inline]
+  pub fn add_SDS_SCHEMA(&mut self, SDS_SCHEMA: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_SDS_SCHEMA, SDS_SCHEMA);
+  }
+  #[inline]
+  pub fn add_TRANSPORT(&mut self, TRANSPORT: appFlowTransport) {
+    self.fbb_.push_slot::<appFlowTransport>(APPDataflow::VT_TRANSPORT, TRANSPORT, appFlowTransport::IPFS_CID);
+  }
+  #[inline]
+  pub fn add_LOCATOR(&mut self, LOCATOR: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_LOCATOR, LOCATOR);
+  }
+  #[inline]
+  pub fn add_MODULE_ID(&mut self, MODULE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_MODULE_ID, MODULE_ID);
+  }
+  #[inline]
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_METHOD_ID, METHOD_ID);
+  }
+  #[inline]
+  pub fn add_PORT_ID(&mut self, PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_PORT_ID, PORT_ID);
+  }
+  #[inline]
+  pub fn add_CONTENT_ENCODING(&mut self, CONTENT_ENCODING: appContentEncoding) {
+    self.fbb_.push_slot::<appContentEncoding>(APPDataflow::VT_CONTENT_ENCODING, CONTENT_ENCODING, appContentEncoding::UTF8);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APPDataflow::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> APPDataflowBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    APPDataflowBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<APPDataflow<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, APPDataflow::VT_NAME,"NAME");
+    self.fbb_.required(o, APPDataflow::VT_SDS_SCHEMA,"SDS_SCHEMA");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for APPDataflow<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("APPDataflow");
+      ds.field("NAME", &self.NAME());
+      ds.field("DIRECTION", &self.DIRECTION());
+      ds.field("SDS_SCHEMA", &self.SDS_SCHEMA());
+      ds.field("TRANSPORT", &self.TRANSPORT());
+      ds.field("LOCATOR", &self.LOCATOR());
+      ds.field("MODULE_ID", &self.MODULE_ID());
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("PORT_ID", &self.PORT_ID());
+      ds.field("CONTENT_ENCODING", &self.CONTENT_ENCODING());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct APPDataflowT {
+  pub NAME: alloc::string::String,
+  pub DIRECTION: appFlowDirection,
+  pub SDS_SCHEMA: alloc::string::String,
+  pub TRANSPORT: appFlowTransport,
+  pub LOCATOR: Option<alloc::string::String>,
+  pub MODULE_ID: Option<alloc::string::String>,
+  pub METHOD_ID: Option<alloc::string::String>,
+  pub PORT_ID: Option<alloc::string::String>,
+  pub CONTENT_ENCODING: appContentEncoding,
+  pub DESCRIPTION: Option<alloc::string::String>,
+}
+impl Default for APPDataflowT {
+  fn default() -> Self {
+    Self {
+      NAME: alloc::string::ToString::to_string(""),
+      DIRECTION: appFlowDirection::TO_PAGE,
+      SDS_SCHEMA: alloc::string::ToString::to_string(""),
+      TRANSPORT: appFlowTransport::IPFS_CID,
+      LOCATOR: None,
+      MODULE_ID: None,
+      METHOD_ID: None,
+      PORT_ID: None,
+      CONTENT_ENCODING: appContentEncoding::UTF8,
+      DESCRIPTION: None,
+    }
+  }
+}
+impl APPDataflowT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<APPDataflow<'b>> {
+    let NAME = Some({
+      let x = &self.NAME;
+      _fbb.create_string(x)
+    });
+    let DIRECTION = self.DIRECTION;
+    let SDS_SCHEMA = Some({
+      let x = &self.SDS_SCHEMA;
+      _fbb.create_string(x)
+    });
+    let TRANSPORT = self.TRANSPORT;
+    let LOCATOR = self.LOCATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MODULE_ID = self.MODULE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let METHOD_ID = self.METHOD_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PORT_ID = self.PORT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONTENT_ENCODING = self.CONTENT_ENCODING;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    APPDataflow::create(_fbb, &APPDataflowArgs{
+      NAME,
+      DIRECTION,
+      SDS_SCHEMA,
+      TRANSPORT,
+      LOCATOR,
+      MODULE_ID,
+      METHOD_ID,
+      PORT_ID,
+      CONTENT_ENCODING,
+      DESCRIPTION,
+    })
+  }
+}
 pub enum APPOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1658,6 +2409,7 @@ impl<'a> APP<'a> {
   pub const VT_UI: ::flatbuffers::VOffsetT = 18;
   pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 20;
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 22;
+  pub const VT_DATAFLOW: ::flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1669,6 +2421,7 @@ impl<'a> APP<'a> {
     args: &'args APPArgs<'args>
   ) -> ::flatbuffers::WIPOffset<APP<'bldr>> {
     let mut builder = APPBuilder::new(_fbb);
+    if let Some(x) = args.DATAFLOW { builder.add_DATAFLOW(x); }
     if let Some(x) = args.UPDATED_AT { builder.add_UPDATED_AT(x); }
     if let Some(x) = args.CREATED_AT { builder.add_CREATED_AT(x); }
     if let Some(x) = args.UI { builder.add_UI(x); }
@@ -1714,6 +2467,9 @@ impl<'a> APP<'a> {
     let UPDATED_AT = self.UPDATED_AT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let DATAFLOW = self.DATAFLOW().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     APPT {
       ID,
       NAME,
@@ -1725,6 +2481,7 @@ impl<'a> APP<'a> {
       UI,
       CREATED_AT,
       UPDATED_AT,
+      DATAFLOW,
     }
   }
 
@@ -1811,6 +2568,17 @@ impl<'a> APP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(APP::VT_UPDATED_AT, None)}
   }
+  /// The page's declarative data contract: what data enters and leaves the
+  /// running page and how. Referential integrity: every MODULE_ID here must
+  /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
+  /// name a method port advertised by that module's PLG manifest.
+  #[inline]
+  pub fn DATAFLOW(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPDataflow<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPDataflow>>>>(APP::VT_DATAFLOW, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for APP<'_> {
@@ -1829,6 +2597,7 @@ impl ::flatbuffers::Verifiable for APP<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<APPUIPage>>>>("UI", Self::VT_UI, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<APPDataflow>>>>("DATAFLOW", Self::VT_DATAFLOW, false)?
      .finish();
     Ok(())
   }
@@ -1844,6 +2613,7 @@ pub struct APPArgs<'a> {
     pub UI: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPUIPage<'a>>>>>,
     pub CREATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DATAFLOW: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPDataflow<'a>>>>>,
 }
 impl<'a> Default for APPArgs<'a> {
   #[inline]
@@ -1859,6 +2629,7 @@ impl<'a> Default for APPArgs<'a> {
       UI: None,
       CREATED_AT: None,
       UPDATED_AT: None,
+      DATAFLOW: None,
     }
   }
 }
@@ -1909,6 +2680,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> APPBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APP::VT_UPDATED_AT, UPDATED_AT);
   }
   #[inline]
+  pub fn add_DATAFLOW(&mut self, DATAFLOW: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<APPDataflow<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APP::VT_DATAFLOW, DATAFLOW);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> APPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     APPBuilder {
@@ -1937,6 +2712,7 @@ impl ::core::fmt::Debug for APP<'_> {
       ds.field("UI", &self.UI());
       ds.field("CREATED_AT", &self.CREATED_AT());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("DATAFLOW", &self.DATAFLOW());
       ds.finish()
   }
 }
@@ -1953,6 +2729,7 @@ pub struct APPT {
   pub UI: Option<alloc::vec::Vec<APPUIPageT>>,
   pub CREATED_AT: Option<alloc::string::String>,
   pub UPDATED_AT: Option<alloc::string::String>,
+  pub DATAFLOW: Option<alloc::vec::Vec<APPDataflowT>>,
 }
 impl Default for APPT {
   fn default() -> Self {
@@ -1967,6 +2744,7 @@ impl Default for APPT {
       UI: None,
       CREATED_AT: None,
       UPDATED_AT: None,
+      DATAFLOW: None,
     }
   }
 }
@@ -2006,6 +2784,9 @@ impl APPT {
     let UPDATED_AT = self.UPDATED_AT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DATAFLOW = self.DATAFLOW.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     APP::create(_fbb, &APPArgs{
       ID,
       NAME,
@@ -2017,6 +2798,7 @@ impl APPT {
       UI,
       CREATED_AT,
       UPDATED_AT,
+      DATAFLOW,
     })
   }
 }

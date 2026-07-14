@@ -13,6 +13,18 @@
       "type" : "string",
       "enum": ["MODULE", "EXTERNAL_API", "DATASET"]
     },
+    "appFlowDirection" : {
+      "type" : "string",
+      "enum": ["TO_PAGE", "FROM_PAGE", "BIDIRECTIONAL"]
+    },
+    "appFlowTransport" : {
+      "type" : "string",
+      "enum": ["IPFS_CID", "PUBSUB_TOPIC", "GATEWAY_ROUTE"]
+    },
+    "appRuntimeTarget" : {
+      "type" : "string",
+      "enum": ["NODE", "PAGE", "BOTH"]
+    },
     "APPModuleRef" : {
       "type" : "object",
       "description" : "One member WASM module of the app. References module identity; never\nembeds the module artifact itself (delivery is the module-bundle lane).",
@@ -52,6 +64,10 @@
         "MAX_MEMORY_PAGES" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "Linear-memory ceiling override in 64 KiB WASM pages. Zero means the\nhost runtime default applies."
+              },
+        "RUNTIME_TARGET" : {
+                "$ref" : "#/definitions/appRuntimeTarget",
+                "description" : "Where this module is instantiated. PAGE or BOTH means the module also\nloads in the browser: the page resolves its bytes by CONTENT_HASH over\nIPFS and instantiates it through the SAME isomorphic module-sdk harness\nABI the SDN nodes use (manifest + plugin_invoke_stream) — never through\na bespoke page-only loader. Defaults to NODE to preserve the prior\nnode-only behavior of manifests written before this field existed."
               }
       },
       "required" : ["ID"],
@@ -169,6 +185,54 @@
       "required" : ["ID"],
       "additionalProperties" : false
     },
+    "APPDataflow" : {
+      "type" : "object",
+      "description" : "One unit of the page's data contract: a named flow describing what data\nenters or leaves the running page, the SDS standard it carries, how it is\ntransported, and — when applicable — the loaded module method port bound\nto it. Standards-only rule: every flow payload is an SDS record (a\ncanonical size-prefixed FlatBuffer) or a CID pointing at one; this table\ndefines no data shapes of its own, it only references an existing\nspacedatastandards.org schema by its established code. Locators are\ncontent-addressed and IPFS-first.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "App-local stable name for this flow. Required, unique within the\nmanifest."
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/appFlowDirection",
+                "description" : "Which way the payload crosses the page boundary at runtime."
+              },
+        "SDS_SCHEMA" : {
+                "type" : "string",
+                "description" : "Existing SDS schema code carried by this flow, for example OMM, OEM, or\nPNM. Required. Mirrors APPDataRef.SDS_TYPE but named for the standard\nthe flow carries; the app defines no schema of its own."
+              },
+        "TRANSPORT" : {
+                "$ref" : "#/definitions/appFlowTransport",
+                "description" : "Transport that moves the payload. Defaults to IPFS_CID per the\ncontent-addressed, IPFS-first rule."
+              },
+        "LOCATOR" : {
+                "type" : "string",
+                "description" : "Where to fetch or reach the payload, interpreted per TRANSPORT: a CID\nfor IPFS_CID, a gossip topic name for PUBSUB_TOPIC, or a same-origin\nroute template for GATEWAY_ROUTE."
+              },
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "When present, must equal an APPModuleRef.ID in the same manifest — the\nloaded module that produces or consumes this flow. Binds the flow to a\nspecific module method port together with METHOD_ID and PORT_ID."
+              },
+        "METHOD_ID" : {
+                "type" : "string",
+                "description" : "When present, the PLG.PLGMethodManifest.METHOD_ID on MODULE_ID that\nthis flow is bound to."
+              },
+        "PORT_ID" : {
+                "type" : "string",
+                "description" : "When present, the PLG.PLGPortManifest.PORT_ID on METHOD_ID that this\nflow is bound to."
+              },
+        "CONTENT_ENCODING" : {
+                "$ref" : "#/definitions/appContentEncoding",
+                "description" : "String/compression form of the payload as it crosses the channel,\nreusing the page content-encoding vocabulary. For flows carrying\ncanonical SDS FlatBuffer bytes (or a CID string), UTF8 denotes the raw\nbytes/string with no extra wrapper; BASE64, BASE64_GZIP, and\nBASE64_BROTLI denote a base64 text wrapper (optionally compressed)\napplied when the channel is text-only."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable summary."
+              }
+      },
+      "required" : ["NAME", "SDS_SCHEMA"],
+      "additionalProperties" : false
+    },
     "APP" : {
       "type" : "object",
       "description" : "Application Package Manifest — one launchable app.",
@@ -212,6 +276,10 @@
         "UPDATED_AT" : {
                 "type" : "string",
                 "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nwhen the manifest was last updated."
+              },
+        "DATAFLOW" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/APPDataflow"},
+                "description" : "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest."
               }
       },
       "required" : ["ID"],

@@ -108,8 +108,21 @@ class APPModuleRef(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Where this module is instantiated. PAGE or BOTH means the module also
+    # loads in the browser: the page resolves its bytes by CONTENT_HASH over
+    # IPFS and instantiates it through the SAME isomorphic module-sdk harness
+    # ABI the SDN nodes use (manifest + plugin_invoke_stream) — never through
+    # a bespoke page-only loader. Defaults to NODE to preserve the prior
+    # node-only behavior of manifests written before this field existed.
+    # APPModuleRef
+    def RUNTIME_TARGET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def APPModuleRefStart(builder):
-    builder.StartObject(9)
+    builder.StartObject(10)
 
 def Start(builder):
     APPModuleRefStart(builder)
@@ -168,6 +181,12 @@ def APPModuleRefAddMAX_MEMORY_PAGES(builder, MAX_MEMORY_PAGES):
 def AddMAX_MEMORY_PAGES(builder, MAX_MEMORY_PAGES):
     APPModuleRefAddMAX_MEMORY_PAGES(builder, MAX_MEMORY_PAGES)
 
+def APPModuleRefAddRUNTIME_TARGET(builder, RUNTIME_TARGET):
+    builder.PrependUint8Slot(9, RUNTIME_TARGET, 0)
+
+def AddRUNTIME_TARGET(builder, RUNTIME_TARGET):
+    APPModuleRefAddRUNTIME_TARGET(builder, RUNTIME_TARGET)
+
 def APPModuleRefEnd(builder):
     return builder.EndObject()
 
@@ -189,6 +208,7 @@ class APPModuleRefT(object):
         MAX_WALL_CLOCK_MS = 0,
         MAX_COST_UNITS = 0,
         MAX_MEMORY_PAGES = 0,
+        RUNTIME_TARGET = 0,
     ):
         self.ID = ID  # type: Optional[str]
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
@@ -199,6 +219,7 @@ class APPModuleRefT(object):
         self.MAX_WALL_CLOCK_MS = MAX_WALL_CLOCK_MS  # type: int
         self.MAX_COST_UNITS = MAX_COST_UNITS  # type: int
         self.MAX_MEMORY_PAGES = MAX_MEMORY_PAGES  # type: int
+        self.RUNTIME_TARGET = RUNTIME_TARGET  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -230,6 +251,7 @@ class APPModuleRefT(object):
         self.MAX_WALL_CLOCK_MS = APPModuleRef.MAX_WALL_CLOCK_MS()
         self.MAX_COST_UNITS = APPModuleRef.MAX_COST_UNITS()
         self.MAX_MEMORY_PAGES = APPModuleRef.MAX_MEMORY_PAGES()
+        self.RUNTIME_TARGET = APPModuleRef.RUNTIME_TARGET()
 
     # APPModuleRefT
     def Pack(self, builder):
@@ -261,5 +283,6 @@ class APPModuleRefT(object):
         APPModuleRefAddMAX_WALL_CLOCK_MS(builder, self.MAX_WALL_CLOCK_MS)
         APPModuleRefAddMAX_COST_UNITS(builder, self.MAX_COST_UNITS)
         APPModuleRefAddMAX_MEMORY_PAGES(builder, self.MAX_MEMORY_PAGES)
+        APPModuleRefAddRUNTIME_TARGET(builder, self.RUNTIME_TARGET)
         APPModuleRef = APPModuleRefEnd(builder)
         return APPModuleRef

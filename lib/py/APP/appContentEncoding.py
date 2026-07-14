@@ -16,6 +16,26 @@
 # text, base64, or a compressed base64 form. A page may instead be served
 # by a member module; exactly one of the two mechanisms must be populated
 # per page.
+#
+# The page's data contract is described declaratively by DATAFLOW: every
+# unit of data that enters or leaves the running page, the SDS standard it
+# carries, the transport that moves it, and — when applicable — the loaded
+# module method port that produces or consumes it. Standards-only rule:
+# every page payload is an SDS record (a canonical size-prefixed
+# FlatBuffer) or a content identifier pointing at one; the app manifest
+# carries no bespoke page-only data shapes. Locators are content-addressed
+# and IPFS-first: a flow's LOCATOR is a CID resolved through the serving
+# node's IPFS gateway wherever the payload can be published as an immutable
+# object, falling back to a live gossip topic or a same-origin gateway
+# route only for streaming or request-scoped delivery.
+#
+# Member modules run isomorphically. A module ref may declare, via
+# RUNTIME_TARGET, that it loads IN THE PAGE through the same module-sdk ABI
+# the SDN nodes use: the page resolves the module bytes by CONTENT_HASH
+# over IPFS and instantiates them in the shared isomorphic JS harness
+# (manifest + plugin_invoke_stream), exactly as a server-side node would.
+# There is no bespoke browser loader; the browser and the node are two
+# hosts of one harness ABI.
 # Content encoding applied to APPUIPage.CONTENT. Append new values only;
 # never reorder or reuse existing values. Decoders must reject an encoding
 # value they do not recognize rather than guessing.
