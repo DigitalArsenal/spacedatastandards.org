@@ -179,6 +179,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -313,10 +315,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 178;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 180;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 179] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 181] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -496,6 +498,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 179] = [
   RecordType::ENT,
   RecordType::VAM,
   RecordType::APP,
+  RecordType::CMT,
+  RecordType::SCX,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -682,9 +686,11 @@ impl RecordType {
   pub const ENT: Self = Self(176);
   pub const VAM: Self = Self(177);
   pub const APP: Self = Self(178);
+  pub const CMT: Self = Self(179);
+  pub const SCX: Self = Self(180);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 178;
+  pub const ENUM_MAX: u8 = 180;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -865,6 +871,8 @@ impl RecordType {
     Self::ENT,
     Self::VAM,
     Self::APP,
+    Self::CMT,
+    Self::SCX,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1048,6 +1056,8 @@ impl RecordType {
       Self::ENT => Some("ENT"),
       Self::VAM => Some("VAM"),
       Self::APP => Some("APP"),
+      Self::CMT => Some("CMT"),
+      Self::SCX => Some("SCX"),
       _ => None,
     }
   }
@@ -1287,6 +1297,8 @@ pub enum RecordTypeT {
   ENT(alloc::boxed::Box<ENTT>),
   VAM(alloc::boxed::Box<VAMT>),
   APP(alloc::boxed::Box<APPT>),
+  CMT(alloc::boxed::Box<CMTT>),
+  SCX(alloc::boxed::Box<SCXT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1475,6 +1487,8 @@ impl RecordTypeT {
       Self::ENT(_) => RecordType::ENT,
       Self::VAM(_) => RecordType::VAM,
       Self::APP(_) => RecordType::APP,
+      Self::CMT(_) => RecordType::CMT,
+      Self::SCX(_) => RecordType::SCX,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1658,6 +1672,8 @@ impl RecordTypeT {
       Self::ENT(v) => Some(v.pack(fbb).as_union_value()),
       Self::VAM(v) => Some(v.pack(fbb).as_union_value()),
       Self::APP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CMT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SCX(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5398,6 +5414,48 @@ impl RecordTypeT {
   pub fn as_app_mut(&mut self) -> Option<&mut APPT> {
     if let Self::APP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CMTT, setting the union to NONE.
+  pub fn take_cmt(&mut self) -> Option<alloc::boxed::Box<CMTT>> {
+    if let Self::CMT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CMT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CMTT.
+  pub fn as_cmt(&self) -> Option<&CMTT> {
+    if let Self::CMT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CMTT.
+  pub fn as_cmt_mut(&mut self) -> Option<&mut CMTT> {
+    if let Self::CMT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SCXT, setting the union to NONE.
+  pub fn take_scx(&mut self) -> Option<alloc::boxed::Box<SCXT>> {
+    if let Self::SCX(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::SCX(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SCXT.
+  pub fn as_scx(&self) -> Option<&SCXT> {
+    if let Self::SCX(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SCXT.
+  pub fn as_scx_mut(&mut self) -> Option<&mut SCXT> {
+    if let Self::SCX(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6327,6 +6385,16 @@ impl<'a> Record<'a> {
       RecordType::APP => RecordTypeT::APP(alloc::boxed::Box::new(
         self.value_as_app()
             .expect("Invalid union table, expected `RecordType::APP`.")
+            .unpack()
+      )),
+      RecordType::CMT => RecordTypeT::CMT(alloc::boxed::Box::new(
+        self.value_as_cmt()
+            .expect("Invalid union table, expected `RecordType::CMT`.")
+            .unpack()
+      )),
+      RecordType::SCX => RecordTypeT::SCX(alloc::boxed::Box::new(
+        self.value_as_scx()
+            .expect("Invalid union table, expected `RecordType::SCX`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -9033,6 +9101,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_cmt(&self) -> Option<CMT<'a>> {
+    if self.value_type() == RecordType::CMT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CMT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_scx(&self) -> Option<SCX<'a>> {
+    if self.value_type() == RecordType::SCX {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SCX::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -9221,6 +9319,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::ENT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<ENT>>("RecordType::ENT", pos),
           RecordType::VAM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<VAM>>("RecordType::VAM", pos),
           RecordType::APP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<APP>>("RecordType::APP", pos),
+          RecordType::CMT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CMT>>("RecordType::CMT", pos),
+          RecordType::SCX => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SCX>>("RecordType::SCX", pos),
           _ => Ok(()),
         }
      })?
@@ -10523,6 +10623,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::APP => {
           if let Some(x) = self.value_as_app() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CMT => {
+          if let Some(x) = self.value_as_cmt() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SCX => {
+          if let Some(x) = self.value_as_scx() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

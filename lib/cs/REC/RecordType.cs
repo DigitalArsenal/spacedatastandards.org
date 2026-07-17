@@ -183,6 +183,8 @@ public enum RecordType : byte
   ENT = 176,
   VAM = 177,
   APP = 178,
+  CMT = 179,
+  SCX = 180,
 };
 
 public class RecordTypeUnion {
@@ -551,6 +553,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromVAM(VAMT _vam) { return new RecordTypeUnion{ Type = RecordType.VAM, Value = _vam }; }
   public APPT AsAPP() { return this.As<APPT>(); }
   public static RecordTypeUnion FromAPP(APPT _app) { return new RecordTypeUnion{ Type = RecordType.APP, Value = _app }; }
+  public CMTT AsCMT() { return this.As<CMTT>(); }
+  public static RecordTypeUnion FromCMT(CMTT _cmt) { return new RecordTypeUnion{ Type = RecordType.CMT, Value = _cmt }; }
+  public SCXT AsSCX() { return this.As<SCXT>(); }
+  public static RecordTypeUnion FromSCX(SCXT _scx) { return new RecordTypeUnion{ Type = RecordType.SCX, Value = _scx }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -733,6 +739,8 @@ public class RecordTypeUnion {
       case RecordType.ENT: return ENT.Pack(builder, _o.AsENT()).Value;
       case RecordType.VAM: return VAM.Pack(builder, _o.AsVAM()).Value;
       case RecordType.APP: return APP.Pack(builder, _o.AsAPP()).Value;
+      case RecordType.CMT: return CMT.Pack(builder, _o.AsCMT()).Value;
+      case RecordType.SCX: return SCX.Pack(builder, _o.AsSCX()).Value;
     }
   }
 }
@@ -1279,6 +1287,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.APP:
         result = APPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CMT:
+        result = CMTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SCX:
+        result = SCXVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

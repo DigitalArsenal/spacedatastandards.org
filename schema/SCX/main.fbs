@@ -1,0 +1,84 @@
+// Hash: 3d9389c3fdb6aca485fd4046cdca8b13f95b589fd5efa69f8f8081372e434a8d
+// Version: 1.155.0
+// -----------------------------------END_HEADER
+/// Recipient of an on-chain revenue split. The identity binds to an `$EPM`
+/// via CHAIN_PROOFS so a payout address is provably the recipient's.
+table SplitRecipient {
+  /// IPFS CID of the recipient's Entity Profile Message (`$EPM`)
+  EPM_CID: string;
+  /// Settlement chain, e.g. "ethereum", "solana", "bitcoin"
+  CHAIN: string;
+  /// On-chain payout address (EVM 0x / SOL base58 / BTC address)
+  ADDRESS: string;
+  /// Account xpub the address derives from
+  XPUB: string;
+}
+
+/// On-chain settlement mechanism a buyer's payment targets.
+enum settlementMechanism : byte {
+  /// Native-asset transfer to a plain address (no split contract)
+  NativeTransfer,
+  /// ERC-20 / SPL token transfer to a plain address
+  Erc20Transfer,
+  /// 0xSplits-style splitter contract on an EVM chain
+  EthSplitter,
+  /// Splitter program on Solana
+  SolSplitter,
+  /// Direct address payout (e.g. Bitcoin); split settled off-contract
+  DirectAddress
+}
+
+/// How the purchase reference (`$PUR.REQUEST_ID`) is bound on-chain so a
+/// payment can be matched to an order replay-safely.
+enum memoBindingScheme : byte {
+  /// No on-chain memo binding
+  NoMemo,
+  /// Bound in EVM transaction calldata
+  TxData,
+  /// Solana memo program instruction
+  SolMemo,
+  /// Bitcoin OP_RETURN output
+  OpReturn
+}
+
+/// Chain Settlement / Smart-Contract Descriptor. The forward description of the
+/// exact established splitter contract/program a buyer's wallet targets so
+/// payment and platform commission settle atomically on-chain. Referenced by
+/// `$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is
+/// realized by the splitter contract itself when the buyer pays it; there is no
+/// off-chain or manual settlement step.
+table SCX {
+  /// Settlement chain identifier, e.g. "ethereum", "solana", "bitcoin"
+  /// (matches `$PUR.PAYMENT_CHAIN`)
+  CHAIN: string (required);
+  /// EVM chainId; 0 for non-EVM chains
+  CHAIN_ID: uint64;
+  /// On-chain settlement mechanism
+  SETTLEMENT_KIND: settlementMechanism;
+  /// Established split standard id, e.g. "0xsplits.v2" (ETH) or the SOL
+  /// splitter program name. An audited off-the-shelf standard, not a custom
+  /// contract.
+  SPLITTER_STANDARD: string;
+  /// Deployed splitter contract address (ETH) or splitter program id (SOL) the
+  /// buyer's payment routes into
+  SPLITTER_ADDRESS: string;
+  /// The specific split configuration (recipient set + basis points) registered
+  /// with the splitter
+  SPLIT_CONFIG_ID: string;
+  /// ERC-20 / SPL mint address for stablecoin settlement; empty = native asset
+  TOKEN_ADDRESS: string;
+  /// Token symbol, e.g. "USDC"
+  TOKEN_SYMBOL: string;
+  /// Token decimals, e.g. 6 for USDC
+  TOKEN_DECIMALS: uint8;
+  /// The recipient set the split configuration encodes (platform + publisher…),
+  /// mirrored here for independent verification
+  SPLIT_RECIPIENTS: [SplitRecipient];
+  /// Confirmations required before the payment is accepted
+  MIN_CONFIRMATIONS: uint32;
+  /// How the order reference is bound on-chain for replay-safe matching
+  MEMO_SCHEME: memoBindingScheme;
+}
+
+root_type SCX;
+file_identifier "$SCX";

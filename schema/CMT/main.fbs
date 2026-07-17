@@ -1,0 +1,84 @@
+// Hash: 20ac40536507a3bf565bb1cdf7d823adef6541dc5da7169454f9a5e24d3490d2
+// Version: 1.155.0
+// -----------------------------------END_HEADER
+include "../SCX/main.fbs";
+
+/// What a set of commission terms applies to.
+enum commissionScope : byte {
+  /// A single listing
+  Listing,
+  /// A whole store's default terms
+  Store,
+  /// A publisher's default terms
+  Publisher
+}
+
+/// How the commission split is enforced.
+enum commissionEnforcement : byte {
+  /// Enforced on-chain by an established splitter contract/program: the split
+  /// executes when the buyer pays the splitter. No off-chain or manual
+  /// settlement — the platform collects commission purely by the buyer's
+  /// payment routing through the splitter contract.
+  SplitterContract,
+  /// Provider-attested off-contract split, used only where no splitter exists
+  /// (e.g. BTC / DirectAddress)
+  ProviderAttested
+}
+
+/// Role a split recipient plays in the revenue division.
+enum splitRole : byte {
+  /// The module/flow publisher (vendor)
+  Publisher,
+  /// The store operator platform (e.g. SpaceAware) — the commission recipient
+  Platform,
+  /// A referrer who drove the sale
+  Referrer,
+  /// A charitable recipient
+  Charity
+}
+
+/// One recipient's share of a sale, expressed in basis points.
+table RevenueSplit {
+  /// The payout recipient
+  RECIPIENT: SplitRecipient;
+  /// Share in basis points (1/100 of a percent); all splits plus the platform
+  /// commission sum to 10000
+  BPS: uint16;
+  /// The role this recipient plays
+  ROLE: splitRole;
+}
+
+/// Commission Terms / Revenue Split. Binds a listing, store, or publisher to a
+/// platform commission and the on-chain split that enforces it. This record
+/// makes "the platform earns on every transaction" auditable and portable
+/// across store deployments. Commission is realized purely by the buyer's
+/// payment routing through the on-chain splitter contract described in
+/// CONTRACTS — never by a manual or off-chain settlement step.
+table CMT {
+  /// Stable terms identifier, referenced by `$PUR`/`$ACL`/listings
+  TERMS_ID: string (required);
+  /// What these terms cover
+  SCOPE: commissionScope;
+  /// The `$PLG.PLUGIN_ID` / store id / publisher xpub the terms apply to
+  TARGET_ID: string;
+  /// Platform commission in basis points (e.g. 500 = 5%)
+  COMMISSION_BPS: uint16;
+  /// Recipient splits; each in basis points, summing with the commission to 10000
+  SPLITS: [RevenueSplit];
+  /// The platform's per-chain payout identity (the commission recipient)
+  PLATFORM_RECIPIENT: SplitRecipient;
+  /// How the split is enforced (on-chain splitter vs provider-attested)
+  ENFORCEMENT: commissionEnforcement;
+  /// The established splitter contract(s)/program(s) that perform the split,
+  /// one per accepted chain/asset
+  CONTRACTS: [SCX];
+  /// Unix ms when these terms take effect
+  EFFECTIVE_AT: uint64;
+  /// Unix ms when these terms expire, or 0 for no expiry
+  EXPIRES_AT: uint64;
+  /// Ed25519 signature by the store operator `$EPM`
+  SIGNATURE: [ubyte];
+}
+
+root_type CMT;
+file_identifier "$CMT";

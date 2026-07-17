@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "settlementMechanism" : {
+      "type" : "string",
+      "enum": ["NativeTransfer", "Erc20Transfer", "EthSplitter", "SolSplitter", "DirectAddress"]
+    },
+    "memoBindingScheme" : {
+      "type" : "string",
+      "enum": ["NoMemo", "TxData", "SolMemo", "OpReturn"]
+    },
+    "SplitRecipient" : {
+      "type" : "object",
+      "description" : "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
+      "properties" : {
+        "EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the recipient's Entity Profile Message (`$EPM`)"
+              },
+        "CHAIN" : {
+                "type" : "string",
+                "description" : "Settlement chain, e.g. \"ethereum\", \"solana\", \"bitcoin\""
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "On-chain payout address (EVM 0x / SOL base58 / BTC address)"
+              },
+        "XPUB" : {
+                "type" : "string",
+                "description" : "Account xpub the address derives from"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SCX" : {
+      "type" : "object",
+      "description" : "Chain Settlement / Smart-Contract Descriptor. The forward description of the\nexact established splitter contract/program a buyer's wallet targets so\npayment and platform commission settle atomically on-chain. Referenced by\n`$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is\nrealized by the splitter contract itself when the buyer pays it; there is no\noff-chain or manual settlement step.",
+      "properties" : {
+        "CHAIN" : {
+                "type" : "string",
+                "description" : "Settlement chain identifier, e.g. \"ethereum\", \"solana\", \"bitcoin\"\n(matches `$PUR.PAYMENT_CHAIN`)"
+              },
+        "CHAIN_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "EVM chainId; 0 for non-EVM chains"
+              },
+        "SETTLEMENT_KIND" : {
+                "$ref" : "#/definitions/settlementMechanism",
+                "description" : "On-chain settlement mechanism"
+              },
+        "SPLITTER_STANDARD" : {
+                "type" : "string",
+                "description" : "Established split standard id, e.g. \"0xsplits.v2\" (ETH) or the SOL\nsplitter program name. An audited off-the-shelf standard, not a custom\ncontract."
+              },
+        "SPLITTER_ADDRESS" : {
+                "type" : "string",
+                "description" : "Deployed splitter contract address (ETH) or splitter program id (SOL) the\nbuyer's payment routes into"
+              },
+        "SPLIT_CONFIG_ID" : {
+                "type" : "string",
+                "description" : "The specific split configuration (recipient set + basis points) registered\nwith the splitter"
+              },
+        "TOKEN_ADDRESS" : {
+                "type" : "string",
+                "description" : "ERC-20 / SPL mint address for stablecoin settlement; empty = native asset"
+              },
+        "TOKEN_SYMBOL" : {
+                "type" : "string",
+                "description" : "Token symbol, e.g. \"USDC\""
+              },
+        "TOKEN_DECIMALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Token decimals, e.g. 6 for USDC"
+              },
+        "SPLIT_RECIPIENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SplitRecipient"},
+                "description" : "The recipient set the split configuration encodes (platform + publisher…),\nmirrored here for independent verification"
+              },
+        "MIN_CONFIRMATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Confirmations required before the payment is accepted"
+              },
+        "MEMO_SCHEME" : {
+                "$ref" : "#/definitions/memoBindingScheme",
+                "description" : "How the order reference is bound on-chain for replay-safe matching"
+              }
+      },
+      "required" : ["CHAIN"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SCX"
+}

@@ -1,0 +1,18 @@
+/**
+ * How the commission split is enforced.
+ */
+export declare enum commissionEnforcement {
+    /**
+     * Enforced on-chain by an established splitter contract/program: the split
+     * executes when the buyer pays the splitter. No off-chain or manual
+     * settlement — the platform collects commission purely by the buyer's
+     * payment routing through the splitter contract.
+     */
+    SplitterContract = 0,
+    /**
+     * Provider-attested off-contract split, used only where no splitter exists
+     * (e.g. BTC / DirectAddress)
+     */
+    ProviderAttested = 1
+}
+//# sourceMappingURL=commissionEnforcement.d.ts.map

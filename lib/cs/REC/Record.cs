@@ -198,6 +198,8 @@ public struct Record : IFlatbufferObject
   public ENT valueAsENT() { return value<ENT>().Value; }
   public VAM valueAsVAM() { return value<VAM>().Value; }
   public APP valueAsAPP() { return value<APP>().Value; }
+  public CMT valueAsCMT() { return value<CMT>().Value; }
+  public SCX valueAsSCX() { return value<SCX>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -769,6 +771,12 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.APP:
         _o.value.Value = this.value<APP>().HasValue ? this.value<APP>().Value.UnPack() : null;
+        break;
+      case RecordType.CMT:
+        _o.value.Value = this.value<CMT>().HasValue ? this.value<CMT>().Value.UnPack() : null;
+        break;
+      case RecordType.SCX:
+        _o.value.Value = this.value<SCX>().HasValue ? this.value<SCX>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;
