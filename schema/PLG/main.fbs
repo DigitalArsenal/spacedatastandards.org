@@ -1,5 +1,5 @@
-// Hash: 03fb793fc663f732b339295614da2e1ca0d7ffbcf53880ccb0147ad9eb9dc093
-// Version: 1.0.11
+// Hash: 993078ffbde7c1bb9458b8166618debc261900ad97901da6e692ac69b8c79439
+// Version: 1.0.12
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -257,6 +257,66 @@ table EntryFunction {
   OUTPUT_SCHEMA: string;
 }
 
+/// One node in a composed flow graph. A degenerate flow IS a module: a leaf
+/// module leaves the flow-graph fields on PLG empty; a composed flow populates
+/// them. This is how flows reuse the module schema rather than a separate one.
+table PLGFlowNode {
+  /// Stable node identifier within this flow
+  NODE_ID: string (required);
+  /// Plugin id of the module this node invokes
+  PLUGIN_ID: string (required);
+  /// Method id invoked on the module
+  METHOD_ID: string;
+  /// Node kind, e.g. "transform", "trigger", "capability"
+  KIND: string;
+  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  DISPATCH_MODEL: string;
+  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
+  CONFIG: [ubyte];
+  /// Editor layout X position
+  UI_X: float;
+  /// Editor layout Y position
+  UI_Y: float;
+}
+
+/// One directed edge wiring a producer output port to a consumer input port.
+table PLGFlowEdge {
+  /// Stable edge identifier
+  EDGE_ID: string;
+  /// Source node id
+  FROM_NODE_ID: string (required);
+  /// Source output port id
+  FROM_PORT_ID: string (required);
+  /// Destination node id
+  TO_NODE_ID: string (required);
+  /// Destination input port id
+  TO_PORT_ID: string (required);
+}
+
+/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.
+table PLGFlowTrigger {
+  /// Stable trigger identifier
+  TRIGGER_ID: string (required);
+  /// Trigger kind, e.g. "timer", "http"
+  KIND: string;
+  /// Trigger source, e.g. "host-cron"
+  SOURCE: string;
+  /// Default firing interval in milliseconds (timer triggers)
+  DEFAULT_INTERVAL_MS: uint64;
+  /// Mounted HTTP path (http triggers)
+  HTTP_PATH: string;
+}
+
+/// Binds a trigger to the node + input port it delivers its frame to.
+table PLGFlowTriggerBinding {
+  /// Trigger identifier
+  TRIGGER_ID: string (required);
+  /// Target node id
+  TARGET_NODE_ID: string (required);
+  /// Target input port id
+  TARGET_PORT_ID: string (required);
+}
+
 /// Plugin Manifest - canonical signed storefront and WASM distribution record
 table PLG {
   /// Unique identifier for the plugin
@@ -378,6 +438,17 @@ table PLG {
   /// a requester whose verified EPM binds an xpub in this list is granted (PKI
   /// identity authorization). Empty list = no xpub allowlist gate.
   ALLOWED_XPUBS: [string];
+
+  /// Composition graph (a degenerate flow is a module): the nodes this flow
+  /// invokes. Empty for a leaf module; populated for a composed flow. The flow
+  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+  FLOW_NODES: [PLGFlowNode];
+  /// Composition-graph edges wiring node output ports to input ports.
+  FLOW_EDGES: [PLGFlowEdge];
+  /// Flow triggers (timer/http) that start a drain.
+  FLOW_TRIGGERS: [PLGFlowTrigger];
+  /// Bindings from triggers to the node + input port they deliver to.
+  FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];
 }
 
 root_type PLG;

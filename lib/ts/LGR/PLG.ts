@@ -7,6 +7,10 @@ import * as flatbuffers from 'flatbuffers';
 import { EntryFunction, EntryFunctionT } from './EntryFunction.js';
 import { FlatBufferTypeRef, FlatBufferTypeRefT } from './FlatBufferTypeRef.js';
 import { PLGBuildArtifact, PLGBuildArtifactT } from './PLGBuildArtifact.js';
+import { PLGFlowEdge, PLGFlowEdgeT } from './PLGFlowEdge.js';
+import { PLGFlowNode, PLGFlowNodeT } from './PLGFlowNode.js';
+import { PLGFlowTrigger, PLGFlowTriggerT } from './PLGFlowTrigger.js';
+import { PLGFlowTriggerBinding, PLGFlowTriggerBindingT } from './PLGFlowTriggerBinding.js';
 import { PLGHostCapability, PLGHostCapabilityT } from './PLGHostCapability.js';
 import { PLGMethodManifest, PLGMethodManifestT } from './PLGMethodManifest.js';
 import { PLGProtocolSpec, PLGProtocolSpecT } from './PLGProtocolSpec.js';
@@ -646,8 +650,62 @@ allowedXpubsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Composition graph (a degenerate flow is a module): the nodes this flow
+ * invokes. Empty for a leaf module; populated for a composed flow. The flow
+ * definition is this PLG FlatBuffer, not a bespoke JSON graph.
+ */
+FLOW_NODES(index: number, obj?:PLGFlowNode):PLGFlowNode|null {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? (obj || new PLGFlowNode()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+flowNodesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Composition-graph edges wiring node output ports to input ports.
+ */
+FLOW_EDGES(index: number, obj?:PLGFlowEdge):PLGFlowEdge|null {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? (obj || new PLGFlowEdge()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+flowEdgesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Flow triggers (timer/http) that start a drain.
+ */
+FLOW_TRIGGERS(index: number, obj?:PLGFlowTrigger):PLGFlowTrigger|null {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? (obj || new PLGFlowTrigger()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+flowTriggersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Bindings from triggers to the node + input port they deliver to.
+ */
+FLOW_TRIGGER_BINDINGS(index: number, obj?:PLGFlowTriggerBinding):PLGFlowTriggerBinding|null {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? (obj || new PLGFlowTriggerBinding()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+flowTriggerBindingsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startPLG(builder:flatbuffers.Builder) {
-  builder.startObject(52);
+  builder.startObject(56);
 }
 
 static addPluginId(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset) {
@@ -1110,6 +1168,70 @@ static startAllowedXpubsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addFlowNodes(builder:flatbuffers.Builder, FLOW_NODESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(52, FLOW_NODESOffset, 0);
+}
+
+static createFlowNodesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startFlowNodesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addFlowEdges(builder:flatbuffers.Builder, FLOW_EDGESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(53, FLOW_EDGESOffset, 0);
+}
+
+static createFlowEdgesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startFlowEdgesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addFlowTriggers(builder:flatbuffers.Builder, FLOW_TRIGGERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(54, FLOW_TRIGGERSOffset, 0);
+}
+
+static createFlowTriggersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startFlowTriggersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addFlowTriggerBindings(builder:flatbuffers.Builder, FLOW_TRIGGER_BINDINGSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(55, FLOW_TRIGGER_BINDINGSOffset, 0);
+}
+
+static createFlowTriggerBindingsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startFlowTriggerBindingsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endPLG(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // PLUGIN_ID
@@ -1126,7 +1248,7 @@ static finishSizePrefixedPLGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PLG', true);
 }
 
-static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, TAGLINEOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory, PUBLISHER_NAMEOffset:flatbuffers.Offset, PUBLISHER_HANDLEOffset:flatbuffers.Offset, PUBLISHER_URLOffset:flatbuffers.Offset, SUPPORT_URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, FEATURESOffset:flatbuffers.Offset, SCREENSHOT_URLSOffset:flatbuffers.Offset, BANNER_URLOffset:flatbuffers.Offset, ABI_VERSION:number, WASM_HASHOffset:flatbuffers.Offset, WASM_SIZE:bigint, WASM_CIDOffset:flatbuffers.Offset, ENCRYPTED_WASM_HASHOffset:flatbuffers.Offset, ENCRYPTED_WASM_SIZE:bigint, ENTRY_FUNCTIONSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, DEPENDENCIESOffset:flatbuffers.Offset, CAPABILITIESOffset:flatbuffers.Offset, PROVIDER_PEER_IDOffset:flatbuffers.Offset, PROVIDER_EPM_CIDOffset:flatbuffers.Offset, ENCRYPTED:boolean, REQUIRED_SCOPEOffset:flatbuffers.Offset, KEY_IDOffset:flatbuffers.Offset, MAX_GRANT_TIMEOUT_MS:bigint, MIN_PERMISSIONSOffset:flatbuffers.Offset, CREATED_AT:bigint, UPDATED_AT:bigint, DOCUMENTATION_URLOffset:flatbuffers.Offset, CHANGELOG_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, PAYMENT_MODEL:purchaseTier, PRICE_USD_CENTS:number, SUBSCRIPTION_PERIOD_DAYS:number, ACCEPTED_PAYMENT_METHODSOffset:flatbuffers.Offset, LISTING_STATUS:publicationState, SIGNATUREOffset:flatbuffers.Offset, INVOKE_SURFACESOffset:flatbuffers.Offset, METHODSOffset:flatbuffers.Offset, HOST_CAPABILITIESOffset:flatbuffers.Offset, TIMERSOffset:flatbuffers.Offset, PROTOCOLSOffset:flatbuffers.Offset, SCHEMAS_USEDOffset:flatbuffers.Offset, BUILD_ARTIFACTSOffset:flatbuffers.Offset, RUNTIME_TARGETSOffset:flatbuffers.Offset, ALLOWED_XPUBSOffset:flatbuffers.Offset, FLOW_NODESOffset:flatbuffers.Offset, FLOW_EDGESOffset:flatbuffers.Offset, FLOW_TRIGGERSOffset:flatbuffers.Offset, FLOW_TRIGGER_BINDINGSOffset:flatbuffers.Offset):flatbuffers.Offset {
   PLG.startPLG(builder);
   PLG.addPluginId(builder, PLUGIN_IDOffset);
   PLG.addName(builder, NAMEOffset);
@@ -1180,6 +1302,10 @@ static createPLG(builder:flatbuffers.Builder, PLUGIN_IDOffset:flatbuffers.Offset
   PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
   PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
   PLG.addAllowedXpubs(builder, ALLOWED_XPUBSOffset);
+  PLG.addFlowNodes(builder, FLOW_NODESOffset);
+  PLG.addFlowEdges(builder, FLOW_EDGESOffset);
+  PLG.addFlowTriggers(builder, FLOW_TRIGGERSOffset);
+  PLG.addFlowTriggerBindings(builder, FLOW_TRIGGER_BINDINGSOffset);
   return PLG.endPLG(builder);
 }
 
@@ -1236,7 +1362,11 @@ unpack(): PLGT {
     this.bb!.createObjList<FlatBufferTypeRef, FlatBufferTypeRefT>(this.SCHEMAS_USED.bind(this), this.schemasUsedLength()),
     this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength()),
     this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength()),
-    this.bb!.createScalarList<string>(this.ALLOWED_XPUBS.bind(this), this.allowedXpubsLength())
+    this.bb!.createScalarList<string>(this.ALLOWED_XPUBS.bind(this), this.allowedXpubsLength()),
+    this.bb!.createObjList<PLGFlowNode, PLGFlowNodeT>(this.FLOW_NODES.bind(this), this.flowNodesLength()),
+    this.bb!.createObjList<PLGFlowEdge, PLGFlowEdgeT>(this.FLOW_EDGES.bind(this), this.flowEdgesLength()),
+    this.bb!.createObjList<PLGFlowTrigger, PLGFlowTriggerT>(this.FLOW_TRIGGERS.bind(this), this.flowTriggersLength()),
+    this.bb!.createObjList<PLGFlowTriggerBinding, PLGFlowTriggerBindingT>(this.FLOW_TRIGGER_BINDINGS.bind(this), this.flowTriggerBindingsLength())
   );
 }
 
@@ -1294,6 +1424,10 @@ unpackTo(_o: PLGT): void {
   _o.BUILD_ARTIFACTS = this.bb!.createObjList<PLGBuildArtifact, PLGBuildArtifactT>(this.BUILD_ARTIFACTS.bind(this), this.buildArtifactsLength());
   _o.RUNTIME_TARGETS = this.bb!.createScalarList<string>(this.RUNTIME_TARGETS.bind(this), this.runtimeTargetsLength());
   _o.ALLOWED_XPUBS = this.bb!.createScalarList<string>(this.ALLOWED_XPUBS.bind(this), this.allowedXpubsLength());
+  _o.FLOW_NODES = this.bb!.createObjList<PLGFlowNode, PLGFlowNodeT>(this.FLOW_NODES.bind(this), this.flowNodesLength());
+  _o.FLOW_EDGES = this.bb!.createObjList<PLGFlowEdge, PLGFlowEdgeT>(this.FLOW_EDGES.bind(this), this.flowEdgesLength());
+  _o.FLOW_TRIGGERS = this.bb!.createObjList<PLGFlowTrigger, PLGFlowTriggerT>(this.FLOW_TRIGGERS.bind(this), this.flowTriggersLength());
+  _o.FLOW_TRIGGER_BINDINGS = this.bb!.createObjList<PLGFlowTriggerBinding, PLGFlowTriggerBindingT>(this.FLOW_TRIGGER_BINDINGS.bind(this), this.flowTriggerBindingsLength());
 }
 }
 
@@ -1350,7 +1484,11 @@ constructor(
   public SCHEMAS_USED: (FlatBufferTypeRefT)[] = [],
   public BUILD_ARTIFACTS: (PLGBuildArtifactT)[] = [],
   public RUNTIME_TARGETS: (string)[] = [],
-  public ALLOWED_XPUBS: (string)[] = []
+  public ALLOWED_XPUBS: (string)[] = [],
+  public FLOW_NODES: (PLGFlowNodeT)[] = [],
+  public FLOW_EDGES: (PLGFlowEdgeT)[] = [],
+  public FLOW_TRIGGERS: (PLGFlowTriggerT)[] = [],
+  public FLOW_TRIGGER_BINDINGS: (PLGFlowTriggerBindingT)[] = []
 ){}
 
 
@@ -1395,6 +1533,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const BUILD_ARTIFACTS = PLG.createBuildArtifactsVector(builder, builder.createObjectOffsetList(this.BUILD_ARTIFACTS));
   const RUNTIME_TARGETS = PLG.createRuntimeTargetsVector(builder, builder.createObjectOffsetList(this.RUNTIME_TARGETS));
   const ALLOWED_XPUBS = PLG.createAllowedXpubsVector(builder, builder.createObjectOffsetList(this.ALLOWED_XPUBS));
+  const FLOW_NODES = PLG.createFlowNodesVector(builder, builder.createObjectOffsetList(this.FLOW_NODES));
+  const FLOW_EDGES = PLG.createFlowEdgesVector(builder, builder.createObjectOffsetList(this.FLOW_EDGES));
+  const FLOW_TRIGGERS = PLG.createFlowTriggersVector(builder, builder.createObjectOffsetList(this.FLOW_TRIGGERS));
+  const FLOW_TRIGGER_BINDINGS = PLG.createFlowTriggerBindingsVector(builder, builder.createObjectOffsetList(this.FLOW_TRIGGER_BINDINGS));
 
   return PLG.createPLG(builder,
     PLUGIN_ID,
@@ -1448,7 +1590,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SCHEMAS_USED,
     BUILD_ARTIFACTS,
     RUNTIME_TARGETS,
-    ALLOWED_XPUBS
+    ALLOWED_XPUBS,
+    FLOW_NODES,
+    FLOW_EDGES,
+    FLOW_TRIGGERS,
+    FLOW_TRIGGER_BINDINGS
   );
 }
 }

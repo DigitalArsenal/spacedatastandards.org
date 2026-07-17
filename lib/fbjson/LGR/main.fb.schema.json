@@ -1279,6 +1279,170 @@
         "NAME"
       ]
     },
+    "PLGFlowNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NODE_ID": {
+          "type": "string",
+          "description": "Stable node identifier within this flow",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "Plugin id of the module this node invokes",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "METHOD_ID": {
+          "type": "string",
+          "description": "Method id invoked on the module",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "type": "string",
+          "description": "Node kind, e.g. \"transform\", \"trigger\", \"capability\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DISPATCH_MODEL": {
+          "type": "string",
+          "description": "Dispatch model: empty = linked-direct (in-wasm), else \"host-capability\"",
+          "x-flatbuffer-type": "string"
+        },
+        "CONFIG": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "UI_X": {
+          "type": "number",
+          "description": "Editor layout X position",
+          "x-flatbuffer-type": "float"
+        },
+        "UI_Y": {
+          "type": "number",
+          "description": "Editor layout Y position",
+          "x-flatbuffer-type": "float"
+        }
+      },
+      "description": "One node in a composed flow graph. A degenerate flow IS a module: a leaf module leaves the flow-graph fields on PLG empty; a composed flow populates them. This is how flows reuse the module schema rather than a separate one.",
+      "required": [
+        "NODE_ID",
+        "PLUGIN_ID"
+      ]
+    },
+    "PLGFlowEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "EDGE_ID": {
+          "type": "string",
+          "description": "Stable edge identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "FROM_NODE_ID": {
+          "type": "string",
+          "description": "Source node id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "FROM_PORT_ID": {
+          "type": "string",
+          "description": "Source output port id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TO_NODE_ID": {
+          "type": "string",
+          "description": "Destination node id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TO_PORT_ID": {
+          "type": "string",
+          "description": "Destination input port id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "description": "One directed edge wiring a producer output port to a consumer input port.",
+      "required": [
+        "FROM_NODE_ID",
+        "FROM_PORT_ID",
+        "TO_NODE_ID",
+        "TO_PORT_ID"
+      ]
+    },
+    "PLGFlowTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TRIGGER_ID": {
+          "type": "string",
+          "description": "Stable trigger identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "type": "string",
+          "description": "Trigger kind, e.g. \"timer\", \"http\"",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Trigger source, e.g. \"host-cron\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DEFAULT_INTERVAL_MS": {
+          "type": "integer",
+          "description": "Default firing interval in milliseconds (timer triggers)",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HTTP_PATH": {
+          "type": "string",
+          "description": "Mounted HTTP path (http triggers)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One flow trigger (e.g. a host timer or HTTP route) that starts a drain.",
+      "required": [
+        "TRIGGER_ID"
+      ]
+    },
+    "PLGFlowTriggerBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TRIGGER_ID": {
+          "type": "string",
+          "description": "Trigger identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET_NODE_ID": {
+          "type": "string",
+          "description": "Target node id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TARGET_PORT_ID": {
+          "type": "string",
+          "description": "Target input port id",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "description": "Binds a trigger to the node + input port it delivers its frame to.",
+      "required": [
+        "TRIGGER_ID",
+        "TARGET_NODE_ID",
+        "TARGET_PORT_ID"
+      ]
+    },
     "PLG": {
       "type": "object",
       "additionalProperties": false,
@@ -1721,6 +1885,38 @@
           },
           "description": "identity authorization). Empty list = no xpub allowlist gate.",
           "x-flatbuffer-type": "[string]"
+        },
+        "FLOW_NODES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGFlowNode"
+          },
+          "description": "definition is this PLG FlatBuffer, not a bespoke JSON graph.",
+          "x-flatbuffer-type": "[PLGFlowNode]"
+        },
+        "FLOW_EDGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGFlowEdge"
+          },
+          "description": "Composition-graph edges wiring node output ports to input ports.",
+          "x-flatbuffer-type": "[PLGFlowEdge]"
+        },
+        "FLOW_TRIGGERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGFlowTrigger"
+          },
+          "description": "Flow triggers (timer/http) that start a drain.",
+          "x-flatbuffer-type": "[PLGFlowTrigger]"
+        },
+        "FLOW_TRIGGER_BINDINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PLGFlowTriggerBinding"
+          },
+          "description": "Bindings from triggers to the node + input port they deliver to.",
+          "x-flatbuffer-type": "[PLGFlowTriggerBinding]"
         }
       },
       "description": "Plugin Manifest - canonical signed storefront and WASM distribution record",

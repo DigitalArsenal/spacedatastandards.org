@@ -3321,6 +3321,1026 @@ impl EntryFunctionT {
     })
   }
 }
+pub enum PLGFlowNodeOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One node in a composed flow graph. A degenerate flow IS a module: a leaf
+/// module leaves the flow-graph fields on PLG empty; a composed flow populates
+/// them. This is how flows reuse the module schema rather than a separate one.
+pub struct PLGFlowNode<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGFlowNode<'a> {
+  type Inner = PLGFlowNode<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGFlowNode<'a> {
+  pub const VT_NODE_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_PLUGIN_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_METHOD_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 10;
+  pub const VT_DISPATCH_MODEL: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CONFIG: ::flatbuffers::VOffsetT = 14;
+  pub const VT_UI_X: ::flatbuffers::VOffsetT = 16;
+  pub const VT_UI_Y: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGFlowNode { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGFlowNodeArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowNode<'bldr>> {
+    let mut builder = PLGFlowNodeBuilder::new(_fbb);
+    builder.add_UI_Y(args.UI_Y);
+    builder.add_UI_X(args.UI_X);
+    if let Some(x) = args.CONFIG { builder.add_CONFIG(x); }
+    if let Some(x) = args.DISPATCH_MODEL { builder.add_DISPATCH_MODEL(x); }
+    if let Some(x) = args.KIND { builder.add_KIND(x); }
+    if let Some(x) = args.METHOD_ID { builder.add_METHOD_ID(x); }
+    if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
+    if let Some(x) = args.NODE_ID { builder.add_NODE_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGFlowNodeT {
+    let NODE_ID = {
+      let x = self.NODE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let PLUGIN_ID = {
+      let x = self.PLUGIN_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let METHOD_ID = self.METHOD_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let KIND = self.KIND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DISPATCH_MODEL = self.DISPATCH_MODEL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONFIG = self.CONFIG().map(|x| {
+      x.into_iter().collect()
+    });
+    let UI_X = self.UI_X();
+    let UI_Y = self.UI_Y();
+    PLGFlowNodeT {
+      NODE_ID,
+      PLUGIN_ID,
+      METHOD_ID,
+      KIND,
+      DISPATCH_MODEL,
+      CONFIG,
+      UI_X,
+      UI_Y,
+    }
+  }
+
+  /// Stable node identifier within this flow
+  #[inline]
+  pub fn NODE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_NODE_ID, None).unwrap()}
+  }
+  /// Plugin id of the module this node invokes
+  #[inline]
+  pub fn PLUGIN_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_PLUGIN_ID, None).unwrap()}
+  }
+  /// Method id invoked on the module
+  #[inline]
+  pub fn METHOD_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_METHOD_ID, None)}
+  }
+  /// Node kind, e.g. "transform", "trigger", "capability"
+  #[inline]
+  pub fn KIND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_KIND, None)}
+  }
+  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  #[inline]
+  pub fn DISPATCH_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_DISPATCH_MODEL, None)}
+  }
+  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
+  #[inline]
+  pub fn CONFIG(&self) -> Option<::flatbuffers::Vector<'a, u8>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(PLGFlowNode::VT_CONFIG, None)}
+  }
+  /// Editor layout X position
+  #[inline]
+  pub fn UI_X(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(PLGFlowNode::VT_UI_X, Some(0.0)).unwrap()}
+  }
+  /// Editor layout Y position
+  #[inline]
+  pub fn UI_Y(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(PLGFlowNode::VT_UI_Y, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGFlowNode<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NODE_ID", Self::VT_NODE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PLUGIN_ID", Self::VT_PLUGIN_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("METHOD_ID", Self::VT_METHOD_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KIND", Self::VT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISPATCH_MODEL", Self::VT_DISPATCH_MODEL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("CONFIG", Self::VT_CONFIG, false)?
+     .visit_field::<f32>("UI_X", Self::VT_UI_X, false)?
+     .visit_field::<f32>("UI_Y", Self::VT_UI_Y, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGFlowNodeArgs<'a> {
+    pub NODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PLUGIN_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub METHOD_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DISPATCH_MODEL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONFIG: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub UI_X: f32,
+    pub UI_Y: f32,
+}
+impl<'a> Default for PLGFlowNodeArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGFlowNodeArgs {
+      NODE_ID: None, // required field
+      PLUGIN_ID: None, // required field
+      METHOD_ID: None,
+      KIND: None,
+      DISPATCH_MODEL: None,
+      CONFIG: None,
+      UI_X: 0.0,
+      UI_Y: 0.0,
+    }
+  }
+}
+
+pub struct PLGFlowNodeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowNodeBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NODE_ID(&mut self, NODE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_NODE_ID, NODE_ID);
+  }
+  #[inline]
+  pub fn add_PLUGIN_ID(&mut self, PLUGIN_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_PLUGIN_ID, PLUGIN_ID);
+  }
+  #[inline]
+  pub fn add_METHOD_ID(&mut self, METHOD_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_METHOD_ID, METHOD_ID);
+  }
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_KIND, KIND);
+  }
+  #[inline]
+  pub fn add_DISPATCH_MODEL(&mut self, DISPATCH_MODEL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_DISPATCH_MODEL, DISPATCH_MODEL);
+  }
+  #[inline]
+  pub fn add_CONFIG(&mut self, CONFIG: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u8>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowNode::VT_CONFIG, CONFIG);
+  }
+  #[inline]
+  pub fn add_UI_X(&mut self, UI_X: f32) {
+    self.fbb_.push_slot::<f32>(PLGFlowNode::VT_UI_X, UI_X, 0.0);
+  }
+  #[inline]
+  pub fn add_UI_Y(&mut self, UI_Y: f32) {
+    self.fbb_.push_slot::<f32>(PLGFlowNode::VT_UI_Y, UI_Y, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowNodeBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGFlowNodeBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGFlowNode<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGFlowNode::VT_NODE_ID,"NODE_ID");
+    self.fbb_.required(o, PLGFlowNode::VT_PLUGIN_ID,"PLUGIN_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGFlowNode<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGFlowNode");
+      ds.field("NODE_ID", &self.NODE_ID());
+      ds.field("PLUGIN_ID", &self.PLUGIN_ID());
+      ds.field("METHOD_ID", &self.METHOD_ID());
+      ds.field("KIND", &self.KIND());
+      ds.field("DISPATCH_MODEL", &self.DISPATCH_MODEL());
+      ds.field("CONFIG", &self.CONFIG());
+      ds.field("UI_X", &self.UI_X());
+      ds.field("UI_Y", &self.UI_Y());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGFlowNodeT {
+  pub NODE_ID: alloc::string::String,
+  pub PLUGIN_ID: alloc::string::String,
+  pub METHOD_ID: Option<alloc::string::String>,
+  pub KIND: Option<alloc::string::String>,
+  pub DISPATCH_MODEL: Option<alloc::string::String>,
+  pub CONFIG: Option<alloc::vec::Vec<u8>>,
+  pub UI_X: f32,
+  pub UI_Y: f32,
+}
+impl Default for PLGFlowNodeT {
+  fn default() -> Self {
+    Self {
+      NODE_ID: alloc::string::ToString::to_string(""),
+      PLUGIN_ID: alloc::string::ToString::to_string(""),
+      METHOD_ID: None,
+      KIND: None,
+      DISPATCH_MODEL: None,
+      CONFIG: None,
+      UI_X: 0.0,
+      UI_Y: 0.0,
+    }
+  }
+}
+impl PLGFlowNodeT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowNode<'b>> {
+    let NODE_ID = Some({
+      let x = &self.NODE_ID;
+      _fbb.create_string(x)
+    });
+    let PLUGIN_ID = Some({
+      let x = &self.PLUGIN_ID;
+      _fbb.create_string(x)
+    });
+    let METHOD_ID = self.METHOD_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KIND = self.KIND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DISPATCH_MODEL = self.DISPATCH_MODEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONFIG = self.CONFIG.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let UI_X = self.UI_X;
+    let UI_Y = self.UI_Y;
+    PLGFlowNode::create(_fbb, &PLGFlowNodeArgs{
+      NODE_ID,
+      PLUGIN_ID,
+      METHOD_ID,
+      KIND,
+      DISPATCH_MODEL,
+      CONFIG,
+      UI_X,
+      UI_Y,
+    })
+  }
+}
+pub enum PLGFlowEdgeOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One directed edge wiring a producer output port to a consumer input port.
+pub struct PLGFlowEdge<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGFlowEdge<'a> {
+  type Inner = PLGFlowEdge<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGFlowEdge<'a> {
+  pub const VT_EDGE_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_FROM_NODE_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_FROM_PORT_ID: ::flatbuffers::VOffsetT = 8;
+  pub const VT_TO_NODE_ID: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TO_PORT_ID: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGFlowEdge { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGFlowEdgeArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowEdge<'bldr>> {
+    let mut builder = PLGFlowEdgeBuilder::new(_fbb);
+    if let Some(x) = args.TO_PORT_ID { builder.add_TO_PORT_ID(x); }
+    if let Some(x) = args.TO_NODE_ID { builder.add_TO_NODE_ID(x); }
+    if let Some(x) = args.FROM_PORT_ID { builder.add_FROM_PORT_ID(x); }
+    if let Some(x) = args.FROM_NODE_ID { builder.add_FROM_NODE_ID(x); }
+    if let Some(x) = args.EDGE_ID { builder.add_EDGE_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGFlowEdgeT {
+    let EDGE_ID = self.EDGE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FROM_NODE_ID = {
+      let x = self.FROM_NODE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let FROM_PORT_ID = {
+      let x = self.FROM_PORT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let TO_NODE_ID = {
+      let x = self.TO_NODE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let TO_PORT_ID = {
+      let x = self.TO_PORT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    PLGFlowEdgeT {
+      EDGE_ID,
+      FROM_NODE_ID,
+      FROM_PORT_ID,
+      TO_NODE_ID,
+      TO_PORT_ID,
+    }
+  }
+
+  /// Stable edge identifier
+  #[inline]
+  pub fn EDGE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_EDGE_ID, None)}
+  }
+  /// Source node id
+  #[inline]
+  pub fn FROM_NODE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_FROM_NODE_ID, None).unwrap()}
+  }
+  /// Source output port id
+  #[inline]
+  pub fn FROM_PORT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_FROM_PORT_ID, None).unwrap()}
+  }
+  /// Destination node id
+  #[inline]
+  pub fn TO_NODE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_TO_NODE_ID, None).unwrap()}
+  }
+  /// Destination input port id
+  #[inline]
+  pub fn TO_PORT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_TO_PORT_ID, None).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGFlowEdge<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EDGE_ID", Self::VT_EDGE_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FROM_NODE_ID", Self::VT_FROM_NODE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FROM_PORT_ID", Self::VT_FROM_PORT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TO_NODE_ID", Self::VT_TO_NODE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TO_PORT_ID", Self::VT_TO_PORT_ID, true)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGFlowEdgeArgs<'a> {
+    pub EDGE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FROM_NODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FROM_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TO_NODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TO_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGFlowEdgeArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGFlowEdgeArgs {
+      EDGE_ID: None,
+      FROM_NODE_ID: None, // required field
+      FROM_PORT_ID: None, // required field
+      TO_NODE_ID: None, // required field
+      TO_PORT_ID: None, // required field
+    }
+  }
+}
+
+pub struct PLGFlowEdgeBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowEdgeBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EDGE_ID(&mut self, EDGE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_EDGE_ID, EDGE_ID);
+  }
+  #[inline]
+  pub fn add_FROM_NODE_ID(&mut self, FROM_NODE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_FROM_NODE_ID, FROM_NODE_ID);
+  }
+  #[inline]
+  pub fn add_FROM_PORT_ID(&mut self, FROM_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_FROM_PORT_ID, FROM_PORT_ID);
+  }
+  #[inline]
+  pub fn add_TO_NODE_ID(&mut self, TO_NODE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_TO_NODE_ID, TO_NODE_ID);
+  }
+  #[inline]
+  pub fn add_TO_PORT_ID(&mut self, TO_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_TO_PORT_ID, TO_PORT_ID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowEdgeBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGFlowEdgeBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGFlowEdge<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGFlowEdge::VT_FROM_NODE_ID,"FROM_NODE_ID");
+    self.fbb_.required(o, PLGFlowEdge::VT_FROM_PORT_ID,"FROM_PORT_ID");
+    self.fbb_.required(o, PLGFlowEdge::VT_TO_NODE_ID,"TO_NODE_ID");
+    self.fbb_.required(o, PLGFlowEdge::VT_TO_PORT_ID,"TO_PORT_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGFlowEdge<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGFlowEdge");
+      ds.field("EDGE_ID", &self.EDGE_ID());
+      ds.field("FROM_NODE_ID", &self.FROM_NODE_ID());
+      ds.field("FROM_PORT_ID", &self.FROM_PORT_ID());
+      ds.field("TO_NODE_ID", &self.TO_NODE_ID());
+      ds.field("TO_PORT_ID", &self.TO_PORT_ID());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGFlowEdgeT {
+  pub EDGE_ID: Option<alloc::string::String>,
+  pub FROM_NODE_ID: alloc::string::String,
+  pub FROM_PORT_ID: alloc::string::String,
+  pub TO_NODE_ID: alloc::string::String,
+  pub TO_PORT_ID: alloc::string::String,
+}
+impl Default for PLGFlowEdgeT {
+  fn default() -> Self {
+    Self {
+      EDGE_ID: None,
+      FROM_NODE_ID: alloc::string::ToString::to_string(""),
+      FROM_PORT_ID: alloc::string::ToString::to_string(""),
+      TO_NODE_ID: alloc::string::ToString::to_string(""),
+      TO_PORT_ID: alloc::string::ToString::to_string(""),
+    }
+  }
+}
+impl PLGFlowEdgeT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowEdge<'b>> {
+    let EDGE_ID = self.EDGE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FROM_NODE_ID = Some({
+      let x = &self.FROM_NODE_ID;
+      _fbb.create_string(x)
+    });
+    let FROM_PORT_ID = Some({
+      let x = &self.FROM_PORT_ID;
+      _fbb.create_string(x)
+    });
+    let TO_NODE_ID = Some({
+      let x = &self.TO_NODE_ID;
+      _fbb.create_string(x)
+    });
+    let TO_PORT_ID = Some({
+      let x = &self.TO_PORT_ID;
+      _fbb.create_string(x)
+    });
+    PLGFlowEdge::create(_fbb, &PLGFlowEdgeArgs{
+      EDGE_ID,
+      FROM_NODE_ID,
+      FROM_PORT_ID,
+      TO_NODE_ID,
+      TO_PORT_ID,
+    })
+  }
+}
+pub enum PLGFlowTriggerOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.
+pub struct PLGFlowTrigger<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGFlowTrigger<'a> {
+  type Inner = PLGFlowTrigger<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGFlowTrigger<'a> {
+  pub const VT_TRIGGER_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_KIND: ::flatbuffers::VOffsetT = 6;
+  pub const VT_SOURCE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_DEFAULT_INTERVAL_MS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_HTTP_PATH: ::flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGFlowTrigger { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGFlowTriggerArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowTrigger<'bldr>> {
+    let mut builder = PLGFlowTriggerBuilder::new(_fbb);
+    builder.add_DEFAULT_INTERVAL_MS(args.DEFAULT_INTERVAL_MS);
+    if let Some(x) = args.HTTP_PATH { builder.add_HTTP_PATH(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    if let Some(x) = args.KIND { builder.add_KIND(x); }
+    if let Some(x) = args.TRIGGER_ID { builder.add_TRIGGER_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGFlowTriggerT {
+    let TRIGGER_ID = {
+      let x = self.TRIGGER_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let KIND = self.KIND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SOURCE = self.SOURCE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DEFAULT_INTERVAL_MS = self.DEFAULT_INTERVAL_MS();
+    let HTTP_PATH = self.HTTP_PATH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    PLGFlowTriggerT {
+      TRIGGER_ID,
+      KIND,
+      SOURCE,
+      DEFAULT_INTERVAL_MS,
+      HTTP_PATH,
+    }
+  }
+
+  /// Stable trigger identifier
+  #[inline]
+  pub fn TRIGGER_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTrigger::VT_TRIGGER_ID, None).unwrap()}
+  }
+  /// Trigger kind, e.g. "timer", "http"
+  #[inline]
+  pub fn KIND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTrigger::VT_KIND, None)}
+  }
+  /// Trigger source, e.g. "host-cron"
+  #[inline]
+  pub fn SOURCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTrigger::VT_SOURCE, None)}
+  }
+  /// Default firing interval in milliseconds (timer triggers)
+  #[inline]
+  pub fn DEFAULT_INTERVAL_MS(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(PLGFlowTrigger::VT_DEFAULT_INTERVAL_MS, Some(0)).unwrap()}
+  }
+  /// Mounted HTTP path (http triggers)
+  #[inline]
+  pub fn HTTP_PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTrigger::VT_HTTP_PATH, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGFlowTrigger<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRIGGER_ID", Self::VT_TRIGGER_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KIND", Self::VT_KIND, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
+     .visit_field::<u64>("DEFAULT_INTERVAL_MS", Self::VT_DEFAULT_INTERVAL_MS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("HTTP_PATH", Self::VT_HTTP_PATH, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGFlowTriggerArgs<'a> {
+    pub TRIGGER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KIND: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DEFAULT_INTERVAL_MS: u64,
+    pub HTTP_PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGFlowTriggerArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGFlowTriggerArgs {
+      TRIGGER_ID: None, // required field
+      KIND: None,
+      SOURCE: None,
+      DEFAULT_INTERVAL_MS: 0,
+      HTTP_PATH: None,
+    }
+  }
+}
+
+pub struct PLGFlowTriggerBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowTriggerBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TRIGGER_ID(&mut self, TRIGGER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTrigger::VT_TRIGGER_ID, TRIGGER_ID);
+  }
+  #[inline]
+  pub fn add_KIND(&mut self, KIND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTrigger::VT_KIND, KIND);
+  }
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTrigger::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_DEFAULT_INTERVAL_MS(&mut self, DEFAULT_INTERVAL_MS: u64) {
+    self.fbb_.push_slot::<u64>(PLGFlowTrigger::VT_DEFAULT_INTERVAL_MS, DEFAULT_INTERVAL_MS, 0);
+  }
+  #[inline]
+  pub fn add_HTTP_PATH(&mut self, HTTP_PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTrigger::VT_HTTP_PATH, HTTP_PATH);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowTriggerBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGFlowTriggerBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGFlowTrigger<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGFlowTrigger::VT_TRIGGER_ID,"TRIGGER_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGFlowTrigger<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGFlowTrigger");
+      ds.field("TRIGGER_ID", &self.TRIGGER_ID());
+      ds.field("KIND", &self.KIND());
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("DEFAULT_INTERVAL_MS", &self.DEFAULT_INTERVAL_MS());
+      ds.field("HTTP_PATH", &self.HTTP_PATH());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGFlowTriggerT {
+  pub TRIGGER_ID: alloc::string::String,
+  pub KIND: Option<alloc::string::String>,
+  pub SOURCE: Option<alloc::string::String>,
+  pub DEFAULT_INTERVAL_MS: u64,
+  pub HTTP_PATH: Option<alloc::string::String>,
+}
+impl Default for PLGFlowTriggerT {
+  fn default() -> Self {
+    Self {
+      TRIGGER_ID: alloc::string::ToString::to_string(""),
+      KIND: None,
+      SOURCE: None,
+      DEFAULT_INTERVAL_MS: 0,
+      HTTP_PATH: None,
+    }
+  }
+}
+impl PLGFlowTriggerT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowTrigger<'b>> {
+    let TRIGGER_ID = Some({
+      let x = &self.TRIGGER_ID;
+      _fbb.create_string(x)
+    });
+    let KIND = self.KIND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE = self.SOURCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DEFAULT_INTERVAL_MS = self.DEFAULT_INTERVAL_MS;
+    let HTTP_PATH = self.HTTP_PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    PLGFlowTrigger::create(_fbb, &PLGFlowTriggerArgs{
+      TRIGGER_ID,
+      KIND,
+      SOURCE,
+      DEFAULT_INTERVAL_MS,
+      HTTP_PATH,
+    })
+  }
+}
+pub enum PLGFlowTriggerBindingOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Binds a trigger to the node + input port it delivers its frame to.
+pub struct PLGFlowTriggerBinding<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGFlowTriggerBinding<'a> {
+  type Inner = PLGFlowTriggerBinding<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGFlowTriggerBinding<'a> {
+  pub const VT_TRIGGER_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_TARGET_NODE_ID: ::flatbuffers::VOffsetT = 6;
+  pub const VT_TARGET_PORT_ID: ::flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGFlowTriggerBinding { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGFlowTriggerBindingArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowTriggerBinding<'bldr>> {
+    let mut builder = PLGFlowTriggerBindingBuilder::new(_fbb);
+    if let Some(x) = args.TARGET_PORT_ID { builder.add_TARGET_PORT_ID(x); }
+    if let Some(x) = args.TARGET_NODE_ID { builder.add_TARGET_NODE_ID(x); }
+    if let Some(x) = args.TRIGGER_ID { builder.add_TRIGGER_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGFlowTriggerBindingT {
+    let TRIGGER_ID = {
+      let x = self.TRIGGER_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let TARGET_NODE_ID = {
+      let x = self.TARGET_NODE_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    let TARGET_PORT_ID = {
+      let x = self.TARGET_PORT_ID();
+      alloc::string::ToString::to_string(x)
+    };
+    PLGFlowTriggerBindingT {
+      TRIGGER_ID,
+      TARGET_NODE_ID,
+      TARGET_PORT_ID,
+    }
+  }
+
+  /// Trigger identifier
+  #[inline]
+  pub fn TRIGGER_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTriggerBinding::VT_TRIGGER_ID, None).unwrap()}
+  }
+  /// Target node id
+  #[inline]
+  pub fn TARGET_NODE_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTriggerBinding::VT_TARGET_NODE_ID, None).unwrap()}
+  }
+  /// Target input port id
+  #[inline]
+  pub fn TARGET_PORT_ID(&self) -> &'a str {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowTriggerBinding::VT_TARGET_PORT_ID, None).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGFlowTriggerBinding<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRIGGER_ID", Self::VT_TRIGGER_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET_NODE_ID", Self::VT_TARGET_NODE_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TARGET_PORT_ID", Self::VT_TARGET_PORT_ID, true)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGFlowTriggerBindingArgs<'a> {
+    pub TRIGGER_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_NODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for PLGFlowTriggerBindingArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGFlowTriggerBindingArgs {
+      TRIGGER_ID: None, // required field
+      TARGET_NODE_ID: None, // required field
+      TARGET_PORT_ID: None, // required field
+    }
+  }
+}
+
+pub struct PLGFlowTriggerBindingBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowTriggerBindingBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TRIGGER_ID(&mut self, TRIGGER_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTriggerBinding::VT_TRIGGER_ID, TRIGGER_ID);
+  }
+  #[inline]
+  pub fn add_TARGET_NODE_ID(&mut self, TARGET_NODE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTriggerBinding::VT_TARGET_NODE_ID, TARGET_NODE_ID);
+  }
+  #[inline]
+  pub fn add_TARGET_PORT_ID(&mut self, TARGET_PORT_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowTriggerBinding::VT_TARGET_PORT_ID, TARGET_PORT_ID);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowTriggerBindingBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGFlowTriggerBindingBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGFlowTriggerBinding<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    self.fbb_.required(o, PLGFlowTriggerBinding::VT_TRIGGER_ID,"TRIGGER_ID");
+    self.fbb_.required(o, PLGFlowTriggerBinding::VT_TARGET_NODE_ID,"TARGET_NODE_ID");
+    self.fbb_.required(o, PLGFlowTriggerBinding::VT_TARGET_PORT_ID,"TARGET_PORT_ID");
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGFlowTriggerBinding<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGFlowTriggerBinding");
+      ds.field("TRIGGER_ID", &self.TRIGGER_ID());
+      ds.field("TARGET_NODE_ID", &self.TARGET_NODE_ID());
+      ds.field("TARGET_PORT_ID", &self.TARGET_PORT_ID());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGFlowTriggerBindingT {
+  pub TRIGGER_ID: alloc::string::String,
+  pub TARGET_NODE_ID: alloc::string::String,
+  pub TARGET_PORT_ID: alloc::string::String,
+}
+impl Default for PLGFlowTriggerBindingT {
+  fn default() -> Self {
+    Self {
+      TRIGGER_ID: alloc::string::ToString::to_string(""),
+      TARGET_NODE_ID: alloc::string::ToString::to_string(""),
+      TARGET_PORT_ID: alloc::string::ToString::to_string(""),
+    }
+  }
+}
+impl PLGFlowTriggerBindingT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowTriggerBinding<'b>> {
+    let TRIGGER_ID = Some({
+      let x = &self.TRIGGER_ID;
+      _fbb.create_string(x)
+    });
+    let TARGET_NODE_ID = Some({
+      let x = &self.TARGET_NODE_ID;
+      _fbb.create_string(x)
+    });
+    let TARGET_PORT_ID = Some({
+      let x = &self.TARGET_PORT_ID;
+      _fbb.create_string(x)
+    });
+    PLGFlowTriggerBinding::create(_fbb, &PLGFlowTriggerBindingArgs{
+      TRIGGER_ID,
+      TARGET_NODE_ID,
+      TARGET_PORT_ID,
+    })
+  }
+}
 pub enum PLGOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -3390,6 +4410,10 @@ impl<'a> PLG<'a> {
   pub const VT_BUILD_ARTIFACTS: ::flatbuffers::VOffsetT = 102;
   pub const VT_RUNTIME_TARGETS: ::flatbuffers::VOffsetT = 104;
   pub const VT_ALLOWED_XPUBS: ::flatbuffers::VOffsetT = 106;
+  pub const VT_FLOW_NODES: ::flatbuffers::VOffsetT = 108;
+  pub const VT_FLOW_EDGES: ::flatbuffers::VOffsetT = 110;
+  pub const VT_FLOW_TRIGGERS: ::flatbuffers::VOffsetT = 112;
+  pub const VT_FLOW_TRIGGER_BINDINGS: ::flatbuffers::VOffsetT = 114;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3406,6 +4430,10 @@ impl<'a> PLG<'a> {
     builder.add_MAX_GRANT_TIMEOUT_MS(args.MAX_GRANT_TIMEOUT_MS);
     builder.add_ENCRYPTED_WASM_SIZE(args.ENCRYPTED_WASM_SIZE);
     builder.add_WASM_SIZE(args.WASM_SIZE);
+    if let Some(x) = args.FLOW_TRIGGER_BINDINGS { builder.add_FLOW_TRIGGER_BINDINGS(x); }
+    if let Some(x) = args.FLOW_TRIGGERS { builder.add_FLOW_TRIGGERS(x); }
+    if let Some(x) = args.FLOW_EDGES { builder.add_FLOW_EDGES(x); }
+    if let Some(x) = args.FLOW_NODES { builder.add_FLOW_NODES(x); }
     if let Some(x) = args.ALLOWED_XPUBS { builder.add_ALLOWED_XPUBS(x); }
     if let Some(x) = args.RUNTIME_TARGETS { builder.add_RUNTIME_TARGETS(x); }
     if let Some(x) = args.BUILD_ARTIFACTS { builder.add_BUILD_ARTIFACTS(x); }
@@ -3592,6 +4620,18 @@ impl<'a> PLG<'a> {
     let ALLOWED_XPUBS = self.ALLOWED_XPUBS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let FLOW_NODES = self.FLOW_NODES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let FLOW_EDGES = self.FLOW_EDGES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let FLOW_TRIGGERS = self.FLOW_TRIGGERS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let FLOW_TRIGGER_BINDINGS = self.FLOW_TRIGGER_BINDINGS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     PLGT {
       PLUGIN_ID,
       NAME,
@@ -3645,6 +4685,10 @@ impl<'a> PLG<'a> {
       BUILD_ARTIFACTS,
       RUNTIME_TARGETS,
       ALLOWED_XPUBS,
+      FLOW_NODES,
+      FLOW_EDGES,
+      FLOW_TRIGGERS,
+      FLOW_TRIGGER_BINDINGS,
     }
   }
 
@@ -4071,6 +5115,40 @@ impl<'a> PLG<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(PLG::VT_ALLOWED_XPUBS, None)}
   }
+  /// Composition graph (a degenerate flow is a module): the nodes this flow
+  /// invokes. Empty for a leaf module; populated for a composed flow. The flow
+  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+  #[inline]
+  pub fn FLOW_NODES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowNode<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowNode>>>>(PLG::VT_FLOW_NODES, None)}
+  }
+  /// Composition-graph edges wiring node output ports to input ports.
+  #[inline]
+  pub fn FLOW_EDGES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowEdge<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowEdge>>>>(PLG::VT_FLOW_EDGES, None)}
+  }
+  /// Flow triggers (timer/http) that start a drain.
+  #[inline]
+  pub fn FLOW_TRIGGERS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger>>>>(PLG::VT_FLOW_TRIGGERS, None)}
+  }
+  /// Bindings from triggers to the node + input port they deliver to.
+  #[inline]
+  pub fn FLOW_TRIGGER_BINDINGS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding>>>>(PLG::VT_FLOW_TRIGGER_BINDINGS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PLG<'_> {
@@ -4131,6 +5209,10 @@ impl ::flatbuffers::Verifiable for PLG<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact>>>>("BUILD_ARTIFACTS", Self::VT_BUILD_ARTIFACTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("RUNTIME_TARGETS", Self::VT_RUNTIME_TARGETS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("ALLOWED_XPUBS", Self::VT_ALLOWED_XPUBS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowNode>>>>("FLOW_NODES", Self::VT_FLOW_NODES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowEdge>>>>("FLOW_EDGES", Self::VT_FLOW_EDGES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger>>>>("FLOW_TRIGGERS", Self::VT_FLOW_TRIGGERS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding>>>>("FLOW_TRIGGER_BINDINGS", Self::VT_FLOW_TRIGGER_BINDINGS, false)?
      .finish();
     Ok(())
   }
@@ -4188,6 +5270,10 @@ pub struct PLGArgs<'a> {
     pub BUILD_ARTIFACTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGBuildArtifact<'a>>>>>,
     pub RUNTIME_TARGETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub ALLOWED_XPUBS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub FLOW_NODES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowNode<'a>>>>>,
+    pub FLOW_EDGES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowEdge<'a>>>>>,
+    pub FLOW_TRIGGERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTrigger<'a>>>>>,
+    pub FLOW_TRIGGER_BINDINGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding<'a>>>>>,
 }
 impl<'a> Default for PLGArgs<'a> {
   #[inline]
@@ -4245,6 +5331,10 @@ impl<'a> Default for PLGArgs<'a> {
       BUILD_ARTIFACTS: None,
       RUNTIME_TARGETS: None,
       ALLOWED_XPUBS: None,
+      FLOW_NODES: None,
+      FLOW_EDGES: None,
+      FLOW_TRIGGERS: None,
+      FLOW_TRIGGER_BINDINGS: None,
     }
   }
 }
@@ -4463,6 +5553,22 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_ALLOWED_XPUBS, ALLOWED_XPUBS);
   }
   #[inline]
+  pub fn add_FLOW_NODES(&mut self, FLOW_NODES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGFlowNode<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FLOW_NODES, FLOW_NODES);
+  }
+  #[inline]
+  pub fn add_FLOW_EDGES(&mut self, FLOW_EDGES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGFlowEdge<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FLOW_EDGES, FLOW_EDGES);
+  }
+  #[inline]
+  pub fn add_FLOW_TRIGGERS(&mut self, FLOW_TRIGGERS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGFlowTrigger<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FLOW_TRIGGERS, FLOW_TRIGGERS);
+  }
+  #[inline]
+  pub fn add_FLOW_TRIGGER_BINDINGS(&mut self, FLOW_TRIGGER_BINDINGS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PLGFlowTriggerBinding<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLG::VT_FLOW_TRIGGER_BINDINGS, FLOW_TRIGGER_BINDINGS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLGBuilder {
@@ -4535,6 +5641,10 @@ impl ::core::fmt::Debug for PLG<'_> {
       ds.field("BUILD_ARTIFACTS", &self.BUILD_ARTIFACTS());
       ds.field("RUNTIME_TARGETS", &self.RUNTIME_TARGETS());
       ds.field("ALLOWED_XPUBS", &self.ALLOWED_XPUBS());
+      ds.field("FLOW_NODES", &self.FLOW_NODES());
+      ds.field("FLOW_EDGES", &self.FLOW_EDGES());
+      ds.field("FLOW_TRIGGERS", &self.FLOW_TRIGGERS());
+      ds.field("FLOW_TRIGGER_BINDINGS", &self.FLOW_TRIGGER_BINDINGS());
       ds.finish()
   }
 }
@@ -4593,6 +5703,10 @@ pub struct PLGT {
   pub BUILD_ARTIFACTS: Option<alloc::vec::Vec<PLGBuildArtifactT>>,
   pub RUNTIME_TARGETS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub ALLOWED_XPUBS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub FLOW_NODES: Option<alloc::vec::Vec<PLGFlowNodeT>>,
+  pub FLOW_EDGES: Option<alloc::vec::Vec<PLGFlowEdgeT>>,
+  pub FLOW_TRIGGERS: Option<alloc::vec::Vec<PLGFlowTriggerT>>,
+  pub FLOW_TRIGGER_BINDINGS: Option<alloc::vec::Vec<PLGFlowTriggerBindingT>>,
 }
 impl Default for PLGT {
   fn default() -> Self {
@@ -4649,6 +5763,10 @@ impl Default for PLGT {
       BUILD_ARTIFACTS: None,
       RUNTIME_TARGETS: None,
       ALLOWED_XPUBS: None,
+      FLOW_NODES: None,
+      FLOW_EDGES: None,
+      FLOW_TRIGGERS: None,
+      FLOW_TRIGGER_BINDINGS: None,
     }
   }
 }
@@ -4792,6 +5910,18 @@ impl PLGT {
     let ALLOWED_XPUBS = self.ALLOWED_XPUBS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let FLOW_NODES = self.FLOW_NODES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let FLOW_EDGES = self.FLOW_EDGES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let FLOW_TRIGGERS = self.FLOW_TRIGGERS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let FLOW_TRIGGER_BINDINGS = self.FLOW_TRIGGER_BINDINGS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     PLG::create(_fbb, &PLGArgs{
       PLUGIN_ID,
       NAME,
@@ -4845,6 +5975,10 @@ impl PLGT {
       BUILD_ARTIFACTS,
       RUNTIME_TARGETS,
       ALLOWED_XPUBS,
+      FLOW_NODES,
+      FLOW_EDGES,
+      FLOW_TRIGGERS,
+      FLOW_TRIGGER_BINDINGS,
     })
   }
 }

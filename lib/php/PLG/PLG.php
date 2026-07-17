@@ -753,22 +753,104 @@ class PLG extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Composition graph (a degenerate flow is a module): the nodes this flow
+    /// invokes. Empty for a leaf module; populated for a composed flow. The flow
+    /// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+    /**
+     * @returnVectorOffset
+     */
+    public function getFLOW_NODES($j)
+    {
+        $o = $this->__offset(108);
+        $obj = new PLGFlowNode();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFLOW_NODESLength()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Composition-graph edges wiring node output ports to input ports.
+    /**
+     * @returnVectorOffset
+     */
+    public function getFLOW_EDGES($j)
+    {
+        $o = $this->__offset(110);
+        $obj = new PLGFlowEdge();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFLOW_EDGESLength()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Flow triggers (timer/http) that start a drain.
+    /**
+     * @returnVectorOffset
+     */
+    public function getFLOW_TRIGGERS($j)
+    {
+        $o = $this->__offset(112);
+        $obj = new PLGFlowTrigger();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFLOW_TRIGGERSLength()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Bindings from triggers to the node + input port they deliver to.
+    /**
+     * @returnVectorOffset
+     */
+    public function getFLOW_TRIGGER_BINDINGS($j)
+    {
+        $o = $this->__offset(114);
+        $obj = new PLGFlowTriggerBinding();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFLOW_TRIGGER_BINDINGSLength()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPLG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(52);
+        $builder->StartObject(56);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLG
      */
-    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS)
+    public static function createPLG(FlatBufferBuilder $builder, $PLUGIN_ID, $NAME, $VERSION, $DESCRIPTION, $TAGLINE, $PLUGIN_TYPE, $PUBLISHER_NAME, $PUBLISHER_HANDLE, $PUBLISHER_URL, $SUPPORT_URL, $TAGS, $FEATURES, $SCREENSHOT_URLS, $BANNER_URL, $ABI_VERSION, $WASM_HASH, $WASM_SIZE, $WASM_CID, $ENCRYPTED_WASM_HASH, $ENCRYPTED_WASM_SIZE, $ENTRY_FUNCTIONS, $REQUIRED_SCHEMAS, $DEPENDENCIES, $CAPABILITIES, $PROVIDER_PEER_ID, $PROVIDER_EPM_CID, $ENCRYPTED, $REQUIRED_SCOPE, $KEY_ID, $MAX_GRANT_TIMEOUT_MS, $MIN_PERMISSIONS, $CREATED_AT, $UPDATED_AT, $DOCUMENTATION_URL, $CHANGELOG_URL, $ICON_URL, $LICENSE, $PAYMENT_MODEL, $PRICE_USD_CENTS, $SUBSCRIPTION_PERIOD_DAYS, $ACCEPTED_PAYMENT_METHODS, $LISTING_STATUS, $SIGNATURE, $INVOKE_SURFACES, $METHODS, $HOST_CAPABILITIES, $TIMERS, $PROTOCOLS, $SCHEMAS_USED, $BUILD_ARTIFACTS, $RUNTIME_TARGETS, $ALLOWED_XPUBS, $FLOW_NODES, $FLOW_EDGES, $FLOW_TRIGGERS, $FLOW_TRIGGER_BINDINGS)
     {
-        $builder->startObject(52);
+        $builder->startObject(56);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -821,6 +903,10 @@ class PLG extends Table
         self::addBUILD_ARTIFACTS($builder, $BUILD_ARTIFACTS);
         self::addRUNTIME_TARGETS($builder, $RUNTIME_TARGETS);
         self::addALLOWED_XPUBS($builder, $ALLOWED_XPUBS);
+        self::addFLOW_NODES($builder, $FLOW_NODES);
+        self::addFLOW_EDGES($builder, $FLOW_EDGES);
+        self::addFLOW_TRIGGERS($builder, $FLOW_TRIGGERS);
+        self::addFLOW_TRIGGER_BINDINGS($builder, $FLOW_TRIGGER_BINDINGS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // PLUGIN_ID
         $builder->required($o, 6);  // NAME
@@ -1848,6 +1934,142 @@ class PLG extends Table
      * @return void
      */
     public static function startALLOWED_XPUBSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFLOW_NODES(FlatBufferBuilder $builder, $FLOW_NODES)
+    {
+        $builder->addOffsetX(52, $FLOW_NODES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createFLOW_NODESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startFLOW_NODESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFLOW_EDGES(FlatBufferBuilder $builder, $FLOW_EDGES)
+    {
+        $builder->addOffsetX(53, $FLOW_EDGES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createFLOW_EDGESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startFLOW_EDGESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFLOW_TRIGGERS(FlatBufferBuilder $builder, $FLOW_TRIGGERS)
+    {
+        $builder->addOffsetX(54, $FLOW_TRIGGERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createFLOW_TRIGGERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startFLOW_TRIGGERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFLOW_TRIGGER_BINDINGS(FlatBufferBuilder $builder, $FLOW_TRIGGER_BINDINGS)
+    {
+        $builder->addOffsetX(55, $FLOW_TRIGGER_BINDINGS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
     }

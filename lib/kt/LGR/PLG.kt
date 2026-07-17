@@ -730,6 +730,72 @@ class PLG : Table() {
         get() {
             val o = __offset(106); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Composition graph (a degenerate flow is a module): the nodes this flow
+     * invokes. Empty for a leaf module; populated for a composed flow. The flow
+     * definition is this PLG FlatBuffer, not a bespoke JSON graph.
+     */
+    fun flowNodes(j: Int) : PLGFlowNode? = flowNodes(PLGFlowNode(), j)
+    fun flowNodes(obj: PLGFlowNode, j: Int) : PLGFlowNode? {
+        val o = __offset(108)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val flowNodesLength : Int
+        get() {
+            val o = __offset(108); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Composition-graph edges wiring node output ports to input ports.
+     */
+    fun flowEdges(j: Int) : PLGFlowEdge? = flowEdges(PLGFlowEdge(), j)
+    fun flowEdges(obj: PLGFlowEdge, j: Int) : PLGFlowEdge? {
+        val o = __offset(110)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val flowEdgesLength : Int
+        get() {
+            val o = __offset(110); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Flow triggers (timer/http) that start a drain.
+     */
+    fun flowTriggers(j: Int) : PLGFlowTrigger? = flowTriggers(PLGFlowTrigger(), j)
+    fun flowTriggers(obj: PLGFlowTrigger, j: Int) : PLGFlowTrigger? {
+        val o = __offset(112)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val flowTriggersLength : Int
+        get() {
+            val o = __offset(112); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Bindings from triggers to the node + input port they deliver to.
+     */
+    fun flowTriggerBindings(j: Int) : PLGFlowTriggerBinding? = flowTriggerBindings(PLGFlowTriggerBinding(), j)
+    fun flowTriggerBindings(obj: PLGFlowTriggerBinding, j: Int) : PLGFlowTriggerBinding? {
+        val o = __offset(114)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val flowTriggerBindingsLength : Int
+        get() {
+            val o = __offset(114); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLG(_bb: ByteBuffer): PLG = getRootAsPLG(_bb, PLG())
@@ -738,13 +804,17 @@ class PLG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
-        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int) : Int {
-            builder.startTable(52)
+        fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int, flowNodesOffset: Int, flowEdgesOffset: Int, flowTriggersOffset: Int, flowTriggerBindingsOffset: Int) : Int {
+            builder.startTable(56)
             addUPDATEDAT(builder, updatedAt)
             addCREATEDAT(builder, createdAt)
             addMAXGRANTTIMEOUTMS(builder, maxGrantTimeoutMs)
             addENCRYPTEDWASMSIZE(builder, encryptedWasmSize)
             addWASMSIZE(builder, wasmSize)
+            addFLOWTRIGGERBINDINGS(builder, flowTriggerBindingsOffset)
+            addFLOWTRIGGERS(builder, flowTriggersOffset)
+            addFLOWEDGES(builder, flowEdgesOffset)
+            addFLOWNODES(builder, flowNodesOffset)
             addALLOWEDXPUBS(builder, allowedXpubsOffset)
             addRUNTIMETARGETS(builder, runtimeTargetsOffset)
             addBUILDARTIFACTS(builder, buildArtifactsOffset)
@@ -794,7 +864,7 @@ class PLG : Table() {
             addPLUGINTYPE(builder, pluginType)
             return endPLG(builder)
         }
-        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(52)
+        fun startPLG(builder: FlatBufferBuilder) = builder.startTable(56)
         fun addPLUGINID(builder: FlatBufferBuilder, pluginId: Int) = builder.addOffset(0, pluginId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -1019,6 +1089,42 @@ class PLG : Table() {
             return builder.endVector()
         }
         fun startAllowedXpubsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFLOWNODES(builder: FlatBufferBuilder, flowNodes: Int) = builder.addOffset(52, flowNodes, 0)
+        fun createFlowNodesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startFlowNodesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFLOWEDGES(builder: FlatBufferBuilder, flowEdges: Int) = builder.addOffset(53, flowEdges, 0)
+        fun createFlowEdgesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startFlowEdgesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFLOWTRIGGERS(builder: FlatBufferBuilder, flowTriggers: Int) = builder.addOffset(54, flowTriggers, 0)
+        fun createFlowTriggersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startFlowTriggersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addFLOWTRIGGERBINDINGS(builder: FlatBufferBuilder, flowTriggerBindings: Int) = builder.addOffset(55, flowTriggerBindings, 0)
+        fun createFlowTriggerBindingsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startFlowTriggerBindingsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endPLG(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

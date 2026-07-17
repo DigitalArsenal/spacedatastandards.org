@@ -361,6 +361,40 @@ public final class PLG extends com.google.flatbuffers.Table {
   public int ALLOWED_XPUBSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
   public StringVector allowedXpubsVector() { return allowedXpubsVector(new StringVector()); }
   public StringVector allowedXpubsVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Composition graph (a degenerate flow is a module): the nodes this flow
+   * invokes. Empty for a leaf module; populated for a composed flow. The flow
+   * definition is this PLG FlatBuffer, not a bespoke JSON graph.
+   */
+  public PLGFlowNode FLOW_NODES(int j) { return FLOW_NODES(new PLGFlowNode(), j); }
+  public PLGFlowNode FLOW_NODES(PLGFlowNode obj, int j) { int o = __offset(108); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int FLOW_NODESLength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
+  public PLGFlowNode.Vector flowNodesVector() { return flowNodesVector(new PLGFlowNode.Vector()); }
+  public PLGFlowNode.Vector flowNodesVector(PLGFlowNode.Vector obj) { int o = __offset(108); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Composition-graph edges wiring node output ports to input ports.
+   */
+  public PLGFlowEdge FLOW_EDGES(int j) { return FLOW_EDGES(new PLGFlowEdge(), j); }
+  public PLGFlowEdge FLOW_EDGES(PLGFlowEdge obj, int j) { int o = __offset(110); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int FLOW_EDGESLength() { int o = __offset(110); return o != 0 ? __vector_len(o) : 0; }
+  public PLGFlowEdge.Vector flowEdgesVector() { return flowEdgesVector(new PLGFlowEdge.Vector()); }
+  public PLGFlowEdge.Vector flowEdgesVector(PLGFlowEdge.Vector obj) { int o = __offset(110); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Flow triggers (timer/http) that start a drain.
+   */
+  public PLGFlowTrigger FLOW_TRIGGERS(int j) { return FLOW_TRIGGERS(new PLGFlowTrigger(), j); }
+  public PLGFlowTrigger FLOW_TRIGGERS(PLGFlowTrigger obj, int j) { int o = __offset(112); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int FLOW_TRIGGERSLength() { int o = __offset(112); return o != 0 ? __vector_len(o) : 0; }
+  public PLGFlowTrigger.Vector flowTriggersVector() { return flowTriggersVector(new PLGFlowTrigger.Vector()); }
+  public PLGFlowTrigger.Vector flowTriggersVector(PLGFlowTrigger.Vector obj) { int o = __offset(112); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Bindings from triggers to the node + input port they deliver to.
+   */
+  public PLGFlowTriggerBinding FLOW_TRIGGER_BINDINGS(int j) { return FLOW_TRIGGER_BINDINGS(new PLGFlowTriggerBinding(), j); }
+  public PLGFlowTriggerBinding FLOW_TRIGGER_BINDINGS(PLGFlowTriggerBinding obj, int j) { int o = __offset(114); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int FLOW_TRIGGER_BINDINGSLength() { int o = __offset(114); return o != 0 ? __vector_len(o) : 0; }
+  public PLGFlowTriggerBinding.Vector flowTriggerBindingsVector() { return flowTriggerBindingsVector(new PLGFlowTriggerBinding.Vector()); }
+  public PLGFlowTriggerBinding.Vector flowTriggerBindingsVector(PLGFlowTriggerBinding.Vector obj) { int o = __offset(114); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createPLG(FlatBufferBuilder builder,
       int PLUGIN_IDOffset,
@@ -414,13 +448,21 @@ public final class PLG extends com.google.flatbuffers.Table {
       int SCHEMAS_USEDOffset,
       int BUILD_ARTIFACTSOffset,
       int RUNTIME_TARGETSOffset,
-      int ALLOWED_XPUBSOffset) {
-    builder.startTable(52);
+      int ALLOWED_XPUBSOffset,
+      int FLOW_NODESOffset,
+      int FLOW_EDGESOffset,
+      int FLOW_TRIGGERSOffset,
+      int FLOW_TRIGGER_BINDINGSOffset) {
+    builder.startTable(56);
     PLG.addUpdatedAt(builder, UPDATED_AT);
     PLG.addCreatedAt(builder, CREATED_AT);
     PLG.addMaxGrantTimeoutMs(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.addEncryptedWasmSize(builder, ENCRYPTED_WASM_SIZE);
     PLG.addWasmSize(builder, WASM_SIZE);
+    PLG.addFlowTriggerBindings(builder, FLOW_TRIGGER_BINDINGSOffset);
+    PLG.addFlowTriggers(builder, FLOW_TRIGGERSOffset);
+    PLG.addFlowEdges(builder, FLOW_EDGESOffset);
+    PLG.addFlowNodes(builder, FLOW_NODESOffset);
     PLG.addAllowedXpubs(builder, ALLOWED_XPUBSOffset);
     PLG.addRuntimeTargets(builder, RUNTIME_TARGETSOffset);
     PLG.addBuildArtifacts(builder, BUILD_ARTIFACTSOffset);
@@ -471,7 +513,7 @@ public final class PLG extends com.google.flatbuffers.Table {
     return PLG.endPLG(builder);
   }
 
-  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(52); }
+  public static void startPLG(FlatBufferBuilder builder) { builder.startTable(56); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(0, PLUGIN_IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -570,6 +612,18 @@ public final class PLG extends com.google.flatbuffers.Table {
   public static void addAllowedXpubs(FlatBufferBuilder builder, int ALLOWED_XPUBSOffset) { builder.addOffset(51, ALLOWED_XPUBSOffset, 0); }
   public static int createAllowedXpubsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAllowedXpubsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFlowNodes(FlatBufferBuilder builder, int FLOW_NODESOffset) { builder.addOffset(52, FLOW_NODESOffset, 0); }
+  public static int createFlowNodesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startFlowNodesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFlowEdges(FlatBufferBuilder builder, int FLOW_EDGESOffset) { builder.addOffset(53, FLOW_EDGESOffset, 0); }
+  public static int createFlowEdgesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startFlowEdgesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFlowTriggers(FlatBufferBuilder builder, int FLOW_TRIGGERSOffset) { builder.addOffset(54, FLOW_TRIGGERSOffset, 0); }
+  public static int createFlowTriggersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startFlowTriggersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addFlowTriggerBindings(FlatBufferBuilder builder, int FLOW_TRIGGER_BINDINGSOffset) { builder.addOffset(55, FLOW_TRIGGER_BINDINGSOffset, 0); }
+  public static int createFlowTriggerBindingsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startFlowTriggerBindingsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endPLG(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // PLUGIN_ID

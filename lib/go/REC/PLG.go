@@ -1319,8 +1319,144 @@ func (rcv *PLG) AllowedXpubsLength() int {
 /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:
 /// a requester whose verified EPM binds an xpub in this list is granted (PKI
 /// identity authorization). Empty list = no xpub allowlist gate.
+/// Composition graph (a degenerate flow is a module): the nodes this flow
+/// invokes. Empty for a leaf module; populated for a composed flow. The flow
+/// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+func (rcv *PLG) FLOW_NODES(obj *PLGFlowNode, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGFlowNode)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) FlowNodes(obj *PLGFlowNode, j int) bool {
+	return rcv.FLOW_NODES(obj, j)
+}
+
+func (rcv *PLG) FLOW_NODESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) FlowNodesLength() int {
+	return rcv.FLOW_NODESLength()
+}
+
+/// Composition graph (a degenerate flow is a module): the nodes this flow
+/// invokes. Empty for a leaf module; populated for a composed flow. The flow
+/// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+/// Composition-graph edges wiring node output ports to input ports.
+func (rcv *PLG) FLOW_EDGES(obj *PLGFlowEdge, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGFlowEdge)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) FlowEdges(obj *PLGFlowEdge, j int) bool {
+	return rcv.FLOW_EDGES(obj, j)
+}
+
+func (rcv *PLG) FLOW_EDGESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) FlowEdgesLength() int {
+	return rcv.FLOW_EDGESLength()
+}
+
+/// Composition-graph edges wiring node output ports to input ports.
+/// Flow triggers (timer/http) that start a drain.
+func (rcv *PLG) FLOW_TRIGGERS(obj *PLGFlowTrigger, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGFlowTrigger)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) FlowTriggers(obj *PLGFlowTrigger, j int) bool {
+	return rcv.FLOW_TRIGGERS(obj, j)
+}
+
+func (rcv *PLG) FLOW_TRIGGERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) FlowTriggersLength() int {
+	return rcv.FLOW_TRIGGERSLength()
+}
+
+/// Flow triggers (timer/http) that start a drain.
+/// Bindings from triggers to the node + input port they deliver to.
+func (rcv *PLG) FLOW_TRIGGER_BINDINGS(obj *PLGFlowTriggerBinding, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PLGFlowTriggerBinding)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PLG) FlowTriggerBindings(obj *PLGFlowTriggerBinding, j int) bool {
+	return rcv.FLOW_TRIGGER_BINDINGS(obj, j)
+}
+
+func (rcv *PLG) FLOW_TRIGGER_BINDINGSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PLG) FlowTriggerBindingsLength() int {
+	return rcv.FLOW_TRIGGER_BINDINGSLength()
+}
+
+/// Bindings from triggers to the node + input port they deliver to.
 func PLGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(52)
+	builder.StartObject(56)
 }
 func PLGAddPLUGIN_ID(builder *flatbuffers.Builder, PLUGIN_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PLUGIN_ID), 0)
@@ -1759,6 +1895,54 @@ func PLGStartALLOWED_XPUBSVector(builder *flatbuffers.Builder, numElems int) fla
 }
 func PLGStartAllowedXpubsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PLGStartALLOWED_XPUBSVector(builder, numElems)
+}
+func PLGAddFLOW_NODES(builder *flatbuffers.Builder, FLOW_NODES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(52, flatbuffers.UOffsetT(FLOW_NODES), 0)
+}
+func PLGAddFlowNodes(builder *flatbuffers.Builder, FLOW_NODES flatbuffers.UOffsetT) {
+	PLGAddFLOW_NODES(builder, FLOW_NODES)
+}
+func PLGStartFLOW_NODESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartFlowNodesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartFLOW_NODESVector(builder, numElems)
+}
+func PLGAddFLOW_EDGES(builder *flatbuffers.Builder, FLOW_EDGES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(53, flatbuffers.UOffsetT(FLOW_EDGES), 0)
+}
+func PLGAddFlowEdges(builder *flatbuffers.Builder, FLOW_EDGES flatbuffers.UOffsetT) {
+	PLGAddFLOW_EDGES(builder, FLOW_EDGES)
+}
+func PLGStartFLOW_EDGESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartFlowEdgesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartFLOW_EDGESVector(builder, numElems)
+}
+func PLGAddFLOW_TRIGGERS(builder *flatbuffers.Builder, FLOW_TRIGGERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(FLOW_TRIGGERS), 0)
+}
+func PLGAddFlowTriggers(builder *flatbuffers.Builder, FLOW_TRIGGERS flatbuffers.UOffsetT) {
+	PLGAddFLOW_TRIGGERS(builder, FLOW_TRIGGERS)
+}
+func PLGStartFLOW_TRIGGERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartFlowTriggersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartFLOW_TRIGGERSVector(builder, numElems)
+}
+func PLGAddFLOW_TRIGGER_BINDINGS(builder *flatbuffers.Builder, FLOW_TRIGGER_BINDINGS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(FLOW_TRIGGER_BINDINGS), 0)
+}
+func PLGAddFlowTriggerBindings(builder *flatbuffers.Builder, FLOW_TRIGGER_BINDINGS flatbuffers.UOffsetT) {
+	PLGAddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS)
+}
+func PLGStartFLOW_TRIGGER_BINDINGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PLGStartFlowTriggerBindingsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PLGStartFLOW_TRIGGER_BINDINGSVector(builder, numElems)
 }
 func PLGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

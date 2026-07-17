@@ -289,6 +289,20 @@ public struct PLG : IFlatbufferObject
   /// identity authorization). Empty list = no xpub allowlist gate.
   public string ALLOWED_XPUBS(int j) { int o = __p.__offset(106); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int ALLOWED_XPUBSLength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Composition graph (a degenerate flow is a module): the nodes this flow
+  /// invokes. Empty for a leaf module; populated for a composed flow. The flow
+  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.
+  public PLGFlowNode? FLOW_NODES(int j) { int o = __p.__offset(108); return o != 0 ? (PLGFlowNode?)(new PLGFlowNode()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int FLOW_NODESLength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Composition-graph edges wiring node output ports to input ports.
+  public PLGFlowEdge? FLOW_EDGES(int j) { int o = __p.__offset(110); return o != 0 ? (PLGFlowEdge?)(new PLGFlowEdge()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int FLOW_EDGESLength { get { int o = __p.__offset(110); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Flow triggers (timer/http) that start a drain.
+  public PLGFlowTrigger? FLOW_TRIGGERS(int j) { int o = __p.__offset(112); return o != 0 ? (PLGFlowTrigger?)(new PLGFlowTrigger()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int FLOW_TRIGGERSLength { get { int o = __p.__offset(112); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Bindings from triggers to the node + input port they deliver to.
+  public PLGFlowTriggerBinding? FLOW_TRIGGER_BINDINGS(int j) { int o = __p.__offset(114); return o != 0 ? (PLGFlowTriggerBinding?)(new PLGFlowTriggerBinding()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int FLOW_TRIGGER_BINDINGSLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PLG> CreatePLG(FlatBufferBuilder builder,
       StringOffset PLUGIN_IDOffset = default(StringOffset),
@@ -342,13 +356,21 @@ public struct PLG : IFlatbufferObject
       VectorOffset SCHEMAS_USEDOffset = default(VectorOffset),
       VectorOffset BUILD_ARTIFACTSOffset = default(VectorOffset),
       VectorOffset RUNTIME_TARGETSOffset = default(VectorOffset),
-      VectorOffset ALLOWED_XPUBSOffset = default(VectorOffset)) {
-    builder.StartTable(52);
+      VectorOffset ALLOWED_XPUBSOffset = default(VectorOffset),
+      VectorOffset FLOW_NODESOffset = default(VectorOffset),
+      VectorOffset FLOW_EDGESOffset = default(VectorOffset),
+      VectorOffset FLOW_TRIGGERSOffset = default(VectorOffset),
+      VectorOffset FLOW_TRIGGER_BINDINGSOffset = default(VectorOffset)) {
+    builder.StartTable(56);
     PLG.AddUPDATED_AT(builder, UPDATED_AT);
     PLG.AddCREATED_AT(builder, CREATED_AT);
     PLG.AddMAX_GRANT_TIMEOUT_MS(builder, MAX_GRANT_TIMEOUT_MS);
     PLG.AddENCRYPTED_WASM_SIZE(builder, ENCRYPTED_WASM_SIZE);
     PLG.AddWASM_SIZE(builder, WASM_SIZE);
+    PLG.AddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGSOffset);
+    PLG.AddFLOW_TRIGGERS(builder, FLOW_TRIGGERSOffset);
+    PLG.AddFLOW_EDGES(builder, FLOW_EDGESOffset);
+    PLG.AddFLOW_NODES(builder, FLOW_NODESOffset);
     PLG.AddALLOWED_XPUBS(builder, ALLOWED_XPUBSOffset);
     PLG.AddRUNTIME_TARGETS(builder, RUNTIME_TARGETSOffset);
     PLG.AddBUILD_ARTIFACTS(builder, BUILD_ARTIFACTSOffset);
@@ -399,7 +421,7 @@ public struct PLG : IFlatbufferObject
     return PLG.EndPLG(builder);
   }
 
-  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(52); }
+  public static void StartPLG(FlatBufferBuilder builder) { builder.StartTable(56); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(0, PLUGIN_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -557,6 +579,30 @@ public struct PLG : IFlatbufferObject
   public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateALLOWED_XPUBSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartALLOWED_XPUBSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFLOW_NODES(FlatBufferBuilder builder, VectorOffset FLOW_NODESOffset) { builder.AddOffset(52, FLOW_NODESOffset.Value, 0); }
+  public static VectorOffset CreateFLOW_NODESVector(FlatBufferBuilder builder, Offset<PLGFlowNode>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_NODESVectorBlock(FlatBufferBuilder builder, Offset<PLGFlowNode>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_NODESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGFlowNode>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_NODESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGFlowNode>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFLOW_NODESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFLOW_EDGES(FlatBufferBuilder builder, VectorOffset FLOW_EDGESOffset) { builder.AddOffset(53, FLOW_EDGESOffset.Value, 0); }
+  public static VectorOffset CreateFLOW_EDGESVector(FlatBufferBuilder builder, Offset<PLGFlowEdge>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_EDGESVectorBlock(FlatBufferBuilder builder, Offset<PLGFlowEdge>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_EDGESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGFlowEdge>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_EDGESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGFlowEdge>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFLOW_EDGESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFLOW_TRIGGERS(FlatBufferBuilder builder, VectorOffset FLOW_TRIGGERSOffset) { builder.AddOffset(54, FLOW_TRIGGERSOffset.Value, 0); }
+  public static VectorOffset CreateFLOW_TRIGGERSVector(FlatBufferBuilder builder, Offset<PLGFlowTrigger>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGERSVectorBlock(FlatBufferBuilder builder, Offset<PLGFlowTrigger>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGFlowTrigger>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGFlowTrigger>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFLOW_TRIGGERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddFLOW_TRIGGER_BINDINGS(FlatBufferBuilder builder, VectorOffset FLOW_TRIGGER_BINDINGSOffset) { builder.AddOffset(55, FLOW_TRIGGER_BINDINGSOffset.Value, 0); }
+  public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder builder, Offset<PLGFlowTriggerBinding>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVectorBlock(FlatBufferBuilder builder, Offset<PLGFlowTriggerBinding>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLGFlowTriggerBinding>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLOW_TRIGGER_BINDINGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLGFlowTriggerBinding>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFLOW_TRIGGER_BINDINGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<PLG> EndPLG(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // PLUGIN_ID
@@ -645,6 +691,14 @@ public struct PLG : IFlatbufferObject
     for (var _j = 0; _j < this.RUNTIME_TARGETSLength; ++_j) {_o.RUNTIME_TARGETS.Add(this.RUNTIME_TARGETS(_j));}
     _o.ALLOWED_XPUBS = new List<string>();
     for (var _j = 0; _j < this.ALLOWED_XPUBSLength; ++_j) {_o.ALLOWED_XPUBS.Add(this.ALLOWED_XPUBS(_j));}
+    _o.FLOW_NODES = new List<PLGFlowNodeT>();
+    for (var _j = 0; _j < this.FLOW_NODESLength; ++_j) {_o.FLOW_NODES.Add(this.FLOW_NODES(_j).HasValue ? this.FLOW_NODES(_j).Value.UnPack() : null);}
+    _o.FLOW_EDGES = new List<PLGFlowEdgeT>();
+    for (var _j = 0; _j < this.FLOW_EDGESLength; ++_j) {_o.FLOW_EDGES.Add(this.FLOW_EDGES(_j).HasValue ? this.FLOW_EDGES(_j).Value.UnPack() : null);}
+    _o.FLOW_TRIGGERS = new List<PLGFlowTriggerT>();
+    for (var _j = 0; _j < this.FLOW_TRIGGERSLength; ++_j) {_o.FLOW_TRIGGERS.Add(this.FLOW_TRIGGERS(_j).HasValue ? this.FLOW_TRIGGERS(_j).Value.UnPack() : null);}
+    _o.FLOW_TRIGGER_BINDINGS = new List<PLGFlowTriggerBindingT>();
+    for (var _j = 0; _j < this.FLOW_TRIGGER_BINDINGSLength; ++_j) {_o.FLOW_TRIGGER_BINDINGS.Add(this.FLOW_TRIGGER_BINDINGS(_j).HasValue ? this.FLOW_TRIGGER_BINDINGS(_j).Value.UnPack() : null);}
   }
   public static Offset<PLG> Pack(FlatBufferBuilder builder, PLGT _o) {
     if (_o == null) return default(Offset<PLG>);
@@ -789,6 +843,30 @@ public struct PLG : IFlatbufferObject
       for (var _j = 0; _j < __ALLOWED_XPUBS.Length; ++_j) { __ALLOWED_XPUBS[_j] = builder.CreateString(_o.ALLOWED_XPUBS[_j]); }
       _ALLOWED_XPUBS = CreateALLOWED_XPUBSVector(builder, __ALLOWED_XPUBS);
     }
+    var _FLOW_NODES = default(VectorOffset);
+    if (_o.FLOW_NODES != null) {
+      var __FLOW_NODES = new Offset<PLGFlowNode>[_o.FLOW_NODES.Count];
+      for (var _j = 0; _j < __FLOW_NODES.Length; ++_j) { __FLOW_NODES[_j] = PLGFlowNode.Pack(builder, _o.FLOW_NODES[_j]); }
+      _FLOW_NODES = CreateFLOW_NODESVector(builder, __FLOW_NODES);
+    }
+    var _FLOW_EDGES = default(VectorOffset);
+    if (_o.FLOW_EDGES != null) {
+      var __FLOW_EDGES = new Offset<PLGFlowEdge>[_o.FLOW_EDGES.Count];
+      for (var _j = 0; _j < __FLOW_EDGES.Length; ++_j) { __FLOW_EDGES[_j] = PLGFlowEdge.Pack(builder, _o.FLOW_EDGES[_j]); }
+      _FLOW_EDGES = CreateFLOW_EDGESVector(builder, __FLOW_EDGES);
+    }
+    var _FLOW_TRIGGERS = default(VectorOffset);
+    if (_o.FLOW_TRIGGERS != null) {
+      var __FLOW_TRIGGERS = new Offset<PLGFlowTrigger>[_o.FLOW_TRIGGERS.Count];
+      for (var _j = 0; _j < __FLOW_TRIGGERS.Length; ++_j) { __FLOW_TRIGGERS[_j] = PLGFlowTrigger.Pack(builder, _o.FLOW_TRIGGERS[_j]); }
+      _FLOW_TRIGGERS = CreateFLOW_TRIGGERSVector(builder, __FLOW_TRIGGERS);
+    }
+    var _FLOW_TRIGGER_BINDINGS = default(VectorOffset);
+    if (_o.FLOW_TRIGGER_BINDINGS != null) {
+      var __FLOW_TRIGGER_BINDINGS = new Offset<PLGFlowTriggerBinding>[_o.FLOW_TRIGGER_BINDINGS.Count];
+      for (var _j = 0; _j < __FLOW_TRIGGER_BINDINGS.Length; ++_j) { __FLOW_TRIGGER_BINDINGS[_j] = PLGFlowTriggerBinding.Pack(builder, _o.FLOW_TRIGGER_BINDINGS[_j]); }
+      _FLOW_TRIGGER_BINDINGS = CreateFLOW_TRIGGER_BINDINGSVector(builder, __FLOW_TRIGGER_BINDINGS);
+    }
     return CreatePLG(
       builder,
       _PLUGIN_ID,
@@ -842,7 +920,11 @@ public struct PLG : IFlatbufferObject
       _SCHEMAS_USED,
       _BUILD_ARTIFACTS,
       _RUNTIME_TARGETS,
-      _ALLOWED_XPUBS);
+      _ALLOWED_XPUBS,
+      _FLOW_NODES,
+      _FLOW_EDGES,
+      _FLOW_TRIGGERS,
+      _FLOW_TRIGGER_BINDINGS);
   }
 }
 
@@ -900,6 +982,10 @@ public class PLGT
   public List<PLGBuildArtifactT> BUILD_ARTIFACTS { get; set; }
   public List<string> RUNTIME_TARGETS { get; set; }
   public List<string> ALLOWED_XPUBS { get; set; }
+  public List<PLGFlowNodeT> FLOW_NODES { get; set; }
+  public List<PLGFlowEdgeT> FLOW_EDGES { get; set; }
+  public List<PLGFlowTriggerT> FLOW_TRIGGERS { get; set; }
+  public List<PLGFlowTriggerBindingT> FLOW_TRIGGER_BINDINGS { get; set; }
 
   public PLGT() {
     this.PLUGIN_ID = null;
@@ -954,6 +1040,10 @@ public class PLGT
     this.BUILD_ARTIFACTS = null;
     this.RUNTIME_TARGETS = null;
     this.ALLOWED_XPUBS = null;
+    this.FLOW_NODES = null;
+    this.FLOW_EDGES = null;
+    this.FLOW_TRIGGERS = null;
+    this.FLOW_TRIGGER_BINDINGS = null;
   }
   public static PLGT DeserializeFromBinary(byte[] fbBuffer) {
     return PLG.GetRootAsPLG(new ByteBuffer(fbBuffer)).UnPack();
@@ -1023,6 +1113,10 @@ static public class PLGVerify
       && verifier.VerifyVectorOfTables(tablePos, 102 /*BUILD_ARTIFACTS*/, PLGBuildArtifactVerify.Verify, false)
       && verifier.VerifyVectorOfStrings(tablePos, 104 /*RUNTIME_TARGETS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 106 /*ALLOWED_XPUBS*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 108 /*FLOW_NODES*/, PLGFlowNodeVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 110 /*FLOW_EDGES*/, PLGFlowEdgeVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 112 /*FLOW_TRIGGERS*/, PLGFlowTriggerVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 114 /*FLOW_TRIGGER_BINDINGS*/, PLGFlowTriggerBindingVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

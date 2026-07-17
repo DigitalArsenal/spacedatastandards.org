@@ -798,8 +798,114 @@ class PLG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         return o == 0
 
+    # Composition graph (a degenerate flow is a module): the nodes this flow
+    # invokes. Empty for a leaf module; populated for a composed flow. The flow
+    # definition is this PLG FlatBuffer, not a bespoke JSON graph.
+    # PLG
+    def FLOW_NODES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGFlowNode import PLGFlowNode
+            obj = PLGFlowNode()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def FLOW_NODESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def FLOW_NODESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        return o == 0
+
+    # Composition-graph edges wiring node output ports to input ports.
+    # PLG
+    def FLOW_EDGES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGFlowEdge import PLGFlowEdge
+            obj = PLGFlowEdge()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def FLOW_EDGESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def FLOW_EDGESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        return o == 0
+
+    # Flow triggers (timer/http) that start a drain.
+    # PLG
+    def FLOW_TRIGGERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGFlowTrigger import PLGFlowTrigger
+            obj = PLGFlowTrigger()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def FLOW_TRIGGERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def FLOW_TRIGGERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        return o == 0
+
+    # Bindings from triggers to the node + input port they deliver to.
+    # PLG
+    def FLOW_TRIGGER_BINDINGS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PLGFlowTriggerBinding import PLGFlowTriggerBinding
+            obj = PLGFlowTriggerBinding()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PLG
+    def FLOW_TRIGGER_BINDINGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PLG
+    def FLOW_TRIGGER_BINDINGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        return o == 0
+
 def PLGStart(builder):
-    builder.StartObject(52)
+    builder.StartObject(56)
 
 def Start(builder):
     PLGStart(builder)
@@ -1384,6 +1490,78 @@ def PLGCreateALLOWED_XPUBSVector(builder, data):
 def CreateALLOWED_XPUBSVector(builder, data):
     PLGCreateALLOWED_XPUBSVector(builder, data)
 
+def PLGAddFLOW_NODES(builder, FLOW_NODES):
+    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_NODES), 0)
+
+def AddFLOW_NODES(builder, FLOW_NODES):
+    PLGAddFLOW_NODES(builder, FLOW_NODES)
+
+def PLGStartFLOW_NODESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFLOW_NODESVector(builder, numElems):
+    return PLGStartFLOW_NODESVector(builder, numElems)
+
+def PLGCreateFLOW_NODESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOW_NODESVector(builder, data):
+    PLGCreateFLOW_NODESVector(builder, data)
+
+def PLGAddFLOW_EDGES(builder, FLOW_EDGES):
+    builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_EDGES), 0)
+
+def AddFLOW_EDGES(builder, FLOW_EDGES):
+    PLGAddFLOW_EDGES(builder, FLOW_EDGES)
+
+def PLGStartFLOW_EDGESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFLOW_EDGESVector(builder, numElems):
+    return PLGStartFLOW_EDGESVector(builder, numElems)
+
+def PLGCreateFLOW_EDGESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOW_EDGESVector(builder, data):
+    PLGCreateFLOW_EDGESVector(builder, data)
+
+def PLGAddFLOW_TRIGGERS(builder, FLOW_TRIGGERS):
+    builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_TRIGGERS), 0)
+
+def AddFLOW_TRIGGERS(builder, FLOW_TRIGGERS):
+    PLGAddFLOW_TRIGGERS(builder, FLOW_TRIGGERS)
+
+def PLGStartFLOW_TRIGGERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFLOW_TRIGGERSVector(builder, numElems):
+    return PLGStartFLOW_TRIGGERSVector(builder, numElems)
+
+def PLGCreateFLOW_TRIGGERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOW_TRIGGERSVector(builder, data):
+    PLGCreateFLOW_TRIGGERSVector(builder, data)
+
+def PLGAddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS):
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(FLOW_TRIGGER_BINDINGS), 0)
+
+def AddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS):
+    PLGAddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS)
+
+def PLGStartFLOW_TRIGGER_BINDINGSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartFLOW_TRIGGER_BINDINGSVector(builder, numElems):
+    return PLGStartFLOW_TRIGGER_BINDINGSVector(builder, numElems)
+
+def PLGCreateFLOW_TRIGGER_BINDINGSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateFLOW_TRIGGER_BINDINGSVector(builder, data):
+    PLGCreateFLOW_TRIGGER_BINDINGSVector(builder, data)
+
 def PLGEnd(builder):
     return builder.EndObject()
 
@@ -1393,6 +1571,10 @@ def End(builder):
 import EntryFunction
 import FlatBufferTypeRef
 import PLGBuildArtifact
+import PLGFlowEdge
+import PLGFlowNode
+import PLGFlowTrigger
+import PLGFlowTriggerBinding
 import PLGHostCapability
 import PLGMethodManifest
 import PLGProtocolSpec
@@ -1461,6 +1643,10 @@ class PLGT(object):
         BUILD_ARTIFACTS = None,
         RUNTIME_TARGETS = None,
         ALLOWED_XPUBS = None,
+        FLOW_NODES = None,
+        FLOW_EDGES = None,
+        FLOW_TRIGGERS = None,
+        FLOW_TRIGGER_BINDINGS = None,
     ):
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -1514,6 +1700,10 @@ class PLGT(object):
         self.BUILD_ARTIFACTS = BUILD_ARTIFACTS  # type: Optional[List[PLGBuildArtifact.PLGBuildArtifactT]]
         self.RUNTIME_TARGETS = RUNTIME_TARGETS  # type: Optional[List[Optional[str]]]
         self.ALLOWED_XPUBS = ALLOWED_XPUBS  # type: Optional[List[Optional[str]]]
+        self.FLOW_NODES = FLOW_NODES  # type: Optional[List[PLGFlowNode.PLGFlowNodeT]]
+        self.FLOW_EDGES = FLOW_EDGES  # type: Optional[List[PLGFlowEdge.PLGFlowEdgeT]]
+        self.FLOW_TRIGGERS = FLOW_TRIGGERS  # type: Optional[List[PLGFlowTrigger.PLGFlowTriggerT]]
+        self.FLOW_TRIGGER_BINDINGS = FLOW_TRIGGER_BINDINGS  # type: Optional[List[PLGFlowTriggerBinding.PLGFlowTriggerBindingT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1699,6 +1889,38 @@ class PLGT(object):
             self.ALLOWED_XPUBS = []
             for i in range(PLG.ALLOWED_XPUBSLength()):
                 self.ALLOWED_XPUBS.append(PLG.ALLOWED_XPUBS(i))
+        if not PLG.FLOW_NODESIsNone():
+            self.FLOW_NODES = []
+            for i in range(PLG.FLOW_NODESLength()):
+                if PLG.FLOW_NODES(i) is None:
+                    self.FLOW_NODES.append(None)
+                else:
+                    pLGFlowNode_ = PLGFlowNode.PLGFlowNodeT.InitFromObj(PLG.FLOW_NODES(i))
+                    self.FLOW_NODES.append(pLGFlowNode_)
+        if not PLG.FLOW_EDGESIsNone():
+            self.FLOW_EDGES = []
+            for i in range(PLG.FLOW_EDGESLength()):
+                if PLG.FLOW_EDGES(i) is None:
+                    self.FLOW_EDGES.append(None)
+                else:
+                    pLGFlowEdge_ = PLGFlowEdge.PLGFlowEdgeT.InitFromObj(PLG.FLOW_EDGES(i))
+                    self.FLOW_EDGES.append(pLGFlowEdge_)
+        if not PLG.FLOW_TRIGGERSIsNone():
+            self.FLOW_TRIGGERS = []
+            for i in range(PLG.FLOW_TRIGGERSLength()):
+                if PLG.FLOW_TRIGGERS(i) is None:
+                    self.FLOW_TRIGGERS.append(None)
+                else:
+                    pLGFlowTrigger_ = PLGFlowTrigger.PLGFlowTriggerT.InitFromObj(PLG.FLOW_TRIGGERS(i))
+                    self.FLOW_TRIGGERS.append(pLGFlowTrigger_)
+        if not PLG.FLOW_TRIGGER_BINDINGSIsNone():
+            self.FLOW_TRIGGER_BINDINGS = []
+            for i in range(PLG.FLOW_TRIGGER_BINDINGSLength()):
+                if PLG.FLOW_TRIGGER_BINDINGS(i) is None:
+                    self.FLOW_TRIGGER_BINDINGS.append(None)
+                else:
+                    pLGFlowTriggerBinding_ = PLGFlowTriggerBinding.PLGFlowTriggerBindingT.InitFromObj(PLG.FLOW_TRIGGER_BINDINGS(i))
+                    self.FLOW_TRIGGER_BINDINGS.append(pLGFlowTriggerBinding_)
 
     # PLGT
     def Pack(self, builder):
@@ -1908,6 +2130,38 @@ class PLGT(object):
             for i in reversed(range(len(self.ALLOWED_XPUBS))):
                 builder.PrependUOffsetTRelative(ALLOWED_XPUBSlist[i])
             ALLOWED_XPUBS = builder.EndVector()
+        if self.FLOW_NODES is not None:
+            FLOW_NODESlist = []
+            for i in range(len(self.FLOW_NODES)):
+                FLOW_NODESlist.append(self.FLOW_NODES[i].Pack(builder))
+            PLGStartFLOW_NODESVector(builder, len(self.FLOW_NODES))
+            for i in reversed(range(len(self.FLOW_NODES))):
+                builder.PrependUOffsetTRelative(FLOW_NODESlist[i])
+            FLOW_NODES = builder.EndVector()
+        if self.FLOW_EDGES is not None:
+            FLOW_EDGESlist = []
+            for i in range(len(self.FLOW_EDGES)):
+                FLOW_EDGESlist.append(self.FLOW_EDGES[i].Pack(builder))
+            PLGStartFLOW_EDGESVector(builder, len(self.FLOW_EDGES))
+            for i in reversed(range(len(self.FLOW_EDGES))):
+                builder.PrependUOffsetTRelative(FLOW_EDGESlist[i])
+            FLOW_EDGES = builder.EndVector()
+        if self.FLOW_TRIGGERS is not None:
+            FLOW_TRIGGERSlist = []
+            for i in range(len(self.FLOW_TRIGGERS)):
+                FLOW_TRIGGERSlist.append(self.FLOW_TRIGGERS[i].Pack(builder))
+            PLGStartFLOW_TRIGGERSVector(builder, len(self.FLOW_TRIGGERS))
+            for i in reversed(range(len(self.FLOW_TRIGGERS))):
+                builder.PrependUOffsetTRelative(FLOW_TRIGGERSlist[i])
+            FLOW_TRIGGERS = builder.EndVector()
+        if self.FLOW_TRIGGER_BINDINGS is not None:
+            FLOW_TRIGGER_BINDINGSlist = []
+            for i in range(len(self.FLOW_TRIGGER_BINDINGS)):
+                FLOW_TRIGGER_BINDINGSlist.append(self.FLOW_TRIGGER_BINDINGS[i].Pack(builder))
+            PLGStartFLOW_TRIGGER_BINDINGSVector(builder, len(self.FLOW_TRIGGER_BINDINGS))
+            for i in reversed(range(len(self.FLOW_TRIGGER_BINDINGS))):
+                builder.PrependUOffsetTRelative(FLOW_TRIGGER_BINDINGSlist[i])
+            FLOW_TRIGGER_BINDINGS = builder.EndVector()
         PLGStart(builder)
         if self.PLUGIN_ID is not None:
             PLGAddPLUGIN_ID(builder, PLUGIN_ID)
@@ -2001,5 +2255,13 @@ class PLGT(object):
             PLGAddRUNTIME_TARGETS(builder, RUNTIME_TARGETS)
         if self.ALLOWED_XPUBS is not None:
             PLGAddALLOWED_XPUBS(builder, ALLOWED_XPUBS)
+        if self.FLOW_NODES is not None:
+            PLGAddFLOW_NODES(builder, FLOW_NODES)
+        if self.FLOW_EDGES is not None:
+            PLGAddFLOW_EDGES(builder, FLOW_EDGES)
+        if self.FLOW_TRIGGERS is not None:
+            PLGAddFLOW_TRIGGERS(builder, FLOW_TRIGGERS)
+        if self.FLOW_TRIGGER_BINDINGS is not None:
+            PLGAddFLOW_TRIGGER_BINDINGS(builder, FLOW_TRIGGER_BINDINGS)
         PLG = PLGEnd(builder)
         return PLG
