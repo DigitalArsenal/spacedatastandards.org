@@ -5,6 +5,7 @@ import { SCVHistogramBin, SCVHistogramBinT } from './SCVHistogramBin.js';
 import { SCVPackedGeometryChunk, SCVPackedGeometryChunkT } from './SCVPackedGeometryChunk.js';
 import { SCVPackedRasterProducts, SCVPackedRasterProductsT } from './SCVPackedRasterProducts.js';
 import { SCVSensorContribution, SCVSensorContributionT } from './SCVSensorContribution.js';
+import { SCVTargetResult, SCVTargetResultT } from './SCVTargetResult.js';
 import { SCVTimeGrid, SCVTimeGridT } from './SCVTimeGrid.js';
 import { scvResultState } from './scvResultState.js';
 export declare class SCVResult implements flatbuffers.IUnpackableObject<SCVResultT> {
@@ -30,6 +31,8 @@ export declare class SCVResult implements flatbuffers.IUnpackableObject<SCVResul
     MESSAGE(): string | null;
     MESSAGE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     AGGREGATE_STATISTICS(obj?: SCVAggregateStatistics): SCVAggregateStatistics | null;
+    TARGET_RESULTS(index: number, obj?: SCVTargetResult): SCVTargetResult | null;
+    targetResultsLength(): number;
     static startSCVResult(builder: flatbuffers.Builder): void;
     static addJobId(builder: flatbuffers.Builder, JOB_IDOffset: flatbuffers.Offset): void;
     static addTraceId(builder: flatbuffers.Builder, TRACE_ID: bigint): void;
@@ -48,6 +51,9 @@ export declare class SCVResult implements flatbuffers.IUnpackableObject<SCVResul
     static addRasterProducts(builder: flatbuffers.Builder, RASTER_PRODUCTSOffset: flatbuffers.Offset): void;
     static addMessage(builder: flatbuffers.Builder, MESSAGEOffset: flatbuffers.Offset): void;
     static addAggregateStatistics(builder: flatbuffers.Builder, AGGREGATE_STATISTICSOffset: flatbuffers.Offset): void;
+    static addTargetResults(builder: flatbuffers.Builder, TARGET_RESULTSOffset: flatbuffers.Offset): void;
+    static createTargetResultsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTargetResultsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSCVResult(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): SCVResultT;
     unpackTo(_o: SCVResultT): void;
@@ -66,7 +72,8 @@ export declare class SCVResultT implements flatbuffers.IGeneratedObject {
     RASTER_PRODUCTS: SCVPackedRasterProductsT | null;
     MESSAGE: string | Uint8Array | null;
     AGGREGATE_STATISTICS: SCVAggregateStatisticsT | null;
-    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, HISTOGRAMS?: (SCVHistogramBinT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null);
+    TARGET_RESULTS: (SCVTargetResultT)[];
+    constructor(JOB_ID?: string | Uint8Array | null, TRACE_ID?: bigint, STATUS?: scvResultState, TIME_GRID?: SCVTimeGridT | null, TARGET_BODY?: SCVEllipsoidT | null, TOTAL_SENSORS?: number, TOTAL_WINDOWS?: number, HISTOGRAMS?: (SCVHistogramBinT)[], CONTRIBUTIONS?: (SCVSensorContributionT)[], GEOMETRY?: SCVPackedGeometryChunkT | null, RASTER_PRODUCTS?: SCVPackedRasterProductsT | null, MESSAGE?: string | Uint8Array | null, AGGREGATE_STATISTICS?: SCVAggregateStatisticsT | null, TARGET_RESULTS?: (SCVTargetResultT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVResult.d.ts.map

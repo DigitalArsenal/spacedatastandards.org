@@ -1,6 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
 import { SCVVec3, SCVVec3T } from './SCVVec3.js';
 import { scvCoordinateFrame } from './scvCoordinateFrame.js';
+import { scvGeometryDomain } from './scvGeometryDomain.js';
+import { scvTargetShape } from './scvTargetShape.js';
 export declare class SCVTarget implements flatbuffers.IUnpackableObject<SCVTargetT> {
     bb: flatbuffers.ByteBuffer | null;
     bb_pos: number;
@@ -16,6 +18,12 @@ export declare class SCVTarget implements flatbuffers.IUnpackableObject<SCVTarge
     POSITION_M(obj?: SCVVec3): SCVVec3 | null;
     VELOCITY_MPS(obj?: SCVVec3): SCVVec3 | null;
     RADIUS_M(): number;
+    TARGET_KIND(): scvTargetShape;
+    DOMAIN(): scvGeometryDomain;
+    POLYGON_VERTICES(index: number, obj?: SCVVec3): SCVVec3 | null;
+    polygonVerticesLength(): number;
+    MIN_ALTITUDE_M(): number;
+    MAX_ALTITUDE_M(): number;
     static startSCVTarget(builder: flatbuffers.Builder): void;
     static addTargetId(builder: flatbuffers.Builder, TARGET_ID: number): void;
     static addObjectId(builder: flatbuffers.Builder, OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -24,6 +32,13 @@ export declare class SCVTarget implements flatbuffers.IUnpackableObject<SCVTarge
     static addPositionM(builder: flatbuffers.Builder, POSITION_MOffset: flatbuffers.Offset): void;
     static addVelocityMps(builder: flatbuffers.Builder, VELOCITY_MPSOffset: flatbuffers.Offset): void;
     static addRadiusM(builder: flatbuffers.Builder, RADIUS_M: number): void;
+    static addTargetKind(builder: flatbuffers.Builder, TARGET_KIND: scvTargetShape): void;
+    static addDomain(builder: flatbuffers.Builder, DOMAIN: scvGeometryDomain): void;
+    static addPolygonVertices(builder: flatbuffers.Builder, POLYGON_VERTICESOffset: flatbuffers.Offset): void;
+    static createPolygonVerticesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startPolygonVerticesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMinAltitudeM(builder: flatbuffers.Builder, MIN_ALTITUDE_M: number): void;
+    static addMaxAltitudeM(builder: flatbuffers.Builder, MAX_ALTITUDE_M: number): void;
     static endSCVTarget(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): SCVTargetT;
     unpackTo(_o: SCVTargetT): void;
@@ -36,7 +51,12 @@ export declare class SCVTargetT implements flatbuffers.IGeneratedObject {
     POSITION_M: SCVVec3T | null;
     VELOCITY_MPS: SCVVec3T | null;
     RADIUS_M: number;
-    constructor(TARGET_ID?: number, OBJECT_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, FRAME?: scvCoordinateFrame, POSITION_M?: SCVVec3T | null, VELOCITY_MPS?: SCVVec3T | null, RADIUS_M?: number);
+    TARGET_KIND: scvTargetShape;
+    DOMAIN: scvGeometryDomain;
+    POLYGON_VERTICES: (SCVVec3T)[];
+    MIN_ALTITUDE_M: number;
+    MAX_ALTITUDE_M: number;
+    constructor(TARGET_ID?: number, OBJECT_ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, FRAME?: scvCoordinateFrame, POSITION_M?: SCVVec3T | null, VELOCITY_MPS?: SCVVec3T | null, RADIUS_M?: number, TARGET_KIND?: scvTargetShape, DOMAIN?: scvGeometryDomain, POLYGON_VERTICES?: (SCVVec3T)[], MIN_ALTITUDE_M?: number, MAX_ALTITUDE_M?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SCVTarget.d.ts.map

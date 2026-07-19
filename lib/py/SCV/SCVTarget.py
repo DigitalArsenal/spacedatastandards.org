@@ -85,8 +85,61 @@ class SCVTarget(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # SCVTarget
+    def TARGET_KIND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # SCVTarget
+    def DOMAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # SCVTarget
+    def POLYGON_VERTICES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SCVVec3 import SCVVec3
+            obj = SCVVec3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SCVTarget
+    def POLYGON_VERTICESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SCVTarget
+    def POLYGON_VERTICESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+    # SCVTarget
+    def MIN_ALTITUDE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # SCVTarget
+    def MAX_ALTITUDE_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def SCVTargetStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(12)
 
 def Start(builder):
     SCVTargetStart(builder)
@@ -133,6 +186,48 @@ def SCVTargetAddRADIUS_M(builder, RADIUS_M):
 def AddRADIUS_M(builder, RADIUS_M):
     SCVTargetAddRADIUS_M(builder, RADIUS_M)
 
+def SCVTargetAddTARGET_KIND(builder, TARGET_KIND):
+    builder.PrependUint8Slot(7, TARGET_KIND, 0)
+
+def AddTARGET_KIND(builder, TARGET_KIND):
+    SCVTargetAddTARGET_KIND(builder, TARGET_KIND)
+
+def SCVTargetAddDOMAIN(builder, DOMAIN):
+    builder.PrependUint8Slot(8, DOMAIN, 0)
+
+def AddDOMAIN(builder, DOMAIN):
+    SCVTargetAddDOMAIN(builder, DOMAIN)
+
+def SCVTargetAddPOLYGON_VERTICES(builder, POLYGON_VERTICES):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(POLYGON_VERTICES), 0)
+
+def AddPOLYGON_VERTICES(builder, POLYGON_VERTICES):
+    SCVTargetAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
+
+def SCVTargetStartPOLYGON_VERTICESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPOLYGON_VERTICESVector(builder, numElems):
+    return SCVTargetStartPOLYGON_VERTICESVector(builder, numElems)
+
+def SCVTargetCreatePOLYGON_VERTICESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePOLYGON_VERTICESVector(builder, data):
+    SCVTargetCreatePOLYGON_VERTICESVector(builder, data)
+
+def SCVTargetAddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M):
+    builder.PrependFloat64Slot(10, MIN_ALTITUDE_M, 0.0)
+
+def AddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M):
+    SCVTargetAddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M)
+
+def SCVTargetAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M):
+    builder.PrependFloat64Slot(11, MAX_ALTITUDE_M, 0.0)
+
+def AddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M):
+    SCVTargetAddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M)
+
 def SCVTargetEnd(builder):
     return builder.EndObject()
 
@@ -141,7 +236,7 @@ def End(builder):
 
 import SCVVec3
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -157,6 +252,11 @@ class SCVTargetT(object):
         POSITION_M = None,
         VELOCITY_MPS = None,
         RADIUS_M = 0.0,
+        TARGET_KIND = 0,
+        DOMAIN = 0,
+        POLYGON_VERTICES = None,
+        MIN_ALTITUDE_M = 0.0,
+        MAX_ALTITUDE_M = 0.0,
     ):
         self.TARGET_ID = TARGET_ID  # type: int
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -165,6 +265,11 @@ class SCVTargetT(object):
         self.POSITION_M = POSITION_M  # type: Optional[SCVVec3.SCVVec3T]
         self.VELOCITY_MPS = VELOCITY_MPS  # type: Optional[SCVVec3.SCVVec3T]
         self.RADIUS_M = RADIUS_M  # type: float
+        self.TARGET_KIND = TARGET_KIND  # type: int
+        self.DOMAIN = DOMAIN  # type: int
+        self.POLYGON_VERTICES = POLYGON_VERTICES  # type: Optional[List[SCVVec3.SCVVec3T]]
+        self.MIN_ALTITUDE_M = MIN_ALTITUDE_M  # type: float
+        self.MAX_ALTITUDE_M = MAX_ALTITUDE_M  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -196,6 +301,18 @@ class SCVTargetT(object):
         if SCVTarget.VELOCITY_MPS() is not None:
             self.VELOCITY_MPS = SCVVec3.SCVVec3T.InitFromObj(SCVTarget.VELOCITY_MPS())
         self.RADIUS_M = SCVTarget.RADIUS_M()
+        self.TARGET_KIND = SCVTarget.TARGET_KIND()
+        self.DOMAIN = SCVTarget.DOMAIN()
+        if not SCVTarget.POLYGON_VERTICESIsNone():
+            self.POLYGON_VERTICES = []
+            for i in range(SCVTarget.POLYGON_VERTICESLength()):
+                if SCVTarget.POLYGON_VERTICES(i) is None:
+                    self.POLYGON_VERTICES.append(None)
+                else:
+                    sCVVec3_ = SCVVec3.SCVVec3T.InitFromObj(SCVTarget.POLYGON_VERTICES(i))
+                    self.POLYGON_VERTICES.append(sCVVec3_)
+        self.MIN_ALTITUDE_M = SCVTarget.MIN_ALTITUDE_M()
+        self.MAX_ALTITUDE_M = SCVTarget.MAX_ALTITUDE_M()
 
     # SCVTargetT
     def Pack(self, builder):
@@ -207,6 +324,14 @@ class SCVTargetT(object):
             POSITION_M = self.POSITION_M.Pack(builder)
         if self.VELOCITY_MPS is not None:
             VELOCITY_MPS = self.VELOCITY_MPS.Pack(builder)
+        if self.POLYGON_VERTICES is not None:
+            POLYGON_VERTICESlist = []
+            for i in range(len(self.POLYGON_VERTICES)):
+                POLYGON_VERTICESlist.append(self.POLYGON_VERTICES[i].Pack(builder))
+            SCVTargetStartPOLYGON_VERTICESVector(builder, len(self.POLYGON_VERTICES))
+            for i in reversed(range(len(self.POLYGON_VERTICES))):
+                builder.PrependUOffsetTRelative(POLYGON_VERTICESlist[i])
+            POLYGON_VERTICES = builder.EndVector()
         SCVTargetStart(builder)
         SCVTargetAddTARGET_ID(builder, self.TARGET_ID)
         if self.OBJECT_ID is not None:
@@ -219,5 +344,11 @@ class SCVTargetT(object):
         if self.VELOCITY_MPS is not None:
             SCVTargetAddVELOCITY_MPS(builder, VELOCITY_MPS)
         SCVTargetAddRADIUS_M(builder, self.RADIUS_M)
+        SCVTargetAddTARGET_KIND(builder, self.TARGET_KIND)
+        SCVTargetAddDOMAIN(builder, self.DOMAIN)
+        if self.POLYGON_VERTICES is not None:
+            SCVTargetAddPOLYGON_VERTICES(builder, POLYGON_VERTICES)
+        SCVTargetAddMIN_ALTITUDE_M(builder, self.MIN_ALTITUDE_M)
+        SCVTargetAddMAX_ALTITUDE_M(builder, self.MAX_ALTITUDE_M)
         SCVTarget = SCVTargetEnd(builder)
         return SCVTarget

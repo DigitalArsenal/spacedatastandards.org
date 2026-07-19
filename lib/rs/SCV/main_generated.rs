@@ -743,6 +743,106 @@ impl<'a> ::flatbuffers::Verifiable for scvGeometryDomain {
 
 impl ::flatbuffers::SimpleToVerifyInSlice for scvGeometryDomain {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SCV_TARGET_SHAPE: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SCV_TARGET_SHAPE: u8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SCV_TARGET_SHAPE: [scvTargetShape; 6] = [
+  scvTargetShape::POINT,
+  scvTargetShape::POLYGON,
+  scvTargetShape::RECTANGLE,
+  scvTargetShape::BOX,
+  scvTargetShape::SPHERE,
+  scvTargetShape::EXTRUDED_POLYGON,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct scvTargetShape(pub u8);
+#[allow(non_upper_case_globals)]
+impl scvTargetShape {
+  pub const POINT: Self = Self(0);
+  pub const POLYGON: Self = Self(1);
+  pub const RECTANGLE: Self = Self(2);
+  pub const BOX: Self = Self(3);
+  pub const SPHERE: Self = Self(4);
+  pub const EXTRUDED_POLYGON: Self = Self(5);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::POINT,
+    Self::POLYGON,
+    Self::RECTANGLE,
+    Self::BOX,
+    Self::SPHERE,
+    Self::EXTRUDED_POLYGON,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::POINT => Some("POINT"),
+      Self::POLYGON => Some("POLYGON"),
+      Self::RECTANGLE => Some("RECTANGLE"),
+      Self::BOX => Some("BOX"),
+      Self::SPHERE => Some("SPHERE"),
+      Self::EXTRUDED_POLYGON => Some("EXTRUDED_POLYGON"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for scvTargetShape {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for scvTargetShape {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for scvTargetShape {
+    type Output = scvTargetShape;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for scvTargetShape {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for scvTargetShape {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for scvTargetShape {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SCV_RESULT_STATE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MAX_SCV_RESULT_STATE: u8 = 3;
@@ -3115,6 +3215,11 @@ impl<'a> SCVTarget<'a> {
   pub const VT_POSITION_M: ::flatbuffers::VOffsetT = 12;
   pub const VT_VELOCITY_MPS: ::flatbuffers::VOffsetT = 14;
   pub const VT_RADIUS_M: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TARGET_KIND: ::flatbuffers::VOffsetT = 18;
+  pub const VT_DOMAIN: ::flatbuffers::VOffsetT = 20;
+  pub const VT_POLYGON_VERTICES: ::flatbuffers::VOffsetT = 22;
+  pub const VT_MIN_ALTITUDE_M: ::flatbuffers::VOffsetT = 24;
+  pub const VT_MAX_ALTITUDE_M: ::flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3126,12 +3231,17 @@ impl<'a> SCVTarget<'a> {
     args: &'args SCVTargetArgs<'args>
   ) -> ::flatbuffers::WIPOffset<SCVTarget<'bldr>> {
     let mut builder = SCVTargetBuilder::new(_fbb);
+    builder.add_MAX_ALTITUDE_M(args.MAX_ALTITUDE_M);
+    builder.add_MIN_ALTITUDE_M(args.MIN_ALTITUDE_M);
     builder.add_RADIUS_M(args.RADIUS_M);
+    if let Some(x) = args.POLYGON_VERTICES { builder.add_POLYGON_VERTICES(x); }
     if let Some(x) = args.VELOCITY_MPS { builder.add_VELOCITY_MPS(x); }
     if let Some(x) = args.POSITION_M { builder.add_POSITION_M(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     builder.add_TARGET_ID(args.TARGET_ID);
+    builder.add_DOMAIN(args.DOMAIN);
+    builder.add_TARGET_KIND(args.TARGET_KIND);
     builder.add_FRAME(args.FRAME);
     builder.finish()
   }
@@ -3152,6 +3262,13 @@ impl<'a> SCVTarget<'a> {
       alloc::boxed::Box::new(x.unpack())
     });
     let RADIUS_M = self.RADIUS_M();
+    let TARGET_KIND = self.TARGET_KIND();
+    let DOMAIN = self.DOMAIN();
+    let POLYGON_VERTICES = self.POLYGON_VERTICES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MIN_ALTITUDE_M = self.MIN_ALTITUDE_M();
+    let MAX_ALTITUDE_M = self.MAX_ALTITUDE_M();
     SCVTargetT {
       TARGET_ID,
       OBJECT_ID,
@@ -3160,6 +3277,11 @@ impl<'a> SCVTarget<'a> {
       POSITION_M,
       VELOCITY_MPS,
       RADIUS_M,
+      TARGET_KIND,
+      DOMAIN,
+      POLYGON_VERTICES,
+      MIN_ALTITUDE_M,
+      MAX_ALTITUDE_M,
     }
   }
 
@@ -3212,6 +3334,41 @@ impl<'a> SCVTarget<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SCVTarget::VT_RADIUS_M, Some(0.0)).unwrap()}
   }
+  #[inline]
+  pub fn TARGET_KIND(&self) -> scvTargetShape {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvTargetShape>(SCVTarget::VT_TARGET_KIND, Some(scvTargetShape::POINT)).unwrap()}
+  }
+  #[inline]
+  pub fn DOMAIN(&self) -> scvGeometryDomain {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<scvGeometryDomain>(SCVTarget::VT_DOMAIN, Some(scvGeometryDomain::SURFACE)).unwrap()}
+  }
+  #[inline]
+  pub fn POLYGON_VERTICES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>(SCVTarget::VT_POLYGON_VERTICES, None)}
+  }
+  #[inline]
+  pub fn MIN_ALTITUDE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVTarget::VT_MIN_ALTITUDE_M, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_ALTITUDE_M(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVTarget::VT_MAX_ALTITUDE_M, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCVTarget<'_> {
@@ -3227,6 +3384,11 @@ impl ::flatbuffers::Verifiable for SCVTarget<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("POSITION_M", Self::VT_POSITION_M, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVVec3>>("VELOCITY_MPS", Self::VT_VELOCITY_MPS, false)?
      .visit_field::<f64>("RADIUS_M", Self::VT_RADIUS_M, false)?
+     .visit_field::<scvTargetShape>("TARGET_KIND", Self::VT_TARGET_KIND, false)?
+     .visit_field::<scvGeometryDomain>("DOMAIN", Self::VT_DOMAIN, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVVec3>>>>("POLYGON_VERTICES", Self::VT_POLYGON_VERTICES, false)?
+     .visit_field::<f64>("MIN_ALTITUDE_M", Self::VT_MIN_ALTITUDE_M, false)?
+     .visit_field::<f64>("MAX_ALTITUDE_M", Self::VT_MAX_ALTITUDE_M, false)?
      .finish();
     Ok(())
   }
@@ -3239,6 +3401,11 @@ pub struct SCVTargetArgs<'a> {
     pub POSITION_M: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
     pub VELOCITY_MPS: Option<::flatbuffers::WIPOffset<SCVVec3<'a>>>,
     pub RADIUS_M: f64,
+    pub TARGET_KIND: scvTargetShape,
+    pub DOMAIN: scvGeometryDomain,
+    pub POLYGON_VERTICES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVVec3<'a>>>>>,
+    pub MIN_ALTITUDE_M: f64,
+    pub MAX_ALTITUDE_M: f64,
 }
 impl<'a> Default for SCVTargetArgs<'a> {
   #[inline]
@@ -3251,6 +3418,11 @@ impl<'a> Default for SCVTargetArgs<'a> {
       POSITION_M: None,
       VELOCITY_MPS: None,
       RADIUS_M: 0.0,
+      TARGET_KIND: scvTargetShape::POINT,
+      DOMAIN: scvGeometryDomain::SURFACE,
+      POLYGON_VERTICES: None,
+      MIN_ALTITUDE_M: 0.0,
+      MAX_ALTITUDE_M: 0.0,
     }
   }
 }
@@ -3289,6 +3461,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVTargetBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SCVTarget::VT_RADIUS_M, RADIUS_M, 0.0);
   }
   #[inline]
+  pub fn add_TARGET_KIND(&mut self, TARGET_KIND: scvTargetShape) {
+    self.fbb_.push_slot::<scvTargetShape>(SCVTarget::VT_TARGET_KIND, TARGET_KIND, scvTargetShape::POINT);
+  }
+  #[inline]
+  pub fn add_DOMAIN(&mut self, DOMAIN: scvGeometryDomain) {
+    self.fbb_.push_slot::<scvGeometryDomain>(SCVTarget::VT_DOMAIN, DOMAIN, scvGeometryDomain::SURFACE);
+  }
+  #[inline]
+  pub fn add_POLYGON_VERTICES(&mut self, POLYGON_VERTICES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVVec3<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTarget::VT_POLYGON_VERTICES, POLYGON_VERTICES);
+  }
+  #[inline]
+  pub fn add_MIN_ALTITUDE_M(&mut self, MIN_ALTITUDE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVTarget::VT_MIN_ALTITUDE_M, MIN_ALTITUDE_M, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_ALTITUDE_M(&mut self, MAX_ALTITUDE_M: f64) {
+    self.fbb_.push_slot::<f64>(SCVTarget::VT_MAX_ALTITUDE_M, MAX_ALTITUDE_M, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVTargetBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCVTargetBuilder {
@@ -3313,6 +3505,11 @@ impl ::core::fmt::Debug for SCVTarget<'_> {
       ds.field("POSITION_M", &self.POSITION_M());
       ds.field("VELOCITY_MPS", &self.VELOCITY_MPS());
       ds.field("RADIUS_M", &self.RADIUS_M());
+      ds.field("TARGET_KIND", &self.TARGET_KIND());
+      ds.field("DOMAIN", &self.DOMAIN());
+      ds.field("POLYGON_VERTICES", &self.POLYGON_VERTICES());
+      ds.field("MIN_ALTITUDE_M", &self.MIN_ALTITUDE_M());
+      ds.field("MAX_ALTITUDE_M", &self.MAX_ALTITUDE_M());
       ds.finish()
   }
 }
@@ -3326,6 +3523,11 @@ pub struct SCVTargetT {
   pub POSITION_M: Option<alloc::boxed::Box<SCVVec3T>>,
   pub VELOCITY_MPS: Option<alloc::boxed::Box<SCVVec3T>>,
   pub RADIUS_M: f64,
+  pub TARGET_KIND: scvTargetShape,
+  pub DOMAIN: scvGeometryDomain,
+  pub POLYGON_VERTICES: Option<alloc::vec::Vec<SCVVec3T>>,
+  pub MIN_ALTITUDE_M: f64,
+  pub MAX_ALTITUDE_M: f64,
 }
 impl Default for SCVTargetT {
   fn default() -> Self {
@@ -3337,6 +3539,11 @@ impl Default for SCVTargetT {
       POSITION_M: None,
       VELOCITY_MPS: None,
       RADIUS_M: 0.0,
+      TARGET_KIND: scvTargetShape::POINT,
+      DOMAIN: scvGeometryDomain::SURFACE,
+      POLYGON_VERTICES: None,
+      MIN_ALTITUDE_M: 0.0,
+      MAX_ALTITUDE_M: 0.0,
     }
   }
 }
@@ -3360,6 +3567,13 @@ impl SCVTargetT {
       x.pack(_fbb)
     });
     let RADIUS_M = self.RADIUS_M;
+    let TARGET_KIND = self.TARGET_KIND;
+    let DOMAIN = self.DOMAIN;
+    let POLYGON_VERTICES = self.POLYGON_VERTICES.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MIN_ALTITUDE_M = self.MIN_ALTITUDE_M;
+    let MAX_ALTITUDE_M = self.MAX_ALTITUDE_M;
     SCVTarget::create(_fbb, &SCVTargetArgs{
       TARGET_ID,
       OBJECT_ID,
@@ -3368,6 +3582,11 @@ impl SCVTargetT {
       POSITION_M,
       VELOCITY_MPS,
       RADIUS_M,
+      TARGET_KIND,
+      DOMAIN,
+      POLYGON_VERTICES,
+      MIN_ALTITUDE_M,
+      MAX_ALTITUDE_M,
     })
   }
 }
@@ -8268,6 +8487,381 @@ impl SCVAggregateStatisticsT {
     })
   }
 }
+pub enum SCVTargetResultOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+pub struct SCVTargetResult<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for SCVTargetResult<'a> {
+  type Inner = SCVTargetResult<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> SCVTargetResult<'a> {
+  pub const VT_TARGET_ID: ::flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_ACCESS_COUNT: ::flatbuffers::VOffsetT = 8;
+  pub const VT_REVISIT_COUNT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TOTAL_ACCESS_DURATION_SEC: ::flatbuffers::VOffsetT = 12;
+  pub const VT_MEAN_REVISIT_TIME_SEC: ::flatbuffers::VOffsetT = 14;
+  pub const VT_MAX_GAP_SEC: ::flatbuffers::VOffsetT = 16;
+  pub const VT_INTERVAL_START_SEC: ::flatbuffers::VOffsetT = 18;
+  pub const VT_INTERVAL_STOP_SEC: ::flatbuffers::VOffsetT = 20;
+  pub const VT_PASS_START_BUCKETS: ::flatbuffers::VOffsetT = 22;
+  pub const VT_ACCESS_BITSET: ::flatbuffers::VOffsetT = 24;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    SCVTargetResult { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args SCVTargetResultArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<SCVTargetResult<'bldr>> {
+    let mut builder = SCVTargetResultBuilder::new(_fbb);
+    builder.add_MAX_GAP_SEC(args.MAX_GAP_SEC);
+    builder.add_MEAN_REVISIT_TIME_SEC(args.MEAN_REVISIT_TIME_SEC);
+    builder.add_TOTAL_ACCESS_DURATION_SEC(args.TOTAL_ACCESS_DURATION_SEC);
+    if let Some(x) = args.ACCESS_BITSET { builder.add_ACCESS_BITSET(x); }
+    if let Some(x) = args.PASS_START_BUCKETS { builder.add_PASS_START_BUCKETS(x); }
+    if let Some(x) = args.INTERVAL_STOP_SEC { builder.add_INTERVAL_STOP_SEC(x); }
+    if let Some(x) = args.INTERVAL_START_SEC { builder.add_INTERVAL_START_SEC(x); }
+    builder.add_REVISIT_COUNT(args.REVISIT_COUNT);
+    builder.add_ACCESS_COUNT(args.ACCESS_COUNT);
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.add_TARGET_ID(args.TARGET_ID);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> SCVTargetResultT {
+    let TARGET_ID = self.TARGET_ID();
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ACCESS_COUNT = self.ACCESS_COUNT();
+    let REVISIT_COUNT = self.REVISIT_COUNT();
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC();
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC();
+    let MAX_GAP_SEC = self.MAX_GAP_SEC();
+    let INTERVAL_START_SEC = self.INTERVAL_START_SEC().map(|x| {
+      x.into_iter().collect()
+    });
+    let INTERVAL_STOP_SEC = self.INTERVAL_STOP_SEC().map(|x| {
+      x.into_iter().collect()
+    });
+    let PASS_START_BUCKETS = self.PASS_START_BUCKETS().map(|x| {
+      x.into_iter().collect()
+    });
+    let ACCESS_BITSET = self.ACCESS_BITSET().map(|x| {
+      x.into_iter().collect()
+    });
+    SCVTargetResultT {
+      TARGET_ID,
+      NAME,
+      ACCESS_COUNT,
+      REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_GAP_SEC,
+      INTERVAL_START_SEC,
+      INTERVAL_STOP_SEC,
+      PASS_START_BUCKETS,
+      ACCESS_BITSET,
+    }
+  }
+
+  #[inline]
+  pub fn TARGET_ID(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVTargetResult::VT_TARGET_ID, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SCVTargetResult::VT_NAME, None)}
+  }
+  #[inline]
+  pub fn ACCESS_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVTargetResult::VT_ACCESS_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn REVISIT_COUNT(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SCVTargetResult::VT_REVISIT_COUNT, Some(0)).unwrap()}
+  }
+  #[inline]
+  pub fn TOTAL_ACCESS_DURATION_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVTargetResult::VT_TOTAL_ACCESS_DURATION_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MEAN_REVISIT_TIME_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVTargetResult::VT_MEAN_REVISIT_TIME_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn MAX_GAP_SEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SCVTargetResult::VT_MAX_GAP_SEC, Some(0.0)).unwrap()}
+  }
+  #[inline]
+  pub fn INTERVAL_START_SEC(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(SCVTargetResult::VT_INTERVAL_START_SEC, None)}
+  }
+  #[inline]
+  pub fn INTERVAL_STOP_SEC(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(SCVTargetResult::VT_INTERVAL_STOP_SEC, None)}
+  }
+  #[inline]
+  pub fn PASS_START_BUCKETS(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(SCVTargetResult::VT_PASS_START_BUCKETS, None)}
+  }
+  #[inline]
+  pub fn ACCESS_BITSET(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(SCVTargetResult::VT_ACCESS_BITSET, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for SCVTargetResult<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<u32>("TARGET_ID", Self::VT_TARGET_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<u32>("ACCESS_COUNT", Self::VT_ACCESS_COUNT, false)?
+     .visit_field::<u32>("REVISIT_COUNT", Self::VT_REVISIT_COUNT, false)?
+     .visit_field::<f64>("TOTAL_ACCESS_DURATION_SEC", Self::VT_TOTAL_ACCESS_DURATION_SEC, false)?
+     .visit_field::<f64>("MEAN_REVISIT_TIME_SEC", Self::VT_MEAN_REVISIT_TIME_SEC, false)?
+     .visit_field::<f64>("MAX_GAP_SEC", Self::VT_MAX_GAP_SEC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("INTERVAL_START_SEC", Self::VT_INTERVAL_START_SEC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("INTERVAL_STOP_SEC", Self::VT_INTERVAL_STOP_SEC, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("PASS_START_BUCKETS", Self::VT_PASS_START_BUCKETS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("ACCESS_BITSET", Self::VT_ACCESS_BITSET, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct SCVTargetResultArgs<'a> {
+    pub TARGET_ID: u32,
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ACCESS_COUNT: u32,
+    pub REVISIT_COUNT: u32,
+    pub TOTAL_ACCESS_DURATION_SEC: f64,
+    pub MEAN_REVISIT_TIME_SEC: f64,
+    pub MAX_GAP_SEC: f64,
+    pub INTERVAL_START_SEC: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub INTERVAL_STOP_SEC: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub PASS_START_BUCKETS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+    pub ACCESS_BITSET: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+}
+impl<'a> Default for SCVTargetResultArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    SCVTargetResultArgs {
+      TARGET_ID: 0,
+      NAME: None,
+      ACCESS_COUNT: 0,
+      REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_GAP_SEC: 0.0,
+      INTERVAL_START_SEC: None,
+      INTERVAL_STOP_SEC: None,
+      PASS_START_BUCKETS: None,
+      ACCESS_BITSET: None,
+    }
+  }
+}
+
+pub struct SCVTargetResultBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVTargetResultBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TARGET_ID(&mut self, TARGET_ID: u32) {
+    self.fbb_.push_slot::<u32>(SCVTargetResult::VT_TARGET_ID, TARGET_ID, 0);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTargetResult::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_ACCESS_COUNT(&mut self, ACCESS_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVTargetResult::VT_ACCESS_COUNT, ACCESS_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_REVISIT_COUNT(&mut self, REVISIT_COUNT: u32) {
+    self.fbb_.push_slot::<u32>(SCVTargetResult::VT_REVISIT_COUNT, REVISIT_COUNT, 0);
+  }
+  #[inline]
+  pub fn add_TOTAL_ACCESS_DURATION_SEC(&mut self, TOTAL_ACCESS_DURATION_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVTargetResult::VT_TOTAL_ACCESS_DURATION_SEC, TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_REVISIT_TIME_SEC(&mut self, MEAN_REVISIT_TIME_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVTargetResult::VT_MEAN_REVISIT_TIME_SEC, MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_MAX_GAP_SEC(&mut self, MAX_GAP_SEC: f64) {
+    self.fbb_.push_slot::<f64>(SCVTargetResult::VT_MAX_GAP_SEC, MAX_GAP_SEC, 0.0);
+  }
+  #[inline]
+  pub fn add_INTERVAL_START_SEC(&mut self, INTERVAL_START_SEC: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTargetResult::VT_INTERVAL_START_SEC, INTERVAL_START_SEC);
+  }
+  #[inline]
+  pub fn add_INTERVAL_STOP_SEC(&mut self, INTERVAL_STOP_SEC: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTargetResult::VT_INTERVAL_STOP_SEC, INTERVAL_STOP_SEC);
+  }
+  #[inline]
+  pub fn add_PASS_START_BUCKETS(&mut self, PASS_START_BUCKETS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTargetResult::VT_PASS_START_BUCKETS, PASS_START_BUCKETS);
+  }
+  #[inline]
+  pub fn add_ACCESS_BITSET(&mut self, ACCESS_BITSET: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVTargetResult::VT_ACCESS_BITSET, ACCESS_BITSET);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVTargetResultBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    SCVTargetResultBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<SCVTargetResult<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for SCVTargetResult<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("SCVTargetResult");
+      ds.field("TARGET_ID", &self.TARGET_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("ACCESS_COUNT", &self.ACCESS_COUNT());
+      ds.field("REVISIT_COUNT", &self.REVISIT_COUNT());
+      ds.field("TOTAL_ACCESS_DURATION_SEC", &self.TOTAL_ACCESS_DURATION_SEC());
+      ds.field("MEAN_REVISIT_TIME_SEC", &self.MEAN_REVISIT_TIME_SEC());
+      ds.field("MAX_GAP_SEC", &self.MAX_GAP_SEC());
+      ds.field("INTERVAL_START_SEC", &self.INTERVAL_START_SEC());
+      ds.field("INTERVAL_STOP_SEC", &self.INTERVAL_STOP_SEC());
+      ds.field("PASS_START_BUCKETS", &self.PASS_START_BUCKETS());
+      ds.field("ACCESS_BITSET", &self.ACCESS_BITSET());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct SCVTargetResultT {
+  pub TARGET_ID: u32,
+  pub NAME: Option<alloc::string::String>,
+  pub ACCESS_COUNT: u32,
+  pub REVISIT_COUNT: u32,
+  pub TOTAL_ACCESS_DURATION_SEC: f64,
+  pub MEAN_REVISIT_TIME_SEC: f64,
+  pub MAX_GAP_SEC: f64,
+  pub INTERVAL_START_SEC: Option<alloc::vec::Vec<f64>>,
+  pub INTERVAL_STOP_SEC: Option<alloc::vec::Vec<f64>>,
+  pub PASS_START_BUCKETS: Option<alloc::vec::Vec<u32>>,
+  pub ACCESS_BITSET: Option<alloc::vec::Vec<u32>>,
+}
+impl Default for SCVTargetResultT {
+  fn default() -> Self {
+    Self {
+      TARGET_ID: 0,
+      NAME: None,
+      ACCESS_COUNT: 0,
+      REVISIT_COUNT: 0,
+      TOTAL_ACCESS_DURATION_SEC: 0.0,
+      MEAN_REVISIT_TIME_SEC: 0.0,
+      MAX_GAP_SEC: 0.0,
+      INTERVAL_START_SEC: None,
+      INTERVAL_STOP_SEC: None,
+      PASS_START_BUCKETS: None,
+      ACCESS_BITSET: None,
+    }
+  }
+}
+impl SCVTargetResultT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<SCVTargetResult<'b>> {
+    let TARGET_ID = self.TARGET_ID;
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ACCESS_COUNT = self.ACCESS_COUNT;
+    let REVISIT_COUNT = self.REVISIT_COUNT;
+    let TOTAL_ACCESS_DURATION_SEC = self.TOTAL_ACCESS_DURATION_SEC;
+    let MEAN_REVISIT_TIME_SEC = self.MEAN_REVISIT_TIME_SEC;
+    let MAX_GAP_SEC = self.MAX_GAP_SEC;
+    let INTERVAL_START_SEC = self.INTERVAL_START_SEC.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let INTERVAL_STOP_SEC = self.INTERVAL_STOP_SEC.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let PASS_START_BUCKETS = self.PASS_START_BUCKETS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let ACCESS_BITSET = self.ACCESS_BITSET.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    SCVTargetResult::create(_fbb, &SCVTargetResultArgs{
+      TARGET_ID,
+      NAME,
+      ACCESS_COUNT,
+      REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_GAP_SEC,
+      INTERVAL_START_SEC,
+      INTERVAL_STOP_SEC,
+      PASS_START_BUCKETS,
+      ACCESS_BITSET,
+    })
+  }
+}
 pub enum SCVResultOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -8297,6 +8891,7 @@ impl<'a> SCVResult<'a> {
   pub const VT_RASTER_PRODUCTS: ::flatbuffers::VOffsetT = 24;
   pub const VT_MESSAGE: ::flatbuffers::VOffsetT = 26;
   pub const VT_AGGREGATE_STATISTICS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_TARGET_RESULTS: ::flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -8309,6 +8904,7 @@ impl<'a> SCVResult<'a> {
   ) -> ::flatbuffers::WIPOffset<SCVResult<'bldr>> {
     let mut builder = SCVResultBuilder::new(_fbb);
     builder.add_TRACE_ID(args.TRACE_ID);
+    if let Some(x) = args.TARGET_RESULTS { builder.add_TARGET_RESULTS(x); }
     if let Some(x) = args.AGGREGATE_STATISTICS { builder.add_AGGREGATE_STATISTICS(x); }
     if let Some(x) = args.MESSAGE { builder.add_MESSAGE(x); }
     if let Some(x) = args.RASTER_PRODUCTS { builder.add_RASTER_PRODUCTS(x); }
@@ -8356,6 +8952,9 @@ impl<'a> SCVResult<'a> {
     let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS().map(|x| {
       alloc::boxed::Box::new(x.unpack())
     });
+    let TARGET_RESULTS = self.TARGET_RESULTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     SCVResultT {
       JOB_ID,
       TRACE_ID,
@@ -8370,6 +8969,7 @@ impl<'a> SCVResult<'a> {
       RASTER_PRODUCTS,
       MESSAGE,
       AGGREGATE_STATISTICS,
+      TARGET_RESULTS,
     }
   }
 
@@ -8464,6 +9064,13 @@ impl<'a> SCVResult<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, None)}
   }
+  #[inline]
+  pub fn TARGET_RESULTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTargetResult<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTargetResult>>>>(SCVResult::VT_TARGET_RESULTS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for SCVResult<'_> {
@@ -8485,6 +9092,7 @@ impl ::flatbuffers::Verifiable for SCVResult<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVPackedRasterProducts>>("RASTER_PRODUCTS", Self::VT_RASTER_PRODUCTS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MESSAGE", Self::VT_MESSAGE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<SCVAggregateStatistics>>("AGGREGATE_STATISTICS", Self::VT_AGGREGATE_STATISTICS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SCVTargetResult>>>>("TARGET_RESULTS", Self::VT_TARGET_RESULTS, false)?
      .finish();
     Ok(())
   }
@@ -8503,6 +9111,7 @@ pub struct SCVResultArgs<'a> {
     pub RASTER_PRODUCTS: Option<::flatbuffers::WIPOffset<SCVPackedRasterProducts<'a>>>,
     pub MESSAGE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub AGGREGATE_STATISTICS: Option<::flatbuffers::WIPOffset<SCVAggregateStatistics<'a>>>,
+    pub TARGET_RESULTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SCVTargetResult<'a>>>>>,
 }
 impl<'a> Default for SCVResultArgs<'a> {
   #[inline]
@@ -8521,6 +9130,7 @@ impl<'a> Default for SCVResultArgs<'a> {
       RASTER_PRODUCTS: None,
       MESSAGE: None,
       AGGREGATE_STATISTICS: None,
+      TARGET_RESULTS: None,
     }
   }
 }
@@ -8583,6 +9193,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SCVResultBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<SCVAggregateStatistics>>(SCVResult::VT_AGGREGATE_STATISTICS, AGGREGATE_STATISTICS);
   }
   #[inline]
+  pub fn add_TARGET_RESULTS(&mut self, TARGET_RESULTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<SCVTargetResult<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SCVResult::VT_TARGET_RESULTS, TARGET_RESULTS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SCVResultBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SCVResultBuilder {
@@ -8613,6 +9227,7 @@ impl ::core::fmt::Debug for SCVResult<'_> {
       ds.field("RASTER_PRODUCTS", &self.RASTER_PRODUCTS());
       ds.field("MESSAGE", &self.MESSAGE());
       ds.field("AGGREGATE_STATISTICS", &self.AGGREGATE_STATISTICS());
+      ds.field("TARGET_RESULTS", &self.TARGET_RESULTS());
       ds.finish()
   }
 }
@@ -8632,6 +9247,7 @@ pub struct SCVResultT {
   pub RASTER_PRODUCTS: Option<alloc::boxed::Box<SCVPackedRasterProductsT>>,
   pub MESSAGE: Option<alloc::string::String>,
   pub AGGREGATE_STATISTICS: Option<alloc::boxed::Box<SCVAggregateStatisticsT>>,
+  pub TARGET_RESULTS: Option<alloc::vec::Vec<SCVTargetResultT>>,
 }
 impl Default for SCVResultT {
   fn default() -> Self {
@@ -8649,6 +9265,7 @@ impl Default for SCVResultT {
       RASTER_PRODUCTS: None,
       MESSAGE: None,
       AGGREGATE_STATISTICS: None,
+      TARGET_RESULTS: None,
     }
   }
 }
@@ -8688,6 +9305,9 @@ impl SCVResultT {
     let AGGREGATE_STATISTICS = self.AGGREGATE_STATISTICS.as_ref().map(|x|{
       x.pack(_fbb)
     });
+    let TARGET_RESULTS = self.TARGET_RESULTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     SCVResult::create(_fbb, &SCVResultArgs{
       JOB_ID,
       TRACE_ID,
@@ -8702,6 +9322,7 @@ impl SCVResultT {
       RASTER_PRODUCTS,
       MESSAGE,
       AGGREGATE_STATISTICS,
+      TARGET_RESULTS,
     })
   }
 }

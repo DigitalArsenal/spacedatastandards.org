@@ -43,6 +43,8 @@ public struct SCVResult : IFlatbufferObject
 #endif
   public byte[] GetMESSAGEArray() { return __p.__vector_as_array<byte>(26); }
   public SCVAggregateStatistics? AGGREGATE_STATISTICS { get { int o = __p.__offset(28); return o != 0 ? (SCVAggregateStatistics?)(new SCVAggregateStatistics()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public SCVTargetResult? TARGET_RESULTS(int j) { int o = __p.__offset(30); return o != 0 ? (SCVTargetResult?)(new SCVTargetResult()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TARGET_RESULTSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<SCVResult> CreateSCVResult(FlatBufferBuilder builder,
       StringOffset JOB_IDOffset = default(StringOffset),
@@ -57,9 +59,11 @@ public struct SCVResult : IFlatbufferObject
       Offset<SCVPackedGeometryChunk> GEOMETRYOffset = default(Offset<SCVPackedGeometryChunk>),
       Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset = default(Offset<SCVPackedRasterProducts>),
       StringOffset MESSAGEOffset = default(StringOffset),
-      Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>)) {
-    builder.StartTable(13);
+      Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset = default(Offset<SCVAggregateStatistics>),
+      VectorOffset TARGET_RESULTSOffset = default(VectorOffset)) {
+    builder.StartTable(14);
     SCVResult.AddTRACE_ID(builder, TRACE_ID);
+    SCVResult.AddTARGET_RESULTS(builder, TARGET_RESULTSOffset);
     SCVResult.AddAGGREGATE_STATISTICS(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.AddMESSAGE(builder, MESSAGEOffset);
     SCVResult.AddRASTER_PRODUCTS(builder, RASTER_PRODUCTSOffset);
@@ -75,7 +79,7 @@ public struct SCVResult : IFlatbufferObject
     return SCVResult.EndSCVResult(builder);
   }
 
-  public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartSCVResult(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddJOB_ID(FlatBufferBuilder builder, StringOffset JOB_IDOffset) { builder.AddOffset(0, JOB_IDOffset.Value, 0); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, ulong TRACE_ID) { builder.AddUlong(1, TRACE_ID, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, scvResultState STATUS) { builder.AddByte(2, (byte)STATUS, 0); }
@@ -99,6 +103,12 @@ public struct SCVResult : IFlatbufferObject
   public static void AddRASTER_PRODUCTS(FlatBufferBuilder builder, Offset<SCVPackedRasterProducts> RASTER_PRODUCTSOffset) { builder.AddOffset(10, RASTER_PRODUCTSOffset.Value, 0); }
   public static void AddMESSAGE(FlatBufferBuilder builder, StringOffset MESSAGEOffset) { builder.AddOffset(11, MESSAGEOffset.Value, 0); }
   public static void AddAGGREGATE_STATISTICS(FlatBufferBuilder builder, Offset<SCVAggregateStatistics> AGGREGATE_STATISTICSOffset) { builder.AddOffset(12, AGGREGATE_STATISTICSOffset.Value, 0); }
+  public static void AddTARGET_RESULTS(FlatBufferBuilder builder, VectorOffset TARGET_RESULTSOffset) { builder.AddOffset(13, TARGET_RESULTSOffset.Value, 0); }
+  public static VectorOffset CreateTARGET_RESULTSVector(FlatBufferBuilder builder, Offset<SCVTargetResult>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, Offset<SCVTargetResult>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVTargetResult>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTARGET_RESULTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVTargetResult>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTARGET_RESULTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<SCVResult> EndSCVResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVResult>(o);
@@ -124,6 +134,8 @@ public struct SCVResult : IFlatbufferObject
     _o.RASTER_PRODUCTS = this.RASTER_PRODUCTS.HasValue ? this.RASTER_PRODUCTS.Value.UnPack() : null;
     _o.MESSAGE = this.MESSAGE;
     _o.AGGREGATE_STATISTICS = this.AGGREGATE_STATISTICS.HasValue ? this.AGGREGATE_STATISTICS.Value.UnPack() : null;
+    _o.TARGET_RESULTS = new List<SCVTargetResultT>();
+    for (var _j = 0; _j < this.TARGET_RESULTSLength; ++_j) {_o.TARGET_RESULTS.Add(this.TARGET_RESULTS(_j).HasValue ? this.TARGET_RESULTS(_j).Value.UnPack() : null);}
   }
   public static Offset<SCVResult> Pack(FlatBufferBuilder builder, SCVResultT _o) {
     if (_o == null) return default(Offset<SCVResult>);
@@ -146,6 +158,12 @@ public struct SCVResult : IFlatbufferObject
     var _RASTER_PRODUCTS = _o.RASTER_PRODUCTS == null ? default(Offset<SCVPackedRasterProducts>) : SCVPackedRasterProducts.Pack(builder, _o.RASTER_PRODUCTS);
     var _MESSAGE = _o.MESSAGE == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE);
     var _AGGREGATE_STATISTICS = _o.AGGREGATE_STATISTICS == null ? default(Offset<SCVAggregateStatistics>) : SCVAggregateStatistics.Pack(builder, _o.AGGREGATE_STATISTICS);
+    var _TARGET_RESULTS = default(VectorOffset);
+    if (_o.TARGET_RESULTS != null) {
+      var __TARGET_RESULTS = new Offset<SCVTargetResult>[_o.TARGET_RESULTS.Count];
+      for (var _j = 0; _j < __TARGET_RESULTS.Length; ++_j) { __TARGET_RESULTS[_j] = SCVTargetResult.Pack(builder, _o.TARGET_RESULTS[_j]); }
+      _TARGET_RESULTS = CreateTARGET_RESULTSVector(builder, __TARGET_RESULTS);
+    }
     return CreateSCVResult(
       builder,
       _JOB_ID,
@@ -160,7 +178,8 @@ public struct SCVResult : IFlatbufferObject
       _GEOMETRY,
       _RASTER_PRODUCTS,
       _MESSAGE,
-      _AGGREGATE_STATISTICS);
+      _AGGREGATE_STATISTICS,
+      _TARGET_RESULTS);
   }
 }
 
@@ -179,6 +198,7 @@ public class SCVResultT
   public SCVPackedRasterProductsT RASTER_PRODUCTS { get; set; }
   public string MESSAGE { get; set; }
   public SCVAggregateStatisticsT AGGREGATE_STATISTICS { get; set; }
+  public List<SCVTargetResultT> TARGET_RESULTS { get; set; }
 
   public SCVResultT() {
     this.JOB_ID = null;
@@ -194,6 +214,7 @@ public class SCVResultT
     this.RASTER_PRODUCTS = null;
     this.MESSAGE = null;
     this.AGGREGATE_STATISTICS = null;
+    this.TARGET_RESULTS = null;
   }
 }
 
@@ -216,6 +237,7 @@ static public class SCVResultVerify
       && verifier.VerifyTable(tablePos, 24 /*RASTER_PRODUCTS*/, SCVPackedRasterProductsVerify.Verify, false)
       && verifier.VerifyString(tablePos, 26 /*MESSAGE*/, false)
       && verifier.VerifyTable(tablePos, 28 /*AGGREGATE_STATISTICS*/, SCVAggregateStatisticsVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 30 /*TARGET_RESULTS*/, SCVTargetResultVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

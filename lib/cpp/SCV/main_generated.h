@@ -73,6 +73,9 @@ struct SCVPackedRasterProductsBuilder;
 struct SCVAggregateStatistics;
 struct SCVAggregateStatisticsBuilder;
 
+struct SCVTargetResult;
+struct SCVTargetResultBuilder;
+
 struct SCVResult;
 struct SCVResultBuilder;
 
@@ -368,6 +371,48 @@ inline const char *EnumNamescvGeometryDomain(scvGeometryDomain e) {
   if (::flatbuffers::IsOutRange(e, scvGeometryDomain_SURFACE, scvGeometryDomain_CUSTOM_MESH)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesscvGeometryDomain()[index];
+}
+
+enum scvTargetShape : uint8_t {
+  scvTargetShape_POINT = 0,
+  scvTargetShape_POLYGON = 1,
+  scvTargetShape_RECTANGLE = 2,
+  scvTargetShape_BOX = 3,
+  scvTargetShape_SPHERE = 4,
+  scvTargetShape_EXTRUDED_POLYGON = 5,
+  scvTargetShape_MIN = scvTargetShape_POINT,
+  scvTargetShape_MAX = scvTargetShape_EXTRUDED_POLYGON
+};
+
+inline const scvTargetShape (&EnumValuesscvTargetShape())[6] {
+  static const scvTargetShape values[] = {
+    scvTargetShape_POINT,
+    scvTargetShape_POLYGON,
+    scvTargetShape_RECTANGLE,
+    scvTargetShape_BOX,
+    scvTargetShape_SPHERE,
+    scvTargetShape_EXTRUDED_POLYGON
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesscvTargetShape() {
+  static const char * const names[7] = {
+    "POINT",
+    "POLYGON",
+    "RECTANGLE",
+    "BOX",
+    "SPHERE",
+    "EXTRUDED_POLYGON",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamescvTargetShape(scvTargetShape e) {
+  if (::flatbuffers::IsOutRange(e, scvTargetShape_POINT, scvTargetShape_EXTRUDED_POLYGON)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesscvTargetShape()[index];
 }
 
 enum scvResultState : uint8_t {
@@ -1429,7 +1474,12 @@ struct SCVTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FRAME = 10,
     VT_POSITION_M = 12,
     VT_VELOCITY_MPS = 14,
-    VT_RADIUS_M = 16
+    VT_RADIUS_M = 16,
+    VT_TARGET_KIND = 18,
+    VT_DOMAIN = 20,
+    VT_POLYGON_VERTICES = 22,
+    VT_MIN_ALTITUDE_M = 24,
+    VT_MAX_ALTITUDE_M = 26
   };
   uint32_t TARGET_ID() const {
     return GetField<uint32_t>(VT_TARGET_ID, 0);
@@ -1452,6 +1502,21 @@ struct SCVTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double RADIUS_M() const {
     return GetField<double>(VT_RADIUS_M, 0.0);
   }
+  scvTargetShape TARGET_KIND() const {
+    return static_cast<scvTargetShape>(GetField<uint8_t>(VT_TARGET_KIND, 0));
+  }
+  scvGeometryDomain DOMAIN() const {
+    return static_cast<scvGeometryDomain>(GetField<uint8_t>(VT_DOMAIN, 0));
+  }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>> *>(VT_POLYGON_VERTICES);
+  }
+  double MIN_ALTITUDE_M() const {
+    return GetField<double>(VT_MIN_ALTITUDE_M, 0.0);
+  }
+  double MAX_ALTITUDE_M() const {
+    return GetField<double>(VT_MAX_ALTITUDE_M, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1466,6 +1531,13 @@ struct SCVTarget FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_VELOCITY_MPS) &&
            verifier.VerifyTable(VELOCITY_MPS()) &&
            VerifyField<double>(verifier, VT_RADIUS_M, 8) &&
+           VerifyField<uint8_t>(verifier, VT_TARGET_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DOMAIN, 1) &&
+           VerifyOffset(verifier, VT_POLYGON_VERTICES) &&
+           verifier.VerifyVector(POLYGON_VERTICES()) &&
+           verifier.VerifyVectorOfTables(POLYGON_VERTICES()) &&
+           VerifyField<double>(verifier, VT_MIN_ALTITUDE_M, 8) &&
+           VerifyField<double>(verifier, VT_MAX_ALTITUDE_M, 8) &&
            verifier.EndTable();
   }
 };
@@ -1495,6 +1567,21 @@ struct SCVTargetBuilder {
   void add_RADIUS_M(double RADIUS_M) {
     fbb_.AddElement<double>(SCVTarget::VT_RADIUS_M, RADIUS_M, 0.0);
   }
+  void add_TARGET_KIND(scvTargetShape TARGET_KIND) {
+    fbb_.AddElement<uint8_t>(SCVTarget::VT_TARGET_KIND, static_cast<uint8_t>(TARGET_KIND), 0);
+  }
+  void add_DOMAIN(scvGeometryDomain DOMAIN) {
+    fbb_.AddElement<uint8_t>(SCVTarget::VT_DOMAIN, static_cast<uint8_t>(DOMAIN), 0);
+  }
+  void add_POLYGON_VERTICES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES) {
+    fbb_.AddOffset(SCVTarget::VT_POLYGON_VERTICES, POLYGON_VERTICES);
+  }
+  void add_MIN_ALTITUDE_M(double MIN_ALTITUDE_M) {
+    fbb_.AddElement<double>(SCVTarget::VT_MIN_ALTITUDE_M, MIN_ALTITUDE_M, 0.0);
+  }
+  void add_MAX_ALTITUDE_M(double MAX_ALTITUDE_M) {
+    fbb_.AddElement<double>(SCVTarget::VT_MAX_ALTITUDE_M, MAX_ALTITUDE_M, 0.0);
+  }
   explicit SCVTargetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1514,14 +1601,24 @@ inline ::flatbuffers::Offset<SCVTarget> CreateSCVTarget(
     scvCoordinateFrame FRAME = scvCoordinateFrame_UNKNOWN,
     ::flatbuffers::Offset<SCVVec3> POSITION_M = 0,
     ::flatbuffers::Offset<SCVVec3> VELOCITY_MPS = 0,
-    double RADIUS_M = 0.0) {
+    double RADIUS_M = 0.0,
+    scvTargetShape TARGET_KIND = scvTargetShape_POINT,
+    scvGeometryDomain DOMAIN = scvGeometryDomain_SURFACE,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVVec3>>> POLYGON_VERTICES = 0,
+    double MIN_ALTITUDE_M = 0.0,
+    double MAX_ALTITUDE_M = 0.0) {
   SCVTargetBuilder builder_(_fbb);
+  builder_.add_MAX_ALTITUDE_M(MAX_ALTITUDE_M);
+  builder_.add_MIN_ALTITUDE_M(MIN_ALTITUDE_M);
   builder_.add_RADIUS_M(RADIUS_M);
+  builder_.add_POLYGON_VERTICES(POLYGON_VERTICES);
   builder_.add_VELOCITY_MPS(VELOCITY_MPS);
   builder_.add_POSITION_M(POSITION_M);
   builder_.add_NAME(NAME);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_TARGET_ID(TARGET_ID);
+  builder_.add_DOMAIN(DOMAIN);
+  builder_.add_TARGET_KIND(TARGET_KIND);
   builder_.add_FRAME(FRAME);
   return builder_.Finish();
 }
@@ -1534,9 +1631,15 @@ inline ::flatbuffers::Offset<SCVTarget> CreateSCVTargetDirect(
     scvCoordinateFrame FRAME = scvCoordinateFrame_UNKNOWN,
     ::flatbuffers::Offset<SCVVec3> POSITION_M = 0,
     ::flatbuffers::Offset<SCVVec3> VELOCITY_MPS = 0,
-    double RADIUS_M = 0.0) {
+    double RADIUS_M = 0.0,
+    scvTargetShape TARGET_KIND = scvTargetShape_POINT,
+    scvGeometryDomain DOMAIN = scvGeometryDomain_SURFACE,
+    const std::vector<::flatbuffers::Offset<SCVVec3>> *POLYGON_VERTICES = nullptr,
+    double MIN_ALTITUDE_M = 0.0,
+    double MAX_ALTITUDE_M = 0.0) {
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto POLYGON_VERTICES__ = POLYGON_VERTICES ? _fbb.CreateVector<::flatbuffers::Offset<SCVVec3>>(*POLYGON_VERTICES) : 0;
   return CreateSCVTarget(
       _fbb,
       TARGET_ID,
@@ -1545,7 +1648,12 @@ inline ::flatbuffers::Offset<SCVTarget> CreateSCVTargetDirect(
       FRAME,
       POSITION_M,
       VELOCITY_MPS,
-      RADIUS_M);
+      RADIUS_M,
+      TARGET_KIND,
+      DOMAIN,
+      POLYGON_VERTICES__,
+      MIN_ALTITUDE_M,
+      MAX_ALTITUDE_M);
 }
 
 struct SCVTargetStateSample FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -3813,6 +3921,186 @@ inline ::flatbuffers::Offset<SCVAggregateStatistics> CreateSCVAggregateStatistic
   return builder_.Finish();
 }
 
+struct SCVTargetResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SCVTargetResultBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TARGET_ID = 4,
+    VT_NAME = 6,
+    VT_ACCESS_COUNT = 8,
+    VT_REVISIT_COUNT = 10,
+    VT_TOTAL_ACCESS_DURATION_SEC = 12,
+    VT_MEAN_REVISIT_TIME_SEC = 14,
+    VT_MAX_GAP_SEC = 16,
+    VT_INTERVAL_START_SEC = 18,
+    VT_INTERVAL_STOP_SEC = 20,
+    VT_PASS_START_BUCKETS = 22,
+    VT_ACCESS_BITSET = 24
+  };
+  uint32_t TARGET_ID() const {
+    return GetField<uint32_t>(VT_TARGET_ID, 0);
+  }
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  uint32_t ACCESS_COUNT() const {
+    return GetField<uint32_t>(VT_ACCESS_COUNT, 0);
+  }
+  uint32_t REVISIT_COUNT() const {
+    return GetField<uint32_t>(VT_REVISIT_COUNT, 0);
+  }
+  double TOTAL_ACCESS_DURATION_SEC() const {
+    return GetField<double>(VT_TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  double MEAN_REVISIT_TIME_SEC() const {
+    return GetField<double>(VT_MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  double MAX_GAP_SEC() const {
+    return GetField<double>(VT_MAX_GAP_SEC, 0.0);
+  }
+  const ::flatbuffers::Vector<double> *INTERVAL_START_SEC() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INTERVAL_START_SEC);
+  }
+  const ::flatbuffers::Vector<double> *INTERVAL_STOP_SEC() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INTERVAL_STOP_SEC);
+  }
+  const ::flatbuffers::Vector<uint32_t> *PASS_START_BUCKETS() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_PASS_START_BUCKETS);
+  }
+  const ::flatbuffers::Vector<uint32_t> *ACCESS_BITSET() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_ACCESS_BITSET);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_TARGET_ID, 4) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyField<uint32_t>(verifier, VT_ACCESS_COUNT, 4) &&
+           VerifyField<uint32_t>(verifier, VT_REVISIT_COUNT, 4) &&
+           VerifyField<double>(verifier, VT_TOTAL_ACCESS_DURATION_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_REVISIT_TIME_SEC, 8) &&
+           VerifyField<double>(verifier, VT_MAX_GAP_SEC, 8) &&
+           VerifyOffset(verifier, VT_INTERVAL_START_SEC) &&
+           verifier.VerifyVector(INTERVAL_START_SEC()) &&
+           VerifyOffset(verifier, VT_INTERVAL_STOP_SEC) &&
+           verifier.VerifyVector(INTERVAL_STOP_SEC()) &&
+           VerifyOffset(verifier, VT_PASS_START_BUCKETS) &&
+           verifier.VerifyVector(PASS_START_BUCKETS()) &&
+           VerifyOffset(verifier, VT_ACCESS_BITSET) &&
+           verifier.VerifyVector(ACCESS_BITSET()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SCVTargetResultBuilder {
+  typedef SCVTargetResult Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TARGET_ID(uint32_t TARGET_ID) {
+    fbb_.AddElement<uint32_t>(SCVTargetResult::VT_TARGET_ID, TARGET_ID, 0);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(SCVTargetResult::VT_NAME, NAME);
+  }
+  void add_ACCESS_COUNT(uint32_t ACCESS_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVTargetResult::VT_ACCESS_COUNT, ACCESS_COUNT, 0);
+  }
+  void add_REVISIT_COUNT(uint32_t REVISIT_COUNT) {
+    fbb_.AddElement<uint32_t>(SCVTargetResult::VT_REVISIT_COUNT, REVISIT_COUNT, 0);
+  }
+  void add_TOTAL_ACCESS_DURATION_SEC(double TOTAL_ACCESS_DURATION_SEC) {
+    fbb_.AddElement<double>(SCVTargetResult::VT_TOTAL_ACCESS_DURATION_SEC, TOTAL_ACCESS_DURATION_SEC, 0.0);
+  }
+  void add_MEAN_REVISIT_TIME_SEC(double MEAN_REVISIT_TIME_SEC) {
+    fbb_.AddElement<double>(SCVTargetResult::VT_MEAN_REVISIT_TIME_SEC, MEAN_REVISIT_TIME_SEC, 0.0);
+  }
+  void add_MAX_GAP_SEC(double MAX_GAP_SEC) {
+    fbb_.AddElement<double>(SCVTargetResult::VT_MAX_GAP_SEC, MAX_GAP_SEC, 0.0);
+  }
+  void add_INTERVAL_START_SEC(::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERVAL_START_SEC) {
+    fbb_.AddOffset(SCVTargetResult::VT_INTERVAL_START_SEC, INTERVAL_START_SEC);
+  }
+  void add_INTERVAL_STOP_SEC(::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERVAL_STOP_SEC) {
+    fbb_.AddOffset(SCVTargetResult::VT_INTERVAL_STOP_SEC, INTERVAL_STOP_SEC);
+  }
+  void add_PASS_START_BUCKETS(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> PASS_START_BUCKETS) {
+    fbb_.AddOffset(SCVTargetResult::VT_PASS_START_BUCKETS, PASS_START_BUCKETS);
+  }
+  void add_ACCESS_BITSET(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> ACCESS_BITSET) {
+    fbb_.AddOffset(SCVTargetResult::VT_ACCESS_BITSET, ACCESS_BITSET);
+  }
+  explicit SCVTargetResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SCVTargetResult> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SCVTargetResult>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SCVTargetResult> CreateSCVTargetResult(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t TARGET_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    uint32_t ACCESS_COUNT = 0,
+    uint32_t REVISIT_COUNT = 0,
+    double TOTAL_ACCESS_DURATION_SEC = 0.0,
+    double MEAN_REVISIT_TIME_SEC = 0.0,
+    double MAX_GAP_SEC = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERVAL_START_SEC = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERVAL_STOP_SEC = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> PASS_START_BUCKETS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> ACCESS_BITSET = 0) {
+  SCVTargetResultBuilder builder_(_fbb);
+  builder_.add_MAX_GAP_SEC(MAX_GAP_SEC);
+  builder_.add_MEAN_REVISIT_TIME_SEC(MEAN_REVISIT_TIME_SEC);
+  builder_.add_TOTAL_ACCESS_DURATION_SEC(TOTAL_ACCESS_DURATION_SEC);
+  builder_.add_ACCESS_BITSET(ACCESS_BITSET);
+  builder_.add_PASS_START_BUCKETS(PASS_START_BUCKETS);
+  builder_.add_INTERVAL_STOP_SEC(INTERVAL_STOP_SEC);
+  builder_.add_INTERVAL_START_SEC(INTERVAL_START_SEC);
+  builder_.add_REVISIT_COUNT(REVISIT_COUNT);
+  builder_.add_ACCESS_COUNT(ACCESS_COUNT);
+  builder_.add_NAME(NAME);
+  builder_.add_TARGET_ID(TARGET_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<SCVTargetResult> CreateSCVTargetResultDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t TARGET_ID = 0,
+    const char *NAME = nullptr,
+    uint32_t ACCESS_COUNT = 0,
+    uint32_t REVISIT_COUNT = 0,
+    double TOTAL_ACCESS_DURATION_SEC = 0.0,
+    double MEAN_REVISIT_TIME_SEC = 0.0,
+    double MAX_GAP_SEC = 0.0,
+    const std::vector<double> *INTERVAL_START_SEC = nullptr,
+    const std::vector<double> *INTERVAL_STOP_SEC = nullptr,
+    const std::vector<uint32_t> *PASS_START_BUCKETS = nullptr,
+    const std::vector<uint32_t> *ACCESS_BITSET = nullptr) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto INTERVAL_START_SEC__ = INTERVAL_START_SEC ? _fbb.CreateVector<double>(*INTERVAL_START_SEC) : 0;
+  auto INTERVAL_STOP_SEC__ = INTERVAL_STOP_SEC ? _fbb.CreateVector<double>(*INTERVAL_STOP_SEC) : 0;
+  auto PASS_START_BUCKETS__ = PASS_START_BUCKETS ? _fbb.CreateVector<uint32_t>(*PASS_START_BUCKETS) : 0;
+  auto ACCESS_BITSET__ = ACCESS_BITSET ? _fbb.CreateVector<uint32_t>(*ACCESS_BITSET) : 0;
+  return CreateSCVTargetResult(
+      _fbb,
+      TARGET_ID,
+      NAME__,
+      ACCESS_COUNT,
+      REVISIT_COUNT,
+      TOTAL_ACCESS_DURATION_SEC,
+      MEAN_REVISIT_TIME_SEC,
+      MAX_GAP_SEC,
+      INTERVAL_START_SEC__,
+      INTERVAL_STOP_SEC__,
+      PASS_START_BUCKETS__,
+      ACCESS_BITSET__);
+}
+
 struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SCVResultBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -3828,7 +4116,8 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GEOMETRY = 22,
     VT_RASTER_PRODUCTS = 24,
     VT_MESSAGE = 26,
-    VT_AGGREGATE_STATISTICS = 28
+    VT_AGGREGATE_STATISTICS = 28,
+    VT_TARGET_RESULTS = 30
   };
   const ::flatbuffers::String *JOB_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_JOB_ID);
@@ -3869,6 +4158,9 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const SCVAggregateStatistics *AGGREGATE_STATISTICS() const {
     return GetPointer<const SCVAggregateStatistics *>(VT_AGGREGATE_STATISTICS);
   }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<SCVTargetResult>> *TARGET_RESULTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<SCVTargetResult>> *>(VT_TARGET_RESULTS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3896,6 +4188,9 @@ struct SCVResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(MESSAGE()) &&
            VerifyOffset(verifier, VT_AGGREGATE_STATISTICS) &&
            verifier.VerifyTable(AGGREGATE_STATISTICS()) &&
+           VerifyOffset(verifier, VT_TARGET_RESULTS) &&
+           verifier.VerifyVector(TARGET_RESULTS()) &&
+           verifier.VerifyVectorOfTables(TARGET_RESULTS()) &&
            verifier.EndTable();
   }
 };
@@ -3943,6 +4238,9 @@ struct SCVResultBuilder {
   void add_AGGREGATE_STATISTICS(::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS) {
     fbb_.AddOffset(SCVResult::VT_AGGREGATE_STATISTICS, AGGREGATE_STATISTICS);
   }
+  void add_TARGET_RESULTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVTargetResult>>> TARGET_RESULTS) {
+    fbb_.AddOffset(SCVResult::VT_TARGET_RESULTS, TARGET_RESULTS);
+  }
   explicit SCVResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3968,9 +4266,11 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResult(
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
     ::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MESSAGE = 0,
-    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
+    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SCVTargetResult>>> TARGET_RESULTS = 0) {
   SCVResultBuilder builder_(_fbb);
   builder_.add_TRACE_ID(TRACE_ID);
+  builder_.add_TARGET_RESULTS(TARGET_RESULTS);
   builder_.add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS);
   builder_.add_MESSAGE(MESSAGE);
   builder_.add_RASTER_PRODUCTS(RASTER_PRODUCTS);
@@ -4000,11 +4300,13 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
     ::flatbuffers::Offset<SCVPackedGeometryChunk> GEOMETRY = 0,
     ::flatbuffers::Offset<SCVPackedRasterProducts> RASTER_PRODUCTS = 0,
     const char *MESSAGE = nullptr,
-    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0) {
+    ::flatbuffers::Offset<SCVAggregateStatistics> AGGREGATE_STATISTICS = 0,
+    const std::vector<::flatbuffers::Offset<SCVTargetResult>> *TARGET_RESULTS = nullptr) {
   auto JOB_ID__ = JOB_ID ? _fbb.CreateString(JOB_ID) : 0;
   auto HISTOGRAMS__ = HISTOGRAMS ? _fbb.CreateVector<::flatbuffers::Offset<SCVHistogramBin>>(*HISTOGRAMS) : 0;
   auto CONTRIBUTIONS__ = CONTRIBUTIONS ? _fbb.CreateVector<::flatbuffers::Offset<SCVSensorContribution>>(*CONTRIBUTIONS) : 0;
   auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
+  auto TARGET_RESULTS__ = TARGET_RESULTS ? _fbb.CreateVector<::flatbuffers::Offset<SCVTargetResult>>(*TARGET_RESULTS) : 0;
   return CreateSCVResult(
       _fbb,
       JOB_ID__,
@@ -4019,7 +4321,8 @@ inline ::flatbuffers::Offset<SCVResult> CreateSCVResultDirect(
       GEOMETRY,
       RASTER_PRODUCTS,
       MESSAGE__,
-      AGGREGATE_STATISTICS);
+      AGGREGATE_STATISTICS,
+      TARGET_RESULTS__);
 }
 
 struct SCV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

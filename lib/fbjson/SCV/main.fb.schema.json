@@ -201,6 +201,39 @@
         }
       }
     },
+    "scvTargetShape": {
+      "type": "string",
+      "enum": [
+        "POINT",
+        "POLYGON",
+        "RECTANGLE",
+        "BOX",
+        "SPHERE",
+        "EXTRUDED_POLYGON"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "POINT": {
+          "value": 0
+        },
+        "POLYGON": {
+          "value": 1
+        },
+        "RECTANGLE": {
+          "value": 2
+        },
+        "BOX": {
+          "value": 3
+        },
+        "SPHERE": {
+          "value": 4
+        },
+        "EXTRUDED_POLYGON": {
+          "value": 5
+        }
+      }
+    },
     "scvResultState": {
       "type": "string",
       "enum": [
@@ -849,6 +882,68 @@
           "x-flatbuffer-type": "SCVVec3"
         },
         "RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_KIND": {
+          "$ref": "#/definitions/scvTargetShape",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "POINT": {
+              "value": 0
+            },
+            "POLYGON": {
+              "value": 1
+            },
+            "RECTANGLE": {
+              "value": 2
+            },
+            "BOX": {
+              "value": 3
+            },
+            "SPHERE": {
+              "value": 4
+            },
+            "EXTRUDED_POLYGON": {
+              "value": 5
+            }
+          }
+        },
+        "DOMAIN": {
+          "$ref": "#/definitions/scvGeometryDomain",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SURFACE": {
+              "value": 0
+            },
+            "SPACE": {
+              "value": 1
+            },
+            "ELLIPSOID": {
+              "value": 2
+            },
+            "PLANE": {
+              "value": 3
+            },
+            "CUSTOM_MESH": {
+              "value": 4
+            }
+          }
+        },
+        "POLYGON_VERTICES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVVec3"
+          },
+          "x-flatbuffer-type": "[SCVVec3]"
+        },
+        "MIN_ALTITUDE_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ALTITUDE_M": {
           "type": "number",
           "x-flatbuffer-type": "double"
         }
@@ -2078,6 +2173,78 @@
       },
       "additionalProperties": false
     },
+    "SCVTargetResult": {
+      "type": "object",
+      "properties": {
+        "TARGET_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESS_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REVISIT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_ACCESS_DURATION_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_REVISIT_TIME_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_GAP_SEC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERVAL_START_SEC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "INTERVAL_STOP_SEC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "PASS_START_BUCKETS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "ACCESS_BITSET": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "x-flatbuffer-type": "[uint32]"
+        }
+      },
+      "additionalProperties": false
+    },
     "SCVResult": {
       "type": "object",
       "properties": {
@@ -2159,6 +2326,13 @@
         "AGGREGATE_STATISTICS": {
           "$ref": "#/definitions/SCVAggregateStatistics",
           "x-flatbuffer-type": "SCVAggregateStatistics"
+        },
+        "TARGET_RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCVTargetResult"
+          },
+          "x-flatbuffer-type": "[SCVTargetResult]"
         }
       },
       "additionalProperties": false

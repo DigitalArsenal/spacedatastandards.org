@@ -139,6 +139,19 @@ class SCVResult : Table() {
             null
         }
     }
+    fun targetResults(j: Int) : SCVTargetResult? = targetResults(SCVTargetResult(), j)
+    fun targetResults(obj: SCVTargetResult, j: Int) : SCVTargetResult? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val targetResultsLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVResult(_bb: ByteBuffer): SCVResult = getRootAsSCVResult(_bb, SCVResult())
@@ -146,9 +159,10 @@ class SCVResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int) : Int {
-            builder.startTable(13)
+        fun createSCVResult(builder: FlatBufferBuilder, jobIdOffset: Int, traceId: ULong, status: UByte, timeGridOffset: Int, targetBodyOffset: Int, totalSensors: UInt, totalWindows: UInt, histogramsOffset: Int, contributionsOffset: Int, geometryOffset: Int, rasterProductsOffset: Int, messageOffset: Int, aggregateStatisticsOffset: Int, targetResultsOffset: Int) : Int {
+            builder.startTable(14)
             addTRACEID(builder, traceId)
+            addTARGETRESULTS(builder, targetResultsOffset)
             addAGGREGATESTATISTICS(builder, aggregateStatisticsOffset)
             addMESSAGE(builder, messageOffset)
             addRASTERPRODUCTS(builder, rasterProductsOffset)
@@ -163,7 +177,7 @@ class SCVResult : Table() {
             addSTATUS(builder, status)
             return endSCVResult(builder)
         }
-        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startSCVResult(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addJOBID(builder: FlatBufferBuilder, jobId: Int) = builder.addOffset(0, jobId, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: ULong) = builder.addLong(1, traceId.toLong(), 0)
         fun addSTATUS(builder: FlatBufferBuilder, status: UByte) = builder.addByte(2, status.toByte(), 0)
@@ -193,6 +207,15 @@ class SCVResult : Table() {
         fun addRASTERPRODUCTS(builder: FlatBufferBuilder, rasterProducts: Int) = builder.addOffset(10, rasterProducts, 0)
         fun addMESSAGE(builder: FlatBufferBuilder, message: Int) = builder.addOffset(11, message, 0)
         fun addAGGREGATESTATISTICS(builder: FlatBufferBuilder, aggregateStatistics: Int) = builder.addOffset(12, aggregateStatistics, 0)
+        fun addTARGETRESULTS(builder: FlatBufferBuilder, targetResults: Int) = builder.addOffset(13, targetResults, 0)
+        fun createTargetResultsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTargetResultsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endSCVResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

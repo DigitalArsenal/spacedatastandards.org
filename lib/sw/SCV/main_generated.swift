@@ -123,6 +123,22 @@ public enum scvGeometryDomain: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 }
 
 
+public enum scvTargetShape: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case point = 0
+  case polygon = 1
+  case rectangle = 2
+  case box = 3
+  case sphere = 4
+  case extrudedPolygon = 5
+
+  public static var max: scvTargetShape { return .extrudedPolygon }
+  public static var min: scvTargetShape { return .point }
+}
+
+
 public enum scvResultState: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
@@ -710,6 +726,11 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let POSITION_M: VOffset = 12
     static let VELOCITY_MPS: VOffset = 14
     static let RADIUS_M: VOffset = 16
+    static let TARGET_KIND: VOffset = 18
+    static let DOMAIN: VOffset = 20
+    static let POLYGON_VERTICES: VOffset = 22
+    static let MIN_ALTITUDE_M: VOffset = 24
+    static let MAX_ALTITUDE_M: VOffset = 26
   }
 
   public var TARGET_ID: UInt32 { let o = _accessor.offset(VT.TARGET_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
@@ -721,7 +742,12 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var POSITION_M: SCVVec3? { let o = _accessor.offset(VT.POSITION_M); return o == 0 ? nil : SCVVec3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var VELOCITY_MPS: SCVVec3? { let o = _accessor.offset(VT.VELOCITY_MPS); return o == 0 ? nil : SCVVec3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var RADIUS_M: Double { let o = _accessor.offset(VT.RADIUS_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startSCVTarget(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public var TARGET_KIND: scvTargetShape { let o = _accessor.offset(VT.TARGET_KIND); return o == 0 ? .point : scvTargetShape(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .point }
+  public var DOMAIN: scvGeometryDomain { let o = _accessor.offset(VT.DOMAIN); return o == 0 ? .surface : scvGeometryDomain(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .surface }
+  public var POLYGON_VERTICES: FlatbufferVector<SCVVec3> { return _accessor.vector(at: VT.POLYGON_VERTICES, byteSize: 4) }
+  public var MIN_ALTITUDE_M: Double { let o = _accessor.offset(VT.MIN_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_ALTITUDE_M: Double { let o = _accessor.offset(VT.MAX_ALTITUDE_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startSCVTarget(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(TARGET_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_ID, def: 0, at: VT.TARGET_ID) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
@@ -729,6 +755,11 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func add(POSITION_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_M, at: VT.POSITION_M) }
   public static func add(VELOCITY_MPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VELOCITY_MPS, at: VT.VELOCITY_MPS) }
   public static func add(RADIUS_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIUS_M, def: 0.0, at: VT.RADIUS_M) }
+  public static func add(TARGET_KIND: scvTargetShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_KIND.rawValue, def: 0, at: VT.TARGET_KIND) }
+  public static func add(DOMAIN: scvGeometryDomain, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOMAIN.rawValue, def: 0, at: VT.DOMAIN) }
+  public static func addVectorOf(POLYGON_VERTICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLYGON_VERTICES, at: VT.POLYGON_VERTICES) }
+  public static func add(MIN_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_ALTITUDE_M, def: 0.0, at: VT.MIN_ALTITUDE_M) }
+  public static func add(MAX_ALTITUDE_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ALTITUDE_M, def: 0.0, at: VT.MAX_ALTITUDE_M) }
   public static func endSCVTarget(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVTarget(
     _ fbb: inout FlatBufferBuilder,
@@ -738,7 +769,12 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     FRAME: scvCoordinateFrame = .unknown,
     POSITION_MOffset POSITION_M: Offset = Offset(),
     VELOCITY_MPSOffset VELOCITY_MPS: Offset = Offset(),
-    RADIUS_M: Double = 0.0
+    RADIUS_M: Double = 0.0,
+    TARGET_KIND: scvTargetShape = .point,
+    DOMAIN: scvGeometryDomain = .surface,
+    POLYGON_VERTICESVectorOffset POLYGON_VERTICES: Offset = Offset(),
+    MIN_ALTITUDE_M: Double = 0.0,
+    MAX_ALTITUDE_M: Double = 0.0
   ) -> Offset {
     let __start = SCVTarget.startSCVTarget(&fbb)
     SCVTarget.add(TARGET_ID: TARGET_ID, &fbb)
@@ -748,6 +784,11 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     SCVTarget.add(POSITION_M: POSITION_M, &fbb)
     SCVTarget.add(VELOCITY_MPS: VELOCITY_MPS, &fbb)
     SCVTarget.add(RADIUS_M: RADIUS_M, &fbb)
+    SCVTarget.add(TARGET_KIND: TARGET_KIND, &fbb)
+    SCVTarget.add(DOMAIN: DOMAIN, &fbb)
+    SCVTarget.addVectorOf(POLYGON_VERTICES: POLYGON_VERTICES, &fbb)
+    SCVTarget.add(MIN_ALTITUDE_M: MIN_ALTITUDE_M, &fbb)
+    SCVTarget.add(MAX_ALTITUDE_M: MAX_ALTITUDE_M, &fbb)
     return SCVTarget.endSCVTarget(&fbb, start: __start)
   }
 
@@ -760,6 +801,11 @@ public struct SCVTarget: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.POSITION_M, fieldName: "POSITION_M", required: false, type: ForwardOffset<SCVVec3>.self)
     try _v.visit(field: VT.VELOCITY_MPS, fieldName: "VELOCITY_MPS", required: false, type: ForwardOffset<SCVVec3>.self)
     try _v.visit(field: VT.RADIUS_M, fieldName: "RADIUS_M", required: false, type: Double.self)
+    try _v.visit(field: VT.TARGET_KIND, fieldName: "TARGET_KIND", required: false, type: scvTargetShape.self)
+    try _v.visit(field: VT.DOMAIN, fieldName: "DOMAIN", required: false, type: scvGeometryDomain.self)
+    try _v.visit(field: VT.POLYGON_VERTICES, fieldName: "POLYGON_VERTICES", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVVec3>, SCVVec3>>.self)
+    try _v.visit(field: VT.MIN_ALTITUDE_M, fieldName: "MIN_ALTITUDE_M", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_ALTITUDE_M, fieldName: "MAX_ALTITUDE_M", required: false, type: Double.self)
     _v.finish()
   }
 }
@@ -2058,6 +2104,106 @@ public struct SCVAggregateStatistics: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
+public struct SCVTargetResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SCV" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SCVTargetResult.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TARGET_ID: VOffset = 4
+    static let NAME: VOffset = 6
+    static let ACCESS_COUNT: VOffset = 8
+    static let REVISIT_COUNT: VOffset = 10
+    static let TOTAL_ACCESS_DURATION_SEC: VOffset = 12
+    static let MEAN_REVISIT_TIME_SEC: VOffset = 14
+    static let MAX_GAP_SEC: VOffset = 16
+    static let INTERVAL_START_SEC: VOffset = 18
+    static let INTERVAL_STOP_SEC: VOffset = 20
+    static let PASS_START_BUCKETS: VOffset = 22
+    static let ACCESS_BITSET: VOffset = 24
+  }
+
+  public var TARGET_ID: UInt32 { let o = _accessor.offset(VT.TARGET_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  public var ACCESS_COUNT: UInt32 { let o = _accessor.offset(VT.ACCESS_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var REVISIT_COUNT: UInt32 { let o = _accessor.offset(VT.REVISIT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var TOTAL_ACCESS_DURATION_SEC: Double { let o = _accessor.offset(VT.TOTAL_ACCESS_DURATION_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MEAN_REVISIT_TIME_SEC: Double { let o = _accessor.offset(VT.MEAN_REVISIT_TIME_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var MAX_GAP_SEC: Double { let o = _accessor.offset(VT.MAX_GAP_SEC); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var INTERVAL_START_SEC: FlatbufferVector<Double> { return _accessor.vector(at: VT.INTERVAL_START_SEC, byteSize: 8) }
+  public func withUnsafePointerToIntervalStartSec<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INTERVAL_START_SEC, body: body) }
+  public var INTERVAL_STOP_SEC: FlatbufferVector<Double> { return _accessor.vector(at: VT.INTERVAL_STOP_SEC, byteSize: 8) }
+  public func withUnsafePointerToIntervalStopSec<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INTERVAL_STOP_SEC, body: body) }
+  public var PASS_START_BUCKETS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.PASS_START_BUCKETS, byteSize: 4) }
+  public func withUnsafePointerToPassStartBuckets<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PASS_START_BUCKETS, body: body) }
+  public var ACCESS_BITSET: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.ACCESS_BITSET, byteSize: 4) }
+  public func withUnsafePointerToAccessBitset<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ACCESS_BITSET, body: body) }
+  public static func startSCVTargetResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(TARGET_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TARGET_ID, def: 0, at: VT.TARGET_ID) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(ACCESS_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCESS_COUNT, def: 0, at: VT.ACCESS_COUNT) }
+  public static func add(REVISIT_COUNT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REVISIT_COUNT, def: 0, at: VT.REVISIT_COUNT) }
+  public static func add(TOTAL_ACCESS_DURATION_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_ACCESS_DURATION_SEC, def: 0.0, at: VT.TOTAL_ACCESS_DURATION_SEC) }
+  public static func add(MEAN_REVISIT_TIME_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_REVISIT_TIME_SEC, def: 0.0, at: VT.MEAN_REVISIT_TIME_SEC) }
+  public static func add(MAX_GAP_SEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_GAP_SEC, def: 0.0, at: VT.MAX_GAP_SEC) }
+  public static func addVectorOf(INTERVAL_START_SEC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL_START_SEC, at: VT.INTERVAL_START_SEC) }
+  public static func addVectorOf(INTERVAL_STOP_SEC: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTERVAL_STOP_SEC, at: VT.INTERVAL_STOP_SEC) }
+  public static func addVectorOf(PASS_START_BUCKETS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PASS_START_BUCKETS, at: VT.PASS_START_BUCKETS) }
+  public static func addVectorOf(ACCESS_BITSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESS_BITSET, at: VT.ACCESS_BITSET) }
+  public static func endSCVTargetResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSCVTargetResult(
+    _ fbb: inout FlatBufferBuilder,
+    TARGET_ID: UInt32 = 0,
+    NAMEOffset NAME: Offset = Offset(),
+    ACCESS_COUNT: UInt32 = 0,
+    REVISIT_COUNT: UInt32 = 0,
+    TOTAL_ACCESS_DURATION_SEC: Double = 0.0,
+    MEAN_REVISIT_TIME_SEC: Double = 0.0,
+    MAX_GAP_SEC: Double = 0.0,
+    INTERVAL_START_SECVectorOffset INTERVAL_START_SEC: Offset = Offset(),
+    INTERVAL_STOP_SECVectorOffset INTERVAL_STOP_SEC: Offset = Offset(),
+    PASS_START_BUCKETSVectorOffset PASS_START_BUCKETS: Offset = Offset(),
+    ACCESS_BITSETVectorOffset ACCESS_BITSET: Offset = Offset()
+  ) -> Offset {
+    let __start = SCVTargetResult.startSCVTargetResult(&fbb)
+    SCVTargetResult.add(TARGET_ID: TARGET_ID, &fbb)
+    SCVTargetResult.add(NAME: NAME, &fbb)
+    SCVTargetResult.add(ACCESS_COUNT: ACCESS_COUNT, &fbb)
+    SCVTargetResult.add(REVISIT_COUNT: REVISIT_COUNT, &fbb)
+    SCVTargetResult.add(TOTAL_ACCESS_DURATION_SEC: TOTAL_ACCESS_DURATION_SEC, &fbb)
+    SCVTargetResult.add(MEAN_REVISIT_TIME_SEC: MEAN_REVISIT_TIME_SEC, &fbb)
+    SCVTargetResult.add(MAX_GAP_SEC: MAX_GAP_SEC, &fbb)
+    SCVTargetResult.addVectorOf(INTERVAL_START_SEC: INTERVAL_START_SEC, &fbb)
+    SCVTargetResult.addVectorOf(INTERVAL_STOP_SEC: INTERVAL_STOP_SEC, &fbb)
+    SCVTargetResult.addVectorOf(PASS_START_BUCKETS: PASS_START_BUCKETS, &fbb)
+    SCVTargetResult.addVectorOf(ACCESS_BITSET: ACCESS_BITSET, &fbb)
+    return SCVTargetResult.endSCVTargetResult(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TARGET_ID, fieldName: "TARGET_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ACCESS_COUNT, fieldName: "ACCESS_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REVISIT_COUNT, fieldName: "REVISIT_COUNT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOTAL_ACCESS_DURATION_SEC, fieldName: "TOTAL_ACCESS_DURATION_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MEAN_REVISIT_TIME_SEC, fieldName: "MEAN_REVISIT_TIME_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_GAP_SEC, fieldName: "MAX_GAP_SEC", required: false, type: Double.self)
+    try _v.visit(field: VT.INTERVAL_START_SEC, fieldName: "INTERVAL_START_SEC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.INTERVAL_STOP_SEC, fieldName: "INTERVAL_STOP_SEC", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PASS_START_BUCKETS, fieldName: "PASS_START_BUCKETS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.ACCESS_BITSET, fieldName: "ACCESS_BITSET", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    _v.finish()
+  }
+}
+
 public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -2083,6 +2229,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let RASTER_PRODUCTS: VOffset = 24
     static let MESSAGE: VOffset = 26
     static let AGGREGATE_STATISTICS: VOffset = 28
+    static let TARGET_RESULTS: VOffset = 30
   }
 
   public var JOB_ID: String? { let o = _accessor.offset(VT.JOB_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -2100,7 +2247,8 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public var MESSAGE: String? { let o = _accessor.offset(VT.MESSAGE); return o == 0 ? nil : _accessor.string(at: o) }
   public var MESSAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MESSAGE) }
   public var AGGREGATE_STATISTICS: SCVAggregateStatistics? { let o = _accessor.offset(VT.AGGREGATE_STATISTICS); return o == 0 ? nil : SCVAggregateStatistics(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public var TARGET_RESULTS: FlatbufferVector<SCVTargetResult> { return _accessor.vector(at: VT.TARGET_RESULTS, byteSize: 4) }
+  public static func startSCVResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(JOB_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_ID, at: VT.JOB_ID) }
   public static func add(TRACE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACE_ID, def: 0, at: VT.TRACE_ID) }
   public static func add(STATUS: scvResultState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
@@ -2114,6 +2262,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func add(RASTER_PRODUCTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RASTER_PRODUCTS, at: VT.RASTER_PRODUCTS) }
   public static func add(MESSAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE, at: VT.MESSAGE) }
   public static func add(AGGREGATE_STATISTICS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGGREGATE_STATISTICS, at: VT.AGGREGATE_STATISTICS) }
+  public static func addVectorOf(TARGET_RESULTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_RESULTS, at: VT.TARGET_RESULTS) }
   public static func endSCVResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSCVResult(
     _ fbb: inout FlatBufferBuilder,
@@ -2129,7 +2278,8 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     GEOMETRYOffset GEOMETRY: Offset = Offset(),
     RASTER_PRODUCTSOffset RASTER_PRODUCTS: Offset = Offset(),
     MESSAGEOffset MESSAGE: Offset = Offset(),
-    AGGREGATE_STATISTICSOffset AGGREGATE_STATISTICS: Offset = Offset()
+    AGGREGATE_STATISTICSOffset AGGREGATE_STATISTICS: Offset = Offset(),
+    TARGET_RESULTSVectorOffset TARGET_RESULTS: Offset = Offset()
   ) -> Offset {
     let __start = SCVResult.startSCVResult(&fbb)
     SCVResult.add(JOB_ID: JOB_ID, &fbb)
@@ -2145,6 +2295,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     SCVResult.add(RASTER_PRODUCTS: RASTER_PRODUCTS, &fbb)
     SCVResult.add(MESSAGE: MESSAGE, &fbb)
     SCVResult.add(AGGREGATE_STATISTICS: AGGREGATE_STATISTICS, &fbb)
+    SCVResult.addVectorOf(TARGET_RESULTS: TARGET_RESULTS, &fbb)
     return SCVResult.endSCVResult(&fbb, start: __start)
   }
 
@@ -2163,6 +2314,7 @@ public struct SCVResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.RASTER_PRODUCTS, fieldName: "RASTER_PRODUCTS", required: false, type: ForwardOffset<SCVPackedRasterProducts>.self)
     try _v.visit(field: VT.MESSAGE, fieldName: "MESSAGE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.AGGREGATE_STATISTICS, fieldName: "AGGREGATE_STATISTICS", required: false, type: ForwardOffset<SCVAggregateStatistics>.self)
+    try _v.visit(field: VT.TARGET_RESULTS, fieldName: "TARGET_RESULTS", required: false, type: ForwardOffset<Vector<ForwardOffset<SCVTargetResult>, SCVTargetResult>>.self)
     _v.finish()
   }
 }

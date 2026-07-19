@@ -52,6 +52,14 @@ enum scvGeometryDomain:
     scvGeometryDomain_PLANE = 3
     scvGeometryDomain_CUSTOM_MESH = 4
 
+enum scvTargetShape:
+    scvTargetShape_POINT = 0
+    scvTargetShape_POLYGON = 1
+    scvTargetShape_RECTANGLE = 2
+    scvTargetShape_BOX = 3
+    scvTargetShape_SPHERE = 4
+    scvTargetShape_EXTRUDED_POLYGON = 5
+
 enum scvResultState:
     scvResultState_OK = 0
     scvResultState_PARTIAL = 1
@@ -141,6 +149,8 @@ class SCVPackedRasterBand
 class SCVPackedRasterProducts
 
 class SCVAggregateStatistics
+
+class SCVTargetResult
 
 class SCVResult
 
@@ -501,13 +511,25 @@ class SCVTarget : flatbuffers.handle
         return if o: SCVVec3 { buf_, o } else: nil
     def RADIUS_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    def TARGET_KIND() -> scvTargetShape:
+        return scvTargetShape(flatbuffers.field_uint8(buf_, pos_, 18, 0))
+    def DOMAIN() -> scvGeometryDomain:
+        return scvGeometryDomain(flatbuffers.field_uint8(buf_, pos_, 20, 0))
+    def POLYGON_VERTICES(i:int) -> SCVVec3:
+        return SCVVec3 { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
+    def POLYGON_VERTICES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    def MIN_ALTITUDE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    def MAX_ALTITUDE_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
 
 def GetRootAsSCVTarget(buf:string): return SCVTarget { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVTargetBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(12)
         return this
     def add_TARGET_ID(TARGET_ID:int):
         b_.PrependUint32Slot(0, TARGET_ID, 0)
@@ -530,8 +552,30 @@ struct SCVTargetBuilder:
     def add_RADIUS_M(RADIUS_M:float):
         b_.PrependFloat64Slot(6, RADIUS_M, 0.0)
         return this
+    def add_TARGET_KIND(TARGET_KIND:scvTargetShape):
+        b_.PrependUint8Slot(7, TARGET_KIND, 0)
+        return this
+    def add_DOMAIN(DOMAIN:scvGeometryDomain):
+        b_.PrependUint8Slot(8, DOMAIN, 0)
+        return this
+    def add_POLYGON_VERTICES(POLYGON_VERTICES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, POLYGON_VERTICES)
+        return this
+    def add_MIN_ALTITUDE_M(MIN_ALTITUDE_M:float):
+        b_.PrependFloat64Slot(10, MIN_ALTITUDE_M, 0.0)
+        return this
+    def add_MAX_ALTITUDE_M(MAX_ALTITUDE_M:float):
+        b_.PrependFloat64Slot(11, MAX_ALTITUDE_M, 0.0)
+        return this
     def end():
         return b_.EndObject()
+
+def SCVTargetStartPOLYGONVERTICESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVTargetCreatePOLYGONVERTICESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 class SCVTargetStateSample : flatbuffers.handle
     def TARGET_ID() -> int:
@@ -1621,6 +1665,109 @@ struct SCVAggregateStatisticsBuilder:
     def end():
         return b_.EndObject()
 
+class SCVTargetResult : flatbuffers.handle
+    def TARGET_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    def ACCESS_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    def REVISIT_COUNT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    def TOTAL_ACCESS_DURATION_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    def MEAN_REVISIT_TIME_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    def MAX_GAP_SEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    def INTERVAL_START_SEC(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def INTERVAL_START_SEC_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    def INTERVAL_STOP_SEC(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 8)
+    def INTERVAL_STOP_SEC_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    def PASS_START_BUCKETS(i:int) -> int:
+        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 4)
+    def PASS_START_BUCKETS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 22)
+    def ACCESS_BITSET(i:int) -> int:
+        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
+    def ACCESS_BITSET_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+
+def GetRootAsSCVTargetResult(buf:string): return SCVTargetResult { buf, flatbuffers.indirect(buf, 0) }
+
+struct SCVTargetResultBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(11)
+        return this
+    def add_TARGET_ID(TARGET_ID:int):
+        b_.PrependUint32Slot(0, TARGET_ID, 0)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, NAME)
+        return this
+    def add_ACCESS_COUNT(ACCESS_COUNT:int):
+        b_.PrependUint32Slot(2, ACCESS_COUNT, 0)
+        return this
+    def add_REVISIT_COUNT(REVISIT_COUNT:int):
+        b_.PrependUint32Slot(3, REVISIT_COUNT, 0)
+        return this
+    def add_TOTAL_ACCESS_DURATION_SEC(TOTAL_ACCESS_DURATION_SEC:float):
+        b_.PrependFloat64Slot(4, TOTAL_ACCESS_DURATION_SEC, 0.0)
+        return this
+    def add_MEAN_REVISIT_TIME_SEC(MEAN_REVISIT_TIME_SEC:float):
+        b_.PrependFloat64Slot(5, MEAN_REVISIT_TIME_SEC, 0.0)
+        return this
+    def add_MAX_GAP_SEC(MAX_GAP_SEC:float):
+        b_.PrependFloat64Slot(6, MAX_GAP_SEC, 0.0)
+        return this
+    def add_INTERVAL_START_SEC(INTERVAL_START_SEC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, INTERVAL_START_SEC)
+        return this
+    def add_INTERVAL_STOP_SEC(INTERVAL_STOP_SEC:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, INTERVAL_STOP_SEC)
+        return this
+    def add_PASS_START_BUCKETS(PASS_START_BUCKETS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, PASS_START_BUCKETS)
+        return this
+    def add_ACCESS_BITSET(ACCESS_BITSET:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, ACCESS_BITSET)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SCVTargetResultStartINTERVALSTARTSECVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def SCVTargetResultCreateINTERVALSTARTSECVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def SCVTargetResultStartINTERVALSTOPSECVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def SCVTargetResultCreateINTERVALSTOPSECVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def SCVTargetResultStartPASSSTARTBUCKETSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVTargetResultCreatePASSSTARTBUCKETSVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUint32(e_)
+    return b_.EndVector(v_.length)
+
+def SCVTargetResultStartACCESSBITSETVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVTargetResultCreateACCESSBITSETVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUint32(e_)
+    return b_.EndVector(v_.length)
+
 class SCVResult : flatbuffers.handle
     def JOB_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
@@ -1657,13 +1804,17 @@ class SCVResult : flatbuffers.handle
     def AGGREGATE_STATISTICS() -> SCVAggregateStatistics?:
         let o = flatbuffers.field_table(buf_, pos_, 28)
         return if o: SCVAggregateStatistics { buf_, o } else: nil
+    def TARGET_RESULTS(i:int) -> SCVTargetResult:
+        return SCVTargetResult { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 30) + i * 4) }
+    def TARGET_RESULTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
 
 def GetRootAsSCVResult(buf:string): return SCVResult { buf, flatbuffers.indirect(buf, 0) }
 
 struct SCVResultBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_JOB_ID(JOB_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, JOB_ID)
@@ -1704,6 +1855,9 @@ struct SCVResultBuilder:
     def add_AGGREGATE_STATISTICS(AGGREGATE_STATISTICS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, AGGREGATE_STATISTICS)
         return this
+    def add_TARGET_RESULTS(TARGET_RESULTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, TARGET_RESULTS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1717,6 +1871,13 @@ def SCVResultCreateHISTOGRAMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
 def SCVResultStartCONTRIBUTIONSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def SCVResultCreateCONTRIBUTIONSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SCVResultStartTARGETRESULTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SCVResultCreateTARGETRESULTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -35,6 +35,12 @@ public struct SCVTarget : IFlatbufferObject
   public SCVVec3? POSITION_M { get { int o = __p.__offset(12); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public SCVVec3? VELOCITY_MPS { get { int o = __p.__offset(14); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public double RADIUS_M { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public scvTargetShape TARGET_KIND { get { int o = __p.__offset(18); return o != 0 ? (scvTargetShape)__p.bb.Get(o + __p.bb_pos) : scvTargetShape.POINT; } }
+  public scvGeometryDomain DOMAIN { get { int o = __p.__offset(20); return o != 0 ? (scvGeometryDomain)__p.bb.Get(o + __p.bb_pos) : scvGeometryDomain.SURFACE; } }
+  public SCVVec3? POLYGON_VERTICES(int j) { int o = __p.__offset(22); return o != 0 ? (SCVVec3?)(new SCVVec3()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int POLYGON_VERTICESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public double MIN_ALTITUDE_M { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public double MAX_ALTITUDE_M { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<SCVTarget> CreateSCVTarget(FlatBufferBuilder builder,
       uint TARGET_ID = 0,
@@ -43,19 +49,29 @@ public struct SCVTarget : IFlatbufferObject
       scvCoordinateFrame FRAME = scvCoordinateFrame.UNKNOWN,
       Offset<SCVVec3> POSITION_MOffset = default(Offset<SCVVec3>),
       Offset<SCVVec3> VELOCITY_MPSOffset = default(Offset<SCVVec3>),
-      double RADIUS_M = 0.0) {
-    builder.StartTable(7);
+      double RADIUS_M = 0.0,
+      scvTargetShape TARGET_KIND = scvTargetShape.POINT,
+      scvGeometryDomain DOMAIN = scvGeometryDomain.SURFACE,
+      VectorOffset POLYGON_VERTICESOffset = default(VectorOffset),
+      double MIN_ALTITUDE_M = 0.0,
+      double MAX_ALTITUDE_M = 0.0) {
+    builder.StartTable(12);
+    SCVTarget.AddMAX_ALTITUDE_M(builder, MAX_ALTITUDE_M);
+    SCVTarget.AddMIN_ALTITUDE_M(builder, MIN_ALTITUDE_M);
     SCVTarget.AddRADIUS_M(builder, RADIUS_M);
+    SCVTarget.AddPOLYGON_VERTICES(builder, POLYGON_VERTICESOffset);
     SCVTarget.AddVELOCITY_MPS(builder, VELOCITY_MPSOffset);
     SCVTarget.AddPOSITION_M(builder, POSITION_MOffset);
     SCVTarget.AddNAME(builder, NAMEOffset);
     SCVTarget.AddOBJECT_ID(builder, OBJECT_IDOffset);
     SCVTarget.AddTARGET_ID(builder, TARGET_ID);
+    SCVTarget.AddDOMAIN(builder, DOMAIN);
+    SCVTarget.AddTARGET_KIND(builder, TARGET_KIND);
     SCVTarget.AddFRAME(builder, FRAME);
     return SCVTarget.EndSCVTarget(builder);
   }
 
-  public static void StartSCVTarget(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartSCVTarget(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddTARGET_ID(FlatBufferBuilder builder, uint TARGET_ID) { builder.AddUint(0, TARGET_ID, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
@@ -63,6 +79,16 @@ public struct SCVTarget : IFlatbufferObject
   public static void AddPOSITION_M(FlatBufferBuilder builder, Offset<SCVVec3> POSITION_MOffset) { builder.AddOffset(4, POSITION_MOffset.Value, 0); }
   public static void AddVELOCITY_MPS(FlatBufferBuilder builder, Offset<SCVVec3> VELOCITY_MPSOffset) { builder.AddOffset(5, VELOCITY_MPSOffset.Value, 0); }
   public static void AddRADIUS_M(FlatBufferBuilder builder, double RADIUS_M) { builder.AddDouble(6, RADIUS_M, 0.0); }
+  public static void AddTARGET_KIND(FlatBufferBuilder builder, scvTargetShape TARGET_KIND) { builder.AddByte(7, (byte)TARGET_KIND, 0); }
+  public static void AddDOMAIN(FlatBufferBuilder builder, scvGeometryDomain DOMAIN) { builder.AddByte(8, (byte)DOMAIN, 0); }
+  public static void AddPOLYGON_VERTICES(FlatBufferBuilder builder, VectorOffset POLYGON_VERTICESOffset) { builder.AddOffset(9, POLYGON_VERTICESOffset.Value, 0); }
+  public static VectorOffset CreatePOLYGON_VERTICESVector(FlatBufferBuilder builder, Offset<SCVVec3>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, Offset<SCVVec3>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SCVVec3>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePOLYGON_VERTICESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SCVVec3>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPOLYGON_VERTICESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMIN_ALTITUDE_M(FlatBufferBuilder builder, double MIN_ALTITUDE_M) { builder.AddDouble(10, MIN_ALTITUDE_M, 0.0); }
+  public static void AddMAX_ALTITUDE_M(FlatBufferBuilder builder, double MAX_ALTITUDE_M) { builder.AddDouble(11, MAX_ALTITUDE_M, 0.0); }
   public static Offset<SCVTarget> EndSCVTarget(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SCVTarget>(o);
@@ -80,6 +106,12 @@ public struct SCVTarget : IFlatbufferObject
     _o.POSITION_M = this.POSITION_M.HasValue ? this.POSITION_M.Value.UnPack() : null;
     _o.VELOCITY_MPS = this.VELOCITY_MPS.HasValue ? this.VELOCITY_MPS.Value.UnPack() : null;
     _o.RADIUS_M = this.RADIUS_M;
+    _o.TARGET_KIND = this.TARGET_KIND;
+    _o.DOMAIN = this.DOMAIN;
+    _o.POLYGON_VERTICES = new List<SCVVec3T>();
+    for (var _j = 0; _j < this.POLYGON_VERTICESLength; ++_j) {_o.POLYGON_VERTICES.Add(this.POLYGON_VERTICES(_j).HasValue ? this.POLYGON_VERTICES(_j).Value.UnPack() : null);}
+    _o.MIN_ALTITUDE_M = this.MIN_ALTITUDE_M;
+    _o.MAX_ALTITUDE_M = this.MAX_ALTITUDE_M;
   }
   public static Offset<SCVTarget> Pack(FlatBufferBuilder builder, SCVTargetT _o) {
     if (_o == null) return default(Offset<SCVTarget>);
@@ -87,6 +119,12 @@ public struct SCVTarget : IFlatbufferObject
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _POSITION_M = _o.POSITION_M == null ? default(Offset<SCVVec3>) : SCVVec3.Pack(builder, _o.POSITION_M);
     var _VELOCITY_MPS = _o.VELOCITY_MPS == null ? default(Offset<SCVVec3>) : SCVVec3.Pack(builder, _o.VELOCITY_MPS);
+    var _POLYGON_VERTICES = default(VectorOffset);
+    if (_o.POLYGON_VERTICES != null) {
+      var __POLYGON_VERTICES = new Offset<SCVVec3>[_o.POLYGON_VERTICES.Count];
+      for (var _j = 0; _j < __POLYGON_VERTICES.Length; ++_j) { __POLYGON_VERTICES[_j] = SCVVec3.Pack(builder, _o.POLYGON_VERTICES[_j]); }
+      _POLYGON_VERTICES = CreatePOLYGON_VERTICESVector(builder, __POLYGON_VERTICES);
+    }
     return CreateSCVTarget(
       builder,
       _o.TARGET_ID,
@@ -95,7 +133,12 @@ public struct SCVTarget : IFlatbufferObject
       _o.FRAME,
       _POSITION_M,
       _VELOCITY_MPS,
-      _o.RADIUS_M);
+      _o.RADIUS_M,
+      _o.TARGET_KIND,
+      _o.DOMAIN,
+      _POLYGON_VERTICES,
+      _o.MIN_ALTITUDE_M,
+      _o.MAX_ALTITUDE_M);
   }
 }
 
@@ -108,6 +151,11 @@ public class SCVTargetT
   public SCVVec3T POSITION_M { get; set; }
   public SCVVec3T VELOCITY_MPS { get; set; }
   public double RADIUS_M { get; set; }
+  public scvTargetShape TARGET_KIND { get; set; }
+  public scvGeometryDomain DOMAIN { get; set; }
+  public List<SCVVec3T> POLYGON_VERTICES { get; set; }
+  public double MIN_ALTITUDE_M { get; set; }
+  public double MAX_ALTITUDE_M { get; set; }
 
   public SCVTargetT() {
     this.TARGET_ID = 0;
@@ -117,6 +165,11 @@ public class SCVTargetT
     this.POSITION_M = null;
     this.VELOCITY_MPS = null;
     this.RADIUS_M = 0.0;
+    this.TARGET_KIND = scvTargetShape.POINT;
+    this.DOMAIN = scvGeometryDomain.SURFACE;
+    this.POLYGON_VERTICES = null;
+    this.MIN_ALTITUDE_M = 0.0;
+    this.MAX_ALTITUDE_M = 0.0;
   }
 }
 
@@ -133,6 +186,11 @@ static public class SCVTargetVerify
       && verifier.VerifyTable(tablePos, 12 /*POSITION_M*/, SCVVec3Verify.Verify, false)
       && verifier.VerifyTable(tablePos, 14 /*VELOCITY_MPS*/, SCVVec3Verify.Verify, false)
       && verifier.VerifyField(tablePos, 16 /*RADIUS_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*TARGET_KIND*/, 1 /*scvTargetShape*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*DOMAIN*/, 1 /*scvGeometryDomain*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 22 /*POLYGON_VERTICES*/, SCVVec3Verify.Verify, false)
+      && verifier.VerifyField(tablePos, 24 /*MIN_ALTITUDE_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*MAX_ALTITUDE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

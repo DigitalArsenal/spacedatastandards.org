@@ -54,6 +54,11 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public ByteBuffer MESSAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
   public SCVAggregateStatistics AGGREGATE_STATISTICS() { return AGGREGATE_STATISTICS(new SCVAggregateStatistics()); }
   public SCVAggregateStatistics AGGREGATE_STATISTICS(SCVAggregateStatistics obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public SCVTargetResult TARGET_RESULTS(int j) { return TARGET_RESULTS(new SCVTargetResult(), j); }
+  public SCVTargetResult TARGET_RESULTS(SCVTargetResult obj, int j) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TARGET_RESULTSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public SCVTargetResult.Vector targetResultsVector() { return targetResultsVector(new SCVTargetResult.Vector()); }
+  public SCVTargetResult.Vector targetResultsVector(SCVTargetResult.Vector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSCVResult(FlatBufferBuilder builder,
       int JOB_IDOffset,
@@ -68,9 +73,11 @@ public final class SCVResult extends com.google.flatbuffers.Table {
       int GEOMETRYOffset,
       int RASTER_PRODUCTSOffset,
       int MESSAGEOffset,
-      int AGGREGATE_STATISTICSOffset) {
-    builder.startTable(13);
+      int AGGREGATE_STATISTICSOffset,
+      int TARGET_RESULTSOffset) {
+    builder.startTable(14);
     SCVResult.addTraceId(builder, TRACE_ID);
+    SCVResult.addTargetResults(builder, TARGET_RESULTSOffset);
     SCVResult.addAggregateStatistics(builder, AGGREGATE_STATISTICSOffset);
     SCVResult.addMessage(builder, MESSAGEOffset);
     SCVResult.addRasterProducts(builder, RASTER_PRODUCTSOffset);
@@ -86,7 +93,7 @@ public final class SCVResult extends com.google.flatbuffers.Table {
     return SCVResult.endSCVResult(builder);
   }
 
-  public static void startSCVResult(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startSCVResult(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addJobId(FlatBufferBuilder builder, int JOB_IDOffset) { builder.addOffset(0, JOB_IDOffset, 0); }
   public static void addTraceId(FlatBufferBuilder builder, long TRACE_ID) { builder.addLong(1, TRACE_ID, 0L); }
   public static void addStatus(FlatBufferBuilder builder, int STATUS) { builder.addByte(2, (byte) STATUS, (byte) 0); }
@@ -104,6 +111,9 @@ public final class SCVResult extends com.google.flatbuffers.Table {
   public static void addRasterProducts(FlatBufferBuilder builder, int RASTER_PRODUCTSOffset) { builder.addOffset(10, RASTER_PRODUCTSOffset, 0); }
   public static void addMessage(FlatBufferBuilder builder, int MESSAGEOffset) { builder.addOffset(11, MESSAGEOffset, 0); }
   public static void addAggregateStatistics(FlatBufferBuilder builder, int AGGREGATE_STATISTICSOffset) { builder.addOffset(12, AGGREGATE_STATISTICSOffset, 0); }
+  public static void addTargetResults(FlatBufferBuilder builder, int TARGET_RESULTSOffset) { builder.addOffset(13, TARGET_RESULTSOffset, 0); }
+  public static int createTargetResultsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTargetResultsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endSCVResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

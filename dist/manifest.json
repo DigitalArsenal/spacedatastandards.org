@@ -1,5 +1,5 @@
 {
-    "version": "1.157.0+1784303380568",
+    "version": "1.158.0+1784472738995",
     "STANDARDS": {
         "PCF": {
             "IDL": "// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier \"$PCF\";",
@@ -15,6 +15,7 @@
                 "./dist/PCF/PCF.rs.tar.gz",
                 "./dist/PCF/PCF.php.tar.gz",
                 "./dist/PCF/PCF.json.tar.gz",
+                "./dist/PCF/PCF.fbjson.tar.gz",
                 "./dist/PCF/PCF.cpp.tar.gz",
                 "./dist/PCF/PCF.kt.tar.gz",
                 "./dist/PCF/PCF.ts.tar.gz"
@@ -34,6 +35,7 @@
                 "./dist/CHN/CHN.rs.tar.gz",
                 "./dist/CHN/CHN.php.tar.gz",
                 "./dist/CHN/CHN.json.tar.gz",
+                "./dist/CHN/CHN.fbjson.tar.gz",
                 "./dist/CHN/CHN.cpp.tar.gz",
                 "./dist/CHN/CHN.kt.tar.gz",
                 "./dist/CHN/CHN.ts.tar.gz"
@@ -53,6 +55,7 @@
                 "./dist/CAT/CAT.rs.tar.gz",
                 "./dist/CAT/CAT.php.tar.gz",
                 "./dist/CAT/CAT.json.tar.gz",
+                "./dist/CAT/CAT.fbjson.tar.gz",
                 "./dist/CAT/CAT.cpp.tar.gz",
                 "./dist/CAT/CAT.kt.tar.gz",
                 "./dist/CAT/CAT.ts.tar.gz"
@@ -72,6 +75,7 @@
                 "./dist/SPP/SPP.rs.tar.gz",
                 "./dist/SPP/SPP.php.tar.gz",
                 "./dist/SPP/SPP.json.tar.gz",
+                "./dist/SPP/SPP.fbjson.tar.gz",
                 "./dist/SPP/SPP.cpp.tar.gz",
                 "./dist/SPP/SPP.kt.tar.gz",
                 "./dist/SPP/SPP.ts.tar.gz"
@@ -91,6 +95,7 @@
                 "./dist/PLK/PLK.rs.tar.gz",
                 "./dist/PLK/PLK.php.tar.gz",
                 "./dist/PLK/PLK.json.tar.gz",
+                "./dist/PLK/PLK.fbjson.tar.gz",
                 "./dist/PLK/PLK.cpp.tar.gz",
                 "./dist/PLK/PLK.kt.tar.gz",
                 "./dist/PLK/PLK.ts.tar.gz"
@@ -110,6 +115,7 @@
                 "./dist/SPW/SPW.rs.tar.gz",
                 "./dist/SPW/SPW.php.tar.gz",
                 "./dist/SPW/SPW.json.tar.gz",
+                "./dist/SPW/SPW.fbjson.tar.gz",
                 "./dist/SPW/SPW.cpp.tar.gz",
                 "./dist/SPW/SPW.kt.tar.gz",
                 "./dist/SPW/SPW.ts.tar.gz"
@@ -129,6 +135,7 @@
                 "./dist/VCM/VCM.rs.tar.gz",
                 "./dist/VCM/VCM.php.tar.gz",
                 "./dist/VCM/VCM.json.tar.gz",
+                "./dist/VCM/VCM.fbjson.tar.gz",
                 "./dist/VCM/VCM.cpp.tar.gz",
                 "./dist/VCM/VCM.kt.tar.gz",
                 "./dist/VCM/VCM.ts.tar.gz"
@@ -148,6 +155,7 @@
                 "./dist/RFO/RFO.rs.tar.gz",
                 "./dist/RFO/RFO.php.tar.gz",
                 "./dist/RFO/RFO.json.tar.gz",
+                "./dist/RFO/RFO.fbjson.tar.gz",
                 "./dist/RFO/RFO.cpp.tar.gz",
                 "./dist/RFO/RFO.kt.tar.gz",
                 "./dist/RFO/RFO.ts.tar.gz"
@@ -167,6 +175,7 @@
                 "./dist/MNV/MNV.rs.tar.gz",
                 "./dist/MNV/MNV.php.tar.gz",
                 "./dist/MNV/MNV.json.tar.gz",
+                "./dist/MNV/MNV.fbjson.tar.gz",
                 "./dist/MNV/MNV.cpp.tar.gz",
                 "./dist/MNV/MNV.kt.tar.gz",
                 "./dist/MNV/MNV.ts.tar.gz"
@@ -186,6 +195,7 @@
                 "./dist/LWK/LWK.rs.tar.gz",
                 "./dist/LWK/LWK.php.tar.gz",
                 "./dist/LWK/LWK.json.tar.gz",
+                "./dist/LWK/LWK.fbjson.tar.gz",
                 "./dist/LWK/LWK.cpp.tar.gz",
                 "./dist/LWK/LWK.kt.tar.gz",
                 "./dist/LWK/LWK.ts.tar.gz"
@@ -205,6 +215,7 @@
                 "./dist/CDM/CDM.rs.tar.gz",
                 "./dist/CDM/CDM.php.tar.gz",
                 "./dist/CDM/CDM.json.tar.gz",
+                "./dist/CDM/CDM.fbjson.tar.gz",
                 "./dist/CDM/CDM.cpp.tar.gz",
                 "./dist/CDM/CDM.kt.tar.gz",
                 "./dist/CDM/CDM.ts.tar.gz"
@@ -224,6 +235,7 @@
                 "./dist/IDM/IDM.rs.tar.gz",
                 "./dist/IDM/IDM.php.tar.gz",
                 "./dist/IDM/IDM.json.tar.gz",
+                "./dist/IDM/IDM.fbjson.tar.gz",
                 "./dist/IDM/IDM.cpp.tar.gz",
                 "./dist/IDM/IDM.kt.tar.gz",
                 "./dist/IDM/IDM.ts.tar.gz"
@@ -243,6 +255,7 @@
                 "./dist/PLD/PLD.rs.tar.gz",
                 "./dist/PLD/PLD.php.tar.gz",
                 "./dist/PLD/PLD.json.tar.gz",
+                "./dist/PLD/PLD.fbjson.tar.gz",
                 "./dist/PLD/PLD.cpp.tar.gz",
                 "./dist/PLD/PLD.kt.tar.gz",
                 "./dist/PLD/PLD.ts.tar.gz"
@@ -262,6 +275,7 @@
                 "./dist/OBD/OBD.rs.tar.gz",
                 "./dist/OBD/OBD.php.tar.gz",
                 "./dist/OBD/OBD.json.tar.gz",
+                "./dist/OBD/OBD.fbjson.tar.gz",
                 "./dist/OBD/OBD.cpp.tar.gz",
                 "./dist/OBD/OBD.kt.tar.gz",
                 "./dist/OBD/OBD.ts.tar.gz"
@@ -281,6 +295,7 @@
                 "./dist/ENT/ENT.rs.tar.gz",
                 "./dist/ENT/ENT.php.tar.gz",
                 "./dist/ENT/ENT.json.tar.gz",
+                "./dist/ENT/ENT.fbjson.tar.gz",
                 "./dist/ENT/ENT.cpp.tar.gz",
                 "./dist/ENT/ENT.kt.tar.gz",
                 "./dist/ENT/ENT.ts.tar.gz"
@@ -300,6 +315,7 @@
                 "./dist/ANI/ANI.rs.tar.gz",
                 "./dist/ANI/ANI.php.tar.gz",
                 "./dist/ANI/ANI.json.tar.gz",
+                "./dist/ANI/ANI.fbjson.tar.gz",
                 "./dist/ANI/ANI.cpp.tar.gz",
                 "./dist/ANI/ANI.kt.tar.gz",
                 "./dist/ANI/ANI.ts.tar.gz"
@@ -319,6 +335,7 @@
                 "./dist/KMF/KMF.rs.tar.gz",
                 "./dist/KMF/KMF.php.tar.gz",
                 "./dist/KMF/KMF.json.tar.gz",
+                "./dist/KMF/KMF.fbjson.tar.gz",
                 "./dist/KMF/KMF.cpp.tar.gz",
                 "./dist/KMF/KMF.kt.tar.gz",
                 "./dist/KMF/KMF.ts.tar.gz"
@@ -338,6 +355,7 @@
                 "./dist/TCF/TCF.rs.tar.gz",
                 "./dist/TCF/TCF.php.tar.gz",
                 "./dist/TCF/TCF.json.tar.gz",
+                "./dist/TCF/TCF.fbjson.tar.gz",
                 "./dist/TCF/TCF.cpp.tar.gz",
                 "./dist/TCF/TCF.kt.tar.gz",
                 "./dist/TCF/TCF.ts.tar.gz"
@@ -357,6 +375,7 @@
                 "./dist/MST/MST.rs.tar.gz",
                 "./dist/MST/MST.php.tar.gz",
                 "./dist/MST/MST.json.tar.gz",
+                "./dist/MST/MST.fbjson.tar.gz",
                 "./dist/MST/MST.cpp.tar.gz",
                 "./dist/MST/MST.kt.tar.gz",
                 "./dist/MST/MST.ts.tar.gz"
@@ -376,6 +395,7 @@
                 "./dist/BOV/BOV.rs.tar.gz",
                 "./dist/BOV/BOV.php.tar.gz",
                 "./dist/BOV/BOV.json.tar.gz",
+                "./dist/BOV/BOV.fbjson.tar.gz",
                 "./dist/BOV/BOV.cpp.tar.gz",
                 "./dist/BOV/BOV.kt.tar.gz",
                 "./dist/BOV/BOV.ts.tar.gz"
@@ -395,6 +415,7 @@
                 "./dist/DOA/DOA.rs.tar.gz",
                 "./dist/DOA/DOA.php.tar.gz",
                 "./dist/DOA/DOA.json.tar.gz",
+                "./dist/DOA/DOA.fbjson.tar.gz",
                 "./dist/DOA/DOA.cpp.tar.gz",
                 "./dist/DOA/DOA.kt.tar.gz",
                 "./dist/DOA/DOA.ts.tar.gz"
@@ -414,6 +435,7 @@
                 "./dist/TRN/TRN.rs.tar.gz",
                 "./dist/TRN/TRN.php.tar.gz",
                 "./dist/TRN/TRN.json.tar.gz",
+                "./dist/TRN/TRN.fbjson.tar.gz",
                 "./dist/TRN/TRN.cpp.tar.gz",
                 "./dist/TRN/TRN.kt.tar.gz",
                 "./dist/TRN/TRN.ts.tar.gz"
@@ -433,6 +455,7 @@
                 "./dist/BEM/BEM.rs.tar.gz",
                 "./dist/BEM/BEM.php.tar.gz",
                 "./dist/BEM/BEM.json.tar.gz",
+                "./dist/BEM/BEM.fbjson.tar.gz",
                 "./dist/BEM/BEM.cpp.tar.gz",
                 "./dist/BEM/BEM.kt.tar.gz",
                 "./dist/BEM/BEM.ts.tar.gz"
@@ -452,6 +475,7 @@
                 "./dist/ESL/ESL.rs.tar.gz",
                 "./dist/ESL/ESL.php.tar.gz",
                 "./dist/ESL/ESL.json.tar.gz",
+                "./dist/ESL/ESL.fbjson.tar.gz",
                 "./dist/ESL/ESL.cpp.tar.gz",
                 "./dist/ESL/ESL.kt.tar.gz",
                 "./dist/ESL/ESL.ts.tar.gz"
@@ -471,6 +495,7 @@
                 "./dist/OPM/OPM.rs.tar.gz",
                 "./dist/OPM/OPM.php.tar.gz",
                 "./dist/OPM/OPM.json.tar.gz",
+                "./dist/OPM/OPM.fbjson.tar.gz",
                 "./dist/OPM/OPM.cpp.tar.gz",
                 "./dist/OPM/OPM.kt.tar.gz",
                 "./dist/OPM/OPM.ts.tar.gz"
@@ -490,6 +515,7 @@
                 "./dist/EPM/EPM.rs.tar.gz",
                 "./dist/EPM/EPM.php.tar.gz",
                 "./dist/EPM/EPM.json.tar.gz",
+                "./dist/EPM/EPM.fbjson.tar.gz",
                 "./dist/EPM/EPM.cpp.tar.gz",
                 "./dist/EPM/EPM.kt.tar.gz",
                 "./dist/EPM/EPM.ts.tar.gz"
@@ -509,6 +535,7 @@
                 "./dist/APP/APP.rs.tar.gz",
                 "./dist/APP/APP.php.tar.gz",
                 "./dist/APP/APP.json.tar.gz",
+                "./dist/APP/APP.fbjson.tar.gz",
                 "./dist/APP/APP.cpp.tar.gz",
                 "./dist/APP/APP.kt.tar.gz",
                 "./dist/APP/APP.ts.tar.gz"
@@ -528,6 +555,7 @@
                 "./dist/SDF/SDF.rs.tar.gz",
                 "./dist/SDF/SDF.php.tar.gz",
                 "./dist/SDF/SDF.json.tar.gz",
+                "./dist/SDF/SDF.fbjson.tar.gz",
                 "./dist/SDF/SDF.cpp.tar.gz",
                 "./dist/SDF/SDF.kt.tar.gz",
                 "./dist/SDF/SDF.ts.tar.gz"
@@ -547,6 +575,7 @@
                 "./dist/APM/APM.rs.tar.gz",
                 "./dist/APM/APM.php.tar.gz",
                 "./dist/APM/APM.json.tar.gz",
+                "./dist/APM/APM.fbjson.tar.gz",
                 "./dist/APM/APM.cpp.tar.gz",
                 "./dist/APM/APM.kt.tar.gz",
                 "./dist/APM/APM.ts.tar.gz"
@@ -566,6 +595,7 @@
                 "./dist/LCF/LCF.rs.tar.gz",
                 "./dist/LCF/LCF.php.tar.gz",
                 "./dist/LCF/LCF.json.tar.gz",
+                "./dist/LCF/LCF.fbjson.tar.gz",
                 "./dist/LCF/LCF.cpp.tar.gz",
                 "./dist/LCF/LCF.kt.tar.gz",
                 "./dist/LCF/LCF.ts.tar.gz"
@@ -585,6 +615,7 @@
                 "./dist/PRR/PRR.rs.tar.gz",
                 "./dist/PRR/PRR.php.tar.gz",
                 "./dist/PRR/PRR.json.tar.gz",
+                "./dist/PRR/PRR.fbjson.tar.gz",
                 "./dist/PRR/PRR.cpp.tar.gz",
                 "./dist/PRR/PRR.kt.tar.gz",
                 "./dist/PRR/PRR.ts.tar.gz"
@@ -604,6 +635,7 @@
                 "./dist/SHW/SHW.rs.tar.gz",
                 "./dist/SHW/SHW.php.tar.gz",
                 "./dist/SHW/SHW.json.tar.gz",
+                "./dist/SHW/SHW.fbjson.tar.gz",
                 "./dist/SHW/SHW.cpp.tar.gz",
                 "./dist/SHW/SHW.kt.tar.gz",
                 "./dist/SHW/SHW.ts.tar.gz"
@@ -623,6 +655,7 @@
                 "./dist/HEL/HEL.rs.tar.gz",
                 "./dist/HEL/HEL.php.tar.gz",
                 "./dist/HEL/HEL.json.tar.gz",
+                "./dist/HEL/HEL.fbjson.tar.gz",
                 "./dist/HEL/HEL.cpp.tar.gz",
                 "./dist/HEL/HEL.kt.tar.gz",
                 "./dist/HEL/HEL.ts.tar.gz"
@@ -642,6 +675,7 @@
                 "./dist/LCH/LCH.rs.tar.gz",
                 "./dist/LCH/LCH.php.tar.gz",
                 "./dist/LCH/LCH.json.tar.gz",
+                "./dist/LCH/LCH.fbjson.tar.gz",
                 "./dist/LCH/LCH.cpp.tar.gz",
                 "./dist/LCH/LCH.kt.tar.gz",
                 "./dist/LCH/LCH.ts.tar.gz"
@@ -661,6 +695,7 @@
                 "./dist/HFC/HFC.rs.tar.gz",
                 "./dist/HFC/HFC.php.tar.gz",
                 "./dist/HFC/HFC.json.tar.gz",
+                "./dist/HFC/HFC.fbjson.tar.gz",
                 "./dist/HFC/HFC.cpp.tar.gz",
                 "./dist/HFC/HFC.kt.tar.gz",
                 "./dist/HFC/HFC.ts.tar.gz"
@@ -680,6 +715,7 @@
                 "./dist/SDR/SDR.rs.tar.gz",
                 "./dist/SDR/SDR.php.tar.gz",
                 "./dist/SDR/SDR.json.tar.gz",
+                "./dist/SDR/SDR.fbjson.tar.gz",
                 "./dist/SDR/SDR.cpp.tar.gz",
                 "./dist/SDR/SDR.kt.tar.gz",
                 "./dist/SDR/SDR.ts.tar.gz"
@@ -699,6 +735,7 @@
                 "./dist/DFH/DFH.rs.tar.gz",
                 "./dist/DFH/DFH.php.tar.gz",
                 "./dist/DFH/DFH.json.tar.gz",
+                "./dist/DFH/DFH.fbjson.tar.gz",
                 "./dist/DFH/DFH.cpp.tar.gz",
                 "./dist/DFH/DFH.kt.tar.gz",
                 "./dist/DFH/DFH.ts.tar.gz"
@@ -718,6 +755,7 @@
                 "./dist/SNR/SNR.rs.tar.gz",
                 "./dist/SNR/SNR.php.tar.gz",
                 "./dist/SNR/SNR.json.tar.gz",
+                "./dist/SNR/SNR.fbjson.tar.gz",
                 "./dist/SNR/SNR.cpp.tar.gz",
                 "./dist/SNR/SNR.kt.tar.gz",
                 "./dist/SNR/SNR.ts.tar.gz"
@@ -737,6 +775,7 @@
                 "./dist/FCS/FCS.rs.tar.gz",
                 "./dist/FCS/FCS.php.tar.gz",
                 "./dist/FCS/FCS.json.tar.gz",
+                "./dist/FCS/FCS.fbjson.tar.gz",
                 "./dist/FCS/FCS.cpp.tar.gz",
                 "./dist/FCS/FCS.kt.tar.gz",
                 "./dist/FCS/FCS.ts.tar.gz"
@@ -756,6 +795,7 @@
                 "./dist/OSM/OSM.rs.tar.gz",
                 "./dist/OSM/OSM.php.tar.gz",
                 "./dist/OSM/OSM.json.tar.gz",
+                "./dist/OSM/OSM.fbjson.tar.gz",
                 "./dist/OSM/OSM.cpp.tar.gz",
                 "./dist/OSM/OSM.kt.tar.gz",
                 "./dist/OSM/OSM.ts.tar.gz"
@@ -775,6 +815,7 @@
                 "./dist/PRG/PRG.rs.tar.gz",
                 "./dist/PRG/PRG.php.tar.gz",
                 "./dist/PRG/PRG.json.tar.gz",
+                "./dist/PRG/PRG.fbjson.tar.gz",
                 "./dist/PRG/PRG.cpp.tar.gz",
                 "./dist/PRG/PRG.kt.tar.gz",
                 "./dist/PRG/PRG.ts.tar.gz"
@@ -794,6 +835,7 @@
                 "./dist/ATD/ATD.rs.tar.gz",
                 "./dist/ATD/ATD.php.tar.gz",
                 "./dist/ATD/ATD.json.tar.gz",
+                "./dist/ATD/ATD.fbjson.tar.gz",
                 "./dist/ATD/ATD.cpp.tar.gz",
                 "./dist/ATD/ATD.kt.tar.gz",
                 "./dist/ATD/ATD.ts.tar.gz"
@@ -813,6 +855,7 @@
                 "./dist/PPE/PPE.rs.tar.gz",
                 "./dist/PPE/PPE.php.tar.gz",
                 "./dist/PPE/PPE.json.tar.gz",
+                "./dist/PPE/PPE.fbjson.tar.gz",
                 "./dist/PPE/PPE.cpp.tar.gz",
                 "./dist/PPE/PPE.kt.tar.gz",
                 "./dist/PPE/PPE.ts.tar.gz"
@@ -832,6 +875,7 @@
                 "./dist/LMS/LMS.rs.tar.gz",
                 "./dist/LMS/LMS.php.tar.gz",
                 "./dist/LMS/LMS.json.tar.gz",
+                "./dist/LMS/LMS.fbjson.tar.gz",
                 "./dist/LMS/LMS.cpp.tar.gz",
                 "./dist/LMS/LMS.kt.tar.gz",
                 "./dist/LMS/LMS.ts.tar.gz"
@@ -851,6 +895,7 @@
                 "./dist/VST/VST.rs.tar.gz",
                 "./dist/VST/VST.php.tar.gz",
                 "./dist/VST/VST.json.tar.gz",
+                "./dist/VST/VST.fbjson.tar.gz",
                 "./dist/VST/VST.cpp.tar.gz",
                 "./dist/VST/VST.kt.tar.gz",
                 "./dist/VST/VST.ts.tar.gz"
@@ -870,6 +915,7 @@
                 "./dist/ATM/ATM.rs.tar.gz",
                 "./dist/ATM/ATM.php.tar.gz",
                 "./dist/ATM/ATM.json.tar.gz",
+                "./dist/ATM/ATM.fbjson.tar.gz",
                 "./dist/ATM/ATM.cpp.tar.gz",
                 "./dist/ATM/ATM.kt.tar.gz",
                 "./dist/ATM/ATM.ts.tar.gz"
@@ -889,6 +935,7 @@
                 "./dist/BAL/BAL.rs.tar.gz",
                 "./dist/BAL/BAL.php.tar.gz",
                 "./dist/BAL/BAL.json.tar.gz",
+                "./dist/BAL/BAL.fbjson.tar.gz",
                 "./dist/BAL/BAL.cpp.tar.gz",
                 "./dist/BAL/BAL.kt.tar.gz",
                 "./dist/BAL/BAL.ts.tar.gz"
@@ -908,6 +955,7 @@
                 "./dist/GRV/GRV.rs.tar.gz",
                 "./dist/GRV/GRV.php.tar.gz",
                 "./dist/GRV/GRV.json.tar.gz",
+                "./dist/GRV/GRV.fbjson.tar.gz",
                 "./dist/GRV/GRV.cpp.tar.gz",
                 "./dist/GRV/GRV.kt.tar.gz",
                 "./dist/GRV/GRV.ts.tar.gz"
@@ -927,6 +975,7 @@
                 "./dist/CTR/CTR.rs.tar.gz",
                 "./dist/CTR/CTR.php.tar.gz",
                 "./dist/CTR/CTR.json.tar.gz",
+                "./dist/CTR/CTR.fbjson.tar.gz",
                 "./dist/CTR/CTR.cpp.tar.gz",
                 "./dist/CTR/CTR.kt.tar.gz",
                 "./dist/CTR/CTR.ts.tar.gz"
@@ -946,6 +995,7 @@
                 "./dist/SIT/SIT.rs.tar.gz",
                 "./dist/SIT/SIT.php.tar.gz",
                 "./dist/SIT/SIT.json.tar.gz",
+                "./dist/SIT/SIT.fbjson.tar.gz",
                 "./dist/SIT/SIT.cpp.tar.gz",
                 "./dist/SIT/SIT.kt.tar.gz",
                 "./dist/SIT/SIT.ts.tar.gz"
@@ -965,6 +1015,7 @@
                 "./dist/LAM/LAM.rs.tar.gz",
                 "./dist/LAM/LAM.php.tar.gz",
                 "./dist/LAM/LAM.json.tar.gz",
+                "./dist/LAM/LAM.fbjson.tar.gz",
                 "./dist/LAM/LAM.cpp.tar.gz",
                 "./dist/LAM/LAM.kt.tar.gz",
                 "./dist/LAM/LAM.ts.tar.gz"
@@ -984,6 +1035,7 @@
                 "./dist/KRF/KRF.rs.tar.gz",
                 "./dist/KRF/KRF.php.tar.gz",
                 "./dist/KRF/KRF.json.tar.gz",
+                "./dist/KRF/KRF.fbjson.tar.gz",
                 "./dist/KRF/KRF.cpp.tar.gz",
                 "./dist/KRF/KRF.kt.tar.gz",
                 "./dist/KRF/KRF.ts.tar.gz"
@@ -1003,6 +1055,7 @@
                 "./dist/SEV/SEV.rs.tar.gz",
                 "./dist/SEV/SEV.php.tar.gz",
                 "./dist/SEV/SEV.json.tar.gz",
+                "./dist/SEV/SEV.fbjson.tar.gz",
                 "./dist/SEV/SEV.cpp.tar.gz",
                 "./dist/SEV/SEV.kt.tar.gz",
                 "./dist/SEV/SEV.ts.tar.gz"
@@ -1022,6 +1075,7 @@
                 "./dist/LMO/LMO.rs.tar.gz",
                 "./dist/LMO/LMO.php.tar.gz",
                 "./dist/LMO/LMO.json.tar.gz",
+                "./dist/LMO/LMO.fbjson.tar.gz",
                 "./dist/LMO/LMO.cpp.tar.gz",
                 "./dist/LMO/LMO.kt.tar.gz",
                 "./dist/LMO/LMO.ts.tar.gz"
@@ -1041,6 +1095,7 @@
                 "./dist/LMR/LMR.rs.tar.gz",
                 "./dist/LMR/LMR.php.tar.gz",
                 "./dist/LMR/LMR.json.tar.gz",
+                "./dist/LMR/LMR.fbjson.tar.gz",
                 "./dist/LMR/LMR.cpp.tar.gz",
                 "./dist/LMR/LMR.kt.tar.gz",
                 "./dist/LMR/LMR.ts.tar.gz"
@@ -1060,6 +1115,7 @@
                 "./dist/PUR/PUR.rs.tar.gz",
                 "./dist/PUR/PUR.php.tar.gz",
                 "./dist/PUR/PUR.json.tar.gz",
+                "./dist/PUR/PUR.fbjson.tar.gz",
                 "./dist/PUR/PUR.cpp.tar.gz",
                 "./dist/PUR/PUR.kt.tar.gz",
                 "./dist/PUR/PUR.ts.tar.gz"
@@ -1079,6 +1135,7 @@
                 "./dist/SCN/SCN.rs.tar.gz",
                 "./dist/SCN/SCN.php.tar.gz",
                 "./dist/SCN/SCN.json.tar.gz",
+                "./dist/SCN/SCN.fbjson.tar.gz",
                 "./dist/SCN/SCN.cpp.tar.gz",
                 "./dist/SCN/SCN.kt.tar.gz",
                 "./dist/SCN/SCN.ts.tar.gz"
@@ -1098,6 +1155,7 @@
                 "./dist/MTI/MTI.rs.tar.gz",
                 "./dist/MTI/MTI.php.tar.gz",
                 "./dist/MTI/MTI.json.tar.gz",
+                "./dist/MTI/MTI.fbjson.tar.gz",
                 "./dist/MTI/MTI.cpp.tar.gz",
                 "./dist/MTI/MTI.kt.tar.gz",
                 "./dist/MTI/MTI.ts.tar.gz"
@@ -1117,6 +1175,7 @@
                 "./dist/ETM/ETM.rs.tar.gz",
                 "./dist/ETM/ETM.php.tar.gz",
                 "./dist/ETM/ETM.json.tar.gz",
+                "./dist/ETM/ETM.fbjson.tar.gz",
                 "./dist/ETM/ETM.cpp.tar.gz",
                 "./dist/ETM/ETM.kt.tar.gz",
                 "./dist/ETM/ETM.ts.tar.gz"
@@ -1136,6 +1195,7 @@
                 "./dist/CRD/CRD.rs.tar.gz",
                 "./dist/CRD/CRD.php.tar.gz",
                 "./dist/CRD/CRD.json.tar.gz",
+                "./dist/CRD/CRD.fbjson.tar.gz",
                 "./dist/CRD/CRD.cpp.tar.gz",
                 "./dist/CRD/CRD.kt.tar.gz",
                 "./dist/CRD/CRD.ts.tar.gz"
@@ -1155,6 +1215,7 @@
                 "./dist/CRM/CRM.rs.tar.gz",
                 "./dist/CRM/CRM.php.tar.gz",
                 "./dist/CRM/CRM.json.tar.gz",
+                "./dist/CRM/CRM.fbjson.tar.gz",
                 "./dist/CRM/CRM.cpp.tar.gz",
                 "./dist/CRM/CRM.kt.tar.gz",
                 "./dist/CRM/CRM.ts.tar.gz"
@@ -1174,6 +1235,7 @@
                 "./dist/LGR/LGR.rs.tar.gz",
                 "./dist/LGR/LGR.php.tar.gz",
                 "./dist/LGR/LGR.json.tar.gz",
+                "./dist/LGR/LGR.fbjson.tar.gz",
                 "./dist/LGR/LGR.cpp.tar.gz",
                 "./dist/LGR/LGR.kt.tar.gz",
                 "./dist/LGR/LGR.ts.tar.gz"
@@ -1193,6 +1255,7 @@
                 "./dist/FPC/FPC.rs.tar.gz",
                 "./dist/FPC/FPC.php.tar.gz",
                 "./dist/FPC/FPC.json.tar.gz",
+                "./dist/FPC/FPC.fbjson.tar.gz",
                 "./dist/FPC/FPC.cpp.tar.gz",
                 "./dist/FPC/FPC.kt.tar.gz",
                 "./dist/FPC/FPC.ts.tar.gz"
@@ -1212,6 +1275,7 @@
                 "./dist/ION/ION.rs.tar.gz",
                 "./dist/ION/ION.php.tar.gz",
                 "./dist/ION/ION.json.tar.gz",
+                "./dist/ION/ION.fbjson.tar.gz",
                 "./dist/ION/ION.cpp.tar.gz",
                 "./dist/ION/ION.kt.tar.gz",
                 "./dist/ION/ION.ts.tar.gz"
@@ -1231,6 +1295,7 @@
                 "./dist/EOP/EOP.rs.tar.gz",
                 "./dist/EOP/EOP.php.tar.gz",
                 "./dist/EOP/EOP.json.tar.gz",
+                "./dist/EOP/EOP.fbjson.tar.gz",
                 "./dist/EOP/EOP.cpp.tar.gz",
                 "./dist/EOP/EOP.kt.tar.gz",
                 "./dist/EOP/EOP.ts.tar.gz"
@@ -1250,6 +1315,7 @@
                 "./dist/GEO/GEO.rs.tar.gz",
                 "./dist/GEO/GEO.php.tar.gz",
                 "./dist/GEO/GEO.json.tar.gz",
+                "./dist/GEO/GEO.fbjson.tar.gz",
                 "./dist/GEO/GEO.cpp.tar.gz",
                 "./dist/GEO/GEO.kt.tar.gz",
                 "./dist/GEO/GEO.ts.tar.gz"
@@ -1269,6 +1335,7 @@
                 "./dist/TMF/TMF.rs.tar.gz",
                 "./dist/TMF/TMF.php.tar.gz",
                 "./dist/TMF/TMF.json.tar.gz",
+                "./dist/TMF/TMF.fbjson.tar.gz",
                 "./dist/TMF/TMF.cpp.tar.gz",
                 "./dist/TMF/TMF.kt.tar.gz",
                 "./dist/TMF/TMF.ts.tar.gz"
@@ -1288,6 +1355,7 @@
                 "./dist/STV/STV.rs.tar.gz",
                 "./dist/STV/STV.php.tar.gz",
                 "./dist/STV/STV.json.tar.gz",
+                "./dist/STV/STV.fbjson.tar.gz",
                 "./dist/STV/STV.cpp.tar.gz",
                 "./dist/STV/STV.kt.tar.gz",
                 "./dist/STV/STV.ts.tar.gz"
@@ -1307,6 +1375,7 @@
                 "./dist/CLT/CLT.rs.tar.gz",
                 "./dist/CLT/CLT.php.tar.gz",
                 "./dist/CLT/CLT.json.tar.gz",
+                "./dist/CLT/CLT.fbjson.tar.gz",
                 "./dist/CLT/CLT.cpp.tar.gz",
                 "./dist/CLT/CLT.kt.tar.gz",
                 "./dist/CLT/CLT.ts.tar.gz"
@@ -1326,6 +1395,7 @@
                 "./dist/BUS/BUS.rs.tar.gz",
                 "./dist/BUS/BUS.php.tar.gz",
                 "./dist/BUS/BUS.json.tar.gz",
+                "./dist/BUS/BUS.fbjson.tar.gz",
                 "./dist/BUS/BUS.cpp.tar.gz",
                 "./dist/BUS/BUS.kt.tar.gz",
                 "./dist/BUS/BUS.ts.tar.gz"
@@ -1345,6 +1415,7 @@
                 "./dist/OOE/OOE.rs.tar.gz",
                 "./dist/OOE/OOE.php.tar.gz",
                 "./dist/OOE/OOE.json.tar.gz",
+                "./dist/OOE/OOE.fbjson.tar.gz",
                 "./dist/OOE/OOE.cpp.tar.gz",
                 "./dist/OOE/OOE.kt.tar.gz",
                 "./dist/OOE/OOE.ts.tar.gz"
@@ -1364,6 +1435,7 @@
                 "./dist/NUM/NUM.rs.tar.gz",
                 "./dist/NUM/NUM.php.tar.gz",
                 "./dist/NUM/NUM.json.tar.gz",
+                "./dist/NUM/NUM.fbjson.tar.gz",
                 "./dist/NUM/NUM.cpp.tar.gz",
                 "./dist/NUM/NUM.kt.tar.gz",
                 "./dist/NUM/NUM.ts.tar.gz"
@@ -1383,6 +1455,7 @@
                 "./dist/OOB/OOB.rs.tar.gz",
                 "./dist/OOB/OOB.php.tar.gz",
                 "./dist/OOB/OOB.json.tar.gz",
+                "./dist/OOB/OOB.fbjson.tar.gz",
                 "./dist/OOB/OOB.cpp.tar.gz",
                 "./dist/OOB/OOB.kt.tar.gz",
                 "./dist/OOB/OOB.ts.tar.gz"
@@ -1402,6 +1475,7 @@
                 "./dist/FSP/FSP.rs.tar.gz",
                 "./dist/FSP/FSP.php.tar.gz",
                 "./dist/FSP/FSP.json.tar.gz",
+                "./dist/FSP/FSP.fbjson.tar.gz",
                 "./dist/FSP/FSP.cpp.tar.gz",
                 "./dist/FSP/FSP.kt.tar.gz",
                 "./dist/FSP/FSP.ts.tar.gz"
@@ -1421,6 +1495,7 @@
                 "./dist/TNR/TNR.rs.tar.gz",
                 "./dist/TNR/TNR.php.tar.gz",
                 "./dist/TNR/TNR.json.tar.gz",
+                "./dist/TNR/TNR.fbjson.tar.gz",
                 "./dist/TNR/TNR.cpp.tar.gz",
                 "./dist/TNR/TNR.kt.tar.gz",
                 "./dist/TNR/TNR.ts.tar.gz"
@@ -1440,6 +1515,7 @@
                 "./dist/MET/MET.rs.tar.gz",
                 "./dist/MET/MET.php.tar.gz",
                 "./dist/MET/MET.json.tar.gz",
+                "./dist/MET/MET.fbjson.tar.gz",
                 "./dist/MET/MET.cpp.tar.gz",
                 "./dist/MET/MET.kt.tar.gz",
                 "./dist/MET/MET.ts.tar.gz"
@@ -1459,6 +1535,7 @@
                 "./dist/RAF/RAF.rs.tar.gz",
                 "./dist/RAF/RAF.php.tar.gz",
                 "./dist/RAF/RAF.json.tar.gz",
+                "./dist/RAF/RAF.fbjson.tar.gz",
                 "./dist/RAF/RAF.cpp.tar.gz",
                 "./dist/RAF/RAF.kt.tar.gz",
                 "./dist/RAF/RAF.ts.tar.gz"
@@ -1478,6 +1555,7 @@
                 "./dist/DSS/DSS.rs.tar.gz",
                 "./dist/DSS/DSS.php.tar.gz",
                 "./dist/DSS/DSS.json.tar.gz",
+                "./dist/DSS/DSS.fbjson.tar.gz",
                 "./dist/DSS/DSS.cpp.tar.gz",
                 "./dist/DSS/DSS.kt.tar.gz",
                 "./dist/DSS/DSS.ts.tar.gz"
@@ -1497,6 +1575,7 @@
                 "./dist/AEM/AEM.rs.tar.gz",
                 "./dist/AEM/AEM.php.tar.gz",
                 "./dist/AEM/AEM.json.tar.gz",
+                "./dist/AEM/AEM.fbjson.tar.gz",
                 "./dist/AEM/AEM.cpp.tar.gz",
                 "./dist/AEM/AEM.kt.tar.gz",
                 "./dist/AEM/AEM.ts.tar.gz"
@@ -1516,6 +1595,7 @@
                 "./dist/OOL/OOL.rs.tar.gz",
                 "./dist/OOL/OOL.php.tar.gz",
                 "./dist/OOL/OOL.json.tar.gz",
+                "./dist/OOL/OOL.fbjson.tar.gz",
                 "./dist/OOL/OOL.cpp.tar.gz",
                 "./dist/OOL/OOL.kt.tar.gz",
                 "./dist/OOL/OOL.ts.tar.gz"
@@ -1535,6 +1615,7 @@
                 "./dist/RDM/RDM.rs.tar.gz",
                 "./dist/RDM/RDM.php.tar.gz",
                 "./dist/RDM/RDM.json.tar.gz",
+                "./dist/RDM/RDM.fbjson.tar.gz",
                 "./dist/RDM/RDM.cpp.tar.gz",
                 "./dist/RDM/RDM.kt.tar.gz",
                 "./dist/RDM/RDM.ts.tar.gz"
@@ -1554,6 +1635,7 @@
                 "./dist/SRI/SRI.rs.tar.gz",
                 "./dist/SRI/SRI.php.tar.gz",
                 "./dist/SRI/SRI.json.tar.gz",
+                "./dist/SRI/SRI.fbjson.tar.gz",
                 "./dist/SRI/SRI.cpp.tar.gz",
                 "./dist/SRI/SRI.kt.tar.gz",
                 "./dist/SRI/SRI.ts.tar.gz"
@@ -1573,6 +1655,7 @@
                 "./dist/OEM/OEM.rs.tar.gz",
                 "./dist/OEM/OEM.php.tar.gz",
                 "./dist/OEM/OEM.json.tar.gz",
+                "./dist/OEM/OEM.fbjson.tar.gz",
                 "./dist/OEM/OEM.cpp.tar.gz",
                 "./dist/OEM/OEM.kt.tar.gz",
                 "./dist/OEM/OEM.ts.tar.gz"
@@ -1592,6 +1675,7 @@
                 "./dist/TAB/TAB.rs.tar.gz",
                 "./dist/TAB/TAB.php.tar.gz",
                 "./dist/TAB/TAB.json.tar.gz",
+                "./dist/TAB/TAB.fbjson.tar.gz",
                 "./dist/TAB/TAB.cpp.tar.gz",
                 "./dist/TAB/TAB.kt.tar.gz",
                 "./dist/TAB/TAB.ts.tar.gz"
@@ -1611,6 +1695,7 @@
                 "./dist/BSP/BSP.rs.tar.gz",
                 "./dist/BSP/BSP.php.tar.gz",
                 "./dist/BSP/BSP.json.tar.gz",
+                "./dist/BSP/BSP.fbjson.tar.gz",
                 "./dist/BSP/BSP.cpp.tar.gz",
                 "./dist/BSP/BSP.kt.tar.gz",
                 "./dist/BSP/BSP.ts.tar.gz"
@@ -1630,6 +1715,7 @@
                 "./dist/FSM/FSM.rs.tar.gz",
                 "./dist/FSM/FSM.php.tar.gz",
                 "./dist/FSM/FSM.json.tar.gz",
+                "./dist/FSM/FSM.fbjson.tar.gz",
                 "./dist/FSM/FSM.cpp.tar.gz",
                 "./dist/FSM/FSM.kt.tar.gz",
                 "./dist/FSM/FSM.ts.tar.gz"
@@ -1649,6 +1735,7 @@
                 "./dist/COT/COT.rs.tar.gz",
                 "./dist/COT/COT.php.tar.gz",
                 "./dist/COT/COT.json.tar.gz",
+                "./dist/COT/COT.fbjson.tar.gz",
                 "./dist/COT/COT.cpp.tar.gz",
                 "./dist/COT/COT.kt.tar.gz",
                 "./dist/COT/COT.ts.tar.gz"
@@ -1668,6 +1755,7 @@
                 "./dist/ACR/ACR.rs.tar.gz",
                 "./dist/ACR/ACR.php.tar.gz",
                 "./dist/ACR/ACR.json.tar.gz",
+                "./dist/ACR/ACR.fbjson.tar.gz",
                 "./dist/ACR/ACR.cpp.tar.gz",
                 "./dist/ACR/ACR.kt.tar.gz",
                 "./dist/ACR/ACR.ts.tar.gz"
@@ -1687,6 +1775,7 @@
                 "./dist/HYP/HYP.rs.tar.gz",
                 "./dist/HYP/HYP.php.tar.gz",
                 "./dist/HYP/HYP.json.tar.gz",
+                "./dist/HYP/HYP.fbjson.tar.gz",
                 "./dist/HYP/HYP.cpp.tar.gz",
                 "./dist/HYP/HYP.kt.tar.gz",
                 "./dist/HYP/HYP.ts.tar.gz"
@@ -1706,6 +1795,7 @@
                 "./dist/OOD/OOD.rs.tar.gz",
                 "./dist/OOD/OOD.php.tar.gz",
                 "./dist/OOD/OOD.json.tar.gz",
+                "./dist/OOD/OOD.fbjson.tar.gz",
                 "./dist/OOD/OOD.cpp.tar.gz",
                 "./dist/OOD/OOD.kt.tar.gz",
                 "./dist/OOD/OOD.ts.tar.gz"
@@ -1725,6 +1815,7 @@
                 "./dist/PHY/PHY.rs.tar.gz",
                 "./dist/PHY/PHY.php.tar.gz",
                 "./dist/PHY/PHY.json.tar.gz",
+                "./dist/PHY/PHY.fbjson.tar.gz",
                 "./dist/PHY/PHY.cpp.tar.gz",
                 "./dist/PHY/PHY.kt.tar.gz",
                 "./dist/PHY/PHY.ts.tar.gz"
@@ -1744,6 +1835,7 @@
                 "./dist/REM/REM.rs.tar.gz",
                 "./dist/REM/REM.php.tar.gz",
                 "./dist/REM/REM.json.tar.gz",
+                "./dist/REM/REM.fbjson.tar.gz",
                 "./dist/REM/REM.cpp.tar.gz",
                 "./dist/REM/REM.kt.tar.gz",
                 "./dist/REM/REM.ts.tar.gz"
@@ -1763,6 +1855,7 @@
                 "./dist/RFB/RFB.rs.tar.gz",
                 "./dist/RFB/RFB.php.tar.gz",
                 "./dist/RFB/RFB.json.tar.gz",
+                "./dist/RFB/RFB.fbjson.tar.gz",
                 "./dist/RFB/RFB.cpp.tar.gz",
                 "./dist/RFB/RFB.kt.tar.gz",
                 "./dist/RFB/RFB.ts.tar.gz"
@@ -1782,6 +1875,7 @@
                 "./dist/RFE/RFE.rs.tar.gz",
                 "./dist/RFE/RFE.php.tar.gz",
                 "./dist/RFE/RFE.json.tar.gz",
+                "./dist/RFE/RFE.fbjson.tar.gz",
                 "./dist/RFE/RFE.cpp.tar.gz",
                 "./dist/RFE/RFE.kt.tar.gz",
                 "./dist/RFE/RFE.ts.tar.gz"
@@ -1801,6 +1895,7 @@
                 "./dist/GDI/GDI.rs.tar.gz",
                 "./dist/GDI/GDI.php.tar.gz",
                 "./dist/GDI/GDI.json.tar.gz",
+                "./dist/GDI/GDI.fbjson.tar.gz",
                 "./dist/GDI/GDI.cpp.tar.gz",
                 "./dist/GDI/GDI.kt.tar.gz",
                 "./dist/GDI/GDI.ts.tar.gz"
@@ -1820,6 +1915,7 @@
                 "./dist/ENV/ENV.rs.tar.gz",
                 "./dist/ENV/ENV.php.tar.gz",
                 "./dist/ENV/ENV.json.tar.gz",
+                "./dist/ENV/ENV.fbjson.tar.gz",
                 "./dist/ENV/ENV.cpp.tar.gz",
                 "./dist/ENV/ENV.kt.tar.gz",
                 "./dist/ENV/ENV.ts.tar.gz"
@@ -1839,6 +1935,7 @@
                 "./dist/REC/REC.rs.tar.gz",
                 "./dist/REC/REC.php.tar.gz",
                 "./dist/REC/REC.json.tar.gz",
+                "./dist/REC/REC.fbjson.tar.gz",
                 "./dist/REC/REC.cpp.tar.gz",
                 "./dist/REC/REC.kt.tar.gz",
                 "./dist/REC/REC.ts.tar.gz"
@@ -1858,6 +1955,7 @@
                 "./dist/FRM/FRM.rs.tar.gz",
                 "./dist/FRM/FRM.php.tar.gz",
                 "./dist/FRM/FRM.json.tar.gz",
+                "./dist/FRM/FRM.fbjson.tar.gz",
                 "./dist/FRM/FRM.cpp.tar.gz",
                 "./dist/FRM/FRM.kt.tar.gz",
                 "./dist/FRM/FRM.ts.tar.gz"
@@ -1877,6 +1975,7 @@
                 "./dist/OBT/OBT.rs.tar.gz",
                 "./dist/OBT/OBT.php.tar.gz",
                 "./dist/OBT/OBT.json.tar.gz",
+                "./dist/OBT/OBT.fbjson.tar.gz",
                 "./dist/OBT/OBT.cpp.tar.gz",
                 "./dist/OBT/OBT.kt.tar.gz",
                 "./dist/OBT/OBT.ts.tar.gz"
@@ -1896,6 +1995,7 @@
                 "./dist/ENC/ENC.rs.tar.gz",
                 "./dist/ENC/ENC.php.tar.gz",
                 "./dist/ENC/ENC.json.tar.gz",
+                "./dist/ENC/ENC.fbjson.tar.gz",
                 "./dist/ENC/ENC.cpp.tar.gz",
                 "./dist/ENC/ENC.kt.tar.gz",
                 "./dist/ENC/ENC.ts.tar.gz"
@@ -1915,6 +2015,7 @@
                 "./dist/REV/REV.rs.tar.gz",
                 "./dist/REV/REV.php.tar.gz",
                 "./dist/REV/REV.json.tar.gz",
+                "./dist/REV/REV.fbjson.tar.gz",
                 "./dist/REV/REV.cpp.tar.gz",
                 "./dist/REV/REV.kt.tar.gz",
                 "./dist/REV/REV.ts.tar.gz"
@@ -1934,6 +2035,7 @@
                 "./dist/TIM/TIM.rs.tar.gz",
                 "./dist/TIM/TIM.php.tar.gz",
                 "./dist/TIM/TIM.json.tar.gz",
+                "./dist/TIM/TIM.fbjson.tar.gz",
                 "./dist/TIM/TIM.cpp.tar.gz",
                 "./dist/TIM/TIM.kt.tar.gz",
                 "./dist/TIM/TIM.ts.tar.gz"
@@ -1953,6 +2055,7 @@
                 "./dist/MBL/MBL.rs.tar.gz",
                 "./dist/MBL/MBL.php.tar.gz",
                 "./dist/MBL/MBL.json.tar.gz",
+                "./dist/MBL/MBL.fbjson.tar.gz",
                 "./dist/MBL/MBL.cpp.tar.gz",
                 "./dist/MBL/MBL.kt.tar.gz",
                 "./dist/MBL/MBL.ts.tar.gz"
@@ -1972,6 +2075,7 @@
                 "./dist/ROC/ROC.rs.tar.gz",
                 "./dist/ROC/ROC.php.tar.gz",
                 "./dist/ROC/ROC.json.tar.gz",
+                "./dist/ROC/ROC.fbjson.tar.gz",
                 "./dist/ROC/ROC.cpp.tar.gz",
                 "./dist/ROC/ROC.kt.tar.gz",
                 "./dist/ROC/ROC.ts.tar.gz"
@@ -1991,6 +2095,7 @@
                 "./dist/RCF/RCF.rs.tar.gz",
                 "./dist/RCF/RCF.php.tar.gz",
                 "./dist/RCF/RCF.json.tar.gz",
+                "./dist/RCF/RCF.fbjson.tar.gz",
                 "./dist/RCF/RCF.cpp.tar.gz",
                 "./dist/RCF/RCF.kt.tar.gz",
                 "./dist/RCF/RCF.ts.tar.gz"
@@ -2010,6 +2115,7 @@
                 "./dist/EME/EME.rs.tar.gz",
                 "./dist/EME/EME.php.tar.gz",
                 "./dist/EME/EME.json.tar.gz",
+                "./dist/EME/EME.fbjson.tar.gz",
                 "./dist/EME/EME.cpp.tar.gz",
                 "./dist/EME/EME.kt.tar.gz",
                 "./dist/EME/EME.ts.tar.gz"
@@ -2029,6 +2135,7 @@
                 "./dist/WPN/WPN.rs.tar.gz",
                 "./dist/WPN/WPN.php.tar.gz",
                 "./dist/WPN/WPN.json.tar.gz",
+                "./dist/WPN/WPN.fbjson.tar.gz",
                 "./dist/WPN/WPN.cpp.tar.gz",
                 "./dist/WPN/WPN.kt.tar.gz",
                 "./dist/WPN/WPN.ts.tar.gz"
@@ -2048,6 +2155,7 @@
                 "./dist/KML/KML.rs.tar.gz",
                 "./dist/KML/KML.php.tar.gz",
                 "./dist/KML/KML.json.tar.gz",
+                "./dist/KML/KML.fbjson.tar.gz",
                 "./dist/KML/KML.cpp.tar.gz",
                 "./dist/KML/KML.kt.tar.gz",
                 "./dist/KML/KML.ts.tar.gz"
@@ -2067,6 +2175,7 @@
                 "./dist/RFM/RFM.rs.tar.gz",
                 "./dist/RFM/RFM.php.tar.gz",
                 "./dist/RFM/RFM.json.tar.gz",
+                "./dist/RFM/RFM.fbjson.tar.gz",
                 "./dist/RFM/RFM.cpp.tar.gz",
                 "./dist/RFM/RFM.kt.tar.gz",
                 "./dist/RFM/RFM.ts.tar.gz"
@@ -2086,6 +2195,7 @@
                 "./dist/CMT/CMT.rs.tar.gz",
                 "./dist/CMT/CMT.php.tar.gz",
                 "./dist/CMT/CMT.json.tar.gz",
+                "./dist/CMT/CMT.fbjson.tar.gz",
                 "./dist/CMT/CMT.cpp.tar.gz",
                 "./dist/CMT/CMT.kt.tar.gz",
                 "./dist/CMT/CMT.ts.tar.gz"
@@ -2105,6 +2215,7 @@
                 "./dist/OMM/OMM.rs.tar.gz",
                 "./dist/OMM/OMM.php.tar.gz",
                 "./dist/OMM/OMM.json.tar.gz",
+                "./dist/OMM/OMM.fbjson.tar.gz",
                 "./dist/OMM/OMM.cpp.tar.gz",
                 "./dist/OMM/OMM.kt.tar.gz",
                 "./dist/OMM/OMM.ts.tar.gz"
@@ -2124,6 +2235,7 @@
                 "./dist/CMS/CMS.rs.tar.gz",
                 "./dist/CMS/CMS.php.tar.gz",
                 "./dist/CMS/CMS.json.tar.gz",
+                "./dist/CMS/CMS.fbjson.tar.gz",
                 "./dist/CMS/CMS.cpp.tar.gz",
                 "./dist/CMS/CMS.kt.tar.gz",
                 "./dist/CMS/CMS.ts.tar.gz"
@@ -2143,6 +2255,7 @@
                 "./dist/MNF/MNF.rs.tar.gz",
                 "./dist/MNF/MNF.php.tar.gz",
                 "./dist/MNF/MNF.json.tar.gz",
+                "./dist/MNF/MNF.fbjson.tar.gz",
                 "./dist/MNF/MNF.cpp.tar.gz",
                 "./dist/MNF/MNF.kt.tar.gz",
                 "./dist/MNF/MNF.ts.tar.gz"
@@ -2162,6 +2275,7 @@
                 "./dist/CAQ/CAQ.rs.tar.gz",
                 "./dist/CAQ/CAQ.php.tar.gz",
                 "./dist/CAQ/CAQ.json.tar.gz",
+                "./dist/CAQ/CAQ.fbjson.tar.gz",
                 "./dist/CAQ/CAQ.cpp.tar.gz",
                 "./dist/CAQ/CAQ.kt.tar.gz",
                 "./dist/CAQ/CAQ.ts.tar.gz"
@@ -2181,6 +2295,7 @@
                 "./dist/PIV/PIV.rs.tar.gz",
                 "./dist/PIV/PIV.php.tar.gz",
                 "./dist/PIV/PIV.json.tar.gz",
+                "./dist/PIV/PIV.fbjson.tar.gz",
                 "./dist/PIV/PIV.cpp.tar.gz",
                 "./dist/PIV/PIV.kt.tar.gz",
                 "./dist/PIV/PIV.ts.tar.gz"
@@ -2200,6 +2315,7 @@
                 "./dist/PLG/PLG.rs.tar.gz",
                 "./dist/PLG/PLG.php.tar.gz",
                 "./dist/PLG/PLG.json.tar.gz",
+                "./dist/PLG/PLG.fbjson.tar.gz",
                 "./dist/PLG/PLG.cpp.tar.gz",
                 "./dist/PLG/PLG.kt.tar.gz",
                 "./dist/PLG/PLG.ts.tar.gz"
@@ -2219,6 +2335,7 @@
                 "./dist/GNO/GNO.rs.tar.gz",
                 "./dist/GNO/GNO.php.tar.gz",
                 "./dist/GNO/GNO.json.tar.gz",
+                "./dist/GNO/GNO.fbjson.tar.gz",
                 "./dist/GNO/GNO.cpp.tar.gz",
                 "./dist/GNO/GNO.kt.tar.gz",
                 "./dist/GNO/GNO.ts.tar.gz"
@@ -2238,6 +2355,7 @@
                 "./dist/SDL/SDL.rs.tar.gz",
                 "./dist/SDL/SDL.php.tar.gz",
                 "./dist/SDL/SDL.json.tar.gz",
+                "./dist/SDL/SDL.fbjson.tar.gz",
                 "./dist/SDL/SDL.cpp.tar.gz",
                 "./dist/SDL/SDL.kt.tar.gz",
                 "./dist/SDL/SDL.ts.tar.gz"
@@ -2257,6 +2375,7 @@
                 "./dist/MSL/MSL.rs.tar.gz",
                 "./dist/MSL/MSL.php.tar.gz",
                 "./dist/MSL/MSL.json.tar.gz",
+                "./dist/MSL/MSL.fbjson.tar.gz",
                 "./dist/MSL/MSL.cpp.tar.gz",
                 "./dist/MSL/MSL.kt.tar.gz",
                 "./dist/MSL/MSL.ts.tar.gz"
@@ -2276,6 +2395,7 @@
                 "./dist/SNW/SNW.rs.tar.gz",
                 "./dist/SNW/SNW.php.tar.gz",
                 "./dist/SNW/SNW.json.tar.gz",
+                "./dist/SNW/SNW.fbjson.tar.gz",
                 "./dist/SNW/SNW.cpp.tar.gz",
                 "./dist/SNW/SNW.kt.tar.gz",
                 "./dist/SNW/SNW.ts.tar.gz"
@@ -2295,6 +2415,7 @@
                 "./dist/GVH/GVH.rs.tar.gz",
                 "./dist/GVH/GVH.php.tar.gz",
                 "./dist/GVH/GVH.json.tar.gz",
+                "./dist/GVH/GVH.fbjson.tar.gz",
                 "./dist/GVH/GVH.cpp.tar.gz",
                 "./dist/GVH/GVH.kt.tar.gz",
                 "./dist/GVH/GVH.ts.tar.gz"
@@ -2314,6 +2435,7 @@
                 "./dist/XTC/XTC.rs.tar.gz",
                 "./dist/XTC/XTC.php.tar.gz",
                 "./dist/XTC/XTC.json.tar.gz",
+                "./dist/XTC/XTC.fbjson.tar.gz",
                 "./dist/XTC/XTC.cpp.tar.gz",
                 "./dist/XTC/XTC.kt.tar.gz",
                 "./dist/XTC/XTC.ts.tar.gz"
@@ -2333,6 +2455,7 @@
                 "./dist/PRW/PRW.rs.tar.gz",
                 "./dist/PRW/PRW.php.tar.gz",
                 "./dist/PRW/PRW.json.tar.gz",
+                "./dist/PRW/PRW.fbjson.tar.gz",
                 "./dist/PRW/PRW.cpp.tar.gz",
                 "./dist/PRW/PRW.kt.tar.gz",
                 "./dist/PRW/PRW.ts.tar.gz"
@@ -2352,6 +2475,7 @@
                 "./dist/CSM/CSM.rs.tar.gz",
                 "./dist/CSM/CSM.php.tar.gz",
                 "./dist/CSM/CSM.json.tar.gz",
+                "./dist/CSM/CSM.fbjson.tar.gz",
                 "./dist/CSM/CSM.cpp.tar.gz",
                 "./dist/CSM/CSM.kt.tar.gz",
                 "./dist/CSM/CSM.ts.tar.gz"
@@ -2371,6 +2495,7 @@
                 "./dist/GPX/GPX.rs.tar.gz",
                 "./dist/GPX/GPX.php.tar.gz",
                 "./dist/GPX/GPX.json.tar.gz",
+                "./dist/GPX/GPX.fbjson.tar.gz",
                 "./dist/GPX/GPX.cpp.tar.gz",
                 "./dist/GPX/GPX.kt.tar.gz",
                 "./dist/GPX/GPX.ts.tar.gz"
@@ -2390,6 +2515,7 @@
                 "./dist/LCC/LCC.rs.tar.gz",
                 "./dist/LCC/LCC.php.tar.gz",
                 "./dist/LCC/LCC.json.tar.gz",
+                "./dist/LCC/LCC.fbjson.tar.gz",
                 "./dist/LCC/LCC.cpp.tar.gz",
                 "./dist/LCC/LCC.kt.tar.gz",
                 "./dist/LCC/LCC.ts.tar.gz"
@@ -2409,6 +2535,7 @@
                 "./dist/CZM/CZM.rs.tar.gz",
                 "./dist/CZM/CZM.php.tar.gz",
                 "./dist/CZM/CZM.json.tar.gz",
+                "./dist/CZM/CZM.fbjson.tar.gz",
                 "./dist/CZM/CZM.cpp.tar.gz",
                 "./dist/CZM/CZM.kt.tar.gz",
                 "./dist/CZM/CZM.ts.tar.gz"
@@ -2428,6 +2555,7 @@
                 "./dist/SAR/SAR.rs.tar.gz",
                 "./dist/SAR/SAR.php.tar.gz",
                 "./dist/SAR/SAR.json.tar.gz",
+                "./dist/SAR/SAR.fbjson.tar.gz",
                 "./dist/SAR/SAR.cpp.tar.gz",
                 "./dist/SAR/SAR.kt.tar.gz",
                 "./dist/SAR/SAR.ts.tar.gz"
@@ -2447,6 +2575,7 @@
                 "./dist/SKI/SKI.rs.tar.gz",
                 "./dist/SKI/SKI.php.tar.gz",
                 "./dist/SKI/SKI.json.tar.gz",
+                "./dist/SKI/SKI.fbjson.tar.gz",
                 "./dist/SKI/SKI.cpp.tar.gz",
                 "./dist/SKI/SKI.kt.tar.gz",
                 "./dist/SKI/SKI.ts.tar.gz"
@@ -2466,6 +2595,7 @@
                 "./dist/AST/AST.rs.tar.gz",
                 "./dist/AST/AST.php.tar.gz",
                 "./dist/AST/AST.json.tar.gz",
+                "./dist/AST/AST.fbjson.tar.gz",
                 "./dist/AST/AST.cpp.tar.gz",
                 "./dist/AST/AST.kt.tar.gz",
                 "./dist/AST/AST.ts.tar.gz"
@@ -2485,6 +2615,7 @@
                 "./dist/MPE/MPE.rs.tar.gz",
                 "./dist/MPE/MPE.php.tar.gz",
                 "./dist/MPE/MPE.json.tar.gz",
+                "./dist/MPE/MPE.fbjson.tar.gz",
                 "./dist/MPE/MPE.cpp.tar.gz",
                 "./dist/MPE/MPE.kt.tar.gz",
                 "./dist/MPE/MPE.ts.tar.gz"
@@ -2504,6 +2635,7 @@
                 "./dist/TRK/TRK.rs.tar.gz",
                 "./dist/TRK/TRK.php.tar.gz",
                 "./dist/TRK/TRK.json.tar.gz",
+                "./dist/TRK/TRK.fbjson.tar.gz",
                 "./dist/TRK/TRK.cpp.tar.gz",
                 "./dist/TRK/TRK.kt.tar.gz",
                 "./dist/TRK/TRK.ts.tar.gz"
@@ -2523,6 +2655,7 @@
                 "./dist/TRE/TRE.rs.tar.gz",
                 "./dist/TRE/TRE.php.tar.gz",
                 "./dist/TRE/TRE.json.tar.gz",
+                "./dist/TRE/TRE.fbjson.tar.gz",
                 "./dist/TRE/TRE.cpp.tar.gz",
                 "./dist/TRE/TRE.kt.tar.gz",
                 "./dist/TRE/TRE.ts.tar.gz"
@@ -2542,6 +2675,7 @@
                 "./dist/SOI/SOI.rs.tar.gz",
                 "./dist/SOI/SOI.php.tar.gz",
                 "./dist/SOI/SOI.json.tar.gz",
+                "./dist/SOI/SOI.fbjson.tar.gz",
                 "./dist/SOI/SOI.cpp.tar.gz",
                 "./dist/SOI/SOI.kt.tar.gz",
                 "./dist/SOI/SOI.ts.tar.gz"
@@ -2561,6 +2695,7 @@
                 "./dist/SON/SON.rs.tar.gz",
                 "./dist/SON/SON.php.tar.gz",
                 "./dist/SON/SON.json.tar.gz",
+                "./dist/SON/SON.fbjson.tar.gz",
                 "./dist/SON/SON.cpp.tar.gz",
                 "./dist/SON/SON.kt.tar.gz",
                 "./dist/SON/SON.ts.tar.gz"
@@ -2580,6 +2715,7 @@
                 "./dist/IRO/IRO.rs.tar.gz",
                 "./dist/IRO/IRO.php.tar.gz",
                 "./dist/IRO/IRO.json.tar.gz",
+                "./dist/IRO/IRO.fbjson.tar.gz",
                 "./dist/IRO/IRO.cpp.tar.gz",
                 "./dist/IRO/IRO.kt.tar.gz",
                 "./dist/IRO/IRO.ts.tar.gz"
@@ -2599,6 +2735,7 @@
                 "./dist/TPN/TPN.rs.tar.gz",
                 "./dist/TPN/TPN.php.tar.gz",
                 "./dist/TPN/TPN.json.tar.gz",
+                "./dist/TPN/TPN.fbjson.tar.gz",
                 "./dist/TPN/TPN.cpp.tar.gz",
                 "./dist/TPN/TPN.kt.tar.gz",
                 "./dist/TPN/TPN.ts.tar.gz"
@@ -2618,6 +2755,7 @@
                 "./dist/LND/LND.rs.tar.gz",
                 "./dist/LND/LND.php.tar.gz",
                 "./dist/LND/LND.json.tar.gz",
+                "./dist/LND/LND.fbjson.tar.gz",
                 "./dist/LND/LND.cpp.tar.gz",
                 "./dist/LND/LND.kt.tar.gz",
                 "./dist/LND/LND.ts.tar.gz"
@@ -2637,6 +2775,7 @@
                 "./dist/EWR/EWR.rs.tar.gz",
                 "./dist/EWR/EWR.php.tar.gz",
                 "./dist/EWR/EWR.json.tar.gz",
+                "./dist/EWR/EWR.fbjson.tar.gz",
                 "./dist/EWR/EWR.cpp.tar.gz",
                 "./dist/EWR/EWR.kt.tar.gz",
                 "./dist/EWR/EWR.ts.tar.gz"
@@ -2656,6 +2795,7 @@
                 "./dist/SEN/SEN.rs.tar.gz",
                 "./dist/SEN/SEN.php.tar.gz",
                 "./dist/SEN/SEN.json.tar.gz",
+                "./dist/SEN/SEN.fbjson.tar.gz",
                 "./dist/SEN/SEN.cpp.tar.gz",
                 "./dist/SEN/SEN.kt.tar.gz",
                 "./dist/SEN/SEN.ts.tar.gz"
@@ -2675,6 +2815,7 @@
                 "./dist/LDM/LDM.rs.tar.gz",
                 "./dist/LDM/LDM.php.tar.gz",
                 "./dist/LDM/LDM.json.tar.gz",
+                "./dist/LDM/LDM.fbjson.tar.gz",
                 "./dist/LDM/LDM.cpp.tar.gz",
                 "./dist/LDM/LDM.kt.tar.gz",
                 "./dist/LDM/LDM.ts.tar.gz"
@@ -2694,6 +2835,7 @@
                 "./dist/NAV/NAV.rs.tar.gz",
                 "./dist/NAV/NAV.php.tar.gz",
                 "./dist/NAV/NAV.json.tar.gz",
+                "./dist/NAV/NAV.fbjson.tar.gz",
                 "./dist/NAV/NAV.cpp.tar.gz",
                 "./dist/NAV/NAV.kt.tar.gz",
                 "./dist/NAV/NAV.ts.tar.gz"
@@ -2713,6 +2855,7 @@
                 "./dist/BMC/BMC.rs.tar.gz",
                 "./dist/BMC/BMC.php.tar.gz",
                 "./dist/BMC/BMC.json.tar.gz",
+                "./dist/BMC/BMC.fbjson.tar.gz",
                 "./dist/BMC/BMC.cpp.tar.gz",
                 "./dist/BMC/BMC.kt.tar.gz",
                 "./dist/BMC/BMC.ts.tar.gz"
@@ -2732,6 +2875,7 @@
                 "./dist/LNE/LNE.rs.tar.gz",
                 "./dist/LNE/LNE.php.tar.gz",
                 "./dist/LNE/LNE.json.tar.gz",
+                "./dist/LNE/LNE.fbjson.tar.gz",
                 "./dist/LNE/LNE.cpp.tar.gz",
                 "./dist/LNE/LNE.kt.tar.gz",
                 "./dist/LNE/LNE.ts.tar.gz"
@@ -2751,6 +2895,7 @@
                 "./dist/LKS/LKS.rs.tar.gz",
                 "./dist/LKS/LKS.php.tar.gz",
                 "./dist/LKS/LKS.json.tar.gz",
+                "./dist/LKS/LKS.fbjson.tar.gz",
                 "./dist/LKS/LKS.cpp.tar.gz",
                 "./dist/LKS/LKS.kt.tar.gz",
                 "./dist/LKS/LKS.ts.tar.gz"
@@ -2770,6 +2915,7 @@
                 "./dist/ARM/ARM.rs.tar.gz",
                 "./dist/ARM/ARM.php.tar.gz",
                 "./dist/ARM/ARM.json.tar.gz",
+                "./dist/ARM/ARM.fbjson.tar.gz",
                 "./dist/ARM/ARM.cpp.tar.gz",
                 "./dist/ARM/ARM.kt.tar.gz",
                 "./dist/ARM/ARM.ts.tar.gz"
@@ -2789,6 +2935,7 @@
                 "./dist/SCM/SCM.rs.tar.gz",
                 "./dist/SCM/SCM.php.tar.gz",
                 "./dist/SCM/SCM.json.tar.gz",
+                "./dist/SCM/SCM.fbjson.tar.gz",
                 "./dist/SCM/SCM.cpp.tar.gz",
                 "./dist/SCM/SCM.kt.tar.gz",
                 "./dist/SCM/SCM.ts.tar.gz"
@@ -2808,6 +2955,7 @@
                 "./dist/DMG/DMG.rs.tar.gz",
                 "./dist/DMG/DMG.php.tar.gz",
                 "./dist/DMG/DMG.json.tar.gz",
+                "./dist/DMG/DMG.fbjson.tar.gz",
                 "./dist/DMG/DMG.cpp.tar.gz",
                 "./dist/DMG/DMG.kt.tar.gz",
                 "./dist/DMG/DMG.ts.tar.gz"
@@ -2827,6 +2975,7 @@
                 "./dist/SCC/SCC.rs.tar.gz",
                 "./dist/SCC/SCC.php.tar.gz",
                 "./dist/SCC/SCC.json.tar.gz",
+                "./dist/SCC/SCC.fbjson.tar.gz",
                 "./dist/SCC/SCC.cpp.tar.gz",
                 "./dist/SCC/SCC.kt.tar.gz",
                 "./dist/SCC/SCC.ts.tar.gz"
@@ -2846,13 +2995,14 @@
                 "./dist/SEO/SEO.rs.tar.gz",
                 "./dist/SEO/SEO.php.tar.gz",
                 "./dist/SEO/SEO.json.tar.gz",
+                "./dist/SEO/SEO.fbjson.tar.gz",
                 "./dist/SEO/SEO.cpp.tar.gz",
                 "./dist/SEO/SEO.kt.tar.gz",
                 "./dist/SEO/SEO.ts.tar.gz"
             ]
         },
         "SCV": {
-            "IDL": "// Hash: 45add17cde528ca740fb64d5f1280b86d35bd31ffdbc27071bf6e0b5dca7ab29\n// Version: 1.101.4\n// -----------------------------------END_HEADER\n/// Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for\n/// access, coverage, swath, and coverage-geometry products produced by SDN\n/// modules and consumed by OrbPro analytics sessions.\n\nenum scvEnvelopeKind : ubyte {\n  REQUEST,\n  RESULT,\n  PROGRESS,\n  CANCEL,\n  GEOMETRY\n}\n\nenum scvAnalysisMode : ubyte {\n  COVERAGE,\n  ACCESS,\n  SWATH,\n  COMBINED\n}\n\nenum scvCoordinateFrame : ubyte {\n  UNKNOWN,\n  BODY_FIXED,\n  INERTIAL,\n  ECEF,\n  ECI,\n  CUSTOM,\n  SENSOR_LOCAL\n}\n\nenum scvBodyKind : ubyte {\n  EARTH,\n  MOON,\n  MARS,\n  CUSTOM\n}\n\nenum scvSensorShapeKind : ubyte {\n  CONIC,\n  RECTANGULAR,\n  CUSTOM_POLYGON,\n  SAR_ANNULAR_SECTOR\n}\n\nenum scvSensorAxisConvention : ubyte {\n  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT\n}\n\nenum scvSensorRangeBoundaryKind : ubyte {\n  RADIAL_SPHERICAL,\n  LOCAL_Z_PLANE\n}\n\nenum scvGeometryDomain : ubyte {\n  SURFACE,\n  SPACE,\n  ELLIPSOID,\n  PLANE,\n  CUSTOM_MESH\n}\n\nenum scvResultState : ubyte {\n  OK,\n  PARTIAL,\n  CANCELLED,\n  FAILED\n}\n\nenum scvMetricSeriesKind : ushort {\n  PERCENT_COVERED,\n  COVERED_CELL_COUNT,\n  ACCESS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  OVERLAP_COUNT,\n  LATITUDE_BAND_COVERAGE\n}\n\nenum scvGeometryEncoding : ubyte {\n  FLAT_FLOAT32,\n  INTERLEAVED_FLOAT32,\n  QUANTIZED_UINT16,\n  SHARED_MEMORY_OFFSET\n}\n\nenum scvRasterProductKind : ushort {\n  CELL_BOUNDS_DEG,\n  CELL_CENTERS_DEG,\n  PERCENT_COVERAGE,\n  PASS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  CURRENT_ACCESS_BITSET,\n  BUCKET_START_SECONDS,\n  BUCKET_STOP_SECONDS,\n  BUCKET_ACTIVE_CELL_COUNT,\n  PASS_COUNT_RGBA,\n  CURRENT_ACCESS_RGBA,\n  LATITUDE_BAND_COVERAGE,\n  BUCKET_PASS_START_COUNT,\n  WINDOW_START_ACCESS_BITSET,\n  WINDOW_STOP_ACCESS_BITSET\n}\n\nenum scvRasterProductEncoding : ubyte {\n  FLOAT32,\n  FLOAT64,\n  UINT32,\n  BITSET_UINT32,\n  UINT8\n}\n\ntable SCVVec3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\ntable SCVEllipsoid {\n  BODY:scvBodyKind;\n  NAME:string;\n  SEMI_MAJOR_M:double;\n  SEMI_MINOR_M:double;\n  SEMI_INTERMEDIATE_M:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTimeGrid {\n  EPOCH_ISO:string;\n  EPOCH_JULIAN_DATE:double;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  STEP_SEC:double;\n  GRID_INDEX_START:uint32;\n  GRID_INDEX_COUNT:uint32;\n}\n\ntable SCVSensorShapeContract {\n  SHAPE_KIND:scvSensorShapeKind;\n  AXIS_CONVENTION:scvSensorAxisConvention;\n  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;\n  OUTER_HALF_ANGLE_DEG:double;\n  INNER_HALF_ANGLE_DEG:double;\n  MIN_CLOCK_ANGLE_DEG:double;\n  MAX_CLOCK_ANGLE_DEG:double = 360.0;\n  X_HALF_ANGLE_DEG:double;\n  Y_HALF_ANGLE_DEG:double;\n  INNER_LOOK_ANGLE_DEG:double;\n  OUTER_LOOK_ANGLE_DEG:double;\n  SAR_SAMPLING_DENSITY:double;\n  MIN_RANGE_M:double;\n  MAX_RANGE_M:double;\n  POLYGON_VERTICES:[SCVVec3];\n  POLYGON_FRAME:scvCoordinateFrame;\n}\n\ntable SCVSensor {\n  SENSOR_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  BORESIGHT_UNIT:SCVVec3;\n  UP_UNIT:SCVVec3;\n  SHAPE_CONTRACT:SCVSensorShapeContract;\n}\n\ntable SCVStateSample {\n  SENSOR_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTarget {\n  TARGET_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  RADIUS_M:double;\n}\n\ntable SCVTargetStateSample {\n  TARGET_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVCoverageGrid {\n  GRID_ID:string;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  MIN_LAT_DEG:double;\n  MAX_LAT_DEG:double;\n  MIN_LON_DEG:double;\n  MAX_LON_DEG:double;\n  LAT_STEP_DEG:double;\n  LON_STEP_DEG:double;\n  ALTITUDE_M:double;\n  CELL_COUNT:uint32;\n  RESOLUTION_DEG:double;\n}\n\ntable SCVCoverageRequest {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  ANALYSIS_MODE:scvAnalysisMode;\n  TARGET_BODY:SCVEllipsoid;\n  TIME_GRID:SCVTimeGrid;\n  COVERAGE_GRID:SCVCoverageGrid;\n  SENSORS:[SCVSensor];\n  STATE_SAMPLES:[SCVStateSample];\n  TARGETS:[SCVTarget];\n  TARGET_STATE_SAMPLES:[SCVTargetStateSample];\n  REQUESTED_PRODUCTS:[scvMetricSeriesKind];\n  SENSOR_BATCH_START:uint32;\n  SENSOR_BATCH_COUNT:uint32;\n  WINDOW_BATCH_START:uint32;\n  WINDOW_BATCH_COUNT:uint32;\n  GEOMETRY_ENCODING:scvGeometryEncoding;\n  INCLUDE_PACKED_GEOMETRY:bool;\n}\n\ntable SCVProgress {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  COMPLETED_SENSORS:uint32;\n  TOTAL_SENSORS:uint32;\n  COMPLETED_WINDOWS:uint32;\n  TOTAL_WINDOWS:uint32;\n  BACKLOG_REMAINING:uint32;\n  COMPLETION_FRACTION:double;\n  MESSAGE:string;\n}\n\ntable SCVCancel {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  REASON:string;\n  CANCEL_AFTER_WINDOW_INDEX:uint32;\n}\n\ntable SCVSensorContribution {\n  SENSOR_ID:uint32;\n  FIRST_WINDOW_INDEX:uint32;\n  LAST_WINDOW_INDEX:uint32;\n  CONTRIBUTION_COUNT:uint32;\n}\n\ntable SCVHistogramBin {\n  METRIC_KIND:scvMetricSeriesKind;\n  MIN_VALUE:double;\n  MAX_VALUE:double;\n  COUNT:uint32;\n  WEIGHT:double;\n}\n\ntable SCVSwathSegment {\n  SEGMENT_ID:uint32;\n  SENSOR_ID:uint32;\n  WINDOW_INDEX:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  VERTEX_OFFSET:uint32;\n  VERTEX_COUNT:uint32;\n  INDEX_OFFSET:uint32;\n  INDEX_COUNT:uint32;\n  SENSOR_IDS:[uint32];\n}\n\ntable SCVMemoryRegion {\n  REGION_ID:uint32;\n  RECORD_INDEX:uint32;\n  REGION_KEY:string;\n  BYTE_OFFSET:uint64;\n  BYTE_LENGTH:uint64;\n  BYTE_STRIDE:uint32;\n  ALIGNMENT:uint32;\n  SHARED:bool;\n  MUTABLE:bool;\n}\n\ntable SCVPackedGeometryChunk {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  CHUNK_INDEX:uint32;\n  WINDOW_START_INDEX:uint32;\n  WINDOW_COUNT:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  ENCODING:scvGeometryEncoding;\n  TIME_START_OFFSET_SEC:double;\n  TIME_STOP_OFFSET_SEC:double;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  POSITIONS_REGION_ID:uint32;\n  POSITIONS_RECORD_INDEX:uint32;\n  NORMALS_REGION_ID:uint32;\n  NORMALS_RECORD_INDEX:uint32;\n  ST_REGION_ID:uint32;\n  ST_RECORD_INDEX:uint32;\n  REVEAL_COORDS_REGION_ID:uint32;\n  REVEAL_COORDS_RECORD_INDEX:uint32;\n  INDICES_REGION_ID:uint32;\n  INDICES_RECORD_INDEX:uint32;\n  POSITIONS:[float];\n  NORMALS:[float];\n  ST:[float];\n  REVEAL_COORDS:[float];\n  INDICES:[uint32];\n  SEGMENT_IDS:[uint32];\n  SENSOR_IDS:[uint32];\n  SEGMENTS:[SCVSwathSegment];\n}\n\ntable SCVPackedRasterBand {\n  PRODUCT_KIND:scvRasterProductKind;\n  METRIC_KIND:scvMetricSeriesKind;\n  ENCODING:scvRasterProductEncoding;\n  COMPONENTS_PER_CELL:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGION_ID:uint32;\n  MEMORY_RECORD_INDEX:uint32;\n  FLOAT32_VALUES:[float];\n  FLOAT64_VALUES:[double];\n  UINT32_VALUES:[uint32];\n}\n\ntable SCVPackedRasterProducts {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  GRID:SCVCoverageGrid;\n  TIME_GRID:SCVTimeGrid;\n  ROWS:uint32;\n  COLUMNS:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  BANDS:[SCVPackedRasterBand];\n}\n\ntable SCVAggregateStatistics {\n  TOTAL_CELLS:uint32;\n  ACCESSED_CELLS:uint32;\n  MULTI_ACCESS_CELLS:uint32;\n  ACTIVE_SENSOR_COUNT:uint32;\n  SWATH_COUNT:uint32;\n  TOTAL_WINDOWS:uint32;\n  TOTAL_INTERVAL_COUNT:uint32;\n  TOTAL_REVISIT_COUNT:uint32;\n  TOTAL_ACCESS_DURATION_SEC:double;\n  TOTAL_GAP_DURATION_SEC:double;\n  MAX_GAP_DURATION_SEC:double;\n  MEAN_REVISIT_TIME_SEC:double;\n  MAX_RESPONSE_TIME_SEC:double;\n  MEAN_RESPONSE_TIME_SEC:double;\n  PERCENT_COVERAGE:double;\n}\n\ntable SCVResult {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  TIME_GRID:SCVTimeGrid;\n  TARGET_BODY:SCVEllipsoid;\n  TOTAL_SENSORS:uint32;\n  TOTAL_WINDOWS:uint32;\n  HISTOGRAMS:[SCVHistogramBin];\n  CONTRIBUTIONS:[SCVSensorContribution];\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n  MESSAGE:string;\n  AGGREGATE_STATISTICS:SCVAggregateStatistics;\n}\n\ntable SCV {\n  ENVELOPE_KIND:scvEnvelopeKind;\n  REQUEST:SCVCoverageRequest;\n  PROGRESS:SCVProgress;\n  CANCEL:SCVCancel;\n  RESULT:SCVResult;\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n}\n\nroot_type SCV;\nfile_identifier \"$SCV\";",
+            "IDL": "// Hash: a708974880aa4f2b2a4039241cb3cf8508804f2780a3ac919f241486cb773470\n// Version: 1.101.5\n// -----------------------------------END_HEADER\n/// Sensor Coverage Analytics \u2014 canonical request/result/progress ABI for\n/// access, coverage, swath, and coverage-geometry products produced by SDN\n/// modules and consumed by OrbPro analytics sessions.\n\nenum scvEnvelopeKind : ubyte {\n  REQUEST,\n  RESULT,\n  PROGRESS,\n  CANCEL,\n  GEOMETRY\n}\n\nenum scvAnalysisMode : ubyte {\n  COVERAGE,\n  ACCESS,\n  SWATH,\n  COMBINED\n}\n\nenum scvCoordinateFrame : ubyte {\n  UNKNOWN,\n  BODY_FIXED,\n  INERTIAL,\n  ECEF,\n  ECI,\n  CUSTOM,\n  SENSOR_LOCAL\n}\n\nenum scvBodyKind : ubyte {\n  EARTH,\n  MOON,\n  MARS,\n  CUSTOM\n}\n\nenum scvSensorShapeKind : ubyte {\n  CONIC,\n  RECTANGULAR,\n  CUSTOM_POLYGON,\n  SAR_ANNULAR_SECTOR\n}\n\nenum scvSensorAxisConvention : ubyte {\n  LOCAL_X_RIGHT_Y_UP_Z_BORESIGHT\n}\n\nenum scvSensorRangeBoundaryKind : ubyte {\n  RADIAL_SPHERICAL,\n  LOCAL_Z_PLANE\n}\n\nenum scvGeometryDomain : ubyte {\n  SURFACE,\n  SPACE,\n  ELLIPSOID,\n  PLANE,\n  CUSTOM_MESH\n}\n\nenum scvTargetShape : ubyte {\n  POINT,\n  POLYGON,\n  RECTANGLE,\n  BOX,\n  SPHERE,\n  EXTRUDED_POLYGON\n}\n\nenum scvResultState : ubyte {\n  OK,\n  PARTIAL,\n  CANCELLED,\n  FAILED\n}\n\nenum scvMetricSeriesKind : ushort {\n  PERCENT_COVERED,\n  COVERED_CELL_COUNT,\n  ACCESS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  OVERLAP_COUNT,\n  LATITUDE_BAND_COVERAGE\n}\n\nenum scvGeometryEncoding : ubyte {\n  FLAT_FLOAT32,\n  INTERLEAVED_FLOAT32,\n  QUANTIZED_UINT16,\n  SHARED_MEMORY_OFFSET\n}\n\nenum scvRasterProductKind : ushort {\n  CELL_BOUNDS_DEG,\n  CELL_CENTERS_DEG,\n  PERCENT_COVERAGE,\n  PASS_COUNT,\n  CONTACT_DURATION_SECONDS,\n  REVISIT_SECONDS,\n  GAP_SECONDS,\n  REDUNDANCY,\n  CURRENT_ACCESS_BITSET,\n  BUCKET_START_SECONDS,\n  BUCKET_STOP_SECONDS,\n  BUCKET_ACTIVE_CELL_COUNT,\n  PASS_COUNT_RGBA,\n  CURRENT_ACCESS_RGBA,\n  LATITUDE_BAND_COVERAGE,\n  BUCKET_PASS_START_COUNT,\n  WINDOW_START_ACCESS_BITSET,\n  WINDOW_STOP_ACCESS_BITSET\n}\n\nenum scvRasterProductEncoding : ubyte {\n  FLOAT32,\n  FLOAT64,\n  UINT32,\n  BITSET_UINT32,\n  UINT8\n}\n\ntable SCVVec3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\ntable SCVEllipsoid {\n  BODY:scvBodyKind;\n  NAME:string;\n  SEMI_MAJOR_M:double;\n  SEMI_MINOR_M:double;\n  SEMI_INTERMEDIATE_M:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTimeGrid {\n  EPOCH_ISO:string;\n  EPOCH_JULIAN_DATE:double;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  STEP_SEC:double;\n  GRID_INDEX_START:uint32;\n  GRID_INDEX_COUNT:uint32;\n}\n\ntable SCVSensorShapeContract {\n  SHAPE_KIND:scvSensorShapeKind;\n  AXIS_CONVENTION:scvSensorAxisConvention;\n  RANGE_BOUNDARY:scvSensorRangeBoundaryKind;\n  OUTER_HALF_ANGLE_DEG:double;\n  INNER_HALF_ANGLE_DEG:double;\n  MIN_CLOCK_ANGLE_DEG:double;\n  MAX_CLOCK_ANGLE_DEG:double = 360.0;\n  X_HALF_ANGLE_DEG:double;\n  Y_HALF_ANGLE_DEG:double;\n  INNER_LOOK_ANGLE_DEG:double;\n  OUTER_LOOK_ANGLE_DEG:double;\n  SAR_SAMPLING_DENSITY:double;\n  MIN_RANGE_M:double;\n  MAX_RANGE_M:double;\n  POLYGON_VERTICES:[SCVVec3];\n  POLYGON_FRAME:scvCoordinateFrame;\n}\n\ntable SCVSensor {\n  SENSOR_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  BORESIGHT_UNIT:SCVVec3;\n  UP_UNIT:SCVVec3;\n  SHAPE_CONTRACT:SCVSensorShapeContract;\n}\n\ntable SCVStateSample {\n  SENSOR_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVTarget {\n  TARGET_ID:uint32;\n  OBJECT_ID:string;\n  NAME:string;\n  FRAME:scvCoordinateFrame;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  RADIUS_M:double;\n  TARGET_KIND:scvTargetShape;\n  DOMAIN:scvGeometryDomain;\n  POLYGON_VERTICES:[SCVVec3];\n  MIN_ALTITUDE_M:double;\n  MAX_ALTITUDE_M:double;\n}\n\ntable SCVTargetStateSample {\n  TARGET_ID:uint32;\n  TIME_OFFSET_SEC:double;\n  POSITION_M:SCVVec3;\n  VELOCITY_MPS:SCVVec3;\n  QUATERNION_X:double;\n  QUATERNION_Y:double;\n  QUATERNION_Z:double;\n  QUATERNION_W:double;\n  FRAME:scvCoordinateFrame;\n}\n\ntable SCVCoverageGrid {\n  GRID_ID:string;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  MIN_LAT_DEG:double;\n  MAX_LAT_DEG:double;\n  MIN_LON_DEG:double;\n  MAX_LON_DEG:double;\n  LAT_STEP_DEG:double;\n  LON_STEP_DEG:double;\n  ALTITUDE_M:double;\n  CELL_COUNT:uint32;\n  RESOLUTION_DEG:double;\n}\n\ntable SCVCoverageRequest {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  ANALYSIS_MODE:scvAnalysisMode;\n  TARGET_BODY:SCVEllipsoid;\n  TIME_GRID:SCVTimeGrid;\n  COVERAGE_GRID:SCVCoverageGrid;\n  SENSORS:[SCVSensor];\n  STATE_SAMPLES:[SCVStateSample];\n  TARGETS:[SCVTarget];\n  TARGET_STATE_SAMPLES:[SCVTargetStateSample];\n  REQUESTED_PRODUCTS:[scvMetricSeriesKind];\n  SENSOR_BATCH_START:uint32;\n  SENSOR_BATCH_COUNT:uint32;\n  WINDOW_BATCH_START:uint32;\n  WINDOW_BATCH_COUNT:uint32;\n  GEOMETRY_ENCODING:scvGeometryEncoding;\n  INCLUDE_PACKED_GEOMETRY:bool;\n}\n\ntable SCVProgress {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  COMPLETED_SENSORS:uint32;\n  TOTAL_SENSORS:uint32;\n  COMPLETED_WINDOWS:uint32;\n  TOTAL_WINDOWS:uint32;\n  BACKLOG_REMAINING:uint32;\n  COMPLETION_FRACTION:double;\n  MESSAGE:string;\n}\n\ntable SCVCancel {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  REASON:string;\n  CANCEL_AFTER_WINDOW_INDEX:uint32;\n}\n\ntable SCVSensorContribution {\n  SENSOR_ID:uint32;\n  FIRST_WINDOW_INDEX:uint32;\n  LAST_WINDOW_INDEX:uint32;\n  CONTRIBUTION_COUNT:uint32;\n}\n\ntable SCVHistogramBin {\n  METRIC_KIND:scvMetricSeriesKind;\n  MIN_VALUE:double;\n  MAX_VALUE:double;\n  COUNT:uint32;\n  WEIGHT:double;\n}\n\ntable SCVSwathSegment {\n  SEGMENT_ID:uint32;\n  SENSOR_ID:uint32;\n  WINDOW_INDEX:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  START_OFFSET_SEC:double;\n  STOP_OFFSET_SEC:double;\n  VERTEX_OFFSET:uint32;\n  VERTEX_COUNT:uint32;\n  INDEX_OFFSET:uint32;\n  INDEX_COUNT:uint32;\n  SENSOR_IDS:[uint32];\n}\n\ntable SCVMemoryRegion {\n  REGION_ID:uint32;\n  RECORD_INDEX:uint32;\n  REGION_KEY:string;\n  BYTE_OFFSET:uint64;\n  BYTE_LENGTH:uint64;\n  BYTE_STRIDE:uint32;\n  ALIGNMENT:uint32;\n  SHARED:bool;\n  MUTABLE:bool;\n}\n\ntable SCVPackedGeometryChunk {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  CHUNK_INDEX:uint32;\n  WINDOW_START_INDEX:uint32;\n  WINDOW_COUNT:uint32;\n  DOMAIN:scvGeometryDomain;\n  FRAME:scvCoordinateFrame;\n  ENCODING:scvGeometryEncoding;\n  TIME_START_OFFSET_SEC:double;\n  TIME_STOP_OFFSET_SEC:double;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  POSITIONS_REGION_ID:uint32;\n  POSITIONS_RECORD_INDEX:uint32;\n  NORMALS_REGION_ID:uint32;\n  NORMALS_RECORD_INDEX:uint32;\n  ST_REGION_ID:uint32;\n  ST_RECORD_INDEX:uint32;\n  REVEAL_COORDS_REGION_ID:uint32;\n  REVEAL_COORDS_RECORD_INDEX:uint32;\n  INDICES_REGION_ID:uint32;\n  INDICES_RECORD_INDEX:uint32;\n  POSITIONS:[float];\n  NORMALS:[float];\n  ST:[float];\n  REVEAL_COORDS:[float];\n  INDICES:[uint32];\n  SEGMENT_IDS:[uint32];\n  SENSOR_IDS:[uint32];\n  SEGMENTS:[SCVSwathSegment];\n}\n\ntable SCVPackedRasterBand {\n  PRODUCT_KIND:scvRasterProductKind;\n  METRIC_KIND:scvMetricSeriesKind;\n  ENCODING:scvRasterProductEncoding;\n  COMPONENTS_PER_CELL:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGION_ID:uint32;\n  MEMORY_RECORD_INDEX:uint32;\n  FLOAT32_VALUES:[float];\n  FLOAT64_VALUES:[double];\n  UINT32_VALUES:[uint32];\n}\n\ntable SCVPackedRasterProducts {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  GRID:SCVCoverageGrid;\n  TIME_GRID:SCVTimeGrid;\n  ROWS:uint32;\n  COLUMNS:uint32;\n  CELL_COUNT:uint32;\n  BUCKET_COUNT:uint32;\n  WORDS_PER_BUCKET:uint32;\n  MEMORY_REGIONS:[SCVMemoryRegion];\n  BANDS:[SCVPackedRasterBand];\n}\n\ntable SCVAggregateStatistics {\n  TOTAL_CELLS:uint32;\n  ACCESSED_CELLS:uint32;\n  MULTI_ACCESS_CELLS:uint32;\n  ACTIVE_SENSOR_COUNT:uint32;\n  SWATH_COUNT:uint32;\n  TOTAL_WINDOWS:uint32;\n  TOTAL_INTERVAL_COUNT:uint32;\n  TOTAL_REVISIT_COUNT:uint32;\n  TOTAL_ACCESS_DURATION_SEC:double;\n  TOTAL_GAP_DURATION_SEC:double;\n  MAX_GAP_DURATION_SEC:double;\n  MEAN_REVISIT_TIME_SEC:double;\n  MAX_RESPONSE_TIME_SEC:double;\n  MEAN_RESPONSE_TIME_SEC:double;\n  PERCENT_COVERAGE:double;\n}\n\ntable SCVTargetResult {\n  TARGET_ID:uint32;\n  NAME:string;\n  ACCESS_COUNT:uint32;\n  REVISIT_COUNT:uint32;\n  TOTAL_ACCESS_DURATION_SEC:double;\n  MEAN_REVISIT_TIME_SEC:double;\n  MAX_GAP_SEC:double;\n  INTERVAL_START_SEC:[double];\n  INTERVAL_STOP_SEC:[double];\n  PASS_START_BUCKETS:[uint32];\n  ACCESS_BITSET:[uint32];\n}\n\ntable SCVResult {\n  JOB_ID:string;\n  TRACE_ID:uint64;\n  STATUS:scvResultState;\n  TIME_GRID:SCVTimeGrid;\n  TARGET_BODY:SCVEllipsoid;\n  TOTAL_SENSORS:uint32;\n  TOTAL_WINDOWS:uint32;\n  HISTOGRAMS:[SCVHistogramBin];\n  CONTRIBUTIONS:[SCVSensorContribution];\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n  MESSAGE:string;\n  AGGREGATE_STATISTICS:SCVAggregateStatistics;\n  TARGET_RESULTS:[SCVTargetResult];\n}\n\ntable SCV {\n  ENVELOPE_KIND:scvEnvelopeKind;\n  REQUEST:SCVCoverageRequest;\n  PROGRESS:SCVProgress;\n  CANCEL:SCVCancel;\n  RESULT:SCVResult;\n  GEOMETRY:SCVPackedGeometryChunk;\n  RASTER_PRODUCTS:SCVPackedRasterProducts;\n}\n\nroot_type SCV;\nfile_identifier \"$SCV\";",
             "files": [
                 "./dist/SCV/SCV.sw.tar.gz",
                 "./dist/SCV/SCV.py.tar.gz",
@@ -2865,6 +3015,7 @@
                 "./dist/SCV/SCV.rs.tar.gz",
                 "./dist/SCV/SCV.php.tar.gz",
                 "./dist/SCV/SCV.json.tar.gz",
+                "./dist/SCV/SCV.fbjson.tar.gz",
                 "./dist/SCV/SCV.cpp.tar.gz",
                 "./dist/SCV/SCV.kt.tar.gz",
                 "./dist/SCV/SCV.ts.tar.gz"
@@ -2884,6 +3035,7 @@
                 "./dist/SCX/SCX.rs.tar.gz",
                 "./dist/SCX/SCX.php.tar.gz",
                 "./dist/SCX/SCX.json.tar.gz",
+                "./dist/SCX/SCX.fbjson.tar.gz",
                 "./dist/SCX/SCX.cpp.tar.gz",
                 "./dist/SCX/SCX.kt.tar.gz",
                 "./dist/SCX/SCX.ts.tar.gz"
@@ -2903,6 +3055,7 @@
                 "./dist/EOO/EOO.rs.tar.gz",
                 "./dist/EOO/EOO.php.tar.gz",
                 "./dist/EOO/EOO.json.tar.gz",
+                "./dist/EOO/EOO.fbjson.tar.gz",
                 "./dist/EOO/EOO.cpp.tar.gz",
                 "./dist/EOO/EOO.kt.tar.gz",
                 "./dist/EOO/EOO.ts.tar.gz"
@@ -2922,6 +3075,7 @@
                 "./dist/OOA/OOA.rs.tar.gz",
                 "./dist/OOA/OOA.php.tar.gz",
                 "./dist/OOA/OOA.json.tar.gz",
+                "./dist/OOA/OOA.fbjson.tar.gz",
                 "./dist/OOA/OOA.cpp.tar.gz",
                 "./dist/OOA/OOA.kt.tar.gz",
                 "./dist/OOA/OOA.ts.tar.gz"
@@ -2941,6 +3095,7 @@
                 "./dist/TDM/TDM.rs.tar.gz",
                 "./dist/TDM/TDM.php.tar.gz",
                 "./dist/TDM/TDM.json.tar.gz",
+                "./dist/TDM/TDM.fbjson.tar.gz",
                 "./dist/TDM/TDM.cpp.tar.gz",
                 "./dist/TDM/TDM.kt.tar.gz",
                 "./dist/TDM/TDM.ts.tar.gz"
@@ -2960,6 +3115,7 @@
                 "./dist/OCM/OCM.rs.tar.gz",
                 "./dist/OCM/OCM.php.tar.gz",
                 "./dist/OCM/OCM.json.tar.gz",
+                "./dist/OCM/OCM.fbjson.tar.gz",
                 "./dist/OCM/OCM.cpp.tar.gz",
                 "./dist/OCM/OCM.kt.tar.gz",
                 "./dist/OCM/OCM.ts.tar.gz"
@@ -2979,6 +3135,7 @@
                 "./dist/ACW/ACW.rs.tar.gz",
                 "./dist/ACW/ACW.php.tar.gz",
                 "./dist/ACW/ACW.json.tar.gz",
+                "./dist/ACW/ACW.fbjson.tar.gz",
                 "./dist/ACW/ACW.cpp.tar.gz",
                 "./dist/ACW/ACW.kt.tar.gz",
                 "./dist/ACW/ACW.ts.tar.gz"
@@ -2998,6 +3155,7 @@
                 "./dist/TKG/TKG.rs.tar.gz",
                 "./dist/TKG/TKG.php.tar.gz",
                 "./dist/TKG/TKG.json.tar.gz",
+                "./dist/TKG/TKG.fbjson.tar.gz",
                 "./dist/TKG/TKG.cpp.tar.gz",
                 "./dist/TKG/TKG.kt.tar.gz",
                 "./dist/TKG/TKG.ts.tar.gz"
@@ -3017,6 +3175,7 @@
                 "./dist/VAM/VAM.rs.tar.gz",
                 "./dist/VAM/VAM.php.tar.gz",
                 "./dist/VAM/VAM.json.tar.gz",
+                "./dist/VAM/VAM.fbjson.tar.gz",
                 "./dist/VAM/VAM.cpp.tar.gz",
                 "./dist/VAM/VAM.kt.tar.gz",
                 "./dist/VAM/VAM.ts.tar.gz"
@@ -3036,6 +3195,7 @@
                 "./dist/DPM/DPM.rs.tar.gz",
                 "./dist/DPM/DPM.php.tar.gz",
                 "./dist/DPM/DPM.json.tar.gz",
+                "./dist/DPM/DPM.fbjson.tar.gz",
                 "./dist/DPM/DPM.cpp.tar.gz",
                 "./dist/DPM/DPM.kt.tar.gz",
                 "./dist/DPM/DPM.ts.tar.gz"
@@ -3055,6 +3215,7 @@
                 "./dist/OOT/OOT.rs.tar.gz",
                 "./dist/OOT/OOT.php.tar.gz",
                 "./dist/OOT/OOT.json.tar.gz",
+                "./dist/OOT/OOT.fbjson.tar.gz",
                 "./dist/OOT/OOT.cpp.tar.gz",
                 "./dist/OOT/OOT.kt.tar.gz",
                 "./dist/OOT/OOT.ts.tar.gz"
@@ -3074,6 +3235,7 @@
                 "./dist/RDO/RDO.rs.tar.gz",
                 "./dist/RDO/RDO.php.tar.gz",
                 "./dist/RDO/RDO.json.tar.gz",
+                "./dist/RDO/RDO.fbjson.tar.gz",
                 "./dist/RDO/RDO.cpp.tar.gz",
                 "./dist/RDO/RDO.kt.tar.gz",
                 "./dist/RDO/RDO.ts.tar.gz"
@@ -3093,6 +3255,7 @@
                 "./dist/PGM/PGM.rs.tar.gz",
                 "./dist/PGM/PGM.php.tar.gz",
                 "./dist/PGM/PGM.json.tar.gz",
+                "./dist/PGM/PGM.fbjson.tar.gz",
                 "./dist/PGM/PGM.cpp.tar.gz",
                 "./dist/PGM/PGM.kt.tar.gz",
                 "./dist/PGM/PGM.ts.tar.gz"
@@ -3112,6 +3275,7 @@
                 "./dist/WTH/WTH.rs.tar.gz",
                 "./dist/WTH/WTH.php.tar.gz",
                 "./dist/WTH/WTH.json.tar.gz",
+                "./dist/WTH/WTH.fbjson.tar.gz",
                 "./dist/WTH/WTH.cpp.tar.gz",
                 "./dist/WTH/WTH.kt.tar.gz",
                 "./dist/WTH/WTH.ts.tar.gz"
@@ -3131,6 +3295,7 @@
                 "./dist/ACL/ACL.rs.tar.gz",
                 "./dist/ACL/ACL.php.tar.gz",
                 "./dist/ACL/ACL.json.tar.gz",
+                "./dist/ACL/ACL.fbjson.tar.gz",
                 "./dist/ACL/ACL.cpp.tar.gz",
                 "./dist/ACL/ACL.kt.tar.gz",
                 "./dist/ACL/ACL.ts.tar.gz"
@@ -3150,6 +3315,7 @@
                 "./dist/TME/TME.rs.tar.gz",
                 "./dist/TME/TME.php.tar.gz",
                 "./dist/TME/TME.json.tar.gz",
+                "./dist/TME/TME.fbjson.tar.gz",
                 "./dist/TME/TME.cpp.tar.gz",
                 "./dist/TME/TME.kt.tar.gz",
                 "./dist/TME/TME.ts.tar.gz"
@@ -3169,6 +3335,7 @@
                 "./dist/OOS/OOS.rs.tar.gz",
                 "./dist/OOS/OOS.php.tar.gz",
                 "./dist/OOS/OOS.json.tar.gz",
+                "./dist/OOS/OOS.fbjson.tar.gz",
                 "./dist/OOS/OOS.cpp.tar.gz",
                 "./dist/OOS/OOS.kt.tar.gz",
                 "./dist/OOS/OOS.ts.tar.gz"
@@ -3188,6 +3355,7 @@
                 "./dist/STR/STR.rs.tar.gz",
                 "./dist/STR/STR.php.tar.gz",
                 "./dist/STR/STR.json.tar.gz",
+                "./dist/STR/STR.fbjson.tar.gz",
                 "./dist/STR/STR.cpp.tar.gz",
                 "./dist/STR/STR.kt.tar.gz",
                 "./dist/STR/STR.ts.tar.gz"
@@ -3207,6 +3375,7 @@
                 "./dist/CFP/CFP.rs.tar.gz",
                 "./dist/CFP/CFP.php.tar.gz",
                 "./dist/CFP/CFP.json.tar.gz",
+                "./dist/CFP/CFP.fbjson.tar.gz",
                 "./dist/CFP/CFP.cpp.tar.gz",
                 "./dist/CFP/CFP.kt.tar.gz",
                 "./dist/CFP/CFP.ts.tar.gz"
@@ -3226,6 +3395,7 @@
                 "./dist/COM/COM.rs.tar.gz",
                 "./dist/COM/COM.php.tar.gz",
                 "./dist/COM/COM.json.tar.gz",
+                "./dist/COM/COM.fbjson.tar.gz",
                 "./dist/COM/COM.cpp.tar.gz",
                 "./dist/COM/COM.kt.tar.gz",
                 "./dist/COM/COM.ts.tar.gz"
@@ -3245,6 +3415,7 @@
                 "./dist/RBK/RBK.rs.tar.gz",
                 "./dist/RBK/RBK.php.tar.gz",
                 "./dist/RBK/RBK.json.tar.gz",
+                "./dist/RBK/RBK.fbjson.tar.gz",
                 "./dist/RBK/RBK.cpp.tar.gz",
                 "./dist/RBK/RBK.kt.tar.gz",
                 "./dist/RBK/RBK.ts.tar.gz"
@@ -3264,6 +3435,7 @@
                 "./dist/PNM/PNM.rs.tar.gz",
                 "./dist/PNM/PNM.php.tar.gz",
                 "./dist/PNM/PNM.json.tar.gz",
+                "./dist/PNM/PNM.fbjson.tar.gz",
                 "./dist/PNM/PNM.cpp.tar.gz",
                 "./dist/PNM/PNM.kt.tar.gz",
                 "./dist/PNM/PNM.ts.tar.gz"
@@ -3283,6 +3455,7 @@
                 "./dist/OOI/OOI.rs.tar.gz",
                 "./dist/OOI/OOI.php.tar.gz",
                 "./dist/OOI/OOI.json.tar.gz",
+                "./dist/OOI/OOI.fbjson.tar.gz",
                 "./dist/OOI/OOI.cpp.tar.gz",
                 "./dist/OOI/OOI.kt.tar.gz",
                 "./dist/OOI/OOI.ts.tar.gz"
@@ -3302,6 +3475,7 @@
                 "./dist/OON/OON.rs.tar.gz",
                 "./dist/OON/OON.php.tar.gz",
                 "./dist/OON/OON.json.tar.gz",
+                "./dist/OON/OON.fbjson.tar.gz",
                 "./dist/OON/OON.cpp.tar.gz",
                 "./dist/OON/OON.kt.tar.gz",
                 "./dist/OON/OON.ts.tar.gz"
@@ -3321,6 +3495,7 @@
                 "./dist/STF/STF.rs.tar.gz",
                 "./dist/STF/STF.php.tar.gz",
                 "./dist/STF/STF.json.tar.gz",
+                "./dist/STF/STF.fbjson.tar.gz",
                 "./dist/STF/STF.cpp.tar.gz",
                 "./dist/STF/STF.kt.tar.gz",
                 "./dist/STF/STF.ts.tar.gz"
@@ -3340,6 +3515,7 @@
                 "./dist/AOF/AOF.rs.tar.gz",
                 "./dist/AOF/AOF.php.tar.gz",
                 "./dist/AOF/AOF.json.tar.gz",
+                "./dist/AOF/AOF.fbjson.tar.gz",
                 "./dist/AOF/AOF.cpp.tar.gz",
                 "./dist/AOF/AOF.kt.tar.gz",
                 "./dist/AOF/AOF.ts.tar.gz"
@@ -3359,6 +3535,7 @@
                 "./dist/MFE/MFE.rs.tar.gz",
                 "./dist/MFE/MFE.php.tar.gz",
                 "./dist/MFE/MFE.json.tar.gz",
+                "./dist/MFE/MFE.fbjson.tar.gz",
                 "./dist/MFE/MFE.cpp.tar.gz",
                 "./dist/MFE/MFE.kt.tar.gz",
                 "./dist/MFE/MFE.ts.tar.gz"
@@ -3378,6 +3555,7 @@
                 "./dist/ACM/ACM.rs.tar.gz",
                 "./dist/ACM/ACM.php.tar.gz",
                 "./dist/ACM/ACM.json.tar.gz",
+                "./dist/ACM/ACM.fbjson.tar.gz",
                 "./dist/ACM/ACM.cpp.tar.gz",
                 "./dist/ACM/ACM.kt.tar.gz",
                 "./dist/ACM/ACM.ts.tar.gz"
@@ -3397,6 +3575,7 @@
                 "./dist/LPF/LPF.rs.tar.gz",
                 "./dist/LPF/LPF.php.tar.gz",
                 "./dist/LPF/LPF.json.tar.gz",
+                "./dist/LPF/LPF.fbjson.tar.gz",
                 "./dist/LPF/LPF.cpp.tar.gz",
                 "./dist/LPF/LPF.kt.tar.gz",
                 "./dist/LPF/LPF.ts.tar.gz"
@@ -3416,6 +3595,7 @@
                 "./dist/SWR/SWR.rs.tar.gz",
                 "./dist/SWR/SWR.php.tar.gz",
                 "./dist/SWR/SWR.json.tar.gz",
+                "./dist/SWR/SWR.fbjson.tar.gz",
                 "./dist/SWR/SWR.cpp.tar.gz",
                 "./dist/SWR/SWR.kt.tar.gz",
                 "./dist/SWR/SWR.ts.tar.gz"
@@ -3435,6 +3615,7 @@
                 "./dist/GJN/GJN.rs.tar.gz",
                 "./dist/GJN/GJN.php.tar.gz",
                 "./dist/GJN/GJN.json.tar.gz",
+                "./dist/GJN/GJN.fbjson.tar.gz",
                 "./dist/GJN/GJN.cpp.tar.gz",
                 "./dist/GJN/GJN.kt.tar.gz",
                 "./dist/GJN/GJN.ts.tar.gz"

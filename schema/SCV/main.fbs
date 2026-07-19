@@ -1,5 +1,5 @@
-// Hash: 45add17cde528ca740fb64d5f1280b86d35bd31ffdbc27071bf6e0b5dca7ab29
-// Version: 1.101.4
+// Hash: a708974880aa4f2b2a4039241cb3cf8508804f2780a3ac919f241486cb773470
+// Version: 1.101.5
 // -----------------------------------END_HEADER
 /// Sensor Coverage Analytics — canonical request/result/progress ABI for
 /// access, coverage, swath, and coverage-geometry products produced by SDN
@@ -59,6 +59,15 @@ enum scvGeometryDomain : ubyte {
   ELLIPSOID,
   PLANE,
   CUSTOM_MESH
+}
+
+enum scvTargetShape : ubyte {
+  POINT,
+  POLYGON,
+  RECTANGLE,
+  BOX,
+  SPHERE,
+  EXTRUDED_POLYGON
 }
 
 enum scvResultState : ubyte {
@@ -192,6 +201,11 @@ table SCVTarget {
   POSITION_M:SCVVec3;
   VELOCITY_MPS:SCVVec3;
   RADIUS_M:double;
+  TARGET_KIND:scvTargetShape;
+  DOMAIN:scvGeometryDomain;
+  POLYGON_VERTICES:[SCVVec3];
+  MIN_ALTITUDE_M:double;
+  MAX_ALTITUDE_M:double;
 }
 
 table SCVTargetStateSample {
@@ -382,6 +396,20 @@ table SCVAggregateStatistics {
   PERCENT_COVERAGE:double;
 }
 
+table SCVTargetResult {
+  TARGET_ID:uint32;
+  NAME:string;
+  ACCESS_COUNT:uint32;
+  REVISIT_COUNT:uint32;
+  TOTAL_ACCESS_DURATION_SEC:double;
+  MEAN_REVISIT_TIME_SEC:double;
+  MAX_GAP_SEC:double;
+  INTERVAL_START_SEC:[double];
+  INTERVAL_STOP_SEC:[double];
+  PASS_START_BUCKETS:[uint32];
+  ACCESS_BITSET:[uint32];
+}
+
 table SCVResult {
   JOB_ID:string;
   TRACE_ID:uint64;
@@ -396,6 +424,7 @@ table SCVResult {
   RASTER_PRODUCTS:SCVPackedRasterProducts;
   MESSAGE:string;
   AGGREGATE_STATISTICS:SCVAggregateStatistics;
+  TARGET_RESULTS:[SCVTargetResult];
 }
 
 table SCV {

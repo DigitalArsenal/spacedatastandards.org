@@ -81,6 +81,39 @@ class SCVTarget : Table() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    val targetKind : UByte
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    val domain : UByte
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    fun polygonVertices(j: Int) : SCVVec3? = polygonVertices(SCVVec3(), j)
+    fun polygonVertices(obj: SCVVec3, j: Int) : SCVVec3? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val polygonVerticesLength : Int
+        get() {
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+        }
+    val minAltitudeM : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    val maxAltitudeM : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSCVTarget(_bb: ByteBuffer): SCVTarget = getRootAsSCVTarget(_bb, SCVTarget())
@@ -88,18 +121,23 @@ class SCVTarget : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createSCVTarget(builder: FlatBufferBuilder, targetId: UInt, objectIdOffset: Int, nameOffset: Int, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, radiusM: Double) : Int {
-            builder.startTable(7)
+        fun createSCVTarget(builder: FlatBufferBuilder, targetId: UInt, objectIdOffset: Int, nameOffset: Int, frame: UByte, positionMOffset: Int, velocityMpsOffset: Int, radiusM: Double, targetKind: UByte, domain: UByte, polygonVerticesOffset: Int, minAltitudeM: Double, maxAltitudeM: Double) : Int {
+            builder.startTable(12)
+            addMAXALTITUDEM(builder, maxAltitudeM)
+            addMINALTITUDEM(builder, minAltitudeM)
             addRADIUSM(builder, radiusM)
+            addPOLYGONVERTICES(builder, polygonVerticesOffset)
             addVELOCITYMPS(builder, velocityMpsOffset)
             addPOSITIONM(builder, positionMOffset)
             addNAME(builder, nameOffset)
             addOBJECTID(builder, objectIdOffset)
             addTARGETID(builder, targetId)
+            addDOMAIN(builder, domain)
+            addTARGETKIND(builder, targetKind)
             addFRAME(builder, frame)
             return endSCVTarget(builder)
         }
-        fun startSCVTarget(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startSCVTarget(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addTARGETID(builder: FlatBufferBuilder, targetId: UInt) = builder.addInt(0, targetId.toInt(), 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
@@ -107,6 +145,19 @@ class SCVTarget : Table() {
         fun addPOSITIONM(builder: FlatBufferBuilder, positionM: Int) = builder.addOffset(4, positionM, 0)
         fun addVELOCITYMPS(builder: FlatBufferBuilder, velocityMps: Int) = builder.addOffset(5, velocityMps, 0)
         fun addRADIUSM(builder: FlatBufferBuilder, radiusM: Double) = builder.addDouble(6, radiusM, 0.0)
+        fun addTARGETKIND(builder: FlatBufferBuilder, targetKind: UByte) = builder.addByte(7, targetKind.toByte(), 0)
+        fun addDOMAIN(builder: FlatBufferBuilder, domain: UByte) = builder.addByte(8, domain.toByte(), 0)
+        fun addPOLYGONVERTICES(builder: FlatBufferBuilder, polygonVertices: Int) = builder.addOffset(9, polygonVertices, 0)
+        fun createPolygonVerticesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPolygonVerticesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMINALTITUDEM(builder: FlatBufferBuilder, minAltitudeM: Double) = builder.addDouble(10, minAltitudeM, 0.0)
+        fun addMAXALTITUDEM(builder: FlatBufferBuilder, maxAltitudeM: Double) = builder.addDouble(11, maxAltitudeM, 0.0)
         fun endSCVTarget(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

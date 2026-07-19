@@ -94,21 +94,76 @@ class SCVTarget extends Table
     }
 
     /**
+     * @return byte
+     */
+    public function getTARGET_KIND()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvTargetShape::POINT;
+    }
+
+    /**
+     * @return byte
+     */
+    public function getDOMAIN()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \scvGeometryDomain::SURFACE;
+    }
+
+    /**
+     * @returnVectorOffset
+     */
+    public function getPOLYGON_VERTICES($j)
+    {
+        $o = $this->__offset(22);
+        $obj = new SCVVec3();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPOLYGON_VERTICESLength()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getMIN_ALTITUDE_M()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
+     * @return double
+     */
+    public function getMAX_ALTITUDE_M()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVTarget(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVTarget
      */
-    public static function createSCVTarget(FlatBufferBuilder $builder, $TARGET_ID, $OBJECT_ID, $NAME, $FRAME, $POSITION_M, $VELOCITY_MPS, $RADIUS_M)
+    public static function createSCVTarget(FlatBufferBuilder $builder, $TARGET_ID, $OBJECT_ID, $NAME, $FRAME, $POSITION_M, $VELOCITY_MPS, $RADIUS_M, $TARGET_KIND, $DOMAIN, $POLYGON_VERTICES, $MIN_ALTITUDE_M, $MAX_ALTITUDE_M)
     {
-        $builder->startObject(7);
+        $builder->startObject(12);
         self::addTARGET_ID($builder, $TARGET_ID);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNAME($builder, $NAME);
@@ -116,6 +171,11 @@ class SCVTarget extends Table
         self::addPOSITION_M($builder, $POSITION_M);
         self::addVELOCITY_MPS($builder, $VELOCITY_MPS);
         self::addRADIUS_M($builder, $RADIUS_M);
+        self::addTARGET_KIND($builder, $TARGET_KIND);
+        self::addDOMAIN($builder, $DOMAIN);
+        self::addPOLYGON_VERTICES($builder, $POLYGON_VERTICES);
+        self::addMIN_ALTITUDE_M($builder, $MIN_ALTITUDE_M);
+        self::addMAX_ALTITUDE_M($builder, $MAX_ALTITUDE_M);
         $o = $builder->endObject();
         return $o;
     }
@@ -188,6 +248,80 @@ class SCVTarget extends Table
     public static function addRADIUS_M(FlatBufferBuilder $builder, $RADIUS_M)
     {
         $builder->addDoubleX(6, $RADIUS_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addTARGET_KIND(FlatBufferBuilder $builder, $TARGET_KIND)
+    {
+        $builder->addByteX(7, $TARGET_KIND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addDOMAIN(FlatBufferBuilder $builder, $DOMAIN)
+    {
+        $builder->addByteX(8, $DOMAIN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOLYGON_VERTICES(FlatBufferBuilder $builder, $POLYGON_VERTICES)
+    {
+        $builder->addOffsetX(9, $POLYGON_VERTICES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPOLYGON_VERTICESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPOLYGON_VERTICESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMIN_ALTITUDE_M(FlatBufferBuilder $builder, $MIN_ALTITUDE_M)
+    {
+        $builder->addDoubleX(10, $MIN_ALTITUDE_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_ALTITUDE_M(FlatBufferBuilder $builder, $MAX_ALTITUDE_M)
+    {
+        $builder->addDoubleX(11, $MAX_ALTITUDE_M, 0.0);
     }
 
     /**

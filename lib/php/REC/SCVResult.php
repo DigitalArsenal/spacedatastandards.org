@@ -162,21 +162,40 @@ class SCVResult extends Table
     }
 
     /**
+     * @returnVectorOffset
+     */
+    public function getTARGET_RESULTS($j)
+    {
+        $o = $this->__offset(30);
+        $obj = new SCVTargetResult();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTARGET_RESULTSLength()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSCVResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SCVResult
      */
-    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS)
+    public static function createSCVResult(FlatBufferBuilder $builder, $JOB_ID, $TRACE_ID, $STATUS, $TIME_GRID, $TARGET_BODY, $TOTAL_SENSORS, $TOTAL_WINDOWS, $HISTOGRAMS, $CONTRIBUTIONS, $GEOMETRY, $RASTER_PRODUCTS, $MESSAGE, $AGGREGATE_STATISTICS, $TARGET_RESULTS)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addJOB_ID($builder, $JOB_ID);
         self::addTRACE_ID($builder, $TRACE_ID);
         self::addSTATUS($builder, $STATUS);
@@ -190,6 +209,7 @@ class SCVResult extends Table
         self::addRASTER_PRODUCTS($builder, $RASTER_PRODUCTS);
         self::addMESSAGE($builder, $MESSAGE);
         self::addAGGREGATE_STATISTICS($builder, $AGGREGATE_STATISTICS);
+        self::addTARGET_RESULTS($builder, $TARGET_RESULTS);
         $o = $builder->endObject();
         return $o;
     }
@@ -370,6 +390,40 @@ class SCVResult extends Table
     public static function addAGGREGATE_STATISTICS(FlatBufferBuilder $builder, $AGGREGATE_STATISTICS)
     {
         $builder->addOffsetX(12, $AGGREGATE_STATISTICS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGET_RESULTS(FlatBufferBuilder $builder, $TARGET_RESULTS)
+    {
+        $builder->addOffsetX(13, $TARGET_RESULTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTARGET_RESULTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTARGET_RESULTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

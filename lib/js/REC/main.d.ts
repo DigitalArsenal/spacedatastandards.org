@@ -781,6 +781,8 @@ export * from './scvSensorShapeKind.js';
 export * from './SCVStateSample.js';
 export * from './SCVSwathSegment.js';
 export * from './SCVTarget.js';
+export * from './SCVTargetResult.js';
+export * from './scvTargetShape.js';
 export * from './SCVTargetStateSample.js';
 export * from './SCVTimeGrid.js';
 export * from './SCVVec3.js';
