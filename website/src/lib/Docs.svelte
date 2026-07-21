@@ -593,7 +593,7 @@ table TelemetryMetaData {
 +----------------------------------------------+
 | Read $ENC first                              |
 | Read $REC to locate/generated root type      |
-| Derive shared secret with Bob private key    |
+| Derive shared secret with recipient key      |
 | Decrypt encrypted fields in payload          |
 | Consume generated KMF/REC bindings locally   |
 +----------------------------------------------+`}</pre>

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "navVersion": "1.0.0",
+  "assets": {
+    "navScript": {
+      "bytes": 10169,
+      "sha256": "52fde607eee38ffa116188201f50258ed50bd18c9f06c1af9678f763147a8fe5",
+      "sha384": "sha384-dgeojhJ8vTszHXIbv7O7nZcEzqD10oUYYJjBmPrV7+kLQEUlXLQD4ek5Q7HOFiO5",
+      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.52fde607eee38ffa116188201f50258ed50bd18c9f06c1af9678f763147a8fe5.js"
+    },
+    "navStyle": {
+      "bytes": 2217,
+      "sha256": "36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7",
+      "sha384": "sha384-c4M8Fg+kYaeOYYtJVr7jJsde24IhSWkWaRyAOHEZU9jozhRck089aw+mnHwxymds",
+      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css"
+    }
+  },
+  "linksSha256": "1538ef56567b745a666a7bc1302c6b11116b09745956e92052fd2f6a80c17a0f"
+}
