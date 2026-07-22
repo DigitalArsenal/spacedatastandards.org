@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "links": [
+    {
+      "key": "onboarding",
+      "label": "Onboarding",
+      "href": "https://spacedatanetwork.org/onboarding.html"
+    },
+    {
+      "key": "standards",
+      "label": "Standards",
+      "href": "https://spacedatastandards.org/"
+    },
+    {
+      "key": "flatbuffers",
+      "label": "FlatBuffers",
+      "href": "https://digitalarsenal.github.io/flatbuffers/"
+    },
+    {
+      "key": "flatsql",
+      "label": "FlatSQL",
+      "href": "https://digitalarsenal.github.io/flatsql/"
+    },
+    {
+      "key": "sdn",
+      "label": "SDN",
+      "href": "https://spacedatanetwork.org/"
+    },
+    {
+      "key": "module-sdk",
+      "label": "Module SDK",
+      "href": "https://digitalarsenal.github.io/space-data-module-sdk/"
+    }
+  ]
+}

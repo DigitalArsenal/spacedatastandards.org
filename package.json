@@ -103,12 +103,13 @@
         "publish:js": "npm publish",
         "start": "node index.js",
         "build:flatbuffers": "node ./scripts/createREC.mjs && node ./scripts/generateSource.mjs",
-        "build": "npm run build:flatbuffers && python ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
-        "build:mac": "npm run build:flatbuffers && python3 ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website",
+        "build": "npm run build:flatbuffers && python ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python ./scripts/generateArchives.py && python ./scripts/generateJSONIndex.py && python ./scripts/generateFBJsonSchema.py && python ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website && npm run build:nav-release",
+        "build:mac": "npm run build:flatbuffers && python3 ./scripts/generateVersion.py && npm run build:js && npm run build:wasm && python3 ./scripts/generateArchives.py && python3 ./scripts/generateJSONIndex.py && python3 ./scripts/generateFBJsonSchema.py && python3 ./scripts/generateGoModule.py && node ./scripts/generateSchemaEmbeddings.js && npm run build:website && npm run build:nav-release",
         "build:website": "npm --prefix website run build",
         "build:js": "rm -rf ./lib/js && mkdir -p ./lib/js && node ./scripts/createTSIndex.js && node ./scripts/fixTSCasing.js && tsc && mv ./lib/js/ts/* ./lib/js && rm -R ./lib/js/ts && find ./lib/js -type f -name '*.ts' ! -name '*.d.ts' -delete && python3 ./scripts/generatePackageJSON.py",
         "build:wasm": "node ./scripts/buildWasm.mjs",
         "dev": "npm --prefix website run dev",
+        "build:nav-release": "node scripts/build-sdn-stack-nav-release.mjs",
         "check:nav": "node scripts/check-sdn-stack-nav.mjs standards website/index.html index.html website/src/app.css website/src/lib/Nav.svelte website/src/lib/Landing.svelte --asset sdn-stack-nav.js",
         "dev:static": "npx serve . -l 8601",
         "prepare": "husky"
@@ -127,7 +128,7 @@
     "dependencies": {
         "buffer": "^6.0.3",
         "flatbuffers": "^25.9.23",
-        "hd-wallet-wasm": "^2.0.4"
+        "hd-wallet-wasm": "2.0.28"
     },
     "devDependencies": {
         "@huggingface/transformers": "^3.8.1",
