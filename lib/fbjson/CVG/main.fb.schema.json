@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CVG": {
+      "type": "object",
+      "description": "Coverage Grid Figure-of-Merit",
+      "properties": {
+        "COVERAGE_ID": {
+          "type": "string",
+          "description": "Stable identifier of this coverage computation",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "GRID_SCHEME": {
+          "type": "string",
+          "description": "Grid scheme identifier; \"H3\" for the H3 hexagonal hierarchical grid",
+          "x-flatbuffer-type": "string"
+        },
+        "GRID_RESOLUTION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Grid resolution (H3 resolution 0-15)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "CELL_INDEXES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709551615
+          },
+          "description": "Grid cell indexes (H3 cell ids); all metric arrays align to this order",
+          "x-flatbuffer-type": "[uint64]"
+        },
+        "WINDOW_START": {
+          "type": "number",
+          "description": "Epoch window start (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]",
+          "x-flatbuffer-type": "double"
+        },
+        "WINDOW_STOP": {
+          "type": "number",
+          "description": "Epoch window stop (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]",
+          "x-flatbuffer-type": "double"
+        },
+        "STEP_SIZE": {
+          "type": "number",
+          "description": "Sampling step in seconds used to compute access intervals",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sensor identifiers contributing to the coverage set",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ASSET_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Asset (satellite) identifiers contributing to the coverage set",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ACCESS_COUNTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Per-cell number of access intervals in the window",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "ACCESS_TOTAL_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell total access duration in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "REVISIT_MEAN_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell mean revisit interval in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "REVISIT_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum revisit interval in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE_MEAN_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell mean response time in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum response time in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "GAP_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum coverage gap in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVERAGE_FRACTION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell fraction of the window with at least one access [0-1]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix ms this coverage set was computed",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature by the producing `$EPM`",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "COVERAGE_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CVG",
+  "x-flatbuffer-root-type": "CVG",
+  "x-flatbuffer-file-identifier": "$CVG"
+}

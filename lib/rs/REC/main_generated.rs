@@ -181,6 +181,12 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -315,10 +321,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 180;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 186;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 181] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 187] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -500,6 +506,12 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 181] = [
   RecordType::APP,
   RecordType::CMT,
   RecordType::SCX,
+  RecordType::CVG,
+  RecordType::PKB,
+  RecordType::RPT,
+  RecordType::STO,
+  RecordType::SUB,
+  RecordType::WKS,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -688,9 +700,15 @@ impl RecordType {
   pub const APP: Self = Self(178);
   pub const CMT: Self = Self(179);
   pub const SCX: Self = Self(180);
+  pub const CVG: Self = Self(181);
+  pub const PKB: Self = Self(182);
+  pub const RPT: Self = Self(183);
+  pub const STO: Self = Self(184);
+  pub const SUB: Self = Self(185);
+  pub const WKS: Self = Self(186);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 180;
+  pub const ENUM_MAX: u8 = 186;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -873,6 +891,12 @@ impl RecordType {
     Self::APP,
     Self::CMT,
     Self::SCX,
+    Self::CVG,
+    Self::PKB,
+    Self::RPT,
+    Self::STO,
+    Self::SUB,
+    Self::WKS,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1058,6 +1082,12 @@ impl RecordType {
       Self::APP => Some("APP"),
       Self::CMT => Some("CMT"),
       Self::SCX => Some("SCX"),
+      Self::CVG => Some("CVG"),
+      Self::PKB => Some("PKB"),
+      Self::RPT => Some("RPT"),
+      Self::STO => Some("STO"),
+      Self::SUB => Some("SUB"),
+      Self::WKS => Some("WKS"),
       _ => None,
     }
   }
@@ -1299,6 +1329,12 @@ pub enum RecordTypeT {
   APP(alloc::boxed::Box<APPT>),
   CMT(alloc::boxed::Box<CMTT>),
   SCX(alloc::boxed::Box<SCXT>),
+  CVG(alloc::boxed::Box<CVGT>),
+  PKB(alloc::boxed::Box<PKBT>),
+  RPT(alloc::boxed::Box<RPTT>),
+  STO(alloc::boxed::Box<STOT>),
+  SUB(alloc::boxed::Box<SUBT>),
+  WKS(alloc::boxed::Box<WKST>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1489,6 +1525,12 @@ impl RecordTypeT {
       Self::APP(_) => RecordType::APP,
       Self::CMT(_) => RecordType::CMT,
       Self::SCX(_) => RecordType::SCX,
+      Self::CVG(_) => RecordType::CVG,
+      Self::PKB(_) => RecordType::PKB,
+      Self::RPT(_) => RecordType::RPT,
+      Self::STO(_) => RecordType::STO,
+      Self::SUB(_) => RecordType::SUB,
+      Self::WKS(_) => RecordType::WKS,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1674,6 +1716,12 @@ impl RecordTypeT {
       Self::APP(v) => Some(v.pack(fbb).as_union_value()),
       Self::CMT(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCX(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CVG(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PKB(v) => Some(v.pack(fbb).as_union_value()),
+      Self::RPT(v) => Some(v.pack(fbb).as_union_value()),
+      Self::STO(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SUB(v) => Some(v.pack(fbb).as_union_value()),
+      Self::WKS(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5456,6 +5504,132 @@ impl RecordTypeT {
   pub fn as_scx_mut(&mut self) -> Option<&mut SCXT> {
     if let Self::SCX(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CVGT, setting the union to NONE.
+  pub fn take_cvg(&mut self) -> Option<alloc::boxed::Box<CVGT>> {
+    if let Self::CVG(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CVG(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CVGT.
+  pub fn as_cvg(&self) -> Option<&CVGT> {
+    if let Self::CVG(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CVGT.
+  pub fn as_cvg_mut(&mut self) -> Option<&mut CVGT> {
+    if let Self::CVG(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned PKBT, setting the union to NONE.
+  pub fn take_pkb(&mut self) -> Option<alloc::boxed::Box<PKBT>> {
+    if let Self::PKB(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PKB(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PKBT.
+  pub fn as_pkb(&self) -> Option<&PKBT> {
+    if let Self::PKB(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PKBT.
+  pub fn as_pkb_mut(&mut self) -> Option<&mut PKBT> {
+    if let Self::PKB(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned RPTT, setting the union to NONE.
+  pub fn take_rpt(&mut self) -> Option<alloc::boxed::Box<RPTT>> {
+    if let Self::RPT(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::RPT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the RPTT.
+  pub fn as_rpt(&self) -> Option<&RPTT> {
+    if let Self::RPT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the RPTT.
+  pub fn as_rpt_mut(&mut self) -> Option<&mut RPTT> {
+    if let Self::RPT(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned STOT, setting the union to NONE.
+  pub fn take_sto(&mut self) -> Option<alloc::boxed::Box<STOT>> {
+    if let Self::STO(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::STO(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the STOT.
+  pub fn as_sto(&self) -> Option<&STOT> {
+    if let Self::STO(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the STOT.
+  pub fn as_sto_mut(&mut self) -> Option<&mut STOT> {
+    if let Self::STO(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SUBT, setting the union to NONE.
+  pub fn take_sub(&mut self) -> Option<alloc::boxed::Box<SUBT>> {
+    if let Self::SUB(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::SUB(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SUBT.
+  pub fn as_sub(&self) -> Option<&SUBT> {
+    if let Self::SUB(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SUBT.
+  pub fn as_sub_mut(&mut self) -> Option<&mut SUBT> {
+    if let Self::SUB(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned WKST, setting the union to NONE.
+  pub fn take_wks(&mut self) -> Option<alloc::boxed::Box<WKST>> {
+    if let Self::WKS(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::WKS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the WKST.
+  pub fn as_wks(&self) -> Option<&WKST> {
+    if let Self::WKS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the WKST.
+  pub fn as_wks_mut(&mut self) -> Option<&mut WKST> {
+    if let Self::WKS(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6395,6 +6569,36 @@ impl<'a> Record<'a> {
       RecordType::SCX => RecordTypeT::SCX(alloc::boxed::Box::new(
         self.value_as_scx()
             .expect("Invalid union table, expected `RecordType::SCX`.")
+            .unpack()
+      )),
+      RecordType::CVG => RecordTypeT::CVG(alloc::boxed::Box::new(
+        self.value_as_cvg()
+            .expect("Invalid union table, expected `RecordType::CVG`.")
+            .unpack()
+      )),
+      RecordType::PKB => RecordTypeT::PKB(alloc::boxed::Box::new(
+        self.value_as_pkb()
+            .expect("Invalid union table, expected `RecordType::PKB`.")
+            .unpack()
+      )),
+      RecordType::RPT => RecordTypeT::RPT(alloc::boxed::Box::new(
+        self.value_as_rpt()
+            .expect("Invalid union table, expected `RecordType::RPT`.")
+            .unpack()
+      )),
+      RecordType::STO => RecordTypeT::STO(alloc::boxed::Box::new(
+        self.value_as_sto()
+            .expect("Invalid union table, expected `RecordType::STO`.")
+            .unpack()
+      )),
+      RecordType::SUB => RecordTypeT::SUB(alloc::boxed::Box::new(
+        self.value_as_sub()
+            .expect("Invalid union table, expected `RecordType::SUB`.")
+            .unpack()
+      )),
+      RecordType::WKS => RecordTypeT::WKS(alloc::boxed::Box::new(
+        self.value_as_wks()
+            .expect("Invalid union table, expected `RecordType::WKS`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -9131,6 +9335,96 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_cvg(&self) -> Option<CVG<'a>> {
+    if self.value_type() == RecordType::CVG {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CVG::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_pkb(&self) -> Option<PKB<'a>> {
+    if self.value_type() == RecordType::PKB {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PKB::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_rpt(&self) -> Option<RPT<'a>> {
+    if self.value_type() == RecordType::RPT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { RPT::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_sto(&self) -> Option<STO<'a>> {
+    if self.value_type() == RecordType::STO {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { STO::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_sub(&self) -> Option<SUB<'a>> {
+    if self.value_type() == RecordType::SUB {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SUB::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_wks(&self) -> Option<WKS<'a>> {
+    if self.value_type() == RecordType::WKS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { WKS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -9321,6 +9615,12 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::APP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<APP>>("RecordType::APP", pos),
           RecordType::CMT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CMT>>("RecordType::CMT", pos),
           RecordType::SCX => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SCX>>("RecordType::SCX", pos),
+          RecordType::CVG => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CVG>>("RecordType::CVG", pos),
+          RecordType::PKB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PKB>>("RecordType::PKB", pos),
+          RecordType::RPT => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<RPT>>("RecordType::RPT", pos),
+          RecordType::STO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<STO>>("RecordType::STO", pos),
+          RecordType::SUB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SUB>>("RecordType::SUB", pos),
+          RecordType::WKS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<WKS>>("RecordType::WKS", pos),
           _ => Ok(()),
         }
      })?
@@ -10637,6 +10937,48 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::SCX => {
           if let Some(x) = self.value_as_scx() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CVG => {
+          if let Some(x) = self.value_as_cvg() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PKB => {
+          if let Some(x) = self.value_as_pkb() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::RPT => {
+          if let Some(x) = self.value_as_rpt() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::STO => {
+          if let Some(x) = self.value_as_sto() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SUB => {
+          if let Some(x) = self.value_as_sub() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::WKS => {
+          if let Some(x) = self.value_as_wks() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

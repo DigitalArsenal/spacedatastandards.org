@@ -200,6 +200,12 @@ public struct Record : IFlatbufferObject
   public APP valueAsAPP() { return value<APP>().Value; }
   public CMT valueAsCMT() { return value<CMT>().Value; }
   public SCX valueAsSCX() { return value<SCX>().Value; }
+  public CVG valueAsCVG() { return value<CVG>().Value; }
+  public PKB valueAsPKB() { return value<PKB>().Value; }
+  public RPT valueAsRPT() { return value<RPT>().Value; }
+  public STO valueAsSTO() { return value<STO>().Value; }
+  public SUB valueAsSUB() { return value<SUB>().Value; }
+  public WKS valueAsWKS() { return value<WKS>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -777,6 +783,24 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.SCX:
         _o.value.Value = this.value<SCX>().HasValue ? this.value<SCX>().Value.UnPack() : null;
+        break;
+      case RecordType.CVG:
+        _o.value.Value = this.value<CVG>().HasValue ? this.value<CVG>().Value.UnPack() : null;
+        break;
+      case RecordType.PKB:
+        _o.value.Value = this.value<PKB>().HasValue ? this.value<PKB>().Value.UnPack() : null;
+        break;
+      case RecordType.RPT:
+        _o.value.Value = this.value<RPT>().HasValue ? this.value<RPT>().Value.UnPack() : null;
+        break;
+      case RecordType.STO:
+        _o.value.Value = this.value<STO>().HasValue ? this.value<STO>().Value.UnPack() : null;
+        break;
+      case RecordType.SUB:
+        _o.value.Value = this.value<SUB>().HasValue ? this.value<SUB>().Value.UnPack() : null;
+        break;
+      case RecordType.WKS:
+        _o.value.Value = this.value<WKS>().HasValue ? this.value<WKS>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

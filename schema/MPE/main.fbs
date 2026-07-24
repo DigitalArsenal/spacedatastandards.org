@@ -1,5 +1,5 @@
-// Hash: 8df3848cd1d2df58d18f37e40ffce5decaebaaa1beebbe8862067df3cf67cced
-// Version: 1.0.4
+// Hash: a0c9f881d7cea39fabf256989601c2c691e0780676c9fa7ef242e2119091ee5d
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
@@ -9,8 +9,54 @@ include "../MET/main.fbs";
 // Legacy format description can be found here.
 // CCSDS Reference documentation: 502x0b2c1e2.
 
+/// One constraint in a maneuver-targeting problem and how well the converged
+/// solution satisfies it.
+table MPETargeterConstraint {
+  /// Constraint identifier, e.g. "SMA", "INC", "RIC_R"
+  NAME: string;
+  /// Reference frame the constraint is expressed in
+  FRAME: string;
+  /// Epoch the constraint applies at (UNIX timestamp) [numeric seconds since
+  /// 1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT
+  EPOCH: double;
+  /// Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"
+  EVENT: string;
+  /// Target value of the constrained quantity
+  TARGET_VALUE: double;
+  /// Value achieved by the converged solution
+  ACHIEVED_VALUE: double;
+  /// Acceptable tolerance on the constrained quantity
+  TOLERANCE: double;
+  /// Relative weight of this constraint in the corrector
+  WEIGHT: double;
+}
+
+/// Maneuver-targeter solution and convergence metadata carried with an
+/// extended MPE: the solver that produced the targeted element set, its
+/// iteration/residual history, and the constraint set it satisfied.
+table MPETargeterSolution {
+  /// Solver used, e.g. "differential-corrector"
+  SOLVER: string;
+  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  DYNAMICS: string;
+  /// Whether the corrector converged within tolerance
+  CONVERGED: bool;
+  /// Number of corrector iterations executed
+  ITERATIONS: uint32;
+  /// RMS of the final-iteration constraint residuals
+  RESIDUAL_RMS: double;
+  /// Final-iteration residual per constraint, aligned with CONSTRAINTS
+  RESIDUALS: [double];
+  /// The constraint set the solution was targeted against
+  CONSTRAINTS: [MPETargeterConstraint];
+  /// Total delta-v of the solved maneuver sequence in m/s
+  TOTAL_DELTA_V: double;
+  /// Unix ms the solution was produced
+  SOLVED_AT: uint64;
+}
+
 /// Minimum Propagatable Element Set
-table MPE {  
+table MPE {
   /// Unique ID as a String [no units]
   ENTITY_ID: string;
   /// Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]
@@ -31,6 +77,9 @@ table MPE {
   BSTAR: double;
   /// Description of the Mean Element Theory (SGP4, DSST, USM)
   MEAN_ELEMENT_THEORY:meanElementSource = SGP4;
+  /// Targeter solution + convergence metadata when this element set is the
+  /// product of maneuver targeting (absent for ordinary element sets)
+  TARGETER: MPETargeterSolution;
 }
 
 root_type MPE;

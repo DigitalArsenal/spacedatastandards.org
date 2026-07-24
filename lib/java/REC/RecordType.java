@@ -184,8 +184,14 @@ public final class RecordType {
   public static final byte APP = 178;
   public static final byte CMT = 179;
   public static final byte SCX = 180;
+  public static final byte CVG = 181;
+  public static final byte PKB = 182;
+  public static final byte RPT = 183;
+  public static final byte STO = 184;
+  public static final byte SUB = 185;
+  public static final byte WKS = 186;
 
-  public static final String[] names = { "NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", };
+  public static final String[] names = { "NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", };
 
   public static String name(int e) { return names[e]; }
 }

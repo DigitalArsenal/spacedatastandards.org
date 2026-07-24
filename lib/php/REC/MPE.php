@@ -138,22 +138,31 @@ class MPE extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \meanElementSource::SGP4;
     }
 
+    /// Targeter solution + convergence metadata when this element set is the
+    /// product of maneuver targeting (absent for ordinary element sets)
+    public function getTARGETER()
+    {
+        $obj = new MPETargeterSolution();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startMPE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(11);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MPE
      */
-    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR, $MEAN_ELEMENT_THEORY)
+    public static function createMPE(FlatBufferBuilder $builder, $ENTITY_ID, $EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RA_OF_ASC_NODE, $ARG_OF_PERICENTER, $MEAN_ANOMALY, $BSTAR, $MEAN_ELEMENT_THEORY, $TARGETER)
     {
-        $builder->startObject(10);
+        $builder->startObject(11);
         self::addENTITY_ID($builder, $ENTITY_ID);
         self::addEPOCH($builder, $EPOCH);
         self::addMEAN_MOTION($builder, $MEAN_MOTION);
@@ -164,6 +173,7 @@ class MPE extends Table
         self::addMEAN_ANOMALY($builder, $MEAN_ANOMALY);
         self::addBSTAR($builder, $BSTAR);
         self::addMEAN_ELEMENT_THEORY($builder, $MEAN_ELEMENT_THEORY);
+        self::addTARGETER($builder, $TARGETER);
         $o = $builder->endObject();
         return $o;
     }
@@ -266,6 +276,16 @@ class MPE extends Table
     public static function addMEAN_ELEMENT_THEORY(FlatBufferBuilder $builder, $MEAN_ELEMENT_THEORY)
     {
         $builder->addSbyteX(9, $MEAN_ELEMENT_THEORY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTARGETER(FlatBufferBuilder $builder, $TARGETER)
+    {
+        $builder->addOffsetX(10, $TARGETER, 0);
     }
 
     /**

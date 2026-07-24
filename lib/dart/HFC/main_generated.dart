@@ -52,6 +52,48 @@ class _trajectoryTypeReader extends fb.Reader<trajectoryType> {
       trajectoryType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Estimator class that produced an orbit-determination solution
+///  (batch-vs-filter provenance).
+enum estimatorCategory {
+  Unknown(0),
+  BatchLeastSquares(1),
+  ExtendedKalman(2),
+  UnscentedKalman(3),
+  Smoother(4);
+
+  final int value;
+  const estimatorCategory(this.value);
+
+  factory estimatorCategory.fromValue(int value) {
+    switch (value) {
+      case 0: return estimatorCategory.Unknown;
+      case 1: return estimatorCategory.BatchLeastSquares;
+      case 2: return estimatorCategory.ExtendedKalman;
+      case 3: return estimatorCategory.UnscentedKalman;
+      case 4: return estimatorCategory.Smoother;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static estimatorCategory? _createOrNull(int? value) =>
+      value == null ? null : estimatorCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<estimatorCategory> reader = _estimatorCategoryReader();
+}
+
+class _estimatorCategoryReader extends fb.Reader<estimatorCategory> {
+  const _estimatorCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  estimatorCategory read(fb.BufferContext bc, int offset) =>
+      estimatorCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 class Header {
   Header._(this._bc, this._bcOffset);
   factory Header(List<int> bytes) {
@@ -2006,10 +2048,31 @@ class OrbitDetermination {
   ///  Residuals from the orbit determination.
   String? get OD_RESIDUALS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   String? get odResiduals => OD_RESIDUALS;
+  ///  Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  estimatorCategory get OD_ESTIMATOR => estimatorCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
+  estimatorCategory get odEstimator => OD_ESTIMATOR;
+  ///  RMS of post-fit residuals for this solution.
+  double get OD_RESIDUAL_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get odResidualRms => OD_RESIDUAL_RMS;
+  ///  Post-fit residual series, one entry per accepted observation.
+  List<double>? get OD_RESIDUALS_SERIES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  List<double>? get odResidualsSeries => OD_RESIDUALS_SERIES;
+  ///  Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  ///  since 1970-01-01T00:00:00 UTC].
+  List<double>? get OD_RESIDUAL_EPOCHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  List<double>? get odResidualEpochs => OD_RESIDUAL_EPOCHS;
+  ///  OD_ID of the batch baseline solution a filtered solution derives from and
+  ///  is compared against (empty for batch solutions).
+  String? get OD_BATCH_BASELINE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get odBatchBaselineId => OD_BATCH_BASELINE_ID;
+  ///  Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  ///  comparison.
+  double get OD_BATCH_BASELINE_RMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get odBatchBaselineRms => OD_BATCH_BASELINE_RMS;
 
   @override
   String toString() {
-    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}}';
+    return 'OrbitDetermination{odId: ${odId}, odPrevId: ${odPrevId}, odAlgorithm: ${odAlgorithm}, odMethod: ${odMethod}, odEpoch: ${odEpoch}, odTimeTag: ${odTimeTag}, odProcessNoise: ${odProcessNoise}, odCovReduction: ${odCovReduction}, odNoiseModels: ${odNoiseModels}, odObservationsType: ${odObservationsType}, odObservationsUsed: ${odObservationsUsed}, odTracksUsed: ${odTracksUsed}, odDataWeighting: ${odDataWeighting}, odConvergenceCriteria: ${odConvergenceCriteria}, odEstParameters: ${odEstParameters}, odAprioriData: ${odAprioriData}, odResiduals: ${odResiduals}, odEstimator: ${odEstimator}, odResidualRms: ${odResidualRms}, odResidualsSeries: ${odResidualsSeries}, odResidualEpochs: ${odResidualEpochs}, odBatchBaselineId: ${odBatchBaselineId}, odBatchBaselineRms: ${odBatchBaselineRms}}';
   }
 }
 
@@ -2027,7 +2090,7 @@ class OrbitDeterminationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(23);
   }
 
   int addOdIdOffset(int? offset) {
@@ -2098,6 +2161,30 @@ class OrbitDeterminationBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addOdEstimator(estimatorCategory? OD_ESTIMATOR) {
+    fbBuilder.addInt8(17, OD_ESTIMATOR?.value);
+    return fbBuilder.offset;
+  }
+  int addOdResidualRms(double? OD_RESIDUAL_RMS) {
+    fbBuilder.addFloat64(18, OD_RESIDUAL_RMS);
+    return fbBuilder.offset;
+  }
+  int addOdResidualsSeriesOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addOdResidualEpochsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addOdBatchBaselineIdOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addOdBatchBaselineRms(double? OD_BATCH_BASELINE_RMS) {
+    fbBuilder.addFloat64(22, OD_BATCH_BASELINE_RMS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2122,6 +2209,12 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _OD_EST_PARAMETERS;
   final String? _OD_APRIORI_DATA;
   final String? _OD_RESIDUALS;
+  final estimatorCategory? _OD_ESTIMATOR;
+  final double? _OD_RESIDUAL_RMS;
+  final List<double>? _OD_RESIDUALS_SERIES;
+  final List<double>? _OD_RESIDUAL_EPOCHS;
+  final String? _OD_BATCH_BASELINE_ID;
+  final double? _OD_BATCH_BASELINE_RMS;
 
   OrbitDeterminationObjectBuilder({
     String? OD_ID,
@@ -2158,6 +2251,18 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     String? odAprioriData,
     String? OD_RESIDUALS,
     String? odResiduals,
+    estimatorCategory? OD_ESTIMATOR,
+    estimatorCategory? odEstimator,
+    double? OD_RESIDUAL_RMS,
+    double? odResidualRms,
+    List<double>? OD_RESIDUALS_SERIES,
+    List<double>? odResidualsSeries,
+    List<double>? OD_RESIDUAL_EPOCHS,
+    List<double>? odResidualEpochs,
+    String? OD_BATCH_BASELINE_ID,
+    String? odBatchBaselineId,
+    double? OD_BATCH_BASELINE_RMS,
+    double? odBatchBaselineRms,
   })
       : _OD_ID = odId ?? OD_ID,
         _OD_PREV_ID = odPrevId ?? OD_PREV_ID,
@@ -2175,7 +2280,13 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         _OD_CONVERGENCE_CRITERIA = odConvergenceCriteria ?? OD_CONVERGENCE_CRITERIA,
         _OD_EST_PARAMETERS = odEstParameters ?? OD_EST_PARAMETERS,
         _OD_APRIORI_DATA = odAprioriData ?? OD_APRIORI_DATA,
-        _OD_RESIDUALS = odResiduals ?? OD_RESIDUALS;
+        _OD_RESIDUALS = odResiduals ?? OD_RESIDUALS,
+        _OD_ESTIMATOR = odEstimator ?? OD_ESTIMATOR,
+        _OD_RESIDUAL_RMS = odResidualRms ?? OD_RESIDUAL_RMS,
+        _OD_RESIDUALS_SERIES = odResidualsSeries ?? OD_RESIDUALS_SERIES,
+        _OD_RESIDUAL_EPOCHS = odResidualEpochs ?? OD_RESIDUAL_EPOCHS,
+        _OD_BATCH_BASELINE_ID = odBatchBaselineId ?? OD_BATCH_BASELINE_ID,
+        _OD_BATCH_BASELINE_RMS = odBatchBaselineRms ?? OD_BATCH_BASELINE_RMS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2210,7 +2321,13 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OD_APRIORI_DATA!);
     final int? OD_RESIDUALSOffset = _OD_RESIDUALS == null ? null
         : fbBuilder.writeString(_OD_RESIDUALS!);
-    fbBuilder.startTable(17);
+    final int? OD_RESIDUALS_SERIESOffset = _OD_RESIDUALS_SERIES == null ? null
+        : fbBuilder.writeListFloat64(_OD_RESIDUALS_SERIES!);
+    final int? OD_RESIDUAL_EPOCHSOffset = _OD_RESIDUAL_EPOCHS == null ? null
+        : fbBuilder.writeListFloat64(_OD_RESIDUAL_EPOCHS!);
+    final int? OD_BATCH_BASELINE_IDOffset = _OD_BATCH_BASELINE_ID == null ? null
+        : fbBuilder.writeString(_OD_BATCH_BASELINE_ID!);
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, OD_IDOffset);
     fbBuilder.addOffset(1, OD_PREV_IDOffset);
     fbBuilder.addOffset(2, OD_ALGORITHMOffset);
@@ -2228,6 +2345,12 @@ class OrbitDeterminationObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, OD_EST_PARAMETERSOffset);
     fbBuilder.addOffset(15, OD_APRIORI_DATAOffset);
     fbBuilder.addOffset(16, OD_RESIDUALSOffset);
+    fbBuilder.addInt8(17, _OD_ESTIMATOR?.value);
+    fbBuilder.addFloat64(18, _OD_RESIDUAL_RMS);
+    fbBuilder.addOffset(19, OD_RESIDUALS_SERIESOffset);
+    fbBuilder.addOffset(20, OD_RESIDUAL_EPOCHSOffset);
+    fbBuilder.addOffset(21, OD_BATCH_BASELINE_IDOffset);
+    fbBuilder.addFloat64(22, _OD_BATCH_BASELINE_RMS);
     return fbBuilder.endTable();
   }
 

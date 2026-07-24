@@ -190,8 +190,99 @@ class OrbitDetermination(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+    # OrbitDetermination
+    def OD_ESTIMATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # RMS of post-fit residuals for this solution.
+    # OrbitDetermination
+    def OD_RESIDUAL_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Post-fit residual series, one entry per accepted observation.
+    # OrbitDetermination
+    def OD_RESIDUALS_SERIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUALS_SERIESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUALS_SERIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUALS_SERIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        return o == 0
+
+    # Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+    # since 1970-01-01T00:00:00 UTC].
+    # OrbitDetermination
+    def OD_RESIDUAL_EPOCHS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUAL_EPOCHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUAL_EPOCHSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # OrbitDetermination
+    def OD_RESIDUAL_EPOCHSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
+    # OD_ID of the batch baseline solution a filtered solution derives from and
+    # is compared against (empty for batch solutions).
+    # OrbitDetermination
+    def OD_BATCH_BASELINE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+    # comparison.
+    # OrbitDetermination
+    def OD_BATCH_BASELINE_RMS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
 def OrbitDeterminationStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(23)
 
 def Start(builder):
     OrbitDeterminationStart(builder)
@@ -322,6 +413,74 @@ def OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS):
 def AddOD_RESIDUALS(builder, OD_RESIDUALS):
     OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
 
+def OrbitDeterminationAddOD_ESTIMATOR(builder, OD_ESTIMATOR):
+    builder.PrependInt8Slot(17, OD_ESTIMATOR, 0)
+
+def AddOD_ESTIMATOR(builder, OD_ESTIMATOR):
+    OrbitDeterminationAddOD_ESTIMATOR(builder, OD_ESTIMATOR)
+
+def OrbitDeterminationAddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS):
+    builder.PrependFloat64Slot(18, OD_RESIDUAL_RMS, 0.0)
+
+def AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS):
+    OrbitDeterminationAddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS)
+
+def OrbitDeterminationAddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIES):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(OD_RESIDUALS_SERIES), 0)
+
+def AddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIES):
+    OrbitDeterminationAddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIES)
+
+def OrbitDeterminationStartOD_RESIDUALS_SERIESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartOD_RESIDUALS_SERIESVector(builder, numElems):
+    return OrbitDeterminationStartOD_RESIDUALS_SERIESVector(builder, numElems)
+
+def OrbitDeterminationCreateOD_RESIDUALS_SERIESVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateOD_RESIDUALS_SERIESVector(builder, data):
+    OrbitDeterminationCreateOD_RESIDUALS_SERIESVector(builder, data)
+
+def OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(OD_RESIDUAL_EPOCHS), 0)
+
+def AddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS):
+    OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS)
+
+def OrbitDeterminationStartOD_RESIDUAL_EPOCHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartOD_RESIDUAL_EPOCHSVector(builder, numElems):
+    return OrbitDeterminationStartOD_RESIDUAL_EPOCHSVector(builder, numElems)
+
+def OrbitDeterminationCreateOD_RESIDUAL_EPOCHSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateOD_RESIDUAL_EPOCHSVector(builder, data):
+    OrbitDeterminationCreateOD_RESIDUAL_EPOCHSVector(builder, data)
+
+def OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OD_BATCH_BASELINE_ID), 0)
+
+def AddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID):
+    OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID)
+
+def OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS):
+    builder.PrependFloat64Slot(22, OD_BATCH_BASELINE_RMS, 0.0)
+
+def AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS):
+    OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS)
+
 def OrbitDeterminationEnd(builder):
     return builder.EndObject()
 
@@ -355,6 +514,12 @@ class OrbitDeterminationT(object):
         OD_EST_PARAMETERS = None,
         OD_APRIORI_DATA = None,
         OD_RESIDUALS = None,
+        OD_ESTIMATOR = 0,
+        OD_RESIDUAL_RMS = 0.0,
+        OD_RESIDUALS_SERIES = None,
+        OD_RESIDUAL_EPOCHS = None,
+        OD_BATCH_BASELINE_ID = None,
+        OD_BATCH_BASELINE_RMS = 0.0,
     ):
         self.OD_ID = OD_ID  # type: Optional[str]
         self.OD_PREV_ID = OD_PREV_ID  # type: Optional[str]
@@ -373,6 +538,12 @@ class OrbitDeterminationT(object):
         self.OD_EST_PARAMETERS = OD_EST_PARAMETERS  # type: Optional[List[Optional[str]]]
         self.OD_APRIORI_DATA = OD_APRIORI_DATA  # type: Optional[str]
         self.OD_RESIDUALS = OD_RESIDUALS  # type: Optional[str]
+        self.OD_ESTIMATOR = OD_ESTIMATOR  # type: int
+        self.OD_RESIDUAL_RMS = OD_RESIDUAL_RMS  # type: float
+        self.OD_RESIDUALS_SERIES = OD_RESIDUALS_SERIES  # type: Optional[List[float]]
+        self.OD_RESIDUAL_EPOCHS = OD_RESIDUAL_EPOCHS  # type: Optional[List[float]]
+        self.OD_BATCH_BASELINE_ID = OD_BATCH_BASELINE_ID  # type: Optional[str]
+        self.OD_BATCH_BASELINE_RMS = OD_BATCH_BASELINE_RMS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -418,6 +589,24 @@ class OrbitDeterminationT(object):
                 self.OD_EST_PARAMETERS.append(OrbitDetermination.OD_EST_PARAMETERS(i))
         self.OD_APRIORI_DATA = OrbitDetermination.OD_APRIORI_DATA()
         self.OD_RESIDUALS = OrbitDetermination.OD_RESIDUALS()
+        self.OD_ESTIMATOR = OrbitDetermination.OD_ESTIMATOR()
+        self.OD_RESIDUAL_RMS = OrbitDetermination.OD_RESIDUAL_RMS()
+        if not OrbitDetermination.OD_RESIDUALS_SERIESIsNone():
+            if np is None:
+                self.OD_RESIDUALS_SERIES = []
+                for i in range(OrbitDetermination.OD_RESIDUALS_SERIESLength()):
+                    self.OD_RESIDUALS_SERIES.append(OrbitDetermination.OD_RESIDUALS_SERIES(i))
+            else:
+                self.OD_RESIDUALS_SERIES = OrbitDetermination.OD_RESIDUALS_SERIESAsNumpy()
+        if not OrbitDetermination.OD_RESIDUAL_EPOCHSIsNone():
+            if np is None:
+                self.OD_RESIDUAL_EPOCHS = []
+                for i in range(OrbitDetermination.OD_RESIDUAL_EPOCHSLength()):
+                    self.OD_RESIDUAL_EPOCHS.append(OrbitDetermination.OD_RESIDUAL_EPOCHS(i))
+            else:
+                self.OD_RESIDUAL_EPOCHS = OrbitDetermination.OD_RESIDUAL_EPOCHSAsNumpy()
+        self.OD_BATCH_BASELINE_ID = OrbitDetermination.OD_BATCH_BASELINE_ID()
+        self.OD_BATCH_BASELINE_RMS = OrbitDetermination.OD_BATCH_BASELINE_RMS()
 
     # OrbitDeterminationT
     def Pack(self, builder):
@@ -463,6 +652,24 @@ class OrbitDeterminationT(object):
             OD_APRIORI_DATA = builder.CreateString(self.OD_APRIORI_DATA)
         if self.OD_RESIDUALS is not None:
             OD_RESIDUALS = builder.CreateString(self.OD_RESIDUALS)
+        if self.OD_RESIDUALS_SERIES is not None:
+            if np is not None and type(self.OD_RESIDUALS_SERIES) is np.ndarray:
+                OD_RESIDUALS_SERIES = builder.CreateNumpyVector(self.OD_RESIDUALS_SERIES)
+            else:
+                OrbitDeterminationStartOD_RESIDUALS_SERIESVector(builder, len(self.OD_RESIDUALS_SERIES))
+                for i in reversed(range(len(self.OD_RESIDUALS_SERIES))):
+                    builder.PrependFloat64(self.OD_RESIDUALS_SERIES[i])
+                OD_RESIDUALS_SERIES = builder.EndVector()
+        if self.OD_RESIDUAL_EPOCHS is not None:
+            if np is not None and type(self.OD_RESIDUAL_EPOCHS) is np.ndarray:
+                OD_RESIDUAL_EPOCHS = builder.CreateNumpyVector(self.OD_RESIDUAL_EPOCHS)
+            else:
+                OrbitDeterminationStartOD_RESIDUAL_EPOCHSVector(builder, len(self.OD_RESIDUAL_EPOCHS))
+                for i in reversed(range(len(self.OD_RESIDUAL_EPOCHS))):
+                    builder.PrependFloat64(self.OD_RESIDUAL_EPOCHS[i])
+                OD_RESIDUAL_EPOCHS = builder.EndVector()
+        if self.OD_BATCH_BASELINE_ID is not None:
+            OD_BATCH_BASELINE_ID = builder.CreateString(self.OD_BATCH_BASELINE_ID)
         OrbitDeterminationStart(builder)
         if self.OD_ID is not None:
             OrbitDeterminationAddOD_ID(builder, OD_ID)
@@ -496,5 +703,14 @@ class OrbitDeterminationT(object):
             OrbitDeterminationAddOD_APRIORI_DATA(builder, OD_APRIORI_DATA)
         if self.OD_RESIDUALS is not None:
             OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
+        OrbitDeterminationAddOD_ESTIMATOR(builder, self.OD_ESTIMATOR)
+        OrbitDeterminationAddOD_RESIDUAL_RMS(builder, self.OD_RESIDUAL_RMS)
+        if self.OD_RESIDUALS_SERIES is not None:
+            OrbitDeterminationAddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIES)
+        if self.OD_RESIDUAL_EPOCHS is not None:
+            OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS)
+        if self.OD_BATCH_BASELINE_ID is not None:
+            OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID)
+        OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, self.OD_BATCH_BASELINE_RMS)
         OrbitDetermination = OrbitDeterminationEnd(builder)
         return OrbitDetermination

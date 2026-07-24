@@ -15,8 +15,332 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 
 #include "main_generated.h"
 
+struct MPETargeterConstraint;
+struct MPETargeterConstraintBuilder;
+
+struct MPETargeterSolution;
+struct MPETargeterSolutionBuilder;
+
 struct MPE;
 struct MPEBuilder;
+
+/// One constraint in a maneuver-targeting problem and how well the converged
+/// solution satisfies it.
+struct MPETargeterConstraint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef MPETargeterConstraintBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_NAME = 4,
+    VT_FRAME = 6,
+    VT_EPOCH = 8,
+    VT_EVENT = 10,
+    VT_TARGET_VALUE = 12,
+    VT_ACHIEVED_VALUE = 14,
+    VT_TOLERANCE = 16,
+    VT_WEIGHT = 18
+  };
+  /// Constraint identifier, e.g. "SMA", "INC", "RIC_R"
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Reference frame the constraint is expressed in
+  const ::flatbuffers::String *FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FRAME);
+  }
+  /// Epoch the constraint applies at (UNIX timestamp) [numeric seconds since
+  /// 1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT
+  double EPOCH() const {
+    return GetField<double>(VT_EPOCH, 0.0);
+  }
+  /// Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"
+  const ::flatbuffers::String *EVENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT);
+  }
+  /// Target value of the constrained quantity
+  double TARGET_VALUE() const {
+    return GetField<double>(VT_TARGET_VALUE, 0.0);
+  }
+  /// Value achieved by the converged solution
+  double ACHIEVED_VALUE() const {
+    return GetField<double>(VT_ACHIEVED_VALUE, 0.0);
+  }
+  /// Acceptable tolerance on the constrained quantity
+  double TOLERANCE() const {
+    return GetField<double>(VT_TOLERANCE, 0.0);
+  }
+  /// Relative weight of this constraint in the corrector
+  double WEIGHT() const {
+    return GetField<double>(VT_WEIGHT, 0.0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_FRAME) &&
+           verifier.VerifyString(FRAME()) &&
+           VerifyField<double>(verifier, VT_EPOCH, 8) &&
+           VerifyOffset(verifier, VT_EVENT) &&
+           verifier.VerifyString(EVENT()) &&
+           VerifyField<double>(verifier, VT_TARGET_VALUE, 8) &&
+           VerifyField<double>(verifier, VT_ACHIEVED_VALUE, 8) &&
+           VerifyField<double>(verifier, VT_TOLERANCE, 8) &&
+           VerifyField<double>(verifier, VT_WEIGHT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct MPETargeterConstraintBuilder {
+  typedef MPETargeterConstraint Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(MPETargeterConstraint::VT_NAME, NAME);
+  }
+  void add_FRAME(::flatbuffers::Offset<::flatbuffers::String> FRAME) {
+    fbb_.AddOffset(MPETargeterConstraint::VT_FRAME, FRAME);
+  }
+  void add_EPOCH(double EPOCH) {
+    fbb_.AddElement<double>(MPETargeterConstraint::VT_EPOCH, EPOCH, 0.0);
+  }
+  void add_EVENT(::flatbuffers::Offset<::flatbuffers::String> EVENT) {
+    fbb_.AddOffset(MPETargeterConstraint::VT_EVENT, EVENT);
+  }
+  void add_TARGET_VALUE(double TARGET_VALUE) {
+    fbb_.AddElement<double>(MPETargeterConstraint::VT_TARGET_VALUE, TARGET_VALUE, 0.0);
+  }
+  void add_ACHIEVED_VALUE(double ACHIEVED_VALUE) {
+    fbb_.AddElement<double>(MPETargeterConstraint::VT_ACHIEVED_VALUE, ACHIEVED_VALUE, 0.0);
+  }
+  void add_TOLERANCE(double TOLERANCE) {
+    fbb_.AddElement<double>(MPETargeterConstraint::VT_TOLERANCE, TOLERANCE, 0.0);
+  }
+  void add_WEIGHT(double WEIGHT) {
+    fbb_.AddElement<double>(MPETargeterConstraint::VT_WEIGHT, WEIGHT, 0.0);
+  }
+  explicit MPETargeterConstraintBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<MPETargeterConstraint> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<MPETargeterConstraint>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<MPETargeterConstraint> CreateMPETargeterConstraint(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FRAME = 0,
+    double EPOCH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT = 0,
+    double TARGET_VALUE = 0.0,
+    double ACHIEVED_VALUE = 0.0,
+    double TOLERANCE = 0.0,
+    double WEIGHT = 0.0) {
+  MPETargeterConstraintBuilder builder_(_fbb);
+  builder_.add_WEIGHT(WEIGHT);
+  builder_.add_TOLERANCE(TOLERANCE);
+  builder_.add_ACHIEVED_VALUE(ACHIEVED_VALUE);
+  builder_.add_TARGET_VALUE(TARGET_VALUE);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_EVENT(EVENT);
+  builder_.add_FRAME(FRAME);
+  builder_.add_NAME(NAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<MPETargeterConstraint> CreateMPETargeterConstraintDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *NAME = nullptr,
+    const char *FRAME = nullptr,
+    double EPOCH = 0.0,
+    const char *EVENT = nullptr,
+    double TARGET_VALUE = 0.0,
+    double ACHIEVED_VALUE = 0.0,
+    double TOLERANCE = 0.0,
+    double WEIGHT = 0.0) {
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto FRAME__ = FRAME ? _fbb.CreateString(FRAME) : 0;
+  auto EVENT__ = EVENT ? _fbb.CreateString(EVENT) : 0;
+  return CreateMPETargeterConstraint(
+      _fbb,
+      NAME__,
+      FRAME__,
+      EPOCH,
+      EVENT__,
+      TARGET_VALUE,
+      ACHIEVED_VALUE,
+      TOLERANCE,
+      WEIGHT);
+}
+
+/// Maneuver-targeter solution and convergence metadata carried with an
+/// extended MPE: the solver that produced the targeted element set, its
+/// iteration/residual history, and the constraint set it satisfied.
+struct MPETargeterSolution FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef MPETargeterSolutionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SOLVER = 4,
+    VT_DYNAMICS = 6,
+    VT_CONVERGED = 8,
+    VT_ITERATIONS = 10,
+    VT_RESIDUAL_RMS = 12,
+    VT_RESIDUALS = 14,
+    VT_CONSTRAINTS = 16,
+    VT_TOTAL_DELTA_V = 18,
+    VT_SOLVED_AT = 20
+  };
+  /// Solver used, e.g. "differential-corrector"
+  const ::flatbuffers::String *SOLVER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOLVER);
+  }
+  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  const ::flatbuffers::String *DYNAMICS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DYNAMICS);
+  }
+  /// Whether the corrector converged within tolerance
+  bool CONVERGED() const {
+    return GetField<uint8_t>(VT_CONVERGED, 0) != 0;
+  }
+  /// Number of corrector iterations executed
+  uint32_t ITERATIONS() const {
+    return GetField<uint32_t>(VT_ITERATIONS, 0);
+  }
+  /// RMS of the final-iteration constraint residuals
+  double RESIDUAL_RMS() const {
+    return GetField<double>(VT_RESIDUAL_RMS, 0.0);
+  }
+  /// Final-iteration residual per constraint, aligned with CONSTRAINTS
+  const ::flatbuffers::Vector<double> *RESIDUALS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_RESIDUALS);
+  }
+  /// The constraint set the solution was targeted against
+  const ::flatbuffers::Vector<::flatbuffers::Offset<MPETargeterConstraint>> *CONSTRAINTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<MPETargeterConstraint>> *>(VT_CONSTRAINTS);
+  }
+  /// Total delta-v of the solved maneuver sequence in m/s
+  double TOTAL_DELTA_V() const {
+    return GetField<double>(VT_TOTAL_DELTA_V, 0.0);
+  }
+  /// Unix ms the solution was produced
+  uint64_t SOLVED_AT() const {
+    return GetField<uint64_t>(VT_SOLVED_AT, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SOLVER) &&
+           verifier.VerifyString(SOLVER()) &&
+           VerifyOffset(verifier, VT_DYNAMICS) &&
+           verifier.VerifyString(DYNAMICS()) &&
+           VerifyField<uint8_t>(verifier, VT_CONVERGED, 1) &&
+           VerifyField<uint32_t>(verifier, VT_ITERATIONS, 4) &&
+           VerifyField<double>(verifier, VT_RESIDUAL_RMS, 8) &&
+           VerifyOffset(verifier, VT_RESIDUALS) &&
+           verifier.VerifyVector(RESIDUALS()) &&
+           VerifyOffset(verifier, VT_CONSTRAINTS) &&
+           verifier.VerifyVector(CONSTRAINTS()) &&
+           verifier.VerifyVectorOfTables(CONSTRAINTS()) &&
+           VerifyField<double>(verifier, VT_TOTAL_DELTA_V, 8) &&
+           VerifyField<uint64_t>(verifier, VT_SOLVED_AT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct MPETargeterSolutionBuilder {
+  typedef MPETargeterSolution Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SOLVER(::flatbuffers::Offset<::flatbuffers::String> SOLVER) {
+    fbb_.AddOffset(MPETargeterSolution::VT_SOLVER, SOLVER);
+  }
+  void add_DYNAMICS(::flatbuffers::Offset<::flatbuffers::String> DYNAMICS) {
+    fbb_.AddOffset(MPETargeterSolution::VT_DYNAMICS, DYNAMICS);
+  }
+  void add_CONVERGED(bool CONVERGED) {
+    fbb_.AddElement<uint8_t>(MPETargeterSolution::VT_CONVERGED, static_cast<uint8_t>(CONVERGED), 0);
+  }
+  void add_ITERATIONS(uint32_t ITERATIONS) {
+    fbb_.AddElement<uint32_t>(MPETargeterSolution::VT_ITERATIONS, ITERATIONS, 0);
+  }
+  void add_RESIDUAL_RMS(double RESIDUAL_RMS) {
+    fbb_.AddElement<double>(MPETargeterSolution::VT_RESIDUAL_RMS, RESIDUAL_RMS, 0.0);
+  }
+  void add_RESIDUALS(::flatbuffers::Offset<::flatbuffers::Vector<double>> RESIDUALS) {
+    fbb_.AddOffset(MPETargeterSolution::VT_RESIDUALS, RESIDUALS);
+  }
+  void add_CONSTRAINTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPETargeterConstraint>>> CONSTRAINTS) {
+    fbb_.AddOffset(MPETargeterSolution::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  void add_TOTAL_DELTA_V(double TOTAL_DELTA_V) {
+    fbb_.AddElement<double>(MPETargeterSolution::VT_TOTAL_DELTA_V, TOTAL_DELTA_V, 0.0);
+  }
+  void add_SOLVED_AT(uint64_t SOLVED_AT) {
+    fbb_.AddElement<uint64_t>(MPETargeterSolution::VT_SOLVED_AT, SOLVED_AT, 0);
+  }
+  explicit MPETargeterSolutionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<MPETargeterSolution> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<MPETargeterSolution>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<MPETargeterSolution> CreateMPETargeterSolution(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> SOLVER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DYNAMICS = 0,
+    bool CONVERGED = false,
+    uint32_t ITERATIONS = 0,
+    double RESIDUAL_RMS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> RESIDUALS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<MPETargeterConstraint>>> CONSTRAINTS = 0,
+    double TOTAL_DELTA_V = 0.0,
+    uint64_t SOLVED_AT = 0) {
+  MPETargeterSolutionBuilder builder_(_fbb);
+  builder_.add_SOLVED_AT(SOLVED_AT);
+  builder_.add_TOTAL_DELTA_V(TOTAL_DELTA_V);
+  builder_.add_RESIDUAL_RMS(RESIDUAL_RMS);
+  builder_.add_CONSTRAINTS(CONSTRAINTS);
+  builder_.add_RESIDUALS(RESIDUALS);
+  builder_.add_ITERATIONS(ITERATIONS);
+  builder_.add_DYNAMICS(DYNAMICS);
+  builder_.add_SOLVER(SOLVER);
+  builder_.add_CONVERGED(CONVERGED);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<MPETargeterSolution> CreateMPETargeterSolutionDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *SOLVER = nullptr,
+    const char *DYNAMICS = nullptr,
+    bool CONVERGED = false,
+    uint32_t ITERATIONS = 0,
+    double RESIDUAL_RMS = 0.0,
+    const std::vector<double> *RESIDUALS = nullptr,
+    const std::vector<::flatbuffers::Offset<MPETargeterConstraint>> *CONSTRAINTS = nullptr,
+    double TOTAL_DELTA_V = 0.0,
+    uint64_t SOLVED_AT = 0) {
+  auto SOLVER__ = SOLVER ? _fbb.CreateString(SOLVER) : 0;
+  auto DYNAMICS__ = DYNAMICS ? _fbb.CreateString(DYNAMICS) : 0;
+  auto RESIDUALS__ = RESIDUALS ? _fbb.CreateVector<double>(*RESIDUALS) : 0;
+  auto CONSTRAINTS__ = CONSTRAINTS ? _fbb.CreateVector<::flatbuffers::Offset<MPETargeterConstraint>>(*CONSTRAINTS) : 0;
+  return CreateMPETargeterSolution(
+      _fbb,
+      SOLVER__,
+      DYNAMICS__,
+      CONVERGED,
+      ITERATIONS,
+      RESIDUAL_RMS,
+      RESIDUALS__,
+      CONSTRAINTS__,
+      TOTAL_DELTA_V,
+      SOLVED_AT);
+}
 
 /// Minimum Propagatable Element Set
 struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -31,7 +355,8 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ARG_OF_PERICENTER = 16,
     VT_MEAN_ANOMALY = 18,
     VT_BSTAR = 20,
-    VT_MEAN_ELEMENT_THEORY = 22
+    VT_MEAN_ELEMENT_THEORY = 22,
+    VT_TARGETER = 24
   };
   /// Unique ID as a String [no units]
   const ::flatbuffers::String *ENTITY_ID() const {
@@ -73,6 +398,11 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   meanElementSource MEAN_ELEMENT_THEORY() const {
     return static_cast<meanElementSource>(GetField<int8_t>(VT_MEAN_ELEMENT_THEORY, 0));
   }
+  /// Targeter solution + convergence metadata when this element set is the
+  /// product of maneuver targeting (absent for ordinary element sets)
+  const MPETargeterSolution *TARGETER() const {
+    return GetPointer<const MPETargeterSolution *>(VT_TARGETER);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -87,6 +417,8 @@ struct MPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_MEAN_ANOMALY, 8) &&
            VerifyField<double>(verifier, VT_BSTAR, 8) &&
            VerifyField<int8_t>(verifier, VT_MEAN_ELEMENT_THEORY, 1) &&
+           VerifyOffset(verifier, VT_TARGETER) &&
+           verifier.VerifyTable(TARGETER()) &&
            verifier.EndTable();
   }
 };
@@ -125,6 +457,9 @@ struct MPEBuilder {
   void add_MEAN_ELEMENT_THEORY(meanElementSource MEAN_ELEMENT_THEORY) {
     fbb_.AddElement<int8_t>(MPE::VT_MEAN_ELEMENT_THEORY, static_cast<int8_t>(MEAN_ELEMENT_THEORY), 0);
   }
+  void add_TARGETER(::flatbuffers::Offset<MPETargeterSolution> TARGETER) {
+    fbb_.AddOffset(MPE::VT_TARGETER, TARGETER);
+  }
   explicit MPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -147,7 +482,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPE(
     double ARG_OF_PERICENTER = 0.0,
     double MEAN_ANOMALY = 0.0,
     double BSTAR = 0.0,
-    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
+    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4,
+    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0) {
   MPEBuilder builder_(_fbb);
   builder_.add_BSTAR(BSTAR);
   builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
@@ -157,6 +493,7 @@ inline ::flatbuffers::Offset<MPE> CreateMPE(
   builder_.add_ECCENTRICITY(ECCENTRICITY);
   builder_.add_MEAN_MOTION(MEAN_MOTION);
   builder_.add_EPOCH(EPOCH);
+  builder_.add_TARGETER(TARGETER);
   builder_.add_ENTITY_ID(ENTITY_ID);
   builder_.add_MEAN_ELEMENT_THEORY(MEAN_ELEMENT_THEORY);
   return builder_.Finish();
@@ -173,7 +510,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
     double ARG_OF_PERICENTER = 0.0,
     double MEAN_ANOMALY = 0.0,
     double BSTAR = 0.0,
-    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4) {
+    meanElementSource MEAN_ELEMENT_THEORY = meanElementSource_SGP4,
+    ::flatbuffers::Offset<MPETargeterSolution> TARGETER = 0) {
   auto ENTITY_ID__ = ENTITY_ID ? _fbb.CreateString(ENTITY_ID) : 0;
   return CreateMPE(
       _fbb,
@@ -186,7 +524,8 @@ inline ::flatbuffers::Offset<MPE> CreateMPEDirect(
       ARG_OF_PERICENTER,
       MEAN_ANOMALY,
       BSTAR,
-      MEAN_ELEMENT_THEORY);
+      MEAN_ELEMENT_THEORY,
+      TARGETER);
 }
 
 inline const MPE *GetMPE(const void *buf) {

@@ -109,8 +109,21 @@ class MPE(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Targeter solution + convergence metadata when this element set is the
+    # product of maneuver targeting (absent for ordinary element sets)
+    # MPE
+    def TARGETER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from MPETargeterSolution import MPETargeterSolution
+            obj = MPETargeterSolution()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def MPEStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(11)
 
 def Start(builder):
     MPEStart(builder)
@@ -175,12 +188,23 @@ def MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
 def AddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY):
     MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
 
+def MPEAddTARGETER(builder, TARGETER):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TARGETER), 0)
+
+def AddTARGETER(builder, TARGETER):
+    MPEAddTARGETER(builder, TARGETER)
+
 def MPEEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return MPEEnd(builder)
 
+import MPETargeterSolution
+try:
+    from typing import Optional
+except:
+    pass
 
 class MPET(object):
 
@@ -197,6 +221,7 @@ class MPET(object):
         MEAN_ANOMALY = 0.0,
         BSTAR = 0.0,
         MEAN_ELEMENT_THEORY = 0,
+        TARGETER = None,
     ):
         self.ENTITY_ID = ENTITY_ID  # type: Optional[str]
         self.EPOCH = EPOCH  # type: float
@@ -208,6 +233,7 @@ class MPET(object):
         self.MEAN_ANOMALY = MEAN_ANOMALY  # type: float
         self.BSTAR = BSTAR  # type: float
         self.MEAN_ELEMENT_THEORY = MEAN_ELEMENT_THEORY  # type: int
+        self.TARGETER = TARGETER  # type: Optional[MPETargeterSolution.MPETargeterSolutionT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -240,11 +266,15 @@ class MPET(object):
         self.MEAN_ANOMALY = MPE.MEAN_ANOMALY()
         self.BSTAR = MPE.BSTAR()
         self.MEAN_ELEMENT_THEORY = MPE.MEAN_ELEMENT_THEORY()
+        if MPE.TARGETER() is not None:
+            self.TARGETER = MPETargeterSolution.MPETargeterSolutionT.InitFromObj(MPE.TARGETER())
 
     # MPET
     def Pack(self, builder):
         if self.ENTITY_ID is not None:
             ENTITY_ID = builder.CreateString(self.ENTITY_ID)
+        if self.TARGETER is not None:
+            TARGETER = self.TARGETER.Pack(builder)
         MPEStart(builder)
         if self.ENTITY_ID is not None:
             MPEAddENTITY_ID(builder, ENTITY_ID)
@@ -257,5 +287,7 @@ class MPET(object):
         MPEAddMEAN_ANOMALY(builder, self.MEAN_ANOMALY)
         MPEAddBSTAR(builder, self.BSTAR)
         MPEAddMEAN_ELEMENT_THEORY(builder, self.MEAN_ELEMENT_THEORY)
+        if self.TARGETER is not None:
+            MPEAddTARGETER(builder, TARGETER)
         MPE = MPEEnd(builder)
         return MPE

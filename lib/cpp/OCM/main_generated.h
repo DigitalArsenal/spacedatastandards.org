@@ -96,6 +96,52 @@ inline const char *EnumNametrajectoryType(trajectoryType e) {
   return EnumNamestrajectoryType()[index];
 }
 
+/// Estimator class that produced an orbit-determination solution
+/// (batch-vs-filter provenance).
+enum estimatorCategory : int8_t {
+  /// Estimator class not specified
+  estimatorCategory_Unknown = 0,
+  /// Batch least-squares fit
+  estimatorCategory_BatchLeastSquares = 1,
+  /// Extended Kalman filter
+  estimatorCategory_ExtendedKalman = 2,
+  /// Unscented Kalman filter
+  estimatorCategory_UnscentedKalman = 3,
+  /// Smoothed sequential solution
+  estimatorCategory_Smoother = 4,
+  estimatorCategory_MIN = estimatorCategory_Unknown,
+  estimatorCategory_MAX = estimatorCategory_Smoother
+};
+
+inline const estimatorCategory (&EnumValuesestimatorCategory())[5] {
+  static const estimatorCategory values[] = {
+    estimatorCategory_Unknown,
+    estimatorCategory_BatchLeastSquares,
+    estimatorCategory_ExtendedKalman,
+    estimatorCategory_UnscentedKalman,
+    estimatorCategory_Smoother
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesestimatorCategory() {
+  static const char * const names[6] = {
+    "Unknown",
+    "BatchLeastSquares",
+    "ExtendedKalman",
+    "UnscentedKalman",
+    "Smoother",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameestimatorCategory(estimatorCategory e) {
+  if (::flatbuffers::IsOutRange(e, estimatorCategory_Unknown, estimatorCategory_Smoother)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesestimatorCategory()[index];
+}
+
 struct Header FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef HeaderBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -2028,7 +2074,13 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_OD_CONVERGENCE_CRITERIA = 30,
     VT_OD_EST_PARAMETERS = 32,
     VT_OD_APRIORI_DATA = 34,
-    VT_OD_RESIDUALS = 36
+    VT_OD_RESIDUALS = 36,
+    VT_OD_ESTIMATOR = 38,
+    VT_OD_RESIDUAL_RMS = 40,
+    VT_OD_RESIDUALS_SERIES = 42,
+    VT_OD_RESIDUAL_EPOCHS = 44,
+    VT_OD_BATCH_BASELINE_ID = 46,
+    VT_OD_BATCH_BASELINE_RMS = 48
   };
   /// Unique identifier for the orbit determination.
   const ::flatbuffers::String *OD_ID() const {
@@ -2098,6 +2150,33 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::String *OD_RESIDUALS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OD_RESIDUALS);
   }
+  /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  estimatorCategory OD_ESTIMATOR() const {
+    return static_cast<estimatorCategory>(GetField<int8_t>(VT_OD_ESTIMATOR, 0));
+  }
+  /// RMS of post-fit residuals for this solution.
+  double OD_RESIDUAL_RMS() const {
+    return GetField<double>(VT_OD_RESIDUAL_RMS, 0.0);
+  }
+  /// Post-fit residual series, one entry per accepted observation.
+  const ::flatbuffers::Vector<double> *OD_RESIDUALS_SERIES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_OD_RESIDUALS_SERIES);
+  }
+  /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  /// since 1970-01-01T00:00:00 UTC].
+  const ::flatbuffers::Vector<double> *OD_RESIDUAL_EPOCHS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_OD_RESIDUAL_EPOCHS);
+  }
+  /// OD_ID of the batch baseline solution a filtered solution derives from and
+  /// is compared against (empty for batch solutions).
+  const ::flatbuffers::String *OD_BATCH_BASELINE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OD_BATCH_BASELINE_ID);
+  }
+  /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  /// comparison.
+  double OD_BATCH_BASELINE_RMS() const {
+    return GetField<double>(VT_OD_BATCH_BASELINE_RMS, 0.0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2135,6 +2214,15 @@ struct OrbitDetermination FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            verifier.VerifyString(OD_APRIORI_DATA()) &&
            VerifyOffset(verifier, VT_OD_RESIDUALS) &&
            verifier.VerifyString(OD_RESIDUALS()) &&
+           VerifyField<int8_t>(verifier, VT_OD_ESTIMATOR, 1) &&
+           VerifyField<double>(verifier, VT_OD_RESIDUAL_RMS, 8) &&
+           VerifyOffset(verifier, VT_OD_RESIDUALS_SERIES) &&
+           verifier.VerifyVector(OD_RESIDUALS_SERIES()) &&
+           VerifyOffset(verifier, VT_OD_RESIDUAL_EPOCHS) &&
+           verifier.VerifyVector(OD_RESIDUAL_EPOCHS()) &&
+           VerifyOffset(verifier, VT_OD_BATCH_BASELINE_ID) &&
+           verifier.VerifyString(OD_BATCH_BASELINE_ID()) &&
+           VerifyField<double>(verifier, VT_OD_BATCH_BASELINE_RMS, 8) &&
            verifier.EndTable();
   }
 };
@@ -2194,6 +2282,24 @@ struct OrbitDeterminationBuilder {
   void add_OD_RESIDUALS(::flatbuffers::Offset<::flatbuffers::String> OD_RESIDUALS) {
     fbb_.AddOffset(OrbitDetermination::VT_OD_RESIDUALS, OD_RESIDUALS);
   }
+  void add_OD_ESTIMATOR(estimatorCategory OD_ESTIMATOR) {
+    fbb_.AddElement<int8_t>(OrbitDetermination::VT_OD_ESTIMATOR, static_cast<int8_t>(OD_ESTIMATOR), 0);
+  }
+  void add_OD_RESIDUAL_RMS(double OD_RESIDUAL_RMS) {
+    fbb_.AddElement<double>(OrbitDetermination::VT_OD_RESIDUAL_RMS, OD_RESIDUAL_RMS, 0.0);
+  }
+  void add_OD_RESIDUALS_SERIES(::flatbuffers::Offset<::flatbuffers::Vector<double>> OD_RESIDUALS_SERIES) {
+    fbb_.AddOffset(OrbitDetermination::VT_OD_RESIDUALS_SERIES, OD_RESIDUALS_SERIES);
+  }
+  void add_OD_RESIDUAL_EPOCHS(::flatbuffers::Offset<::flatbuffers::Vector<double>> OD_RESIDUAL_EPOCHS) {
+    fbb_.AddOffset(OrbitDetermination::VT_OD_RESIDUAL_EPOCHS, OD_RESIDUAL_EPOCHS);
+  }
+  void add_OD_BATCH_BASELINE_ID(::flatbuffers::Offset<::flatbuffers::String> OD_BATCH_BASELINE_ID) {
+    fbb_.AddOffset(OrbitDetermination::VT_OD_BATCH_BASELINE_ID, OD_BATCH_BASELINE_ID);
+  }
+  void add_OD_BATCH_BASELINE_RMS(double OD_BATCH_BASELINE_RMS) {
+    fbb_.AddElement<double>(OrbitDetermination::VT_OD_BATCH_BASELINE_RMS, OD_BATCH_BASELINE_RMS, 0.0);
+  }
   explicit OrbitDeterminationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2223,8 +2329,19 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDetermination(
     ::flatbuffers::Offset<::flatbuffers::String> OD_CONVERGENCE_CRITERIA = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OD_EST_PARAMETERS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OD_APRIORI_DATA = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OD_RESIDUALS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> OD_RESIDUALS = 0,
+    estimatorCategory OD_ESTIMATOR = estimatorCategory_Unknown,
+    double OD_RESIDUAL_RMS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> OD_RESIDUALS_SERIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> OD_RESIDUAL_EPOCHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OD_BATCH_BASELINE_ID = 0,
+    double OD_BATCH_BASELINE_RMS = 0.0) {
   OrbitDeterminationBuilder builder_(_fbb);
+  builder_.add_OD_BATCH_BASELINE_RMS(OD_BATCH_BASELINE_RMS);
+  builder_.add_OD_RESIDUAL_RMS(OD_RESIDUAL_RMS);
+  builder_.add_OD_BATCH_BASELINE_ID(OD_BATCH_BASELINE_ID);
+  builder_.add_OD_RESIDUAL_EPOCHS(OD_RESIDUAL_EPOCHS);
+  builder_.add_OD_RESIDUALS_SERIES(OD_RESIDUALS_SERIES);
   builder_.add_OD_RESIDUALS(OD_RESIDUALS);
   builder_.add_OD_APRIORI_DATA(OD_APRIORI_DATA);
   builder_.add_OD_EST_PARAMETERS(OD_EST_PARAMETERS);
@@ -2242,6 +2359,7 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDetermination(
   builder_.add_OD_ALGORITHM(OD_ALGORITHM);
   builder_.add_OD_PREV_ID(OD_PREV_ID);
   builder_.add_OD_ID(OD_ID);
+  builder_.add_OD_ESTIMATOR(OD_ESTIMATOR);
   return builder_.Finish();
 }
 
@@ -2263,7 +2381,13 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
     const char *OD_CONVERGENCE_CRITERIA = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *OD_EST_PARAMETERS = nullptr,
     const char *OD_APRIORI_DATA = nullptr,
-    const char *OD_RESIDUALS = nullptr) {
+    const char *OD_RESIDUALS = nullptr,
+    estimatorCategory OD_ESTIMATOR = estimatorCategory_Unknown,
+    double OD_RESIDUAL_RMS = 0.0,
+    const std::vector<double> *OD_RESIDUALS_SERIES = nullptr,
+    const std::vector<double> *OD_RESIDUAL_EPOCHS = nullptr,
+    const char *OD_BATCH_BASELINE_ID = nullptr,
+    double OD_BATCH_BASELINE_RMS = 0.0) {
   auto OD_ID__ = OD_ID ? _fbb.CreateString(OD_ID) : 0;
   auto OD_PREV_ID__ = OD_PREV_ID ? _fbb.CreateString(OD_PREV_ID) : 0;
   auto OD_ALGORITHM__ = OD_ALGORITHM ? _fbb.CreateString(OD_ALGORITHM) : 0;
@@ -2279,6 +2403,9 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
   auto OD_EST_PARAMETERS__ = OD_EST_PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*OD_EST_PARAMETERS) : 0;
   auto OD_APRIORI_DATA__ = OD_APRIORI_DATA ? _fbb.CreateString(OD_APRIORI_DATA) : 0;
   auto OD_RESIDUALS__ = OD_RESIDUALS ? _fbb.CreateString(OD_RESIDUALS) : 0;
+  auto OD_RESIDUALS_SERIES__ = OD_RESIDUALS_SERIES ? _fbb.CreateVector<double>(*OD_RESIDUALS_SERIES) : 0;
+  auto OD_RESIDUAL_EPOCHS__ = OD_RESIDUAL_EPOCHS ? _fbb.CreateVector<double>(*OD_RESIDUAL_EPOCHS) : 0;
+  auto OD_BATCH_BASELINE_ID__ = OD_BATCH_BASELINE_ID ? _fbb.CreateString(OD_BATCH_BASELINE_ID) : 0;
   return CreateOrbitDetermination(
       _fbb,
       OD_ID__,
@@ -2297,7 +2424,13 @@ inline ::flatbuffers::Offset<OrbitDetermination> CreateOrbitDeterminationDirect(
       OD_CONVERGENCE_CRITERIA__,
       OD_EST_PARAMETERS__,
       OD_APRIORI_DATA__,
-      OD_RESIDUALS__);
+      OD_RESIDUALS__,
+      OD_ESTIMATOR,
+      OD_RESIDUAL_RMS,
+      OD_RESIDUALS_SERIES__,
+      OD_RESIDUAL_EPOCHS__,
+      OD_BATCH_BASELINE_ID__,
+      OD_BATCH_BASELINE_RMS);
 }
 
 struct UserDefinedParameters FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

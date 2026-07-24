@@ -20,6 +20,20 @@ enum trajectoryType:
     /// Lagrange interpolating polynomial representation.
     trajectoryType_LAGRANGE = 5
 
+/// Estimator class that produced an orbit-determination solution
+/// (batch-vs-filter provenance).
+enum estimatorCategory:
+    /// Estimator class not specified
+    estimatorCategory_Unknown = 0
+    /// Batch least-squares fit
+    estimatorCategory_BatchLeastSquares = 1
+    /// Extended Kalman filter
+    estimatorCategory_ExtendedKalman = 2
+    /// Unscented Kalman filter
+    estimatorCategory_UnscentedKalman = 3
+    /// Smoothed sequential solution
+    estimatorCategory_Smoother = 4
+
 class Header
 
 class Metadata
@@ -968,13 +982,38 @@ class OrbitDetermination : flatbuffers.handle
     /// Residuals from the orbit determination.
     def OD_RESIDUALS() -> string:
         return flatbuffers.field_string(buf_, pos_, 36)
+    /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+    def OD_ESTIMATOR() -> estimatorCategory:
+        return estimatorCategory(flatbuffers.field_int8(buf_, pos_, 38, 0))
+    /// RMS of post-fit residuals for this solution.
+    def OD_RESIDUAL_RMS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// Post-fit residual series, one entry per accepted observation.
+    def OD_RESIDUALS_SERIES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 8)
+    def OD_RESIDUALS_SERIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 42)
+    /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+    /// since 1970-01-01T00:00:00 UTC].
+    def OD_RESIDUAL_EPOCHS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 8)
+    def OD_RESIDUAL_EPOCHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
+    /// OD_ID of the batch baseline solution a filtered solution derives from and
+    /// is compared against (empty for batch solutions).
+    def OD_BATCH_BASELINE_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+    /// comparison.
+    def OD_BATCH_BASELINE_RMS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
 
 def GetRootAsOrbitDetermination(buf:string): return OrbitDetermination { buf, flatbuffers.indirect(buf, 0) }
 
 struct OrbitDeterminationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(23)
         return this
     def add_OD_ID(OD_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, OD_ID)
@@ -1027,6 +1066,24 @@ struct OrbitDeterminationBuilder:
     def add_OD_RESIDUALS(OD_RESIDUALS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, OD_RESIDUALS)
         return this
+    def add_OD_ESTIMATOR(OD_ESTIMATOR:estimatorCategory):
+        b_.PrependInt8Slot(17, OD_ESTIMATOR, 0)
+        return this
+    def add_OD_RESIDUAL_RMS(OD_RESIDUAL_RMS:float):
+        b_.PrependFloat64Slot(18, OD_RESIDUAL_RMS, 0.0)
+        return this
+    def add_OD_RESIDUALS_SERIES(OD_RESIDUALS_SERIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, OD_RESIDUALS_SERIES)
+        return this
+    def add_OD_RESIDUAL_EPOCHS(OD_RESIDUAL_EPOCHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, OD_RESIDUAL_EPOCHS)
+        return this
+    def add_OD_BATCH_BASELINE_ID(OD_BATCH_BASELINE_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, OD_BATCH_BASELINE_ID)
+        return this
+    def add_OD_BATCH_BASELINE_RMS(OD_BATCH_BASELINE_RMS:float):
+        b_.PrependFloat64Slot(22, OD_BATCH_BASELINE_RMS, 0.0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1042,6 +1099,20 @@ def OrbitDeterminationStartODESTPARAMETERSVector(b_:flatbuffers.builder, n_:int)
 def OrbitDeterminationCreateODESTPARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def OrbitDeterminationStartODRESIDUALSSERIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OrbitDeterminationCreateODRESIDUALSSERIESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def OrbitDeterminationStartODRESIDUALEPOCHSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def OrbitDeterminationCreateODRESIDUALEPOCHSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 class UserDefinedParameters : flatbuffers.handle

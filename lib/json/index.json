@@ -5772,6 +5772,16 @@
                         "LAGRANGE"
                     ]
                 },
+                "estimatorCategory": {
+                    "type": "string",
+                    "enum": [
+                        "Unknown",
+                        "BatchLeastSquares",
+                        "ExtendedKalman",
+                        "UnscentedKalman",
+                        "Smoother"
+                    ]
+                },
                 "ATM": {
                     "type": "object",
                     "description": "Atmospheric Model Message",
@@ -7239,6 +7249,36 @@
                         "OD_RESIDUALS": {
                             "type": "string",
                             "description": "Residuals from the orbit determination."
+                        },
+                        "OD_ESTIMATOR": {
+                            "$ref": "#/definitions/estimatorCategory",
+                            "description": "Estimator class provenance: batch fit vs sequential filter (EKF/UKF)."
+                        },
+                        "OD_RESIDUAL_RMS": {
+                            "type": "number",
+                            "description": "RMS of post-fit residuals for this solution."
+                        },
+                        "OD_RESIDUALS_SERIES": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Post-fit residual series, one entry per accepted observation."
+                        },
+                        "OD_RESIDUAL_EPOCHS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds\nsince 1970-01-01T00:00:00 UTC]."
+                        },
+                        "OD_BATCH_BASELINE_ID": {
+                            "type": "string",
+                            "description": "OD_ID of the batch baseline solution a filtered solution derives from and\nis compared against (empty for batch solutions)."
+                        },
+                        "OD_BATCH_BASELINE_RMS": {
+                            "type": "number",
+                            "description": "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison."
                         }
                     },
                     "additionalProperties": false
@@ -9574,6 +9614,95 @@
                 }
             },
             "$ref": "#/definitions/MST"
+        },
+        "RPT": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "RPT": {
+                    "type": "object",
+                    "description": "Verifiable Report descriptor",
+                    "properties": {
+                        "REPORT_ID": {
+                            "type": "string",
+                            "description": "Stable report identifier"
+                        },
+                        "TEMPLATE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the report template used to render"
+                        },
+                        "TEMPLATE_VERSION": {
+                            "type": "string",
+                            "description": "Version of the report template"
+                        },
+                        "TITLE": {
+                            "type": "string",
+                            "description": "Display title of the report"
+                        },
+                        "SOURCE_QUERY": {
+                            "type": "string",
+                            "description": "FlatSQL source query the report renders from"
+                        },
+                        "SOURCE_DATA_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA-256 over the canonical source-query result stream, so the data the\nreport was rendered from can be re-derived and verified"
+                        },
+                        "CONTENT_HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "SHA-256 of the rendered report artifact"
+                        },
+                        "CONTENT_TYPE": {
+                            "type": "string",
+                            "description": "MIME type of the rendered artifact, e.g. \"application/pdf\", \"text/html\",\n\"text/csv\""
+                        },
+                        "CONTENT_CID": {
+                            "type": "string",
+                            "description": "Optional IPFS CID of the rendered artifact"
+                        },
+                        "GENERATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix ms the report was generated"
+                        },
+                        "GENERATOR_MODULE_ID": {
+                            "type": "string",
+                            "description": "`$PLG.PLUGIN_ID` of the generator module"
+                        },
+                        "GENERATOR_MODULE_VERSION": {
+                            "type": "string",
+                            "description": "Version of the generator module"
+                        },
+                        "CREATOR_EPM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the `$EPM` that generated the report"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ed25519 signature by the creator `$EPM` over the report descriptor"
+                        }
+                    },
+                    "required": [
+                        "REPORT_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/RPT"
         },
         "KRF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -11913,6 +12042,112 @@
                 }
             },
             "$ref": "#/definitions/GEO"
+        },
+        "PKB": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "brokerCustodyModel": {
+                    "type": "string",
+                    "enum": [
+                        "SelfHosted",
+                        "StandbyReplica",
+                        "EscrowFallback"
+                    ]
+                },
+                "brokerLiveness": {
+                    "type": "string",
+                    "enum": [
+                        "Unknown",
+                        "Online",
+                        "Degraded",
+                        "Unreachable"
+                    ]
+                },
+                "PKB": {
+                    "type": "object",
+                    "description": "Publisher Key-Broker Descriptor",
+                    "properties": {
+                        "BROKER_ID": {
+                            "type": "string",
+                            "description": "Stable broker identity, referenced by `$PLG`/`$STO`/`$PUR`/`$LGR`"
+                        },
+                        "PUBLISHER_EPM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the publisher `$EPM` that operates this broker"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "libp2p peer id of the publisher node hosting the broker"
+                        },
+                        "PROTOCOL_ID": {
+                            "type": "string",
+                            "description": "libp2p protocol the broker answers on\n(e.g. \"/space-data-network/module-delivery/1.0.0\")"
+                        },
+                        "MULTIFORMAT_ADDRESSES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Dialable multiformat addresses for the broker"
+                        },
+                        "BROKER_PUBLIC_KEY": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The broker's public key (from the key server's get_public_key) so the\nbuyer can pin it"
+                        },
+                        "BROKER_KIND": {
+                            "$ref": "#/definitions/brokerCustodyModel",
+                            "description": "Custody model (default: full publisher custody)"
+                        },
+                        "LIVENESS": {
+                            "$ref": "#/definitions/brokerLiveness",
+                            "description": "Store-maintained liveness status"
+                        },
+                        "LAST_HEARTBEAT_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix ms of the last successful probe/heartbeat"
+                        },
+                        "HEARTBEAT_INTERVAL_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Expected heartbeat cadence in ms"
+                        },
+                        "FIRST_SEEN_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix ms the store first saw this broker"
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix ms this descriptor was last updated"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ed25519 signature by the publisher `$EPM` over the self-attested endpoint\nfields; re-verified by the store's live probe"
+                        }
+                    },
+                    "required": [
+                        "BROKER_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/PKB"
         },
         "TMF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -20889,6 +21124,121 @@
             },
             "$ref": "#/definitions/ROC"
         },
+        "SUB": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "settlementMechanism": {
+                    "type": "string",
+                    "enum": [
+                        "NativeTransfer",
+                        "Erc20Transfer",
+                        "EthSplitter",
+                        "SolSplitter",
+                        "DirectAddress"
+                    ]
+                },
+                "memoBindingScheme": {
+                    "type": "string",
+                    "enum": [
+                        "NoMemo",
+                        "TxData",
+                        "SolMemo",
+                        "OpReturn"
+                    ]
+                },
+                "SplitRecipient": {
+                    "type": "object",
+                    "description": "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
+                    "properties": {
+                        "EPM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the recipient's Entity Profile Message (`$EPM`)"
+                        },
+                        "CHAIN": {
+                            "type": "string",
+                            "description": "Settlement chain, e.g. \"ethereum\", \"solana\", \"bitcoin\""
+                        },
+                        "ADDRESS": {
+                            "type": "string",
+                            "description": "On-chain payout address (EVM 0x / SOL base58 / BTC address)"
+                        },
+                        "XPUB": {
+                            "type": "string",
+                            "description": "Account xpub the address derives from"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCX": {
+                    "type": "object",
+                    "description": "Chain Settlement / Smart-Contract Descriptor. The forward description of the\nexact established splitter contract/program a buyer's wallet targets so\npayment and platform commission settle atomically on-chain. Referenced by\n`$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is\nrealized by the splitter contract itself when the buyer pays it; there is no\noff-chain or manual settlement step.",
+                    "properties": {
+                        "CHAIN": {
+                            "type": "string",
+                            "description": "Settlement chain identifier, e.g. \"ethereum\", \"solana\", \"bitcoin\"\n(matches `$PUR.PAYMENT_CHAIN`)"
+                        },
+                        "CHAIN_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "EVM chainId; 0 for non-EVM chains"
+                        },
+                        "SETTLEMENT_KIND": {
+                            "$ref": "#/definitions/settlementMechanism",
+                            "description": "On-chain settlement mechanism"
+                        },
+                        "SPLITTER_STANDARD": {
+                            "type": "string",
+                            "description": "Established split standard id, e.g. \"0xsplits.v2\" (ETH) or the SOL\nsplitter program name. An audited off-the-shelf standard, not a custom\ncontract."
+                        },
+                        "SPLITTER_ADDRESS": {
+                            "type": "string",
+                            "description": "Deployed splitter contract address (ETH) or splitter program id (SOL) the\nbuyer's payment routes into"
+                        },
+                        "SPLIT_CONFIG_ID": {
+                            "type": "string",
+                            "description": "The specific split configuration (recipient set + basis points) registered\nwith the splitter"
+                        },
+                        "TOKEN_ADDRESS": {
+                            "type": "string",
+                            "description": "ERC-20 / SPL mint address for stablecoin settlement; empty = native asset"
+                        },
+                        "TOKEN_SYMBOL": {
+                            "type": "string",
+                            "description": "Token symbol, e.g. \"USDC\""
+                        },
+                        "TOKEN_DECIMALS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Token decimals, e.g. 6 for USDC"
+                        },
+                        "SPLIT_RECIPIENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SplitRecipient"
+                            },
+                            "description": "The recipient set the split configuration encodes (platform + publisher\u2026),\nmirrored here for independent verification"
+                        },
+                        "MIN_CONFIRMATIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Confirmations required before the payment is accepted"
+                        },
+                        "MEMO_SCHEME": {
+                            "$ref": "#/definitions/memoBindingScheme",
+                            "description": "How the order reference is bound on-chain for replay-safe matching"
+                        }
+                    },
+                    "required": [
+                        "CHAIN"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SCX"
+        },
         "RCF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -24786,6 +25136,148 @@
                 }
             },
             "$ref": "#/definitions/SNW"
+        },
+        "CVG": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "CVG": {
+                    "type": "object",
+                    "description": "Coverage Grid Figure-of-Merit",
+                    "properties": {
+                        "COVERAGE_ID": {
+                            "type": "string",
+                            "description": "Stable identifier of this coverage computation"
+                        },
+                        "NAME": {
+                            "type": "string",
+                            "description": "Display name"
+                        },
+                        "GRID_SCHEME": {
+                            "type": "string",
+                            "description": "Grid scheme identifier; \"H3\" for the H3 hexagonal hierarchical grid"
+                        },
+                        "GRID_RESOLUTION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Grid resolution (H3 resolution 0-15)"
+                        },
+                        "CELL_INDEXES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 18446744073709551615
+                            },
+                            "description": "Grid cell indexes (H3 cell ids); all metric arrays align to this order"
+                        },
+                        "WINDOW_START": {
+                            "type": "number",
+                            "description": "Epoch window start (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]"
+                        },
+                        "WINDOW_STOP": {
+                            "type": "number",
+                            "description": "Epoch window stop (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]"
+                        },
+                        "STEP_SIZE": {
+                            "type": "number",
+                            "description": "Sampling step in seconds used to compute access intervals"
+                        },
+                        "SENSOR_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Sensor identifiers contributing to the coverage set"
+                        },
+                        "ASSET_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Asset (satellite) identifiers contributing to the coverage set"
+                        },
+                        "ACCESS_COUNTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Per-cell number of access intervals in the window"
+                        },
+                        "ACCESS_TOTAL_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell total access duration in seconds"
+                        },
+                        "REVISIT_MEAN_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell mean revisit interval in seconds"
+                        },
+                        "REVISIT_MAX_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell maximum revisit interval in seconds"
+                        },
+                        "RESPONSE_MEAN_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell mean response time in seconds"
+                        },
+                        "RESPONSE_MAX_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell maximum response time in seconds"
+                        },
+                        "GAP_MAX_S": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell maximum coverage gap in seconds"
+                        },
+                        "COVERAGE_FRACTION": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Per-cell fraction of the window with at least one access [0-1]"
+                        },
+                        "COMPUTED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix ms this coverage set was computed"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ed25519 signature by the producing `$EPM`"
+                        }
+                    },
+                    "required": [
+                        "COVERAGE_ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/CVG"
         },
         "GVH": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -30651,6 +31143,457 @@
                 }
             },
             "$ref": "#/definitions/SAR"
+        },
+        "WKS": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "accessCategory": {
+                    "type": "string",
+                    "enum": [
+                        "OneTime",
+                        "Subscription",
+                        "Streaming",
+                        "Query"
+                    ]
+                },
+                "paymentMethod": {
+                    "type": "string",
+                    "enum": [
+                        "Crypto_ETH",
+                        "Crypto_SOL",
+                        "Crypto_BTC",
+                        "SDN_Credits",
+                        "Fiat_Stripe",
+                        "Free",
+                        "UsageBased",
+                        "Enterprise"
+                    ]
+                },
+                "listingCategory": {
+                    "type": "string",
+                    "enum": [
+                        "DataStream",
+                        "WasmModule"
+                    ]
+                },
+                "GrantFieldStreamPolicy": {
+                    "type": "object",
+                    "description": "Field-level stream policy bound into protected delivery and grants.",
+                    "properties": {
+                        "POLICY_ID": {
+                            "type": "string"
+                        },
+                        "POLICY_VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "STREAM_ID": {
+                            "type": "string"
+                        },
+                        "SCHEMA_CODE": {
+                            "type": "string"
+                        },
+                        "ALLOWED_FIELD_PATHS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "REDACTED_FIELD_PATHS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "KEY_EPOCH": {
+                            "type": "string"
+                        },
+                        "GRANT_SCOPE": {
+                            "type": "string"
+                        },
+                        "ALLOWED_OPERATIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ProtectedDeliveryBinding": {
+                    "type": "object",
+                    "description": "Immutable encrypted artifact/window metadata for protected delivery.",
+                    "properties": {
+                        "ENCRYPTED_CID": {
+                            "type": "string"
+                        },
+                        "MANIFEST_CID": {
+                            "type": "string"
+                        },
+                        "CONTENT_HASH": {
+                            "type": "string"
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "string"
+                        },
+                        "LICENSE_MODULE_ID": {
+                            "type": "string"
+                        },
+                        "MODULE_ID": {
+                            "type": "string"
+                        },
+                        "MODULE_VERSION": {
+                            "type": "string"
+                        },
+                        "REQUIRED_SCOPES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "GRANT_SCOPE": {
+                            "type": "string"
+                        },
+                        "DELIVERY_PROTOCOL": {
+                            "type": "string"
+                        },
+                        "FIELD_STREAM_POLICY": {
+                            "$ref": "#/definitions/GrantFieldStreamPolicy"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "ProviderReputation": {
+                    "type": "object",
+                    "description": "Provider reputation summary surfaced in marketplace listings.",
+                    "properties": {
+                        "TOTAL_SALES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "AVERAGE_RATING_X10": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        },
+                        "TOTAL_RATINGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "UPTIME_PERCENTAGE_X100": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        },
+                        "AVG_DELIVERY_LATENCY_MS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "DISPUTE_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "PROVIDER_SINCE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SpatialCoverage": {
+                    "type": "object",
+                    "description": "Spatial coverage definition",
+                    "properties": {
+                        "TYPE": {
+                            "type": "string",
+                            "description": "Type of coverage: \"global\", \"region\", \"object_list\""
+                        },
+                        "REGIONS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Regions covered, e.g., [\"LEO\", \"GEO\", \"MEO\"]"
+                        },
+                        "OBJECT_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Specific NORAD IDs or catalog numbers"
+                        },
+                        "MIN_ALTITUDE_KM": {
+                            "type": "number",
+                            "description": "Minimum altitude in kilometers for altitude-bounded offerings"
+                        },
+                        "MAX_ALTITUDE_KM": {
+                            "type": "number",
+                            "description": "Maximum altitude in kilometers for altitude-bounded offerings"
+                        },
+                        "GEO_BOUNDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Bounding box as [min_lat, min_lon, max_lat, max_lon]"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "TemporalCoverage": {
+                    "type": "object",
+                    "description": "Temporal coverage definition",
+                    "properties": {
+                        "START_EPOCH": {
+                            "type": "string",
+                            "description": "Start epoch in ISO 8601 format"
+                        },
+                        "END_EPOCH": {
+                            "type": "string",
+                            "description": "End epoch in ISO 8601 format"
+                        },
+                        "UPDATE_FREQUENCY": {
+                            "type": "string",
+                            "description": "Update frequency: \"realtime\", \"hourly\", \"daily\""
+                        },
+                        "HISTORICAL_DEPTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Days of historical data available"
+                        },
+                        "LATENCY_SECONDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Typical provider latency in seconds"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "DataCoverage": {
+                    "type": "object",
+                    "description": "Data coverage combining spatial and temporal",
+                    "properties": {
+                        "SPATIAL": {
+                            "$ref": "#/definitions/SpatialCoverage",
+                            "description": "Spatial coverage definition"
+                        },
+                        "TEMPORAL": {
+                            "$ref": "#/definitions/TemporalCoverage",
+                            "description": "Temporal coverage definition"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PricingTier": {
+                    "type": "object",
+                    "description": "Pricing tier for a listing",
+                    "properties": {
+                        "NAME": {
+                            "type": "string",
+                            "description": "Tier name, e.g., \"Basic\", \"Pro\", \"Enterprise\""
+                        },
+                        "PRICE_AMOUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Price in smallest unit (cents, satoshis, etc.)"
+                        },
+                        "PRICE_CURRENCY": {
+                            "type": "string",
+                            "description": "Currency code: \"USD\", \"ETH\", \"SOL\", \"SDN_CREDITS\""
+                        },
+                        "DURATION_DAYS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Duration in days (0 = one-time purchase)"
+                        },
+                        "RATE_LIMIT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Rate limit in requests per hour"
+                        },
+                        "FEATURES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of features included in this tier"
+                        },
+                        "MAX_RECORDS_PER_REQUEST": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Maximum records returned per request"
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Human-readable tier description"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "STF": {
+                    "type": "object",
+                    "description": "Storefront Listing - Data marketplace listing",
+                    "properties": {
+                        "LISTING_ID": {
+                            "type": "string",
+                            "description": "Unique identifier for the listing"
+                        },
+                        "PROVIDER_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer ID of the data provider"
+                        },
+                        "PROVIDER_EPM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of provider's EPM (Entity Profile Message)"
+                        },
+                        "TITLE": {
+                            "type": "string",
+                            "description": "Title of the data listing"
+                        },
+                        "DESCRIPTION": {
+                            "type": "string",
+                            "description": "Detailed description of the data offering"
+                        },
+                        "DATA_TYPES": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "SDS data types offered, e.g., [\"OMM\", \"CDM\", \"TLE\"]"
+                        },
+                        "COVERAGE": {
+                            "$ref": "#/definitions/DataCoverage",
+                            "description": "Coverage information (spatial and temporal)"
+                        },
+                        "SAMPLE_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of sample data"
+                        },
+                        "ACCESS_TYPE": {
+                            "$ref": "#/definitions/accessCategory",
+                            "description": "Type of access offered"
+                        },
+                        "ENCRYPTION_REQUIRED": {
+                            "type": "boolean",
+                            "description": "Whether encryption is required for data delivery"
+                        },
+                        "PRICING": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PricingTier"
+                            },
+                            "description": "Available pricing tiers"
+                        },
+                        "ACCEPTED_PAYMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/paymentMethod"
+                            },
+                            "description": "Payment methods accepted"
+                        },
+                        "CREATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp when listing was created"
+                        },
+                        "UPDATED_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp when listing was last updated"
+                        },
+                        "ACTIVE": {
+                            "type": "boolean",
+                            "description": "Whether the listing is currently active"
+                        },
+                        "SIGNATURE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Ed25519 signature from provider"
+                        },
+                        "LISTING_KIND": {
+                            "$ref": "#/definitions/listingCategory",
+                            "description": "Listing category: data stream or WASM module"
+                        },
+                        "TAGS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Search tags"
+                        },
+                        "SAMPLE_RECORD_COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Number of records in sample data, when available"
+                        },
+                        "DELIVERY_METHODS": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Supported delivery methods"
+                        },
+                        "PROTECTED_DELIVERY": {
+                            "$ref": "#/definitions/ProtectedDeliveryBinding",
+                            "description": "Protected delivery metadata for encrypted artifacts or streams"
+                        },
+                        "REPUTATION": {
+                            "$ref": "#/definitions/ProviderReputation",
+                            "description": "Provider reputation summary"
+                        },
+                        "VERSION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Listing version"
+                        },
+                        "EXPIRES_AT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Unix timestamp when the listing expires, or 0 for no expiry"
+                        },
+                        "TERMS_CID": {
+                            "type": "string",
+                            "description": "Terms document CID"
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "License label or SPDX-style identifier"
+                        },
+                        "SOURCE_PEER_ID": {
+                            "type": "string",
+                            "description": "Peer ID this listing was sourced from when discovered remotely"
+                        }
+                    },
+                    "required": [
+                        "LISTING_ID",
+                        "PROVIDER_PEER_ID",
+                        "TITLE"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/STF"
         },
         "SKI": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -39544,6 +40487,121 @@
                 }
             },
             "$ref": "#/definitions/OOI"
+        },
+        "STO": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "settlementMechanism": {
+                    "type": "string",
+                    "enum": [
+                        "NativeTransfer",
+                        "Erc20Transfer",
+                        "EthSplitter",
+                        "SolSplitter",
+                        "DirectAddress"
+                    ]
+                },
+                "memoBindingScheme": {
+                    "type": "string",
+                    "enum": [
+                        "NoMemo",
+                        "TxData",
+                        "SolMemo",
+                        "OpReturn"
+                    ]
+                },
+                "SplitRecipient": {
+                    "type": "object",
+                    "description": "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
+                    "properties": {
+                        "EPM_CID": {
+                            "type": "string",
+                            "description": "IPFS CID of the recipient's Entity Profile Message (`$EPM`)"
+                        },
+                        "CHAIN": {
+                            "type": "string",
+                            "description": "Settlement chain, e.g. \"ethereum\", \"solana\", \"bitcoin\""
+                        },
+                        "ADDRESS": {
+                            "type": "string",
+                            "description": "On-chain payout address (EVM 0x / SOL base58 / BTC address)"
+                        },
+                        "XPUB": {
+                            "type": "string",
+                            "description": "Account xpub the address derives from"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "SCX": {
+                    "type": "object",
+                    "description": "Chain Settlement / Smart-Contract Descriptor. The forward description of the\nexact established splitter contract/program a buyer's wallet targets so\npayment and platform commission settle atomically on-chain. Referenced by\n`$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is\nrealized by the splitter contract itself when the buyer pays it; there is no\noff-chain or manual settlement step.",
+                    "properties": {
+                        "CHAIN": {
+                            "type": "string",
+                            "description": "Settlement chain identifier, e.g. \"ethereum\", \"solana\", \"bitcoin\"\n(matches `$PUR.PAYMENT_CHAIN`)"
+                        },
+                        "CHAIN_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "EVM chainId; 0 for non-EVM chains"
+                        },
+                        "SETTLEMENT_KIND": {
+                            "$ref": "#/definitions/settlementMechanism",
+                            "description": "On-chain settlement mechanism"
+                        },
+                        "SPLITTER_STANDARD": {
+                            "type": "string",
+                            "description": "Established split standard id, e.g. \"0xsplits.v2\" (ETH) or the SOL\nsplitter program name. An audited off-the-shelf standard, not a custom\ncontract."
+                        },
+                        "SPLITTER_ADDRESS": {
+                            "type": "string",
+                            "description": "Deployed splitter contract address (ETH) or splitter program id (SOL) the\nbuyer's payment routes into"
+                        },
+                        "SPLIT_CONFIG_ID": {
+                            "type": "string",
+                            "description": "The specific split configuration (recipient set + basis points) registered\nwith the splitter"
+                        },
+                        "TOKEN_ADDRESS": {
+                            "type": "string",
+                            "description": "ERC-20 / SPL mint address for stablecoin settlement; empty = native asset"
+                        },
+                        "TOKEN_SYMBOL": {
+                            "type": "string",
+                            "description": "Token symbol, e.g. \"USDC\""
+                        },
+                        "TOKEN_DECIMALS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "Token decimals, e.g. 6 for USDC"
+                        },
+                        "SPLIT_RECIPIENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SplitRecipient"
+                            },
+                            "description": "The recipient set the split configuration encodes (platform + publisher\u2026),\nmirrored here for independent verification"
+                        },
+                        "MIN_CONFIRMATIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Confirmations required before the payment is accepted"
+                        },
+                        "MEMO_SCHEME": {
+                            "$ref": "#/definitions/memoBindingScheme",
+                            "description": "How the order reference is bound on-chain for replay-safe matching"
+                        }
+                    },
+                    "required": [
+                        "CHAIN"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/SCX"
         },
         "OON": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

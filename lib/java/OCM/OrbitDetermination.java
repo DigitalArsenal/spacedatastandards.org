@@ -124,6 +124,45 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public String OD_RESIDUALS() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OD_RESIDUALSAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer OD_RESIDUALSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+   */
+  public byte OD_ESTIMATOR() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * RMS of post-fit residuals for this solution.
+   */
+  public double OD_RESIDUAL_RMS() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Post-fit residual series, one entry per accepted observation.
+   */
+  public double OD_RESIDUALS_SERIES(int j) { int o = __offset(42); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int OD_RESIDUALS_SERIESLength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector odResidualsSeriesVector() { return odResidualsSeriesVector(new DoubleVector()); }
+  public DoubleVector odResidualsSeriesVector(DoubleVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer OD_RESIDUALS_SERIESAsByteBuffer() { return __vector_as_bytebuffer(42, 8); }
+  public ByteBuffer OD_RESIDUALS_SERIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 8); }
+  /**
+   * Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+   * since 1970-01-01T00:00:00 UTC].
+   */
+  public double OD_RESIDUAL_EPOCHS(int j) { int o = __offset(44); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int OD_RESIDUAL_EPOCHSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector odResidualEpochsVector() { return odResidualEpochsVector(new DoubleVector()); }
+  public DoubleVector odResidualEpochsVector(DoubleVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer OD_RESIDUAL_EPOCHSAsByteBuffer() { return __vector_as_bytebuffer(44, 8); }
+  public ByteBuffer OD_RESIDUAL_EPOCHSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 8); }
+  /**
+   * OD_ID of the batch baseline solution a filtered solution derives from and
+   * is compared against (empty for batch solutions).
+   */
+  public String OD_BATCH_BASELINE_ID() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OD_BATCH_BASELINE_IDAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer OD_BATCH_BASELINE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+   * comparison.
+   */
+  public double OD_BATCH_BASELINE_RMS() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createOrbitDetermination(FlatBufferBuilder builder,
       int OD_IDOffset,
@@ -142,8 +181,19 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
       int OD_CONVERGENCE_CRITERIAOffset,
       int OD_EST_PARAMETERSOffset,
       int OD_APRIORI_DATAOffset,
-      int OD_RESIDUALSOffset) {
-    builder.startTable(17);
+      int OD_RESIDUALSOffset,
+      byte OD_ESTIMATOR,
+      double OD_RESIDUAL_RMS,
+      int OD_RESIDUALS_SERIESOffset,
+      int OD_RESIDUAL_EPOCHSOffset,
+      int OD_BATCH_BASELINE_IDOffset,
+      double OD_BATCH_BASELINE_RMS) {
+    builder.startTable(23);
+    OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
+    OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
+    OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
+    OrbitDetermination.addOdResidualsSeries(builder, OD_RESIDUALS_SERIESOffset);
     OrbitDetermination.addOdResiduals(builder, OD_RESIDUALSOffset);
     OrbitDetermination.addOdAprioriData(builder, OD_APRIORI_DATAOffset);
     OrbitDetermination.addOdEstParameters(builder, OD_EST_PARAMETERSOffset);
@@ -161,10 +211,11 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
     OrbitDetermination.addOdAlgorithm(builder, OD_ALGORITHMOffset);
     OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
     OrbitDetermination.addOdId(builder, OD_IDOffset);
+    OrbitDetermination.addOdEstimator(builder, OD_ESTIMATOR);
     return OrbitDetermination.endOrbitDetermination(builder);
   }
 
-  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startOrbitDetermination(FlatBufferBuilder builder) { builder.startTable(23); }
   public static void addOdId(FlatBufferBuilder builder, int OD_IDOffset) { builder.addOffset(0, OD_IDOffset, 0); }
   public static void addOdPrevId(FlatBufferBuilder builder, int OD_PREV_IDOffset) { builder.addOffset(1, OD_PREV_IDOffset, 0); }
   public static void addOdAlgorithm(FlatBufferBuilder builder, int OD_ALGORITHMOffset) { builder.addOffset(2, OD_ALGORITHMOffset, 0); }
@@ -186,6 +237,16 @@ public final class OrbitDetermination extends com.google.flatbuffers.Table {
   public static void startOdEstParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addOdAprioriData(FlatBufferBuilder builder, int OD_APRIORI_DATAOffset) { builder.addOffset(15, OD_APRIORI_DATAOffset, 0); }
   public static void addOdResiduals(FlatBufferBuilder builder, int OD_RESIDUALSOffset) { builder.addOffset(16, OD_RESIDUALSOffset, 0); }
+  public static void addOdEstimator(FlatBufferBuilder builder, byte OD_ESTIMATOR) { builder.addByte(17, OD_ESTIMATOR, 0); }
+  public static void addOdResidualRms(FlatBufferBuilder builder, double OD_RESIDUAL_RMS) { builder.addDouble(18, OD_RESIDUAL_RMS, 0.0); }
+  public static void addOdResidualsSeries(FlatBufferBuilder builder, int OD_RESIDUALS_SERIESOffset) { builder.addOffset(19, OD_RESIDUALS_SERIESOffset, 0); }
+  public static int createOdResidualsSeriesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startOdResidualsSeriesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addOdResidualEpochs(FlatBufferBuilder builder, int OD_RESIDUAL_EPOCHSOffset) { builder.addOffset(20, OD_RESIDUAL_EPOCHSOffset, 0); }
+  public static int createOdResidualEpochsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startOdResidualEpochsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addOdBatchBaselineId(FlatBufferBuilder builder, int OD_BATCH_BASELINE_IDOffset) { builder.addOffset(21, OD_BATCH_BASELINE_IDOffset, 0); }
+  public static void addOdBatchBaselineRms(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.addDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
   public static int endOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

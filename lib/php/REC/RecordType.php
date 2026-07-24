@@ -184,6 +184,12 @@ class RecordType
     const APP = 178;
     const CMT = 179;
     const SCX = 180;
+    const CVG = 181;
+    const PKB = 182;
+    const RPT = 183;
+    const STO = 184;
+    const SUB = 185;
+    const WKS = 186;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -367,6 +373,12 @@ class RecordType
         RecordType::APP=>"APP",
         RecordType::CMT=>"CMT",
         RecordType::SCX=>"SCX",
+        RecordType::CVG=>"CVG",
+        RecordType::PKB=>"PKB",
+        RecordType::RPT=>"RPT",
+        RecordType::STO=>"STO",
+        RecordType::SUB=>"SUB",
+        RecordType::WKS=>"WKS",
     );
 
     public static function Name($e)

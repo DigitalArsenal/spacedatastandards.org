@@ -12,6 +12,7 @@ export * from './DataMode.js';
 export * from './DeviceType.js';
 export * from './ephemerisDataBlock.js';
 export * from './ephemerisDataLine.js';
+export * from './estimatorCategory.js';
 export * from './FrequencyRange.js';
 export * from './Header.js';
 export * from './HFC.js';

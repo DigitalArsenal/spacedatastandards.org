@@ -1,0 +1,22 @@
+/**
+ * Lifecycle of a crypto-native subscription authorization.
+ */
+export declare enum subscriptionLifecycleStatus {
+    /**
+     * Charging on schedule
+     */
+    Active = 0,
+    /**
+     * Temporarily paused by the buyer or store
+     */
+    Paused = 1,
+    /**
+     * Cancelled by the buyer; no further charges
+     */
+    Cancelled = 2,
+    /**
+     * A scheduled charge failed / authorization expired
+     */
+    Lapsed = 3
+}
+//# sourceMappingURL=subscriptionLifecycleStatus.d.ts.map

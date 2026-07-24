@@ -130,6 +130,41 @@ public struct OrbitDetermination : IFlatbufferObject
   public ArraySegment<byte>? GetOD_RESIDUALSBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetOD_RESIDUALSArray() { return __p.__vector_as_array<byte>(36); }
+  /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  public estimatorCategory OD_ESTIMATOR { get { int o = __p.__offset(38); return o != 0 ? (estimatorCategory)__p.bb.GetSbyte(o + __p.bb_pos) : estimatorCategory.Unknown; } }
+  /// RMS of post-fit residuals for this solution.
+  public double OD_RESIDUAL_RMS { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Post-fit residual series, one entry per accepted observation.
+  public double OD_RESIDUALS_SERIES(int j) { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int OD_RESIDUALS_SERIESLength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetOD_RESIDUALS_SERIESBytes() { return __p.__vector_as_span<double>(42, 8); }
+#else
+  public ArraySegment<byte>? GetOD_RESIDUALS_SERIESBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public double[] GetOD_RESIDUALS_SERIESArray() { return __p.__vector_as_array<double>(42); }
+  /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  /// since 1970-01-01T00:00:00 UTC].
+  public double OD_RESIDUAL_EPOCHS(int j) { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int OD_RESIDUAL_EPOCHSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetOD_RESIDUAL_EPOCHSBytes() { return __p.__vector_as_span<double>(44, 8); }
+#else
+  public ArraySegment<byte>? GetOD_RESIDUAL_EPOCHSBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public double[] GetOD_RESIDUAL_EPOCHSArray() { return __p.__vector_as_array<double>(44); }
+  /// OD_ID of the batch baseline solution a filtered solution derives from and
+  /// is compared against (empty for batch solutions).
+  public string OD_BATCH_BASELINE_ID { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOD_BATCH_BASELINE_IDBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetOD_BATCH_BASELINE_IDBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetOD_BATCH_BASELINE_IDArray() { return __p.__vector_as_array<byte>(46); }
+  /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  /// comparison.
+  public double OD_BATCH_BASELINE_RMS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<OrbitDetermination> CreateOrbitDetermination(FlatBufferBuilder builder,
       StringOffset OD_IDOffset = default(StringOffset),
@@ -148,8 +183,19 @@ public struct OrbitDetermination : IFlatbufferObject
       StringOffset OD_CONVERGENCE_CRITERIAOffset = default(StringOffset),
       VectorOffset OD_EST_PARAMETERSOffset = default(VectorOffset),
       StringOffset OD_APRIORI_DATAOffset = default(StringOffset),
-      StringOffset OD_RESIDUALSOffset = default(StringOffset)) {
-    builder.StartTable(17);
+      StringOffset OD_RESIDUALSOffset = default(StringOffset),
+      estimatorCategory OD_ESTIMATOR = estimatorCategory.Unknown,
+      double OD_RESIDUAL_RMS = 0.0,
+      VectorOffset OD_RESIDUALS_SERIESOffset = default(VectorOffset),
+      VectorOffset OD_RESIDUAL_EPOCHSOffset = default(VectorOffset),
+      StringOffset OD_BATCH_BASELINE_IDOffset = default(StringOffset),
+      double OD_BATCH_BASELINE_RMS = 0.0) {
+    builder.StartTable(23);
+    OrbitDetermination.AddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS);
+    OrbitDetermination.AddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS);
+    OrbitDetermination.AddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_IDOffset);
+    OrbitDetermination.AddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHSOffset);
+    OrbitDetermination.AddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIESOffset);
     OrbitDetermination.AddOD_RESIDUALS(builder, OD_RESIDUALSOffset);
     OrbitDetermination.AddOD_APRIORI_DATA(builder, OD_APRIORI_DATAOffset);
     OrbitDetermination.AddOD_EST_PARAMETERS(builder, OD_EST_PARAMETERSOffset);
@@ -167,10 +213,11 @@ public struct OrbitDetermination : IFlatbufferObject
     OrbitDetermination.AddOD_ALGORITHM(builder, OD_ALGORITHMOffset);
     OrbitDetermination.AddOD_PREV_ID(builder, OD_PREV_IDOffset);
     OrbitDetermination.AddOD_ID(builder, OD_IDOffset);
+    OrbitDetermination.AddOD_ESTIMATOR(builder, OD_ESTIMATOR);
     return OrbitDetermination.EndOrbitDetermination(builder);
   }
 
-  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartOrbitDetermination(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddOD_ID(FlatBufferBuilder builder, StringOffset OD_IDOffset) { builder.AddOffset(0, OD_IDOffset.Value, 0); }
   public static void AddOD_PREV_ID(FlatBufferBuilder builder, StringOffset OD_PREV_IDOffset) { builder.AddOffset(1, OD_PREV_IDOffset.Value, 0); }
   public static void AddOD_ALGORITHM(FlatBufferBuilder builder, StringOffset OD_ALGORITHMOffset) { builder.AddOffset(2, OD_ALGORITHMOffset.Value, 0); }
@@ -198,6 +245,22 @@ public struct OrbitDetermination : IFlatbufferObject
   public static void StartOD_EST_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddOD_APRIORI_DATA(FlatBufferBuilder builder, StringOffset OD_APRIORI_DATAOffset) { builder.AddOffset(15, OD_APRIORI_DATAOffset.Value, 0); }
   public static void AddOD_RESIDUALS(FlatBufferBuilder builder, StringOffset OD_RESIDUALSOffset) { builder.AddOffset(16, OD_RESIDUALSOffset.Value, 0); }
+  public static void AddOD_ESTIMATOR(FlatBufferBuilder builder, estimatorCategory OD_ESTIMATOR) { builder.AddSbyte(17, (sbyte)OD_ESTIMATOR, 0); }
+  public static void AddOD_RESIDUAL_RMS(FlatBufferBuilder builder, double OD_RESIDUAL_RMS) { builder.AddDouble(18, OD_RESIDUAL_RMS, 0.0); }
+  public static void AddOD_RESIDUALS_SERIES(FlatBufferBuilder builder, VectorOffset OD_RESIDUALS_SERIESOffset) { builder.AddOffset(19, OD_RESIDUALS_SERIESOffset.Value, 0); }
+  public static VectorOffset CreateOD_RESIDUALS_SERIESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUALS_SERIESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUALS_SERIESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUALS_SERIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOD_RESIDUALS_SERIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddOD_RESIDUAL_EPOCHS(FlatBufferBuilder builder, VectorOffset OD_RESIDUAL_EPOCHSOffset) { builder.AddOffset(20, OD_RESIDUAL_EPOCHSOffset.Value, 0); }
+  public static VectorOffset CreateOD_RESIDUAL_EPOCHSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUAL_EPOCHSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUAL_EPOCHSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateOD_RESIDUAL_EPOCHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartOD_RESIDUAL_EPOCHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddOD_BATCH_BASELINE_ID(FlatBufferBuilder builder, StringOffset OD_BATCH_BASELINE_IDOffset) { builder.AddOffset(21, OD_BATCH_BASELINE_IDOffset.Value, 0); }
+  public static void AddOD_BATCH_BASELINE_RMS(FlatBufferBuilder builder, double OD_BATCH_BASELINE_RMS) { builder.AddDouble(22, OD_BATCH_BASELINE_RMS, 0.0); }
   public static Offset<OrbitDetermination> EndOrbitDetermination(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OrbitDetermination>(o);
@@ -227,6 +290,14 @@ public struct OrbitDetermination : IFlatbufferObject
     for (var _j = 0; _j < this.OD_EST_PARAMETERSLength; ++_j) {_o.OD_EST_PARAMETERS.Add(this.OD_EST_PARAMETERS(_j));}
     _o.OD_APRIORI_DATA = this.OD_APRIORI_DATA;
     _o.OD_RESIDUALS = this.OD_RESIDUALS;
+    _o.OD_ESTIMATOR = this.OD_ESTIMATOR;
+    _o.OD_RESIDUAL_RMS = this.OD_RESIDUAL_RMS;
+    _o.OD_RESIDUALS_SERIES = new List<double>();
+    for (var _j = 0; _j < this.OD_RESIDUALS_SERIESLength; ++_j) {_o.OD_RESIDUALS_SERIES.Add(this.OD_RESIDUALS_SERIES(_j));}
+    _o.OD_RESIDUAL_EPOCHS = new List<double>();
+    for (var _j = 0; _j < this.OD_RESIDUAL_EPOCHSLength; ++_j) {_o.OD_RESIDUAL_EPOCHS.Add(this.OD_RESIDUAL_EPOCHS(_j));}
+    _o.OD_BATCH_BASELINE_ID = this.OD_BATCH_BASELINE_ID;
+    _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS;
   }
   public static Offset<OrbitDetermination> Pack(FlatBufferBuilder builder, OrbitDeterminationT _o) {
     if (_o == null) return default(Offset<OrbitDetermination>);
@@ -255,6 +326,17 @@ public struct OrbitDetermination : IFlatbufferObject
     }
     var _OD_APRIORI_DATA = _o.OD_APRIORI_DATA == null ? default(StringOffset) : builder.CreateString(_o.OD_APRIORI_DATA);
     var _OD_RESIDUALS = _o.OD_RESIDUALS == null ? default(StringOffset) : builder.CreateString(_o.OD_RESIDUALS);
+    var _OD_RESIDUALS_SERIES = default(VectorOffset);
+    if (_o.OD_RESIDUALS_SERIES != null) {
+      var __OD_RESIDUALS_SERIES = _o.OD_RESIDUALS_SERIES.ToArray();
+      _OD_RESIDUALS_SERIES = CreateOD_RESIDUALS_SERIESVector(builder, __OD_RESIDUALS_SERIES);
+    }
+    var _OD_RESIDUAL_EPOCHS = default(VectorOffset);
+    if (_o.OD_RESIDUAL_EPOCHS != null) {
+      var __OD_RESIDUAL_EPOCHS = _o.OD_RESIDUAL_EPOCHS.ToArray();
+      _OD_RESIDUAL_EPOCHS = CreateOD_RESIDUAL_EPOCHSVector(builder, __OD_RESIDUAL_EPOCHS);
+    }
+    var _OD_BATCH_BASELINE_ID = _o.OD_BATCH_BASELINE_ID == null ? default(StringOffset) : builder.CreateString(_o.OD_BATCH_BASELINE_ID);
     return CreateOrbitDetermination(
       builder,
       _OD_ID,
@@ -273,7 +355,13 @@ public struct OrbitDetermination : IFlatbufferObject
       _OD_CONVERGENCE_CRITERIA,
       _OD_EST_PARAMETERS,
       _OD_APRIORI_DATA,
-      _OD_RESIDUALS);
+      _OD_RESIDUALS,
+      _o.OD_ESTIMATOR,
+      _o.OD_RESIDUAL_RMS,
+      _OD_RESIDUALS_SERIES,
+      _OD_RESIDUAL_EPOCHS,
+      _OD_BATCH_BASELINE_ID,
+      _o.OD_BATCH_BASELINE_RMS);
   }
 }
 
@@ -296,6 +384,12 @@ public class OrbitDeterminationT
   public List<string> OD_EST_PARAMETERS { get; set; }
   public string OD_APRIORI_DATA { get; set; }
   public string OD_RESIDUALS { get; set; }
+  public estimatorCategory OD_ESTIMATOR { get; set; }
+  public double OD_RESIDUAL_RMS { get; set; }
+  public List<double> OD_RESIDUALS_SERIES { get; set; }
+  public List<double> OD_RESIDUAL_EPOCHS { get; set; }
+  public string OD_BATCH_BASELINE_ID { get; set; }
+  public double OD_BATCH_BASELINE_RMS { get; set; }
 
   public OrbitDeterminationT() {
     this.OD_ID = null;
@@ -315,6 +409,12 @@ public class OrbitDeterminationT
     this.OD_EST_PARAMETERS = null;
     this.OD_APRIORI_DATA = null;
     this.OD_RESIDUALS = null;
+    this.OD_ESTIMATOR = estimatorCategory.Unknown;
+    this.OD_RESIDUAL_RMS = 0.0;
+    this.OD_RESIDUALS_SERIES = null;
+    this.OD_RESIDUAL_EPOCHS = null;
+    this.OD_BATCH_BASELINE_ID = null;
+    this.OD_BATCH_BASELINE_RMS = 0.0;
   }
 }
 
@@ -341,6 +441,12 @@ static public class OrbitDeterminationVerify
       && verifier.VerifyVectorOfStrings(tablePos, 32 /*OD_EST_PARAMETERS*/, false)
       && verifier.VerifyString(tablePos, 34 /*OD_APRIORI_DATA*/, false)
       && verifier.VerifyString(tablePos, 36 /*OD_RESIDUALS*/, false)
+      && verifier.VerifyField(tablePos, 38 /*OD_ESTIMATOR*/, 1 /*estimatorCategory*/, 1, false)
+      && verifier.VerifyField(tablePos, 40 /*OD_RESIDUAL_RMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 42 /*OD_RESIDUALS_SERIES*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 44 /*OD_RESIDUAL_EPOCHS*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 46 /*OD_BATCH_BASELINE_ID*/, false)
+      && verifier.VerifyField(tablePos, 48 /*OD_BATCH_BASELINE_RMS*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

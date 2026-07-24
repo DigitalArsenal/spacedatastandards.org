@@ -191,22 +191,102 @@ class OrbitDetermination extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+    /**
+     * @return sbyte
+     */
+    public function getOD_ESTIMATOR()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \estimatorCategory::Unknown;
+    }
+
+    /// RMS of post-fit residuals for this solution.
+    /**
+     * @return double
+     */
+    public function getOD_RESIDUAL_RMS()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Post-fit residual series, one entry per accepted observation.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getOD_RESIDUALS_SERIES($j)
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOD_RESIDUALS_SERIESLength()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+    /// since 1970-01-01T00:00:00 UTC].
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getOD_RESIDUAL_EPOCHS($j)
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOD_RESIDUAL_EPOCHSLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// OD_ID of the batch baseline solution a filtered solution derives from and
+    /// is compared against (empty for batch solutions).
+    public function getOD_BATCH_BASELINE_ID()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+    /// comparison.
+    /**
+     * @return double
+     */
+    public function getOD_BATCH_BASELINE_RMS()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startOrbitDetermination(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OrbitDetermination
      */
-    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS)
+    public static function createOrbitDetermination(FlatBufferBuilder $builder, $OD_ID, $OD_PREV_ID, $OD_ALGORITHM, $OD_METHOD, $OD_EPOCH, $OD_TIME_TAG, $OD_PROCESS_NOISE, $OD_COV_REDUCTION, $OD_NOISE_MODELS, $OD_OBSERVATIONS_TYPE, $OD_OBSERVATIONS_USED, $OD_TRACKS_USED, $OD_DATA_WEIGHTING, $OD_CONVERGENCE_CRITERIA, $OD_EST_PARAMETERS, $OD_APRIORI_DATA, $OD_RESIDUALS, $OD_ESTIMATOR, $OD_RESIDUAL_RMS, $OD_RESIDUALS_SERIES, $OD_RESIDUAL_EPOCHS, $OD_BATCH_BASELINE_ID, $OD_BATCH_BASELINE_RMS)
     {
-        $builder->startObject(17);
+        $builder->startObject(23);
         self::addOD_ID($builder, $OD_ID);
         self::addOD_PREV_ID($builder, $OD_PREV_ID);
         self::addOD_ALGORITHM($builder, $OD_ALGORITHM);
@@ -224,6 +304,12 @@ class OrbitDetermination extends Table
         self::addOD_EST_PARAMETERS($builder, $OD_EST_PARAMETERS);
         self::addOD_APRIORI_DATA($builder, $OD_APRIORI_DATA);
         self::addOD_RESIDUALS($builder, $OD_RESIDUALS);
+        self::addOD_ESTIMATOR($builder, $OD_ESTIMATOR);
+        self::addOD_RESIDUAL_RMS($builder, $OD_RESIDUAL_RMS);
+        self::addOD_RESIDUALS_SERIES($builder, $OD_RESIDUALS_SERIES);
+        self::addOD_RESIDUAL_EPOCHS($builder, $OD_RESIDUAL_EPOCHS);
+        self::addOD_BATCH_BASELINE_ID($builder, $OD_BATCH_BASELINE_ID);
+        self::addOD_BATCH_BASELINE_RMS($builder, $OD_BATCH_BASELINE_RMS);
         $o = $builder->endObject();
         return $o;
     }
@@ -444,6 +530,114 @@ class OrbitDetermination extends Table
     public static function addOD_RESIDUALS(FlatBufferBuilder $builder, $OD_RESIDUALS)
     {
         $builder->addOffsetX(16, $OD_RESIDUALS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addOD_ESTIMATOR(FlatBufferBuilder $builder, $OD_ESTIMATOR)
+    {
+        $builder->addSbyteX(17, $OD_ESTIMATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_RESIDUAL_RMS(FlatBufferBuilder $builder, $OD_RESIDUAL_RMS)
+    {
+        $builder->addDoubleX(18, $OD_RESIDUAL_RMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOD_RESIDUALS_SERIES(FlatBufferBuilder $builder, $OD_RESIDUALS_SERIES)
+    {
+        $builder->addOffsetX(19, $OD_RESIDUALS_SERIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOD_RESIDUALS_SERIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOD_RESIDUALS_SERIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOD_RESIDUAL_EPOCHS(FlatBufferBuilder $builder, $OD_RESIDUAL_EPOCHS)
+    {
+        $builder->addOffsetX(20, $OD_RESIDUAL_EPOCHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createOD_RESIDUAL_EPOCHSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startOD_RESIDUAL_EPOCHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOD_BATCH_BASELINE_ID(FlatBufferBuilder $builder, $OD_BATCH_BASELINE_ID)
+    {
+        $builder->addOffsetX(21, $OD_BATCH_BASELINE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addOD_BATCH_BASELINE_RMS(FlatBufferBuilder $builder, $OD_BATCH_BASELINE_RMS)
+    {
+        $builder->addDoubleX(22, $OD_BATCH_BASELINE_RMS, 0.0);
     }
 
     /**

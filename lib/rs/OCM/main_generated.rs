@@ -122,6 +122,109 @@ impl<'a> ::flatbuffers::Verifiable for trajectoryType {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for trajectoryType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ESTIMATOR_CATEGORY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ESTIMATOR_CATEGORY: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ESTIMATOR_CATEGORY: [estimatorCategory; 5] = [
+  estimatorCategory::Unknown,
+  estimatorCategory::BatchLeastSquares,
+  estimatorCategory::ExtendedKalman,
+  estimatorCategory::UnscentedKalman,
+  estimatorCategory::Smoother,
+];
+
+/// Estimator class that produced an orbit-determination solution
+/// (batch-vs-filter provenance).
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct estimatorCategory(pub i8);
+#[allow(non_upper_case_globals)]
+impl estimatorCategory {
+  /// Estimator class not specified
+  pub const Unknown: Self = Self(0);
+  /// Batch least-squares fit
+  pub const BatchLeastSquares: Self = Self(1);
+  /// Extended Kalman filter
+  pub const ExtendedKalman: Self = Self(2);
+  /// Unscented Kalman filter
+  pub const UnscentedKalman: Self = Self(3);
+  /// Smoothed sequential solution
+  pub const Smoother: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::Unknown,
+    Self::BatchLeastSquares,
+    Self::ExtendedKalman,
+    Self::UnscentedKalman,
+    Self::Smoother,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::Unknown => Some("Unknown"),
+      Self::BatchLeastSquares => Some("BatchLeastSquares"),
+      Self::ExtendedKalman => Some("ExtendedKalman"),
+      Self::UnscentedKalman => Some("UnscentedKalman"),
+      Self::Smoother => Some("Smoother"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for estimatorCategory {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for estimatorCategory {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<i8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for estimatorCategory {
+    type Output = estimatorCategory;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<i8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for estimatorCategory {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for estimatorCategory {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for estimatorCategory {}
 pub enum HeaderOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -3883,6 +3986,12 @@ impl<'a> OrbitDetermination<'a> {
   pub const VT_OD_EST_PARAMETERS: ::flatbuffers::VOffsetT = 32;
   pub const VT_OD_APRIORI_DATA: ::flatbuffers::VOffsetT = 34;
   pub const VT_OD_RESIDUALS: ::flatbuffers::VOffsetT = 36;
+  pub const VT_OD_ESTIMATOR: ::flatbuffers::VOffsetT = 38;
+  pub const VT_OD_RESIDUAL_RMS: ::flatbuffers::VOffsetT = 40;
+  pub const VT_OD_RESIDUALS_SERIES: ::flatbuffers::VOffsetT = 42;
+  pub const VT_OD_RESIDUAL_EPOCHS: ::flatbuffers::VOffsetT = 44;
+  pub const VT_OD_BATCH_BASELINE_ID: ::flatbuffers::VOffsetT = 46;
+  pub const VT_OD_BATCH_BASELINE_RMS: ::flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3894,6 +4003,11 @@ impl<'a> OrbitDetermination<'a> {
     args: &'args OrbitDeterminationArgs<'args>
   ) -> ::flatbuffers::WIPOffset<OrbitDetermination<'bldr>> {
     let mut builder = OrbitDeterminationBuilder::new(_fbb);
+    builder.add_OD_BATCH_BASELINE_RMS(args.OD_BATCH_BASELINE_RMS);
+    builder.add_OD_RESIDUAL_RMS(args.OD_RESIDUAL_RMS);
+    if let Some(x) = args.OD_BATCH_BASELINE_ID { builder.add_OD_BATCH_BASELINE_ID(x); }
+    if let Some(x) = args.OD_RESIDUAL_EPOCHS { builder.add_OD_RESIDUAL_EPOCHS(x); }
+    if let Some(x) = args.OD_RESIDUALS_SERIES { builder.add_OD_RESIDUALS_SERIES(x); }
     if let Some(x) = args.OD_RESIDUALS { builder.add_OD_RESIDUALS(x); }
     if let Some(x) = args.OD_APRIORI_DATA { builder.add_OD_APRIORI_DATA(x); }
     if let Some(x) = args.OD_EST_PARAMETERS { builder.add_OD_EST_PARAMETERS(x); }
@@ -3911,6 +4025,7 @@ impl<'a> OrbitDetermination<'a> {
     if let Some(x) = args.OD_ALGORITHM { builder.add_OD_ALGORITHM(x); }
     if let Some(x) = args.OD_PREV_ID { builder.add_OD_PREV_ID(x); }
     if let Some(x) = args.OD_ID { builder.add_OD_ID(x); }
+    builder.add_OD_ESTIMATOR(args.OD_ESTIMATOR);
     builder.finish()
   }
 
@@ -3962,6 +4077,18 @@ impl<'a> OrbitDetermination<'a> {
     let OD_RESIDUALS = self.OD_RESIDUALS().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let OD_ESTIMATOR = self.OD_ESTIMATOR();
+    let OD_RESIDUAL_RMS = self.OD_RESIDUAL_RMS();
+    let OD_RESIDUALS_SERIES = self.OD_RESIDUALS_SERIES().map(|x| {
+      x.into_iter().collect()
+    });
+    let OD_RESIDUAL_EPOCHS = self.OD_RESIDUAL_EPOCHS().map(|x| {
+      x.into_iter().collect()
+    });
+    let OD_BATCH_BASELINE_ID = self.OD_BATCH_BASELINE_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS();
     OrbitDeterminationT {
       OD_ID,
       OD_PREV_ID,
@@ -3980,6 +4107,12 @@ impl<'a> OrbitDetermination<'a> {
       OD_EST_PARAMETERS,
       OD_APRIORI_DATA,
       OD_RESIDUALS,
+      OD_ESTIMATOR,
+      OD_RESIDUAL_RMS,
+      OD_RESIDUALS_SERIES,
+      OD_RESIDUAL_EPOCHS,
+      OD_BATCH_BASELINE_ID,
+      OD_BATCH_BASELINE_RMS,
     }
   }
 
@@ -4119,6 +4252,57 @@ impl<'a> OrbitDetermination<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_RESIDUALS, None)}
   }
+  /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  #[inline]
+  pub fn OD_ESTIMATOR(&self) -> estimatorCategory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<estimatorCategory>(OrbitDetermination::VT_OD_ESTIMATOR, Some(estimatorCategory::Unknown)).unwrap()}
+  }
+  /// RMS of post-fit residuals for this solution.
+  #[inline]
+  pub fn OD_RESIDUAL_RMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_RESIDUAL_RMS, Some(0.0)).unwrap()}
+  }
+  /// Post-fit residual series, one entry per accepted observation.
+  #[inline]
+  pub fn OD_RESIDUALS_SERIES(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OrbitDetermination::VT_OD_RESIDUALS_SERIES, None)}
+  }
+  /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  /// since 1970-01-01T00:00:00 UTC].
+  #[inline]
+  pub fn OD_RESIDUAL_EPOCHS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(OrbitDetermination::VT_OD_RESIDUAL_EPOCHS, None)}
+  }
+  /// OD_ID of the batch baseline solution a filtered solution derives from and
+  /// is compared against (empty for batch solutions).
+  #[inline]
+  pub fn OD_BATCH_BASELINE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OrbitDetermination::VT_OD_BATCH_BASELINE_ID, None)}
+  }
+  /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  /// comparison.
+  #[inline]
+  pub fn OD_BATCH_BASELINE_RMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OrbitDetermination::VT_OD_BATCH_BASELINE_RMS, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
@@ -4144,6 +4328,12 @@ impl ::flatbuffers::Verifiable for OrbitDetermination<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OD_EST_PARAMETERS", Self::VT_OD_EST_PARAMETERS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_APRIORI_DATA", Self::VT_OD_APRIORI_DATA, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_RESIDUALS", Self::VT_OD_RESIDUALS, false)?
+     .visit_field::<estimatorCategory>("OD_ESTIMATOR", Self::VT_OD_ESTIMATOR, false)?
+     .visit_field::<f64>("OD_RESIDUAL_RMS", Self::VT_OD_RESIDUAL_RMS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("OD_RESIDUALS_SERIES", Self::VT_OD_RESIDUALS_SERIES, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("OD_RESIDUAL_EPOCHS", Self::VT_OD_RESIDUAL_EPOCHS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OD_BATCH_BASELINE_ID", Self::VT_OD_BATCH_BASELINE_ID, false)?
+     .visit_field::<f64>("OD_BATCH_BASELINE_RMS", Self::VT_OD_BATCH_BASELINE_RMS, false)?
      .finish();
     Ok(())
   }
@@ -4166,6 +4356,12 @@ pub struct OrbitDeterminationArgs<'a> {
     pub OD_EST_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub OD_APRIORI_DATA: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub OD_RESIDUALS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_ESTIMATOR: estimatorCategory,
+    pub OD_RESIDUAL_RMS: f64,
+    pub OD_RESIDUALS_SERIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OD_RESIDUAL_EPOCHS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub OD_BATCH_BASELINE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OD_BATCH_BASELINE_RMS: f64,
 }
 impl<'a> Default for OrbitDeterminationArgs<'a> {
   #[inline]
@@ -4188,6 +4384,12 @@ impl<'a> Default for OrbitDeterminationArgs<'a> {
       OD_EST_PARAMETERS: None,
       OD_APRIORI_DATA: None,
       OD_RESIDUALS: None,
+      OD_ESTIMATOR: estimatorCategory::Unknown,
+      OD_RESIDUAL_RMS: 0.0,
+      OD_RESIDUALS_SERIES: None,
+      OD_RESIDUAL_EPOCHS: None,
+      OD_BATCH_BASELINE_ID: None,
+      OD_BATCH_BASELINE_RMS: 0.0,
     }
   }
 }
@@ -4266,6 +4468,30 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> OrbitDeterminationBuilder<'a,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_RESIDUALS, OD_RESIDUALS);
   }
   #[inline]
+  pub fn add_OD_ESTIMATOR(&mut self, OD_ESTIMATOR: estimatorCategory) {
+    self.fbb_.push_slot::<estimatorCategory>(OrbitDetermination::VT_OD_ESTIMATOR, OD_ESTIMATOR, estimatorCategory::Unknown);
+  }
+  #[inline]
+  pub fn add_OD_RESIDUAL_RMS(&mut self, OD_RESIDUAL_RMS: f64) {
+    self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_RESIDUAL_RMS, OD_RESIDUAL_RMS, 0.0);
+  }
+  #[inline]
+  pub fn add_OD_RESIDUALS_SERIES(&mut self, OD_RESIDUALS_SERIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_RESIDUALS_SERIES, OD_RESIDUALS_SERIES);
+  }
+  #[inline]
+  pub fn add_OD_RESIDUAL_EPOCHS(&mut self, OD_RESIDUAL_EPOCHS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_RESIDUAL_EPOCHS, OD_RESIDUAL_EPOCHS);
+  }
+  #[inline]
+  pub fn add_OD_BATCH_BASELINE_ID(&mut self, OD_BATCH_BASELINE_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(OrbitDetermination::VT_OD_BATCH_BASELINE_ID, OD_BATCH_BASELINE_ID);
+  }
+  #[inline]
+  pub fn add_OD_BATCH_BASELINE_RMS(&mut self, OD_BATCH_BASELINE_RMS: f64) {
+    self.fbb_.push_slot::<f64>(OrbitDetermination::VT_OD_BATCH_BASELINE_RMS, OD_BATCH_BASELINE_RMS, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> OrbitDeterminationBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     OrbitDeterminationBuilder {
@@ -4300,6 +4526,12 @@ impl ::core::fmt::Debug for OrbitDetermination<'_> {
       ds.field("OD_EST_PARAMETERS", &self.OD_EST_PARAMETERS());
       ds.field("OD_APRIORI_DATA", &self.OD_APRIORI_DATA());
       ds.field("OD_RESIDUALS", &self.OD_RESIDUALS());
+      ds.field("OD_ESTIMATOR", &self.OD_ESTIMATOR());
+      ds.field("OD_RESIDUAL_RMS", &self.OD_RESIDUAL_RMS());
+      ds.field("OD_RESIDUALS_SERIES", &self.OD_RESIDUALS_SERIES());
+      ds.field("OD_RESIDUAL_EPOCHS", &self.OD_RESIDUAL_EPOCHS());
+      ds.field("OD_BATCH_BASELINE_ID", &self.OD_BATCH_BASELINE_ID());
+      ds.field("OD_BATCH_BASELINE_RMS", &self.OD_BATCH_BASELINE_RMS());
       ds.finish()
   }
 }
@@ -4323,6 +4555,12 @@ pub struct OrbitDeterminationT {
   pub OD_EST_PARAMETERS: Option<alloc::vec::Vec<alloc::string::String>>,
   pub OD_APRIORI_DATA: Option<alloc::string::String>,
   pub OD_RESIDUALS: Option<alloc::string::String>,
+  pub OD_ESTIMATOR: estimatorCategory,
+  pub OD_RESIDUAL_RMS: f64,
+  pub OD_RESIDUALS_SERIES: Option<alloc::vec::Vec<f64>>,
+  pub OD_RESIDUAL_EPOCHS: Option<alloc::vec::Vec<f64>>,
+  pub OD_BATCH_BASELINE_ID: Option<alloc::string::String>,
+  pub OD_BATCH_BASELINE_RMS: f64,
 }
 impl Default for OrbitDeterminationT {
   fn default() -> Self {
@@ -4344,6 +4582,12 @@ impl Default for OrbitDeterminationT {
       OD_EST_PARAMETERS: None,
       OD_APRIORI_DATA: None,
       OD_RESIDUALS: None,
+      OD_ESTIMATOR: estimatorCategory::Unknown,
+      OD_RESIDUAL_RMS: 0.0,
+      OD_RESIDUALS_SERIES: None,
+      OD_RESIDUAL_EPOCHS: None,
+      OD_BATCH_BASELINE_ID: None,
+      OD_BATCH_BASELINE_RMS: 0.0,
     }
   }
 }
@@ -4399,6 +4643,18 @@ impl OrbitDeterminationT {
     let OD_RESIDUALS = self.OD_RESIDUALS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let OD_ESTIMATOR = self.OD_ESTIMATOR;
+    let OD_RESIDUAL_RMS = self.OD_RESIDUAL_RMS;
+    let OD_RESIDUALS_SERIES = self.OD_RESIDUALS_SERIES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let OD_RESIDUAL_EPOCHS = self.OD_RESIDUAL_EPOCHS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let OD_BATCH_BASELINE_ID = self.OD_BATCH_BASELINE_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OD_BATCH_BASELINE_RMS = self.OD_BATCH_BASELINE_RMS;
     OrbitDetermination::create(_fbb, &OrbitDeterminationArgs{
       OD_ID,
       OD_PREV_ID,
@@ -4417,6 +4673,12 @@ impl OrbitDeterminationT {
       OD_EST_PARAMETERS,
       OD_APRIORI_DATA,
       OD_RESIDUALS,
+      OD_ESTIMATOR,
+      OD_RESIDUAL_RMS,
+      OD_RESIDUALS_SERIES,
+      OD_RESIDUAL_EPOCHS,
+      OD_BATCH_BASELINE_ID,
+      OD_BATCH_BASELINE_RMS,
     })
   }
 }

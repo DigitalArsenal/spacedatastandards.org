@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { estimatorCategory } from './estimatorCategory.js';
 
 
 export class OrbitDetermination implements flatbuffers.IUnpackableObject<OrbitDeterminationT> {
@@ -200,8 +201,81 @@ OD_RESIDUALS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+ */
+OD_ESTIMATOR():estimatorCategory {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : estimatorCategory.Unknown;
+}
+
+/**
+ * RMS of post-fit residuals for this solution.
+ */
+OD_RESIDUAL_RMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Post-fit residual series, one entry per accepted observation.
+ */
+OD_RESIDUALS_SERIES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+odResidualsSeriesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+odResidualsSeriesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+ * since 1970-01-01T00:00:00 UTC].
+ */
+OD_RESIDUAL_EPOCHS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+odResidualEpochsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+odResidualEpochsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * OD_ID of the batch baseline solution a filtered solution derives from and
+ * is compared against (empty for batch solutions).
+ */
+OD_BATCH_BASELINE_ID():string|null
+OD_BATCH_BASELINE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OD_BATCH_BASELINE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+ * comparison.
+ */
+OD_BATCH_BASELINE_RMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
 static startOrbitDetermination(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(23);
 }
 
 static addOdId(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset) {
@@ -296,12 +370,70 @@ static addOdResiduals(builder:flatbuffers.Builder, OD_RESIDUALSOffset:flatbuffer
   builder.addFieldOffset(16, OD_RESIDUALSOffset, 0);
 }
 
+static addOdEstimator(builder:flatbuffers.Builder, OD_ESTIMATOR:estimatorCategory) {
+  builder.addFieldInt8(17, OD_ESTIMATOR, estimatorCategory.Unknown);
+}
+
+static addOdResidualRms(builder:flatbuffers.Builder, OD_RESIDUAL_RMS:number) {
+  builder.addFieldFloat64(18, OD_RESIDUAL_RMS, 0.0);
+}
+
+static addOdResidualsSeries(builder:flatbuffers.Builder, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, OD_RESIDUALS_SERIESOffset, 0);
+}
+
+static createOdResidualsSeriesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createOdResidualsSeriesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createOdResidualsSeriesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOdResidualsSeriesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addOdResidualEpochs(builder:flatbuffers.Builder, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, OD_RESIDUAL_EPOCHSOffset, 0);
+}
+
+static createOdResidualEpochsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createOdResidualEpochsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createOdResidualEpochsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startOdResidualEpochsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addOdBatchBaselineId(builder:flatbuffers.Builder, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, OD_BATCH_BASELINE_IDOffset, 0);
+}
+
+static addOdBatchBaselineRms(builder:flatbuffers.Builder, OD_BATCH_BASELINE_RMS:number) {
+  builder.addFieldFloat64(22, OD_BATCH_BASELINE_RMS, 0.0);
+}
+
 static endOrbitDetermination(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuffers.Offset, OD_PREV_IDOffset:flatbuffers.Offset, OD_ALGORITHMOffset:flatbuffers.Offset, OD_METHODOffset:flatbuffers.Offset, OD_EPOCHOffset:flatbuffers.Offset, OD_TIME_TAGOffset:flatbuffers.Offset, OD_PROCESS_NOISEOffset:flatbuffers.Offset, OD_COV_REDUCTIONOffset:flatbuffers.Offset, OD_NOISE_MODELSOffset:flatbuffers.Offset, OD_OBSERVATIONS_TYPEOffset:flatbuffers.Offset, OD_OBSERVATIONS_USED:number, OD_TRACKS_USED:number, OD_DATA_WEIGHTINGOffset:flatbuffers.Offset, OD_CONVERGENCE_CRITERIAOffset:flatbuffers.Offset, OD_EST_PARAMETERSOffset:flatbuffers.Offset, OD_APRIORI_DATAOffset:flatbuffers.Offset, OD_RESIDUALSOffset:flatbuffers.Offset, OD_ESTIMATOR:estimatorCategory, OD_RESIDUAL_RMS:number, OD_RESIDUALS_SERIESOffset:flatbuffers.Offset, OD_RESIDUAL_EPOCHSOffset:flatbuffers.Offset, OD_BATCH_BASELINE_IDOffset:flatbuffers.Offset, OD_BATCH_BASELINE_RMS:number):flatbuffers.Offset {
   OrbitDetermination.startOrbitDetermination(builder);
   OrbitDetermination.addOdId(builder, OD_IDOffset);
   OrbitDetermination.addOdPrevId(builder, OD_PREV_IDOffset);
@@ -320,6 +452,12 @@ static createOrbitDetermination(builder:flatbuffers.Builder, OD_IDOffset:flatbuf
   OrbitDetermination.addOdEstParameters(builder, OD_EST_PARAMETERSOffset);
   OrbitDetermination.addOdAprioriData(builder, OD_APRIORI_DATAOffset);
   OrbitDetermination.addOdResiduals(builder, OD_RESIDUALSOffset);
+  OrbitDetermination.addOdEstimator(builder, OD_ESTIMATOR);
+  OrbitDetermination.addOdResidualRms(builder, OD_RESIDUAL_RMS);
+  OrbitDetermination.addOdResidualsSeries(builder, OD_RESIDUALS_SERIESOffset);
+  OrbitDetermination.addOdResidualEpochs(builder, OD_RESIDUAL_EPOCHSOffset);
+  OrbitDetermination.addOdBatchBaselineId(builder, OD_BATCH_BASELINE_IDOffset);
+  OrbitDetermination.addOdBatchBaselineRms(builder, OD_BATCH_BASELINE_RMS);
   return OrbitDetermination.endOrbitDetermination(builder);
 }
 
@@ -341,7 +479,13 @@ unpack(): OrbitDeterminationT {
     this.OD_CONVERGENCE_CRITERIA(),
     this.bb!.createScalarList<string>(this.OD_EST_PARAMETERS.bind(this), this.odEstParametersLength()),
     this.OD_APRIORI_DATA(),
-    this.OD_RESIDUALS()
+    this.OD_RESIDUALS(),
+    this.OD_ESTIMATOR(),
+    this.OD_RESIDUAL_RMS(),
+    this.bb!.createScalarList<number>(this.OD_RESIDUALS_SERIES.bind(this), this.odResidualsSeriesLength()),
+    this.bb!.createScalarList<number>(this.OD_RESIDUAL_EPOCHS.bind(this), this.odResidualEpochsLength()),
+    this.OD_BATCH_BASELINE_ID(),
+    this.OD_BATCH_BASELINE_RMS()
   );
 }
 
@@ -364,6 +508,12 @@ unpackTo(_o: OrbitDeterminationT): void {
   _o.OD_EST_PARAMETERS = this.bb!.createScalarList<string>(this.OD_EST_PARAMETERS.bind(this), this.odEstParametersLength());
   _o.OD_APRIORI_DATA = this.OD_APRIORI_DATA();
   _o.OD_RESIDUALS = this.OD_RESIDUALS();
+  _o.OD_ESTIMATOR = this.OD_ESTIMATOR();
+  _o.OD_RESIDUAL_RMS = this.OD_RESIDUAL_RMS();
+  _o.OD_RESIDUALS_SERIES = this.bb!.createScalarList<number>(this.OD_RESIDUALS_SERIES.bind(this), this.odResidualsSeriesLength());
+  _o.OD_RESIDUAL_EPOCHS = this.bb!.createScalarList<number>(this.OD_RESIDUAL_EPOCHS.bind(this), this.odResidualEpochsLength());
+  _o.OD_BATCH_BASELINE_ID = this.OD_BATCH_BASELINE_ID();
+  _o.OD_BATCH_BASELINE_RMS = this.OD_BATCH_BASELINE_RMS();
 }
 }
 
@@ -385,7 +535,13 @@ constructor(
   public OD_CONVERGENCE_CRITERIA: string|Uint8Array|null = null,
   public OD_EST_PARAMETERS: (string)[] = [],
   public OD_APRIORI_DATA: string|Uint8Array|null = null,
-  public OD_RESIDUALS: string|Uint8Array|null = null
+  public OD_RESIDUALS: string|Uint8Array|null = null,
+  public OD_ESTIMATOR: estimatorCategory = estimatorCategory.Unknown,
+  public OD_RESIDUAL_RMS: number = 0.0,
+  public OD_RESIDUALS_SERIES: (number)[] = [],
+  public OD_RESIDUAL_EPOCHS: (number)[] = [],
+  public OD_BATCH_BASELINE_ID: string|Uint8Array|null = null,
+  public OD_BATCH_BASELINE_RMS: number = 0.0
 ){}
 
 
@@ -405,6 +561,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const OD_EST_PARAMETERS = OrbitDetermination.createOdEstParametersVector(builder, builder.createObjectOffsetList(this.OD_EST_PARAMETERS));
   const OD_APRIORI_DATA = (this.OD_APRIORI_DATA !== null ? builder.createString(this.OD_APRIORI_DATA!) : 0);
   const OD_RESIDUALS = (this.OD_RESIDUALS !== null ? builder.createString(this.OD_RESIDUALS!) : 0);
+  const OD_RESIDUALS_SERIES = OrbitDetermination.createOdResidualsSeriesVector(builder, this.OD_RESIDUALS_SERIES);
+  const OD_RESIDUAL_EPOCHS = OrbitDetermination.createOdResidualEpochsVector(builder, this.OD_RESIDUAL_EPOCHS);
+  const OD_BATCH_BASELINE_ID = (this.OD_BATCH_BASELINE_ID !== null ? builder.createString(this.OD_BATCH_BASELINE_ID!) : 0);
 
   return OrbitDetermination.createOrbitDetermination(builder,
     OD_ID,
@@ -423,7 +582,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     OD_CONVERGENCE_CRITERIA,
     OD_EST_PARAMETERS,
     OD_APRIORI_DATA,
-    OD_RESIDUALS
+    OD_RESIDUALS,
+    this.OD_ESTIMATOR,
+    this.OD_RESIDUAL_RMS,
+    OD_RESIDUALS_SERIES,
+    OD_RESIDUAL_EPOCHS,
+    OD_BATCH_BASELINE_ID,
+    this.OD_BATCH_BASELINE_RMS
   );
 }
 }

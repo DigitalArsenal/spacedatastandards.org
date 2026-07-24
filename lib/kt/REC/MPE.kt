@@ -115,6 +115,19 @@ class MPE : Table() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Targeter solution + convergence metadata when this element set is the
+     * product of maneuver targeting (absent for ordinary element sets)
+     */
+    val targeter : MPETargeterSolution? get() = targeter(MPETargeterSolution())
+    fun targeter(obj: MPETargeterSolution) : MPETargeterSolution? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsMPE(_bb: ByteBuffer): MPE = getRootAsMPE(_bb, MPE())
@@ -123,8 +136,8 @@ class MPE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MPE")
-        fun createMPE(builder: FlatBufferBuilder, entityIdOffset: Int, epoch: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, bstar: Double, meanElementTheory: Byte) : Int {
-            builder.startTable(10)
+        fun createMPE(builder: FlatBufferBuilder, entityIdOffset: Int, epoch: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, bstar: Double, meanElementTheory: Byte, targeterOffset: Int) : Int {
+            builder.startTable(11)
             addBSTAR(builder, bstar)
             addMEANANOMALY(builder, meanAnomaly)
             addARGOFPERICENTER(builder, argOfPericenter)
@@ -133,11 +146,12 @@ class MPE : Table() {
             addECCENTRICITY(builder, eccentricity)
             addMEANMOTION(builder, meanMotion)
             addEPOCH(builder, epoch)
+            addTARGETER(builder, targeterOffset)
             addENTITYID(builder, entityIdOffset)
             addMEANELEMENTTHEORY(builder, meanElementTheory)
             return endMPE(builder)
         }
-        fun startMPE(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startMPE(builder: FlatBufferBuilder) = builder.startTable(11)
         fun addENTITYID(builder: FlatBufferBuilder, entityId: Int) = builder.addOffset(0, entityId, 0)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Double) = builder.addDouble(1, epoch, 0.0)
         fun addMEANMOTION(builder: FlatBufferBuilder, meanMotion: Double) = builder.addDouble(2, meanMotion, 0.0)
@@ -148,6 +162,7 @@ class MPE : Table() {
         fun addMEANANOMALY(builder: FlatBufferBuilder, meanAnomaly: Double) = builder.addDouble(7, meanAnomaly, 0.0)
         fun addBSTAR(builder: FlatBufferBuilder, bstar: Double) = builder.addDouble(8, bstar, 0.0)
         fun addMEANELEMENTTHEORY(builder: FlatBufferBuilder, meanElementTheory: Byte) = builder.addByte(9, meanElementTheory, 0)
+        fun addTARGETER(builder: FlatBufferBuilder, targeter: Int) = builder.addOffset(10, targeter, 0)
         fun endMPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

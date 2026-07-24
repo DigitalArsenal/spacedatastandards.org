@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "brokerCustodyModel" : {
+      "type" : "string",
+      "enum": ["SelfHosted", "StandbyReplica", "EscrowFallback"]
+    },
+    "brokerLiveness" : {
+      "type" : "string",
+      "enum": ["Unknown", "Online", "Degraded", "Unreachable"]
+    },
+    "PKB" : {
+      "type" : "object",
+      "description" : "Publisher Key-Broker Descriptor",
+      "properties" : {
+        "BROKER_ID" : {
+                "type" : "string",
+                "description" : "Stable broker identity, referenced by `$PLG`/`$STO`/`$PUR`/`$LGR`"
+              },
+        "PUBLISHER_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the publisher `$EPM` that operates this broker"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "libp2p peer id of the publisher node hosting the broker"
+              },
+        "PROTOCOL_ID" : {
+                "type" : "string",
+                "description" : "libp2p protocol the broker answers on\n(e.g. \"/space-data-network/module-delivery/1.0.0\")"
+              },
+        "MULTIFORMAT_ADDRESSES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Dialable multiformat addresses for the broker"
+              },
+        "BROKER_PUBLIC_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The broker's public key (from the key server's get_public_key) so the\nbuyer can pin it"
+              },
+        "BROKER_KIND" : {
+                "$ref" : "#/definitions/brokerCustodyModel",
+                "description" : "Custody model (default: full publisher custody)"
+              },
+        "LIVENESS" : {
+                "$ref" : "#/definitions/brokerLiveness",
+                "description" : "Store-maintained liveness status"
+              },
+        "LAST_HEARTBEAT_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms of the last successful probe/heartbeat"
+              },
+        "HEARTBEAT_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Expected heartbeat cadence in ms"
+              },
+        "FIRST_SEEN_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms the store first saw this broker"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this descriptor was last updated"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the publisher `$EPM` over the self-attested endpoint\nfields; re-verified by the store's live probe"
+              }
+      },
+      "required" : ["BROKER_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PKB"
+}

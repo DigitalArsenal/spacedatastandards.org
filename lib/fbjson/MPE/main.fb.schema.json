@@ -60,6 +60,111 @@
       },
       "additionalProperties": false
     },
+    "MPETargeterConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Constraint identifier, e.g. \"SMA\", \"INC\", \"RIC_R\"",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAME": {
+          "type": "string",
+          "description": "Reference frame the constraint is expressed in",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT",
+          "x-flatbuffer-type": "double"
+        },
+        "EVENT": {
+          "type": "string",
+          "description": "Event the constraint anchors to when EPOCH is 0, e.g. \"APOAPSIS\"",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_VALUE": {
+          "type": "number",
+          "description": "Target value of the constrained quantity",
+          "x-flatbuffer-type": "double"
+        },
+        "ACHIEVED_VALUE": {
+          "type": "number",
+          "description": "Value achieved by the converged solution",
+          "x-flatbuffer-type": "double"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "description": "Acceptable tolerance on the constrained quantity",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHT": {
+          "type": "number",
+          "description": "Relative weight of this constraint in the corrector",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "One constraint in a maneuver-targeting problem and how well the converged solution satisfies it."
+    },
+    "MPETargeterSolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SOLVER": {
+          "type": "string",
+          "description": "Solver used, e.g. \"differential-corrector\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DYNAMICS": {
+          "type": "string",
+          "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERGED": {
+          "type": "boolean",
+          "description": "Whether the corrector converged within tolerance",
+          "x-flatbuffer-type": "bool"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "description": "Number of corrector iterations executed",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RESIDUAL_RMS": {
+          "type": "number",
+          "description": "RMS of the final-iteration constraint residuals",
+          "x-flatbuffer-type": "double"
+        },
+        "RESIDUALS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Final-iteration residual per constraint, aligned with CONSTRAINTS",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MPETargeterConstraint"
+          },
+          "description": "The constraint set the solution was targeted against",
+          "x-flatbuffer-type": "[MPETargeterConstraint]"
+        },
+        "TOTAL_DELTA_V": {
+          "type": "number",
+          "description": "Total delta-v of the solved maneuver sequence in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLVED_AT": {
+          "type": "integer",
+          "description": "Unix ms the solution was produced",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "description": "Maneuver-targeter solution and convergence metadata carried with an extended MPE: the solver that produced the targeted element set, its iteration/residual history, and the constraint set it satisfied."
+    },
     "MPE": {
       "type": "object",
       "additionalProperties": false,
@@ -133,6 +238,11 @@
               "description": "Universal Semianalytical Method"
             }
           }
+        },
+        "TARGETER": {
+          "$ref": "#/definitions/MPETargeterSolution",
+          "description": "product of maneuver targeting (absent for ordinary element sets)",
+          "x-flatbuffer-type": "MPETargeterSolution"
         }
       },
       "description": "Minimum Propagatable Element Set"

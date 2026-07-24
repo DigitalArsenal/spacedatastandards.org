@@ -10215,6 +10215,41 @@
         }
       }
     },
+    "estimatorCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "(batch-vs-filter provenance).",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0,
+          "description": "Estimator class not specified"
+        },
+        "BatchLeastSquares": {
+          "value": 1,
+          "description": "Batch least-squares fit"
+        },
+        "ExtendedKalman": {
+          "value": 2,
+          "description": "Extended Kalman filter"
+        },
+        "UnscentedKalman": {
+          "value": 3,
+          "description": "Unscented Kalman filter"
+        },
+        "Smoother": {
+          "value": 4,
+          "description": "Smoothed sequential solution"
+        }
+      }
+    },
     "hfcFlowRegime": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -13262,6 +13297,61 @@
         "FAILED": {
           "value": 3,
           "description": "Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure."
+        }
+      }
+    },
+    "brokerCustodyModel": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "can release that module's content key.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "SelfHosted": {
+          "value": 0,
+          "description": "The publisher's own node hosts the broker and holds the content keys"
+        },
+        "StandbyReplica": {
+          "value": 1,
+          "description": "A publisher-run replica sharing the wrapping key (custody stays with the publisher)"
+        },
+        "EscrowFallback": {
+          "value": 2,
+          "description": "A third-party (e.g. platform-run) fallback broker able to release the content key for this module"
+        }
+      }
+    },
+    "brokerLiveness": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Store-maintained liveness of a publisher key broker.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0,
+          "description": "No probe/heartbeat information yet"
+        },
+        "Online": {
+          "value": 1,
+          "description": "Broker answered the most recent probe/heartbeat window"
+        },
+        "Degraded": {
+          "value": 2,
+          "description": "Heartbeats are late or intermittently failing"
+        },
+        "Unreachable": {
+          "value": 3,
+          "description": "Broker failed probing; paid listings behind it are unpurchasable"
         }
       }
     },
@@ -16348,6 +16438,66 @@
         },
         "PRM": {
           "value": 3
+        }
+      }
+    },
+    "recurringChargeMethod": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "On-chain recurring charge mechanism.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Erc20Allowance": {
+          "value": 0,
+          "description": "ERC-20 allowance the settlement contract draws per period"
+        },
+        "EvmDelegate": {
+          "value": 1,
+          "description": "EVM delegated / session-key authorization"
+        },
+        "SolDelegate": {
+          "value": 2,
+          "description": "Solana delegated token authority"
+        },
+        "ReAuthorizePerPeriod": {
+          "value": 3,
+          "description": "No standing authorization; the buyer re-authorizes each period"
+        }
+      }
+    },
+    "subscriptionLifecycleStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Lifecycle of a crypto-native subscription authorization.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0,
+          "description": "Charging on schedule"
+        },
+        "Paused": {
+          "value": 1,
+          "description": "Temporarily paused by the buyer or store"
+        },
+        "Cancelled": {
+          "value": 2,
+          "description": "Cancelled by the buyer; no further charges"
+        },
+        "Lapsed": {
+          "value": 3,
+          "description": "A scheduled charge failed / authorization expired"
         }
       }
     },
@@ -25943,6 +26093,153 @@
       },
       "description": "Country Identity Message"
     },
+    "CVG": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "COVERAGE_ID": {
+          "type": "string",
+          "description": "Stable identifier of this coverage computation",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "GRID_SCHEME": {
+          "type": "string",
+          "description": "Grid scheme identifier; \"H3\" for the H3 hexagonal hierarchical grid",
+          "x-flatbuffer-type": "string"
+        },
+        "GRID_RESOLUTION": {
+          "type": "integer",
+          "description": "Grid resolution (H3 resolution 0-15)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "CELL_INDEXES": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Grid cell indexes (H3 cell ids); all metric arrays align to this order",
+          "x-flatbuffer-type": "[uint64]"
+        },
+        "WINDOW_START": {
+          "type": "number",
+          "description": "1970-01-01T00:00:00 UTC]",
+          "x-flatbuffer-type": "double"
+        },
+        "WINDOW_STOP": {
+          "type": "number",
+          "description": "1970-01-01T00:00:00 UTC]",
+          "x-flatbuffer-type": "double"
+        },
+        "STEP_SIZE": {
+          "type": "number",
+          "description": "Sampling step in seconds used to compute access intervals",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sensor identifiers contributing to the coverage set",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ASSET_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Asset (satellite) identifiers contributing to the coverage set",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ACCESS_COUNTS": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Per-cell number of access intervals in the window",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "ACCESS_TOTAL_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell total access duration in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "REVISIT_MEAN_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell mean revisit interval in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "REVISIT_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum revisit interval in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE_MEAN_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell mean response time in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RESPONSE_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum response time in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "GAP_MAX_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell maximum coverage gap in seconds",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVERAGE_FRACTION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-cell fraction of the window with at least one access [0-1]",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COMPUTED_AT": {
+          "type": "integer",
+          "description": "Unix ms this coverage set was computed",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature by the producing `$EPM`",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Coverage Grid Figure-of-Merit",
+      "required": [
+        "COVERAGE_ID"
+      ]
+    },
     "CZMInterval": {
       "type": "object",
       "additionalProperties": false,
@@ -35355,6 +35652,65 @@
           "type": "string",
           "description": "Residuals from the orbit determination.",
           "x-flatbuffer-type": "string"
+        },
+        "OD_ESTIMATOR": {
+          "$ref": "#/definitions/estimatorCategory",
+          "description": "Estimator class provenance: batch fit vs sequential filter (EKF/UKF).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0,
+              "description": "Estimator class not specified"
+            },
+            "BatchLeastSquares": {
+              "value": 1,
+              "description": "Batch least-squares fit"
+            },
+            "ExtendedKalman": {
+              "value": 2,
+              "description": "Extended Kalman filter"
+            },
+            "UnscentedKalman": {
+              "value": 3,
+              "description": "Unscented Kalman filter"
+            },
+            "Smoother": {
+              "value": 4,
+              "description": "Smoothed sequential solution"
+            }
+          }
+        },
+        "OD_RESIDUAL_RMS": {
+          "type": "number",
+          "description": "RMS of post-fit residuals for this solution.",
+          "x-flatbuffer-type": "double"
+        },
+        "OD_RESIDUALS_SERIES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-fit residual series, one entry per accepted observation.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OD_RESIDUAL_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "since 1970-01-01T00:00:00 UTC].",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OD_BATCH_BASELINE_ID": {
+          "type": "string",
+          "description": "is compared against (empty for batch solutions).",
+          "x-flatbuffer-type": "string"
+        },
+        "OD_BATCH_BASELINE_RMS": {
+          "type": "number",
+          "description": "comparison.",
+          "x-flatbuffer-type": "double"
         }
       }
     },
@@ -44284,6 +44640,111 @@
       },
       "description": "Spacecraft Maneuver"
     },
+    "MPETargeterConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Constraint identifier, e.g. \"SMA\", \"INC\", \"RIC_R\"",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAME": {
+          "type": "string",
+          "description": "Reference frame the constraint is expressed in",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "number",
+          "description": "1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT",
+          "x-flatbuffer-type": "double"
+        },
+        "EVENT": {
+          "type": "string",
+          "description": "Event the constraint anchors to when EPOCH is 0, e.g. \"APOAPSIS\"",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_VALUE": {
+          "type": "number",
+          "description": "Target value of the constrained quantity",
+          "x-flatbuffer-type": "double"
+        },
+        "ACHIEVED_VALUE": {
+          "type": "number",
+          "description": "Value achieved by the converged solution",
+          "x-flatbuffer-type": "double"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "description": "Acceptable tolerance on the constrained quantity",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHT": {
+          "type": "number",
+          "description": "Relative weight of this constraint in the corrector",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "One constraint in a maneuver-targeting problem and how well the converged solution satisfies it."
+    },
+    "MPETargeterSolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SOLVER": {
+          "type": "string",
+          "description": "Solver used, e.g. \"differential-corrector\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DYNAMICS": {
+          "type": "string",
+          "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP",
+          "x-flatbuffer-type": "string"
+        },
+        "CONVERGED": {
+          "type": "boolean",
+          "description": "Whether the corrector converged within tolerance",
+          "x-flatbuffer-type": "bool"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "description": "Number of corrector iterations executed",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RESIDUAL_RMS": {
+          "type": "number",
+          "description": "RMS of the final-iteration constraint residuals",
+          "x-flatbuffer-type": "double"
+        },
+        "RESIDUALS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Final-iteration residual per constraint, aligned with CONSTRAINTS",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MPETargeterConstraint"
+          },
+          "description": "The constraint set the solution was targeted against",
+          "x-flatbuffer-type": "[MPETargeterConstraint]"
+        },
+        "TOTAL_DELTA_V": {
+          "type": "number",
+          "description": "Total delta-v of the solved maneuver sequence in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLVED_AT": {
+          "type": "integer",
+          "description": "Unix ms the solution was produced",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "description": "Maneuver-targeter solution and convergence metadata carried with an extended MPE: the solver that produced the targeted element set, its iteration/residual history, and the constraint set it satisfied."
+    },
     "MPE": {
       "type": "object",
       "additionalProperties": false,
@@ -44357,6 +44818,11 @@
               "description": "Universal Semianalytical Method"
             }
           }
+        },
+        "TARGETER": {
+          "$ref": "#/definitions/MPETargeterSolution",
+          "description": "product of maneuver targeting (absent for ordinary element sets)",
+          "x-flatbuffer-type": "MPETargeterSolution"
         }
       },
       "description": "Minimum Propagatable Element Set"
@@ -48034,6 +48500,125 @@
       },
       "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or RESPONSE is populated per message; both populated is undefined."
     },
+    "PKB": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "BROKER_ID": {
+          "type": "string",
+          "description": "Stable broker identity, referenced by `$PLG`/`$STO`/`$PUR`/`$LGR`",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PUBLISHER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the publisher `$EPM` that operates this broker",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "libp2p peer id of the publisher node hosting the broker",
+          "x-flatbuffer-type": "string"
+        },
+        "PROTOCOL_ID": {
+          "type": "string",
+          "description": "(e.g. \"/space-data-network/module-delivery/1.0.0\")",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTIFORMAT_ADDRESSES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Dialable multiformat addresses for the broker",
+          "x-flatbuffer-type": "[string]"
+        },
+        "BROKER_PUBLIC_KEY": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "buyer can pin it",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "BROKER_KIND": {
+          "$ref": "#/definitions/brokerCustodyModel",
+          "description": "Custody model (default: full publisher custody)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SelfHosted": {
+              "value": 0,
+              "description": "The publisher's own node hosts the broker and holds the content keys"
+            },
+            "StandbyReplica": {
+              "value": 1,
+              "description": "A publisher-run replica sharing the wrapping key (custody stays with the publisher)"
+            },
+            "EscrowFallback": {
+              "value": 2,
+              "description": "A third-party (e.g. platform-run) fallback broker able to release the content key for this module"
+            }
+          }
+        },
+        "LIVENESS": {
+          "$ref": "#/definitions/brokerLiveness",
+          "description": "Store-maintained liveness status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0,
+              "description": "No probe/heartbeat information yet"
+            },
+            "Online": {
+              "value": 1,
+              "description": "Broker answered the most recent probe/heartbeat window"
+            },
+            "Degraded": {
+              "value": 2,
+              "description": "Heartbeats are late or intermittently failing"
+            },
+            "Unreachable": {
+              "value": 3,
+              "description": "Broker failed probing; paid listings behind it are unpurchasable"
+            }
+          }
+        },
+        "LAST_HEARTBEAT_AT": {
+          "type": "integer",
+          "description": "Unix ms of the last successful probe/heartbeat",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HEARTBEAT_INTERVAL_MS": {
+          "type": "integer",
+          "description": "Expected heartbeat cadence in ms",
+          "x-flatbuffer-type": "uint64"
+        },
+        "FIRST_SEEN_AT": {
+          "type": "integer",
+          "description": "Unix ms the store first saw this broker",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix ms this descriptor was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "fields; re-verified by the store's live probe",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Publisher Key-Broker Descriptor",
+      "required": [
+        "BROKER_ID"
+      ]
+    },
     "PLK": {
       "type": "object",
       "additionalProperties": false,
@@ -51539,6 +52124,96 @@
         }
       },
       "description": "RF Observation"
+    },
+    "RPT": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "REPORT_ID": {
+          "type": "string",
+          "description": "Stable report identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TEMPLATE_ID": {
+          "type": "string",
+          "description": "Identifier of the report template used to render",
+          "x-flatbuffer-type": "string"
+        },
+        "TEMPLATE_VERSION": {
+          "type": "string",
+          "description": "Version of the report template",
+          "x-flatbuffer-type": "string"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Display title of the report",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "FlatSQL source query the report renders from",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DATA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "report was rendered from can be re-derived and verified",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CONTENT_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "SHA-256 of the rendered report artifact",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CONTENT_TYPE": {
+          "type": "string",
+          "description": "\"text/csv\"",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_CID": {
+          "type": "string",
+          "description": "Optional IPFS CID of the rendered artifact",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT": {
+          "type": "integer",
+          "description": "Unix ms the report was generated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "GENERATOR_MODULE_ID": {
+          "type": "string",
+          "description": "`$PLG.PLUGIN_ID` of the generator module",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATOR_MODULE_VERSION": {
+          "type": "string",
+          "description": "Version of the generator module",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATOR_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the `$EPM` that generated the report",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature by the creator `$EPM` over the report descriptor",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Verifiable Report descriptor",
+      "required": [
+        "REPORT_ID"
+      ]
     },
     "SAR": {
       "type": "object",
@@ -57507,6 +58182,115 @@
       },
       "description": "Standards Record Index \u2014 local wrapper for a standards payload's identity and mutation metadata, participating in shared FlatSQL query and cascade paths across plugins that read the same record universe."
     },
+    "STOModuleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "`$PLG.PLUGIN_ID` of the store module",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_HASH": {
+          "type": "string",
+          "description": "Content hash of the (encrypted) store module artifact",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Module version",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Reference to the store module that runs a store."
+    },
+    "STO": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "STORE_ID": {
+          "type": "string",
+          "description": "Stable store identity",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Display description",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the store operator's `$EPM`",
+          "x-flatbuffer-type": "string"
+        },
+        "STORE_MODULE": {
+          "$ref": "#/definitions/STOModuleRef",
+          "description": "The (encrypted) store MODULE that runs this store",
+          "x-flatbuffer-type": "STOModuleRef"
+        },
+        "APP_ID": {
+          "type": "string",
+          "description": "Optional `$APP.ID` when the store ships a UI app",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_OFFICIAL": {
+          "type": "boolean",
+          "description": "platform's well-known signing key",
+          "x-flatbuffer-type": "bool"
+        },
+        "COMMISSION_TERMS": {
+          "$ref": "#/definitions/CMT",
+          "description": "Store-default commission terms, embedded",
+          "x-flatbuffer-type": "CMT"
+        },
+        "COMMISSION_TERMS_ID": {
+          "type": "string",
+          "description": "Alternative reference to store-default terms by `$CMT.TERMS_ID`",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCEPTED_CHAINS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCX"
+          },
+          "description": "Chains/tokens this store accepts, each with its splitter settlement",
+          "x-flatbuffer-type": "[SCX]"
+        },
+        "CATALOG_ROOT_CID": {
+          "type": "string",
+          "description": "IPFS CID of the store's catalog (a `$REC` of `$PLG`/`$STF` listings)",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCOVERY_KEY": {
+          "type": "string",
+          "description": "libp2p advertise/discovery key for reachability",
+          "x-flatbuffer-type": "string"
+        },
+        "PROTOCOL_ID": {
+          "type": "string",
+          "description": "libp2p protocol id the store answers on",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature by the operator `$EPM`",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Store Descriptor \u2014 storefront identity",
+      "required": [
+        "STORE_ID"
+      ]
+    },
     "STR": {
       "type": "object",
       "additionalProperties": false,
@@ -57708,6 +58492,118 @@
         }
       },
       "description": "Star Catalog Entry"
+    },
+    "SUB": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SUBSCRIPTION_ID": {
+          "type": "string",
+          "description": "Stable subscription identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ENTITLEMENT_ID": {
+          "type": "string",
+          "description": "Reference to the durable entitlement (`$ENT.ENTITLEMENT_ID`)",
+          "x-flatbuffer-type": "string"
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "description": "Listing this subscription pays for (`$PLG.PLUGIN_ID` / `$STF.LISTING_ID`)",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTH_KIND": {
+          "$ref": "#/definitions/recurringChargeMethod",
+          "description": "On-chain recurring mechanism",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Erc20Allowance": {
+              "value": 0,
+              "description": "ERC-20 allowance the settlement contract draws per period"
+            },
+            "EvmDelegate": {
+              "value": 1,
+              "description": "EVM delegated / session-key authorization"
+            },
+            "SolDelegate": {
+              "value": 2,
+              "description": "Solana delegated token authority"
+            },
+            "ReAuthorizePerPeriod": {
+              "value": 3,
+              "description": "No standing authorization; the buyer re-authorizes each period"
+            }
+          }
+        },
+        "CHAIN_SETTLEMENT": {
+          "$ref": "#/definitions/SCX",
+          "description": "Settlement descriptor (chain, splitter, token) that charges each period",
+          "x-flatbuffer-type": "SCX"
+        },
+        "PERIOD_DAYS": {
+          "type": "integer",
+          "description": "Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AMOUNT_PER_PERIOD": {
+          "type": "integer",
+          "description": "Charge per period in the smallest unit of CURRENCY",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CURRENCY": {
+          "type": "string",
+          "description": "Currency / token symbol, e.g. \"USDC\"",
+          "x-flatbuffer-type": "string"
+        },
+        "NEXT_CHARGE_AT": {
+          "type": "integer",
+          "description": "Unix ms of the next scheduled charge",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_PERIODS": {
+          "type": "integer",
+          "description": "Maximum number of periods; 0 = until cancelled",
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/subscriptionLifecycleStatus",
+          "description": "Subscription lifecycle status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0,
+              "description": "Charging on schedule"
+            },
+            "Paused": {
+              "value": 1,
+              "description": "Temporarily paused by the buyer or store"
+            },
+            "Cancelled": {
+              "value": 2,
+              "description": "Cancelled by the buyer; no further charges"
+            },
+            "Lapsed": {
+              "value": 3,
+              "description": "A scheduled charge failed / authorization expired"
+            }
+          }
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Buyer's Ed25519 authorization signature over the terms",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Crypto-native Subscription Authorization",
+      "required": [
+        "SUBSCRIPTION_ID"
+      ]
     },
     "SWR": {
       "type": "object",
@@ -60552,6 +61448,108 @@
         }
       },
       "description": "Vector Covariance Message"
+    },
+    "WKSQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "QUERY_ID": {
+          "type": "string",
+          "description": "Stable query identifier within the workspace",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "SQL": {
+          "type": "string",
+          "description": "FlatSQL query text",
+          "x-flatbuffer-type": "string"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "Whether this query is active (applied) when the workspace opens",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "description": "One saved FlatSQL query belonging to a workspace."
+    },
+    "WKS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "WORKSPACE_ID": {
+          "type": "string",
+          "description": "Stable workspace identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Display description",
+          "x-flatbuffer-type": "string"
+        },
+        "OWNER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the owning `$EPM`",
+          "x-flatbuffer-type": "string"
+        },
+        "APP_ID": {
+          "type": "string",
+          "description": "`$APP.ID` of the application this workspace belongs to",
+          "x-flatbuffer-type": "string"
+        },
+        "SCENE": {
+          "$ref": "#/definitions/CZM",
+          "description": "The named `$CZM` scene snapshot",
+          "x-flatbuffer-type": "CZM"
+        },
+        "QUERIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WKSQuery"
+          },
+          "description": "FlatSQL query state captured with the scene",
+          "x-flatbuffer-type": "[WKSQuery]"
+        },
+        "SHARE_GRANTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ACL"
+          },
+          "description": "Share grants to other `$EPM` identities",
+          "x-flatbuffer-type": "[ACL]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "description": "Unix ms the workspace was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "description": "Unix ms the workspace was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Ed25519 signature by the owner `$EPM`",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Workspace \u2014 named scene snapshot + FlatSQL query state + share grants",
+      "required": [
+        "WORKSPACE_ID"
+      ]
     },
     "WPN": {
       "type": "object",

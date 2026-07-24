@@ -97,6 +97,10 @@
       "type" : "string",
       "enum": ["CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE"]
     },
+    "estimatorCategory" : {
+      "type" : "string",
+      "enum": ["Unknown", "BatchLeastSquares", "ExtendedKalman", "UnscentedKalman", "Smoother"]
+    },
     "ATM" : {
       "type" : "object",
       "description" : "Atmospheric Model Message",
@@ -1412,6 +1416,30 @@
         "OD_RESIDUALS" : {
                 "type" : "string",
                 "description" : "Residuals from the orbit determination."
+              },
+        "OD_ESTIMATOR" : {
+                "$ref" : "#/definitions/estimatorCategory",
+                "description" : "Estimator class provenance: batch fit vs sequential filter (EKF/UKF)."
+              },
+        "OD_RESIDUAL_RMS" : {
+                "type" : "number",
+                "description" : "RMS of post-fit residuals for this solution."
+              },
+        "OD_RESIDUALS_SERIES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-fit residual series, one entry per accepted observation."
+              },
+        "OD_RESIDUAL_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds\nsince 1970-01-01T00:00:00 UTC]."
+              },
+        "OD_BATCH_BASELINE_ID" : {
+                "type" : "string",
+                "description" : "OD_ID of the batch baseline solution a filtered solution derives from and\nis compared against (empty for batch solutions)."
+              },
+        "OD_BATCH_BASELINE_RMS" : {
+                "type" : "number",
+                "description" : "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison."
               }
       },
       "additionalProperties" : false

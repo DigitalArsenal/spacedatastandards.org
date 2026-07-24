@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "settlementMechanism": {
+      "type": "string",
+      "enum": [
+        "NativeTransfer",
+        "Erc20Transfer",
+        "EthSplitter",
+        "SolSplitter",
+        "DirectAddress"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NativeTransfer": {
+          "value": 0,
+          "description": "Native-asset transfer to a plain address (no split contract)"
+        },
+        "Erc20Transfer": {
+          "value": 1,
+          "description": "ERC-20 / SPL token transfer to a plain address"
+        },
+        "EthSplitter": {
+          "value": 2,
+          "description": "0xSplits-style splitter contract on an EVM chain"
+        },
+        "SolSplitter": {
+          "value": 3,
+          "description": "Splitter program on Solana"
+        },
+        "DirectAddress": {
+          "value": 4,
+          "description": "Direct address payout (e.g. Bitcoin); split settled off-contract"
+        }
+      }
+    },
+    "memoBindingScheme": {
+      "type": "string",
+      "enum": [
+        "NoMemo",
+        "TxData",
+        "SolMemo",
+        "OpReturn"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NoMemo": {
+          "value": 0,
+          "description": "No on-chain memo binding"
+        },
+        "TxData": {
+          "value": 1,
+          "description": "Bound in EVM transaction calldata"
+        },
+        "SolMemo": {
+          "value": 2,
+          "description": "Solana memo program instruction"
+        },
+        "OpReturn": {
+          "value": 3,
+          "description": "Bitcoin OP_RETURN output"
+        }
+      }
+    },
+    "SplitRecipient": {
+      "type": "object",
+      "description": "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
+      "properties": {
+        "EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the recipient's Entity Profile Message (`$EPM`)",
+          "x-flatbuffer-type": "string"
+        },
+        "CHAIN": {
+          "type": "string",
+          "description": "Settlement chain, e.g. \"ethereum\", \"solana\", \"bitcoin\"",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "type": "string",
+          "description": "On-chain payout address (EVM 0x / SOL base58 / BTC address)",
+          "x-flatbuffer-type": "string"
+        },
+        "XPUB": {
+          "type": "string",
+          "description": "Account xpub the address derives from",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCX": {
+      "type": "object",
+      "description": "Chain Settlement / Smart-Contract Descriptor. The forward description of the\nexact established splitter contract/program a buyer's wallet targets so\npayment and platform commission settle atomically on-chain. Referenced by\n`$CMT.CONTRACTS` and echoed into a store `checkout` quote. Commission is\nrealized by the splitter contract itself when the buyer pays it; there is no\noff-chain or manual settlement step.",
+      "properties": {
+        "CHAIN": {
+          "type": "string",
+          "description": "Settlement chain identifier, e.g. \"ethereum\", \"solana\", \"bitcoin\"\n(matches `$PUR.PAYMENT_CHAIN`)",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CHAIN_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "EVM chainId; 0 for non-EVM chains",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SETTLEMENT_KIND": {
+          "$ref": "#/definitions/settlementMechanism",
+          "description": "On-chain settlement mechanism",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NativeTransfer": {
+              "value": 0,
+              "description": "Native-asset transfer to a plain address (no split contract)"
+            },
+            "Erc20Transfer": {
+              "value": 1,
+              "description": "ERC-20 / SPL token transfer to a plain address"
+            },
+            "EthSplitter": {
+              "value": 2,
+              "description": "0xSplits-style splitter contract on an EVM chain"
+            },
+            "SolSplitter": {
+              "value": 3,
+              "description": "Splitter program on Solana"
+            },
+            "DirectAddress": {
+              "value": 4,
+              "description": "Direct address payout (e.g. Bitcoin); split settled off-contract"
+            }
+          }
+        },
+        "SPLITTER_STANDARD": {
+          "type": "string",
+          "description": "Established split standard id, e.g. \"0xsplits.v2\" (ETH) or the SOL\nsplitter program name. An audited off-the-shelf standard, not a custom\ncontract.",
+          "x-flatbuffer-type": "string"
+        },
+        "SPLITTER_ADDRESS": {
+          "type": "string",
+          "description": "Deployed splitter contract address (ETH) or splitter program id (SOL) the\nbuyer's payment routes into",
+          "x-flatbuffer-type": "string"
+        },
+        "SPLIT_CONFIG_ID": {
+          "type": "string",
+          "description": "The specific split configuration (recipient set + basis points) registered\nwith the splitter",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_ADDRESS": {
+          "type": "string",
+          "description": "ERC-20 / SPL mint address for stablecoin settlement; empty = native asset",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_SYMBOL": {
+          "type": "string",
+          "description": "Token symbol, e.g. \"USDC\"",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_DECIMALS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Token decimals, e.g. 6 for USDC",
+          "x-flatbuffer-type": "uint8"
+        },
+        "SPLIT_RECIPIENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SplitRecipient"
+          },
+          "description": "The recipient set the split configuration encodes (platform + publisher\u2026),\nmirrored here for independent verification",
+          "x-flatbuffer-type": "[SplitRecipient]"
+        },
+        "MIN_CONFIRMATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Confirmations required before the payment is accepted",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MEMO_SCHEME": {
+          "$ref": "#/definitions/memoBindingScheme",
+          "description": "How the order reference is bound on-chain for replay-safe matching",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NoMemo": {
+              "value": 0,
+              "description": "No on-chain memo binding"
+            },
+            "TxData": {
+              "value": 1,
+              "description": "Bound in EVM transaction calldata"
+            },
+            "SolMemo": {
+              "value": 2,
+              "description": "Solana memo program instruction"
+            },
+            "OpReturn": {
+              "value": 3,
+              "description": "Bitcoin OP_RETURN output"
+            }
+          }
+        }
+      },
+      "required": [
+        "CHAIN"
+      ],
+      "additionalProperties": false
+    },
+    "recurringChargeMethod": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "On-chain recurring charge mechanism.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Erc20Allowance": {
+          "value": 0,
+          "description": "ERC-20 allowance the settlement contract draws per period"
+        },
+        "EvmDelegate": {
+          "value": 1,
+          "description": "EVM delegated / session-key authorization"
+        },
+        "SolDelegate": {
+          "value": 2,
+          "description": "Solana delegated token authority"
+        },
+        "ReAuthorizePerPeriod": {
+          "value": 3,
+          "description": "No standing authorization; the buyer re-authorizes each period"
+        }
+      }
+    },
+    "subscriptionLifecycleStatus": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Lifecycle of a crypto-native subscription authorization.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0,
+          "description": "Charging on schedule"
+        },
+        "Paused": {
+          "value": 1,
+          "description": "Temporarily paused by the buyer or store"
+        },
+        "Cancelled": {
+          "value": 2,
+          "description": "Cancelled by the buyer; no further charges"
+        },
+        "Lapsed": {
+          "value": 3,
+          "description": "A scheduled charge failed / authorization expired"
+        }
+      }
+    },
+    "SUB": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "SUBSCRIPTION_ID": {
+          "type": "string",
+          "description": "Stable subscription identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ENTITLEMENT_ID": {
+          "type": "string",
+          "description": "Reference to the durable entitlement (`$ENT.ENTITLEMENT_ID`)",
+          "x-flatbuffer-type": "string"
+        },
+        "LISTING_ID": {
+          "type": "string",
+          "description": "Listing this subscription pays for (`$PLG.PLUGIN_ID` / `$STF.LISTING_ID`)",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTH_KIND": {
+          "$ref": "#/definitions/recurringChargeMethod",
+          "description": "On-chain recurring mechanism",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Erc20Allowance": {
+              "value": 0,
+              "description": "ERC-20 allowance the settlement contract draws per period"
+            },
+            "EvmDelegate": {
+              "value": 1,
+              "description": "EVM delegated / session-key authorization"
+            },
+            "SolDelegate": {
+              "value": 2,
+              "description": "Solana delegated token authority"
+            },
+            "ReAuthorizePerPeriod": {
+              "value": 3,
+              "description": "No standing authorization; the buyer re-authorizes each period"
+            }
+          }
+        },
+        "CHAIN_SETTLEMENT": {
+          "$ref": "#/definitions/SCX",
+          "description": "Settlement descriptor (chain, splitter, token) that charges each period",
+          "x-flatbuffer-type": "SCX"
+        },
+        "PERIOD_DAYS": {
+          "type": "integer",
+          "description": "Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AMOUNT_PER_PERIOD": {
+          "type": "integer",
+          "description": "Charge per period in the smallest unit of CURRENCY",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CURRENCY": {
+          "type": "string",
+          "description": "Currency / token symbol, e.g. \"USDC\"",
+          "x-flatbuffer-type": "string"
+        },
+        "NEXT_CHARGE_AT": {
+          "type": "integer",
+          "description": "Unix ms of the next scheduled charge",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_PERIODS": {
+          "type": "integer",
+          "description": "Maximum number of periods; 0 = until cancelled",
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/subscriptionLifecycleStatus",
+          "description": "Subscription lifecycle status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Active": {
+              "value": 0,
+              "description": "Charging on schedule"
+            },
+            "Paused": {
+              "value": 1,
+              "description": "Temporarily paused by the buyer or store"
+            },
+            "Cancelled": {
+              "value": 2,
+              "description": "Cancelled by the buyer; no further charges"
+            },
+            "Lapsed": {
+              "value": 3,
+              "description": "A scheduled charge failed / authorization expired"
+            }
+          }
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Buyer's Ed25519 authorization signature over the terms",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "description": "Crypto-native Subscription Authorization",
+      "required": [
+        "SUBSCRIPTION_ID"
+      ]
+    }
+  },
+  "$ref": "#/definitions/SUB",
+  "x-flatbuffer-root-type": "SUB",
+  "x-flatbuffer-file-identifier": "$SUB"
+}

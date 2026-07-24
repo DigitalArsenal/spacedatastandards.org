@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RPT" : {
+      "type" : "object",
+      "description" : "Verifiable Report descriptor",
+      "properties" : {
+        "REPORT_ID" : {
+                "type" : "string",
+                "description" : "Stable report identifier"
+              },
+        "TEMPLATE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the report template used to render"
+              },
+        "TEMPLATE_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the report template"
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Display title of the report"
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "FlatSQL source query the report renders from"
+              },
+        "SOURCE_DATA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 over the canonical source-query result stream, so the data the\nreport was rendered from can be re-derived and verified"
+              },
+        "CONTENT_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA-256 of the rendered report artifact"
+              },
+        "CONTENT_TYPE" : {
+                "type" : "string",
+                "description" : "MIME type of the rendered artifact, e.g. \"application/pdf\", \"text/html\",\n\"text/csv\""
+              },
+        "CONTENT_CID" : {
+                "type" : "string",
+                "description" : "Optional IPFS CID of the rendered artifact"
+              },
+        "GENERATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms the report was generated"
+              },
+        "GENERATOR_MODULE_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` of the generator module"
+              },
+        "GENERATOR_MODULE_VERSION" : {
+                "type" : "string",
+                "description" : "Version of the generator module"
+              },
+        "CREATOR_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the `$EPM` that generated the report"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the creator `$EPM` over the report descriptor"
+              }
+      },
+      "required" : ["REPORT_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RPT"
+}

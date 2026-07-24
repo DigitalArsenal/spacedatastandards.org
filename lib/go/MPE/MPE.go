@@ -266,8 +266,29 @@ func (rcv *MPE) MutateMeanElementTheory(n meanElementSource) bool {
 	return rcv.MutateMEAN_ELEMENT_THEORY(n)
 }
 
+/// Targeter solution + convergence metadata when this element set is the
+/// product of maneuver targeting (absent for ordinary element sets)
+func (rcv *MPE) TARGETER(obj *MPETargeterSolution) *MPETargeterSolution {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(MPETargeterSolution)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *MPE) Targeter(obj *MPETargeterSolution) *MPETargeterSolution {
+	return rcv.TARGETER(obj)
+}
+
+/// Targeter solution + convergence metadata when this element set is the
+/// product of maneuver targeting (absent for ordinary element sets)
 func MPEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(11)
 }
 func MPEAddENTITY_ID(builder *flatbuffers.Builder, ENTITY_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ENTITY_ID), 0)
@@ -328,6 +349,12 @@ func MPEAddMEAN_ELEMENT_THEORY(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY
 }
 func MPEAddMeanElementTheory(builder *flatbuffers.Builder, MEAN_ELEMENT_THEORY meanElementSource) {
 	MPEAddMEAN_ELEMENT_THEORY(builder, MEAN_ELEMENT_THEORY)
+}
+func MPEAddTARGETER(builder *flatbuffers.Builder, TARGETER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TARGETER), 0)
+}
+func MPEAddTargeter(builder *flatbuffers.Builder, TARGETER flatbuffers.UOffsetT) {
+	MPEAddTARGETER(builder, TARGETER)
 }
 func MPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

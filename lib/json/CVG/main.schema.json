@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CVG" : {
+      "type" : "object",
+      "description" : "Coverage Grid Figure-of-Merit",
+      "properties" : {
+        "COVERAGE_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier of this coverage computation"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name"
+              },
+        "GRID_SCHEME" : {
+                "type" : "string",
+                "description" : "Grid scheme identifier; \"H3\" for the H3 hexagonal hierarchical grid"
+              },
+        "GRID_RESOLUTION" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Grid resolution (H3 resolution 0-15)"
+              },
+        "CELL_INDEXES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615},
+                "description" : "Grid cell indexes (H3 cell ids); all metric arrays align to this order"
+              },
+        "WINDOW_START" : {
+                "type" : "number",
+                "description" : "Epoch window start (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]"
+              },
+        "WINDOW_STOP" : {
+                "type" : "number",
+                "description" : "Epoch window stop (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]"
+              },
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Sampling step in seconds used to compute access intervals"
+              },
+        "SENSOR_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Sensor identifiers contributing to the coverage set"
+              },
+        "ASSET_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Asset (satellite) identifiers contributing to the coverage set"
+              },
+        "ACCESS_COUNTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Per-cell number of access intervals in the window"
+              },
+        "ACCESS_TOTAL_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell total access duration in seconds"
+              },
+        "REVISIT_MEAN_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell mean revisit interval in seconds"
+              },
+        "REVISIT_MAX_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell maximum revisit interval in seconds"
+              },
+        "RESPONSE_MEAN_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell mean response time in seconds"
+              },
+        "RESPONSE_MAX_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell maximum response time in seconds"
+              },
+        "GAP_MAX_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell maximum coverage gap in seconds"
+              },
+        "COVERAGE_FRACTION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Per-cell fraction of the window with at least one access [0-1]"
+              },
+        "COMPUTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms this coverage set was computed"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the producing `$EPM`"
+              }
+      },
+      "required" : ["COVERAGE_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CVG"
+}

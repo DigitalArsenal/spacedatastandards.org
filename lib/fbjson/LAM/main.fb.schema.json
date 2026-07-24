@@ -2458,6 +2458,41 @@
         }
       }
     },
+    "estimatorCategory": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "(batch-vs-filter provenance).",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0,
+          "description": "Estimator class not specified"
+        },
+        "BatchLeastSquares": {
+          "value": 1,
+          "description": "Batch least-squares fit"
+        },
+        "ExtendedKalman": {
+          "value": 2,
+          "description": "Extended Kalman filter"
+        },
+        "UnscentedKalman": {
+          "value": 3,
+          "description": "Unscented Kalman filter"
+        },
+        "Smoother": {
+          "value": 4,
+          "description": "Smoothed sequential solution"
+        }
+      }
+    },
     "hfcFlowRegime": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -7171,6 +7206,65 @@
           "type": "string",
           "description": "Residuals from the orbit determination.",
           "x-flatbuffer-type": "string"
+        },
+        "OD_ESTIMATOR": {
+          "$ref": "#/definitions/estimatorCategory",
+          "description": "Estimator class provenance: batch fit vs sequential filter (EKF/UKF).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0,
+              "description": "Estimator class not specified"
+            },
+            "BatchLeastSquares": {
+              "value": 1,
+              "description": "Batch least-squares fit"
+            },
+            "ExtendedKalman": {
+              "value": 2,
+              "description": "Extended Kalman filter"
+            },
+            "UnscentedKalman": {
+              "value": 3,
+              "description": "Unscented Kalman filter"
+            },
+            "Smoother": {
+              "value": 4,
+              "description": "Smoothed sequential solution"
+            }
+          }
+        },
+        "OD_RESIDUAL_RMS": {
+          "type": "number",
+          "description": "RMS of post-fit residuals for this solution.",
+          "x-flatbuffer-type": "double"
+        },
+        "OD_RESIDUALS_SERIES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Post-fit residual series, one entry per accepted observation.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OD_RESIDUAL_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "since 1970-01-01T00:00:00 UTC].",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OD_BATCH_BASELINE_ID": {
+          "type": "string",
+          "description": "is compared against (empty for batch solutions).",
+          "x-flatbuffer-type": "string"
+        },
+        "OD_BATCH_BASELINE_RMS": {
+          "type": "number",
+          "description": "comparison.",
+          "x-flatbuffer-type": "double"
         }
       }
     },

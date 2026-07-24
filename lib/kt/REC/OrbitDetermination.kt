@@ -254,6 +254,81 @@ class OrbitDetermination : Table() {
         }
     val odResidualsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
     fun odResidualsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+     */
+    val odEstimator : Byte
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * RMS of post-fit residuals for this solution.
+     */
+    val odResidualRms : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Post-fit residual series, one entry per accepted observation.
+     */
+    fun odResidualsSeries(j: Int) : Double {
+        val o = __offset(42)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val odResidualsSeriesLength : Int
+        get() {
+            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
+        }
+    val odResidualsSeriesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 8)
+    fun odResidualsSeriesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 8)
+    /**
+     * Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+     * since 1970-01-01T00:00:00 UTC].
+     */
+    fun odResidualEpochs(j: Int) : Double {
+        val o = __offset(44)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val odResidualEpochsLength : Int
+        get() {
+            val o = __offset(44); return if (o != 0) __vector_len(o) else 0
+        }
+    val odResidualEpochsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 8)
+    fun odResidualEpochsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 8)
+    /**
+     * OD_ID of the batch baseline solution a filtered solution derives from and
+     * is compared against (empty for batch solutions).
+     */
+    val odBatchBaselineId : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val odBatchBaselineIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun odBatchBaselineIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+     * comparison.
+     */
+    val odBatchBaselineRms : Double
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsOrbitDetermination(_bb: ByteBuffer): OrbitDetermination = getRootAsOrbitDetermination(_bb, OrbitDetermination())
@@ -261,8 +336,13 @@ class OrbitDetermination : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int) : Int {
-            builder.startTable(17)
+        fun createOrbitDetermination(builder: FlatBufferBuilder, odIdOffset: Int, odPrevIdOffset: Int, odAlgorithmOffset: Int, odMethodOffset: Int, odEpochOffset: Int, odTimeTagOffset: Int, odProcessNoiseOffset: Int, odCovReductionOffset: Int, odNoiseModelsOffset: Int, odObservationsTypeOffset: Int, odObservationsUsed: Int, odTracksUsed: Int, odDataWeightingOffset: Int, odConvergenceCriteriaOffset: Int, odEstParametersOffset: Int, odAprioriDataOffset: Int, odResidualsOffset: Int, odEstimator: Byte, odResidualRms: Double, odResidualsSeriesOffset: Int, odResidualEpochsOffset: Int, odBatchBaselineIdOffset: Int, odBatchBaselineRms: Double) : Int {
+            builder.startTable(23)
+            addODBATCHBASELINERMS(builder, odBatchBaselineRms)
+            addODRESIDUALRMS(builder, odResidualRms)
+            addODBATCHBASELINEID(builder, odBatchBaselineIdOffset)
+            addODRESIDUALEPOCHS(builder, odResidualEpochsOffset)
+            addODRESIDUALSSERIES(builder, odResidualsSeriesOffset)
             addODRESIDUALS(builder, odResidualsOffset)
             addODAPRIORIDATA(builder, odAprioriDataOffset)
             addODESTPARAMETERS(builder, odEstParametersOffset)
@@ -280,9 +360,10 @@ class OrbitDetermination : Table() {
             addODALGORITHM(builder, odAlgorithmOffset)
             addODPREVID(builder, odPrevIdOffset)
             addODID(builder, odIdOffset)
+            addODESTIMATOR(builder, odEstimator)
             return endOrbitDetermination(builder)
         }
-        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startOrbitDetermination(builder: FlatBufferBuilder) = builder.startTable(23)
         fun addODID(builder: FlatBufferBuilder, odId: Int) = builder.addOffset(0, odId, 0)
         fun addODPREVID(builder: FlatBufferBuilder, odPrevId: Int) = builder.addOffset(1, odPrevId, 0)
         fun addODALGORITHM(builder: FlatBufferBuilder, odAlgorithm: Int) = builder.addOffset(2, odAlgorithm, 0)
@@ -316,6 +397,28 @@ class OrbitDetermination : Table() {
         fun startOdEstParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addODAPRIORIDATA(builder: FlatBufferBuilder, odAprioriData: Int) = builder.addOffset(15, odAprioriData, 0)
         fun addODRESIDUALS(builder: FlatBufferBuilder, odResiduals: Int) = builder.addOffset(16, odResiduals, 0)
+        fun addODESTIMATOR(builder: FlatBufferBuilder, odEstimator: Byte) = builder.addByte(17, odEstimator, 0)
+        fun addODRESIDUALRMS(builder: FlatBufferBuilder, odResidualRms: Double) = builder.addDouble(18, odResidualRms, 0.0)
+        fun addODRESIDUALSSERIES(builder: FlatBufferBuilder, odResidualsSeries: Int) = builder.addOffset(19, odResidualsSeries, 0)
+        fun createOdResidualsSeriesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startOdResidualsSeriesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addODRESIDUALEPOCHS(builder: FlatBufferBuilder, odResidualEpochs: Int) = builder.addOffset(20, odResidualEpochs, 0)
+        fun createOdResidualEpochsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startOdResidualEpochsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addODBATCHBASELINEID(builder: FlatBufferBuilder, odBatchBaselineId: Int) = builder.addOffset(21, odBatchBaselineId, 0)
+        fun addODBATCHBASELINERMS(builder: FlatBufferBuilder, odBatchBaselineRms: Double) = builder.addDouble(22, odBatchBaselineRms, 0.0)
         fun endOrbitDetermination(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

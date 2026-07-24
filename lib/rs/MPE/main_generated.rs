@@ -4,6 +4,652 @@
 use crate::main_generated::*;
 extern crate alloc;
 
+pub enum MPETargeterConstraintOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One constraint in a maneuver-targeting problem and how well the converged
+/// solution satisfies it.
+pub struct MPETargeterConstraint<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for MPETargeterConstraint<'a> {
+  type Inner = MPETargeterConstraint<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> MPETargeterConstraint<'a> {
+  pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_FRAME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_EPOCH: ::flatbuffers::VOffsetT = 8;
+  pub const VT_EVENT: ::flatbuffers::VOffsetT = 10;
+  pub const VT_TARGET_VALUE: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ACHIEVED_VALUE: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TOLERANCE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_WEIGHT: ::flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    MPETargeterConstraint { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args MPETargeterConstraintArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<MPETargeterConstraint<'bldr>> {
+    let mut builder = MPETargeterConstraintBuilder::new(_fbb);
+    builder.add_WEIGHT(args.WEIGHT);
+    builder.add_TOLERANCE(args.TOLERANCE);
+    builder.add_ACHIEVED_VALUE(args.ACHIEVED_VALUE);
+    builder.add_TARGET_VALUE(args.TARGET_VALUE);
+    builder.add_EPOCH(args.EPOCH);
+    if let Some(x) = args.EVENT { builder.add_EVENT(x); }
+    if let Some(x) = args.FRAME { builder.add_FRAME(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> MPETargeterConstraintT {
+    let NAME = self.NAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FRAME = self.FRAME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let EPOCH = self.EPOCH();
+    let EVENT = self.EVENT().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TARGET_VALUE = self.TARGET_VALUE();
+    let ACHIEVED_VALUE = self.ACHIEVED_VALUE();
+    let TOLERANCE = self.TOLERANCE();
+    let WEIGHT = self.WEIGHT();
+    MPETargeterConstraintT {
+      NAME,
+      FRAME,
+      EPOCH,
+      EVENT,
+      TARGET_VALUE,
+      ACHIEVED_VALUE,
+      TOLERANCE,
+      WEIGHT,
+    }
+  }
+
+  /// Constraint identifier, e.g. "SMA", "INC", "RIC_R"
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterConstraint::VT_NAME, None)}
+  }
+  /// Reference frame the constraint is expressed in
+  #[inline]
+  pub fn FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterConstraint::VT_FRAME, None)}
+  }
+  /// Epoch the constraint applies at (UNIX timestamp) [numeric seconds since
+  /// 1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT
+  #[inline]
+  pub fn EPOCH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterConstraint::VT_EPOCH, Some(0.0)).unwrap()}
+  }
+  /// Event the constraint anchors to when EPOCH is 0, e.g. "APOAPSIS"
+  #[inline]
+  pub fn EVENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterConstraint::VT_EVENT, None)}
+  }
+  /// Target value of the constrained quantity
+  #[inline]
+  pub fn TARGET_VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterConstraint::VT_TARGET_VALUE, Some(0.0)).unwrap()}
+  }
+  /// Value achieved by the converged solution
+  #[inline]
+  pub fn ACHIEVED_VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterConstraint::VT_ACHIEVED_VALUE, Some(0.0)).unwrap()}
+  }
+  /// Acceptable tolerance on the constrained quantity
+  #[inline]
+  pub fn TOLERANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterConstraint::VT_TOLERANCE, Some(0.0)).unwrap()}
+  }
+  /// Relative weight of this constraint in the corrector
+  #[inline]
+  pub fn WEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterConstraint::VT_WEIGHT, Some(0.0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for MPETargeterConstraint<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FRAME", Self::VT_FRAME, false)?
+     .visit_field::<f64>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EVENT", Self::VT_EVENT, false)?
+     .visit_field::<f64>("TARGET_VALUE", Self::VT_TARGET_VALUE, false)?
+     .visit_field::<f64>("ACHIEVED_VALUE", Self::VT_ACHIEVED_VALUE, false)?
+     .visit_field::<f64>("TOLERANCE", Self::VT_TOLERANCE, false)?
+     .visit_field::<f64>("WEIGHT", Self::VT_WEIGHT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct MPETargeterConstraintArgs<'a> {
+    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FRAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: f64,
+    pub EVENT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_VALUE: f64,
+    pub ACHIEVED_VALUE: f64,
+    pub TOLERANCE: f64,
+    pub WEIGHT: f64,
+}
+impl<'a> Default for MPETargeterConstraintArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    MPETargeterConstraintArgs {
+      NAME: None,
+      FRAME: None,
+      EPOCH: 0.0,
+      EVENT: None,
+      TARGET_VALUE: 0.0,
+      ACHIEVED_VALUE: 0.0,
+      TOLERANCE: 0.0,
+      WEIGHT: 0.0,
+    }
+  }
+}
+
+pub struct MPETargeterConstraintBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MPETargeterConstraintBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterConstraint::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_FRAME(&mut self, FRAME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterConstraint::VT_FRAME, FRAME);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterConstraint::VT_EPOCH, EPOCH, 0.0);
+  }
+  #[inline]
+  pub fn add_EVENT(&mut self, EVENT: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterConstraint::VT_EVENT, EVENT);
+  }
+  #[inline]
+  pub fn add_TARGET_VALUE(&mut self, TARGET_VALUE: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterConstraint::VT_TARGET_VALUE, TARGET_VALUE, 0.0);
+  }
+  #[inline]
+  pub fn add_ACHIEVED_VALUE(&mut self, ACHIEVED_VALUE: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterConstraint::VT_ACHIEVED_VALUE, ACHIEVED_VALUE, 0.0);
+  }
+  #[inline]
+  pub fn add_TOLERANCE(&mut self, TOLERANCE: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterConstraint::VT_TOLERANCE, TOLERANCE, 0.0);
+  }
+  #[inline]
+  pub fn add_WEIGHT(&mut self, WEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterConstraint::VT_WEIGHT, WEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MPETargeterConstraintBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    MPETargeterConstraintBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<MPETargeterConstraint<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for MPETargeterConstraint<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("MPETargeterConstraint");
+      ds.field("NAME", &self.NAME());
+      ds.field("FRAME", &self.FRAME());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("EVENT", &self.EVENT());
+      ds.field("TARGET_VALUE", &self.TARGET_VALUE());
+      ds.field("ACHIEVED_VALUE", &self.ACHIEVED_VALUE());
+      ds.field("TOLERANCE", &self.TOLERANCE());
+      ds.field("WEIGHT", &self.WEIGHT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct MPETargeterConstraintT {
+  pub NAME: Option<alloc::string::String>,
+  pub FRAME: Option<alloc::string::String>,
+  pub EPOCH: f64,
+  pub EVENT: Option<alloc::string::String>,
+  pub TARGET_VALUE: f64,
+  pub ACHIEVED_VALUE: f64,
+  pub TOLERANCE: f64,
+  pub WEIGHT: f64,
+}
+impl Default for MPETargeterConstraintT {
+  fn default() -> Self {
+    Self {
+      NAME: None,
+      FRAME: None,
+      EPOCH: 0.0,
+      EVENT: None,
+      TARGET_VALUE: 0.0,
+      ACHIEVED_VALUE: 0.0,
+      TOLERANCE: 0.0,
+      WEIGHT: 0.0,
+    }
+  }
+}
+impl MPETargeterConstraintT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<MPETargeterConstraint<'b>> {
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FRAME = self.FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH;
+    let EVENT = self.EVENT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TARGET_VALUE = self.TARGET_VALUE;
+    let ACHIEVED_VALUE = self.ACHIEVED_VALUE;
+    let TOLERANCE = self.TOLERANCE;
+    let WEIGHT = self.WEIGHT;
+    MPETargeterConstraint::create(_fbb, &MPETargeterConstraintArgs{
+      NAME,
+      FRAME,
+      EPOCH,
+      EVENT,
+      TARGET_VALUE,
+      ACHIEVED_VALUE,
+      TOLERANCE,
+      WEIGHT,
+    })
+  }
+}
+pub enum MPETargeterSolutionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Maneuver-targeter solution and convergence metadata carried with an
+/// extended MPE: the solver that produced the targeted element set, its
+/// iteration/residual history, and the constraint set it satisfied.
+pub struct MPETargeterSolution<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for MPETargeterSolution<'a> {
+  type Inner = MPETargeterSolution<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> MPETargeterSolution<'a> {
+  pub const VT_SOLVER: ::flatbuffers::VOffsetT = 4;
+  pub const VT_DYNAMICS: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CONVERGED: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ITERATIONS: ::flatbuffers::VOffsetT = 10;
+  pub const VT_RESIDUAL_RMS: ::flatbuffers::VOffsetT = 12;
+  pub const VT_RESIDUALS: ::flatbuffers::VOffsetT = 14;
+  pub const VT_CONSTRAINTS: ::flatbuffers::VOffsetT = 16;
+  pub const VT_TOTAL_DELTA_V: ::flatbuffers::VOffsetT = 18;
+  pub const VT_SOLVED_AT: ::flatbuffers::VOffsetT = 20;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    MPETargeterSolution { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args MPETargeterSolutionArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<MPETargeterSolution<'bldr>> {
+    let mut builder = MPETargeterSolutionBuilder::new(_fbb);
+    builder.add_SOLVED_AT(args.SOLVED_AT);
+    builder.add_TOTAL_DELTA_V(args.TOTAL_DELTA_V);
+    builder.add_RESIDUAL_RMS(args.RESIDUAL_RMS);
+    if let Some(x) = args.CONSTRAINTS { builder.add_CONSTRAINTS(x); }
+    if let Some(x) = args.RESIDUALS { builder.add_RESIDUALS(x); }
+    builder.add_ITERATIONS(args.ITERATIONS);
+    if let Some(x) = args.DYNAMICS { builder.add_DYNAMICS(x); }
+    if let Some(x) = args.SOLVER { builder.add_SOLVER(x); }
+    builder.add_CONVERGED(args.CONVERGED);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> MPETargeterSolutionT {
+    let SOLVER = self.SOLVER().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let DYNAMICS = self.DYNAMICS().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CONVERGED = self.CONVERGED();
+    let ITERATIONS = self.ITERATIONS();
+    let RESIDUAL_RMS = self.RESIDUAL_RMS();
+    let RESIDUALS = self.RESIDUALS().map(|x| {
+      x.into_iter().collect()
+    });
+    let CONSTRAINTS = self.CONSTRAINTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TOTAL_DELTA_V = self.TOTAL_DELTA_V();
+    let SOLVED_AT = self.SOLVED_AT();
+    MPETargeterSolutionT {
+      SOLVER,
+      DYNAMICS,
+      CONVERGED,
+      ITERATIONS,
+      RESIDUAL_RMS,
+      RESIDUALS,
+      CONSTRAINTS,
+      TOTAL_DELTA_V,
+      SOLVED_AT,
+    }
+  }
+
+  /// Solver used, e.g. "differential-corrector"
+  #[inline]
+  pub fn SOLVER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterSolution::VT_SOLVER, None)}
+  }
+  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  #[inline]
+  pub fn DYNAMICS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterSolution::VT_DYNAMICS, None)}
+  }
+  /// Whether the corrector converged within tolerance
+  #[inline]
+  pub fn CONVERGED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(MPETargeterSolution::VT_CONVERGED, Some(false)).unwrap()}
+  }
+  /// Number of corrector iterations executed
+  #[inline]
+  pub fn ITERATIONS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(MPETargeterSolution::VT_ITERATIONS, Some(0)).unwrap()}
+  }
+  /// RMS of the final-iteration constraint residuals
+  #[inline]
+  pub fn RESIDUAL_RMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterSolution::VT_RESIDUAL_RMS, Some(0.0)).unwrap()}
+  }
+  /// Final-iteration residual per constraint, aligned with CONSTRAINTS
+  #[inline]
+  pub fn RESIDUALS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(MPETargeterSolution::VT_RESIDUALS, None)}
+  }
+  /// The constraint set the solution was targeted against
+  #[inline]
+  pub fn CONSTRAINTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MPETargeterConstraint<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MPETargeterConstraint>>>>(MPETargeterSolution::VT_CONSTRAINTS, None)}
+  }
+  /// Total delta-v of the solved maneuver sequence in m/s
+  #[inline]
+  pub fn TOTAL_DELTA_V(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MPETargeterSolution::VT_TOTAL_DELTA_V, Some(0.0)).unwrap()}
+  }
+  /// Unix ms the solution was produced
+  #[inline]
+  pub fn SOLVED_AT(&self) -> u64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u64>(MPETargeterSolution::VT_SOLVED_AT, Some(0)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for MPETargeterSolution<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOLVER", Self::VT_SOLVER, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DYNAMICS", Self::VT_DYNAMICS, false)?
+     .visit_field::<bool>("CONVERGED", Self::VT_CONVERGED, false)?
+     .visit_field::<u32>("ITERATIONS", Self::VT_ITERATIONS, false)?
+     .visit_field::<f64>("RESIDUAL_RMS", Self::VT_RESIDUAL_RMS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("RESIDUALS", Self::VT_RESIDUALS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<MPETargeterConstraint>>>>("CONSTRAINTS", Self::VT_CONSTRAINTS, false)?
+     .visit_field::<f64>("TOTAL_DELTA_V", Self::VT_TOTAL_DELTA_V, false)?
+     .visit_field::<u64>("SOLVED_AT", Self::VT_SOLVED_AT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct MPETargeterSolutionArgs<'a> {
+    pub SOLVER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DYNAMICS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONVERGED: bool,
+    pub ITERATIONS: u32,
+    pub RESIDUAL_RMS: f64,
+    pub RESIDUALS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub CONSTRAINTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<MPETargeterConstraint<'a>>>>>,
+    pub TOTAL_DELTA_V: f64,
+    pub SOLVED_AT: u64,
+}
+impl<'a> Default for MPETargeterSolutionArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    MPETargeterSolutionArgs {
+      SOLVER: None,
+      DYNAMICS: None,
+      CONVERGED: false,
+      ITERATIONS: 0,
+      RESIDUAL_RMS: 0.0,
+      RESIDUALS: None,
+      CONSTRAINTS: None,
+      TOTAL_DELTA_V: 0.0,
+      SOLVED_AT: 0,
+    }
+  }
+}
+
+pub struct MPETargeterSolutionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MPETargeterSolutionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SOLVER(&mut self, SOLVER: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterSolution::VT_SOLVER, SOLVER);
+  }
+  #[inline]
+  pub fn add_DYNAMICS(&mut self, DYNAMICS: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterSolution::VT_DYNAMICS, DYNAMICS);
+  }
+  #[inline]
+  pub fn add_CONVERGED(&mut self, CONVERGED: bool) {
+    self.fbb_.push_slot::<bool>(MPETargeterSolution::VT_CONVERGED, CONVERGED, false);
+  }
+  #[inline]
+  pub fn add_ITERATIONS(&mut self, ITERATIONS: u32) {
+    self.fbb_.push_slot::<u32>(MPETargeterSolution::VT_ITERATIONS, ITERATIONS, 0);
+  }
+  #[inline]
+  pub fn add_RESIDUAL_RMS(&mut self, RESIDUAL_RMS: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterSolution::VT_RESIDUAL_RMS, RESIDUAL_RMS, 0.0);
+  }
+  #[inline]
+  pub fn add_RESIDUALS(&mut self, RESIDUALS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterSolution::VT_RESIDUALS, RESIDUALS);
+  }
+  #[inline]
+  pub fn add_CONSTRAINTS(&mut self, CONSTRAINTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<MPETargeterConstraint<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(MPETargeterSolution::VT_CONSTRAINTS, CONSTRAINTS);
+  }
+  #[inline]
+  pub fn add_TOTAL_DELTA_V(&mut self, TOTAL_DELTA_V: f64) {
+    self.fbb_.push_slot::<f64>(MPETargeterSolution::VT_TOTAL_DELTA_V, TOTAL_DELTA_V, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLVED_AT(&mut self, SOLVED_AT: u64) {
+    self.fbb_.push_slot::<u64>(MPETargeterSolution::VT_SOLVED_AT, SOLVED_AT, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MPETargeterSolutionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    MPETargeterSolutionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<MPETargeterSolution<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for MPETargeterSolution<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("MPETargeterSolution");
+      ds.field("SOLVER", &self.SOLVER());
+      ds.field("DYNAMICS", &self.DYNAMICS());
+      ds.field("CONVERGED", &self.CONVERGED());
+      ds.field("ITERATIONS", &self.ITERATIONS());
+      ds.field("RESIDUAL_RMS", &self.RESIDUAL_RMS());
+      ds.field("RESIDUALS", &self.RESIDUALS());
+      ds.field("CONSTRAINTS", &self.CONSTRAINTS());
+      ds.field("TOTAL_DELTA_V", &self.TOTAL_DELTA_V());
+      ds.field("SOLVED_AT", &self.SOLVED_AT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct MPETargeterSolutionT {
+  pub SOLVER: Option<alloc::string::String>,
+  pub DYNAMICS: Option<alloc::string::String>,
+  pub CONVERGED: bool,
+  pub ITERATIONS: u32,
+  pub RESIDUAL_RMS: f64,
+  pub RESIDUALS: Option<alloc::vec::Vec<f64>>,
+  pub CONSTRAINTS: Option<alloc::vec::Vec<MPETargeterConstraintT>>,
+  pub TOTAL_DELTA_V: f64,
+  pub SOLVED_AT: u64,
+}
+impl Default for MPETargeterSolutionT {
+  fn default() -> Self {
+    Self {
+      SOLVER: None,
+      DYNAMICS: None,
+      CONVERGED: false,
+      ITERATIONS: 0,
+      RESIDUAL_RMS: 0.0,
+      RESIDUALS: None,
+      CONSTRAINTS: None,
+      TOTAL_DELTA_V: 0.0,
+      SOLVED_AT: 0,
+    }
+  }
+}
+impl MPETargeterSolutionT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<MPETargeterSolution<'b>> {
+    let SOLVER = self.SOLVER.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DYNAMICS = self.DYNAMICS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONVERGED = self.CONVERGED;
+    let ITERATIONS = self.ITERATIONS;
+    let RESIDUAL_RMS = self.RESIDUAL_RMS;
+    let RESIDUALS = self.RESIDUALS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let CONSTRAINTS = self.CONSTRAINTS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TOTAL_DELTA_V = self.TOTAL_DELTA_V;
+    let SOLVED_AT = self.SOLVED_AT;
+    MPETargeterSolution::create(_fbb, &MPETargeterSolutionArgs{
+      SOLVER,
+      DYNAMICS,
+      CONVERGED,
+      ITERATIONS,
+      RESIDUAL_RMS,
+      RESIDUALS,
+      CONSTRAINTS,
+      TOTAL_DELTA_V,
+      SOLVED_AT,
+    })
+  }
+}
 pub enum MPEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,6 +677,7 @@ impl<'a> MPE<'a> {
   pub const VT_MEAN_ANOMALY: ::flatbuffers::VOffsetT = 18;
   pub const VT_BSTAR: ::flatbuffers::VOffsetT = 20;
   pub const VT_MEAN_ELEMENT_THEORY: ::flatbuffers::VOffsetT = 22;
+  pub const VT_TARGETER: ::flatbuffers::VOffsetT = 24;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -50,6 +697,7 @@ impl<'a> MPE<'a> {
     builder.add_ECCENTRICITY(args.ECCENTRICITY);
     builder.add_MEAN_MOTION(args.MEAN_MOTION);
     builder.add_EPOCH(args.EPOCH);
+    if let Some(x) = args.TARGETER { builder.add_TARGETER(x); }
     if let Some(x) = args.ENTITY_ID { builder.add_ENTITY_ID(x); }
     builder.add_MEAN_ELEMENT_THEORY(args.MEAN_ELEMENT_THEORY);
     builder.finish()
@@ -68,6 +716,9 @@ impl<'a> MPE<'a> {
     let MEAN_ANOMALY = self.MEAN_ANOMALY();
     let BSTAR = self.BSTAR();
     let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY();
+    let TARGETER = self.TARGETER().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     MPET {
       ENTITY_ID,
       EPOCH,
@@ -79,6 +730,7 @@ impl<'a> MPE<'a> {
       MEAN_ANOMALY,
       BSTAR,
       MEAN_ELEMENT_THEORY,
+      TARGETER,
     }
   }
 
@@ -162,6 +814,15 @@ impl<'a> MPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<meanElementSource>(MPE::VT_MEAN_ELEMENT_THEORY, Some(meanElementSource::SGP4)).unwrap()}
   }
+  /// Targeter solution + convergence metadata when this element set is the
+  /// product of maneuver targeting (absent for ordinary element sets)
+  #[inline]
+  pub fn TARGETER(&self) -> Option<MPETargeterSolution<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<MPETargeterSolution>>(MPE::VT_TARGETER, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for MPE<'_> {
@@ -180,6 +841,7 @@ impl ::flatbuffers::Verifiable for MPE<'_> {
      .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
      .visit_field::<f64>("BSTAR", Self::VT_BSTAR, false)?
      .visit_field::<meanElementSource>("MEAN_ELEMENT_THEORY", Self::VT_MEAN_ELEMENT_THEORY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<MPETargeterSolution>>("TARGETER", Self::VT_TARGETER, false)?
      .finish();
     Ok(())
   }
@@ -195,6 +857,7 @@ pub struct MPEArgs<'a> {
     pub MEAN_ANOMALY: f64,
     pub BSTAR: f64,
     pub MEAN_ELEMENT_THEORY: meanElementSource,
+    pub TARGETER: Option<::flatbuffers::WIPOffset<MPETargeterSolution<'a>>>,
 }
 impl<'a> Default for MPEArgs<'a> {
   #[inline]
@@ -210,6 +873,7 @@ impl<'a> Default for MPEArgs<'a> {
       MEAN_ANOMALY: 0.0,
       BSTAR: 0.0,
       MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
+      TARGETER: None,
     }
   }
 }
@@ -260,6 +924,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> MPEBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<meanElementSource>(MPE::VT_MEAN_ELEMENT_THEORY, MEAN_ELEMENT_THEORY, meanElementSource::SGP4);
   }
   #[inline]
+  pub fn add_TARGETER(&mut self, TARGETER: ::flatbuffers::WIPOffset<MPETargeterSolution<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<MPETargeterSolution>>(MPE::VT_TARGETER, TARGETER);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> MPEBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     MPEBuilder {
@@ -287,6 +955,7 @@ impl ::core::fmt::Debug for MPE<'_> {
       ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
       ds.field("BSTAR", &self.BSTAR());
       ds.field("MEAN_ELEMENT_THEORY", &self.MEAN_ELEMENT_THEORY());
+      ds.field("TARGETER", &self.TARGETER());
       ds.finish()
   }
 }
@@ -303,6 +972,7 @@ pub struct MPET {
   pub MEAN_ANOMALY: f64,
   pub BSTAR: f64,
   pub MEAN_ELEMENT_THEORY: meanElementSource,
+  pub TARGETER: Option<alloc::boxed::Box<MPETargeterSolutionT>>,
 }
 impl Default for MPET {
   fn default() -> Self {
@@ -317,6 +987,7 @@ impl Default for MPET {
       MEAN_ANOMALY: 0.0,
       BSTAR: 0.0,
       MEAN_ELEMENT_THEORY: meanElementSource::SGP4,
+      TARGETER: None,
     }
   }
 }
@@ -337,6 +1008,9 @@ impl MPET {
     let MEAN_ANOMALY = self.MEAN_ANOMALY;
     let BSTAR = self.BSTAR;
     let MEAN_ELEMENT_THEORY = self.MEAN_ELEMENT_THEORY;
+    let TARGETER = self.TARGETER.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     MPE::create(_fbb, &MPEArgs{
       ENTITY_ID,
       EPOCH,
@@ -348,6 +1022,7 @@ impl MPET {
       MEAN_ANOMALY,
       BSTAR,
       MEAN_ELEMENT_THEORY,
+      TARGETER,
     })
   }
 }

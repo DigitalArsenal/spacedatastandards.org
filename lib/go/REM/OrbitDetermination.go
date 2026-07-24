@@ -321,8 +321,174 @@ func (rcv *OrbitDetermination) OdResiduals() []byte {
 }
 
 /// Residuals from the orbit determination.
+/// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+func (rcv *OrbitDetermination) OD_ESTIMATOR() estimatorCategory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return estimatorCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdEstimator() estimatorCategory {
+	return rcv.OD_ESTIMATOR()
+}
+
+/// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+func (rcv *OrbitDetermination) MutateOD_ESTIMATOR(n estimatorCategory) bool {
+	return rcv._tab.MutateInt8Slot(38, int8(n))
+}
+
+func (rcv *OrbitDetermination) MutateOdEstimator(n estimatorCategory) bool {
+	return rcv.MutateOD_ESTIMATOR(n)
+}
+
+/// RMS of post-fit residuals for this solution.
+func (rcv *OrbitDetermination) OD_RESIDUAL_RMS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OrbitDetermination) OdResidualRms() float64 {
+	return rcv.OD_RESIDUAL_RMS()
+}
+
+/// RMS of post-fit residuals for this solution.
+func (rcv *OrbitDetermination) MutateOD_RESIDUAL_RMS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdResidualRms(n float64) bool {
+	return rcv.MutateOD_RESIDUAL_RMS(n)
+}
+
+/// Post-fit residual series, one entry per accepted observation.
+func (rcv *OrbitDetermination) OD_RESIDUALS_SERIES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdResidualsSeries(j int) float64 {
+	return rcv.OD_RESIDUALS_SERIES(j)
+}
+
+func (rcv *OrbitDetermination) OD_RESIDUALS_SERIESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdResidualsSeriesLength() int {
+	return rcv.OD_RESIDUALS_SERIESLength()
+}
+
+/// Post-fit residual series, one entry per accepted observation.
+func (rcv *OrbitDetermination) MutateOD_RESIDUALS_SERIES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *OrbitDetermination) MutateOdResidualsSeries(j int, n float64) bool {
+	return rcv.MutateOD_RESIDUALS_SERIES(j, n)
+}
+
+/// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+/// since 1970-01-01T00:00:00 UTC].
+func (rcv *OrbitDetermination) OD_RESIDUAL_EPOCHS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdResidualEpochs(j int) float64 {
+	return rcv.OD_RESIDUAL_EPOCHS(j)
+}
+
+func (rcv *OrbitDetermination) OD_RESIDUAL_EPOCHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *OrbitDetermination) OdResidualEpochsLength() int {
+	return rcv.OD_RESIDUAL_EPOCHSLength()
+}
+
+/// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+/// since 1970-01-01T00:00:00 UTC].
+func (rcv *OrbitDetermination) MutateOD_RESIDUAL_EPOCHS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *OrbitDetermination) MutateOdResidualEpochs(j int, n float64) bool {
+	return rcv.MutateOD_RESIDUAL_EPOCHS(j, n)
+}
+
+/// OD_ID of the batch baseline solution a filtered solution derives from and
+/// is compared against (empty for batch solutions).
+func (rcv *OrbitDetermination) OD_BATCH_BASELINE_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *OrbitDetermination) OdBatchBaselineId() []byte {
+	return rcv.OD_BATCH_BASELINE_ID()
+}
+
+/// OD_ID of the batch baseline solution a filtered solution derives from and
+/// is compared against (empty for batch solutions).
+/// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+/// comparison.
+func (rcv *OrbitDetermination) OD_BATCH_BASELINE_RMS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *OrbitDetermination) OdBatchBaselineRms() float64 {
+	return rcv.OD_BATCH_BASELINE_RMS()
+}
+
+/// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+/// comparison.
+func (rcv *OrbitDetermination) MutateOD_BATCH_BASELINE_RMS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *OrbitDetermination) MutateOdBatchBaselineRms(n float64) bool {
+	return rcv.MutateOD_BATCH_BASELINE_RMS(n)
+}
+
 func OrbitDeterminationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(23)
 }
 func OrbitDeterminationAddOD_ID(builder *flatbuffers.Builder, OD_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OD_ID), 0)
@@ -437,6 +603,54 @@ func OrbitDeterminationAddOD_RESIDUALS(builder *flatbuffers.Builder, OD_RESIDUAL
 }
 func OrbitDeterminationAddOdResiduals(builder *flatbuffers.Builder, OD_RESIDUALS flatbuffers.UOffsetT) {
 	OrbitDeterminationAddOD_RESIDUALS(builder, OD_RESIDUALS)
+}
+func OrbitDeterminationAddOD_ESTIMATOR(builder *flatbuffers.Builder, OD_ESTIMATOR estimatorCategory) {
+	builder.PrependInt8Slot(17, int8(OD_ESTIMATOR), 0)
+}
+func OrbitDeterminationAddOdEstimator(builder *flatbuffers.Builder, OD_ESTIMATOR estimatorCategory) {
+	OrbitDeterminationAddOD_ESTIMATOR(builder, OD_ESTIMATOR)
+}
+func OrbitDeterminationAddOD_RESIDUAL_RMS(builder *flatbuffers.Builder, OD_RESIDUAL_RMS float64) {
+	builder.PrependFloat64Slot(18, OD_RESIDUAL_RMS, 0.0)
+}
+func OrbitDeterminationAddOdResidualRms(builder *flatbuffers.Builder, OD_RESIDUAL_RMS float64) {
+	OrbitDeterminationAddOD_RESIDUAL_RMS(builder, OD_RESIDUAL_RMS)
+}
+func OrbitDeterminationAddOD_RESIDUALS_SERIES(builder *flatbuffers.Builder, OD_RESIDUALS_SERIES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(OD_RESIDUALS_SERIES), 0)
+}
+func OrbitDeterminationAddOdResidualsSeries(builder *flatbuffers.Builder, OD_RESIDUALS_SERIES flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_RESIDUALS_SERIES(builder, OD_RESIDUALS_SERIES)
+}
+func OrbitDeterminationStartOD_RESIDUALS_SERIESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OrbitDeterminationStartOdResidualsSeriesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartOD_RESIDUALS_SERIESVector(builder, numElems)
+}
+func OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder *flatbuffers.Builder, OD_RESIDUAL_EPOCHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(OD_RESIDUAL_EPOCHS), 0)
+}
+func OrbitDeterminationAddOdResidualEpochs(builder *flatbuffers.Builder, OD_RESIDUAL_EPOCHS flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_RESIDUAL_EPOCHS(builder, OD_RESIDUAL_EPOCHS)
+}
+func OrbitDeterminationStartOD_RESIDUAL_EPOCHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OrbitDeterminationStartOdResidualEpochsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return OrbitDeterminationStartOD_RESIDUAL_EPOCHSVector(builder, numElems)
+}
+func OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder *flatbuffers.Builder, OD_BATCH_BASELINE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(OD_BATCH_BASELINE_ID), 0)
+}
+func OrbitDeterminationAddOdBatchBaselineId(builder *flatbuffers.Builder, OD_BATCH_BASELINE_ID flatbuffers.UOffsetT) {
+	OrbitDeterminationAddOD_BATCH_BASELINE_ID(builder, OD_BATCH_BASELINE_ID)
+}
+func OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder *flatbuffers.Builder, OD_BATCH_BASELINE_RMS float64) {
+	builder.PrependFloat64Slot(22, OD_BATCH_BASELINE_RMS, 0.0)
+}
+func OrbitDeterminationAddOdBatchBaselineRms(builder *flatbuffers.Builder, OD_BATCH_BASELINE_RMS float64) {
+	OrbitDeterminationAddOD_BATCH_BASELINE_RMS(builder, OD_BATCH_BASELINE_RMS)
 }
 func OrbitDeterminationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

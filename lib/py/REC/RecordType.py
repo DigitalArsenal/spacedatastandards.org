@@ -184,6 +184,12 @@ class RecordType(object):
     APP = 178
     CMT = 179
     SCX = 180
+    CVG = 181
+    PKB = 182
+    RPT = 183
+    STO = 184
+    SUB = 185
+    WKS = 186
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -729,4 +735,22 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SCX:
         import SCX
         return SCX.SCXT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CVG:
+        import CVG
+        return CVG.CVGT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PKB:
+        import PKB
+        return PKB.PKBT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.RPT:
+        import RPT
+        return RPT.RPTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.STO:
+        import STO
+        return STO.STOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SUB:
+        import SUB
+        return SUB.SUBT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.WKS:
+        import WKS
+        return WKS.WKST.InitFromBuf(table.Bytes, table.Pos)
     return None

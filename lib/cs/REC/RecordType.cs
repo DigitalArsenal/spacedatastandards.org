@@ -185,6 +185,12 @@ public enum RecordType : byte
   APP = 178,
   CMT = 179,
   SCX = 180,
+  CVG = 181,
+  PKB = 182,
+  RPT = 183,
+  STO = 184,
+  SUB = 185,
+  WKS = 186,
 };
 
 public class RecordTypeUnion {
@@ -557,6 +563,18 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromCMT(CMTT _cmt) { return new RecordTypeUnion{ Type = RecordType.CMT, Value = _cmt }; }
   public SCXT AsSCX() { return this.As<SCXT>(); }
   public static RecordTypeUnion FromSCX(SCXT _scx) { return new RecordTypeUnion{ Type = RecordType.SCX, Value = _scx }; }
+  public CVGT AsCVG() { return this.As<CVGT>(); }
+  public static RecordTypeUnion FromCVG(CVGT _cvg) { return new RecordTypeUnion{ Type = RecordType.CVG, Value = _cvg }; }
+  public PKBT AsPKB() { return this.As<PKBT>(); }
+  public static RecordTypeUnion FromPKB(PKBT _pkb) { return new RecordTypeUnion{ Type = RecordType.PKB, Value = _pkb }; }
+  public RPTT AsRPT() { return this.As<RPTT>(); }
+  public static RecordTypeUnion FromRPT(RPTT _rpt) { return new RecordTypeUnion{ Type = RecordType.RPT, Value = _rpt }; }
+  public STOT AsSTO() { return this.As<STOT>(); }
+  public static RecordTypeUnion FromSTO(STOT _sto) { return new RecordTypeUnion{ Type = RecordType.STO, Value = _sto }; }
+  public SUBT AsSUB() { return this.As<SUBT>(); }
+  public static RecordTypeUnion FromSUB(SUBT _sub) { return new RecordTypeUnion{ Type = RecordType.SUB, Value = _sub }; }
+  public WKST AsWKS() { return this.As<WKST>(); }
+  public static RecordTypeUnion FromWKS(WKST _wks) { return new RecordTypeUnion{ Type = RecordType.WKS, Value = _wks }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -741,6 +759,12 @@ public class RecordTypeUnion {
       case RecordType.APP: return APP.Pack(builder, _o.AsAPP()).Value;
       case RecordType.CMT: return CMT.Pack(builder, _o.AsCMT()).Value;
       case RecordType.SCX: return SCX.Pack(builder, _o.AsSCX()).Value;
+      case RecordType.CVG: return CVG.Pack(builder, _o.AsCVG()).Value;
+      case RecordType.PKB: return PKB.Pack(builder, _o.AsPKB()).Value;
+      case RecordType.RPT: return RPT.Pack(builder, _o.AsRPT()).Value;
+      case RecordType.STO: return STO.Pack(builder, _o.AsSTO()).Value;
+      case RecordType.SUB: return SUB.Pack(builder, _o.AsSUB()).Value;
+      case RecordType.WKS: return WKS.Pack(builder, _o.AsWKS()).Value;
     }
   }
 }
@@ -1293,6 +1317,24 @@ static public class RecordTypeVerify
         break;
       case RecordType.SCX:
         result = SCXVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CVG:
+        result = CVGVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PKB:
+        result = PKBVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.RPT:
+        result = RPTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.STO:
+        result = STOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SUB:
+        result = SUBVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.WKS:
+        result = WKSVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

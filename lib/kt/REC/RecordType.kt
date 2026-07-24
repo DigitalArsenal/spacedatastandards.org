@@ -184,5 +184,11 @@ class RecordType private constructor() {
         const val APP: UByte = 178u
         const val CMT: UByte = 179u
         const val SCX: UByte = 180u
+        const val CVG: UByte = 181u
+        const val PKB: UByte = 182u
+        const val RPT: UByte = 183u
+        const val STO: UByte = 184u
+        const val SUB: UByte = 185u
+        const val WKS: UByte = 186u
     }
 }

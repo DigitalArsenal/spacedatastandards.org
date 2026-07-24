@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "RPT": {
+      "type": "object",
+      "description": "Verifiable Report descriptor",
+      "properties": {
+        "REPORT_ID": {
+          "type": "string",
+          "description": "Stable report identifier",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TEMPLATE_ID": {
+          "type": "string",
+          "description": "Identifier of the report template used to render",
+          "x-flatbuffer-type": "string"
+        },
+        "TEMPLATE_VERSION": {
+          "type": "string",
+          "description": "Version of the report template",
+          "x-flatbuffer-type": "string"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Display title of the report",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "FlatSQL source query the report renders from",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DATA_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 over the canonical source-query result stream, so the data the\nreport was rendered from can be re-derived and verified",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CONTENT_HASH": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "SHA-256 of the rendered report artifact",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CONTENT_TYPE": {
+          "type": "string",
+          "description": "MIME type of the rendered artifact, e.g. \"application/pdf\", \"text/html\",\n\"text/csv\"",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_CID": {
+          "type": "string",
+          "description": "Optional IPFS CID of the rendered artifact",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix ms the report was generated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "GENERATOR_MODULE_ID": {
+          "type": "string",
+          "description": "`$PLG.PLUGIN_ID` of the generator module",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATOR_MODULE_VERSION": {
+          "type": "string",
+          "description": "Version of the generator module",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATOR_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the `$EPM` that generated the report",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature by the creator `$EPM` over the report descriptor",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "REPORT_ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/RPT",
+  "x-flatbuffer-root-type": "RPT",
+  "x-flatbuffer-file-identifier": "$RPT"
+}

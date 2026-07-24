@@ -1,5 +1,5 @@
-// Hash: f0476b745543339265ed83f5cd25fed98290187d6a156b3e90dc1de793bf0f6d
-// Version: 2.1.1
+// Hash: 868bfe4c8ac76ed3ff10850c86260230a6c311626596ae10fbf3581d665763d4
+// Version: 2.1.2
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PPE/main.fbs";
@@ -300,6 +300,21 @@ table Maneuver {
   MAN_COMMENT: [string];
 }
 
+/// Estimator class that produced an orbit-determination solution
+/// (batch-vs-filter provenance).
+enum estimatorCategory : byte {
+  /// Estimator class not specified
+  Unknown,
+  /// Batch least-squares fit
+  BatchLeastSquares,
+  /// Extended Kalman filter
+  ExtendedKalman,
+  /// Unscented Kalman filter
+  UnscentedKalman,
+  /// Smoothed sequential solution
+  Smoother
+}
+
 table OrbitDetermination {
   /// Unique identifier for the orbit determination.
   OD_ID: string;
@@ -335,6 +350,21 @@ table OrbitDetermination {
   OD_APRIORI_DATA: string;
   /// Residuals from the orbit determination.
   OD_RESIDUALS: string;
+  /// Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  OD_ESTIMATOR: estimatorCategory;
+  /// RMS of post-fit residuals for this solution.
+  OD_RESIDUAL_RMS: double;
+  /// Post-fit residual series, one entry per accepted observation.
+  OD_RESIDUALS_SERIES: [double];
+  /// Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  /// since 1970-01-01T00:00:00 UTC].
+  OD_RESIDUAL_EPOCHS: [double];
+  /// OD_ID of the batch baseline solution a filtered solution derives from and
+  /// is compared against (empty for batch solutions).
+  OD_BATCH_BASELINE_ID: string;
+  /// Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  /// comparison.
+  OD_BATCH_BASELINE_RMS: double;
 }
 
 table UserDefinedParameters {

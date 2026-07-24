@@ -35,6 +35,28 @@ public enum trajectoryType: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 }
 
 
+///  Estimator class that produced an orbit-determination solution
+///  (batch-vs-filter provenance).
+public enum estimatorCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Estimator class not specified
+  case unknown = 0
+  ///  Batch least-squares fit
+  case batchleastsquares = 1
+  ///  Extended Kalman filter
+  case extendedkalman = 2
+  ///  Unscented Kalman filter
+  case unscentedkalman = 3
+  ///  Smoothed sequential solution
+  case smoother = 4
+
+  public static var max: estimatorCategory { return .smoother }
+  public static var min: estimatorCategory { return .unknown }
+}
+
+
 public struct Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -1122,6 +1144,12 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     static let OD_EST_PARAMETERS: VOffset = 32
     static let OD_APRIORI_DATA: VOffset = 34
     static let OD_RESIDUALS: VOffset = 36
+    static let OD_ESTIMATOR: VOffset = 38
+    static let OD_RESIDUAL_RMS: VOffset = 40
+    static let OD_RESIDUALS_SERIES: VOffset = 42
+    static let OD_RESIDUAL_EPOCHS: VOffset = 44
+    static let OD_BATCH_BASELINE_ID: VOffset = 46
+    static let OD_BATCH_BASELINE_RMS: VOffset = 48
   }
 
   ///  Unique identifier for the orbit determination.
@@ -1171,7 +1199,25 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
   ///  Residuals from the orbit determination.
   public var OD_RESIDUALS: String? { let o = _accessor.offset(VT.OD_RESIDUALS); return o == 0 ? nil : _accessor.string(at: o) }
   public var OD_RESIDUALSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_RESIDUALS) }
-  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  ///  Estimator class provenance: batch fit vs sequential filter (EKF/UKF).
+  public var OD_ESTIMATOR: estimatorCategory { let o = _accessor.offset(VT.OD_ESTIMATOR); return o == 0 ? .unknown : estimatorCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unknown }
+  ///  RMS of post-fit residuals for this solution.
+  public var OD_RESIDUAL_RMS: Double { let o = _accessor.offset(VT.OD_RESIDUAL_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Post-fit residual series, one entry per accepted observation.
+  public var OD_RESIDUALS_SERIES: FlatbufferVector<Double> { return _accessor.vector(at: VT.OD_RESIDUALS_SERIES, byteSize: 8) }
+  public func withUnsafePointerToOdResidualsSeries<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OD_RESIDUALS_SERIES, body: body) }
+  ///  Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds
+  ///  since 1970-01-01T00:00:00 UTC].
+  public var OD_RESIDUAL_EPOCHS: FlatbufferVector<Double> { return _accessor.vector(at: VT.OD_RESIDUAL_EPOCHS, byteSize: 8) }
+  public func withUnsafePointerToOdResidualEpochs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.OD_RESIDUAL_EPOCHS, body: body) }
+  ///  OD_ID of the batch baseline solution a filtered solution derives from and
+  ///  is compared against (empty for batch solutions).
+  public var OD_BATCH_BASELINE_ID: String? { let o = _accessor.offset(VT.OD_BATCH_BASELINE_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OD_BATCH_BASELINE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OD_BATCH_BASELINE_ID) }
+  ///  Post-fit residual RMS of the batch baseline, for direct batch-vs-filter
+  ///  comparison.
+  public var OD_BATCH_BASELINE_RMS: Double { let o = _accessor.offset(VT.OD_BATCH_BASELINE_RMS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startOrbitDetermination(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(OD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ID, at: VT.OD_ID) }
   public static func add(OD_PREV_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_PREV_ID, at: VT.OD_PREV_ID) }
   public static func add(OD_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_ALGORITHM, at: VT.OD_ALGORITHM) }
@@ -1189,6 +1235,12 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
   public static func addVectorOf(OD_EST_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_EST_PARAMETERS, at: VT.OD_EST_PARAMETERS) }
   public static func add(OD_APRIORI_DATA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_APRIORI_DATA, at: VT.OD_APRIORI_DATA) }
   public static func add(OD_RESIDUALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUALS, at: VT.OD_RESIDUALS) }
+  public static func add(OD_ESTIMATOR: estimatorCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_ESTIMATOR.rawValue, def: 0, at: VT.OD_ESTIMATOR) }
+  public static func add(OD_RESIDUAL_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_RESIDUAL_RMS, def: 0.0, at: VT.OD_RESIDUAL_RMS) }
+  public static func addVectorOf(OD_RESIDUALS_SERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUALS_SERIES, at: VT.OD_RESIDUALS_SERIES) }
+  public static func addVectorOf(OD_RESIDUAL_EPOCHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_RESIDUAL_EPOCHS, at: VT.OD_RESIDUAL_EPOCHS) }
+  public static func add(OD_BATCH_BASELINE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OD_BATCH_BASELINE_ID, at: VT.OD_BATCH_BASELINE_ID) }
+  public static func add(OD_BATCH_BASELINE_RMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OD_BATCH_BASELINE_RMS, def: 0.0, at: VT.OD_BATCH_BASELINE_RMS) }
   public static func endOrbitDetermination(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOrbitDetermination(
     _ fbb: inout FlatBufferBuilder,
@@ -1208,7 +1260,13 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     OD_CONVERGENCE_CRITERIAOffset OD_CONVERGENCE_CRITERIA: Offset = Offset(),
     OD_EST_PARAMETERSVectorOffset OD_EST_PARAMETERS: Offset = Offset(),
     OD_APRIORI_DATAOffset OD_APRIORI_DATA: Offset = Offset(),
-    OD_RESIDUALSOffset OD_RESIDUALS: Offset = Offset()
+    OD_RESIDUALSOffset OD_RESIDUALS: Offset = Offset(),
+    OD_ESTIMATOR: estimatorCategory = .unknown,
+    OD_RESIDUAL_RMS: Double = 0.0,
+    OD_RESIDUALS_SERIESVectorOffset OD_RESIDUALS_SERIES: Offset = Offset(),
+    OD_RESIDUAL_EPOCHSVectorOffset OD_RESIDUAL_EPOCHS: Offset = Offset(),
+    OD_BATCH_BASELINE_IDOffset OD_BATCH_BASELINE_ID: Offset = Offset(),
+    OD_BATCH_BASELINE_RMS: Double = 0.0
   ) -> Offset {
     let __start = OrbitDetermination.startOrbitDetermination(&fbb)
     OrbitDetermination.add(OD_ID: OD_ID, &fbb)
@@ -1228,6 +1286,12 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     OrbitDetermination.addVectorOf(OD_EST_PARAMETERS: OD_EST_PARAMETERS, &fbb)
     OrbitDetermination.add(OD_APRIORI_DATA: OD_APRIORI_DATA, &fbb)
     OrbitDetermination.add(OD_RESIDUALS: OD_RESIDUALS, &fbb)
+    OrbitDetermination.add(OD_ESTIMATOR: OD_ESTIMATOR, &fbb)
+    OrbitDetermination.add(OD_RESIDUAL_RMS: OD_RESIDUAL_RMS, &fbb)
+    OrbitDetermination.addVectorOf(OD_RESIDUALS_SERIES: OD_RESIDUALS_SERIES, &fbb)
+    OrbitDetermination.addVectorOf(OD_RESIDUAL_EPOCHS: OD_RESIDUAL_EPOCHS, &fbb)
+    OrbitDetermination.add(OD_BATCH_BASELINE_ID: OD_BATCH_BASELINE_ID, &fbb)
+    OrbitDetermination.add(OD_BATCH_BASELINE_RMS: OD_BATCH_BASELINE_RMS, &fbb)
     return OrbitDetermination.endOrbitDetermination(&fbb, start: __start)
   }
 
@@ -1250,6 +1314,12 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.OD_EST_PARAMETERS, fieldName: "OD_EST_PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.OD_APRIORI_DATA, fieldName: "OD_APRIORI_DATA", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.OD_RESIDUALS, fieldName: "OD_RESIDUALS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_ESTIMATOR, fieldName: "OD_ESTIMATOR", required: false, type: estimatorCategory.self)
+    try _v.visit(field: VT.OD_RESIDUAL_RMS, fieldName: "OD_RESIDUAL_RMS", required: false, type: Double.self)
+    try _v.visit(field: VT.OD_RESIDUALS_SERIES, fieldName: "OD_RESIDUALS_SERIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OD_RESIDUAL_EPOCHS, fieldName: "OD_RESIDUAL_EPOCHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.OD_BATCH_BASELINE_ID, fieldName: "OD_BATCH_BASELINE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OD_BATCH_BASELINE_RMS, fieldName: "OD_BATCH_BASELINE_RMS", required: false, type: Double.self)
     _v.finish()
   }
 }
