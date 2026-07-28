@@ -27,6 +27,7 @@ export * as CMS from './CMS/main.js';
 export * as CMT from './CMT/main.js';
 export * as COM from './COM/main.js';
 export * as COT from './COT/main.js';
+export * as CPS from './CPS/main.js';
 export * as CRD from './CRD/main.js';
 export * as CRM from './CRM/main.js';
 export * as CSM from './CSM/main.js';

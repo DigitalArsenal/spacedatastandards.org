@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.162.0+1784922672186",
+  version: "1.163.0+1785282767831",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -830,6 +830,121 @@ file_identifier "$OBD";`,
         "./dist/ESL/ESL.cpp.tar.gz",
         "./dist/ESL/ESL.kt.tar.gz",
         "./dist/ESL/ESL.ts.tar.gz"
+      ]
+    },
+    CPS: {
+      IDL: `// Hash: 2b19612ed61a2351c8f38cdc31d767a70a59d34826b72b9891b2fa57c27ff65a
+// Version: 1.162.0
+// -----------------------------------END_HEADER
+/// Compression algorithm applied to a fixed-length packet stream.
+/// Append new values only; never reorder or reuse existing values. Decoders
+/// must reject an algorithm value they do not recognize rather than guessing.
+enum packetCompressionAlgorithm : ubyte {
+  /// CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length
+  /// spacecraft housekeeping telemetry.
+  POCKET_PLUS = 0
+}
+
+/// Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly
+/// compressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output
+/// is a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which
+/// projects to an $SPP record. This record carries a compressed packet stream
+/// only; it is not a general-purpose compression envelope for SDS records.
+table CPS {
+  /// Compression algorithm used to produce COMPRESSED_DATA.
+  ALGORITHM:packetCompressionAlgorithm = POCKET_PLUS;
+
+  /// Uncompressed length in bytes of EVERY packet in the stream. POCKET+ is
+  /// defined only for a fixed packet length; a length change starts a new
+  /// stream and therefore a new $CPS record.
+  PACKET_LENGTH:ushort;
+
+  /// Number of uncompressed packets encoded in COMPRESSED_DATA. NORMATIVE:
+  /// this is the only output-size bound a decoder has. The compressed
+  /// bitstream alone does not bound the decoded size, and a compression-ratio
+  /// guess is unsafe in both directions. Decoders MUST reject a record whose
+  /// PACKET_COUNT is zero, and MUST allocate exactly
+  /// PACKET_COUNT * PACKET_LENGTH bytes of output.
+  PACKET_COUNT:uint32;
+
+  /// POCKET+ robustness level: the window depth in PACKETS, range 0-7. This is
+  /// a window depth, NOT a retransmission interval \u2014 it does not by itself
+  /// configure a decoder. See MASK_UPDATE_PERIOD / MASK_SEND_PERIOD /
+  /// REFERENCE_PERIOD, which are three independent periods.
+  ROBUSTNESS:ubyte;
+
+  /// POCKET+ mask update period (pt), in packets. Independent of ROBUSTNESS,
+  /// MASK_SEND_PERIOD, and REFERENCE_PERIOD.
+  MASK_UPDATE_PERIOD:ushort;
+
+  /// POCKET+ mask send period (ft), in packets \u2014 how often the change mask is
+  /// transmitted. Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and
+  /// REFERENCE_PERIOD.
+  MASK_SEND_PERIOD:ushort;
+
+  /// POCKET+ reference packet retransmission period (rt), in packets.
+  /// Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.
+  REFERENCE_PERIOD:ushort;
+
+  /// True only when the FIRST packet of COMPRESSED_DATA carries both rt=1 and
+  /// ft=1, i.e. it transmits a full reference packet and a full mask, so this
+  /// record decodes standalone without its predecessor. There is no
+  /// synchronization flag in the POCKET+ bitstream itself: this field is the
+  /// producer's assertion about the first packet, and defaults to false.
+  SELF_SYNCHRONIZING:bool = false;
+
+  /// Producer-defined stream identity. Records sharing STREAM_ID decode in
+  /// SEGMENT_INDEX order as one continuous POCKET+ stream. A missing segment
+  /// poisons every subsequent segment up to the next segment with
+  /// SELF_SYNCHRONIZING = true.
+  STREAM_ID:string;
+
+  /// Zero-based index of this segment within STREAM_ID.
+  SEGMENT_INDEX:uint32;
+
+  /// CCSDS Application Process Identifier of the packets, when known.
+  APID:ushort;
+
+  /// Spacecraft identifier of the packets, when known.
+  SPACECRAFT_ID:ushort;
+
+  /// UTC epoch of the first packet in the segment, ISO 8601.
+  START_EPOCH:string;
+
+  /// UTC epoch of the last packet in the segment, ISO 8601.
+  STOP_EPOCH:string;
+
+  /// The POCKET+ compressed bitstream per CCSDS 124.0-B-1. Each compressed
+  /// packet is individually octet-aligned; padding is per PACKET, never per
+  /// stream. Bit-concatenating packets diverges from the reference
+  /// implementation and MUST NOT be done.
+  COMPRESSED_DATA:[ubyte] (required);
+
+  /// PACKET_LENGTH * PACKET_COUNT. Carried so a decoder can check its decoded
+  /// output length without recomputing the product from a corrupt header.
+  UNCOMPRESSED_LENGTH:uint32;
+
+  /// CRC-32 (IEEE 802.3) over the concatenated decompressed packets.
+  UNCOMPRESSED_CRC32:uint32;
+}
+
+root_type CPS;
+file_identifier "$CPS";`,
+      files: [
+        "./dist/CPS/CPS.sw.tar.gz",
+        "./dist/CPS/CPS.py.tar.gz",
+        "./dist/CPS/CPS.lob.tar.gz",
+        "./dist/CPS/CPS.go.tar.gz",
+        "./dist/CPS/CPS.js.tar.gz",
+        "./dist/CPS/CPS.dart.tar.gz",
+        "./dist/CPS/CPS.cs.tar.gz",
+        "./dist/CPS/CPS.java.tar.gz",
+        "./dist/CPS/CPS.rs.tar.gz",
+        "./dist/CPS/CPS.php.tar.gz",
+        "./dist/CPS/CPS.json.tar.gz",
+        "./dist/CPS/CPS.cpp.tar.gz",
+        "./dist/CPS/CPS.kt.tar.gz",
+        "./dist/CPS/CPS.ts.tar.gz"
       ]
     },
     OPM: {
@@ -3496,7 +3611,7 @@ file_identifier "$NUM";`,
       ]
     },
     REC: {
-      IDL: '// Hash: e529e4ce8b1b8480e2293c52ee9c351b1c9655a6469816915e905f54ea20a08a\n// Version: 1.44.39\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: 9cd6d7904861fe75dae9211b2d943a4597af66668f3f3e2d8b9ad9c4f487bd98\n// Version: 1.44.40\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -13641,6 +13756,123 @@ var json_default = {
         }
       },
       $ref: "#/definitions/ESL"
+    },
+    CPS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        packetCompressionAlgorithm: {
+          type: "string",
+          enum: [
+            "POCKET_PLUS"
+          ]
+        },
+        CPS: {
+          type: "object",
+          description: "Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly\ncompressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output\nis a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which\nprojects to an $SPP record. This record carries a compressed packet stream\nonly; it is not a general-purpose compression envelope for SDS records.",
+          properties: {
+            ALGORITHM: {
+              $ref: "#/definitions/packetCompressionAlgorithm",
+              description: "Compression algorithm used to produce COMPRESSED_DATA."
+            },
+            PACKET_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Uncompressed length in bytes of EVERY packet in the stream. POCKET+ is\ndefined only for a fixed packet length; a length change starts a new\nstream and therefore a new $CPS record."
+            },
+            PACKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of uncompressed packets encoded in COMPRESSED_DATA. NORMATIVE:\nthis is the only output-size bound a decoder has. The compressed\nbitstream alone does not bound the decoded size, and a compression-ratio\nguess is unsafe in both directions. Decoders MUST reject a record whose\nPACKET_COUNT is zero, and MUST allocate exactly\nPACKET_COUNT * PACKET_LENGTH bytes of output."
+            },
+            ROBUSTNESS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "POCKET+ robustness level: the window depth in PACKETS, range 0-7. This is\na window depth, NOT a retransmission interval \u2014 it does not by itself\nconfigure a decoder. See MASK_UPDATE_PERIOD / MASK_SEND_PERIOD /\nREFERENCE_PERIOD, which are three independent periods."
+            },
+            MASK_UPDATE_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ mask update period (pt), in packets. Independent of ROBUSTNESS,\nMASK_SEND_PERIOD, and REFERENCE_PERIOD."
+            },
+            MASK_SEND_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ mask send period (ft), in packets \u2014 how often the change mask is\ntransmitted. Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and\nREFERENCE_PERIOD."
+            },
+            REFERENCE_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ reference packet retransmission period (rt), in packets.\nIndependent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD."
+            },
+            SELF_SYNCHRONIZING: {
+              type: "boolean",
+              description: "True only when the FIRST packet of COMPRESSED_DATA carries both rt=1 and\nft=1, i.e. it transmits a full reference packet and a full mask, so this\nrecord decodes standalone without its predecessor. There is no\nsynchronization flag in the POCKET+ bitstream itself: this field is the\nproducer's assertion about the first packet, and defaults to false."
+            },
+            STREAM_ID: {
+              type: "string",
+              description: "Producer-defined stream identity. Records sharing STREAM_ID decode in\nSEGMENT_INDEX order as one continuous POCKET+ stream. A missing segment\npoisons every subsequent segment up to the next segment with\nSELF_SYNCHRONIZING = true."
+            },
+            SEGMENT_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index of this segment within STREAM_ID."
+            },
+            APID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "CCSDS Application Process Identifier of the packets, when known."
+            },
+            SPACECRAFT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Spacecraft identifier of the packets, when known."
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the first packet in the segment, ISO 8601."
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the last packet in the segment, ISO 8601."
+            },
+            COMPRESSED_DATA: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "The POCKET+ compressed bitstream per CCSDS 124.0-B-1. Each compressed\npacket is individually octet-aligned; padding is per PACKET, never per\nstream. Bit-concatenating packets diverges from the reference\nimplementation and MUST NOT be done."
+            },
+            UNCOMPRESSED_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "PACKET_LENGTH * PACKET_COUNT. Carried so a decoder can check its decoded\noutput length without recomputing the product from a corrupt header."
+            },
+            UNCOMPRESSED_CRC32: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CRC-32 (IEEE 802.3) over the concatenated decompressed packets."
+            }
+          },
+          required: [
+            "COMPRESSED_DATA"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CPS"
     },
     OPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -67873,6 +68105,160 @@ var fbjson_default = {
       $ref: "#/definitions/ESL",
       "x-flatbuffer-root-type": "ESL",
       "x-flatbuffer-file-identifier": "$ESL"
+    },
+    CPS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        packetCompressionAlgorithm: {
+          type: "string",
+          enum: [
+            "POCKET_PLUS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            POCKET_PLUS: {
+              value: 0,
+              description: "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+            }
+          }
+        },
+        CPS: {
+          type: "object",
+          description: "Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly\ncompressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output\nis a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which\nprojects to an $SPP record. This record carries a compressed packet stream\nonly; it is not a general-purpose compression envelope for SDS records.",
+          properties: {
+            ALGORITHM: {
+              $ref: "#/definitions/packetCompressionAlgorithm",
+              description: "Compression algorithm used to produce COMPRESSED_DATA.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                POCKET_PLUS: {
+                  value: 0,
+                  description: "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+                }
+              },
+              "x-flatbuffer-default": "POCKET_PLUS"
+            },
+            PACKET_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Uncompressed length in bytes of EVERY packet in the stream. POCKET+ is\ndefined only for a fixed packet length; a length change starts a new\nstream and therefore a new $CPS record.",
+              "x-flatbuffer-type": "ushort"
+            },
+            PACKET_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of uncompressed packets encoded in COMPRESSED_DATA. NORMATIVE:\nthis is the only output-size bound a decoder has. The compressed\nbitstream alone does not bound the decoded size, and a compression-ratio\nguess is unsafe in both directions. Decoders MUST reject a record whose\nPACKET_COUNT is zero, and MUST allocate exactly\nPACKET_COUNT * PACKET_LENGTH bytes of output.",
+              "x-flatbuffer-type": "uint32"
+            },
+            ROBUSTNESS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "POCKET+ robustness level: the window depth in PACKETS, range 0-7. This is\na window depth, NOT a retransmission interval \u2014 it does not by itself\nconfigure a decoder. See MASK_UPDATE_PERIOD / MASK_SEND_PERIOD /\nREFERENCE_PERIOD, which are three independent periods.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MASK_UPDATE_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ mask update period (pt), in packets. Independent of ROBUSTNESS,\nMASK_SEND_PERIOD, and REFERENCE_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            MASK_SEND_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ mask send period (ft), in packets \u2014 how often the change mask is\ntransmitted. Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and\nREFERENCE_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            REFERENCE_PERIOD: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "POCKET+ reference packet retransmission period (rt), in packets.\nIndependent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            SELF_SYNCHRONIZING: {
+              type: "boolean",
+              description: "True only when the FIRST packet of COMPRESSED_DATA carries both rt=1 and\nft=1, i.e. it transmits a full reference packet and a full mask, so this\nrecord decodes standalone without its predecessor. There is no\nsynchronization flag in the POCKET+ bitstream itself: this field is the\nproducer's assertion about the first packet, and defaults to false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            STREAM_ID: {
+              type: "string",
+              description: "Producer-defined stream identity. Records sharing STREAM_ID decode in\nSEGMENT_INDEX order as one continuous POCKET+ stream. A missing segment\npoisons every subsequent segment up to the next segment with\nSELF_SYNCHRONIZING = true.",
+              "x-flatbuffer-type": "string"
+            },
+            SEGMENT_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based index of this segment within STREAM_ID.",
+              "x-flatbuffer-type": "uint32"
+            },
+            APID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "CCSDS Application Process Identifier of the packets, when known.",
+              "x-flatbuffer-type": "ushort"
+            },
+            SPACECRAFT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Spacecraft identifier of the packets, when known.",
+              "x-flatbuffer-type": "ushort"
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the first packet in the segment, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the last packet in the segment, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            COMPRESSED_DATA: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "The POCKET+ compressed bitstream per CCSDS 124.0-B-1. Each compressed\npacket is individually octet-aligned; padding is per PACKET, never per\nstream. Bit-concatenating packets diverges from the reference\nimplementation and MUST NOT be done.",
+              "x-flatbuffer-type": "[ubyte]",
+              "x-flatbuffer-required": true
+            },
+            UNCOMPRESSED_LENGTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "PACKET_LENGTH * PACKET_COUNT. Carried so a decoder can check its decoded\noutput length without recomputing the product from a corrupt header.",
+              "x-flatbuffer-type": "uint32"
+            },
+            UNCOMPRESSED_CRC32: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "CRC-32 (IEEE 802.3) over the concatenated decompressed packets.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "COMPRESSED_DATA"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CPS",
+      "x-flatbuffer-root-type": "CPS",
+      "x-flatbuffer-file-identifier": "$CPS"
     },
     OPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -135460,6 +135846,21 @@ var fbjson_default = {
             }
           }
         },
+        packetCompressionAlgorithm: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "must reject an algorithm value they do not recognize rather than guessing.",
+          enum: [
+            0
+          ],
+          "x-flatbuffer-enum-values": {
+            POCKET_PLUS: {
+              value: 0,
+              description: "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+            }
+          }
+        },
         CoordFrame: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -153396,6 +153797,114 @@ var fbjson_default = {
             }
           },
           description: "Cursor on Target Event"
+        },
+        CPS: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            ALGORITHM: {
+              $ref: "#/definitions/packetCompressionAlgorithm",
+              description: "Compression algorithm used to produce COMPRESSED_DATA.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "POCKET_PLUS",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                POCKET_PLUS: {
+                  value: 0,
+                  description: "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+                }
+              }
+            },
+            PACKET_LENGTH: {
+              type: "integer",
+              description: "stream and therefore a new $CPS record.",
+              "x-flatbuffer-type": "ushort"
+            },
+            PACKET_COUNT: {
+              type: "integer",
+              description: "PACKET_COUNT * PACKET_LENGTH bytes of output.",
+              "x-flatbuffer-type": "uint32"
+            },
+            ROBUSTNESS: {
+              type: "integer",
+              description: "REFERENCE_PERIOD, which are three independent periods.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MASK_UPDATE_PERIOD: {
+              type: "integer",
+              description: "MASK_SEND_PERIOD, and REFERENCE_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            MASK_SEND_PERIOD: {
+              type: "integer",
+              description: "REFERENCE_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            REFERENCE_PERIOD: {
+              type: "integer",
+              description: "Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.",
+              "x-flatbuffer-type": "ushort"
+            },
+            SELF_SYNCHRONIZING: {
+              type: "boolean",
+              description: "producer's assertion about the first packet, and defaults to false.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            STREAM_ID: {
+              type: "string",
+              description: "SELF_SYNCHRONIZING = true.",
+              "x-flatbuffer-type": "string"
+            },
+            SEGMENT_INDEX: {
+              type: "integer",
+              description: "Zero-based index of this segment within STREAM_ID.",
+              "x-flatbuffer-type": "uint32"
+            },
+            APID: {
+              type: "integer",
+              description: "CCSDS Application Process Identifier of the packets, when known.",
+              "x-flatbuffer-type": "ushort"
+            },
+            SPACECRAFT_ID: {
+              type: "integer",
+              description: "Spacecraft identifier of the packets, when known.",
+              "x-flatbuffer-type": "ushort"
+            },
+            START_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the first packet in the segment, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            STOP_EPOCH: {
+              type: "string",
+              description: "UTC epoch of the last packet in the segment, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            COMPRESSED_DATA: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "implementation and MUST NOT be done.",
+              "x-flatbuffer-type": "[ubyte]",
+              "x-flatbuffer-required": true
+            },
+            UNCOMPRESSED_LENGTH: {
+              type: "integer",
+              description: "output length without recomputing the product from a corrupt header.",
+              "x-flatbuffer-type": "uint32"
+            },
+            UNCOMPRESSED_CRC32: {
+              type: "integer",
+              description: "CRC-32 (IEEE 802.3) over the concatenated decompressed packets.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          description: "Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly compressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output is a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which projects to an $SPP record. This record carries a compressed packet stream only; it is not a general-purpose compression envelope for SDS records.",
+          required: [
+            "COMPRESSED_DATA"
+          ]
         },
         CRD: {
           type: "object",

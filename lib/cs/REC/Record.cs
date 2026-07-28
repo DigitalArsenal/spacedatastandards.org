@@ -206,6 +206,7 @@ public struct Record : IFlatbufferObject
   public STO valueAsSTO() { return value<STO>().Value; }
   public SUB valueAsSUB() { return value<SUB>().Value; }
   public WKS valueAsWKS() { return value<WKS>().Value; }
+  public CPS valueAsCPS() { return value<CPS>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -801,6 +802,9 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.WKS:
         _o.value.Value = this.value<WKS>().HasValue ? this.value<WKS>().Value.UnPack() : null;
+        break;
+      case RecordType.CPS:
+        _o.value.Value = this.value<CPS>().HasValue ? this.value<CPS>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

@@ -7614,6 +7614,21 @@
         }
       }
     },
+    "packetCompressionAlgorithm": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "must reject an algorithm value they do not recognize rather than guessing.",
+      "enum": [
+        0
+      ],
+      "x-flatbuffer-enum-values": {
+        "POCKET_PLUS": {
+          "value": 0,
+          "description": "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+        }
+      }
+    },
     "CoordFrame": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -25550,6 +25565,114 @@
         }
       },
       "description": "Cursor on Target Event"
+    },
+    "CPS": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ALGORITHM": {
+          "$ref": "#/definitions/packetCompressionAlgorithm",
+          "description": "Compression algorithm used to produce COMPRESSED_DATA.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "POCKET_PLUS",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "POCKET_PLUS": {
+              "value": 0,
+              "description": "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+            }
+          }
+        },
+        "PACKET_LENGTH": {
+          "type": "integer",
+          "description": "stream and therefore a new $CPS record.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "PACKET_COUNT": {
+          "type": "integer",
+          "description": "PACKET_COUNT * PACKET_LENGTH bytes of output.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROBUSTNESS": {
+          "type": "integer",
+          "description": "REFERENCE_PERIOD, which are three independent periods.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MASK_UPDATE_PERIOD": {
+          "type": "integer",
+          "description": "MASK_SEND_PERIOD, and REFERENCE_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "MASK_SEND_PERIOD": {
+          "type": "integer",
+          "description": "REFERENCE_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "REFERENCE_PERIOD": {
+          "type": "integer",
+          "description": "Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SELF_SYNCHRONIZING": {
+          "type": "boolean",
+          "description": "producer's assertion about the first packet, and defaults to false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "description": "SELF_SYNCHRONIZING = true.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENT_INDEX": {
+          "type": "integer",
+          "description": "Zero-based index of this segment within STREAM_ID.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "APID": {
+          "type": "integer",
+          "description": "CCSDS Application Process Identifier of the packets, when known.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SPACECRAFT_ID": {
+          "type": "integer",
+          "description": "Spacecraft identifier of the packets, when known.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "UTC epoch of the first packet in the segment, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "UTC epoch of the last packet in the segment, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPRESSED_DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "implementation and MUST NOT be done.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "UNCOMPRESSED_LENGTH": {
+          "type": "integer",
+          "description": "output length without recomputing the product from a corrupt header.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNCOMPRESSED_CRC32": {
+          "type": "integer",
+          "description": "CRC-32 (IEEE 802.3) over the concatenated decompressed packets.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "description": "Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly compressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output is a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which projects to an $SPP record. This record carries a compressed packet stream only; it is not a general-purpose compression envelope for SDS records.",
+      "required": [
+        "COMPRESSED_DATA"
+      ]
     },
     "CRD": {
       "type": "object",

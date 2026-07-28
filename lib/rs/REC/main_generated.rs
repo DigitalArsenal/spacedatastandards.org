@@ -187,6 +187,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -321,10 +322,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 186;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 187;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 187] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 188] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -512,6 +513,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 187] = [
   RecordType::STO,
   RecordType::SUB,
   RecordType::WKS,
+  RecordType::CPS,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -706,9 +708,10 @@ impl RecordType {
   pub const STO: Self = Self(184);
   pub const SUB: Self = Self(185);
   pub const WKS: Self = Self(186);
+  pub const CPS: Self = Self(187);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 186;
+  pub const ENUM_MAX: u8 = 187;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -897,6 +900,7 @@ impl RecordType {
     Self::STO,
     Self::SUB,
     Self::WKS,
+    Self::CPS,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1088,6 +1092,7 @@ impl RecordType {
       Self::STO => Some("STO"),
       Self::SUB => Some("SUB"),
       Self::WKS => Some("WKS"),
+      Self::CPS => Some("CPS"),
       _ => None,
     }
   }
@@ -1335,6 +1340,7 @@ pub enum RecordTypeT {
   STO(alloc::boxed::Box<STOT>),
   SUB(alloc::boxed::Box<SUBT>),
   WKS(alloc::boxed::Box<WKST>),
+  CPS(alloc::boxed::Box<CPST>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1531,6 +1537,7 @@ impl RecordTypeT {
       Self::STO(_) => RecordType::STO,
       Self::SUB(_) => RecordType::SUB,
       Self::WKS(_) => RecordType::WKS,
+      Self::CPS(_) => RecordType::CPS,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1722,6 +1729,7 @@ impl RecordTypeT {
       Self::STO(v) => Some(v.pack(fbb).as_union_value()),
       Self::SUB(v) => Some(v.pack(fbb).as_union_value()),
       Self::WKS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CPS(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5630,6 +5638,27 @@ impl RecordTypeT {
   pub fn as_wks_mut(&mut self) -> Option<&mut WKST> {
     if let Self::WKS(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CPST, setting the union to NONE.
+  pub fn take_cps(&mut self) -> Option<alloc::boxed::Box<CPST>> {
+    if let Self::CPS(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CPS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CPST.
+  pub fn as_cps(&self) -> Option<&CPST> {
+    if let Self::CPS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CPST.
+  pub fn as_cps_mut(&mut self) -> Option<&mut CPST> {
+    if let Self::CPS(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6599,6 +6628,11 @@ impl<'a> Record<'a> {
       RecordType::WKS => RecordTypeT::WKS(alloc::boxed::Box::new(
         self.value_as_wks()
             .expect("Invalid union table, expected `RecordType::WKS`.")
+            .unpack()
+      )),
+      RecordType::CPS => RecordTypeT::CPS(alloc::boxed::Box::new(
+        self.value_as_cps()
+            .expect("Invalid union table, expected `RecordType::CPS`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -9425,6 +9459,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_cps(&self) -> Option<CPS<'a>> {
+    if self.value_type() == RecordType::CPS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CPS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -9621,6 +9670,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::STO => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<STO>>("RecordType::STO", pos),
           RecordType::SUB => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SUB>>("RecordType::SUB", pos),
           RecordType::WKS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<WKS>>("RecordType::WKS", pos),
+          RecordType::CPS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CPS>>("RecordType::CPS", pos),
           _ => Ok(()),
         }
      })?
@@ -10979,6 +11029,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::WKS => {
           if let Some(x) = self.value_as_wks() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CPS => {
+          if let Some(x) = self.value_as_cps() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

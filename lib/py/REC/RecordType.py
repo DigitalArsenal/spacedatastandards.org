@@ -190,6 +190,7 @@ class RecordType(object):
     STO = 184
     SUB = 185
     WKS = 186
+    CPS = 187
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -753,4 +754,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.WKS:
         import WKS
         return WKS.WKST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CPS:
+        import CPS
+        return CPS.CPST.InitFromBuf(table.Bytes, table.Pos)
     return None

@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "packetCompressionAlgorithm": {
+      "type": "string",
+      "enum": [
+        "POCKET_PLUS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "POCKET_PLUS": {
+          "value": 0,
+          "description": "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+        }
+      }
+    },
+    "CPS": {
+      "type": "object",
+      "description": "Compressed Packet Stream \u2014 a run of fixed-length CCSDS packets losslessly\ncompressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output\nis a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which\nprojects to an $SPP record. This record carries a compressed packet stream\nonly; it is not a general-purpose compression envelope for SDS records.",
+      "properties": {
+        "ALGORITHM": {
+          "$ref": "#/definitions/packetCompressionAlgorithm",
+          "description": "Compression algorithm used to produce COMPRESSED_DATA.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "POCKET_PLUS": {
+              "value": 0,
+              "description": "CCSDS 124.0-B-1 POCKET+ \u2014 lossless compression of fixed-length spacecraft housekeeping telemetry."
+            }
+          },
+          "x-flatbuffer-default": "POCKET_PLUS"
+        },
+        "PACKET_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Uncompressed length in bytes of EVERY packet in the stream. POCKET+ is\ndefined only for a fixed packet length; a length change starts a new\nstream and therefore a new $CPS record.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "PACKET_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of uncompressed packets encoded in COMPRESSED_DATA. NORMATIVE:\nthis is the only output-size bound a decoder has. The compressed\nbitstream alone does not bound the decoded size, and a compression-ratio\nguess is unsafe in both directions. Decoders MUST reject a record whose\nPACKET_COUNT is zero, and MUST allocate exactly\nPACKET_COUNT * PACKET_LENGTH bytes of output.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROBUSTNESS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "POCKET+ robustness level: the window depth in PACKETS, range 0-7. This is\na window depth, NOT a retransmission interval \u2014 it does not by itself\nconfigure a decoder. See MASK_UPDATE_PERIOD / MASK_SEND_PERIOD /\nREFERENCE_PERIOD, which are three independent periods.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MASK_UPDATE_PERIOD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "POCKET+ mask update period (pt), in packets. Independent of ROBUSTNESS,\nMASK_SEND_PERIOD, and REFERENCE_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "MASK_SEND_PERIOD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "POCKET+ mask send period (ft), in packets \u2014 how often the change mask is\ntransmitted. Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and\nREFERENCE_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "REFERENCE_PERIOD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "POCKET+ reference packet retransmission period (rt), in packets.\nIndependent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SELF_SYNCHRONIZING": {
+          "type": "boolean",
+          "description": "True only when the FIRST packet of COMPRESSED_DATA carries both rt=1 and\nft=1, i.e. it transmits a full reference packet and a full mask, so this\nrecord decodes standalone without its predecessor. There is no\nsynchronization flag in the POCKET+ bitstream itself: this field is the\nproducer's assertion about the first packet, and defaults to false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "description": "Producer-defined stream identity. Records sharing STREAM_ID decode in\nSEGMENT_INDEX order as one continuous POCKET+ stream. A missing segment\npoisons every subsequent segment up to the next segment with\nSELF_SYNCHRONIZING = true.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENT_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Zero-based index of this segment within STREAM_ID.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "APID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "CCSDS Application Process Identifier of the packets, when known.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "SPACECRAFT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Spacecraft identifier of the packets, when known.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "UTC epoch of the first packet in the segment, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "UTC epoch of the last packet in the segment, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPRESSED_DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The POCKET+ compressed bitstream per CCSDS 124.0-B-1. Each compressed\npacket is individually octet-aligned; padding is per PACKET, never per\nstream. Bit-concatenating packets diverges from the reference\nimplementation and MUST NOT be done.",
+          "x-flatbuffer-type": "[ubyte]",
+          "x-flatbuffer-required": true
+        },
+        "UNCOMPRESSED_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "PACKET_LENGTH * PACKET_COUNT. Carried so a decoder can check its decoded\noutput length without recomputing the product from a corrupt header.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNCOMPRESSED_CRC32": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "CRC-32 (IEEE 802.3) over the concatenated decompressed packets.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "COMPRESSED_DATA"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CPS",
+  "x-flatbuffer-root-type": "CPS",
+  "x-flatbuffer-file-identifier": "$CPS"
+}

@@ -190,6 +190,7 @@ class RecordType
     const STO = 184;
     const SUB = 185;
     const WKS = 186;
+    const CPS = 187;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -379,6 +380,7 @@ class RecordType
         RecordType::STO=>"STO",
         RecordType::SUB=>"SUB",
         RecordType::WKS=>"WKS",
+        RecordType::CPS=>"CPS",
     );
 
     public static function Name($e)

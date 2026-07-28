@@ -1,0 +1,97 @@
+// Hash: 2b19612ed61a2351c8f38cdc31d767a70a59d34826b72b9891b2fa57c27ff65a
+// Version: 1.162.0
+// -----------------------------------END_HEADER
+/// Compression algorithm applied to a fixed-length packet stream.
+/// Append new values only; never reorder or reuse existing values. Decoders
+/// must reject an algorithm value they do not recognize rather than guessing.
+enum packetCompressionAlgorithm : ubyte {
+  /// CCSDS 124.0-B-1 POCKET+ — lossless compression of fixed-length
+  /// spacecraft housekeeping telemetry.
+  POCKET_PLUS = 0
+}
+
+/// Compressed Packet Stream — a run of fixed-length CCSDS packets losslessly
+/// compressed as one stateful stream (CCSDS 124.0-B-1 POCKET+). Decoded output
+/// is a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which
+/// projects to an $SPP record. This record carries a compressed packet stream
+/// only; it is not a general-purpose compression envelope for SDS records.
+table CPS {
+  /// Compression algorithm used to produce COMPRESSED_DATA.
+  ALGORITHM:packetCompressionAlgorithm = POCKET_PLUS;
+
+  /// Uncompressed length in bytes of EVERY packet in the stream. POCKET+ is
+  /// defined only for a fixed packet length; a length change starts a new
+  /// stream and therefore a new $CPS record.
+  PACKET_LENGTH:ushort;
+
+  /// Number of uncompressed packets encoded in COMPRESSED_DATA. NORMATIVE:
+  /// this is the only output-size bound a decoder has. The compressed
+  /// bitstream alone does not bound the decoded size, and a compression-ratio
+  /// guess is unsafe in both directions. Decoders MUST reject a record whose
+  /// PACKET_COUNT is zero, and MUST allocate exactly
+  /// PACKET_COUNT * PACKET_LENGTH bytes of output.
+  PACKET_COUNT:uint32;
+
+  /// POCKET+ robustness level: the window depth in PACKETS, range 0-7. This is
+  /// a window depth, NOT a retransmission interval — it does not by itself
+  /// configure a decoder. See MASK_UPDATE_PERIOD / MASK_SEND_PERIOD /
+  /// REFERENCE_PERIOD, which are three independent periods.
+  ROBUSTNESS:ubyte;
+
+  /// POCKET+ mask update period (pt), in packets. Independent of ROBUSTNESS,
+  /// MASK_SEND_PERIOD, and REFERENCE_PERIOD.
+  MASK_UPDATE_PERIOD:ushort;
+
+  /// POCKET+ mask send period (ft), in packets — how often the change mask is
+  /// transmitted. Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and
+  /// REFERENCE_PERIOD.
+  MASK_SEND_PERIOD:ushort;
+
+  /// POCKET+ reference packet retransmission period (rt), in packets.
+  /// Independent of ROBUSTNESS, MASK_UPDATE_PERIOD, and MASK_SEND_PERIOD.
+  REFERENCE_PERIOD:ushort;
+
+  /// True only when the FIRST packet of COMPRESSED_DATA carries both rt=1 and
+  /// ft=1, i.e. it transmits a full reference packet and a full mask, so this
+  /// record decodes standalone without its predecessor. There is no
+  /// synchronization flag in the POCKET+ bitstream itself: this field is the
+  /// producer's assertion about the first packet, and defaults to false.
+  SELF_SYNCHRONIZING:bool = false;
+
+  /// Producer-defined stream identity. Records sharing STREAM_ID decode in
+  /// SEGMENT_INDEX order as one continuous POCKET+ stream. A missing segment
+  /// poisons every subsequent segment up to the next segment with
+  /// SELF_SYNCHRONIZING = true.
+  STREAM_ID:string;
+
+  /// Zero-based index of this segment within STREAM_ID.
+  SEGMENT_INDEX:uint32;
+
+  /// CCSDS Application Process Identifier of the packets, when known.
+  APID:ushort;
+
+  /// Spacecraft identifier of the packets, when known.
+  SPACECRAFT_ID:ushort;
+
+  /// UTC epoch of the first packet in the segment, ISO 8601.
+  START_EPOCH:string;
+
+  /// UTC epoch of the last packet in the segment, ISO 8601.
+  STOP_EPOCH:string;
+
+  /// The POCKET+ compressed bitstream per CCSDS 124.0-B-1. Each compressed
+  /// packet is individually octet-aligned; padding is per PACKET, never per
+  /// stream. Bit-concatenating packets diverges from the reference
+  /// implementation and MUST NOT be done.
+  COMPRESSED_DATA:[ubyte] (required);
+
+  /// PACKET_LENGTH * PACKET_COUNT. Carried so a decoder can check its decoded
+  /// output length without recomputing the product from a corrupt header.
+  UNCOMPRESSED_LENGTH:uint32;
+
+  /// CRC-32 (IEEE 802.3) over the concatenated decompressed packets.
+  UNCOMPRESSED_CRC32:uint32;
+}
+
+root_type CPS;
+file_identifier "$CPS";

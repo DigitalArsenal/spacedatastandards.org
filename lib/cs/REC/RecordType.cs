@@ -191,6 +191,7 @@ public enum RecordType : byte
   STO = 184,
   SUB = 185,
   WKS = 186,
+  CPS = 187,
 };
 
 public class RecordTypeUnion {
@@ -575,6 +576,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSUB(SUBT _sub) { return new RecordTypeUnion{ Type = RecordType.SUB, Value = _sub }; }
   public WKST AsWKS() { return this.As<WKST>(); }
   public static RecordTypeUnion FromWKS(WKST _wks) { return new RecordTypeUnion{ Type = RecordType.WKS, Value = _wks }; }
+  public CPST AsCPS() { return this.As<CPST>(); }
+  public static RecordTypeUnion FromCPS(CPST _cps) { return new RecordTypeUnion{ Type = RecordType.CPS, Value = _cps }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -765,6 +768,7 @@ public class RecordTypeUnion {
       case RecordType.STO: return STO.Pack(builder, _o.AsSTO()).Value;
       case RecordType.SUB: return SUB.Pack(builder, _o.AsSUB()).Value;
       case RecordType.WKS: return WKS.Pack(builder, _o.AsWKS()).Value;
+      case RecordType.CPS: return CPS.Pack(builder, _o.AsCPS()).Value;
     }
   }
 }
@@ -1335,6 +1339,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.WKS:
         result = WKSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CPS:
+        result = CPSVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
