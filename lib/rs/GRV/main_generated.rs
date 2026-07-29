@@ -106,10 +106,10 @@ impl ::flatbuffers::SimpleToVerifyInSlice for GravityModelType {}
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_GRAVITY_MODEL_NAME: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_GRAVITY_MODEL_NAME: i8 = 8;
+pub const ENUM_MAX_GRAVITY_MODEL_NAME: i8 = 17;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_GRAVITY_MODEL_NAME: [GravityModelName; 9] = [
+pub const ENUM_VALUES_GRAVITY_MODEL_NAME: [GravityModelName; 18] = [
   GravityModelName::WGS84,
   GravityModelName::EGM96,
   GravityModelName::EGM2008,
@@ -119,6 +119,15 @@ pub const ENUM_VALUES_GRAVITY_MODEL_NAME: [GravityModelName; 9] = [
   GravityModelName::GOCO06S,
   GravityModelName::XGM2019E,
   GravityModelName::CUSTOM_MODEL,
+  GravityModelName::GGM02C,
+  GravityModelName::GGM02S,
+  GravityModelName::GOCO05C,
+  GravityModelName::GLGM3150,
+  GravityModelName::LPE200,
+  GravityModelName::GGGRX1200,
+  GravityModelName::JGMRO120D,
+  GravityModelName::JGMESS160A,
+  GravityModelName::SHGJ180U,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -135,9 +144,18 @@ impl GravityModelName {
   pub const GOCO06S: Self = Self(6);
   pub const XGM2019E: Self = Self(7);
   pub const CUSTOM_MODEL: Self = Self(8);
+  pub const GGM02C: Self = Self(9);
+  pub const GGM02S: Self = Self(10);
+  pub const GOCO05C: Self = Self(11);
+  pub const GLGM3150: Self = Self(12);
+  pub const LPE200: Self = Self(13);
+  pub const GGGRX1200: Self = Self(14);
+  pub const JGMRO120D: Self = Self(15);
+  pub const JGMESS160A: Self = Self(16);
+  pub const SHGJ180U: Self = Self(17);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_MAX: i8 = 17;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::WGS84,
     Self::EGM96,
@@ -148,6 +166,15 @@ impl GravityModelName {
     Self::GOCO06S,
     Self::XGM2019E,
     Self::CUSTOM_MODEL,
+    Self::GGM02C,
+    Self::GGM02S,
+    Self::GOCO05C,
+    Self::GLGM3150,
+    Self::LPE200,
+    Self::GGGRX1200,
+    Self::JGMRO120D,
+    Self::JGMESS160A,
+    Self::SHGJ180U,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -161,6 +188,15 @@ impl GravityModelName {
       Self::GOCO06S => Some("GOCO06S"),
       Self::XGM2019E => Some("XGM2019E"),
       Self::CUSTOM_MODEL => Some("CUSTOM_MODEL"),
+      Self::GGM02C => Some("GGM02C"),
+      Self::GGM02S => Some("GGM02S"),
+      Self::GOCO05C => Some("GOCO05C"),
+      Self::GLGM3150 => Some("GLGM3150"),
+      Self::LPE200 => Some("LPE200"),
+      Self::GGGRX1200 => Some("GGGRX1200"),
+      Self::JGMRO120D => Some("JGMRO120D"),
+      Self::JGMESS160A => Some("JGMESS160A"),
+      Self::SHGJ180U => Some("SHGJ180U"),
       _ => None,
     }
   }

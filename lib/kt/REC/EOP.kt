@@ -115,6 +115,75 @@ class EOP : Table() {
             val o = __offset(22)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Published series this row was taken from. Rows from different series are
+     * NOT interchangeable at the microarcsecond level and must not be merged
+     * without recording which series each row came from.
+     */
+    val series : UByte
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Precession-nutation model the celestial pole offsets are expressed
+     * against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+     * (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+     * them correctly without knowing which model produced them.
+     */
+    val iauConvention : UByte
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * 1-sigma uncertainty in x Pole Wander, radians.
+     */
+    val xPoleWanderUncertaintyRadians : Float
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * 1-sigma uncertainty in y Pole Wander, radians.
+     */
+    val yPoleWanderUncertaintyRadians : Float
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+     */
+    val xCelestialPoleOffsetUncertaintyRadians : Float
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+     */
+    val yCelestialPoleOffsetUncertaintyRadians : Float
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * 1-sigma uncertainty in UT1 minus UTC, seconds.
+     */
+    val ut1MinusUtcUncertaintySeconds : Float
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
+    /**
+     * 1-sigma uncertainty in the Length of Day correction, seconds.
+     */
+    val lengthOfDayUncertaintySeconds : Float
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEOP(_bb: ByteBuffer): EOP = getRootAsEOP(_bb, EOP())
@@ -123,8 +192,14 @@ class EOP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOP")
-        fun createEOP(builder: FlatBufferBuilder, dateOffset: Int, mjd: UInt, xPoleWanderRadians: Float, yPoleWanderRadians: Float, xCelestialPoleOffsetRadians: Float, yCelestialPoleOffsetRadians: Float, ut1MinusUtcSeconds: Float, taiMinusUtcSeconds: UShort, lengthOfDayCorrectionSeconds: Float, dataType: Byte) : Int {
-            builder.startTable(10)
+        fun createEOP(builder: FlatBufferBuilder, dateOffset: Int, mjd: UInt, xPoleWanderRadians: Float, yPoleWanderRadians: Float, xCelestialPoleOffsetRadians: Float, yCelestialPoleOffsetRadians: Float, ut1MinusUtcSeconds: Float, taiMinusUtcSeconds: UShort, lengthOfDayCorrectionSeconds: Float, dataType: Byte, series: UByte, iauConvention: UByte, xPoleWanderUncertaintyRadians: Float, yPoleWanderUncertaintyRadians: Float, xCelestialPoleOffsetUncertaintyRadians: Float, yCelestialPoleOffsetUncertaintyRadians: Float, ut1MinusUtcUncertaintySeconds: Float, lengthOfDayUncertaintySeconds: Float) : Int {
+            builder.startTable(18)
+            addLENGTHOFDAYUNCERTAINTYSECONDS(builder, lengthOfDayUncertaintySeconds)
+            addUT1MINUSUTCUNCERTAINTYSECONDS(builder, ut1MinusUtcUncertaintySeconds)
+            addYCELESTIALPOLEOFFSETUNCERTAINTYRADIANS(builder, yCelestialPoleOffsetUncertaintyRadians)
+            addXCELESTIALPOLEOFFSETUNCERTAINTYRADIANS(builder, xCelestialPoleOffsetUncertaintyRadians)
+            addYPOLEWANDERUNCERTAINTYRADIANS(builder, yPoleWanderUncertaintyRadians)
+            addXPOLEWANDERUNCERTAINTYRADIANS(builder, xPoleWanderUncertaintyRadians)
             addLENGTHOFDAYCORRECTIONSECONDS(builder, lengthOfDayCorrectionSeconds)
             addUT1MINUSUTCSECONDS(builder, ut1MinusUtcSeconds)
             addYCELESTIALPOLEOFFSETRADIANS(builder, yCelestialPoleOffsetRadians)
@@ -134,10 +209,12 @@ class EOP : Table() {
             addMJD(builder, mjd)
             addDATE(builder, dateOffset)
             addTAIMINUSUTCSECONDS(builder, taiMinusUtcSeconds)
+            addIAUCONVENTION(builder, iauConvention)
+            addSERIES(builder, series)
             addDATATYPE(builder, dataType)
             return endEOP(builder)
         }
-        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(10)
+        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addDATE(builder: FlatBufferBuilder, date: Int) = builder.addOffset(0, date, 0)
         fun addMJD(builder: FlatBufferBuilder, mjd: UInt) = builder.addInt(1, mjd.toInt(), 0)
         fun addXPOLEWANDERRADIANS(builder: FlatBufferBuilder, xPoleWanderRadians: Float) = builder.addFloat(2, xPoleWanderRadians, 0.0)
@@ -148,6 +225,14 @@ class EOP : Table() {
         fun addTAIMINUSUTCSECONDS(builder: FlatBufferBuilder, taiMinusUtcSeconds: UShort) = builder.addShort(7, taiMinusUtcSeconds.toShort(), 0)
         fun addLENGTHOFDAYCORRECTIONSECONDS(builder: FlatBufferBuilder, lengthOfDayCorrectionSeconds: Float) = builder.addFloat(8, lengthOfDayCorrectionSeconds, 0.0)
         fun addDATATYPE(builder: FlatBufferBuilder, dataType: Byte) = builder.addByte(9, dataType, 0)
+        fun addSERIES(builder: FlatBufferBuilder, series: UByte) = builder.addByte(10, series.toByte(), 0)
+        fun addIAUCONVENTION(builder: FlatBufferBuilder, iauConvention: UByte) = builder.addByte(11, iauConvention.toByte(), 0)
+        fun addXPOLEWANDERUNCERTAINTYRADIANS(builder: FlatBufferBuilder, xPoleWanderUncertaintyRadians: Float) = builder.addFloat(12, xPoleWanderUncertaintyRadians, 0.0)
+        fun addYPOLEWANDERUNCERTAINTYRADIANS(builder: FlatBufferBuilder, yPoleWanderUncertaintyRadians: Float) = builder.addFloat(13, yPoleWanderUncertaintyRadians, 0.0)
+        fun addXCELESTIALPOLEOFFSETUNCERTAINTYRADIANS(builder: FlatBufferBuilder, xCelestialPoleOffsetUncertaintyRadians: Float) = builder.addFloat(14, xCelestialPoleOffsetUncertaintyRadians, 0.0)
+        fun addYCELESTIALPOLEOFFSETUNCERTAINTYRADIANS(builder: FlatBufferBuilder, yCelestialPoleOffsetUncertaintyRadians: Float) = builder.addFloat(15, yCelestialPoleOffsetUncertaintyRadians, 0.0)
+        fun addUT1MINUSUTCUNCERTAINTYSECONDS(builder: FlatBufferBuilder, ut1MinusUtcUncertaintySeconds: Float) = builder.addFloat(16, ut1MinusUtcUncertaintySeconds, 0.0)
+        fun addLENGTHOFDAYUNCERTAINTYSECONDS(builder: FlatBufferBuilder, lengthOfDayUncertaintySeconds: Float) = builder.addFloat(17, lengthOfDayUncertaintySeconds, 0.0)
         fun endEOP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

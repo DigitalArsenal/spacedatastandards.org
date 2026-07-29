@@ -761,8 +761,38 @@ class TDM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
         return o == 0
 
+    # SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+    # table covering this segment, ordered by START_TIME and non-overlapping.
+    # Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+    # cannot reconstruct the observables. Absent for unramped tracking, which
+    # leaves the record exactly CCSDS-conformant.
+    # TDM
+    def TRANSMIT_RAMPS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from TDMTransmitRamp import TDMTransmitRamp
+            obj = TDMTransmitRamp()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # TDM
+    def TRANSMIT_RAMPSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def TRANSMIT_RAMPSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        return o == 0
+
 def TDMStart(builder):
-    builder.StartObject(61)
+    builder.StartObject(62)
 
 def Start(builder):
     TDMStart(builder)
@@ -1321,6 +1351,24 @@ def TDMCreateCLOCK_DRIFTVector(builder, data):
 def CreateCLOCK_DRIFTVector(builder, data):
     TDMCreateCLOCK_DRIFTVector(builder, data)
 
+def TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS):
+    builder.PrependUOffsetTRelativeSlot(61, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_RAMPS), 0)
+
+def AddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS):
+    TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
+
+def TDMStartTRANSMIT_RAMPSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTRANSMIT_RAMPSVector(builder, numElems):
+    return TDMStartTRANSMIT_RAMPSVector(builder, numElems)
+
+def TDMCreateTRANSMIT_RAMPSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTRANSMIT_RAMPSVector(builder, data):
+    TDMCreateTRANSMIT_RAMPSVector(builder, data)
+
 def TDMEnd(builder):
     return builder.EndObject()
 
@@ -1328,6 +1376,7 @@ def End(builder):
     return TDMEnd(builder)
 
 import RFM
+import TDMTransmitRamp
 try:
     from typing import List, Optional
 except:
@@ -1399,6 +1448,7 @@ class TDMT(object):
         TEMPERATURE = None,
         CLOCK_BIAS = None,
         CLOCK_DRIFT = None,
+        TRANSMIT_RAMPS = None,
     ):
         self.OBSERVER_ID = OBSERVER_ID  # type: Optional[str]
         self.OBSERVER_X = OBSERVER_X  # type: float
@@ -1461,6 +1511,7 @@ class TDMT(object):
         self.TEMPERATURE = TEMPERATURE  # type: Optional[List[float]]
         self.CLOCK_BIAS = CLOCK_BIAS  # type: Optional[List[float]]
         self.CLOCK_DRIFT = CLOCK_DRIFT  # type: Optional[List[float]]
+        self.TRANSMIT_RAMPS = TRANSMIT_RAMPS  # type: Optional[List[TDMTransmitRamp.TDMTransmitRampT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1615,6 +1666,14 @@ class TDMT(object):
                     self.CLOCK_DRIFT.append(TDM.CLOCK_DRIFT(i))
             else:
                 self.CLOCK_DRIFT = TDM.CLOCK_DRIFTAsNumpy()
+        if not TDM.TRANSMIT_RAMPSIsNone():
+            self.TRANSMIT_RAMPS = []
+            for i in range(TDM.TRANSMIT_RAMPSLength()):
+                if TDM.TRANSMIT_RAMPS(i) is None:
+                    self.TRANSMIT_RAMPS.append(None)
+                else:
+                    tDMTransmitRamp_ = TDMTransmitRamp.TDMTransmitRampT.InitFromObj(TDM.TRANSMIT_RAMPS(i))
+                    self.TRANSMIT_RAMPS.append(tDMTransmitRamp_)
 
     # TDMT
     def Pack(self, builder):
@@ -1772,6 +1831,14 @@ class TDMT(object):
                 for i in reversed(range(len(self.CLOCK_DRIFT))):
                     builder.PrependFloat64(self.CLOCK_DRIFT[i])
                 CLOCK_DRIFT = builder.EndVector()
+        if self.TRANSMIT_RAMPS is not None:
+            TRANSMIT_RAMPSlist = []
+            for i in range(len(self.TRANSMIT_RAMPS)):
+                TRANSMIT_RAMPSlist.append(self.TRANSMIT_RAMPS[i].Pack(builder))
+            TDMStartTRANSMIT_RAMPSVector(builder, len(self.TRANSMIT_RAMPS))
+            for i in reversed(range(len(self.TRANSMIT_RAMPS))):
+                builder.PrependUOffsetTRelative(TRANSMIT_RAMPSlist[i])
+            TRANSMIT_RAMPS = builder.EndVector()
         TDMStart(builder)
         if self.OBSERVER_ID is not None:
             TDMAddOBSERVER_ID(builder, OBSERVER_ID)
@@ -1875,5 +1942,7 @@ class TDMT(object):
             TDMAddCLOCK_BIAS(builder, CLOCK_BIAS)
         if self.CLOCK_DRIFT is not None:
             TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
+        if self.TRANSMIT_RAMPS is not None:
+            TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
         TDM = TDMEnd(builder)
         return TDM

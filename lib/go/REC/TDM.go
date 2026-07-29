@@ -1383,8 +1383,49 @@ func (rcv *TDM) MutateClockDrift(j int, n float64) bool {
 	return rcv.MutateCLOCK_DRIFT(j, n)
 }
 
+/// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+/// table covering this segment, ordered by START_TIME and non-overlapping.
+/// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+/// cannot reconstruct the observables. Absent for unramped tracking, which
+/// leaves the record exactly CCSDS-conformant.
+func (rcv *TDM) TRANSMIT_RAMPS(obj *TDMTransmitRamp, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(TDMTransmitRamp)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *TDM) TransmitRamps(obj *TDMTransmitRamp, j int) bool {
+	return rcv.TRANSMIT_RAMPS(obj, j)
+}
+
+func (rcv *TDM) TRANSMIT_RAMPSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) TransmitRampsLength() int {
+	return rcv.TRANSMIT_RAMPSLength()
+}
+
+/// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+/// table covering this segment, ordered by START_TIME and non-overlapping.
+/// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+/// cannot reconstruct the observables. Absent for unramped tracking, which
+/// leaves the record exactly CCSDS-conformant.
 func TDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(61)
+	builder.StartObject(62)
 }
 func TDMAddOBSERVER_ID(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBSERVER_ID), 0)
@@ -1823,6 +1864,18 @@ func TDMStartCLOCK_DRIFTVector(builder *flatbuffers.Builder, numElems int) flatb
 }
 func TDMStartClockDriftVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return TDMStartCLOCK_DRIFTVector(builder, numElems)
+}
+func TDMAddTRANSMIT_RAMPS(builder *flatbuffers.Builder, TRANSMIT_RAMPS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(TRANSMIT_RAMPS), 0)
+}
+func TDMAddTransmitRamps(builder *flatbuffers.Builder, TRANSMIT_RAMPS flatbuffers.UOffsetT) {
+	TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
+}
+func TDMStartTRANSMIT_RAMPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func TDMStartTransmitRampsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartTRANSMIT_RAMPSVector(builder, numElems)
 }
 func TDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

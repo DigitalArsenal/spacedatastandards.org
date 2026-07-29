@@ -45,7 +45,16 @@
         "EIGEN_6C4",
         "GOCO06S",
         "XGM2019E",
-        "CUSTOM_MODEL"
+        "CUSTOM_MODEL",
+        "GGM02C",
+        "GGM02S",
+        "GOCO05C",
+        "GLGM3150",
+        "LPE200",
+        "GGGRX1200",
+        "JGMRO120D",
+        "JGMESS160A",
+        "SHGJ180U"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -76,6 +85,38 @@
         },
         "CUSTOM_MODEL": {
           "value": 8
+        },
+        "GGM02C": {
+          "value": 9,
+          "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+        },
+        "GGM02S": {
+          "value": 10
+        },
+        "GOCO05C": {
+          "value": 11
+        },
+        "GLGM3150": {
+          "value": 12,
+          "description": "Moon"
+        },
+        "LPE200": {
+          "value": 13
+        },
+        "GGGRX1200": {
+          "value": 14
+        },
+        "JGMRO120D": {
+          "value": 15,
+          "description": "Mars"
+        },
+        "JGMESS160A": {
+          "value": 16,
+          "description": "Mercury"
+        },
+        "SHGJ180U": {
+          "value": 17,
+          "description": "Venus"
         }
       }
     },
@@ -185,6 +226,38 @@
             },
             "CUSTOM_MODEL": {
               "value": 8
+            },
+            "GGM02C": {
+              "value": 9,
+              "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+            },
+            "GGM02S": {
+              "value": 10
+            },
+            "GOCO05C": {
+              "value": 11
+            },
+            "GLGM3150": {
+              "value": 12,
+              "description": "Moon"
+            },
+            "LPE200": {
+              "value": 13
+            },
+            "GGGRX1200": {
+              "value": 14
+            },
+            "JGMRO120D": {
+              "value": 15,
+              "description": "Mars"
+            },
+            "JGMESS160A": {
+              "value": 16,
+              "description": "Mercury"
+            },
+            "SHGJ180U": {
+              "value": 17,
+              "description": "Venus"
             }
           },
           "x-flatbuffer-default": "EGM2008"

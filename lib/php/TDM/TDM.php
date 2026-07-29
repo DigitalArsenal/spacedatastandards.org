@@ -689,22 +689,46 @@ class TDM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+    /// table covering this segment, ordered by START_TIME and non-overlapping.
+    /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+    /// cannot reconstruct the observables. Absent for unramped tracking, which
+    /// leaves the record exactly CCSDS-conformant.
+    /**
+     * @returnVectorOffset
+     */
+    public function getTRANSMIT_RAMPS($j)
+    {
+        $o = $this->__offset(126);
+        $obj = new TDMTransmitRamp();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTRANSMIT_RAMPSLength()
+    {
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startTDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(61);
+        $builder->StartObject(62);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return TDM
      */
-    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $OBSERVATION_STEP_SIZE, $OBSERVATION_START_TIME, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT)
+    public static function createTDM(FlatBufferBuilder $builder, $OBSERVER_ID, $OBSERVER_X, $OBSERVER_Y, $OBSERVER_Z, $OBSERVER_VX, $OBSERVER_VY, $OBSERVER_VZ, $OBSERVER_POSITION_REFERENCE_FRAME, $OBS_REFERENCE_FRAME, $EPOCH, $OBSERVATION_STEP_SIZE, $OBSERVATION_START_TIME, $CCSDS_TDM_VERS, $COMMENT, $CREATION_DATE, $ORIGINATOR, $META_START, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $PARTICIPANT_1, $PARTICIPANT_2, $PARTICIPANT_3, $PARTICIPANT_4, $PARTICIPANT_5, $MODE, $PATH_1, $PATH_2, $TRANSMIT_BAND, $RECEIVE_BAND, $INTEGRATION_INTERVAL, $INTEGRATION_REF, $RECEIVE_DELAY_2, $RECEIVE_DELAY_3, $DATA_QUALITY, $META_STOP, $DATA_START, $TRANSMIT_FREQ_1, $RECEIVE_FREQ, $DATA_STOP, $TIMETAG_REF, $ANGLE_TYPE, $ANGLE_1, $ANGLE_2, $ANGLE_UNCERTAINTY_1, $ANGLE_UNCERTAINTY_2, $RANGE_RATE, $RANGE_UNCERTAINTY, $RANGE_MODE, $RANGE_MODULUS, $CORRECTION_ANGLE_1, $CORRECTION_ANGLE_2, $CORRECTIONS_APPLIED, $TROPO_DRY, $TROPO_WET, $STEC, $PRESSURE, $RHUMIDITY, $TEMPERATURE, $CLOCK_BIAS, $CLOCK_DRIFT, $TRANSMIT_RAMPS)
     {
-        $builder->startObject(61);
+        $builder->startObject(62);
         self::addOBSERVER_ID($builder, $OBSERVER_ID);
         self::addOBSERVER_X($builder, $OBSERVER_X);
         self::addOBSERVER_Y($builder, $OBSERVER_Y);
@@ -766,6 +790,7 @@ class TDM extends Table
         self::addTEMPERATURE($builder, $TEMPERATURE);
         self::addCLOCK_BIAS($builder, $CLOCK_BIAS);
         self::addCLOCK_DRIFT($builder, $CLOCK_DRIFT);
+        self::addTRANSMIT_RAMPS($builder, $TRANSMIT_RAMPS);
         $o = $builder->endObject();
         return $o;
     }
@@ -1666,6 +1691,40 @@ class TDM extends Table
     public static function startCLOCK_DRIFTVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTRANSMIT_RAMPS(FlatBufferBuilder $builder, $TRANSMIT_RAMPS)
+    {
+        $builder->addOffsetX(61, $TRANSMIT_RAMPS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTRANSMIT_RAMPSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTRANSMIT_RAMPSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

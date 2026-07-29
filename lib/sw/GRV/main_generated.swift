@@ -37,8 +37,17 @@ public enum GravityModelName: Int8, FlatbuffersVectorInitializable, Enum, Verifi
   case goco06s = 6
   case xgm2019e = 7
   case customModel = 8
+  case ggm02c = 9
+  case ggm02s = 10
+  case goco05c = 11
+  case glgm3150 = 12
+  case lpe200 = 13
+  case gggrx1200 = 14
+  case jgmro120d = 15
+  case jgmess160a = 16
+  case shgj180u = 17
 
-  public static var max: GravityModelName { return .customModel }
+  public static var max: GravityModelName { return .shgj180u }
   public static var min: GravityModelName { return .wgs84 }
 }
 

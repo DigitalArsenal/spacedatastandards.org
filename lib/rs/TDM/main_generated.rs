@@ -4,6 +4,315 @@
 use crate::main_generated::*;
 extern crate alloc;
 
+pub enum TDMTransmitRampOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// One uplink transmitter frequency ramp applying over a closed time interval.
+///
+/// SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single
+/// TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space
+/// radiometric archives carry an explicit ramp table and the Doppler observables
+/// are NOT reconstructible without it. Ramps are optional; a record that omits
+/// TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.
+///
+/// Frequency over the interval is the linear polynomial
+///   f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)
+/// which is the common form of the two archive representations: DSN ODF
+/// (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp
+/// start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a
+/// ramp reference time with constant and linear transmission-frequency terms,
+/// so REFERENCE_TIME is that reference time and may precede START_TIME.
+/// Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer
+/// assume which convention was used.
+pub struct TDMTransmitRamp<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for TDMTransmitRamp<'a> {
+  type Inner = TDMTransmitRamp<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> TDMTransmitRamp<'a> {
+  pub const VT_START_TIME: ::flatbuffers::VOffsetT = 4;
+  pub const VT_END_TIME: ::flatbuffers::VOffsetT = 6;
+  pub const VT_REFERENCE_TIME: ::flatbuffers::VOffsetT = 8;
+  pub const VT_FREQUENCY_HZ: ::flatbuffers::VOffsetT = 10;
+  pub const VT_FREQUENCY_RATE_HZ_PER_S: ::flatbuffers::VOffsetT = 12;
+  pub const VT_TRANSMITTING_STATION_ID: ::flatbuffers::VOffsetT = 14;
+  pub const VT_TRANSMIT_BAND: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    TDMTransmitRamp { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args TDMTransmitRampArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<TDMTransmitRamp<'bldr>> {
+    let mut builder = TDMTransmitRampBuilder::new(_fbb);
+    builder.add_FREQUENCY_RATE_HZ_PER_S(args.FREQUENCY_RATE_HZ_PER_S);
+    builder.add_FREQUENCY_HZ(args.FREQUENCY_HZ);
+    if let Some(x) = args.TRANSMIT_BAND { builder.add_TRANSMIT_BAND(x); }
+    if let Some(x) = args.TRANSMITTING_STATION_ID { builder.add_TRANSMITTING_STATION_ID(x); }
+    if let Some(x) = args.REFERENCE_TIME { builder.add_REFERENCE_TIME(x); }
+    if let Some(x) = args.END_TIME { builder.add_END_TIME(x); }
+    if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> TDMTransmitRampT {
+    let START_TIME = self.START_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let END_TIME = self.END_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let REFERENCE_TIME = self.REFERENCE_TIME().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let FREQUENCY_HZ = self.FREQUENCY_HZ();
+    let FREQUENCY_RATE_HZ_PER_S = self.FREQUENCY_RATE_HZ_PER_S();
+    let TRANSMITTING_STATION_ID = self.TRANSMITTING_STATION_ID().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let TRANSMIT_BAND = self.TRANSMIT_BAND().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    TDMTransmitRampT {
+      START_TIME,
+      END_TIME,
+      REFERENCE_TIME,
+      FREQUENCY_HZ,
+      FREQUENCY_RATE_HZ_PER_S,
+      TRANSMITTING_STATION_ID,
+      TRANSMIT_BAND,
+    }
+  }
+
+  /// Start of the interval over which this ramp applies, ISO 8601.
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMTransmitRamp::VT_START_TIME, None)}
+  }
+  /// End of the interval over which this ramp applies, ISO 8601.
+  #[inline]
+  pub fn END_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMTransmitRamp::VT_END_TIME, None)}
+  }
+  /// Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.
+  #[inline]
+  pub fn REFERENCE_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMTransmitRamp::VT_REFERENCE_TIME, None)}
+  }
+  /// Transmitted frequency at REFERENCE_TIME, Hz.
+  #[inline]
+  pub fn FREQUENCY_HZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMTransmitRamp::VT_FREQUENCY_HZ, Some(0.0)).unwrap()}
+  }
+  /// Constant ramp rate over the interval, Hz per second.
+  #[inline]
+  pub fn FREQUENCY_RATE_HZ_PER_S(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(TDMTransmitRamp::VT_FREQUENCY_RATE_HZ_PER_S, Some(0.0)).unwrap()}
+  }
+  /// Identifier of the transmitting station the ramp applies to. Must match
+  /// the PARTICIPANT_n naming used by the segment when both are present.
+  #[inline]
+  pub fn TRANSMITTING_STATION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMTransmitRamp::VT_TRANSMITTING_STATION_ID, None)}
+  }
+  /// Uplink band the ramp applies to, using the same vocabulary as
+  /// TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").
+  #[inline]
+  pub fn TRANSMIT_BAND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(TDMTransmitRamp::VT_TRANSMIT_BAND, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for TDMTransmitRamp<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("END_TIME", Self::VT_END_TIME, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_TIME", Self::VT_REFERENCE_TIME, false)?
+     .visit_field::<f64>("FREQUENCY_HZ", Self::VT_FREQUENCY_HZ, false)?
+     .visit_field::<f64>("FREQUENCY_RATE_HZ_PER_S", Self::VT_FREQUENCY_RATE_HZ_PER_S, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSMITTING_STATION_ID", Self::VT_TRANSMITTING_STATION_ID, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRANSMIT_BAND", Self::VT_TRANSMIT_BAND, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct TDMTransmitRampArgs<'a> {
+    pub START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub END_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub FREQUENCY_HZ: f64,
+    pub FREQUENCY_RATE_HZ_PER_S: f64,
+    pub TRANSMITTING_STATION_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSMIT_BAND: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for TDMTransmitRampArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    TDMTransmitRampArgs {
+      START_TIME: None,
+      END_TIME: None,
+      REFERENCE_TIME: None,
+      FREQUENCY_HZ: 0.0,
+      FREQUENCY_RATE_HZ_PER_S: 0.0,
+      TRANSMITTING_STATION_ID: None,
+      TRANSMIT_BAND: None,
+    }
+  }
+}
+
+pub struct TDMTransmitRampBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMTransmitRampBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_START_TIME(&mut self, START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMTransmitRamp::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_END_TIME(&mut self, END_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMTransmitRamp::VT_END_TIME, END_TIME);
+  }
+  #[inline]
+  pub fn add_REFERENCE_TIME(&mut self, REFERENCE_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMTransmitRamp::VT_REFERENCE_TIME, REFERENCE_TIME);
+  }
+  #[inline]
+  pub fn add_FREQUENCY_HZ(&mut self, FREQUENCY_HZ: f64) {
+    self.fbb_.push_slot::<f64>(TDMTransmitRamp::VT_FREQUENCY_HZ, FREQUENCY_HZ, 0.0);
+  }
+  #[inline]
+  pub fn add_FREQUENCY_RATE_HZ_PER_S(&mut self, FREQUENCY_RATE_HZ_PER_S: f64) {
+    self.fbb_.push_slot::<f64>(TDMTransmitRamp::VT_FREQUENCY_RATE_HZ_PER_S, FREQUENCY_RATE_HZ_PER_S, 0.0);
+  }
+  #[inline]
+  pub fn add_TRANSMITTING_STATION_ID(&mut self, TRANSMITTING_STATION_ID: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMTransmitRamp::VT_TRANSMITTING_STATION_ID, TRANSMITTING_STATION_ID);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_BAND(&mut self, TRANSMIT_BAND: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDMTransmitRamp::VT_TRANSMIT_BAND, TRANSMIT_BAND);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TDMTransmitRampBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    TDMTransmitRampBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<TDMTransmitRamp<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for TDMTransmitRamp<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("TDMTransmitRamp");
+      ds.field("START_TIME", &self.START_TIME());
+      ds.field("END_TIME", &self.END_TIME());
+      ds.field("REFERENCE_TIME", &self.REFERENCE_TIME());
+      ds.field("FREQUENCY_HZ", &self.FREQUENCY_HZ());
+      ds.field("FREQUENCY_RATE_HZ_PER_S", &self.FREQUENCY_RATE_HZ_PER_S());
+      ds.field("TRANSMITTING_STATION_ID", &self.TRANSMITTING_STATION_ID());
+      ds.field("TRANSMIT_BAND", &self.TRANSMIT_BAND());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct TDMTransmitRampT {
+  pub START_TIME: Option<alloc::string::String>,
+  pub END_TIME: Option<alloc::string::String>,
+  pub REFERENCE_TIME: Option<alloc::string::String>,
+  pub FREQUENCY_HZ: f64,
+  pub FREQUENCY_RATE_HZ_PER_S: f64,
+  pub TRANSMITTING_STATION_ID: Option<alloc::string::String>,
+  pub TRANSMIT_BAND: Option<alloc::string::String>,
+}
+impl Default for TDMTransmitRampT {
+  fn default() -> Self {
+    Self {
+      START_TIME: None,
+      END_TIME: None,
+      REFERENCE_TIME: None,
+      FREQUENCY_HZ: 0.0,
+      FREQUENCY_RATE_HZ_PER_S: 0.0,
+      TRANSMITTING_STATION_ID: None,
+      TRANSMIT_BAND: None,
+    }
+  }
+}
+impl TDMTransmitRampT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<TDMTransmitRamp<'b>> {
+    let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let END_TIME = self.END_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REFERENCE_TIME = self.REFERENCE_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FREQUENCY_HZ = self.FREQUENCY_HZ;
+    let FREQUENCY_RATE_HZ_PER_S = self.FREQUENCY_RATE_HZ_PER_S;
+    let TRANSMITTING_STATION_ID = self.TRANSMITTING_STATION_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRANSMIT_BAND = self.TRANSMIT_BAND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    TDMTransmitRamp::create(_fbb, &TDMTransmitRampArgs{
+      START_TIME,
+      END_TIME,
+      REFERENCE_TIME,
+      FREQUENCY_HZ,
+      FREQUENCY_RATE_HZ_PER_S,
+      TRANSMITTING_STATION_ID,
+      TRANSMIT_BAND,
+    })
+  }
+}
 pub enum TDMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -82,6 +391,7 @@ impl<'a> TDM<'a> {
   pub const VT_TEMPERATURE: ::flatbuffers::VOffsetT = 120;
   pub const VT_CLOCK_BIAS: ::flatbuffers::VOffsetT = 122;
   pub const VT_CLOCK_DRIFT: ::flatbuffers::VOffsetT = 124;
+  pub const VT_TRANSMIT_RAMPS: ::flatbuffers::VOffsetT = 126;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -106,6 +416,7 @@ impl<'a> TDM<'a> {
     builder.add_OBSERVER_Z(args.OBSERVER_Z);
     builder.add_OBSERVER_Y(args.OBSERVER_Y);
     builder.add_OBSERVER_X(args.OBSERVER_X);
+    if let Some(x) = args.TRANSMIT_RAMPS { builder.add_TRANSMIT_RAMPS(x); }
     if let Some(x) = args.CLOCK_DRIFT { builder.add_CLOCK_DRIFT(x); }
     if let Some(x) = args.CLOCK_BIAS { builder.add_CLOCK_BIAS(x); }
     if let Some(x) = args.TEMPERATURE { builder.add_TEMPERATURE(x); }
@@ -301,6 +612,9 @@ impl<'a> TDM<'a> {
     let CLOCK_DRIFT = self.CLOCK_DRIFT().map(|x| {
       x.into_iter().collect()
     });
+    let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     TDMT {
       OBSERVER_ID,
       OBSERVER_X,
@@ -363,6 +677,7 @@ impl<'a> TDM<'a> {
       TEMPERATURE,
       CLOCK_BIAS,
       CLOCK_DRIFT,
+      TRANSMIT_RAMPS,
     }
   }
 
@@ -857,6 +1172,18 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(TDM::VT_CLOCK_DRIFT, None)}
   }
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+  /// table covering this segment, ordered by START_TIME and non-overlapping.
+  /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+  /// cannot reconstruct the observables. Absent for unramped tracking, which
+  /// leaves the record exactly CCSDS-conformant.
+  #[inline]
+  pub fn TRANSMIT_RAMPS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>(TDM::VT_TRANSMIT_RAMPS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for TDM<'_> {
@@ -926,6 +1253,7 @@ impl ::flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("TEMPERATURE", Self::VT_TEMPERATURE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CLOCK_BIAS", Self::VT_CLOCK_BIAS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CLOCK_DRIFT", Self::VT_CLOCK_DRIFT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>("TRANSMIT_RAMPS", Self::VT_TRANSMIT_RAMPS, false)?
      .finish();
     Ok(())
   }
@@ -992,6 +1320,7 @@ pub struct TDMArgs<'a> {
     pub TEMPERATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub CLOCK_BIAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub CLOCK_DRIFT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub TRANSMIT_RAMPS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>>>,
 }
 impl<'a> Default for TDMArgs<'a> {
   #[inline]
@@ -1058,6 +1387,7 @@ impl<'a> Default for TDMArgs<'a> {
       TEMPERATURE: None,
       CLOCK_BIAS: None,
       CLOCK_DRIFT: None,
+      TRANSMIT_RAMPS: None,
     }
   }
 }
@@ -1312,6 +1642,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_CLOCK_DRIFT, CLOCK_DRIFT);
   }
   #[inline]
+  pub fn add_TRANSMIT_RAMPS(&mut self, TRANSMIT_RAMPS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> TDMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     TDMBuilder {
@@ -1390,6 +1724,7 @@ impl ::core::fmt::Debug for TDM<'_> {
       ds.field("TEMPERATURE", &self.TEMPERATURE());
       ds.field("CLOCK_BIAS", &self.CLOCK_BIAS());
       ds.field("CLOCK_DRIFT", &self.CLOCK_DRIFT());
+      ds.field("TRANSMIT_RAMPS", &self.TRANSMIT_RAMPS());
       ds.finish()
   }
 }
@@ -1457,6 +1792,7 @@ pub struct TDMT {
   pub TEMPERATURE: Option<alloc::vec::Vec<f64>>,
   pub CLOCK_BIAS: Option<alloc::vec::Vec<f64>>,
   pub CLOCK_DRIFT: Option<alloc::vec::Vec<f64>>,
+  pub TRANSMIT_RAMPS: Option<alloc::vec::Vec<TDMTransmitRampT>>,
 }
 impl Default for TDMT {
   fn default() -> Self {
@@ -1522,6 +1858,7 @@ impl Default for TDMT {
       TEMPERATURE: None,
       CLOCK_BIAS: None,
       CLOCK_DRIFT: None,
+      TRANSMIT_RAMPS: None,
     }
   }
 }
@@ -1673,6 +2010,9 @@ impl TDMT {
     let CLOCK_DRIFT = self.CLOCK_DRIFT.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     TDM::create(_fbb, &TDMArgs{
       OBSERVER_ID,
       OBSERVER_X,
@@ -1735,6 +2075,7 @@ impl TDMT {
       TEMPERATURE,
       CLOCK_BIAS,
       CLOCK_DRIFT,
+      TRANSMIT_RAMPS,
     })
   }
 }

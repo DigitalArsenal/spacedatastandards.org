@@ -16,6 +16,15 @@ const (
 	GravityModelNameGOCO06S      GravityModelName = 6
 	GravityModelNameXGM2019E     GravityModelName = 7
 	GravityModelNameCUSTOM_MODEL GravityModelName = 8
+	GravityModelNameGGM02C       GravityModelName = 9
+	GravityModelNameGGM02S       GravityModelName = 10
+	GravityModelNameGOCO05C      GravityModelName = 11
+	GravityModelNameGLGM3150     GravityModelName = 12
+	GravityModelNameLPE200       GravityModelName = 13
+	GravityModelNameGGGRX1200    GravityModelName = 14
+	GravityModelNameJGMRO120D    GravityModelName = 15
+	GravityModelNameJGMESS160A   GravityModelName = 16
+	GravityModelNameSHGJ180U     GravityModelName = 17
 )
 
 var EnumNamesGravityModelName = map[GravityModelName]string{
@@ -28,6 +37,15 @@ var EnumNamesGravityModelName = map[GravityModelName]string{
 	GravityModelNameGOCO06S:      "GOCO06S",
 	GravityModelNameXGM2019E:     "XGM2019E",
 	GravityModelNameCUSTOM_MODEL: "CUSTOM_MODEL",
+	GravityModelNameGGM02C:       "GGM02C",
+	GravityModelNameGGM02S:       "GGM02S",
+	GravityModelNameGOCO05C:      "GOCO05C",
+	GravityModelNameGLGM3150:     "GLGM3150",
+	GravityModelNameLPE200:       "LPE200",
+	GravityModelNameGGGRX1200:    "GGGRX1200",
+	GravityModelNameJGMRO120D:    "JGMRO120D",
+	GravityModelNameJGMESS160A:   "JGMESS160A",
+	GravityModelNameSHGJ180U:     "SHGJ180U",
 }
 
 var EnumValuesGravityModelName = map[string]GravityModelName{
@@ -40,6 +58,15 @@ var EnumValuesGravityModelName = map[string]GravityModelName{
 	"GOCO06S":      GravityModelNameGOCO06S,
 	"XGM2019E":     GravityModelNameXGM2019E,
 	"CUSTOM_MODEL": GravityModelNameCUSTOM_MODEL,
+	"GGM02C":       GravityModelNameGGM02C,
+	"GGM02S":       GravityModelNameGGM02S,
+	"GOCO05C":      GravityModelNameGOCO05C,
+	"GLGM3150":     GravityModelNameGLGM3150,
+	"LPE200":       GravityModelNameLPE200,
+	"GGGRX1200":    GravityModelNameGGGRX1200,
+	"JGMRO120D":    GravityModelNameJGMRO120D,
+	"JGMESS160A":   GravityModelNameJGMESS160A,
+	"SHGJ180U":     GravityModelNameSHGJ180U,
 }
 
 func (v GravityModelName) String() string {

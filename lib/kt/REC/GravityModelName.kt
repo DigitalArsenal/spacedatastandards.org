@@ -12,5 +12,14 @@ class GravityModelName private constructor() {
         const val GOCO06S: Byte = 6
         const val XGM2019E: Byte = 7
         const val CUSTOM_MODEL: Byte = 8
+        const val GGM02C: Byte = 9
+        const val GGM02S: Byte = 10
+        const val GOCO05C: Byte = 11
+        const val GLGM3150: Byte = 12
+        const val LPE200: Byte = 13
+        const val GGGRX1200: Byte = 14
+        const val JGMRO120D: Byte = 15
+        const val JGMESS160A: Byte = 16
+        const val SHGJ180U: Byte = 17
     }
 }

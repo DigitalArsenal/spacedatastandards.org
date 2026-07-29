@@ -1,5 +1,5 @@
-// Hash: 3cff136fc81adf1cf217342e255f454a72fa8d922b9231f2a0d93fca5f76519b
-// Version: 2.0.1
+// Hash: 4942a0c3b5baa66fc83c978085b6df7429ec677e4e0098fdc322d2d3105d7752
+// Version: 2.0.2
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
@@ -10,6 +10,42 @@ include "../RFM/main.fbs";
 //   time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)
 // where i is the zero-based index into the observation arrays.
 //
+/// One uplink transmitter frequency ramp applying over a closed time interval.
+///
+/// SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single
+/// TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space
+/// radiometric archives carry an explicit ramp table and the Doppler observables
+/// are NOT reconstructible without it. Ramps are optional; a record that omits
+/// TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.
+///
+/// Frequency over the interval is the linear polynomial
+///   f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)
+/// which is the common form of the two archive representations: DSN ODF
+/// (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp
+/// start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a
+/// ramp reference time with constant and linear transmission-frequency terms,
+/// so REFERENCE_TIME is that reference time and may precede START_TIME.
+/// Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer
+/// assume which convention was used.
+table TDMTransmitRamp {
+  /// Start of the interval over which this ramp applies, ISO 8601.
+  START_TIME: string;
+  /// End of the interval over which this ramp applies, ISO 8601.
+  END_TIME: string;
+  /// Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.
+  REFERENCE_TIME: string;
+  /// Transmitted frequency at REFERENCE_TIME, Hz.
+  FREQUENCY_HZ: double;
+  /// Constant ramp rate over the interval, Hz per second.
+  FREQUENCY_RATE_HZ_PER_S: double;
+  /// Identifier of the transmitting station the ramp applies to. Must match
+  /// the PARTICIPANT_n naming used by the segment when both are present.
+  TRANSMITTING_STATION_ID: string;
+  /// Uplink band the ramp applies to, using the same vocabulary as
+  /// TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").
+  TRANSMIT_BAND: string;
+}
+
 /// Tracking Data Message
 table TDM {
 
@@ -198,6 +234,13 @@ table TDM {
 
   /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
   CLOCK_DRIFT: [double];
+
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+  /// table covering this segment, ordered by START_TIME and non-overlapping.
+  /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+  /// cannot reconstruct the observables. Absent for unramped tracking, which
+  /// leaves the record exactly CCSDS-conformant.
+  TRANSMIT_RAMPS: [TDMTransmitRamp];
 }
 
 root_type TDM;

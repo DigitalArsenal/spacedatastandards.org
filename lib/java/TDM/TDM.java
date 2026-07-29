@@ -389,6 +389,18 @@ public final class TDM extends com.google.flatbuffers.Table {
   public DoubleVector clockDriftVector(DoubleVector obj) { int o = __offset(124); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer CLOCK_DRIFTAsByteBuffer() { return __vector_as_bytebuffer(124, 8); }
   public ByteBuffer CLOCK_DRIFTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 124, 8); }
+  /**
+   * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+   * table covering this segment, ordered by START_TIME and non-overlapping.
+   * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+   * cannot reconstruct the observables. Absent for unramped tracking, which
+   * leaves the record exactly CCSDS-conformant.
+   */
+  public TDMTransmitRamp TRANSMIT_RAMPS(int j) { return TRANSMIT_RAMPS(new TDMTransmitRamp(), j); }
+  public TDMTransmitRamp TRANSMIT_RAMPS(TDMTransmitRamp obj, int j) { int o = __offset(126); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRANSMIT_RAMPSLength() { int o = __offset(126); return o != 0 ? __vector_len(o) : 0; }
+  public TDMTransmitRamp.Vector transmitRampsVector() { return transmitRampsVector(new TDMTransmitRamp.Vector()); }
+  public TDMTransmitRamp.Vector transmitRampsVector(TDMTransmitRamp.Vector obj) { int o = __offset(126); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createTDM(FlatBufferBuilder builder,
       int OBSERVER_IDOffset,
@@ -451,8 +463,9 @@ public final class TDM extends com.google.flatbuffers.Table {
       int RHUMIDITYOffset,
       int TEMPERATUREOffset,
       int CLOCK_BIASOffset,
-      int CLOCK_DRIFTOffset) {
-    builder.startTable(61);
+      int CLOCK_DRIFTOffset,
+      int TRANSMIT_RAMPSOffset) {
+    builder.startTable(62);
     TDM.addRangeModulus(builder, RANGE_MODULUS);
     TDM.addRangeUncertainty(builder, RANGE_UNCERTAINTY);
     TDM.addRangeRate(builder, RANGE_RATE);
@@ -466,6 +479,7 @@ public final class TDM extends com.google.flatbuffers.Table {
     TDM.addObserverZ(builder, OBSERVER_Z);
     TDM.addObserverY(builder, OBSERVER_Y);
     TDM.addObserverX(builder, OBSERVER_X);
+    TDM.addTransmitRamps(builder, TRANSMIT_RAMPSOffset);
     TDM.addClockDrift(builder, CLOCK_DRIFTOffset);
     TDM.addClockBias(builder, CLOCK_BIASOffset);
     TDM.addTemperature(builder, TEMPERATUREOffset);
@@ -517,7 +531,7 @@ public final class TDM extends com.google.flatbuffers.Table {
     return TDM.endTDM(builder);
   }
 
-  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(61); }
+  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(62); }
   public static void addObserverId(FlatBufferBuilder builder, int OBSERVER_IDOffset) { builder.addOffset(0, OBSERVER_IDOffset, 0); }
   public static void addObserverX(FlatBufferBuilder builder, double OBSERVER_X) { builder.addDouble(1, OBSERVER_X, 0.0); }
   public static void addObserverY(FlatBufferBuilder builder, double OBSERVER_Y) { builder.addDouble(2, OBSERVER_Y, 0.0); }
@@ -603,6 +617,9 @@ public final class TDM extends com.google.flatbuffers.Table {
   public static void addClockDrift(FlatBufferBuilder builder, int CLOCK_DRIFTOffset) { builder.addOffset(60, CLOCK_DRIFTOffset, 0); }
   public static int createClockDriftVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startClockDriftVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addTransmitRamps(FlatBufferBuilder builder, int TRANSMIT_RAMPSOffset) { builder.addOffset(61, TRANSMIT_RAMPSOffset, 0); }
+  public static int createTransmitRampsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTransmitRampsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endTDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

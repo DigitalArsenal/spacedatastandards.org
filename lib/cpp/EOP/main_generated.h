@@ -46,6 +46,98 @@ inline const char *EnumNameDataType(DataType e) {
   return EnumNamesDataType()[index];
 }
 
+/// Published Earth-orientation series a row was taken from. Append new values
+/// only; never reorder or reuse existing values.
+enum eopSeries : uint8_t {
+  eopSeries_UNSPECIFIED = 0,
+  /// IERS EOP 14 C04, the long-term combined solution (e.g.
+  /// eopc04_14_IAU2000.62-now.txt).
+  eopSeries_IERS_C04_14 = 1,
+  /// IERS EOP 20 C04, the ITRF2020-based combined solution.
+  eopSeries_IERS_C04_20 = 2,
+  /// IERS Bulletin A rapid service / prediction.
+  eopSeries_IERS_BULLETIN_A = 3,
+  /// IERS Bulletin B.
+  eopSeries_IERS_BULLETIN_B = 4,
+  /// USNO/IERS finals2000A combined rapid + prediction file.
+  eopSeries_FINALS2000A = 5,
+  /// A series not covered above; identify it in a producer-defined way.
+  eopSeries_OTHER = 6,
+  eopSeries_MIN = eopSeries_UNSPECIFIED,
+  eopSeries_MAX = eopSeries_OTHER
+};
+
+inline const eopSeries (&EnumValueseopSeries())[7] {
+  static const eopSeries values[] = {
+    eopSeries_UNSPECIFIED,
+    eopSeries_IERS_C04_14,
+    eopSeries_IERS_C04_20,
+    eopSeries_IERS_BULLETIN_A,
+    eopSeries_IERS_BULLETIN_B,
+    eopSeries_FINALS2000A,
+    eopSeries_OTHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNameseopSeries() {
+  static const char * const names[8] = {
+    "UNSPECIFIED",
+    "IERS_C04_14",
+    "IERS_C04_20",
+    "IERS_BULLETIN_A",
+    "IERS_BULLETIN_B",
+    "FINALS2000A",
+    "OTHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameeopSeries(eopSeries e) {
+  if (::flatbuffers::IsOutRange(e, eopSeries_UNSPECIFIED, eopSeries_OTHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameseopSeries()[index];
+}
+
+/// IAU precession-nutation model the celestial pole offsets are referenced to.
+/// Append new values only; never reorder or reuse existing values.
+enum iauPrecessionNutationModel : uint8_t {
+  iauPrecessionNutationModel_UNSPECIFIED = 0,
+  iauPrecessionNutationModel_IAU_2000A = 1,
+  iauPrecessionNutationModel_IAU_2000B = 2,
+  iauPrecessionNutationModel_IAU_2006 = 3,
+  iauPrecessionNutationModel_MIN = iauPrecessionNutationModel_UNSPECIFIED,
+  iauPrecessionNutationModel_MAX = iauPrecessionNutationModel_IAU_2006
+};
+
+inline const iauPrecessionNutationModel (&EnumValuesiauPrecessionNutationModel())[4] {
+  static const iauPrecessionNutationModel values[] = {
+    iauPrecessionNutationModel_UNSPECIFIED,
+    iauPrecessionNutationModel_IAU_2000A,
+    iauPrecessionNutationModel_IAU_2000B,
+    iauPrecessionNutationModel_IAU_2006
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesiauPrecessionNutationModel() {
+  static const char * const names[5] = {
+    "UNSPECIFIED",
+    "IAU_2000A",
+    "IAU_2000B",
+    "IAU_2006",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameiauPrecessionNutationModel(iauPrecessionNutationModel e) {
+  if (::flatbuffers::IsOutRange(e, iauPrecessionNutationModel_UNSPECIFIED, iauPrecessionNutationModel_IAU_2006)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesiauPrecessionNutationModel()[index];
+}
+
 /// Earth Orientation Parameters
 struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef EOPBuilder Builder;
@@ -59,7 +151,15 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_UT1_MINUS_UTC_SECONDS = 16,
     VT_TAI_MINUS_UTC_SECONDS = 18,
     VT_LENGTH_OF_DAY_CORRECTION_SECONDS = 20,
-    VT_DATA_TYPE = 22
+    VT_DATA_TYPE = 22,
+    VT_SERIES = 24,
+    VT_IAU_CONVENTION = 26,
+    VT_X_POLE_WANDER_UNCERTAINTY_RADIANS = 28,
+    VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS = 30,
+    VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 32,
+    VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 34,
+    VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 36,
+    VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 38
   };
   ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
   const ::flatbuffers::String *DATE() const {
@@ -101,6 +201,43 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   DataType DATA_TYPE() const {
     return static_cast<DataType>(GetField<int8_t>(VT_DATA_TYPE, 0));
   }
+  /// Published series this row was taken from. Rows from different series are
+  /// NOT interchangeable at the microarcsecond level and must not be merged
+  /// without recording which series each row came from.
+  eopSeries SERIES() const {
+    return static_cast<eopSeries>(GetField<uint8_t>(VT_SERIES, 0));
+  }
+  /// Precession-nutation model the celestial pole offsets are expressed
+  /// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+  /// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+  /// them correctly without knowing which model produced them.
+  iauPrecessionNutationModel IAU_CONVENTION() const {
+    return static_cast<iauPrecessionNutationModel>(GetField<uint8_t>(VT_IAU_CONVENTION, 0));
+  }
+  /// 1-sigma uncertainty in x Pole Wander, radians.
+  float X_POLE_WANDER_UNCERTAINTY_RADIANS() const {
+    return GetField<float>(VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  /// 1-sigma uncertainty in y Pole Wander, radians.
+  float Y_POLE_WANDER_UNCERTAINTY_RADIANS() const {
+    return GetField<float>(VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  /// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+  float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() const {
+    return GetField<float>(VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  /// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+  float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() const {
+    return GetField<float>(VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  /// 1-sigma uncertainty in UT1 minus UTC, seconds.
+  float UT1_MINUS_UTC_UNCERTAINTY_SECONDS() const {
+    return GetField<float>(VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0f);
+  }
+  /// 1-sigma uncertainty in the Length of Day correction, seconds.
+  float LENGTH_OF_DAY_UNCERTAINTY_SECONDS() const {
+    return GetField<float>(VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0f);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -115,6 +252,14 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint16_t>(verifier, VT_TAI_MINUS_UTC_SECONDS, 2) &&
            VerifyField<float>(verifier, VT_LENGTH_OF_DAY_CORRECTION_SECONDS, 4) &&
            VerifyField<int8_t>(verifier, VT_DATA_TYPE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SERIES, 1) &&
+           VerifyField<uint8_t>(verifier, VT_IAU_CONVENTION, 1) &&
+           VerifyField<float>(verifier, VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, 4) &&
+           VerifyField<float>(verifier, VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, 4) &&
+           VerifyField<float>(verifier, VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 4) &&
+           VerifyField<float>(verifier, VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 4) &&
+           VerifyField<float>(verifier, VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 4) &&
+           VerifyField<float>(verifier, VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 4) &&
            verifier.EndTable();
   }
 };
@@ -153,6 +298,30 @@ struct EOPBuilder {
   void add_DATA_TYPE(DataType DATA_TYPE) {
     fbb_.AddElement<int8_t>(EOP::VT_DATA_TYPE, static_cast<int8_t>(DATA_TYPE), 0);
   }
+  void add_SERIES(eopSeries SERIES) {
+    fbb_.AddElement<uint8_t>(EOP::VT_SERIES, static_cast<uint8_t>(SERIES), 0);
+  }
+  void add_IAU_CONVENTION(iauPrecessionNutationModel IAU_CONVENTION) {
+    fbb_.AddElement<uint8_t>(EOP::VT_IAU_CONVENTION, static_cast<uint8_t>(IAU_CONVENTION), 0);
+  }
+  void add_X_POLE_WANDER_UNCERTAINTY_RADIANS(float X_POLE_WANDER_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<float>(EOP::VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  void add_Y_POLE_WANDER_UNCERTAINTY_RADIANS(float Y_POLE_WANDER_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<float>(EOP::VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  void add_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<float>(EOP::VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  void add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) {
+    fbb_.AddElement<float>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f);
+  }
+  void add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(float UT1_MINUS_UTC_UNCERTAINTY_SECONDS) {
+    fbb_.AddElement<float>(EOP::VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0f);
+  }
+  void add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(float LENGTH_OF_DAY_UNCERTAINTY_SECONDS) {
+    fbb_.AddElement<float>(EOP::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0f);
+  }
   explicit EOPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -175,8 +344,22 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
     float UT1_MINUS_UTC_SECONDS = 0.0f,
     uint16_t TAI_MINUS_UTC_SECONDS = 0,
     float LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f,
-    DataType DATA_TYPE = DataType_OBSERVED) {
+    DataType DATA_TYPE = DataType_OBSERVED,
+    eopSeries SERIES = eopSeries_UNSPECIFIED,
+    iauPrecessionNutationModel IAU_CONVENTION = iauPrecessionNutationModel_UNSPECIFIED,
+    float X_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0f,
+    float Y_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0f,
+    float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
+    float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
+    float UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0f,
+    float LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0f) {
   EOPBuilder builder_(_fbb);
+  builder_.add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+  builder_.add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+  builder_.add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+  builder_.add_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+  builder_.add_Y_POLE_WANDER_UNCERTAINTY_RADIANS(Y_POLE_WANDER_UNCERTAINTY_RADIANS);
+  builder_.add_X_POLE_WANDER_UNCERTAINTY_RADIANS(X_POLE_WANDER_UNCERTAINTY_RADIANS);
   builder_.add_LENGTH_OF_DAY_CORRECTION_SECONDS(LENGTH_OF_DAY_CORRECTION_SECONDS);
   builder_.add_UT1_MINUS_UTC_SECONDS(UT1_MINUS_UTC_SECONDS);
   builder_.add_Y_CELESTIAL_POLE_OFFSET_RADIANS(Y_CELESTIAL_POLE_OFFSET_RADIANS);
@@ -186,6 +369,8 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
   builder_.add_MJD(MJD);
   builder_.add_DATE(DATE);
   builder_.add_TAI_MINUS_UTC_SECONDS(TAI_MINUS_UTC_SECONDS);
+  builder_.add_IAU_CONVENTION(IAU_CONVENTION);
+  builder_.add_SERIES(SERIES);
   builder_.add_DATA_TYPE(DATA_TYPE);
   return builder_.Finish();
 }
@@ -201,7 +386,15 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
     float UT1_MINUS_UTC_SECONDS = 0.0f,
     uint16_t TAI_MINUS_UTC_SECONDS = 0,
     float LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0f,
-    DataType DATA_TYPE = DataType_OBSERVED) {
+    DataType DATA_TYPE = DataType_OBSERVED,
+    eopSeries SERIES = eopSeries_UNSPECIFIED,
+    iauPrecessionNutationModel IAU_CONVENTION = iauPrecessionNutationModel_UNSPECIFIED,
+    float X_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0f,
+    float Y_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0f,
+    float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
+    float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0f,
+    float UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0f,
+    float LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0f) {
   auto DATE__ = DATE ? _fbb.CreateString(DATE) : 0;
   return CreateEOP(
       _fbb,
@@ -214,7 +407,15 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
       UT1_MINUS_UTC_SECONDS,
       TAI_MINUS_UTC_SECONDS,
       LENGTH_OF_DAY_CORRECTION_SECONDS,
-      DATA_TYPE);
+      DATA_TYPE,
+      SERIES,
+      IAU_CONVENTION,
+      X_POLE_WANDER_UNCERTAINTY_RADIANS,
+      Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+      X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+      LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
 }
 
 inline const EOP *GetEOP(const void *buf) {

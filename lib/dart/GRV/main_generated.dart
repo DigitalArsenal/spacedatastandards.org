@@ -57,7 +57,16 @@ enum GravityModelName {
   EIGEN_6C4(5),
   GOCO06S(6),
   XGM2019E(7),
-  CUSTOM_MODEL(8);
+  CUSTOM_MODEL(8),
+  GGM02C(9),
+  GGM02S(10),
+  GOCO05C(11),
+  GLGM3150(12),
+  LPE200(13),
+  GGGRX1200(14),
+  JGMRO120D(15),
+  JGMESS160A(16),
+  SHGJ180U(17);
 
   final int value;
   const GravityModelName(this.value);
@@ -73,6 +82,15 @@ enum GravityModelName {
       case 6: return GravityModelName.GOCO06S;
       case 7: return GravityModelName.XGM2019E;
       case 8: return GravityModelName.CUSTOM_MODEL;
+      case 9: return GravityModelName.GGM02C;
+      case 10: return GravityModelName.GGM02S;
+      case 11: return GravityModelName.GOCO05C;
+      case 12: return GravityModelName.GLGM3150;
+      case 13: return GravityModelName.LPE200;
+      case 14: return GravityModelName.GGGRX1200;
+      case 15: return GravityModelName.JGMRO120D;
+      case 16: return GravityModelName.JGMESS160A;
+      case 17: return GravityModelName.SHGJ180U;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -81,7 +99,7 @@ enum GravityModelName {
       value == null ? null : GravityModelName.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 8;
+  static const int maxValue = 17;
   static const fb.Reader<GravityModelName> reader = _GravityModelNameReader();
 }
 

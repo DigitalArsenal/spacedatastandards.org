@@ -12,8 +12,17 @@ public final class GravityModelName {
   public static final byte GOCO06S = 6;
   public static final byte XGM2019E = 7;
   public static final byte CUSTOM_MODEL = 8;
+  public static final byte GGM02C = 9;
+  public static final byte GGM02S = 10;
+  public static final byte GOCO05C = 11;
+  public static final byte GLGM3150 = 12;
+  public static final byte LPE200 = 13;
+  public static final byte GGGRX1200 = 14;
+  public static final byte JGMRO120D = 15;
+  public static final byte JGMESS160A = 16;
+  public static final byte SHGJ180U = 17;
 
-  public static final String[] names = { "WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL", };
+  public static final String[] names = { "WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL", "GGM02C", "GGM02S", "GOCO05C", "GLGM3150", "LPE200", "GGGRX1200", "JGMRO120D", "JGMESS160A", "SHGJ180U", };
 
   public static String name(int e) { return names[e]; }
 }

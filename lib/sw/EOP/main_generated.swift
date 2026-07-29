@@ -20,6 +20,48 @@ public enum DataType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
+///  Published Earth-orientation series a row was taken from. Append new values
+///  only; never reorder or reuse existing values.
+public enum eopSeries: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  IERS EOP 14 C04, the long-term combined solution (e.g.
+  ///  eopc04_14_IAU2000.62-now.txt).
+  case iersC0414 = 1
+  ///  IERS EOP 20 C04, the ITRF2020-based combined solution.
+  case iersC0420 = 2
+  ///  IERS Bulletin A rapid service / prediction.
+  case iersBulletinA = 3
+  ///  IERS Bulletin B.
+  case iersBulletinB = 4
+  ///  USNO/IERS finals2000A combined rapid + prediction file.
+  case finals2000a = 5
+  ///  A series not covered above; identify it in a producer-defined way.
+  case other = 6
+
+  public static var max: eopSeries { return .other }
+  public static var min: eopSeries { return .unspecified }
+}
+
+
+///  IAU precession-nutation model the celestial pole offsets are referenced to.
+///  Append new values only; never reorder or reuse existing values.
+public enum iauPrecessionNutationModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case iau2000a = 1
+  case iau2000b = 2
+  case iau2006 = 3
+
+  public static var max: iauPrecessionNutationModel { return .iau2006 }
+  public static var min: iauPrecessionNutationModel { return .unspecified }
+}
+
+
 ///  Earth Orientation Parameters
 public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -43,6 +85,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let TAI_MINUS_UTC_SECONDS: VOffset = 18
     static let LENGTH_OF_DAY_CORRECTION_SECONDS: VOffset = 20
     static let DATA_TYPE: VOffset = 22
+    static let SERIES: VOffset = 24
+    static let IAU_CONVENTION: VOffset = 26
+    static let X_POLE_WANDER_UNCERTAINTY_RADIANS: VOffset = 28
+    static let Y_POLE_WANDER_UNCERTAINTY_RADIANS: VOffset = 30
+    static let X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: VOffset = 32
+    static let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: VOffset = 34
+    static let UT1_MINUS_UTC_UNCERTAINTY_SECONDS: VOffset = 36
+    static let LENGTH_OF_DAY_UNCERTAINTY_SECONDS: VOffset = 38
   }
 
   ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
@@ -66,7 +116,28 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var LENGTH_OF_DAY_CORRECTION_SECONDS: Float32 { let o = _accessor.offset(VT.LENGTH_OF_DAY_CORRECTION_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///   Data type (O = Observed, P = Predicted)
   public var DATA_TYPE: DataType { let o = _accessor.offset(VT.DATA_TYPE); return o == 0 ? .observed : DataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .observed }
-  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  ///  Published series this row was taken from. Rows from different series are
+  ///  NOT interchangeable at the microarcsecond level and must not be merged
+  ///  without recording which series each row came from.
+  public var SERIES: eopSeries { let o = _accessor.offset(VT.SERIES); return o == 0 ? .unspecified : eopSeries(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Precession-nutation model the celestial pole offsets are expressed
+  ///  against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+  ///  (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+  ///  them correctly without knowing which model produced them.
+  public var IAU_CONVENTION: iauPrecessionNutationModel { let o = _accessor.offset(VT.IAU_CONVENTION); return o == 0 ? .unspecified : iauPrecessionNutationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  1-sigma uncertainty in x Pole Wander, radians.
+  public var X_POLE_WANDER_UNCERTAINTY_RADIANS: Float32 { let o = _accessor.offset(VT.X_POLE_WANDER_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  1-sigma uncertainty in y Pole Wander, radians.
+  public var Y_POLE_WANDER_UNCERTAINTY_RADIANS: Float32 { let o = _accessor.offset(VT.Y_POLE_WANDER_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  1-sigma uncertainty in the x Celestial Pole Offset, radians.
+  public var X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 { let o = _accessor.offset(VT.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  1-sigma uncertainty in the y Celestial Pole Offset, radians.
+  public var Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 { let o = _accessor.offset(VT.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  1-sigma uncertainty in UT1 minus UTC, seconds.
+  public var UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32 { let o = _accessor.offset(VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  1-sigma uncertainty in the Length of Day correction, seconds.
+  public var LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32 { let o = _accessor.offset(VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
+  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
   public static func add(MJD: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MJD, def: 0, at: VT.MJD) }
   public static func add(X_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS, def: 0.0, at: VT.X_POLE_WANDER_RADIANS) }
@@ -77,6 +148,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(TAI_MINUS_UTC_SECONDS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAI_MINUS_UTC_SECONDS, def: 0, at: VT.TAI_MINUS_UTC_SECONDS) }
   public static func add(LENGTH_OF_DAY_CORRECTION_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_CORRECTION_SECONDS, def: 0.0, at: VT.LENGTH_OF_DAY_CORRECTION_SECONDS) }
   public static func add(DATA_TYPE: DataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_TYPE.rawValue, def: 0, at: VT.DATA_TYPE) }
+  public static func add(SERIES: eopSeries, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SERIES.rawValue, def: 0, at: VT.SERIES) }
+  public static func add(IAU_CONVENTION: iauPrecessionNutationModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IAU_CONVENTION.rawValue, def: 0, at: VT.IAU_CONVENTION) }
+  public static func add(X_POLE_WANDER_UNCERTAINTY_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_UNCERTAINTY_RADIANS, def: 0.0, at: VT.X_POLE_WANDER_UNCERTAINTY_RADIANS) }
+  public static func add(Y_POLE_WANDER_UNCERTAINTY_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_POLE_WANDER_UNCERTAINTY_RADIANS, def: 0.0, at: VT.Y_POLE_WANDER_UNCERTAINTY_RADIANS) }
+  public static func add(X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, def: 0.0, at: VT.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) }
+  public static func add(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, def: 0.0, at: VT.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) }
+  public static func add(UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UT1_MINUS_UTC_UNCERTAINTY_SECONDS, def: 0.0, at: VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS) }
+  public static func add(LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LENGTH_OF_DAY_UNCERTAINTY_SECONDS, def: 0.0, at: VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS) }
   public static func endEOP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOP(
     _ fbb: inout FlatBufferBuilder,
@@ -89,7 +168,15 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     UT1_MINUS_UTC_SECONDS: Float32 = 0.0,
     TAI_MINUS_UTC_SECONDS: UInt16 = 0,
     LENGTH_OF_DAY_CORRECTION_SECONDS: Float32 = 0.0,
-    DATA_TYPE: DataType = .observed
+    DATA_TYPE: DataType = .observed,
+    SERIES: eopSeries = .unspecified,
+    IAU_CONVENTION: iauPrecessionNutationModel = .unspecified,
+    X_POLE_WANDER_UNCERTAINTY_RADIANS: Float32 = 0.0,
+    Y_POLE_WANDER_UNCERTAINTY_RADIANS: Float32 = 0.0,
+    X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 = 0.0,
+    Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Float32 = 0.0,
+    UT1_MINUS_UTC_UNCERTAINTY_SECONDS: Float32 = 0.0,
+    LENGTH_OF_DAY_UNCERTAINTY_SECONDS: Float32 = 0.0
   ) -> Offset {
     let __start = EOP.startEOP(&fbb)
     EOP.add(DATE: DATE, &fbb)
@@ -102,6 +189,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EOP.add(TAI_MINUS_UTC_SECONDS: TAI_MINUS_UTC_SECONDS, &fbb)
     EOP.add(LENGTH_OF_DAY_CORRECTION_SECONDS: LENGTH_OF_DAY_CORRECTION_SECONDS, &fbb)
     EOP.add(DATA_TYPE: DATA_TYPE, &fbb)
+    EOP.add(SERIES: SERIES, &fbb)
+    EOP.add(IAU_CONVENTION: IAU_CONVENTION, &fbb)
+    EOP.add(X_POLE_WANDER_UNCERTAINTY_RADIANS: X_POLE_WANDER_UNCERTAINTY_RADIANS, &fbb)
+    EOP.add(Y_POLE_WANDER_UNCERTAINTY_RADIANS: Y_POLE_WANDER_UNCERTAINTY_RADIANS, &fbb)
+    EOP.add(X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, &fbb)
+    EOP.add(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, &fbb)
+    EOP.add(UT1_MINUS_UTC_UNCERTAINTY_SECONDS: UT1_MINUS_UTC_UNCERTAINTY_SECONDS, &fbb)
+    EOP.add(LENGTH_OF_DAY_UNCERTAINTY_SECONDS: LENGTH_OF_DAY_UNCERTAINTY_SECONDS, &fbb)
     return EOP.endEOP(&fbb, start: __start)
   }
 
@@ -117,6 +212,14 @@ public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.TAI_MINUS_UTC_SECONDS, fieldName: "TAI_MINUS_UTC_SECONDS", required: false, type: UInt16.self)
     try _v.visit(field: VT.LENGTH_OF_DAY_CORRECTION_SECONDS, fieldName: "LENGTH_OF_DAY_CORRECTION_SECONDS", required: false, type: Float32.self)
     try _v.visit(field: VT.DATA_TYPE, fieldName: "DATA_TYPE", required: false, type: DataType.self)
+    try _v.visit(field: VT.SERIES, fieldName: "SERIES", required: false, type: eopSeries.self)
+    try _v.visit(field: VT.IAU_CONVENTION, fieldName: "IAU_CONVENTION", required: false, type: iauPrecessionNutationModel.self)
+    try _v.visit(field: VT.X_POLE_WANDER_UNCERTAINTY_RADIANS, fieldName: "X_POLE_WANDER_UNCERTAINTY_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.Y_POLE_WANDER_UNCERTAINTY_RADIANS, fieldName: "Y_POLE_WANDER_UNCERTAINTY_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, fieldName: "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, fieldName: "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", required: false, type: Float32.self)
+    try _v.visit(field: VT.UT1_MINUS_UTC_UNCERTAINTY_SECONDS, fieldName: "UT1_MINUS_UTC_UNCERTAINTY_SECONDS", required: false, type: Float32.self)
+    try _v.visit(field: VT.LENGTH_OF_DAY_UNCERTAINTY_SECONDS, fieldName: "LENGTH_OF_DAY_UNCERTAINTY_SECONDS", required: false, type: Float32.self)
     _v.finish()
   }
 }

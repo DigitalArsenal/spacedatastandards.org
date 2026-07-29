@@ -384,6 +384,13 @@ public struct TDM : IFlatbufferObject
   public ArraySegment<byte>? GetCLOCK_DRIFTBytes() { return __p.__vector_as_arraysegment(124); }
 #endif
   public double[] GetCLOCK_DRIFTArray() { return __p.__vector_as_array<double>(124); }
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+  /// table covering this segment, ordered by START_TIME and non-overlapping.
+  /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+  /// cannot reconstruct the observables. Absent for unramped tracking, which
+  /// leaves the record exactly CCSDS-conformant.
+  public TDMTransmitRamp? TRANSMIT_RAMPS(int j) { int o = __p.__offset(126); return o != 0 ? (TDMTransmitRamp?)(new TDMTransmitRamp()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRANSMIT_RAMPSLength { get { int o = __p.__offset(126); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<TDM> CreateTDM(FlatBufferBuilder builder,
       StringOffset OBSERVER_IDOffset = default(StringOffset),
@@ -446,8 +453,9 @@ public struct TDM : IFlatbufferObject
       VectorOffset RHUMIDITYOffset = default(VectorOffset),
       VectorOffset TEMPERATUREOffset = default(VectorOffset),
       VectorOffset CLOCK_BIASOffset = default(VectorOffset),
-      VectorOffset CLOCK_DRIFTOffset = default(VectorOffset)) {
-    builder.StartTable(61);
+      VectorOffset CLOCK_DRIFTOffset = default(VectorOffset),
+      VectorOffset TRANSMIT_RAMPSOffset = default(VectorOffset)) {
+    builder.StartTable(62);
     TDM.AddRANGE_MODULUS(builder, RANGE_MODULUS);
     TDM.AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY);
     TDM.AddRANGE_RATE(builder, RANGE_RATE);
@@ -461,6 +469,7 @@ public struct TDM : IFlatbufferObject
     TDM.AddOBSERVER_Z(builder, OBSERVER_Z);
     TDM.AddOBSERVER_Y(builder, OBSERVER_Y);
     TDM.AddOBSERVER_X(builder, OBSERVER_X);
+    TDM.AddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPSOffset);
     TDM.AddCLOCK_DRIFT(builder, CLOCK_DRIFTOffset);
     TDM.AddCLOCK_BIAS(builder, CLOCK_BIASOffset);
     TDM.AddTEMPERATURE(builder, TEMPERATUREOffset);
@@ -512,7 +521,7 @@ public struct TDM : IFlatbufferObject
     return TDM.EndTDM(builder);
   }
 
-  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(61); }
+  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(62); }
   public static void AddOBSERVER_ID(FlatBufferBuilder builder, StringOffset OBSERVER_IDOffset) { builder.AddOffset(0, OBSERVER_IDOffset.Value, 0); }
   public static void AddOBSERVER_X(FlatBufferBuilder builder, double OBSERVER_X) { builder.AddDouble(1, OBSERVER_X, 0.0); }
   public static void AddOBSERVER_Y(FlatBufferBuilder builder, double OBSERVER_Y) { builder.AddDouble(2, OBSERVER_Y, 0.0); }
@@ -634,6 +643,12 @@ public struct TDM : IFlatbufferObject
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCLOCK_DRIFTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddTRANSMIT_RAMPS(FlatBufferBuilder builder, VectorOffset TRANSMIT_RAMPSOffset) { builder.AddOffset(61, TRANSMIT_RAMPSOffset.Value, 0); }
+  public static VectorOffset CreateTRANSMIT_RAMPSVector(FlatBufferBuilder builder, Offset<TDMTransmitRamp>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, Offset<TDMTransmitRamp>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<TDMTransmitRamp>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<TDMTransmitRamp>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTRANSMIT_RAMPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<TDM> EndTDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<TDM>(o);
@@ -719,6 +734,8 @@ public struct TDM : IFlatbufferObject
     for (var _j = 0; _j < this.CLOCK_BIASLength; ++_j) {_o.CLOCK_BIAS.Add(this.CLOCK_BIAS(_j));}
     _o.CLOCK_DRIFT = new List<double>();
     for (var _j = 0; _j < this.CLOCK_DRIFTLength; ++_j) {_o.CLOCK_DRIFT.Add(this.CLOCK_DRIFT(_j));}
+    _o.TRANSMIT_RAMPS = new List<TDMTransmitRampT>();
+    for (var _j = 0; _j < this.TRANSMIT_RAMPSLength; ++_j) {_o.TRANSMIT_RAMPS.Add(this.TRANSMIT_RAMPS(_j).HasValue ? this.TRANSMIT_RAMPS(_j).Value.UnPack() : null);}
   }
   public static Offset<TDM> Pack(FlatBufferBuilder builder, TDMT _o) {
     if (_o == null) return default(Offset<TDM>);
@@ -812,6 +829,12 @@ public struct TDM : IFlatbufferObject
       var __CLOCK_DRIFT = _o.CLOCK_DRIFT.ToArray();
       _CLOCK_DRIFT = CreateCLOCK_DRIFTVector(builder, __CLOCK_DRIFT);
     }
+    var _TRANSMIT_RAMPS = default(VectorOffset);
+    if (_o.TRANSMIT_RAMPS != null) {
+      var __TRANSMIT_RAMPS = new Offset<TDMTransmitRamp>[_o.TRANSMIT_RAMPS.Count];
+      for (var _j = 0; _j < __TRANSMIT_RAMPS.Length; ++_j) { __TRANSMIT_RAMPS[_j] = TDMTransmitRamp.Pack(builder, _o.TRANSMIT_RAMPS[_j]); }
+      _TRANSMIT_RAMPS = CreateTRANSMIT_RAMPSVector(builder, __TRANSMIT_RAMPS);
+    }
     return CreateTDM(
       builder,
       _OBSERVER_ID,
@@ -874,7 +897,8 @@ public struct TDM : IFlatbufferObject
       _RHUMIDITY,
       _TEMPERATURE,
       _CLOCK_BIAS,
-      _CLOCK_DRIFT);
+      _CLOCK_DRIFT,
+      _TRANSMIT_RAMPS);
   }
 }
 
@@ -941,6 +965,7 @@ public class TDMT
   public List<double> TEMPERATURE { get; set; }
   public List<double> CLOCK_BIAS { get; set; }
   public List<double> CLOCK_DRIFT { get; set; }
+  public List<TDMTransmitRampT> TRANSMIT_RAMPS { get; set; }
 
   public TDMT() {
     this.OBSERVER_ID = null;
@@ -1004,6 +1029,7 @@ public class TDMT
     this.TEMPERATURE = null;
     this.CLOCK_BIAS = null;
     this.CLOCK_DRIFT = null;
+    this.TRANSMIT_RAMPS = null;
   }
   public static TDMT DeserializeFromBinary(byte[] fbBuffer) {
     return TDM.GetRootAsTDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -1082,6 +1108,7 @@ static public class TDMVerify
       && verifier.VerifyVectorOfData(tablePos, 120 /*TEMPERATURE*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 122 /*CLOCK_BIAS*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 124 /*CLOCK_DRIFT*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 126 /*TRANSMIT_RAMPS*/, TDMTransmitRampVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -838,6 +838,48 @@
       },
       "additionalProperties": false
     },
+    "TDMTransmitRamp": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "START_TIME": {
+          "type": "string",
+          "description": "Start of the interval over which this ramp applies, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "End of the interval over which this ramp applies, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_TIME": {
+          "type": "string",
+          "description": "Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_HZ": {
+          "type": "number",
+          "description": "Transmitted frequency at REFERENCE_TIME, Hz.",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY_RATE_HZ_PER_S": {
+          "type": "number",
+          "description": "Constant ramp rate over the interval, Hz per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMITTING_STATION_ID": {
+          "type": "string",
+          "description": "the PARTICIPANT_n naming used by the segment when both are present.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT_BAND": {
+          "type": "string",
+          "description": "TRANSMIT_BAND (e.g. \"S\", \"X\", \"Ka\", \"Ku\").",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One uplink transmitter frequency ramp applying over a closed time interval.  SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space radiometric archives carry an explicit ramp table and the Doppler observables are NOT reconstructible without it. Ramps are optional; a record that omits TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.  Frequency over the interval is the linear polynomial f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME) which is the common form of the two archive representations: DSN ODF (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a ramp reference time with constant and linear transmission-frequency terms, so REFERENCE_TIME is that reference time and may precede START_TIME. Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer assume which convention was used."
+    },
     "TDM": {
       "type": "object",
       "additionalProperties": false,
@@ -1182,6 +1224,14 @@
           },
           "description": "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
           "x-flatbuffer-type": "[double]"
+        },
+        "TRANSMIT_RAMPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TDMTransmitRamp"
+          },
+          "description": "leaves the record exactly CCSDS-conformant.",
+          "x-flatbuffer-type": "[TDMTransmitRamp]"
         }
       },
       "description": "Tracking Data Message"

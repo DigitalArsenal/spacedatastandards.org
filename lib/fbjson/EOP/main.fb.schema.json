@@ -18,6 +18,74 @@
         }
       }
     },
+    "eopSeries": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "IERS_C04_14",
+        "IERS_C04_20",
+        "IERS_BULLETIN_A",
+        "IERS_BULLETIN_B",
+        "FINALS2000A",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "IERS_C04_14": {
+          "value": 1,
+          "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+        },
+        "IERS_C04_20": {
+          "value": 2,
+          "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+        },
+        "IERS_BULLETIN_A": {
+          "value": 3,
+          "description": "IERS Bulletin A rapid service / prediction."
+        },
+        "IERS_BULLETIN_B": {
+          "value": 4,
+          "description": "IERS Bulletin B."
+        },
+        "FINALS2000A": {
+          "value": 5,
+          "description": "USNO/IERS finals2000A combined rapid + prediction file."
+        },
+        "OTHER": {
+          "value": 6,
+          "description": "A series not covered above; identify it in a producer-defined way."
+        }
+      }
+    },
+    "iauPrecessionNutationModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "IAU_2000A",
+        "IAU_2000B",
+        "IAU_2006"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "IAU_2000A": {
+          "value": 1
+        },
+        "IAU_2000B": {
+          "value": 2
+        },
+        "IAU_2006": {
+          "value": 3
+        }
+      }
+    },
     "EOP": {
       "type": "object",
       "description": "Earth Orientation Parameters",
@@ -84,6 +152,93 @@
               "value": 1
             }
           }
+        },
+        "SERIES": {
+          "$ref": "#/definitions/eopSeries",
+          "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "IERS_C04_14": {
+              "value": 1,
+              "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+            },
+            "IERS_C04_20": {
+              "value": 2,
+              "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+            },
+            "IERS_BULLETIN_A": {
+              "value": 3,
+              "description": "IERS Bulletin A rapid service / prediction."
+            },
+            "IERS_BULLETIN_B": {
+              "value": 4,
+              "description": "IERS Bulletin B."
+            },
+            "FINALS2000A": {
+              "value": 5,
+              "description": "USNO/IERS finals2000A combined rapid + prediction file."
+            },
+            "OTHER": {
+              "value": 6,
+              "description": "A series not covered above; identify it in a producer-defined way."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "IAU_CONVENTION": {
+          "$ref": "#/definitions/iauPrecessionNutationModel",
+          "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "IAU_2000A": {
+              "value": 1
+            },
+            "IAU_2000B": {
+              "value": 2
+            },
+            "IAU_2006": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in x Pole Wander, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in y Pole Wander, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians.",
+          "x-flatbuffer-type": "float"
+        },
+        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in UT1 minus UTC, seconds.",
+          "x-flatbuffer-type": "float"
+        },
+        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+          "type": "number",
+          "description": "1-sigma uncertainty in the Length of Day correction, seconds.",
+          "x-flatbuffer-type": "float"
         }
       },
       "additionalProperties": false

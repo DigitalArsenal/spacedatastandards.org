@@ -266,8 +266,194 @@ func (rcv *EOP) MutateDataType(n DataType) bool {
 	return rcv.MutateDATA_TYPE(n)
 }
 
+/// Published series this row was taken from. Rows from different series are
+/// NOT interchangeable at the microarcsecond level and must not be merged
+/// without recording which series each row came from.
+func (rcv *EOP) SERIES() eopSeries {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return eopSeries(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *EOP) Series() eopSeries {
+	return rcv.SERIES()
+}
+
+/// Published series this row was taken from. Rows from different series are
+/// NOT interchangeable at the microarcsecond level and must not be merged
+/// without recording which series each row came from.
+func (rcv *EOP) MutateSERIES(n eopSeries) bool {
+	return rcv._tab.MutateByteSlot(24, byte(n))
+}
+
+func (rcv *EOP) MutateSeries(n eopSeries) bool {
+	return rcv.MutateSERIES(n)
+}
+
+/// Precession-nutation model the celestial pole offsets are expressed
+/// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+/// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+/// them correctly without knowing which model produced them.
+func (rcv *EOP) IAU_CONVENTION() iauPrecessionNutationModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return iauPrecessionNutationModel(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *EOP) IauConvention() iauPrecessionNutationModel {
+	return rcv.IAU_CONVENTION()
+}
+
+/// Precession-nutation model the celestial pole offsets are expressed
+/// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+/// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+/// them correctly without knowing which model produced them.
+func (rcv *EOP) MutateIAU_CONVENTION(n iauPrecessionNutationModel) bool {
+	return rcv._tab.MutateByteSlot(26, byte(n))
+}
+
+func (rcv *EOP) MutateIauConvention(n iauPrecessionNutationModel) bool {
+	return rcv.MutateIAU_CONVENTION(n)
+}
+
+/// 1-sigma uncertainty in x Pole Wander, radians.
+func (rcv *EOP) X_POLE_WANDER_UNCERTAINTY_RADIANS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) XPoleWanderUncertaintyRadians() float32 {
+	return rcv.X_POLE_WANDER_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty in x Pole Wander, radians.
+func (rcv *EOP) MutateX_POLE_WANDER_UNCERTAINTY_RADIANS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(28, n)
+}
+
+func (rcv *EOP) MutateXPoleWanderUncertaintyRadians(n float32) bool {
+	return rcv.MutateX_POLE_WANDER_UNCERTAINTY_RADIANS(n)
+}
+
+/// 1-sigma uncertainty in y Pole Wander, radians.
+func (rcv *EOP) Y_POLE_WANDER_UNCERTAINTY_RADIANS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) YPoleWanderUncertaintyRadians() float32 {
+	return rcv.Y_POLE_WANDER_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty in y Pole Wander, radians.
+func (rcv *EOP) MutateY_POLE_WANDER_UNCERTAINTY_RADIANS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(30, n)
+}
+
+func (rcv *EOP) MutateYPoleWanderUncertaintyRadians(n float32) bool {
+	return rcv.MutateY_POLE_WANDER_UNCERTAINTY_RADIANS(n)
+}
+
+/// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+func (rcv *EOP) X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) XCelestialPoleOffsetUncertaintyRadians() float32 {
+	return rcv.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+func (rcv *EOP) MutateX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(32, n)
+}
+
+func (rcv *EOP) MutateXCelestialPoleOffsetUncertaintyRadians(n float32) bool {
+	return rcv.MutateX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(n)
+}
+
+/// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+func (rcv *EOP) Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) YCelestialPoleOffsetUncertaintyRadians() float32 {
+	return rcv.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+}
+
+/// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+func (rcv *EOP) MutateY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(34, n)
+}
+
+func (rcv *EOP) MutateYCelestialPoleOffsetUncertaintyRadians(n float32) bool {
+	return rcv.MutateY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(n)
+}
+
+/// 1-sigma uncertainty in UT1 minus UTC, seconds.
+func (rcv *EOP) UT1_MINUS_UTC_UNCERTAINTY_SECONDS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) Ut1MinusUtcUncertaintySeconds() float32 {
+	return rcv.UT1_MINUS_UTC_UNCERTAINTY_SECONDS()
+}
+
+/// 1-sigma uncertainty in UT1 minus UTC, seconds.
+func (rcv *EOP) MutateUT1_MINUS_UTC_UNCERTAINTY_SECONDS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(36, n)
+}
+
+func (rcv *EOP) MutateUt1MinusUtcUncertaintySeconds(n float32) bool {
+	return rcv.MutateUT1_MINUS_UTC_UNCERTAINTY_SECONDS(n)
+}
+
+/// 1-sigma uncertainty in the Length of Day correction, seconds.
+func (rcv *EOP) LENGTH_OF_DAY_UNCERTAINTY_SECONDS() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *EOP) LengthOfDayUncertaintySeconds() float32 {
+	return rcv.LENGTH_OF_DAY_UNCERTAINTY_SECONDS()
+}
+
+/// 1-sigma uncertainty in the Length of Day correction, seconds.
+func (rcv *EOP) MutateLENGTH_OF_DAY_UNCERTAINTY_SECONDS(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(38, n)
+}
+
+func (rcv *EOP) MutateLengthOfDayUncertaintySeconds(n float32) bool {
+	return rcv.MutateLENGTH_OF_DAY_UNCERTAINTY_SECONDS(n)
+}
+
 func EOPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(10)
+	builder.StartObject(18)
 }
 func EOPAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
@@ -328,6 +514,54 @@ func EOPAddDATA_TYPE(builder *flatbuffers.Builder, DATA_TYPE DataType) {
 }
 func EOPAddDataType(builder *flatbuffers.Builder, DATA_TYPE DataType) {
 	EOPAddDATA_TYPE(builder, DATA_TYPE)
+}
+func EOPAddSERIES(builder *flatbuffers.Builder, SERIES eopSeries) {
+	builder.PrependByteSlot(10, byte(SERIES), 0)
+}
+func EOPAddSeries(builder *flatbuffers.Builder, SERIES eopSeries) {
+	EOPAddSERIES(builder, SERIES)
+}
+func EOPAddIAU_CONVENTION(builder *flatbuffers.Builder, IAU_CONVENTION iauPrecessionNutationModel) {
+	builder.PrependByteSlot(11, byte(IAU_CONVENTION), 0)
+}
+func EOPAddIauConvention(builder *flatbuffers.Builder, IAU_CONVENTION iauPrecessionNutationModel) {
+	EOPAddIAU_CONVENTION(builder, IAU_CONVENTION)
+}
+func EOPAddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, X_POLE_WANDER_UNCERTAINTY_RADIANS float32) {
+	builder.PrependFloat32Slot(12, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddXPoleWanderUncertaintyRadians(builder *flatbuffers.Builder, X_POLE_WANDER_UNCERTAINTY_RADIANS float32) {
+	EOPAddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder, X_POLE_WANDER_UNCERTAINTY_RADIANS)
+}
+func EOPAddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS float32) {
+	builder.PrependFloat32Slot(13, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddYPoleWanderUncertaintyRadians(builder *flatbuffers.Builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS float32) {
+	EOPAddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS)
+}
+func EOPAddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS float32) {
+	builder.PrependFloat32Slot(14, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddXCelestialPoleOffsetUncertaintyRadians(builder *flatbuffers.Builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS float32) {
+	EOPAddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+}
+func EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS float32) {
+	builder.PrependFloat32Slot(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+}
+func EOPAddYCelestialPoleOffsetUncertaintyRadians(builder *flatbuffers.Builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS float32) {
+	EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+}
+func EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder *flatbuffers.Builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS float32) {
+	builder.PrependFloat32Slot(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0)
+}
+func EOPAddUt1MinusUtcUncertaintySeconds(builder *flatbuffers.Builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS float32) {
+	EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS)
+}
+func EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder *flatbuffers.Builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS float32) {
+	builder.PrependFloat32Slot(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0)
+}
+func EOPAddLengthOfDayUncertaintySeconds(builder *flatbuffers.Builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS float32) {
+	EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
 }
 func EOPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

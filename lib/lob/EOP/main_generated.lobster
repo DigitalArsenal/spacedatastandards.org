@@ -5,6 +5,32 @@ enum DataType:
     DataType_OBSERVED = 0
     DataType_PREDICTED = 1
 
+/// Published Earth-orientation series a row was taken from. Append new values
+/// only; never reorder or reuse existing values.
+enum eopSeries:
+    eopSeries_UNSPECIFIED = 0
+    /// IERS EOP 14 C04, the long-term combined solution (e.g.
+    /// eopc04_14_IAU2000.62-now.txt).
+    eopSeries_IERS_C04_14 = 1
+    /// IERS EOP 20 C04, the ITRF2020-based combined solution.
+    eopSeries_IERS_C04_20 = 2
+    /// IERS Bulletin A rapid service / prediction.
+    eopSeries_IERS_BULLETIN_A = 3
+    /// IERS Bulletin B.
+    eopSeries_IERS_BULLETIN_B = 4
+    /// USNO/IERS finals2000A combined rapid + prediction file.
+    eopSeries_FINALS2000A = 5
+    /// A series not covered above; identify it in a producer-defined way.
+    eopSeries_OTHER = 6
+
+/// IAU precession-nutation model the celestial pole offsets are referenced to.
+/// Append new values only; never reorder or reuse existing values.
+enum iauPrecessionNutationModel:
+    iauPrecessionNutationModel_UNSPECIFIED = 0
+    iauPrecessionNutationModel_IAU_2000A = 1
+    iauPrecessionNutationModel_IAU_2000B = 2
+    iauPrecessionNutationModel_IAU_2006 = 3
+
 class EOP
 
 /// Earth Orientation Parameters
@@ -39,13 +65,42 @@ class EOP : flatbuffers.handle
     ///  Data type (O = Observed, P = Predicted)
     def DATA_TYPE() -> DataType:
         return DataType(flatbuffers.field_int8(buf_, pos_, 22, 0))
+    /// Published series this row was taken from. Rows from different series are
+    /// NOT interchangeable at the microarcsecond level and must not be merged
+    /// without recording which series each row came from.
+    def SERIES() -> eopSeries:
+        return eopSeries(flatbuffers.field_uint8(buf_, pos_, 24, 0))
+    /// Precession-nutation model the celestial pole offsets are expressed
+    /// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+    /// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+    /// them correctly without knowing which model produced them.
+    def IAU_CONVENTION() -> iauPrecessionNutationModel:
+        return iauPrecessionNutationModel(flatbuffers.field_uint8(buf_, pos_, 26, 0))
+    /// 1-sigma uncertainty in x Pole Wander, radians.
+    def X_POLE_WANDER_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 28, 0.0)
+    /// 1-sigma uncertainty in y Pole Wander, radians.
+    def Y_POLE_WANDER_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 30, 0.0)
+    /// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+    def X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 32, 0.0)
+    /// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+    def Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 34, 0.0)
+    /// 1-sigma uncertainty in UT1 minus UTC, seconds.
+    def UT1_MINUS_UTC_UNCERTAINTY_SECONDS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 36, 0.0)
+    /// 1-sigma uncertainty in the Length of Day correction, seconds.
+    def LENGTH_OF_DAY_UNCERTAINTY_SECONDS() -> float:
+        return flatbuffers.field_float32(buf_, pos_, 38, 0.0)
 
 def GetRootAsEOP(buf:string): return EOP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(10)
+        b_.StartObject(18)
         return this
     def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
@@ -76,6 +131,30 @@ struct EOPBuilder:
         return this
     def add_DATA_TYPE(DATA_TYPE:DataType):
         b_.PrependInt8Slot(9, DATA_TYPE, 0)
+        return this
+    def add_SERIES(SERIES:eopSeries):
+        b_.PrependUint8Slot(10, SERIES, 0)
+        return this
+    def add_IAU_CONVENTION(IAU_CONVENTION:iauPrecessionNutationModel):
+        b_.PrependUint8Slot(11, IAU_CONVENTION, 0)
+        return this
+    def add_X_POLE_WANDER_UNCERTAINTY_RADIANS(X_POLE_WANDER_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat32Slot(12, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_Y_POLE_WANDER_UNCERTAINTY_RADIANS(Y_POLE_WANDER_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat32Slot(13, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat32Slot(14, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS:float):
+        b_.PrependFloat32Slot(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(UT1_MINUS_UTC_UNCERTAINTY_SECONDS:float):
+        b_.PrependFloat32Slot(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0)
+        return this
+    def add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(LENGTH_OF_DAY_UNCERTAINTY_SECONDS:float):
+        b_.PrependFloat32Slot(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0)
         return this
     def end():
         return b_.EndObject()

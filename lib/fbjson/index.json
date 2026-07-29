@@ -33168,7 +33168,16 @@
                         "EIGEN_6C4",
                         "GOCO06S",
                         "XGM2019E",
-                        "CUSTOM_MODEL"
+                        "CUSTOM_MODEL",
+                        "GGM02C",
+                        "GGM02S",
+                        "GOCO05C",
+                        "GLGM3150",
+                        "LPE200",
+                        "GGGRX1200",
+                        "JGMRO120D",
+                        "JGMESS160A",
+                        "SHGJ180U"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "byte",
@@ -33199,6 +33208,38 @@
                         },
                         "CUSTOM_MODEL": {
                             "value": 8
+                        },
+                        "GGM02C": {
+                            "value": 9,
+                            "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+                        },
+                        "GGM02S": {
+                            "value": 10
+                        },
+                        "GOCO05C": {
+                            "value": 11
+                        },
+                        "GLGM3150": {
+                            "value": 12,
+                            "description": "Moon"
+                        },
+                        "LPE200": {
+                            "value": 13
+                        },
+                        "GGGRX1200": {
+                            "value": 14
+                        },
+                        "JGMRO120D": {
+                            "value": 15,
+                            "description": "Mars"
+                        },
+                        "JGMESS160A": {
+                            "value": 16,
+                            "description": "Mercury"
+                        },
+                        "SHGJ180U": {
+                            "value": 17,
+                            "description": "Venus"
                         }
                     }
                 },
@@ -33308,6 +33349,38 @@
                                 },
                                 "CUSTOM_MODEL": {
                                     "value": 8
+                                },
+                                "GGM02C": {
+                                    "value": 9,
+                                    "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+                                },
+                                "GGM02S": {
+                                    "value": 10
+                                },
+                                "GOCO05C": {
+                                    "value": 11
+                                },
+                                "GLGM3150": {
+                                    "value": 12,
+                                    "description": "Moon"
+                                },
+                                "LPE200": {
+                                    "value": 13
+                                },
+                                "GGGRX1200": {
+                                    "value": 14
+                                },
+                                "JGMRO120D": {
+                                    "value": 15,
+                                    "description": "Mars"
+                                },
+                                "JGMESS160A": {
+                                    "value": 16,
+                                    "description": "Mercury"
+                                },
+                                "SHGJ180U": {
+                                    "value": 17,
+                                    "description": "Venus"
                                 }
                             },
                             "x-flatbuffer-default": "EGM2008"
@@ -55795,6 +55868,74 @@
                         }
                     }
                 },
+                "eopSeries": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IERS_C04_14",
+                        "IERS_C04_20",
+                        "IERS_BULLETIN_A",
+                        "IERS_BULLETIN_B",
+                        "FINALS2000A",
+                        "OTHER"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "IERS_C04_14": {
+                            "value": 1,
+                            "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+                        },
+                        "IERS_C04_20": {
+                            "value": 2,
+                            "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+                        },
+                        "IERS_BULLETIN_A": {
+                            "value": 3,
+                            "description": "IERS Bulletin A rapid service / prediction."
+                        },
+                        "IERS_BULLETIN_B": {
+                            "value": 4,
+                            "description": "IERS Bulletin B."
+                        },
+                        "FINALS2000A": {
+                            "value": 5,
+                            "description": "USNO/IERS finals2000A combined rapid + prediction file."
+                        },
+                        "OTHER": {
+                            "value": 6,
+                            "description": "A series not covered above; identify it in a producer-defined way."
+                        }
+                    }
+                },
+                "iauPrecessionNutationModel": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "IAU_2000A",
+                        "IAU_2000B",
+                        "IAU_2006"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "IAU_2000A": {
+                            "value": 1
+                        },
+                        "IAU_2000B": {
+                            "value": 2
+                        },
+                        "IAU_2006": {
+                            "value": 3
+                        }
+                    }
+                },
                 "EOP": {
                     "type": "object",
                     "description": "Earth Orientation Parameters",
@@ -55861,6 +56002,93 @@
                                     "value": 1
                                 }
                             }
+                        },
+                        "SERIES": {
+                            "$ref": "#/definitions/eopSeries",
+                            "description": "Published series this row was taken from. Rows from different series are\nNOT interchangeable at the microarcsecond level and must not be merged\nwithout recording which series each row came from.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "IERS_C04_14": {
+                                    "value": 1,
+                                    "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+                                },
+                                "IERS_C04_20": {
+                                    "value": 2,
+                                    "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+                                },
+                                "IERS_BULLETIN_A": {
+                                    "value": 3,
+                                    "description": "IERS Bulletin A rapid service / prediction."
+                                },
+                                "IERS_BULLETIN_B": {
+                                    "value": 4,
+                                    "description": "IERS Bulletin B."
+                                },
+                                "FINALS2000A": {
+                                    "value": 5,
+                                    "description": "USNO/IERS finals2000A combined rapid + prediction file."
+                                },
+                                "OTHER": {
+                                    "value": 6,
+                                    "description": "A series not covered above; identify it in a producer-defined way."
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "IAU_CONVENTION": {
+                            "$ref": "#/definitions/iauPrecessionNutationModel",
+                            "description": "Precession-nutation model the celestial pole offsets are expressed\nagainst. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS\n(dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply\nthem correctly without knowing which model produced them.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "IAU_2000A": {
+                                    "value": 1
+                                },
+                                "IAU_2000B": {
+                                    "value": 2
+                                },
+                                "IAU_2006": {
+                                    "value": 3
+                                }
+                            },
+                            "x-flatbuffer-default": "UNSPECIFIED"
+                        },
+                        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in x Pole Wander, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in y Pole Wander, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UT1 minus UTC, seconds.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the Length of Day correction, seconds.",
+                            "x-flatbuffer-type": "float"
                         }
                     },
                     "additionalProperties": false
@@ -84760,6 +84988,76 @@
                         }
                     }
                 },
+                "eopSeries": {
+                    "type": "integer",
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "description": "only; never reorder or reuse existing values.",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "IERS_C04_14": {
+                            "value": 1,
+                            "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+                        },
+                        "IERS_C04_20": {
+                            "value": 2,
+                            "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+                        },
+                        "IERS_BULLETIN_A": {
+                            "value": 3,
+                            "description": "IERS Bulletin A rapid service / prediction."
+                        },
+                        "IERS_BULLETIN_B": {
+                            "value": 4,
+                            "description": "IERS Bulletin B."
+                        },
+                        "FINALS2000A": {
+                            "value": 5,
+                            "description": "USNO/IERS finals2000A combined rapid + prediction file."
+                        },
+                        "OTHER": {
+                            "value": 6,
+                            "description": "A series not covered above; identify it in a producer-defined way."
+                        }
+                    }
+                },
+                "iauPrecessionNutationModel": {
+                    "type": "integer",
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "ubyte",
+                    "description": "Append new values only; never reorder or reuse existing values.",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3
+                    ],
+                    "x-flatbuffer-enum-values": {
+                        "UNSPECIFIED": {
+                            "value": 0
+                        },
+                        "IAU_2000A": {
+                            "value": 1
+                        },
+                        "IAU_2000B": {
+                            "value": 2
+                        },
+                        "IAU_2006": {
+                            "value": 3
+                        }
+                    }
+                },
                 "JammingType": {
                     "type": "integer",
                     "x-flatbuffer-type": "enum",
@@ -85779,7 +86077,16 @@
                         5,
                         6,
                         7,
-                        8
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17
                     ],
                     "x-flatbuffer-enum-values": {
                         "WGS84": {
@@ -85808,6 +86115,38 @@
                         },
                         "CUSTOM_MODEL": {
                             "value": 8
+                        },
+                        "GGM02C": {
+                            "value": 9,
+                            "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+                        },
+                        "GGM02S": {
+                            "value": 10
+                        },
+                        "GOCO05C": {
+                            "value": 11
+                        },
+                        "GLGM3150": {
+                            "value": 12,
+                            "description": "Moon"
+                        },
+                        "LPE200": {
+                            "value": 13
+                        },
+                        "GGGRX1200": {
+                            "value": 14
+                        },
+                        "JGMRO120D": {
+                            "value": 15,
+                            "description": "Mars"
+                        },
+                        "JGMESS160A": {
+                            "value": 16,
+                            "description": "Mercury"
+                        },
+                        "SHGJ180U": {
+                            "value": 17,
+                            "description": "Venus"
                         }
                     }
                 },
@@ -107244,6 +107583,93 @@
                                     "value": 1
                                 }
                             }
+                        },
+                        "SERIES": {
+                            "$ref": "#/definitions/eopSeries",
+                            "description": "without recording which series each row came from.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-default": "UNSPECIFIED",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "IERS_C04_14": {
+                                    "value": 1,
+                                    "description": "IERS EOP 14 C04, the long-term combined solution (e.g. eopc04_14_IAU2000.62-now.txt)."
+                                },
+                                "IERS_C04_20": {
+                                    "value": 2,
+                                    "description": "IERS EOP 20 C04, the ITRF2020-based combined solution."
+                                },
+                                "IERS_BULLETIN_A": {
+                                    "value": 3,
+                                    "description": "IERS Bulletin A rapid service / prediction."
+                                },
+                                "IERS_BULLETIN_B": {
+                                    "value": 4,
+                                    "description": "IERS Bulletin B."
+                                },
+                                "FINALS2000A": {
+                                    "value": 5,
+                                    "description": "USNO/IERS finals2000A combined rapid + prediction file."
+                                },
+                                "OTHER": {
+                                    "value": 6,
+                                    "description": "A series not covered above; identify it in a producer-defined way."
+                                }
+                            }
+                        },
+                        "IAU_CONVENTION": {
+                            "$ref": "#/definitions/iauPrecessionNutationModel",
+                            "description": "them correctly without knowing which model produced them.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-default": "UNSPECIFIED",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "UNSPECIFIED": {
+                                    "value": 0
+                                },
+                                "IAU_2000A": {
+                                    "value": 1
+                                },
+                                "IAU_2000B": {
+                                    "value": 2
+                                },
+                                "IAU_2006": {
+                                    "value": 3
+                                }
+                            }
+                        },
+                        "X_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in x Pole Wander, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "Y_POLE_WANDER_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in y Pole Wander, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the x Celestial Pole Offset, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the y Celestial Pole Offset, radians.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "UT1_MINUS_UTC_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UT1 minus UTC, seconds.",
+                            "x-flatbuffer-type": "float"
+                        },
+                        "LENGTH_OF_DAY_UNCERTAINTY_SECONDS": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in the Length of Day correction, seconds.",
+                            "x-flatbuffer-type": "float"
                         }
                     },
                     "description": "Earth Orientation Parameters"
@@ -109826,6 +110252,38 @@
                                 },
                                 "CUSTOM_MODEL": {
                                     "value": 8
+                                },
+                                "GGM02C": {
+                                    "value": 9,
+                                    "description": "Appended: widely distributed coefficient sets carried by open astrodynamics toolchains. Append only; never reorder."
+                                },
+                                "GGM02S": {
+                                    "value": 10
+                                },
+                                "GOCO05C": {
+                                    "value": 11
+                                },
+                                "GLGM3150": {
+                                    "value": 12,
+                                    "description": "Moon"
+                                },
+                                "LPE200": {
+                                    "value": 13
+                                },
+                                "GGGRX1200": {
+                                    "value": 14
+                                },
+                                "JGMRO120D": {
+                                    "value": 15,
+                                    "description": "Mars"
+                                },
+                                "JGMESS160A": {
+                                    "value": 16,
+                                    "description": "Mercury"
+                                },
+                                "SHGJ180U": {
+                                    "value": 17,
+                                    "description": "Venus"
                                 }
                             }
                         },
@@ -135404,6 +135862,48 @@
                     },
                     "description": "Telecommand Transfer Frame (CCSDS 232.0-B-3)"
                 },
+                "TDMTransmitRamp": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "START_TIME": {
+                            "type": "string",
+                            "description": "Start of the interval over which this ramp applies, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "END_TIME": {
+                            "type": "string",
+                            "description": "End of the interval over which this ramp applies, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REFERENCE_TIME": {
+                            "type": "string",
+                            "description": "Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Transmitted frequency at REFERENCE_TIME, Hz.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FREQUENCY_RATE_HZ_PER_S": {
+                            "type": "number",
+                            "description": "Constant ramp rate over the interval, Hz per second.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TRANSMITTING_STATION_ID": {
+                            "type": "string",
+                            "description": "the PARTICIPANT_n naming used by the segment when both are present.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TRANSMIT_BAND": {
+                            "type": "string",
+                            "description": "TRANSMIT_BAND (e.g. \"S\", \"X\", \"Ka\", \"Ku\").",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "description": "One uplink transmitter frequency ramp applying over a closed time interval.  SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space radiometric archives carry an explicit ramp table and the Doppler observables are NOT reconstructible without it. Ramps are optional; a record that omits TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.  Frequency over the interval is the linear polynomial f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME) which is the common form of the two archive representations: DSN ODF (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a ramp reference time with constant and linear transmission-frequency terms, so REFERENCE_TIME is that reference time and may precede START_TIME. Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer assume which convention was used."
+                },
                 "TDM": {
                     "type": "object",
                     "additionalProperties": false,
@@ -135748,6 +136248,14 @@
                             },
                             "description": "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
                             "x-flatbuffer-type": "[double]"
+                        },
+                        "TRANSMIT_RAMPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TDMTransmitRamp"
+                            },
+                            "description": "leaves the record exactly CCSDS-conformant.",
+                            "x-flatbuffer-type": "[TDMTransmitRamp]"
                         }
                     },
                     "description": "Tracking Data Message"
@@ -190279,6 +190787,48 @@
                     },
                     "additionalProperties": false
                 },
+                "TDMTransmitRamp": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "START_TIME": {
+                            "type": "string",
+                            "description": "Start of the interval over which this ramp applies, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "END_TIME": {
+                            "type": "string",
+                            "description": "End of the interval over which this ramp applies, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "REFERENCE_TIME": {
+                            "type": "string",
+                            "description": "Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "FREQUENCY_HZ": {
+                            "type": "number",
+                            "description": "Transmitted frequency at REFERENCE_TIME, Hz.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "FREQUENCY_RATE_HZ_PER_S": {
+                            "type": "number",
+                            "description": "Constant ramp rate over the interval, Hz per second.",
+                            "x-flatbuffer-type": "double"
+                        },
+                        "TRANSMITTING_STATION_ID": {
+                            "type": "string",
+                            "description": "the PARTICIPANT_n naming used by the segment when both are present.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "TRANSMIT_BAND": {
+                            "type": "string",
+                            "description": "TRANSMIT_BAND (e.g. \"S\", \"X\", \"Ka\", \"Ku\").",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "description": "One uplink transmitter frequency ramp applying over a closed time interval.  SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space radiometric archives carry an explicit ramp table and the Doppler observables are NOT reconstructible without it. Ramps are optional; a record that omits TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.  Frequency over the interval is the linear polynomial f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME) which is the common form of the two archive representations: DSN ODF (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a ramp reference time with constant and linear transmission-frequency terms, so REFERENCE_TIME is that reference time and may precede START_TIME. Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer assume which convention was used."
+                },
                 "TDM": {
                     "type": "object",
                     "additionalProperties": false,
@@ -190623,6 +191173,14 @@
                             },
                             "description": "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
                             "x-flatbuffer-type": "[double]"
+                        },
+                        "TRANSMIT_RAMPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TDMTransmitRamp"
+                            },
+                            "description": "leaves the record exactly CCSDS-conformant.",
+                            "x-flatbuffer-type": "[TDMTransmitRamp]"
                         }
                     },
                     "description": "Tracking Data Message"

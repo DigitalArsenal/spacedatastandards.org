@@ -7,7 +7,7 @@
     },
     "GravityModelName" : {
       "type" : "string",
-      "enum": ["WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL"]
+      "enum": ["WGS84", "EGM96", "EGM2008", "GGM05C", "JGM3", "EIGEN_6C4", "GOCO06S", "XGM2019E", "CUSTOM_MODEL", "GGM02C", "GGM02S", "GOCO05C", "GLGM3150", "LPE200", "GGGRX1200", "JGMRO120D", "JGMESS160A", "SHGJ180U"]
     },
     "CentralBody" : {
       "type" : "string",

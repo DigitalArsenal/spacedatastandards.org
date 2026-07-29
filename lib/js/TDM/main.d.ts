@@ -9,4 +9,5 @@ export * from './RFMUnion.js';
 export * from './SpacecraftFrame.js';
 export * from './SpacecraftFrameWrapper.js';
 export * from './TDM.js';
+export * from './TDMTransmitRamp.js';
 //# sourceMappingURL=main.d.ts.map

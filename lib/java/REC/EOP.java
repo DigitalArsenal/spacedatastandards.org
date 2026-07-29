@@ -70,6 +70,43 @@ public final class EOP extends com.google.flatbuffers.Table {
    *  Data type (O = Observed, P = Predicted)
    */
   public byte DATA_TYPE() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Published series this row was taken from. Rows from different series are
+   * NOT interchangeable at the microarcsecond level and must not be merged
+   * without recording which series each row came from.
+   */
+  public int SERIES() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Precession-nutation model the celestial pole offsets are expressed
+   * against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+   * (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+   * them correctly without knowing which model produced them.
+   */
+  public int IAU_CONVENTION() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * 1-sigma uncertainty in x Pole Wander, radians.
+   */
+  public float X_POLE_WANDER_UNCERTAINTY_RADIANS() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * 1-sigma uncertainty in y Pole Wander, radians.
+   */
+  public float Y_POLE_WANDER_UNCERTAINTY_RADIANS() { int o = __offset(30); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+   */
+  public float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() { int o = __offset(32); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+   */
+  public float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS() { int o = __offset(34); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * 1-sigma uncertainty in UT1 minus UTC, seconds.
+   */
+  public float UT1_MINUS_UTC_UNCERTAINTY_SECONDS() { int o = __offset(36); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * 1-sigma uncertainty in the Length of Day correction, seconds.
+   */
+  public float LENGTH_OF_DAY_UNCERTAINTY_SECONDS() { int o = __offset(38); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
 
   public static int createEOP(FlatBufferBuilder builder,
       int DATEOffset,
@@ -81,8 +118,22 @@ public final class EOP extends com.google.flatbuffers.Table {
       float UT1_MINUS_UTC_SECONDS,
       int TAI_MINUS_UTC_SECONDS,
       float LENGTH_OF_DAY_CORRECTION_SECONDS,
-      byte DATA_TYPE) {
-    builder.startTable(10);
+      byte DATA_TYPE,
+      int SERIES,
+      int IAU_CONVENTION,
+      float X_POLE_WANDER_UNCERTAINTY_RADIANS,
+      float Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+      float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      float UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+      float LENGTH_OF_DAY_UNCERTAINTY_SECONDS) {
+    builder.startTable(18);
+    EOP.addLengthOfDayUncertaintySeconds(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+    EOP.addUt1MinusUtcUncertaintySeconds(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+    EOP.addYCelestialPoleOffsetUncertaintyRadians(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    EOP.addXCelestialPoleOffsetUncertaintyRadians(builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    EOP.addYPoleWanderUncertaintyRadians(builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS);
+    EOP.addXPoleWanderUncertaintyRadians(builder, X_POLE_WANDER_UNCERTAINTY_RADIANS);
     EOP.addLengthOfDayCorrectionSeconds(builder, LENGTH_OF_DAY_CORRECTION_SECONDS);
     EOP.addUt1MinusUtcSeconds(builder, UT1_MINUS_UTC_SECONDS);
     EOP.addYCelestialPoleOffsetRadians(builder, Y_CELESTIAL_POLE_OFFSET_RADIANS);
@@ -92,11 +143,13 @@ public final class EOP extends com.google.flatbuffers.Table {
     EOP.addMjd(builder, MJD);
     EOP.addDate(builder, DATEOffset);
     EOP.addTaiMinusUtcSeconds(builder, TAI_MINUS_UTC_SECONDS);
+    EOP.addIauConvention(builder, IAU_CONVENTION);
+    EOP.addSeries(builder, SERIES);
     EOP.addDataType(builder, DATA_TYPE);
     return EOP.endEOP(builder);
   }
 
-  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(10); }
+  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addDate(FlatBufferBuilder builder, int DATEOffset) { builder.addOffset(0, DATEOffset, 0); }
   public static void addMjd(FlatBufferBuilder builder, long MJD) { builder.addInt(1, (int) MJD, (int) 0L); }
   public static void addXPoleWanderRadians(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.addFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -107,6 +160,14 @@ public final class EOP extends com.google.flatbuffers.Table {
   public static void addTaiMinusUtcSeconds(FlatBufferBuilder builder, int TAI_MINUS_UTC_SECONDS) { builder.addShort(7, (short) TAI_MINUS_UTC_SECONDS, (short) 0); }
   public static void addLengthOfDayCorrectionSeconds(FlatBufferBuilder builder, float LENGTH_OF_DAY_CORRECTION_SECONDS) { builder.addFloat(8, LENGTH_OF_DAY_CORRECTION_SECONDS, 0.0f); }
   public static void addDataType(FlatBufferBuilder builder, byte DATA_TYPE) { builder.addByte(9, DATA_TYPE, 0); }
+  public static void addSeries(FlatBufferBuilder builder, int SERIES) { builder.addByte(10, (byte) SERIES, (byte) 0); }
+  public static void addIauConvention(FlatBufferBuilder builder, int IAU_CONVENTION) { builder.addByte(11, (byte) IAU_CONVENTION, (byte) 0); }
+  public static void addXPoleWanderUncertaintyRadians(FlatBufferBuilder builder, float X_POLE_WANDER_UNCERTAINTY_RADIANS) { builder.addFloat(12, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f); }
+  public static void addYPoleWanderUncertaintyRadians(FlatBufferBuilder builder, float Y_POLE_WANDER_UNCERTAINTY_RADIANS) { builder.addFloat(13, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0f); }
+  public static void addXCelestialPoleOffsetUncertaintyRadians(FlatBufferBuilder builder, float X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) { builder.addFloat(14, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f); }
+  public static void addYCelestialPoleOffsetUncertaintyRadians(FlatBufferBuilder builder, float Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS) { builder.addFloat(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0f); }
+  public static void addUt1MinusUtcUncertaintySeconds(FlatBufferBuilder builder, float UT1_MINUS_UTC_UNCERTAINTY_SECONDS) { builder.addFloat(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0f); }
+  public static void addLengthOfDayUncertaintySeconds(FlatBufferBuilder builder, float LENGTH_OF_DAY_UNCERTAINTY_SECONDS) { builder.addFloat(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0f); }
   public static int endEOP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -19,6 +19,15 @@ enum GravityModelName:
     GravityModelName_GOCO06S = 6
     GravityModelName_XGM2019E = 7
     GravityModelName_CUSTOM_MODEL = 8
+    GravityModelName_GGM02C = 9
+    GravityModelName_GGM02S = 10
+    GravityModelName_GOCO05C = 11
+    GravityModelName_GLGM3150 = 12
+    GravityModelName_LPE200 = 13
+    GravityModelName_GGGRX1200 = 14
+    GravityModelName_JGMRO120D = 15
+    GravityModelName_JGMESS160A = 16
+    GravityModelName_SHGJ180U = 17
 
 enum CentralBody:
     CentralBody_EARTH = 0

@@ -68,11 +68,20 @@ enum GravityModelName : int8_t {
   GravityModelName_GOCO06S = 6,
   GravityModelName_XGM2019E = 7,
   GravityModelName_CUSTOM_MODEL = 8,
+  GravityModelName_GGM02C = 9,
+  GravityModelName_GGM02S = 10,
+  GravityModelName_GOCO05C = 11,
+  GravityModelName_GLGM3150 = 12,
+  GravityModelName_LPE200 = 13,
+  GravityModelName_GGGRX1200 = 14,
+  GravityModelName_JGMRO120D = 15,
+  GravityModelName_JGMESS160A = 16,
+  GravityModelName_SHGJ180U = 17,
   GravityModelName_MIN = GravityModelName_WGS84,
-  GravityModelName_MAX = GravityModelName_CUSTOM_MODEL
+  GravityModelName_MAX = GravityModelName_SHGJ180U
 };
 
-inline const GravityModelName (&EnumValuesGravityModelName())[9] {
+inline const GravityModelName (&EnumValuesGravityModelName())[18] {
   static const GravityModelName values[] = {
     GravityModelName_WGS84,
     GravityModelName_EGM96,
@@ -82,13 +91,22 @@ inline const GravityModelName (&EnumValuesGravityModelName())[9] {
     GravityModelName_EIGEN_6C4,
     GravityModelName_GOCO06S,
     GravityModelName_XGM2019E,
-    GravityModelName_CUSTOM_MODEL
+    GravityModelName_CUSTOM_MODEL,
+    GravityModelName_GGM02C,
+    GravityModelName_GGM02S,
+    GravityModelName_GOCO05C,
+    GravityModelName_GLGM3150,
+    GravityModelName_LPE200,
+    GravityModelName_GGGRX1200,
+    GravityModelName_JGMRO120D,
+    GravityModelName_JGMESS160A,
+    GravityModelName_SHGJ180U
   };
   return values;
 }
 
 inline const char * const *EnumNamesGravityModelName() {
-  static const char * const names[10] = {
+  static const char * const names[19] = {
     "WGS84",
     "EGM96",
     "EGM2008",
@@ -98,13 +116,22 @@ inline const char * const *EnumNamesGravityModelName() {
     "GOCO06S",
     "XGM2019E",
     "CUSTOM_MODEL",
+    "GGM02C",
+    "GGM02S",
+    "GOCO05C",
+    "GLGM3150",
+    "LPE200",
+    "GGGRX1200",
+    "JGMRO120D",
+    "JGMESS160A",
+    "SHGJ180U",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameGravityModelName(GravityModelName e) {
-  if (::flatbuffers::IsOutRange(e, GravityModelName_WGS84, GravityModelName_CUSTOM_MODEL)) return "";
+  if (::flatbuffers::IsOutRange(e, GravityModelName_WGS84, GravityModelName_SHGJ180U)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesGravityModelName()[index];
 }

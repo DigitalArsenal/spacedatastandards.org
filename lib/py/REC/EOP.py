@@ -109,8 +109,77 @@ class EOP(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Published series this row was taken from. Rows from different series are
+    # NOT interchangeable at the microarcsecond level and must not be merged
+    # without recording which series each row came from.
+    # EOP
+    def SERIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Precession-nutation model the celestial pole offsets are expressed
+    # against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+    # (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+    # them correctly without knowing which model produced them.
+    # EOP
+    def IAU_CONVENTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # 1-sigma uncertainty in x Pole Wander, radians.
+    # EOP
+    def X_POLE_WANDER_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty in y Pole Wander, radians.
+    # EOP
+    def Y_POLE_WANDER_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+    # EOP
+    def X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+    # EOP
+    def Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty in UT1 minus UTC, seconds.
+    # EOP
+    def UT1_MINUS_UTC_UNCERTAINTY_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # 1-sigma uncertainty in the Length of Day correction, seconds.
+    # EOP
+    def LENGTH_OF_DAY_UNCERTAINTY_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
 def EOPStart(builder):
-    builder.StartObject(10)
+    builder.StartObject(18)
 
 def Start(builder):
     EOPStart(builder)
@@ -175,6 +244,54 @@ def EOPAddDATA_TYPE(builder, DATA_TYPE):
 def AddDATA_TYPE(builder, DATA_TYPE):
     EOPAddDATA_TYPE(builder, DATA_TYPE)
 
+def EOPAddSERIES(builder, SERIES):
+    builder.PrependUint8Slot(10, SERIES, 0)
+
+def AddSERIES(builder, SERIES):
+    EOPAddSERIES(builder, SERIES)
+
+def EOPAddIAU_CONVENTION(builder, IAU_CONVENTION):
+    builder.PrependUint8Slot(11, IAU_CONVENTION, 0)
+
+def AddIAU_CONVENTION(builder, IAU_CONVENTION):
+    EOPAddIAU_CONVENTION(builder, IAU_CONVENTION)
+
+def EOPAddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder, X_POLE_WANDER_UNCERTAINTY_RADIANS):
+    builder.PrependFloat32Slot(12, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+
+def AddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder, X_POLE_WANDER_UNCERTAINTY_RADIANS):
+    EOPAddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder, X_POLE_WANDER_UNCERTAINTY_RADIANS)
+
+def EOPAddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS):
+    builder.PrependFloat32Slot(13, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0)
+
+def AddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS):
+    EOPAddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder, Y_POLE_WANDER_UNCERTAINTY_RADIANS)
+
+def EOPAddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS):
+    builder.PrependFloat32Slot(14, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+
+def AddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS):
+    EOPAddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+
+def EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS):
+    builder.PrependFloat32Slot(15, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0)
+
+def AddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS):
+    EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+
+def EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS):
+    builder.PrependFloat32Slot(16, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0)
+
+def AddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS):
+    EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, UT1_MINUS_UTC_UNCERTAINTY_SECONDS)
+
+def EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS):
+    builder.PrependFloat32Slot(17, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0)
+
+def AddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS):
+    EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
+
 def EOPEnd(builder):
     return builder.EndObject()
 
@@ -197,6 +314,14 @@ class EOPT(object):
         TAI_MINUS_UTC_SECONDS = 0,
         LENGTH_OF_DAY_CORRECTION_SECONDS = 0.0,
         DATA_TYPE = 0,
+        SERIES = 0,
+        IAU_CONVENTION = 0,
+        X_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0,
+        Y_POLE_WANDER_UNCERTAINTY_RADIANS = 0.0,
+        X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0,
+        Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = 0.0,
+        UT1_MINUS_UTC_UNCERTAINTY_SECONDS = 0.0,
+        LENGTH_OF_DAY_UNCERTAINTY_SECONDS = 0.0,
     ):
         self.DATE = DATE  # type: Optional[str]
         self.MJD = MJD  # type: int
@@ -208,6 +333,14 @@ class EOPT(object):
         self.TAI_MINUS_UTC_SECONDS = TAI_MINUS_UTC_SECONDS  # type: int
         self.LENGTH_OF_DAY_CORRECTION_SECONDS = LENGTH_OF_DAY_CORRECTION_SECONDS  # type: float
         self.DATA_TYPE = DATA_TYPE  # type: int
+        self.SERIES = SERIES  # type: int
+        self.IAU_CONVENTION = IAU_CONVENTION  # type: int
+        self.X_POLE_WANDER_UNCERTAINTY_RADIANS = X_POLE_WANDER_UNCERTAINTY_RADIANS  # type: float
+        self.Y_POLE_WANDER_UNCERTAINTY_RADIANS = Y_POLE_WANDER_UNCERTAINTY_RADIANS  # type: float
+        self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS  # type: float
+        self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS  # type: float
+        self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = UT1_MINUS_UTC_UNCERTAINTY_SECONDS  # type: float
+        self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = LENGTH_OF_DAY_UNCERTAINTY_SECONDS  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -240,6 +373,14 @@ class EOPT(object):
         self.TAI_MINUS_UTC_SECONDS = EOP.TAI_MINUS_UTC_SECONDS()
         self.LENGTH_OF_DAY_CORRECTION_SECONDS = EOP.LENGTH_OF_DAY_CORRECTION_SECONDS()
         self.DATA_TYPE = EOP.DATA_TYPE()
+        self.SERIES = EOP.SERIES()
+        self.IAU_CONVENTION = EOP.IAU_CONVENTION()
+        self.X_POLE_WANDER_UNCERTAINTY_RADIANS = EOP.X_POLE_WANDER_UNCERTAINTY_RADIANS()
+        self.Y_POLE_WANDER_UNCERTAINTY_RADIANS = EOP.Y_POLE_WANDER_UNCERTAINTY_RADIANS()
+        self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = EOP.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+        self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = EOP.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+        self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS = EOP.UT1_MINUS_UTC_UNCERTAINTY_SECONDS()
+        self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS = EOP.LENGTH_OF_DAY_UNCERTAINTY_SECONDS()
 
     # EOPT
     def Pack(self, builder):
@@ -257,5 +398,13 @@ class EOPT(object):
         EOPAddTAI_MINUS_UTC_SECONDS(builder, self.TAI_MINUS_UTC_SECONDS)
         EOPAddLENGTH_OF_DAY_CORRECTION_SECONDS(builder, self.LENGTH_OF_DAY_CORRECTION_SECONDS)
         EOPAddDATA_TYPE(builder, self.DATA_TYPE)
+        EOPAddSERIES(builder, self.SERIES)
+        EOPAddIAU_CONVENTION(builder, self.IAU_CONVENTION)
+        EOPAddX_POLE_WANDER_UNCERTAINTY_RADIANS(builder, self.X_POLE_WANDER_UNCERTAINTY_RADIANS)
+        EOPAddY_POLE_WANDER_UNCERTAINTY_RADIANS(builder, self.Y_POLE_WANDER_UNCERTAINTY_RADIANS)
+        EOPAddX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+        EOPAddY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(builder, self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+        EOPAddUT1_MINUS_UTC_UNCERTAINTY_SECONDS(builder, self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS)
+        EOPAddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
         EOP = EOPEnd(builder)
         return EOP

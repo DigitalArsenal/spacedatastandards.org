@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { RFM, RFMT } from './RFM.js';
+import { TDMTransmitRamp, TDMTransmitRampT } from './TDMTransmitRamp.js';
 
 
 /**
@@ -694,8 +695,25 @@ clockDriftArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
+ * table covering this segment, ordered by START_TIME and non-overlapping.
+ * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
+ * cannot reconstruct the observables. Absent for unramped tracking, which
+ * leaves the record exactly CCSDS-conformant.
+ */
+TRANSMIT_RAMPS(index: number, obj?:TDMTransmitRamp):TDMTransmitRamp|null {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? (obj || new TDMTransmitRamp()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+transmitRampsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startTDM(builder:flatbuffers.Builder) {
-  builder.startObject(61);
+  builder.startObject(62);
 }
 
 static addObserverId(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset) {
@@ -1141,6 +1159,22 @@ static startClockDriftVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addTransmitRamps(builder:flatbuffers.Builder, TRANSMIT_RAMPSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(61, TRANSMIT_RAMPSOffset, 0);
+}
+
+static createTransmitRampsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTransmitRampsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endTDM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -1217,7 +1251,8 @@ unpack(): TDMT {
     this.bb!.createScalarList<number>(this.RHUMIDITY.bind(this), this.rhumidityLength()),
     this.bb!.createScalarList<number>(this.TEMPERATURE.bind(this), this.temperatureLength()),
     this.bb!.createScalarList<number>(this.CLOCK_BIAS.bind(this), this.clockBiasLength()),
-    this.bb!.createScalarList<number>(this.CLOCK_DRIFT.bind(this), this.clockDriftLength())
+    this.bb!.createScalarList<number>(this.CLOCK_DRIFT.bind(this), this.clockDriftLength()),
+    this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength())
   );
 }
 
@@ -1284,6 +1319,7 @@ unpackTo(_o: TDMT): void {
   _o.TEMPERATURE = this.bb!.createScalarList<number>(this.TEMPERATURE.bind(this), this.temperatureLength());
   _o.CLOCK_BIAS = this.bb!.createScalarList<number>(this.CLOCK_BIAS.bind(this), this.clockBiasLength());
   _o.CLOCK_DRIFT = this.bb!.createScalarList<number>(this.CLOCK_DRIFT.bind(this), this.clockDriftLength());
+  _o.TRANSMIT_RAMPS = this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength());
 }
 }
 
@@ -1349,7 +1385,8 @@ constructor(
   public RHUMIDITY: (number)[] = [],
   public TEMPERATURE: (number)[] = [],
   public CLOCK_BIAS: (number)[] = [],
-  public CLOCK_DRIFT: (number)[] = []
+  public CLOCK_DRIFT: (number)[] = [],
+  public TRANSMIT_RAMPS: (TDMTransmitRampT)[] = []
 ){}
 
 
@@ -1395,6 +1432,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TEMPERATURE = TDM.createTemperatureVector(builder, this.TEMPERATURE);
   const CLOCK_BIAS = TDM.createClockBiasVector(builder, this.CLOCK_BIAS);
   const CLOCK_DRIFT = TDM.createClockDriftVector(builder, this.CLOCK_DRIFT);
+  const TRANSMIT_RAMPS = TDM.createTransmitRampsVector(builder, builder.createObjectOffsetList(this.TRANSMIT_RAMPS));
 
   TDM.startTDM(builder);
   TDM.addObserverId(builder, OBSERVER_ID);
@@ -1458,6 +1496,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   TDM.addTemperature(builder, TEMPERATURE);
   TDM.addClockBias(builder, CLOCK_BIAS);
   TDM.addClockDrift(builder, CLOCK_DRIFT);
+  TDM.addTransmitRamps(builder, TRANSMIT_RAMPS);
 
   return TDM.endTDM(builder);
 }

@@ -87,6 +87,213 @@ impl<'a> ::flatbuffers::Verifiable for DataType {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for DataType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_EOP_SERIES: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_EOP_SERIES: u8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_EOP_SERIES: [eopSeries; 7] = [
+  eopSeries::UNSPECIFIED,
+  eopSeries::IERS_C04_14,
+  eopSeries::IERS_C04_20,
+  eopSeries::IERS_BULLETIN_A,
+  eopSeries::IERS_BULLETIN_B,
+  eopSeries::FINALS2000A,
+  eopSeries::OTHER,
+];
+
+/// Published Earth-orientation series a row was taken from. Append new values
+/// only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct eopSeries(pub u8);
+#[allow(non_upper_case_globals)]
+impl eopSeries {
+  pub const UNSPECIFIED: Self = Self(0);
+  /// IERS EOP 14 C04, the long-term combined solution (e.g.
+  /// eopc04_14_IAU2000.62-now.txt).
+  pub const IERS_C04_14: Self = Self(1);
+  /// IERS EOP 20 C04, the ITRF2020-based combined solution.
+  pub const IERS_C04_20: Self = Self(2);
+  /// IERS Bulletin A rapid service / prediction.
+  pub const IERS_BULLETIN_A: Self = Self(3);
+  /// IERS Bulletin B.
+  pub const IERS_BULLETIN_B: Self = Self(4);
+  /// USNO/IERS finals2000A combined rapid + prediction file.
+  pub const FINALS2000A: Self = Self(5);
+  /// A series not covered above; identify it in a producer-defined way.
+  pub const OTHER: Self = Self(6);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::IERS_C04_14,
+    Self::IERS_C04_20,
+    Self::IERS_BULLETIN_A,
+    Self::IERS_BULLETIN_B,
+    Self::FINALS2000A,
+    Self::OTHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::IERS_C04_14 => Some("IERS_C04_14"),
+      Self::IERS_C04_20 => Some("IERS_C04_20"),
+      Self::IERS_BULLETIN_A => Some("IERS_BULLETIN_A"),
+      Self::IERS_BULLETIN_B => Some("IERS_BULLETIN_B"),
+      Self::FINALS2000A => Some("FINALS2000A"),
+      Self::OTHER => Some("OTHER"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for eopSeries {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for eopSeries {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for eopSeries {
+    type Output = eopSeries;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for eopSeries {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for eopSeries {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for eopSeries {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_IAU_PRECESSION_NUTATION_MODEL: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_IAU_PRECESSION_NUTATION_MODEL: u8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_IAU_PRECESSION_NUTATION_MODEL: [iauPrecessionNutationModel; 4] = [
+  iauPrecessionNutationModel::UNSPECIFIED,
+  iauPrecessionNutationModel::IAU_2000A,
+  iauPrecessionNutationModel::IAU_2000B,
+  iauPrecessionNutationModel::IAU_2006,
+];
+
+/// IAU precession-nutation model the celestial pole offsets are referenced to.
+/// Append new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct iauPrecessionNutationModel(pub u8);
+#[allow(non_upper_case_globals)]
+impl iauPrecessionNutationModel {
+  pub const UNSPECIFIED: Self = Self(0);
+  pub const IAU_2000A: Self = Self(1);
+  pub const IAU_2000B: Self = Self(2);
+  pub const IAU_2006: Self = Self(3);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UNSPECIFIED,
+    Self::IAU_2000A,
+    Self::IAU_2000B,
+    Self::IAU_2006,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UNSPECIFIED => Some("UNSPECIFIED"),
+      Self::IAU_2000A => Some("IAU_2000A"),
+      Self::IAU_2000B => Some("IAU_2000B"),
+      Self::IAU_2006 => Some("IAU_2006"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for iauPrecessionNutationModel {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for iauPrecessionNutationModel {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for iauPrecessionNutationModel {
+    type Output = iauPrecessionNutationModel;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for iauPrecessionNutationModel {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for iauPrecessionNutationModel {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for iauPrecessionNutationModel {}
 pub enum EOPOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -114,6 +321,14 @@ impl<'a> EOP<'a> {
   pub const VT_TAI_MINUS_UTC_SECONDS: ::flatbuffers::VOffsetT = 18;
   pub const VT_LENGTH_OF_DAY_CORRECTION_SECONDS: ::flatbuffers::VOffsetT = 20;
   pub const VT_DATA_TYPE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_SERIES: ::flatbuffers::VOffsetT = 24;
+  pub const VT_IAU_CONVENTION: ::flatbuffers::VOffsetT = 26;
+  pub const VT_X_POLE_WANDER_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 28;
+  pub const VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 30;
+  pub const VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 32;
+  pub const VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: ::flatbuffers::VOffsetT = 34;
+  pub const VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS: ::flatbuffers::VOffsetT = 36;
+  pub const VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS: ::flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -125,6 +340,12 @@ impl<'a> EOP<'a> {
     args: &'args EOPArgs<'args>
   ) -> ::flatbuffers::WIPOffset<EOP<'bldr>> {
     let mut builder = EOPBuilder::new(_fbb);
+    builder.add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(args.LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
+    builder.add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(args.UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+    builder.add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(args.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    builder.add_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(args.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+    builder.add_Y_POLE_WANDER_UNCERTAINTY_RADIANS(args.Y_POLE_WANDER_UNCERTAINTY_RADIANS);
+    builder.add_X_POLE_WANDER_UNCERTAINTY_RADIANS(args.X_POLE_WANDER_UNCERTAINTY_RADIANS);
     builder.add_LENGTH_OF_DAY_CORRECTION_SECONDS(args.LENGTH_OF_DAY_CORRECTION_SECONDS);
     builder.add_UT1_MINUS_UTC_SECONDS(args.UT1_MINUS_UTC_SECONDS);
     builder.add_Y_CELESTIAL_POLE_OFFSET_RADIANS(args.Y_CELESTIAL_POLE_OFFSET_RADIANS);
@@ -134,6 +355,8 @@ impl<'a> EOP<'a> {
     builder.add_MJD(args.MJD);
     if let Some(x) = args.DATE { builder.add_DATE(x); }
     builder.add_TAI_MINUS_UTC_SECONDS(args.TAI_MINUS_UTC_SECONDS);
+    builder.add_IAU_CONVENTION(args.IAU_CONVENTION);
+    builder.add_SERIES(args.SERIES);
     builder.add_DATA_TYPE(args.DATA_TYPE);
     builder.finish()
   }
@@ -151,6 +374,14 @@ impl<'a> EOP<'a> {
     let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS();
     let LENGTH_OF_DAY_CORRECTION_SECONDS = self.LENGTH_OF_DAY_CORRECTION_SECONDS();
     let DATA_TYPE = self.DATA_TYPE();
+    let SERIES = self.SERIES();
+    let IAU_CONVENTION = self.IAU_CONVENTION();
+    let X_POLE_WANDER_UNCERTAINTY_RADIANS = self.X_POLE_WANDER_UNCERTAINTY_RADIANS();
+    let Y_POLE_WANDER_UNCERTAINTY_RADIANS = self.Y_POLE_WANDER_UNCERTAINTY_RADIANS();
+    let X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS();
+    let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS();
+    let UT1_MINUS_UTC_UNCERTAINTY_SECONDS = self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS();
+    let LENGTH_OF_DAY_UNCERTAINTY_SECONDS = self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS();
     EOPT {
       DATE,
       MJD,
@@ -162,6 +393,14 @@ impl<'a> EOP<'a> {
       TAI_MINUS_UTC_SECONDS,
       LENGTH_OF_DAY_CORRECTION_SECONDS,
       DATA_TYPE,
+      SERIES,
+      IAU_CONVENTION,
+      X_POLE_WANDER_UNCERTAINTY_RADIANS,
+      Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+      X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+      LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
     }
   }
 
@@ -245,6 +484,75 @@ impl<'a> EOP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<DataType>(EOP::VT_DATA_TYPE, Some(DataType::OBSERVED)).unwrap()}
   }
+  /// Published series this row was taken from. Rows from different series are
+  /// NOT interchangeable at the microarcsecond level and must not be merged
+  /// without recording which series each row came from.
+  #[inline]
+  pub fn SERIES(&self) -> eopSeries {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<eopSeries>(EOP::VT_SERIES, Some(eopSeries::UNSPECIFIED)).unwrap()}
+  }
+  /// Precession-nutation model the celestial pole offsets are expressed
+  /// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+  /// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+  /// them correctly without knowing which model produced them.
+  #[inline]
+  pub fn IAU_CONVENTION(&self) -> iauPrecessionNutationModel {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<iauPrecessionNutationModel>(EOP::VT_IAU_CONVENTION, Some(iauPrecessionNutationModel::UNSPECIFIED)).unwrap()}
+  }
+  /// 1-sigma uncertainty in x Pole Wander, radians.
+  #[inline]
+  pub fn X_POLE_WANDER_UNCERTAINTY_RADIANS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty in y Pole Wander, radians.
+  #[inline]
+  pub fn Y_POLE_WANDER_UNCERTAINTY_RADIANS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+  #[inline]
+  pub fn X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+  #[inline]
+  pub fn Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty in UT1 minus UTC, seconds.
+  #[inline]
+  pub fn UT1_MINUS_UTC_UNCERTAINTY_SECONDS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, Some(0.0)).unwrap()}
+  }
+  /// 1-sigma uncertainty in the Length of Day correction, seconds.
+  #[inline]
+  pub fn LENGTH_OF_DAY_UNCERTAINTY_SECONDS(&self) -> f32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f32>(EOP::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, Some(0.0)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EOP<'_> {
@@ -263,6 +571,14 @@ impl ::flatbuffers::Verifiable for EOP<'_> {
      .visit_field::<u16>("TAI_MINUS_UTC_SECONDS", Self::VT_TAI_MINUS_UTC_SECONDS, false)?
      .visit_field::<f32>("LENGTH_OF_DAY_CORRECTION_SECONDS", Self::VT_LENGTH_OF_DAY_CORRECTION_SECONDS, false)?
      .visit_field::<DataType>("DATA_TYPE", Self::VT_DATA_TYPE, false)?
+     .visit_field::<eopSeries>("SERIES", Self::VT_SERIES, false)?
+     .visit_field::<iauPrecessionNutationModel>("IAU_CONVENTION", Self::VT_IAU_CONVENTION, false)?
+     .visit_field::<f32>("X_POLE_WANDER_UNCERTAINTY_RADIANS", Self::VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, false)?
+     .visit_field::<f32>("Y_POLE_WANDER_UNCERTAINTY_RADIANS", Self::VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, false)?
+     .visit_field::<f32>("X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", Self::VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, false)?
+     .visit_field::<f32>("Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", Self::VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, false)?
+     .visit_field::<f32>("UT1_MINUS_UTC_UNCERTAINTY_SECONDS", Self::VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, false)?
+     .visit_field::<f32>("LENGTH_OF_DAY_UNCERTAINTY_SECONDS", Self::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, false)?
      .finish();
     Ok(())
   }
@@ -278,6 +594,14 @@ pub struct EOPArgs<'a> {
     pub TAI_MINUS_UTC_SECONDS: u16,
     pub LENGTH_OF_DAY_CORRECTION_SECONDS: f32,
     pub DATA_TYPE: DataType,
+    pub SERIES: eopSeries,
+    pub IAU_CONVENTION: iauPrecessionNutationModel,
+    pub X_POLE_WANDER_UNCERTAINTY_RADIANS: f32,
+    pub Y_POLE_WANDER_UNCERTAINTY_RADIANS: f32,
+    pub X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
+    pub Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
+    pub UT1_MINUS_UTC_UNCERTAINTY_SECONDS: f32,
+    pub LENGTH_OF_DAY_UNCERTAINTY_SECONDS: f32,
 }
 impl<'a> Default for EOPArgs<'a> {
   #[inline]
@@ -293,6 +617,14 @@ impl<'a> Default for EOPArgs<'a> {
       TAI_MINUS_UTC_SECONDS: 0,
       LENGTH_OF_DAY_CORRECTION_SECONDS: 0.0,
       DATA_TYPE: DataType::OBSERVED,
+      SERIES: eopSeries::UNSPECIFIED,
+      IAU_CONVENTION: iauPrecessionNutationModel::UNSPECIFIED,
+      X_POLE_WANDER_UNCERTAINTY_RADIANS: 0.0,
+      Y_POLE_WANDER_UNCERTAINTY_RADIANS: 0.0,
+      X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
+      Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
+      UT1_MINUS_UTC_UNCERTAINTY_SECONDS: 0.0,
+      LENGTH_OF_DAY_UNCERTAINTY_SECONDS: 0.0,
     }
   }
 }
@@ -343,6 +675,38 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EOPBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<DataType>(EOP::VT_DATA_TYPE, DATA_TYPE, DataType::OBSERVED);
   }
   #[inline]
+  pub fn add_SERIES(&mut self, SERIES: eopSeries) {
+    self.fbb_.push_slot::<eopSeries>(EOP::VT_SERIES, SERIES, eopSeries::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_IAU_CONVENTION(&mut self, IAU_CONVENTION: iauPrecessionNutationModel) {
+    self.fbb_.push_slot::<iauPrecessionNutationModel>(EOP::VT_IAU_CONVENTION, IAU_CONVENTION, iauPrecessionNutationModel::UNSPECIFIED);
+  }
+  #[inline]
+  pub fn add_X_POLE_WANDER_UNCERTAINTY_RADIANS(&mut self, X_POLE_WANDER_UNCERTAINTY_RADIANS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_X_POLE_WANDER_UNCERTAINTY_RADIANS, X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_POLE_WANDER_UNCERTAINTY_RADIANS(&mut self, Y_POLE_WANDER_UNCERTAINTY_RADIANS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_Y_POLE_WANDER_UNCERTAINTY_RADIANS, Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(&mut self, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(&mut self, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0);
+  }
+  #[inline]
+  pub fn add_UT1_MINUS_UTC_UNCERTAINTY_SECONDS(&mut self, UT1_MINUS_UTC_UNCERTAINTY_SECONDS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_UT1_MINUS_UTC_UNCERTAINTY_SECONDS, UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0);
+  }
+  #[inline]
+  pub fn add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(&mut self, LENGTH_OF_DAY_UNCERTAINTY_SECONDS: f32) {
+    self.fbb_.push_slot::<f32>(EOP::VT_LENGTH_OF_DAY_UNCERTAINTY_SECONDS, LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EOPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EOPBuilder {
@@ -370,6 +734,14 @@ impl ::core::fmt::Debug for EOP<'_> {
       ds.field("TAI_MINUS_UTC_SECONDS", &self.TAI_MINUS_UTC_SECONDS());
       ds.field("LENGTH_OF_DAY_CORRECTION_SECONDS", &self.LENGTH_OF_DAY_CORRECTION_SECONDS());
       ds.field("DATA_TYPE", &self.DATA_TYPE());
+      ds.field("SERIES", &self.SERIES());
+      ds.field("IAU_CONVENTION", &self.IAU_CONVENTION());
+      ds.field("X_POLE_WANDER_UNCERTAINTY_RADIANS", &self.X_POLE_WANDER_UNCERTAINTY_RADIANS());
+      ds.field("Y_POLE_WANDER_UNCERTAINTY_RADIANS", &self.Y_POLE_WANDER_UNCERTAINTY_RADIANS());
+      ds.field("X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", &self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS());
+      ds.field("Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS", &self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS());
+      ds.field("UT1_MINUS_UTC_UNCERTAINTY_SECONDS", &self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS());
+      ds.field("LENGTH_OF_DAY_UNCERTAINTY_SECONDS", &self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS());
       ds.finish()
   }
 }
@@ -386,6 +758,14 @@ pub struct EOPT {
   pub TAI_MINUS_UTC_SECONDS: u16,
   pub LENGTH_OF_DAY_CORRECTION_SECONDS: f32,
   pub DATA_TYPE: DataType,
+  pub SERIES: eopSeries,
+  pub IAU_CONVENTION: iauPrecessionNutationModel,
+  pub X_POLE_WANDER_UNCERTAINTY_RADIANS: f32,
+  pub Y_POLE_WANDER_UNCERTAINTY_RADIANS: f32,
+  pub X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
+  pub Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: f32,
+  pub UT1_MINUS_UTC_UNCERTAINTY_SECONDS: f32,
+  pub LENGTH_OF_DAY_UNCERTAINTY_SECONDS: f32,
 }
 impl Default for EOPT {
   fn default() -> Self {
@@ -400,6 +780,14 @@ impl Default for EOPT {
       TAI_MINUS_UTC_SECONDS: 0,
       LENGTH_OF_DAY_CORRECTION_SECONDS: 0.0,
       DATA_TYPE: DataType::OBSERVED,
+      SERIES: eopSeries::UNSPECIFIED,
+      IAU_CONVENTION: iauPrecessionNutationModel::UNSPECIFIED,
+      X_POLE_WANDER_UNCERTAINTY_RADIANS: 0.0,
+      Y_POLE_WANDER_UNCERTAINTY_RADIANS: 0.0,
+      X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
+      Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: 0.0,
+      UT1_MINUS_UTC_UNCERTAINTY_SECONDS: 0.0,
+      LENGTH_OF_DAY_UNCERTAINTY_SECONDS: 0.0,
     }
   }
 }
@@ -420,6 +808,14 @@ impl EOPT {
     let TAI_MINUS_UTC_SECONDS = self.TAI_MINUS_UTC_SECONDS;
     let LENGTH_OF_DAY_CORRECTION_SECONDS = self.LENGTH_OF_DAY_CORRECTION_SECONDS;
     let DATA_TYPE = self.DATA_TYPE;
+    let SERIES = self.SERIES;
+    let IAU_CONVENTION = self.IAU_CONVENTION;
+    let X_POLE_WANDER_UNCERTAINTY_RADIANS = self.X_POLE_WANDER_UNCERTAINTY_RADIANS;
+    let Y_POLE_WANDER_UNCERTAINTY_RADIANS = self.Y_POLE_WANDER_UNCERTAINTY_RADIANS;
+    let X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+    let Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS = self.Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS;
+    let UT1_MINUS_UTC_UNCERTAINTY_SECONDS = self.UT1_MINUS_UTC_UNCERTAINTY_SECONDS;
+    let LENGTH_OF_DAY_UNCERTAINTY_SECONDS = self.LENGTH_OF_DAY_UNCERTAINTY_SECONDS;
     EOP::create(_fbb, &EOPArgs{
       DATE,
       MJD,
@@ -431,6 +827,14 @@ impl EOPT {
       TAI_MINUS_UTC_SECONDS,
       LENGTH_OF_DAY_CORRECTION_SECONDS,
       DATA_TYPE,
+      SERIES,
+      IAU_CONVENTION,
+      X_POLE_WANDER_UNCERTAINTY_RADIANS,
+      Y_POLE_WANDER_UNCERTAINTY_RADIANS,
+      X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS,
+      UT1_MINUS_UTC_UNCERTAINTY_SECONDS,
+      LENGTH_OF_DAY_UNCERTAINTY_SECONDS,
     })
   }
 }

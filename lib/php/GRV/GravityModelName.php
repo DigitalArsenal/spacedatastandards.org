@@ -12,6 +12,15 @@ class GravityModelName
     const GOCO06S = 6;
     const XGM2019E = 7;
     const CUSTOM_MODEL = 8;
+    const GGM02C = 9;
+    const GGM02S = 10;
+    const GOCO05C = 11;
+    const GLGM3150 = 12;
+    const LPE200 = 13;
+    const GGGRX1200 = 14;
+    const JGMRO120D = 15;
+    const JGMESS160A = 16;
+    const SHGJ180U = 17;
 
     private static $names = array(
         GravityModelName::WGS84=>"WGS84",
@@ -23,6 +32,15 @@ class GravityModelName
         GravityModelName::GOCO06S=>"GOCO06S",
         GravityModelName::XGM2019E=>"XGM2019E",
         GravityModelName::CUSTOM_MODEL=>"CUSTOM_MODEL",
+        GravityModelName::GGM02C=>"GGM02C",
+        GravityModelName::GGM02S=>"GGM02S",
+        GravityModelName::GOCO05C=>"GOCO05C",
+        GravityModelName::GLGM3150=>"GLGM3150",
+        GravityModelName::LPE200=>"LPE200",
+        GravityModelName::GGGRX1200=>"GGGRX1200",
+        GravityModelName::JGMRO120D=>"JGMRO120D",
+        GravityModelName::JGMESS160A=>"JGMESS160A",
+        GravityModelName::SHGJ180U=>"SHGJ180U",
     );
 
     public static function Name($e)

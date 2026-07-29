@@ -138,22 +138,107 @@ class EOP extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \DataType::OBSERVED;
     }
 
+    /// Published series this row was taken from. Rows from different series are
+    /// NOT interchangeable at the microarcsecond level and must not be merged
+    /// without recording which series each row came from.
+    /**
+     * @return byte
+     */
+    public function getSERIES()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \eopSeries::UNSPECIFIED;
+    }
+
+    /// Precession-nutation model the celestial pole offsets are expressed
+    /// against. X_/Y_CELESTIAL_POLE_OFFSET_RADIANS are CIP offsets in the GCRS
+    /// (dX, dY) under the IAU 2000/2006 conventions; a consumer cannot apply
+    /// them correctly without knowing which model produced them.
+    /**
+     * @return byte
+     */
+    public function getIAU_CONVENTION()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \iauPrecessionNutationModel::UNSPECIFIED;
+    }
+
+    /// 1-sigma uncertainty in x Pole Wander, radians.
+    /**
+     * @return float
+     */
+    public function getX_POLE_WANDER_UNCERTAINTY_RADIANS()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty in y Pole Wander, radians.
+    /**
+     * @return float
+     */
+    public function getY_POLE_WANDER_UNCERTAINTY_RADIANS()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty in the x Celestial Pole Offset, radians.
+    /**
+     * @return float
+     */
+    public function getX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty in the y Celestial Pole Offset, radians.
+    /**
+     * @return float
+     */
+    public function getY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty in UT1 minus UTC, seconds.
+    /**
+     * @return float
+     */
+    public function getUT1_MINUS_UTC_UNCERTAINTY_SECONDS()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
+    /// 1-sigma uncertainty in the Length of Day correction, seconds.
+    /**
+     * @return float
+     */
+    public function getLENGTH_OF_DAY_UNCERTAINTY_SECONDS()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEOP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(10);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EOP
      */
-    public static function createEOP(FlatBufferBuilder $builder, $DATE, $MJD, $X_POLE_WANDER_RADIANS, $Y_POLE_WANDER_RADIANS, $X_CELESTIAL_POLE_OFFSET_RADIANS, $Y_CELESTIAL_POLE_OFFSET_RADIANS, $UT1_MINUS_UTC_SECONDS, $TAI_MINUS_UTC_SECONDS, $LENGTH_OF_DAY_CORRECTION_SECONDS, $DATA_TYPE)
+    public static function createEOP(FlatBufferBuilder $builder, $DATE, $MJD, $X_POLE_WANDER_RADIANS, $Y_POLE_WANDER_RADIANS, $X_CELESTIAL_POLE_OFFSET_RADIANS, $Y_CELESTIAL_POLE_OFFSET_RADIANS, $UT1_MINUS_UTC_SECONDS, $TAI_MINUS_UTC_SECONDS, $LENGTH_OF_DAY_CORRECTION_SECONDS, $DATA_TYPE, $SERIES, $IAU_CONVENTION, $X_POLE_WANDER_UNCERTAINTY_RADIANS, $Y_POLE_WANDER_UNCERTAINTY_RADIANS, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
     {
-        $builder->startObject(10);
+        $builder->startObject(18);
         self::addDATE($builder, $DATE);
         self::addMJD($builder, $MJD);
         self::addX_POLE_WANDER_RADIANS($builder, $X_POLE_WANDER_RADIANS);
@@ -164,6 +249,14 @@ class EOP extends Table
         self::addTAI_MINUS_UTC_SECONDS($builder, $TAI_MINUS_UTC_SECONDS);
         self::addLENGTH_OF_DAY_CORRECTION_SECONDS($builder, $LENGTH_OF_DAY_CORRECTION_SECONDS);
         self::addDATA_TYPE($builder, $DATA_TYPE);
+        self::addSERIES($builder, $SERIES);
+        self::addIAU_CONVENTION($builder, $IAU_CONVENTION);
+        self::addX_POLE_WANDER_UNCERTAINTY_RADIANS($builder, $X_POLE_WANDER_UNCERTAINTY_RADIANS);
+        self::addY_POLE_WANDER_UNCERTAINTY_RADIANS($builder, $Y_POLE_WANDER_UNCERTAINTY_RADIANS);
+        self::addX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS($builder, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+        self::addY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS($builder, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS);
+        self::addUT1_MINUS_UTC_UNCERTAINTY_SECONDS($builder, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS);
+        self::addLENGTH_OF_DAY_UNCERTAINTY_SECONDS($builder, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -266,6 +359,86 @@ class EOP extends Table
     public static function addDATA_TYPE(FlatBufferBuilder $builder, $DATA_TYPE)
     {
         $builder->addSbyteX(9, $DATA_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSERIES(FlatBufferBuilder $builder, $SERIES)
+    {
+        $builder->addByteX(10, $SERIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addIAU_CONVENTION(FlatBufferBuilder $builder, $IAU_CONVENTION)
+    {
+        $builder->addByteX(11, $IAU_CONVENTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addX_POLE_WANDER_UNCERTAINTY_RADIANS(FlatBufferBuilder $builder, $X_POLE_WANDER_UNCERTAINTY_RADIANS)
+    {
+        $builder->addFloatX(12, $X_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addY_POLE_WANDER_UNCERTAINTY_RADIANS(FlatBufferBuilder $builder, $Y_POLE_WANDER_UNCERTAINTY_RADIANS)
+    {
+        $builder->addFloatX(13, $Y_POLE_WANDER_UNCERTAINTY_RADIANS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addX_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(FlatBufferBuilder $builder, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+    {
+        $builder->addFloatX(14, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addY_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS(FlatBufferBuilder $builder, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS)
+    {
+        $builder->addFloatX(15, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addUT1_MINUS_UTC_UNCERTAINTY_SECONDS(FlatBufferBuilder $builder, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS)
+    {
+        $builder->addFloatX(16, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addLENGTH_OF_DAY_UNCERTAINTY_SECONDS(FlatBufferBuilder $builder, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS)
+    {
+        $builder->addFloatX(17, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS, 0.0);
     }
 
     /**
