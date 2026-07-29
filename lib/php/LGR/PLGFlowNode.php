@@ -71,7 +71,9 @@ class PLGFlowNode extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+    /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+    /// independently instantiated signed WASM node, and "host-capability" = a
+    /// generic host adapter.
     public function getDISPATCH_MODEL()
     {
         $o = $this->__offset(12);

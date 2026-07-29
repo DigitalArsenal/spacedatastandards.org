@@ -57,14 +57,24 @@ public struct PLGFlowEdge : IFlatbufferObject
   public ArraySegment<byte>? GetTO_PORT_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetTO_PORT_IDArray() { return __p.__vector_as_array<byte>(12); }
+  /// Exact identity/layout and compile-time representation policy. NOT
+  /// `required`: marking a NEW field of an EXISTING table required makes the
+  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  /// which is a breaking change to a ratified standard. Presence is enforced
+  /// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  public PLGFlowEdgeContract? CONTRACT { get { int o = __p.__offset(14); return o != 0 ? (PLGFlowEdgeContract?)(new PLGFlowEdgeContract()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PLGFlowEdge> CreatePLGFlowEdge(FlatBufferBuilder builder,
       StringOffset EDGE_IDOffset = default(StringOffset),
       StringOffset FROM_NODE_IDOffset = default(StringOffset),
       StringOffset FROM_PORT_IDOffset = default(StringOffset),
       StringOffset TO_NODE_IDOffset = default(StringOffset),
-      StringOffset TO_PORT_IDOffset = default(StringOffset)) {
-    builder.StartTable(5);
+      StringOffset TO_PORT_IDOffset = default(StringOffset),
+      Offset<PLGFlowEdgeContract> CONTRACTOffset = default(Offset<PLGFlowEdgeContract>)) {
+    builder.StartTable(6);
+    PLGFlowEdge.AddCONTRACT(builder, CONTRACTOffset);
     PLGFlowEdge.AddTO_PORT_ID(builder, TO_PORT_IDOffset);
     PLGFlowEdge.AddTO_NODE_ID(builder, TO_NODE_IDOffset);
     PLGFlowEdge.AddFROM_PORT_ID(builder, FROM_PORT_IDOffset);
@@ -73,12 +83,13 @@ public struct PLGFlowEdge : IFlatbufferObject
     return PLGFlowEdge.EndPLGFlowEdge(builder);
   }
 
-  public static void StartPLGFlowEdge(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartPLGFlowEdge(FlatBufferBuilder builder) { builder.StartTable(6); }
   public static void AddEDGE_ID(FlatBufferBuilder builder, StringOffset EDGE_IDOffset) { builder.AddOffset(0, EDGE_IDOffset.Value, 0); }
   public static void AddFROM_NODE_ID(FlatBufferBuilder builder, StringOffset FROM_NODE_IDOffset) { builder.AddOffset(1, FROM_NODE_IDOffset.Value, 0); }
   public static void AddFROM_PORT_ID(FlatBufferBuilder builder, StringOffset FROM_PORT_IDOffset) { builder.AddOffset(2, FROM_PORT_IDOffset.Value, 0); }
   public static void AddTO_NODE_ID(FlatBufferBuilder builder, StringOffset TO_NODE_IDOffset) { builder.AddOffset(3, TO_NODE_IDOffset.Value, 0); }
   public static void AddTO_PORT_ID(FlatBufferBuilder builder, StringOffset TO_PORT_IDOffset) { builder.AddOffset(4, TO_PORT_IDOffset.Value, 0); }
+  public static void AddCONTRACT(FlatBufferBuilder builder, Offset<PLGFlowEdgeContract> CONTRACTOffset) { builder.AddOffset(5, CONTRACTOffset.Value, 0); }
   public static Offset<PLGFlowEdge> EndPLGFlowEdge(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 6);  // FROM_NODE_ID
@@ -98,6 +109,7 @@ public struct PLGFlowEdge : IFlatbufferObject
     _o.FROM_PORT_ID = this.FROM_PORT_ID;
     _o.TO_NODE_ID = this.TO_NODE_ID;
     _o.TO_PORT_ID = this.TO_PORT_ID;
+    _o.CONTRACT = this.CONTRACT.HasValue ? this.CONTRACT.Value.UnPack() : null;
   }
   public static Offset<PLGFlowEdge> Pack(FlatBufferBuilder builder, PLGFlowEdgeT _o) {
     if (_o == null) return default(Offset<PLGFlowEdge>);
@@ -106,13 +118,15 @@ public struct PLGFlowEdge : IFlatbufferObject
     var _FROM_PORT_ID = _o.FROM_PORT_ID == null ? default(StringOffset) : builder.CreateString(_o.FROM_PORT_ID);
     var _TO_NODE_ID = _o.TO_NODE_ID == null ? default(StringOffset) : builder.CreateString(_o.TO_NODE_ID);
     var _TO_PORT_ID = _o.TO_PORT_ID == null ? default(StringOffset) : builder.CreateString(_o.TO_PORT_ID);
+    var _CONTRACT = _o.CONTRACT == null ? default(Offset<PLGFlowEdgeContract>) : PLGFlowEdgeContract.Pack(builder, _o.CONTRACT);
     return CreatePLGFlowEdge(
       builder,
       _EDGE_ID,
       _FROM_NODE_ID,
       _FROM_PORT_ID,
       _TO_NODE_ID,
-      _TO_PORT_ID);
+      _TO_PORT_ID,
+      _CONTRACT);
   }
 }
 
@@ -123,6 +137,7 @@ public class PLGFlowEdgeT
   public string FROM_PORT_ID { get; set; }
   public string TO_NODE_ID { get; set; }
   public string TO_PORT_ID { get; set; }
+  public PLGFlowEdgeContractT CONTRACT { get; set; }
 
   public PLGFlowEdgeT() {
     this.EDGE_ID = null;
@@ -130,6 +145,7 @@ public class PLGFlowEdgeT
     this.FROM_PORT_ID = null;
     this.TO_NODE_ID = null;
     this.TO_PORT_ID = null;
+    this.CONTRACT = null;
   }
 }
 
@@ -144,6 +160,7 @@ static public class PLGFlowEdgeVerify
       && verifier.VerifyString(tablePos, 8 /*FROM_PORT_ID*/, true)
       && verifier.VerifyString(tablePos, 10 /*TO_NODE_ID*/, true)
       && verifier.VerifyString(tablePos, 12 /*TO_PORT_ID*/, true)
+      && verifier.VerifyTable(tablePos, 14 /*CONTRACT*/, PLGFlowEdgeContractVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

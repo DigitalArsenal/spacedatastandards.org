@@ -773,6 +773,93 @@ impl<'a> ::flatbuffers::Verifiable for hostCapabilityKind {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for hostCapabilityKind {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_FLOW_EDGE_ROUTE_POLICY: u8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_FLOW_EDGE_ROUTE_POLICY: u8 = 1;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_FLOW_EDGE_ROUTE_POLICY: [flowEdgeRoutePolicy; 2] = [
+  flowEdgeRoutePolicy::CANONICAL_ONLY,
+  flowEdgeRoutePolicy::ALIGNED_SHARED_ARENA_OR_CANONICAL,
+];
+
+/// Compile-time routing decision for an edge. The aligned option is legal only
+/// when the producer and consumer share the declared arena and the runtime can
+/// prove bounds, alignment, ownership, mutability, and lifetime.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct flowEdgeRoutePolicy(pub u8);
+#[allow(non_upper_case_globals)]
+impl flowEdgeRoutePolicy {
+  pub const CANONICAL_ONLY: Self = Self(0);
+  pub const ALIGNED_SHARED_ARENA_OR_CANONICAL: Self = Self(1);
+
+  pub const ENUM_MIN: u8 = 0;
+  pub const ENUM_MAX: u8 = 1;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CANONICAL_ONLY,
+    Self::ALIGNED_SHARED_ARENA_OR_CANONICAL,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CANONICAL_ONLY => Some("CANONICAL_ONLY"),
+      Self::ALIGNED_SHARED_ARENA_OR_CANONICAL => Some("ALIGNED_SHARED_ARENA_OR_CANONICAL"),
+      _ => None,
+    }
+  }
+}
+impl ::core::fmt::Debug for flowEdgeRoutePolicy {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> ::flatbuffers::Follow<'a> for flowEdgeRoutePolicy {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+    Self(b)
+  }
+}
+
+impl ::flatbuffers::Push for flowEdgeRoutePolicy {
+    type Output = flowEdgeRoutePolicy;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for flowEdgeRoutePolicy {
+  type Scalar = u8;
+  #[inline]
+  fn to_little_endian(self) -> u8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: u8) -> Self {
+    let b = u8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> ::flatbuffers::Verifiable for flowEdgeRoutePolicy {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    u8::run_verifier(v, pos)
+  }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for flowEdgeRoutePolicy {}
 pub enum PluginCapabilityOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -3437,7 +3524,9 @@ impl<'a> PLGFlowNode<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowNode::VT_KIND, None)}
   }
-  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  /// independently instantiated signed WASM node, and "host-capability" = a
+  /// generic host adapter.
   #[inline]
   pub fn DISPATCH_MODEL(&self) -> Option<&'a str> {
     // Safety:
@@ -3648,6 +3737,269 @@ impl PLGFlowNodeT {
     })
   }
 }
+pub enum PLGFlowEdgeContractOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Exact validated SDS and representation contract bound into a signed flow
+/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
+/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
+pub struct PLGFlowEdgeContract<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PLGFlowEdgeContract<'a> {
+  type Inner = PLGFlowEdgeContract<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> PLGFlowEdgeContract<'a> {
+  pub const VT_CANONICAL_TYPE: ::flatbuffers::VOffsetT = 4;
+  pub const VT_ALIGNED_TYPE: ::flatbuffers::VOffsetT = 6;
+  pub const VT_CANONICAL_FALLBACK_AVAILABLE: ::flatbuffers::VOffsetT = 8;
+  pub const VT_ALIGNED_ELIGIBLE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_ROUTE_POLICY: ::flatbuffers::VOffsetT = 12;
+  pub const VT_OPAQUE: ::flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    PLGFlowEdgeContract { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args PLGFlowEdgeContractArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowEdgeContract<'bldr>> {
+    let mut builder = PLGFlowEdgeContractBuilder::new(_fbb);
+    if let Some(x) = args.ALIGNED_TYPE { builder.add_ALIGNED_TYPE(x); }
+    if let Some(x) = args.CANONICAL_TYPE { builder.add_CANONICAL_TYPE(x); }
+    builder.add_OPAQUE(args.OPAQUE);
+    builder.add_ROUTE_POLICY(args.ROUTE_POLICY);
+    builder.add_ALIGNED_ELIGIBLE(args.ALIGNED_ELIGIBLE);
+    builder.add_CANONICAL_FALLBACK_AVAILABLE(args.CANONICAL_FALLBACK_AVAILABLE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> PLGFlowEdgeContractT {
+    let CANONICAL_TYPE = self.CANONICAL_TYPE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let ALIGNED_TYPE = self.ALIGNED_TYPE().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
+    let CANONICAL_FALLBACK_AVAILABLE = self.CANONICAL_FALLBACK_AVAILABLE();
+    let ALIGNED_ELIGIBLE = self.ALIGNED_ELIGIBLE();
+    let ROUTE_POLICY = self.ROUTE_POLICY();
+    let OPAQUE = self.OPAQUE();
+    PLGFlowEdgeContractT {
+      CANONICAL_TYPE,
+      ALIGNED_TYPE,
+      CANONICAL_FALLBACK_AVAILABLE,
+      ALIGNED_ELIGIBLE,
+      ROUTE_POLICY,
+      OPAQUE,
+    }
+  }
+
+  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may
+  /// be opaque by design (see OPAQUE), and a signer must never be forced to
+  /// invent an identity to satisfy the schema. A contract MUST carry exactly
+  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with
+  /// both, is invalid and MUST be rejected by the compiler that signs the flow.
+  #[inline]
+  pub fn CANONICAL_TYPE(&self) -> Option<FlatBufferTypeRef<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>(PLGFlowEdgeContract::VT_CANONICAL_TYPE, None)}
+  }
+  #[inline]
+  pub fn ALIGNED_TYPE(&self) -> Option<FlatBufferTypeRef<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>(PLGFlowEdgeContract::VT_ALIGNED_TYPE, None)}
+  }
+  #[inline]
+  pub fn CANONICAL_FALLBACK_AVAILABLE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGFlowEdgeContract::VT_CANONICAL_FALLBACK_AVAILABLE, Some(true)).unwrap()}
+  }
+  #[inline]
+  pub fn ALIGNED_ELIGIBLE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGFlowEdgeContract::VT_ALIGNED_ELIGIBLE, Some(false)).unwrap()}
+  }
+  #[inline]
+  pub fn ROUTE_POLICY(&self) -> flowEdgeRoutePolicy {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flowEdgeRoutePolicy>(PLGFlowEdgeContract::VT_ROUTE_POLICY, Some(flowEdgeRoutePolicy::CANONICAL_ONLY)).unwrap()}
+  }
+  /// The edge carries bytes with no SDS identity BY DESIGN — an
+  /// application-blind host-capability adapter (an HTTP body, a raw file
+  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate
+  /// signed assertion of opacity, which is why it is an explicit flag rather
+  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable
+  /// from a declared-opaque one. An opaque edge is ineligible for the aligned
+  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.
+  #[inline]
+  pub fn OPAQUE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(PLGFlowEdgeContract::VT_OPAQUE, Some(false)).unwrap()}
+  }
+}
+
+impl ::flatbuffers::Verifiable for PLGFlowEdgeContract<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>("CANONICAL_TYPE", Self::VT_CANONICAL_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<FlatBufferTypeRef>>("ALIGNED_TYPE", Self::VT_ALIGNED_TYPE, false)?
+     .visit_field::<bool>("CANONICAL_FALLBACK_AVAILABLE", Self::VT_CANONICAL_FALLBACK_AVAILABLE, false)?
+     .visit_field::<bool>("ALIGNED_ELIGIBLE", Self::VT_ALIGNED_ELIGIBLE, false)?
+     .visit_field::<flowEdgeRoutePolicy>("ROUTE_POLICY", Self::VT_ROUTE_POLICY, false)?
+     .visit_field::<bool>("OPAQUE", Self::VT_OPAQUE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct PLGFlowEdgeContractArgs<'a> {
+    pub CANONICAL_TYPE: Option<::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>>>,
+    pub ALIGNED_TYPE: Option<::flatbuffers::WIPOffset<FlatBufferTypeRef<'a>>>,
+    pub CANONICAL_FALLBACK_AVAILABLE: bool,
+    pub ALIGNED_ELIGIBLE: bool,
+    pub ROUTE_POLICY: flowEdgeRoutePolicy,
+    pub OPAQUE: bool,
+}
+impl<'a> Default for PLGFlowEdgeContractArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    PLGFlowEdgeContractArgs {
+      CANONICAL_TYPE: None,
+      ALIGNED_TYPE: None,
+      CANONICAL_FALLBACK_AVAILABLE: true,
+      ALIGNED_ELIGIBLE: false,
+      ROUTE_POLICY: flowEdgeRoutePolicy::CANONICAL_ONLY,
+      OPAQUE: false,
+    }
+  }
+}
+
+pub struct PLGFlowEdgeContractBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowEdgeContractBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CANONICAL_TYPE(&mut self, CANONICAL_TYPE: ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FlatBufferTypeRef>>(PLGFlowEdgeContract::VT_CANONICAL_TYPE, CANONICAL_TYPE);
+  }
+  #[inline]
+  pub fn add_ALIGNED_TYPE(&mut self, ALIGNED_TYPE: ::flatbuffers::WIPOffset<FlatBufferTypeRef<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FlatBufferTypeRef>>(PLGFlowEdgeContract::VT_ALIGNED_TYPE, ALIGNED_TYPE);
+  }
+  #[inline]
+  pub fn add_CANONICAL_FALLBACK_AVAILABLE(&mut self, CANONICAL_FALLBACK_AVAILABLE: bool) {
+    self.fbb_.push_slot::<bool>(PLGFlowEdgeContract::VT_CANONICAL_FALLBACK_AVAILABLE, CANONICAL_FALLBACK_AVAILABLE, true);
+  }
+  #[inline]
+  pub fn add_ALIGNED_ELIGIBLE(&mut self, ALIGNED_ELIGIBLE: bool) {
+    self.fbb_.push_slot::<bool>(PLGFlowEdgeContract::VT_ALIGNED_ELIGIBLE, ALIGNED_ELIGIBLE, false);
+  }
+  #[inline]
+  pub fn add_ROUTE_POLICY(&mut self, ROUTE_POLICY: flowEdgeRoutePolicy) {
+    self.fbb_.push_slot::<flowEdgeRoutePolicy>(PLGFlowEdgeContract::VT_ROUTE_POLICY, ROUTE_POLICY, flowEdgeRoutePolicy::CANONICAL_ONLY);
+  }
+  #[inline]
+  pub fn add_OPAQUE(&mut self, OPAQUE: bool) {
+    self.fbb_.push_slot::<bool>(PLGFlowEdgeContract::VT_OPAQUE, OPAQUE, false);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowEdgeContractBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    PLGFlowEdgeContractBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<PLGFlowEdgeContract<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for PLGFlowEdgeContract<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("PLGFlowEdgeContract");
+      ds.field("CANONICAL_TYPE", &self.CANONICAL_TYPE());
+      ds.field("ALIGNED_TYPE", &self.ALIGNED_TYPE());
+      ds.field("CANONICAL_FALLBACK_AVAILABLE", &self.CANONICAL_FALLBACK_AVAILABLE());
+      ds.field("ALIGNED_ELIGIBLE", &self.ALIGNED_ELIGIBLE());
+      ds.field("ROUTE_POLICY", &self.ROUTE_POLICY());
+      ds.field("OPAQUE", &self.OPAQUE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PLGFlowEdgeContractT {
+  pub CANONICAL_TYPE: Option<alloc::boxed::Box<FlatBufferTypeRefT>>,
+  pub ALIGNED_TYPE: Option<alloc::boxed::Box<FlatBufferTypeRefT>>,
+  pub CANONICAL_FALLBACK_AVAILABLE: bool,
+  pub ALIGNED_ELIGIBLE: bool,
+  pub ROUTE_POLICY: flowEdgeRoutePolicy,
+  pub OPAQUE: bool,
+}
+impl Default for PLGFlowEdgeContractT {
+  fn default() -> Self {
+    Self {
+      CANONICAL_TYPE: None,
+      ALIGNED_TYPE: None,
+      CANONICAL_FALLBACK_AVAILABLE: true,
+      ALIGNED_ELIGIBLE: false,
+      ROUTE_POLICY: flowEdgeRoutePolicy::CANONICAL_ONLY,
+      OPAQUE: false,
+    }
+  }
+}
+impl PLGFlowEdgeContractT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<PLGFlowEdgeContract<'b>> {
+    let CANONICAL_TYPE = self.CANONICAL_TYPE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let ALIGNED_TYPE = self.ALIGNED_TYPE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let CANONICAL_FALLBACK_AVAILABLE = self.CANONICAL_FALLBACK_AVAILABLE;
+    let ALIGNED_ELIGIBLE = self.ALIGNED_ELIGIBLE;
+    let ROUTE_POLICY = self.ROUTE_POLICY;
+    let OPAQUE = self.OPAQUE;
+    PLGFlowEdgeContract::create(_fbb, &PLGFlowEdgeContractArgs{
+      CANONICAL_TYPE,
+      ALIGNED_TYPE,
+      CANONICAL_FALLBACK_AVAILABLE,
+      ALIGNED_ELIGIBLE,
+      ROUTE_POLICY,
+      OPAQUE,
+    })
+  }
+}
 pub enum PLGFlowEdgeOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -3670,6 +4022,7 @@ impl<'a> PLGFlowEdge<'a> {
   pub const VT_FROM_PORT_ID: ::flatbuffers::VOffsetT = 8;
   pub const VT_TO_NODE_ID: ::flatbuffers::VOffsetT = 10;
   pub const VT_TO_PORT_ID: ::flatbuffers::VOffsetT = 12;
+  pub const VT_CONTRACT: ::flatbuffers::VOffsetT = 14;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3681,6 +4034,7 @@ impl<'a> PLGFlowEdge<'a> {
     args: &'args PLGFlowEdgeArgs<'args>
   ) -> ::flatbuffers::WIPOffset<PLGFlowEdge<'bldr>> {
     let mut builder = PLGFlowEdgeBuilder::new(_fbb);
+    if let Some(x) = args.CONTRACT { builder.add_CONTRACT(x); }
     if let Some(x) = args.TO_PORT_ID { builder.add_TO_PORT_ID(x); }
     if let Some(x) = args.TO_NODE_ID { builder.add_TO_NODE_ID(x); }
     if let Some(x) = args.FROM_PORT_ID { builder.add_FROM_PORT_ID(x); }
@@ -3709,12 +4063,16 @@ impl<'a> PLGFlowEdge<'a> {
       let x = self.TO_PORT_ID();
       alloc::string::ToString::to_string(x)
     };
+    let CONTRACT = self.CONTRACT().map(|x| {
+      alloc::boxed::Box::new(x.unpack())
+    });
     PLGFlowEdgeT {
       EDGE_ID,
       FROM_NODE_ID,
       FROM_PORT_ID,
       TO_NODE_ID,
       TO_PORT_ID,
+      CONTRACT,
     }
   }
 
@@ -3758,6 +4116,20 @@ impl<'a> PLGFlowEdge<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PLGFlowEdge::VT_TO_PORT_ID, None).unwrap()}
   }
+  /// Exact identity/layout and compile-time representation policy. NOT
+  /// `required`: marking a NEW field of an EXISTING table required makes the
+  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  /// which is a breaking change to a ratified standard. Presence is enforced
+  /// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  #[inline]
+  pub fn CONTRACT(&self) -> Option<PLGFlowEdgeContract<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PLGFlowEdgeContract>>(PLGFlowEdge::VT_CONTRACT, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PLGFlowEdge<'_> {
@@ -3771,6 +4143,7 @@ impl ::flatbuffers::Verifiable for PLGFlowEdge<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FROM_PORT_ID", Self::VT_FROM_PORT_ID, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TO_NODE_ID", Self::VT_TO_NODE_ID, true)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TO_PORT_ID", Self::VT_TO_PORT_ID, true)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<PLGFlowEdgeContract>>("CONTRACT", Self::VT_CONTRACT, false)?
      .finish();
     Ok(())
   }
@@ -3781,6 +4154,7 @@ pub struct PLGFlowEdgeArgs<'a> {
     pub FROM_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TO_NODE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub TO_PORT_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CONTRACT: Option<::flatbuffers::WIPOffset<PLGFlowEdgeContract<'a>>>,
 }
 impl<'a> Default for PLGFlowEdgeArgs<'a> {
   #[inline]
@@ -3791,6 +4165,7 @@ impl<'a> Default for PLGFlowEdgeArgs<'a> {
       FROM_PORT_ID: None, // required field
       TO_NODE_ID: None, // required field
       TO_PORT_ID: None, // required field
+      CONTRACT: None,
     }
   }
 }
@@ -3821,6 +4196,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PLGFlowEdgeBuilder<'a, 'b, A>
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PLGFlowEdge::VT_TO_PORT_ID, TO_PORT_ID);
   }
   #[inline]
+  pub fn add_CONTRACT(&mut self, CONTRACT: ::flatbuffers::WIPOffset<PLGFlowEdgeContract<'b >>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PLGFlowEdgeContract>>(PLGFlowEdge::VT_CONTRACT, CONTRACT);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PLGFlowEdgeBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PLGFlowEdgeBuilder {
@@ -3847,6 +4226,7 @@ impl ::core::fmt::Debug for PLGFlowEdge<'_> {
       ds.field("FROM_PORT_ID", &self.FROM_PORT_ID());
       ds.field("TO_NODE_ID", &self.TO_NODE_ID());
       ds.field("TO_PORT_ID", &self.TO_PORT_ID());
+      ds.field("CONTRACT", &self.CONTRACT());
       ds.finish()
   }
 }
@@ -3858,6 +4238,7 @@ pub struct PLGFlowEdgeT {
   pub FROM_PORT_ID: alloc::string::String,
   pub TO_NODE_ID: alloc::string::String,
   pub TO_PORT_ID: alloc::string::String,
+  pub CONTRACT: Option<alloc::boxed::Box<PLGFlowEdgeContractT>>,
 }
 impl Default for PLGFlowEdgeT {
   fn default() -> Self {
@@ -3867,6 +4248,7 @@ impl Default for PLGFlowEdgeT {
       FROM_PORT_ID: alloc::string::ToString::to_string(""),
       TO_NODE_ID: alloc::string::ToString::to_string(""),
       TO_PORT_ID: alloc::string::ToString::to_string(""),
+      CONTRACT: None,
     }
   }
 }
@@ -3894,12 +4276,16 @@ impl PLGFlowEdgeT {
       let x = &self.TO_PORT_ID;
       _fbb.create_string(x)
     });
+    let CONTRACT = self.CONTRACT.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
     PLGFlowEdge::create(_fbb, &PLGFlowEdgeArgs{
       EDGE_ID,
       FROM_NODE_ID,
       FROM_PORT_ID,
       TO_NODE_ID,
       TO_PORT_ID,
+      CONTRACT,
     })
   }
 }

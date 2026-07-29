@@ -76,27 +76,42 @@ class PLGFlowEdge extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Exact identity/layout and compile-time representation policy. NOT
+    /// `required`: marking a NEW field of an EXISTING table required makes the
+    /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+    /// which is a breaking change to a ratified standard. Presence is enforced
+    /// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+    /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+    /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+    public function getCONTRACT()
+    {
+        $obj = new PLGFlowEdgeContract();
+        $o = $this->__offset(14);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPLGFlowEdge(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(6);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PLGFlowEdge
      */
-    public static function createPLGFlowEdge(FlatBufferBuilder $builder, $EDGE_ID, $FROM_NODE_ID, $FROM_PORT_ID, $TO_NODE_ID, $TO_PORT_ID)
+    public static function createPLGFlowEdge(FlatBufferBuilder $builder, $EDGE_ID, $FROM_NODE_ID, $FROM_PORT_ID, $TO_NODE_ID, $TO_PORT_ID, $CONTRACT)
     {
-        $builder->startObject(5);
+        $builder->startObject(6);
         self::addEDGE_ID($builder, $EDGE_ID);
         self::addFROM_NODE_ID($builder, $FROM_NODE_ID);
         self::addFROM_PORT_ID($builder, $FROM_PORT_ID);
         self::addTO_NODE_ID($builder, $TO_NODE_ID);
         self::addTO_PORT_ID($builder, $TO_PORT_ID);
+        self::addCONTRACT($builder, $CONTRACT);
         $o = $builder->endObject();
         $builder->required($o, 6);  // FROM_NODE_ID
         $builder->required($o, 8);  // FROM_PORT_ID
@@ -153,6 +168,16 @@ class PLGFlowEdge extends Table
     public static function addTO_PORT_ID(FlatBufferBuilder $builder, $TO_PORT_ID)
     {
         $builder->addOffsetX(4, $TO_PORT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCONTRACT(FlatBufferBuilder $builder, $CONTRACT)
+    {
+        $builder->addOffsetX(5, $CONTRACT, 0);
     }
 
     /**

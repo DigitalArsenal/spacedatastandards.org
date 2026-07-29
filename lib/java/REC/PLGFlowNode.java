@@ -54,7 +54,9 @@ public final class PLGFlowNode extends com.google.flatbuffers.Table {
   public ByteBuffer KINDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer KINDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
-   * Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+   * Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+   * independently instantiated signed WASM node, and "host-capability" = a
+   * generic host adapter.
    */
   public String DISPATCH_MODEL() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DISPATCH_MODELAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }

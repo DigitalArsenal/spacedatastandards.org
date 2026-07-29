@@ -99,6 +99,24 @@ class PLGFlowEdge : Table() {
         }
     val toPortIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun toPortIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Exact identity/layout and compile-time representation policy. NOT
+     * `required`: marking a NEW field of an EXISTING table required makes the
+     * FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+     * which is a breaking change to a ratified standard. Presence is enforced
+     * where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+     * edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+     * without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+     */
+    val contract : PLGFlowEdgeContract? get() = contract(PLGFlowEdgeContract())
+    fun contract(obj: PLGFlowEdgeContract) : PLGFlowEdgeContract? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPLGFlowEdge(_bb: ByteBuffer): PLGFlowEdge = getRootAsPLGFlowEdge(_bb, PLGFlowEdge())
@@ -106,8 +124,9 @@ class PLGFlowEdge : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPLGFlowEdge(builder: FlatBufferBuilder, edgeIdOffset: Int, fromNodeIdOffset: Int, fromPortIdOffset: Int, toNodeIdOffset: Int, toPortIdOffset: Int) : Int {
-            builder.startTable(5)
+        fun createPLGFlowEdge(builder: FlatBufferBuilder, edgeIdOffset: Int, fromNodeIdOffset: Int, fromPortIdOffset: Int, toNodeIdOffset: Int, toPortIdOffset: Int, contractOffset: Int) : Int {
+            builder.startTable(6)
+            addCONTRACT(builder, contractOffset)
             addTOPORTID(builder, toPortIdOffset)
             addTONODEID(builder, toNodeIdOffset)
             addFROMPORTID(builder, fromPortIdOffset)
@@ -115,12 +134,13 @@ class PLGFlowEdge : Table() {
             addEDGEID(builder, edgeIdOffset)
             return endPLGFlowEdge(builder)
         }
-        fun startPLGFlowEdge(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startPLGFlowEdge(builder: FlatBufferBuilder) = builder.startTable(6)
         fun addEDGEID(builder: FlatBufferBuilder, edgeId: Int) = builder.addOffset(0, edgeId, 0)
         fun addFROMNODEID(builder: FlatBufferBuilder, fromNodeId: Int) = builder.addOffset(1, fromNodeId, 0)
         fun addFROMPORTID(builder: FlatBufferBuilder, fromPortId: Int) = builder.addOffset(2, fromPortId, 0)
         fun addTONODEID(builder: FlatBufferBuilder, toNodeId: Int) = builder.addOffset(3, toNodeId, 0)
         fun addTOPORTID(builder: FlatBufferBuilder, toPortId: Int) = builder.addOffset(4, toPortId, 0)
+        fun addCONTRACT(builder: FlatBufferBuilder, contract: Int) = builder.addOffset(5, contract, 0)
         fun endPLGFlowEdge(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 6)

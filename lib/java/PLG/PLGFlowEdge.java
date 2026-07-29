@@ -57,14 +57,27 @@ public final class PLGFlowEdge extends com.google.flatbuffers.Table {
   public String TO_PORT_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TO_PORT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer TO_PORT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Exact identity/layout and compile-time representation policy. NOT
+   * `required`: marking a NEW field of an EXISTING table required makes the
+   * FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+   * which is a breaking change to a ratified standard. Presence is enforced
+   * where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+   * edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+   * without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+   */
+  public PLGFlowEdgeContract CONTRACT() { return CONTRACT(new PLGFlowEdgeContract()); }
+  public PLGFlowEdgeContract CONTRACT(PLGFlowEdgeContract obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPLGFlowEdge(FlatBufferBuilder builder,
       int EDGE_IDOffset,
       int FROM_NODE_IDOffset,
       int FROM_PORT_IDOffset,
       int TO_NODE_IDOffset,
-      int TO_PORT_IDOffset) {
-    builder.startTable(5);
+      int TO_PORT_IDOffset,
+      int CONTRACTOffset) {
+    builder.startTable(6);
+    PLGFlowEdge.addContract(builder, CONTRACTOffset);
     PLGFlowEdge.addToPortId(builder, TO_PORT_IDOffset);
     PLGFlowEdge.addToNodeId(builder, TO_NODE_IDOffset);
     PLGFlowEdge.addFromPortId(builder, FROM_PORT_IDOffset);
@@ -73,12 +86,13 @@ public final class PLGFlowEdge extends com.google.flatbuffers.Table {
     return PLGFlowEdge.endPLGFlowEdge(builder);
   }
 
-  public static void startPLGFlowEdge(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startPLGFlowEdge(FlatBufferBuilder builder) { builder.startTable(6); }
   public static void addEdgeId(FlatBufferBuilder builder, int EDGE_IDOffset) { builder.addOffset(0, EDGE_IDOffset, 0); }
   public static void addFromNodeId(FlatBufferBuilder builder, int FROM_NODE_IDOffset) { builder.addOffset(1, FROM_NODE_IDOffset, 0); }
   public static void addFromPortId(FlatBufferBuilder builder, int FROM_PORT_IDOffset) { builder.addOffset(2, FROM_PORT_IDOffset, 0); }
   public static void addToNodeId(FlatBufferBuilder builder, int TO_NODE_IDOffset) { builder.addOffset(3, TO_NODE_IDOffset, 0); }
   public static void addToPortId(FlatBufferBuilder builder, int TO_PORT_IDOffset) { builder.addOffset(4, TO_PORT_IDOffset, 0); }
+  public static void addContract(FlatBufferBuilder builder, int CONTRACTOffset) { builder.addOffset(5, CONTRACTOffset, 0); }
   public static int endPLGFlowEdge(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 6);  // FROM_NODE_ID

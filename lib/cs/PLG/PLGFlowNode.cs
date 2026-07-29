@@ -51,7 +51,9 @@ public struct PLGFlowNode : IFlatbufferObject
   public ArraySegment<byte>? GetKINDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetKINDArray() { return __p.__vector_as_array<byte>(10); }
-  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  /// independently instantiated signed WASM node, and "host-capability" = a
+  /// generic host adapter.
   public string DISPATCH_MODEL { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDISPATCH_MODELBytes() { return __p.__vector_as_span<byte>(12, 1); }

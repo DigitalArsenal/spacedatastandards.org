@@ -112,8 +112,39 @@ func (rcv *PLGFlowEdge) ToPortId() []byte {
 }
 
 /// Destination input port id
+/// Exact identity/layout and compile-time representation policy. NOT
+/// `required`: marking a NEW field of an EXISTING table required makes the
+/// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+/// which is a breaking change to a ratified standard. Presence is enforced
+/// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+/// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+/// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+func (rcv *PLGFlowEdge) CONTRACT(obj *PLGFlowEdgeContract) *PLGFlowEdgeContract {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PLGFlowEdgeContract)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PLGFlowEdge) Contract(obj *PLGFlowEdgeContract) *PLGFlowEdgeContract {
+	return rcv.CONTRACT(obj)
+}
+
+/// Exact identity/layout and compile-time representation policy. NOT
+/// `required`: marking a NEW field of an EXISTING table required makes the
+/// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+/// which is a breaking change to a ratified standard. Presence is enforced
+/// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+/// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+/// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
 func PLGFlowEdgeStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(6)
 }
 func PLGFlowEdgeAddEDGE_ID(builder *flatbuffers.Builder, EDGE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EDGE_ID), 0)
@@ -144,6 +175,12 @@ func PLGFlowEdgeAddTO_PORT_ID(builder *flatbuffers.Builder, TO_PORT_ID flatbuffe
 }
 func PLGFlowEdgeAddToPortId(builder *flatbuffers.Builder, TO_PORT_ID flatbuffers.UOffsetT) {
 	PLGFlowEdgeAddTO_PORT_ID(builder, TO_PORT_ID)
+}
+func PLGFlowEdgeAddCONTRACT(builder *flatbuffers.Builder, CONTRACT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(CONTRACT), 0)
+}
+func PLGFlowEdgeAddContract(builder *flatbuffers.Builder, CONTRACT flatbuffers.UOffsetT) {
+	PLGFlowEdgeAddCONTRACT(builder, CONTRACT)
 }
 func PLGFlowEdgeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PLGFlowEdgeContract, PLGFlowEdgeContractT } from './PLGFlowEdgeContract.js';
 
 
 /**
@@ -77,8 +78,22 @@ TO_PORT_ID(optionalEncoding?:any):string|Uint8Array {
   return this.bb!.__string(this.bb_pos + offset, optionalEncoding);
 }
 
+/**
+ * Exact identity/layout and compile-time representation policy. NOT
+ * `required`: marking a NEW field of an EXISTING table required makes the
+ * FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+ * which is a breaking change to a ratified standard. Presence is enforced
+ * where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+ * edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+ * without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+ */
+CONTRACT(obj?:PLGFlowEdgeContract):PLGFlowEdgeContract|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? (obj || new PLGFlowEdgeContract()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPLGFlowEdge(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 }
 
 static addEdgeId(builder:flatbuffers.Builder, EDGE_IDOffset:flatbuffers.Offset) {
@@ -101,6 +116,10 @@ static addToPortId(builder:flatbuffers.Builder, TO_PORT_IDOffset:flatbuffers.Off
   builder.addFieldOffset(4, TO_PORT_IDOffset, 0);
 }
 
+static addContract(builder:flatbuffers.Builder, CONTRACTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, CONTRACTOffset, 0);
+}
+
 static endPLGFlowEdge(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 6) // FROM_NODE_ID
@@ -110,15 +129,6 @@ static endPLGFlowEdge(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPLGFlowEdge(builder:flatbuffers.Builder, EDGE_IDOffset:flatbuffers.Offset, FROM_NODE_IDOffset:flatbuffers.Offset, FROM_PORT_IDOffset:flatbuffers.Offset, TO_NODE_IDOffset:flatbuffers.Offset, TO_PORT_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
-  PLGFlowEdge.startPLGFlowEdge(builder);
-  PLGFlowEdge.addEdgeId(builder, EDGE_IDOffset);
-  PLGFlowEdge.addFromNodeId(builder, FROM_NODE_IDOffset);
-  PLGFlowEdge.addFromPortId(builder, FROM_PORT_IDOffset);
-  PLGFlowEdge.addToNodeId(builder, TO_NODE_IDOffset);
-  PLGFlowEdge.addToPortId(builder, TO_PORT_IDOffset);
-  return PLGFlowEdge.endPLGFlowEdge(builder);
-}
 
 unpack(): PLGFlowEdgeT {
   return new PLGFlowEdgeT(
@@ -126,7 +136,8 @@ unpack(): PLGFlowEdgeT {
     this.FROM_NODE_ID(),
     this.FROM_PORT_ID(),
     this.TO_NODE_ID(),
-    this.TO_PORT_ID()
+    this.TO_PORT_ID(),
+    (this.CONTRACT() !== null ? this.CONTRACT()!.unpack() : null)
   );
 }
 
@@ -137,6 +148,7 @@ unpackTo(_o: PLGFlowEdgeT): void {
   _o.FROM_PORT_ID = this.FROM_PORT_ID();
   _o.TO_NODE_ID = this.TO_NODE_ID();
   _o.TO_PORT_ID = this.TO_PORT_ID();
+  _o.CONTRACT = (this.CONTRACT() !== null ? this.CONTRACT()!.unpack() : null);
 }
 }
 
@@ -146,7 +158,8 @@ constructor(
   public FROM_NODE_ID: string|Uint8Array|null = null,
   public FROM_PORT_ID: string|Uint8Array|null = null,
   public TO_NODE_ID: string|Uint8Array|null = null,
-  public TO_PORT_ID: string|Uint8Array|null = null
+  public TO_PORT_ID: string|Uint8Array|null = null,
+  public CONTRACT: PLGFlowEdgeContractT|null = null
 ){}
 
 
@@ -156,13 +169,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FROM_PORT_ID = (this.FROM_PORT_ID !== null ? builder.createString(this.FROM_PORT_ID!) : 0);
   const TO_NODE_ID = (this.TO_NODE_ID !== null ? builder.createString(this.TO_NODE_ID!) : 0);
   const TO_PORT_ID = (this.TO_PORT_ID !== null ? builder.createString(this.TO_PORT_ID!) : 0);
+  const CONTRACT = (this.CONTRACT !== null ? this.CONTRACT!.pack(builder) : 0);
 
-  return PLGFlowEdge.createPLGFlowEdge(builder,
-    EDGE_ID,
-    FROM_NODE_ID,
-    FROM_PORT_ID,
-    TO_NODE_ID,
-    TO_PORT_ID
-  );
+  PLGFlowEdge.startPLGFlowEdge(builder);
+  PLGFlowEdge.addEdgeId(builder, EDGE_ID);
+  PLGFlowEdge.addFromNodeId(builder, FROM_NODE_ID);
+  PLGFlowEdge.addFromPortId(builder, FROM_PORT_ID);
+  PLGFlowEdge.addToNodeId(builder, TO_NODE_ID);
+  PLGFlowEdge.addToPortId(builder, TO_PORT_ID);
+  PLGFlowEdge.addContract(builder, CONTRACT);
+
+  return PLGFlowEdge.endPLGFlowEdge(builder);
 }
 }

@@ -63,7 +63,9 @@ class PLGFlowNode(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+    # Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+    # independently instantiated signed WASM node, and "host-capability" = a
+    # generic host adapter.
     # PLGFlowNode
     def DISPATCH_MODEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))

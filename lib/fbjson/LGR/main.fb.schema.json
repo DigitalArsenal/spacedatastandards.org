@@ -585,6 +585,24 @@
         }
       }
     },
+    "flowEdgeRoutePolicy": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "prove bounds, alignment, ownership, mutability, and lifetime.",
+      "enum": [
+        0,
+        1
+      ],
+      "x-flatbuffer-enum-values": {
+        "CANONICAL_ONLY": {
+          "value": 0
+        },
+        "ALIGNED_SHARED_ARENA_OR_CANONICAL": {
+          "value": 1
+        }
+      }
+    },
     "licensingGrantMessageType": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -1307,7 +1325,7 @@
         },
         "DISPATCH_MODEL": {
           "type": "string",
-          "description": "Dispatch model: empty = linked-direct (in-wasm), else \"host-capability\"",
+          "description": "generic host adapter.",
           "x-flatbuffer-type": "string"
         },
         "CONFIG": {
@@ -1334,6 +1352,52 @@
         "NODE_ID",
         "PLUGIN_ID"
       ]
+    },
+    "PLGFlowEdgeContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "CANONICAL_TYPE": {
+          "$ref": "#/definitions/FlatBufferTypeRef",
+          "description": "both, is invalid and MUST be rejected by the compiler that signs the flow.",
+          "x-flatbuffer-type": "FlatBufferTypeRef"
+        },
+        "ALIGNED_TYPE": {
+          "$ref": "#/definitions/FlatBufferTypeRef",
+          "x-flatbuffer-type": "FlatBufferTypeRef"
+        },
+        "CANONICAL_FALLBACK_AVAILABLE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "ALIGNED_ELIGIBLE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ROUTE_POLICY": {
+          "$ref": "#/definitions/flowEdgeRoutePolicy",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "CANONICAL_ONLY",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CANONICAL_ONLY": {
+              "value": 0
+            },
+            "ALIGNED_SHARED_ARENA_OR_CANONICAL": {
+              "value": 1
+            }
+          }
+        },
+        "OPAQUE": {
+          "type": "boolean",
+          "description": "route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "description": "Exact validated SDS and representation contract bound into a signed flow edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema; ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef."
     },
     "PLGFlowEdge": {
       "type": "object",
@@ -1367,6 +1431,11 @@
           "description": "Destination input port id",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
+        },
+        "CONTRACT": {
+          "$ref": "#/definitions/PLGFlowEdgeContract",
+          "description": "without one. Buffers predating 1.0.13 stay readable and stay unsigned.",
+          "x-flatbuffer-type": "PLGFlowEdgeContract"
         }
       },
       "description": "One directed edge wiring a producer output port to a consumer input port.",

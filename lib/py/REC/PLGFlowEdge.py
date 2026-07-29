@@ -69,8 +69,26 @@ class PLGFlowEdge(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Exact identity/layout and compile-time representation policy. NOT
+    # `required`: marking a NEW field of an EXISTING table required makes the
+    # FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+    # which is a breaking change to a ratified standard. Presence is enforced
+    # where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+    # edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+    # without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+    # PLGFlowEdge
+    def CONTRACT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PLGFlowEdgeContract import PLGFlowEdgeContract
+            obj = PLGFlowEdgeContract()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PLGFlowEdgeStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(6)
 
 def Start(builder):
     PLGFlowEdgeStart(builder)
@@ -105,12 +123,23 @@ def PLGFlowEdgeAddTO_PORT_ID(builder, TO_PORT_ID):
 def AddTO_PORT_ID(builder, TO_PORT_ID):
     PLGFlowEdgeAddTO_PORT_ID(builder, TO_PORT_ID)
 
+def PLGFlowEdgeAddCONTRACT(builder, CONTRACT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRACT), 0)
+
+def AddCONTRACT(builder, CONTRACT):
+    PLGFlowEdgeAddCONTRACT(builder, CONTRACT)
+
 def PLGFlowEdgeEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PLGFlowEdgeEnd(builder)
 
+import PLGFlowEdgeContract
+try:
+    from typing import Optional
+except:
+    pass
 
 class PLGFlowEdgeT(object):
 
@@ -122,12 +151,14 @@ class PLGFlowEdgeT(object):
         FROM_PORT_ID = None,
         TO_NODE_ID = None,
         TO_PORT_ID = None,
+        CONTRACT = None,
     ):
         self.EDGE_ID = EDGE_ID  # type: Optional[str]
         self.FROM_NODE_ID = FROM_NODE_ID  # type: Optional[str]
         self.FROM_PORT_ID = FROM_PORT_ID  # type: Optional[str]
         self.TO_NODE_ID = TO_NODE_ID  # type: Optional[str]
         self.TO_PORT_ID = TO_PORT_ID  # type: Optional[str]
+        self.CONTRACT = CONTRACT  # type: Optional[PLGFlowEdgeContract.PLGFlowEdgeContractT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -155,6 +186,8 @@ class PLGFlowEdgeT(object):
         self.FROM_PORT_ID = PLGFlowEdge.FROM_PORT_ID()
         self.TO_NODE_ID = PLGFlowEdge.TO_NODE_ID()
         self.TO_PORT_ID = PLGFlowEdge.TO_PORT_ID()
+        if PLGFlowEdge.CONTRACT() is not None:
+            self.CONTRACT = PLGFlowEdgeContract.PLGFlowEdgeContractT.InitFromObj(PLGFlowEdge.CONTRACT())
 
     # PLGFlowEdgeT
     def Pack(self, builder):
@@ -168,6 +201,8 @@ class PLGFlowEdgeT(object):
             TO_NODE_ID = builder.CreateString(self.TO_NODE_ID)
         if self.TO_PORT_ID is not None:
             TO_PORT_ID = builder.CreateString(self.TO_PORT_ID)
+        if self.CONTRACT is not None:
+            CONTRACT = self.CONTRACT.Pack(builder)
         PLGFlowEdgeStart(builder)
         if self.EDGE_ID is not None:
             PLGFlowEdgeAddEDGE_ID(builder, EDGE_ID)
@@ -179,5 +214,7 @@ class PLGFlowEdgeT(object):
             PLGFlowEdgeAddTO_NODE_ID(builder, TO_NODE_ID)
         if self.TO_PORT_ID is not None:
             PLGFlowEdgeAddTO_PORT_ID(builder, TO_PORT_ID)
+        if self.CONTRACT is not None:
+            PLGFlowEdgeAddCONTRACT(builder, CONTRACT)
         PLGFlowEdge = PLGFlowEdgeEnd(builder)
         return PLGFlowEdge

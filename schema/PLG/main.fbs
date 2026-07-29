@@ -1,5 +1,5 @@
-// Hash: 993078ffbde7c1bb9458b8166618debc261900ad97901da6e692ac69b8c79439
-// Version: 1.0.12
+// Hash: 68745cf6d995c0f32e3f91bd037cfaaa936168a1c8fb169a41682a25a9104aca
+// Version: 1.0.13
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -269,7 +269,9 @@ table PLGFlowNode {
   METHOD_ID: string;
   /// Node kind, e.g. "transform", "trigger", "capability"
   KIND: string;
-  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  /// independently instantiated signed WASM node, and "host-capability" = a
+  /// generic host adapter.
   DISPATCH_MODEL: string;
   /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
   CONFIG: [ubyte];
@@ -277,6 +279,38 @@ table PLGFlowNode {
   UI_X: float;
   /// Editor layout Y position
   UI_Y: float;
+}
+
+/// Compile-time routing decision for an edge. The aligned option is legal only
+/// when the producer and consumer share the declared arena and the runtime can
+/// prove bounds, alignment, ownership, mutability, and lifetime.
+enum flowEdgeRoutePolicy : ubyte {
+  CANONICAL_ONLY,
+  ALIGNED_SHARED_ARENA_OR_CANONICAL
+}
+
+/// Exact validated SDS and representation contract bound into a signed flow
+/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
+/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
+table PLGFlowEdgeContract {
+  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may
+  /// be opaque by design (see OPAQUE), and a signer must never be forced to
+  /// invent an identity to satisfy the schema. A contract MUST carry exactly
+  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with
+  /// both, is invalid and MUST be rejected by the compiler that signs the flow.
+  CANONICAL_TYPE: FlatBufferTypeRef;
+  ALIGNED_TYPE: FlatBufferTypeRef;
+  CANONICAL_FALLBACK_AVAILABLE: bool = true;
+  ALIGNED_ELIGIBLE: bool = false;
+  ROUTE_POLICY: flowEdgeRoutePolicy = CANONICAL_ONLY;
+  /// The edge carries bytes with no SDS identity BY DESIGN — an
+  /// application-blind host-capability adapter (an HTTP body, a raw file
+  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate
+  /// signed assertion of opacity, which is why it is an explicit flag rather
+  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable
+  /// from a declared-opaque one. An opaque edge is ineligible for the aligned
+  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.
+  OPAQUE: bool = false;
 }
 
 /// One directed edge wiring a producer output port to a consumer input port.
@@ -291,6 +325,14 @@ table PLGFlowEdge {
   TO_NODE_ID: string (required);
   /// Destination input port id
   TO_PORT_ID: string (required);
+  /// Exact identity/layout and compile-time representation policy. NOT
+  /// `required`: marking a NEW field of an EXISTING table required makes the
+  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  /// which is a breaking change to a ratified standard. Presence is enforced
+  /// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  CONTRACT: PLGFlowEdgeContract;
 }
 
 /// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.

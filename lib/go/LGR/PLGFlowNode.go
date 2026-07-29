@@ -100,7 +100,9 @@ func (rcv *PLGFlowNode) Kind() []byte {
 }
 
 /// Node kind, e.g. "transform", "trigger", "capability"
-/// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+/// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+/// independently instantiated signed WASM node, and "host-capability" = a
+/// generic host adapter.
 func (rcv *PLGFlowNode) DISPATCH_MODEL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -113,7 +115,9 @@ func (rcv *PLGFlowNode) DispatchModel() []byte {
 	return rcv.DISPATCH_MODEL()
 }
 
-/// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+/// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+/// independently instantiated signed WASM node, and "host-capability" = a
+/// generic host adapter.
 /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)
 func (rcv *PLGFlowNode) CONFIG(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))

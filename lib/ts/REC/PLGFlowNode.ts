@@ -70,7 +70,9 @@ KIND(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+ * Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+ * independently instantiated signed WASM node, and "host-capability" = a
+ * generic host adapter.
  */
 DISPATCH_MODEL():string|null
 DISPATCH_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

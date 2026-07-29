@@ -48,6 +48,9 @@ struct EntryFunctionBuilder;
 struct PLGFlowNode;
 struct PLGFlowNodeBuilder;
 
+struct PLGFlowEdgeContract;
+struct PLGFlowEdgeContractBuilder;
+
 struct PLGFlowEdge;
 struct PLGFlowEdgeBuilder;
 
@@ -448,6 +451,39 @@ inline const char *EnumNamehostCapabilityKind(hostCapabilityKind e) {
   if (::flatbuffers::IsOutRange(e, hostCapabilityKind_CLOCK, hostCapabilityKind_STORAGE_INGEST)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNameshostCapabilityKind()[index];
+}
+
+/// Compile-time routing decision for an edge. The aligned option is legal only
+/// when the producer and consumer share the declared arena and the runtime can
+/// prove bounds, alignment, ownership, mutability, and lifetime.
+enum flowEdgeRoutePolicy : uint8_t {
+  flowEdgeRoutePolicy_CANONICAL_ONLY = 0,
+  flowEdgeRoutePolicy_ALIGNED_SHARED_ARENA_OR_CANONICAL = 1,
+  flowEdgeRoutePolicy_MIN = flowEdgeRoutePolicy_CANONICAL_ONLY,
+  flowEdgeRoutePolicy_MAX = flowEdgeRoutePolicy_ALIGNED_SHARED_ARENA_OR_CANONICAL
+};
+
+inline const flowEdgeRoutePolicy (&EnumValuesflowEdgeRoutePolicy())[2] {
+  static const flowEdgeRoutePolicy values[] = {
+    flowEdgeRoutePolicy_CANONICAL_ONLY,
+    flowEdgeRoutePolicy_ALIGNED_SHARED_ARENA_OR_CANONICAL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesflowEdgeRoutePolicy() {
+  static const char * const names[3] = {
+    "CANONICAL_ONLY",
+    "ALIGNED_SHARED_ARENA_OR_CANONICAL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameflowEdgeRoutePolicy(flowEdgeRoutePolicy e) {
+  if (::flatbuffers::IsOutRange(e, flowEdgeRoutePolicy_CANONICAL_ONLY, flowEdgeRoutePolicy_ALIGNED_SHARED_ARENA_OR_CANONICAL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesflowEdgeRoutePolicy()[index];
 }
 
 /// Plugin capability declaration
@@ -1672,7 +1708,9 @@ struct PLGFlowNode FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *KIND() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KIND);
   }
-  /// Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+  /// independently instantiated signed WASM node, and "host-capability" = a
+  /// generic host adapter.
   const ::flatbuffers::String *DISPATCH_MODEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DISPATCH_MODEL);
   }
@@ -1800,6 +1838,115 @@ inline ::flatbuffers::Offset<PLGFlowNode> CreatePLGFlowNodeDirect(
       UI_Y);
 }
 
+/// Exact validated SDS and representation contract bound into a signed flow
+/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
+/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
+struct PLGFlowEdgeContract FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PLGFlowEdgeContractBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CANONICAL_TYPE = 4,
+    VT_ALIGNED_TYPE = 6,
+    VT_CANONICAL_FALLBACK_AVAILABLE = 8,
+    VT_ALIGNED_ELIGIBLE = 10,
+    VT_ROUTE_POLICY = 12,
+    VT_OPAQUE = 14
+  };
+  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may
+  /// be opaque by design (see OPAQUE), and a signer must never be forced to
+  /// invent an identity to satisfy the schema. A contract MUST carry exactly
+  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with
+  /// both, is invalid and MUST be rejected by the compiler that signs the flow.
+  const FlatBufferTypeRef *CANONICAL_TYPE() const {
+    return GetPointer<const FlatBufferTypeRef *>(VT_CANONICAL_TYPE);
+  }
+  const FlatBufferTypeRef *ALIGNED_TYPE() const {
+    return GetPointer<const FlatBufferTypeRef *>(VT_ALIGNED_TYPE);
+  }
+  bool CANONICAL_FALLBACK_AVAILABLE() const {
+    return GetField<uint8_t>(VT_CANONICAL_FALLBACK_AVAILABLE, 1) != 0;
+  }
+  bool ALIGNED_ELIGIBLE() const {
+    return GetField<uint8_t>(VT_ALIGNED_ELIGIBLE, 0) != 0;
+  }
+  flowEdgeRoutePolicy ROUTE_POLICY() const {
+    return static_cast<flowEdgeRoutePolicy>(GetField<uint8_t>(VT_ROUTE_POLICY, 0));
+  }
+  /// The edge carries bytes with no SDS identity BY DESIGN — an
+  /// application-blind host-capability adapter (an HTTP body, a raw file
+  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate
+  /// signed assertion of opacity, which is why it is an explicit flag rather
+  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable
+  /// from a declared-opaque one. An opaque edge is ineligible for the aligned
+  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.
+  bool OPAQUE() const {
+    return GetField<uint8_t>(VT_OPAQUE, 0) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CANONICAL_TYPE) &&
+           verifier.VerifyTable(CANONICAL_TYPE()) &&
+           VerifyOffset(verifier, VT_ALIGNED_TYPE) &&
+           verifier.VerifyTable(ALIGNED_TYPE()) &&
+           VerifyField<uint8_t>(verifier, VT_CANONICAL_FALLBACK_AVAILABLE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ALIGNED_ELIGIBLE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_ROUTE_POLICY, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OPAQUE, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct PLGFlowEdgeContractBuilder {
+  typedef PLGFlowEdgeContract Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CANONICAL_TYPE(::flatbuffers::Offset<FlatBufferTypeRef> CANONICAL_TYPE) {
+    fbb_.AddOffset(PLGFlowEdgeContract::VT_CANONICAL_TYPE, CANONICAL_TYPE);
+  }
+  void add_ALIGNED_TYPE(::flatbuffers::Offset<FlatBufferTypeRef> ALIGNED_TYPE) {
+    fbb_.AddOffset(PLGFlowEdgeContract::VT_ALIGNED_TYPE, ALIGNED_TYPE);
+  }
+  void add_CANONICAL_FALLBACK_AVAILABLE(bool CANONICAL_FALLBACK_AVAILABLE) {
+    fbb_.AddElement<uint8_t>(PLGFlowEdgeContract::VT_CANONICAL_FALLBACK_AVAILABLE, static_cast<uint8_t>(CANONICAL_FALLBACK_AVAILABLE), 1);
+  }
+  void add_ALIGNED_ELIGIBLE(bool ALIGNED_ELIGIBLE) {
+    fbb_.AddElement<uint8_t>(PLGFlowEdgeContract::VT_ALIGNED_ELIGIBLE, static_cast<uint8_t>(ALIGNED_ELIGIBLE), 0);
+  }
+  void add_ROUTE_POLICY(flowEdgeRoutePolicy ROUTE_POLICY) {
+    fbb_.AddElement<uint8_t>(PLGFlowEdgeContract::VT_ROUTE_POLICY, static_cast<uint8_t>(ROUTE_POLICY), 0);
+  }
+  void add_OPAQUE(bool OPAQUE) {
+    fbb_.AddElement<uint8_t>(PLGFlowEdgeContract::VT_OPAQUE, static_cast<uint8_t>(OPAQUE), 0);
+  }
+  explicit PLGFlowEdgeContractBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PLGFlowEdgeContract> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PLGFlowEdgeContract>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PLGFlowEdgeContract> CreatePLGFlowEdgeContract(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<FlatBufferTypeRef> CANONICAL_TYPE = 0,
+    ::flatbuffers::Offset<FlatBufferTypeRef> ALIGNED_TYPE = 0,
+    bool CANONICAL_FALLBACK_AVAILABLE = true,
+    bool ALIGNED_ELIGIBLE = false,
+    flowEdgeRoutePolicy ROUTE_POLICY = flowEdgeRoutePolicy_CANONICAL_ONLY,
+    bool OPAQUE = false) {
+  PLGFlowEdgeContractBuilder builder_(_fbb);
+  builder_.add_ALIGNED_TYPE(ALIGNED_TYPE);
+  builder_.add_CANONICAL_TYPE(CANONICAL_TYPE);
+  builder_.add_OPAQUE(OPAQUE);
+  builder_.add_ROUTE_POLICY(ROUTE_POLICY);
+  builder_.add_ALIGNED_ELIGIBLE(ALIGNED_ELIGIBLE);
+  builder_.add_CANONICAL_FALLBACK_AVAILABLE(CANONICAL_FALLBACK_AVAILABLE);
+  return builder_.Finish();
+}
+
 /// One directed edge wiring a producer output port to a consumer input port.
 struct PLGFlowEdge FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PLGFlowEdgeBuilder Builder;
@@ -1808,7 +1955,8 @@ struct PLGFlowEdge FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FROM_NODE_ID = 6,
     VT_FROM_PORT_ID = 8,
     VT_TO_NODE_ID = 10,
-    VT_TO_PORT_ID = 12
+    VT_TO_PORT_ID = 12,
+    VT_CONTRACT = 14
   };
   /// Stable edge identifier
   const ::flatbuffers::String *EDGE_ID() const {
@@ -1830,6 +1978,16 @@ struct PLGFlowEdge FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *TO_PORT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TO_PORT_ID);
   }
+  /// Exact identity/layout and compile-time representation policy. NOT
+  /// `required`: marking a NEW field of an EXISTING table required makes the
+  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,
+  /// which is a breaking change to a ratified standard. Presence is enforced
+  /// where it belongs — the flow compiler MUST refuse to SIGN a flow whose
+  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge
+  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.
+  const PLGFlowEdgeContract *CONTRACT() const {
+    return GetPointer<const PLGFlowEdgeContract *>(VT_CONTRACT);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1843,6 +2001,8 @@ struct PLGFlowEdge FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TO_NODE_ID()) &&
            VerifyOffsetRequired(verifier, VT_TO_PORT_ID) &&
            verifier.VerifyString(TO_PORT_ID()) &&
+           VerifyOffset(verifier, VT_CONTRACT) &&
+           verifier.VerifyTable(CONTRACT()) &&
            verifier.EndTable();
   }
 };
@@ -1866,6 +2026,9 @@ struct PLGFlowEdgeBuilder {
   void add_TO_PORT_ID(::flatbuffers::Offset<::flatbuffers::String> TO_PORT_ID) {
     fbb_.AddOffset(PLGFlowEdge::VT_TO_PORT_ID, TO_PORT_ID);
   }
+  void add_CONTRACT(::flatbuffers::Offset<PLGFlowEdgeContract> CONTRACT) {
+    fbb_.AddOffset(PLGFlowEdge::VT_CONTRACT, CONTRACT);
+  }
   explicit PLGFlowEdgeBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1887,8 +2050,10 @@ inline ::flatbuffers::Offset<PLGFlowEdge> CreatePLGFlowEdge(
     ::flatbuffers::Offset<::flatbuffers::String> FROM_NODE_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FROM_PORT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TO_NODE_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TO_PORT_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TO_PORT_ID = 0,
+    ::flatbuffers::Offset<PLGFlowEdgeContract> CONTRACT = 0) {
   PLGFlowEdgeBuilder builder_(_fbb);
+  builder_.add_CONTRACT(CONTRACT);
   builder_.add_TO_PORT_ID(TO_PORT_ID);
   builder_.add_TO_NODE_ID(TO_NODE_ID);
   builder_.add_FROM_PORT_ID(FROM_PORT_ID);
@@ -1903,7 +2068,8 @@ inline ::flatbuffers::Offset<PLGFlowEdge> CreatePLGFlowEdgeDirect(
     const char *FROM_NODE_ID = nullptr,
     const char *FROM_PORT_ID = nullptr,
     const char *TO_NODE_ID = nullptr,
-    const char *TO_PORT_ID = nullptr) {
+    const char *TO_PORT_ID = nullptr,
+    ::flatbuffers::Offset<PLGFlowEdgeContract> CONTRACT = 0) {
   auto EDGE_ID__ = EDGE_ID ? _fbb.CreateString(EDGE_ID) : 0;
   auto FROM_NODE_ID__ = FROM_NODE_ID ? _fbb.CreateString(FROM_NODE_ID) : 0;
   auto FROM_PORT_ID__ = FROM_PORT_ID ? _fbb.CreateString(FROM_PORT_ID) : 0;
@@ -1915,7 +2081,8 @@ inline ::flatbuffers::Offset<PLGFlowEdge> CreatePLGFlowEdgeDirect(
       FROM_NODE_ID__,
       FROM_PORT_ID__,
       TO_NODE_ID__,
-      TO_PORT_ID__);
+      TO_PORT_ID__,
+      CONTRACT);
 }
 
 /// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.

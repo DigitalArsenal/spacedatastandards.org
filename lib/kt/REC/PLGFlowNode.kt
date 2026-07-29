@@ -88,7 +88,9 @@ class PLGFlowNode : Table() {
     val kindAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun kindInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Dispatch model: empty = linked-direct (in-wasm), else "host-capability"
+     * Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an
+     * independently instantiated signed WASM node, and "host-capability" = a
+     * generic host adapter.
      */
     val dispatchModel : String?
         get() {
