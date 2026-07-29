@@ -67,10 +67,13 @@ and enum-type are unambiguously different tokens at every casing.
 Plugin invoke frames carry `TAB.WIRE_FORMAT` which selects FLATBUFFER or
 ALIGNED_BINARY per-frame. Per SDK contract:
 
-- An input or output port that advertises `ALIGNED_BINARY` in
-  `PLG.PLGPortManifest.ACCEPTED_TYPE_SETS[].ALLOWED_WIRE_FORMATS` MUST
-  also advertise `FLATBUFFER` for the same schema and file identifier
-  in the same set.
+- Every input and output port MUST advertise both `FLATBUFFER` and
+  `ALIGNED_BINARY` in
+  `PLG.PLGPortManifest.ACCEPTED_TYPE_SETS[].ALLOWED_WIRE_FORMATS` for each
+  logical type it accepts.
+- The paired type refs MUST carry the same schema name, file identifier, root
+  type, version, and schema hash when present. The aligned entry additionally
+  carries its required layout and alignment metadata.
 - Callers can send either format; the plugin MUST accept both.
 - This keeps aligned-binary as an invoke-ABI optimization, not a
   replacement for the canonical FlatBuffer schema.

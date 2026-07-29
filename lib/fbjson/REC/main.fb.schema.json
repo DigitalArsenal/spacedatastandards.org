@@ -15206,6 +15206,72 @@
         }
       }
     },
+    "sbmEventType": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Append new values only; never reorder or reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "EXPLOSION": {
+          "value": 1
+        },
+        "COLLISION": {
+          "value": 2
+        }
+      }
+    },
+    "sbmObjectClass": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Append new values only; never reorder or reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "SPACECRAFT": {
+          "value": 1
+        },
+        "ROCKET_BODY": {
+          "value": 2
+        }
+      }
+    },
+    "sbmFragmentOrigin": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Append new values only; never reorder or reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "TARGET": {
+          "value": 1
+        },
+        "IMPACTOR": {
+          "value": 2
+        }
+      }
+    },
     "STVReferenceFrame": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -55110,6 +55176,312 @@
         }
       },
       "description": "SAR Observation"
+    },
+    "sbmFragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ORIGIN": {
+          "$ref": "#/definitions/sbmFragmentOrigin",
+          "description": "Which parent body this fragment came from.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "TARGET": {
+              "value": 1
+            },
+            "IMPACTOR": {
+              "value": 2
+            }
+          }
+        },
+        "L_C_M": {
+          "type": "number",
+          "description": "Characteristic length L_c in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "AM_RATIO_M2_PER_KG": {
+          "type": "number",
+          "description": "Area-to-mass ratio in square meters per kilogram.",
+          "x-flatbuffer-type": "double"
+        },
+        "AREA_M2": {
+          "type": "number",
+          "description": "Average cross-sectional area in square meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS_KG": {
+          "type": "number",
+          "description": "Fragment mass in kilograms.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_MAG_M_PER_S": {
+          "type": "number",
+          "description": "Magnitude of the ejection delta-V in meters per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_X_M_PER_S": {
+          "type": "number",
+          "description": "Ejection delta-V X component in meters per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_Y_M_PER_S": {
+          "type": "number",
+          "description": "Ejection delta-V Y component in meters per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_Z_M_PER_S": {
+          "type": "number",
+          "description": "Ejection delta-V Z component in meters per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_X_KM": {
+          "type": "number",
+          "description": "Fragment position X component in kilometers.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Y_KM": {
+          "type": "number",
+          "description": "Fragment position Y component in kilometers.",
+          "x-flatbuffer-type": "double"
+        },
+        "POSITION_Z_KM": {
+          "type": "number",
+          "description": "Fragment position Z component in kilometers.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_X_KM_PER_S": {
+          "type": "number",
+          "description": "Fragment velocity X component in kilometers per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Y_KM_PER_S": {
+          "type": "number",
+          "description": "Fragment velocity Y component in kilometers per second.",
+          "x-flatbuffer-type": "double"
+        },
+        "VELOCITY_Z_KM_PER_S": {
+          "type": "number",
+          "description": "Fragment velocity Z component in kilometers per second.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "description": "One debris fragment produced by a breakup event.  Vector components are expressed in the parent SBM.REF_FRAME axes. Position and velocity are the fragment's state at SBM.EPOCH, i.e. the parent state plus the ejection delta-V, before any propagation."
+    },
+    "SBM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "Producer-defined message identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Message creation date in ISO 8601 UTC format.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Creating agency, application, or service.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_TYPE": {
+          "$ref": "#/definitions/sbmEventType",
+          "description": "Breakup event type.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "EXPLOSION": {
+              "value": 1
+            },
+            "COLLISION": {
+              "value": 2
+            }
+          }
+        },
+        "OBJECT_CLASS": {
+          "$ref": "#/definitions/sbmObjectClass",
+          "description": "Parent object class used to select model coefficients.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "SPACECRAFT": {
+              "value": 1
+            },
+            "ROCKET_BODY": {
+              "value": 2
+            }
+          }
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "epoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system used by all epochs.",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame for all position, velocity and delta-V components.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Target object name.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "Target international designator or producer object identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "description": "OMM.NORAD_CAT_ID. 0 when unbound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "IMPACTOR_OBJECT_NAME": {
+          "type": "string",
+          "description": "Impactor object name. COLLISION events only.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMPACTOR_NORAD_CAT_ID": {
+          "type": "integer",
+          "description": "Impactor satellite catalog number. COLLISION events only. 0 when unbound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET_MASS_KG": {
+          "type": "number",
+          "description": "Target mass in kilograms.",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_L_C_M": {
+          "type": "number",
+          "description": "Target characteristic length in meters.",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACTOR_MASS_KG": {
+          "type": "number",
+          "description": "Impactor mass in kilograms. COLLISION events only.",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACTOR_L_C_M": {
+          "type": "number",
+          "description": "Impactor characteristic length in meters. COLLISION events only.",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_VELOCITY_M_PER_S": {
+          "type": "number",
+          "description": "Collision relative velocity in meters per second. COLLISION events only.",
+          "x-flatbuffer-type": "double"
+        },
+        "CATASTROPHIC": {
+          "type": "boolean",
+          "description": "threshold and both bodies were fully fragmented.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PARENT_POSITION_X_KM": {
+          "type": "number",
+          "description": "Parent position X component in kilometers at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "PARENT_POSITION_Y_KM": {
+          "type": "number",
+          "description": "Parent position Y component in kilometers at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "PARENT_POSITION_Z_KM": {
+          "type": "number",
+          "description": "Parent position Z component in kilometers at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "PARENT_VELOCITY_X_KM_PER_S": {
+          "type": "number",
+          "description": "Parent velocity X component in kilometers per second at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "PARENT_VELOCITY_Y_KM_PER_S": {
+          "type": "number",
+          "description": "Parent velocity Y component in kilometers per second at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "PARENT_VELOCITY_Z_KM_PER_S": {
+          "type": "number",
+          "description": "Parent velocity Z component in kilometers per second at EPOCH.",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_LC_M": {
+          "type": "number",
+          "description": "this were not generated.",
+          "x-flatbuffer-type": "double"
+        },
+        "SEED": {
+          "type": "integer",
+          "description": "exactly.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MODEL_NAME": {
+          "type": "string",
+          "description": "Breakup model name, e.g. \"NASA_SSBM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "description": "Breakup model implementation version.",
+          "x-flatbuffer-type": "string"
+        },
+        "FRAGMENT_COUNT": {
+          "type": "integer",
+          "description": "population is carried in this record.",
+          "x-flatbuffer-type": "uint"
+        },
+        "INPUT_MASS_KG": {
+          "type": "number",
+          "description": "Total parent mass fed to the model in kilograms.",
+          "x-flatbuffer-type": "double"
+        },
+        "OUTPUT_MASS_KG": {
+          "type": "number",
+          "description": "Total mass carried by the generated fragments in kilograms.",
+          "x-flatbuffer-type": "double"
+        },
+        "FRAGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sbmFragment"
+          },
+          "description": "Generated fragment population.",
+          "x-flatbuffer-type": "[sbmFragment]"
+        },
+        "ASSUMPTIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Free-form model assumptions or limitations.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Additional comments.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Satellite Breakup Model  One SBM record is a single on-orbit fragmentation event \u2014 an explosion or a collision \u2014 together with the debris population a breakup model produced for it. It carries the model inputs (parent states, masses, relative velocity, object class, cutoff, seed) so the population is reproducible, and the resulting fragments in FRAGMENTS.  Units on the wire: parent and fragment position are KILOMETERS, parent and fragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and $CDM state conventions); ejection delta-V, relative velocity and characteristic length are METERS PER SECOND and METERS respectively (matching the breakup-model literature). Every field name states its unit.  This record describes an ON-ORBIT breakup. Atmospheric reentry breakup and demise stay in $RDM/$REM; a business-loss classification of the event stays in $OOE."
     },
     "STV": {
       "type": "object",

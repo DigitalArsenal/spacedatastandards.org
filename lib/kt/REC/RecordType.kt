@@ -200,5 +200,6 @@ class RecordType private constructor() {
         const val SHC: UByte = 194u
         const val CES: UByte = 195u
         const val QEM: UByte = 196u
+        const val SBM: UByte = 197u
     }
 }

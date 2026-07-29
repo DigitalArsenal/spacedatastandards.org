@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.169.0+1785343787347",
+  version: "1.170.0+1785354666757",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -1051,6 +1051,191 @@ file_identifier "$OBD";`,
         "./dist/DOA/DOA.cpp.tar.gz",
         "./dist/DOA/DOA.kt.tar.gz",
         "./dist/DOA/DOA.ts.tar.gz"
+      ]
+    },
+    SBM: {
+      IDL: `// Hash: d87c836ec91004f3fbe4b79da4ad9c2473c15f5a0cdaa51c2314a13c868833e8
+// Version: 1.169.0
+// -----------------------------------END_HEADER
+/// Breakup event type. Selects the NASA Standard Satellite Breakup Model
+/// (SSBM) branch used to generate the fragment population.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmEventType : byte {
+  UNKNOWN,
+  EXPLOSION,
+  COLLISION
+}
+
+/// Parent object class. Selects the SSBM characteristic-length distribution
+/// coefficients; spacecraft and rocket bodies fragment differently.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmObjectClass : byte {
+  UNKNOWN,
+  SPACECRAFT,
+  ROCKET_BODY
+}
+
+/// Which parent body a fragment was generated from. Always TARGET for an
+/// EXPLOSION event; a COLLISION population carries fragments from both bodies.
+/// Append new values only; never reorder or reuse existing values.
+enum sbmFragmentOrigin : byte {
+  UNKNOWN,
+  TARGET,
+  IMPACTOR
+}
+
+/// One debris fragment produced by a breakup event.
+///
+/// Vector components are expressed in the parent SBM.REF_FRAME axes.
+/// Position and velocity are the fragment's state at SBM.EPOCH, i.e. the
+/// parent state plus the ejection delta-V, before any propagation.
+table sbmFragment {
+  /// Which parent body this fragment came from.
+  ORIGIN:sbmFragmentOrigin;
+  /// Characteristic length L_c in meters.
+  L_C_M:double;
+  /// Area-to-mass ratio in square meters per kilogram.
+  AM_RATIO_M2_PER_KG:double;
+  /// Average cross-sectional area in square meters.
+  AREA_M2:double;
+  /// Fragment mass in kilograms.
+  MASS_KG:double;
+  /// Magnitude of the ejection delta-V in meters per second.
+  DELTA_V_MAG_M_PER_S:double;
+  /// Ejection delta-V X component in meters per second.
+  DELTA_V_X_M_PER_S:double;
+  /// Ejection delta-V Y component in meters per second.
+  DELTA_V_Y_M_PER_S:double;
+  /// Ejection delta-V Z component in meters per second.
+  DELTA_V_Z_M_PER_S:double;
+  /// Fragment position X component in kilometers.
+  POSITION_X_KM:double;
+  /// Fragment position Y component in kilometers.
+  POSITION_Y_KM:double;
+  /// Fragment position Z component in kilometers.
+  POSITION_Z_KM:double;
+  /// Fragment velocity X component in kilometers per second.
+  VELOCITY_X_KM_PER_S:double;
+  /// Fragment velocity Y component in kilometers per second.
+  VELOCITY_Y_KM_PER_S:double;
+  /// Fragment velocity Z component in kilometers per second.
+  VELOCITY_Z_KM_PER_S:double;
+}
+
+/// Satellite Breakup Model
+///
+/// One SBM record is a single on-orbit fragmentation event \u2014 an explosion or
+/// a collision \u2014 together with the debris population a breakup model produced
+/// for it. It carries the model inputs (parent states, masses, relative
+/// velocity, object class, cutoff, seed) so the population is reproducible,
+/// and the resulting fragments in FRAGMENTS.
+///
+/// Units on the wire: parent and fragment position are KILOMETERS, parent and
+/// fragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and
+/// $CDM state conventions); ejection delta-V, relative velocity and
+/// characteristic length are METERS PER SECOND and METERS respectively
+/// (matching the breakup-model literature). Every field name states its unit.
+///
+/// This record describes an ON-ORBIT breakup. Atmospheric reentry breakup and
+/// demise stay in $RDM/$REM; a business-loss classification of the event stays
+/// in $OOE.
+table SBM {
+  /// Producer-defined message identifier.
+  MESSAGE_ID:string;
+  /// Message creation date in ISO 8601 UTC format.
+  CREATION_DATE:string;
+  /// Creating agency, application, or service.
+  ORIGINATOR:string;
+  /// Breakup event type.
+  EVENT_TYPE:sbmEventType;
+  /// Parent object class used to select model coefficients.
+  OBJECT_CLASS:sbmObjectClass;
+  /// Event epoch in ISO 8601 UTC format. Fragment states are given at this
+  /// epoch.
+  EPOCH:string;
+  /// Time system used by all epochs.
+  TIME_SYSTEM:string;
+  /// Reference frame for all position, velocity and delta-V components.
+  REF_FRAME:string;
+  /// Target object name.
+  OBJECT_NAME:string;
+  /// Target international designator or producer object identifier.
+  OBJECT_ID:string;
+  /// Target satellite catalog number. Joins to CAT.NORAD_CAT_ID and
+  /// OMM.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID:uint;
+  /// Impactor object name. COLLISION events only.
+  IMPACTOR_OBJECT_NAME:string;
+  /// Impactor satellite catalog number. COLLISION events only. 0 when unbound.
+  IMPACTOR_NORAD_CAT_ID:uint;
+  /// Target mass in kilograms.
+  TARGET_MASS_KG:double;
+  /// Target characteristic length in meters.
+  TARGET_L_C_M:double;
+  /// Impactor mass in kilograms. COLLISION events only.
+  IMPACTOR_MASS_KG:double;
+  /// Impactor characteristic length in meters. COLLISION events only.
+  IMPACTOR_L_C_M:double;
+  /// Collision relative velocity in meters per second. COLLISION events only.
+  RELATIVE_VELOCITY_M_PER_S:double;
+  /// True when the collision energy-to-mass ratio met the catastrophic
+  /// threshold and both bodies were fully fragmented.
+  CATASTROPHIC:bool;
+  /// Parent position X component in kilometers at EPOCH.
+  PARENT_POSITION_X_KM:double;
+  /// Parent position Y component in kilometers at EPOCH.
+  PARENT_POSITION_Y_KM:double;
+  /// Parent position Z component in kilometers at EPOCH.
+  PARENT_POSITION_Z_KM:double;
+  /// Parent velocity X component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_X_KM_PER_S:double;
+  /// Parent velocity Y component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_Y_KM_PER_S:double;
+  /// Parent velocity Z component in kilometers per second at EPOCH.
+  PARENT_VELOCITY_Z_KM_PER_S:double;
+  /// Lower characteristic-length cutoff in meters. Fragments smaller than
+  /// this were not generated.
+  MIN_LC_M:double;
+  /// Random number generator seed. A producer that reports the same
+  /// MODEL_NAME, MODEL_VERSION, inputs and SEED must reproduce FRAGMENTS
+  /// exactly.
+  SEED:uint32;
+  /// Breakup model name, e.g. "NASA_SSBM".
+  MODEL_NAME:string;
+  /// Breakup model implementation version.
+  MODEL_VERSION:string;
+  /// Number of fragments generated. Equals the length of FRAGMENTS when the
+  /// population is carried in this record.
+  FRAGMENT_COUNT:uint;
+  /// Total parent mass fed to the model in kilograms.
+  INPUT_MASS_KG:double;
+  /// Total mass carried by the generated fragments in kilograms.
+  OUTPUT_MASS_KG:double;
+  /// Generated fragment population.
+  FRAGMENTS:[sbmFragment];
+  /// Free-form model assumptions or limitations.
+  ASSUMPTIONS:[string];
+  /// Additional comments.
+  COMMENT:string;
+}
+
+root_type SBM;
+file_identifier "$SBM";`,
+      files: [
+        "./dist/SBM/SBM.sw.tar.gz",
+        "./dist/SBM/SBM.py.tar.gz",
+        "./dist/SBM/SBM.lob.tar.gz",
+        "./dist/SBM/SBM.go.tar.gz",
+        "./dist/SBM/SBM.js.tar.gz",
+        "./dist/SBM/SBM.dart.tar.gz",
+        "./dist/SBM/SBM.cs.tar.gz",
+        "./dist/SBM/SBM.java.tar.gz",
+        "./dist/SBM/SBM.rs.tar.gz",
+        "./dist/SBM/SBM.php.tar.gz",
+        "./dist/SBM/SBM.json.tar.gz",
+        "./dist/SBM/SBM.cpp.tar.gz",
+        "./dist/SBM/SBM.kt.tar.gz",
+        "./dist/SBM/SBM.ts.tar.gz"
       ]
     },
     GST: {
@@ -4168,7 +4353,7 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: '// Hash: ea78ce65992302b9567f90fe4e48d7f7736842f5ec892e456783d076cd8503cd\n// Version: 1.44.43\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: 5fc46d4beaa57dd72aea80fe7b20fc72426b2a02eecebfeac6fe9abc2c6b6d76\n// Version: 1.44.44\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -14639,6 +14824,264 @@ var json_default = {
         }
       },
       $ref: "#/definitions/DOA"
+    },
+    SBM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        sbmEventType: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "EXPLOSION",
+            "COLLISION"
+          ]
+        },
+        sbmObjectClass: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "SPACECRAFT",
+            "ROCKET_BODY"
+          ]
+        },
+        sbmFragmentOrigin: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "TARGET",
+            "IMPACTOR"
+          ]
+        },
+        sbmFragment: {
+          type: "object",
+          description: "One debris fragment produced by a breakup event.\n\nVector components are expressed in the parent SBM.REF_FRAME axes.\nPosition and velocity are the fragment's state at SBM.EPOCH, i.e. the\nparent state plus the ejection delta-V, before any propagation.",
+          properties: {
+            ORIGIN: {
+              $ref: "#/definitions/sbmFragmentOrigin",
+              description: "Which parent body this fragment came from."
+            },
+            L_C_M: {
+              type: "number",
+              description: "Characteristic length L_c in meters."
+            },
+            AM_RATIO_M2_PER_KG: {
+              type: "number",
+              description: "Area-to-mass ratio in square meters per kilogram."
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Average cross-sectional area in square meters."
+            },
+            MASS_KG: {
+              type: "number",
+              description: "Fragment mass in kilograms."
+            },
+            DELTA_V_MAG_M_PER_S: {
+              type: "number",
+              description: "Magnitude of the ejection delta-V in meters per second."
+            },
+            DELTA_V_X_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V X component in meters per second."
+            },
+            DELTA_V_Y_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Y component in meters per second."
+            },
+            DELTA_V_Z_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Z component in meters per second."
+            },
+            POSITION_X_KM: {
+              type: "number",
+              description: "Fragment position X component in kilometers."
+            },
+            POSITION_Y_KM: {
+              type: "number",
+              description: "Fragment position Y component in kilometers."
+            },
+            POSITION_Z_KM: {
+              type: "number",
+              description: "Fragment position Z component in kilometers."
+            },
+            VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity X component in kilometers per second."
+            },
+            VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Y component in kilometers per second."
+            },
+            VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Z component in kilometers per second."
+            }
+          },
+          additionalProperties: false
+        },
+        SBM: {
+          type: "object",
+          description: "Satellite Breakup Model\n\nOne SBM record is a single on-orbit fragmentation event \u2014 an explosion or\na collision \u2014 together with the debris population a breakup model produced\nfor it. It carries the model inputs (parent states, masses, relative\nvelocity, object class, cutoff, seed) so the population is reproducible,\nand the resulting fragments in FRAGMENTS.\n\nUnits on the wire: parent and fragment position are KILOMETERS, parent and\nfragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and\n$CDM state conventions); ejection delta-V, relative velocity and\ncharacteristic length are METERS PER SECOND and METERS respectively\n(matching the breakup-model literature). Every field name states its unit.\n\nThis record describes an ON-ORBIT breakup. Atmospheric reentry breakup and\ndemise stay in $RDM/$REM; a business-loss classification of the event stays\nin $OOE.",
+          properties: {
+            MESSAGE_ID: {
+              type: "string",
+              description: "Producer-defined message identifier."
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "Message creation date in ISO 8601 UTC format."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Creating agency, application, or service."
+            },
+            EVENT_TYPE: {
+              $ref: "#/definitions/sbmEventType",
+              description: "Breakup event type."
+            },
+            OBJECT_CLASS: {
+              $ref: "#/definitions/sbmObjectClass",
+              description: "Parent object class used to select model coefficients."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Event epoch in ISO 8601 UTC format. Fragment states are given at this\nepoch."
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time system used by all epochs."
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "Reference frame for all position, velocity and delta-V components."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Target object name."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Target international designator or producer object identifier."
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Target satellite catalog number. Joins to CAT.NORAD_CAT_ID and\nOMM.NORAD_CAT_ID. 0 when unbound."
+            },
+            IMPACTOR_OBJECT_NAME: {
+              type: "string",
+              description: "Impactor object name. COLLISION events only."
+            },
+            IMPACTOR_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Impactor satellite catalog number. COLLISION events only. 0 when unbound."
+            },
+            TARGET_MASS_KG: {
+              type: "number",
+              description: "Target mass in kilograms."
+            },
+            TARGET_L_C_M: {
+              type: "number",
+              description: "Target characteristic length in meters."
+            },
+            IMPACTOR_MASS_KG: {
+              type: "number",
+              description: "Impactor mass in kilograms. COLLISION events only."
+            },
+            IMPACTOR_L_C_M: {
+              type: "number",
+              description: "Impactor characteristic length in meters. COLLISION events only."
+            },
+            RELATIVE_VELOCITY_M_PER_S: {
+              type: "number",
+              description: "Collision relative velocity in meters per second. COLLISION events only."
+            },
+            CATASTROPHIC: {
+              type: "boolean",
+              description: "True when the collision energy-to-mass ratio met the catastrophic\nthreshold and both bodies were fully fragmented."
+            },
+            PARENT_POSITION_X_KM: {
+              type: "number",
+              description: "Parent position X component in kilometers at EPOCH."
+            },
+            PARENT_POSITION_Y_KM: {
+              type: "number",
+              description: "Parent position Y component in kilometers at EPOCH."
+            },
+            PARENT_POSITION_Z_KM: {
+              type: "number",
+              description: "Parent position Z component in kilometers at EPOCH."
+            },
+            PARENT_VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity X component in kilometers per second at EPOCH."
+            },
+            PARENT_VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Y component in kilometers per second at EPOCH."
+            },
+            PARENT_VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Z component in kilometers per second at EPOCH."
+            },
+            MIN_LC_M: {
+              type: "number",
+              description: "Lower characteristic-length cutoff in meters. Fragments smaller than\nthis were not generated."
+            },
+            SEED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Random number generator seed. A producer that reports the same\nMODEL_NAME, MODEL_VERSION, inputs and SEED must reproduce FRAGMENTS\nexactly."
+            },
+            MODEL_NAME: {
+              type: "string",
+              description: 'Breakup model name, e.g. "NASA_SSBM".'
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Breakup model implementation version."
+            },
+            FRAGMENT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of fragments generated. Equals the length of FRAGMENTS when the\npopulation is carried in this record."
+            },
+            INPUT_MASS_KG: {
+              type: "number",
+              description: "Total parent mass fed to the model in kilograms."
+            },
+            OUTPUT_MASS_KG: {
+              type: "number",
+              description: "Total mass carried by the generated fragments in kilograms."
+            },
+            FRAGMENTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/sbmFragment"
+              },
+              description: "Generated fragment population."
+            },
+            ASSUMPTIONS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Free-form model assumptions or limitations."
+            },
+            COMMENT: {
+              type: "string",
+              description: "Additional comments."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SBM"
     },
     GST: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -70359,6 +70802,391 @@ var fbjson_default = {
       $ref: "#/definitions/DOA",
       "x-flatbuffer-root-type": "DOA",
       "x-flatbuffer-file-identifier": "$DOA"
+    },
+    SBM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        sbmEventType: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "EXPLOSION",
+            "COLLISION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            EXPLOSION: {
+              value: 1
+            },
+            COLLISION: {
+              value: 2
+            }
+          }
+        },
+        sbmObjectClass: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "SPACECRAFT",
+            "ROCKET_BODY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            SPACECRAFT: {
+              value: 1
+            },
+            ROCKET_BODY: {
+              value: 2
+            }
+          }
+        },
+        sbmFragmentOrigin: {
+          type: "string",
+          enum: [
+            "UNKNOWN",
+            "TARGET",
+            "IMPACTOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            TARGET: {
+              value: 1
+            },
+            IMPACTOR: {
+              value: 2
+            }
+          }
+        },
+        sbmFragment: {
+          type: "object",
+          description: "One debris fragment produced by a breakup event.\n\nVector components are expressed in the parent SBM.REF_FRAME axes.\nPosition and velocity are the fragment's state at SBM.EPOCH, i.e. the\nparent state plus the ejection delta-V, before any propagation.",
+          properties: {
+            ORIGIN: {
+              $ref: "#/definitions/sbmFragmentOrigin",
+              description: "Which parent body this fragment came from.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                TARGET: {
+                  value: 1
+                },
+                IMPACTOR: {
+                  value: 2
+                }
+              }
+            },
+            L_C_M: {
+              type: "number",
+              description: "Characteristic length L_c in meters.",
+              "x-flatbuffer-type": "double"
+            },
+            AM_RATIO_M2_PER_KG: {
+              type: "number",
+              description: "Area-to-mass ratio in square meters per kilogram.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Average cross-sectional area in square meters.",
+              "x-flatbuffer-type": "double"
+            },
+            MASS_KG: {
+              type: "number",
+              description: "Fragment mass in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_MAG_M_PER_S: {
+              type: "number",
+              description: "Magnitude of the ejection delta-V in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_X_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V X component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Y_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Y component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Z_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Z component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_X_KM: {
+              type: "number",
+              description: "Fragment position X component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Y_KM: {
+              type: "number",
+              description: "Fragment position Y component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Z_KM: {
+              type: "number",
+              description: "Fragment position Z component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity X component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Y component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Z component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        SBM: {
+          type: "object",
+          description: "Satellite Breakup Model\n\nOne SBM record is a single on-orbit fragmentation event \u2014 an explosion or\na collision \u2014 together with the debris population a breakup model produced\nfor it. It carries the model inputs (parent states, masses, relative\nvelocity, object class, cutoff, seed) so the population is reproducible,\nand the resulting fragments in FRAGMENTS.\n\nUnits on the wire: parent and fragment position are KILOMETERS, parent and\nfragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and\n$CDM state conventions); ejection delta-V, relative velocity and\ncharacteristic length are METERS PER SECOND and METERS respectively\n(matching the breakup-model literature). Every field name states its unit.\n\nThis record describes an ON-ORBIT breakup. Atmospheric reentry breakup and\ndemise stay in $RDM/$REM; a business-loss classification of the event stays\nin $OOE.",
+          properties: {
+            MESSAGE_ID: {
+              type: "string",
+              description: "Producer-defined message identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "Message creation date in ISO 8601 UTC format.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Creating agency, application, or service.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_TYPE: {
+              $ref: "#/definitions/sbmEventType",
+              description: "Breakup event type.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                EXPLOSION: {
+                  value: 1
+                },
+                COLLISION: {
+                  value: 2
+                }
+              }
+            },
+            OBJECT_CLASS: {
+              $ref: "#/definitions/sbmObjectClass",
+              description: "Parent object class used to select model coefficients.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                SPACECRAFT: {
+                  value: 1
+                },
+                ROCKET_BODY: {
+                  value: 2
+                }
+              }
+            },
+            EPOCH: {
+              type: "string",
+              description: "Event epoch in ISO 8601 UTC format. Fragment states are given at this\nepoch.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time system used by all epochs.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "Reference frame for all position, velocity and delta-V components.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Target object name.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Target international designator or producer object identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Target satellite catalog number. Joins to CAT.NORAD_CAT_ID and\nOMM.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            IMPACTOR_OBJECT_NAME: {
+              type: "string",
+              description: "Impactor object name. COLLISION events only.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACTOR_NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Impactor satellite catalog number. COLLISION events only. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            TARGET_MASS_KG: {
+              type: "number",
+              description: "Target mass in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            TARGET_L_C_M: {
+              type: "number",
+              description: "Target characteristic length in meters.",
+              "x-flatbuffer-type": "double"
+            },
+            IMPACTOR_MASS_KG: {
+              type: "number",
+              description: "Impactor mass in kilograms. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            IMPACTOR_L_C_M: {
+              type: "number",
+              description: "Impactor characteristic length in meters. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            RELATIVE_VELOCITY_M_PER_S: {
+              type: "number",
+              description: "Collision relative velocity in meters per second. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            CATASTROPHIC: {
+              type: "boolean",
+              description: "True when the collision energy-to-mass ratio met the catastrophic\nthreshold and both bodies were fully fragmented.",
+              "x-flatbuffer-type": "bool"
+            },
+            PARENT_POSITION_X_KM: {
+              type: "number",
+              description: "Parent position X component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_POSITION_Y_KM: {
+              type: "number",
+              description: "Parent position Y component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_POSITION_Z_KM: {
+              type: "number",
+              description: "Parent position Z component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity X component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Y component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Z component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_LC_M: {
+              type: "number",
+              description: "Lower characteristic-length cutoff in meters. Fragments smaller than\nthis were not generated.",
+              "x-flatbuffer-type": "double"
+            },
+            SEED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Random number generator seed. A producer that reports the same\nMODEL_NAME, MODEL_VERSION, inputs and SEED must reproduce FRAGMENTS\nexactly.",
+              "x-flatbuffer-type": "uint32"
+            },
+            MODEL_NAME: {
+              type: "string",
+              description: 'Breakup model name, e.g. "NASA_SSBM".',
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Breakup model implementation version.",
+              "x-flatbuffer-type": "string"
+            },
+            FRAGMENT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of fragments generated. Equals the length of FRAGMENTS when the\npopulation is carried in this record.",
+              "x-flatbuffer-type": "uint"
+            },
+            INPUT_MASS_KG: {
+              type: "number",
+              description: "Total parent mass fed to the model in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            OUTPUT_MASS_KG: {
+              type: "number",
+              description: "Total mass carried by the generated fragments in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            FRAGMENTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/sbmFragment"
+              },
+              description: "Generated fragment population.",
+              "x-flatbuffer-type": "[sbmFragment]"
+            },
+            ASSUMPTIONS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Free-form model assumptions or limitations.",
+              "x-flatbuffer-type": "[string]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Additional comments.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SBM",
+      "x-flatbuffer-root-type": "SBM",
+      "x-flatbuffer-file-identifier": "$SBM"
     },
     GST: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -147919,6 +148747,72 @@ var fbjson_default = {
             }
           }
         },
+        sbmEventType: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Append new values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            EXPLOSION: {
+              value: 1
+            },
+            COLLISION: {
+              value: 2
+            }
+          }
+        },
+        sbmObjectClass: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Append new values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            SPACECRAFT: {
+              value: 1
+            },
+            ROCKET_BODY: {
+              value: 2
+            }
+          }
+        },
+        sbmFragmentOrigin: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Append new values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            TARGET: {
+              value: 1
+            },
+            IMPACTOR: {
+              value: 2
+            }
+          }
+        },
         STVReferenceFrame: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -187823,6 +188717,312 @@ var fbjson_default = {
             }
           },
           description: "SAR Observation"
+        },
+        sbmFragment: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            ORIGIN: {
+              $ref: "#/definitions/sbmFragmentOrigin",
+              description: "Which parent body this fragment came from.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                TARGET: {
+                  value: 1
+                },
+                IMPACTOR: {
+                  value: 2
+                }
+              }
+            },
+            L_C_M: {
+              type: "number",
+              description: "Characteristic length L_c in meters.",
+              "x-flatbuffer-type": "double"
+            },
+            AM_RATIO_M2_PER_KG: {
+              type: "number",
+              description: "Area-to-mass ratio in square meters per kilogram.",
+              "x-flatbuffer-type": "double"
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Average cross-sectional area in square meters.",
+              "x-flatbuffer-type": "double"
+            },
+            MASS_KG: {
+              type: "number",
+              description: "Fragment mass in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_MAG_M_PER_S: {
+              type: "number",
+              description: "Magnitude of the ejection delta-V in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_X_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V X component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Y_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Y component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Z_M_PER_S: {
+              type: "number",
+              description: "Ejection delta-V Z component in meters per second.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_X_KM: {
+              type: "number",
+              description: "Fragment position X component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Y_KM: {
+              type: "number",
+              description: "Fragment position Y component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Z_KM: {
+              type: "number",
+              description: "Fragment position Z component in kilometers.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity X component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Y component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Fragment velocity Z component in kilometers per second.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          description: "One debris fragment produced by a breakup event.  Vector components are expressed in the parent SBM.REF_FRAME axes. Position and velocity are the fragment's state at SBM.EPOCH, i.e. the parent state plus the ejection delta-V, before any propagation."
+        },
+        SBM: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MESSAGE_ID: {
+              type: "string",
+              description: "Producer-defined message identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "Message creation date in ISO 8601 UTC format.",
+              "x-flatbuffer-type": "string"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Creating agency, application, or service.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_TYPE: {
+              $ref: "#/definitions/sbmEventType",
+              description: "Breakup event type.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                EXPLOSION: {
+                  value: 1
+                },
+                COLLISION: {
+                  value: 2
+                }
+              }
+            },
+            OBJECT_CLASS: {
+              $ref: "#/definitions/sbmObjectClass",
+              description: "Parent object class used to select model coefficients.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                SPACECRAFT: {
+                  value: 1
+                },
+                ROCKET_BODY: {
+                  value: 2
+                }
+              }
+            },
+            EPOCH: {
+              type: "string",
+              description: "epoch.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time system used by all epochs.",
+              "x-flatbuffer-type": "string"
+            },
+            REF_FRAME: {
+              type: "string",
+              description: "Reference frame for all position, velocity and delta-V components.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Target object name.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Target international designator or producer object identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "OMM.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            IMPACTOR_OBJECT_NAME: {
+              type: "string",
+              description: "Impactor object name. COLLISION events only.",
+              "x-flatbuffer-type": "string"
+            },
+            IMPACTOR_NORAD_CAT_ID: {
+              type: "integer",
+              description: "Impactor satellite catalog number. COLLISION events only. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            TARGET_MASS_KG: {
+              type: "number",
+              description: "Target mass in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            TARGET_L_C_M: {
+              type: "number",
+              description: "Target characteristic length in meters.",
+              "x-flatbuffer-type": "double"
+            },
+            IMPACTOR_MASS_KG: {
+              type: "number",
+              description: "Impactor mass in kilograms. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            IMPACTOR_L_C_M: {
+              type: "number",
+              description: "Impactor characteristic length in meters. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            RELATIVE_VELOCITY_M_PER_S: {
+              type: "number",
+              description: "Collision relative velocity in meters per second. COLLISION events only.",
+              "x-flatbuffer-type": "double"
+            },
+            CATASTROPHIC: {
+              type: "boolean",
+              description: "threshold and both bodies were fully fragmented.",
+              "x-flatbuffer-type": "bool"
+            },
+            PARENT_POSITION_X_KM: {
+              type: "number",
+              description: "Parent position X component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_POSITION_Y_KM: {
+              type: "number",
+              description: "Parent position Y component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_POSITION_Z_KM: {
+              type: "number",
+              description: "Parent position Z component in kilometers at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_X_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity X component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_Y_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Y component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            PARENT_VELOCITY_Z_KM_PER_S: {
+              type: "number",
+              description: "Parent velocity Z component in kilometers per second at EPOCH.",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_LC_M: {
+              type: "number",
+              description: "this were not generated.",
+              "x-flatbuffer-type": "double"
+            },
+            SEED: {
+              type: "integer",
+              description: "exactly.",
+              "x-flatbuffer-type": "uint32"
+            },
+            MODEL_NAME: {
+              type: "string",
+              description: 'Breakup model name, e.g. "NASA_SSBM".',
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Breakup model implementation version.",
+              "x-flatbuffer-type": "string"
+            },
+            FRAGMENT_COUNT: {
+              type: "integer",
+              description: "population is carried in this record.",
+              "x-flatbuffer-type": "uint"
+            },
+            INPUT_MASS_KG: {
+              type: "number",
+              description: "Total parent mass fed to the model in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            OUTPUT_MASS_KG: {
+              type: "number",
+              description: "Total mass carried by the generated fragments in kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            FRAGMENTS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/sbmFragment"
+              },
+              description: "Generated fragment population.",
+              "x-flatbuffer-type": "[sbmFragment]"
+            },
+            ASSUMPTIONS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Free-form model assumptions or limitations.",
+              "x-flatbuffer-type": "[string]"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Additional comments.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Satellite Breakup Model  One SBM record is a single on-orbit fragmentation event \u2014 an explosion or a collision \u2014 together with the debris population a breakup model produced for it. It carries the model inputs (parent states, masses, relative velocity, object class, cutoff, seed) so the population is reproducible, and the resulting fragments in FRAGMENTS.  Units on the wire: parent and fragment position are KILOMETERS, parent and fragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and $CDM state conventions); ejection delta-V, relative velocity and characteristic length are METERS PER SECOND and METERS respectively (matching the breakup-model literature). Every field name states its unit.  This record describes an ON-ORBIT breakup. Atmospheric reentry breakup and demise stay in $RDM/$REM; a business-loss classification of the event stays in $OOE."
         },
         STV: {
           type: "object",

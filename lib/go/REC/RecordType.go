@@ -204,6 +204,7 @@ const (
 	RecordTypeSHC  RecordType = 194
 	RecordTypeCES  RecordType = 195
 	RecordTypeQEM  RecordType = 196
+	RecordTypeSBM  RecordType = 197
 )
 
 var EnumNamesRecordType = map[RecordType]string{
@@ -404,6 +405,7 @@ var EnumNamesRecordType = map[RecordType]string{
 	RecordTypeSHC:  "SHC",
 	RecordTypeCES:  "CES",
 	RecordTypeQEM:  "QEM",
+	RecordTypeSBM:  "SBM",
 }
 
 var EnumValuesRecordType = map[string]RecordType{
@@ -604,6 +606,7 @@ var EnumValuesRecordType = map[string]RecordType{
 	"SHC":  RecordTypeSHC,
 	"CES":  RecordTypeCES,
 	"QEM":  RecordTypeQEM,
+	"SBM":  RecordTypeSBM,
 }
 
 func (v RecordType) String() string {

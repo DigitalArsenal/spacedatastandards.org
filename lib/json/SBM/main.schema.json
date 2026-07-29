@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sbmEventType" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "EXPLOSION", "COLLISION"]
+    },
+    "sbmObjectClass" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "SPACECRAFT", "ROCKET_BODY"]
+    },
+    "sbmFragmentOrigin" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "TARGET", "IMPACTOR"]
+    },
+    "sbmFragment" : {
+      "type" : "object",
+      "description" : "One debris fragment produced by a breakup event.\n\nVector components are expressed in the parent SBM.REF_FRAME axes.\nPosition and velocity are the fragment's state at SBM.EPOCH, i.e. the\nparent state plus the ejection delta-V, before any propagation.",
+      "properties" : {
+        "ORIGIN" : {
+                "$ref" : "#/definitions/sbmFragmentOrigin",
+                "description" : "Which parent body this fragment came from."
+              },
+        "L_C_M" : {
+                "type" : "number",
+                "description" : "Characteristic length L_c in meters."
+              },
+        "AM_RATIO_M2_PER_KG" : {
+                "type" : "number",
+                "description" : "Area-to-mass ratio in square meters per kilogram."
+              },
+        "AREA_M2" : {
+                "type" : "number",
+                "description" : "Average cross-sectional area in square meters."
+              },
+        "MASS_KG" : {
+                "type" : "number",
+                "description" : "Fragment mass in kilograms."
+              },
+        "DELTA_V_MAG_M_PER_S" : {
+                "type" : "number",
+                "description" : "Magnitude of the ejection delta-V in meters per second."
+              },
+        "DELTA_V_X_M_PER_S" : {
+                "type" : "number",
+                "description" : "Ejection delta-V X component in meters per second."
+              },
+        "DELTA_V_Y_M_PER_S" : {
+                "type" : "number",
+                "description" : "Ejection delta-V Y component in meters per second."
+              },
+        "DELTA_V_Z_M_PER_S" : {
+                "type" : "number",
+                "description" : "Ejection delta-V Z component in meters per second."
+              },
+        "POSITION_X_KM" : {
+                "type" : "number",
+                "description" : "Fragment position X component in kilometers."
+              },
+        "POSITION_Y_KM" : {
+                "type" : "number",
+                "description" : "Fragment position Y component in kilometers."
+              },
+        "POSITION_Z_KM" : {
+                "type" : "number",
+                "description" : "Fragment position Z component in kilometers."
+              },
+        "VELOCITY_X_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Fragment velocity X component in kilometers per second."
+              },
+        "VELOCITY_Y_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Fragment velocity Y component in kilometers per second."
+              },
+        "VELOCITY_Z_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Fragment velocity Z component in kilometers per second."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBM" : {
+      "type" : "object",
+      "description" : "Satellite Breakup Model\n\nOne SBM record is a single on-orbit fragmentation event — an explosion or\na collision — together with the debris population a breakup model produced\nfor it. It carries the model inputs (parent states, masses, relative\nvelocity, object class, cutoff, seed) so the population is reproducible,\nand the resulting fragments in FRAGMENTS.\n\nUnits on the wire: parent and fragment position are KILOMETERS, parent and\nfragment velocity are KILOMETERS PER SECOND (matching $OMM, $OEM, $OCM and\n$CDM state conventions); ejection delta-V, relative velocity and\ncharacteristic length are METERS PER SECOND and METERS respectively\n(matching the breakup-model literature). Every field name states its unit.\n\nThis record describes an ON-ORBIT breakup. Atmospheric reentry breakup and\ndemise stay in $RDM/$REM; a business-loss classification of the event stays\nin $OOE.",
+      "properties" : {
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Producer-defined message identifier."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Message creation date in ISO 8601 UTC format."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Creating agency, application, or service."
+              },
+        "EVENT_TYPE" : {
+                "$ref" : "#/definitions/sbmEventType",
+                "description" : "Breakup event type."
+              },
+        "OBJECT_CLASS" : {
+                "$ref" : "#/definitions/sbmObjectClass",
+                "description" : "Parent object class used to select model coefficients."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Event epoch in ISO 8601 UTC format. Fragment states are given at this\nepoch."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system used by all epochs."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for all position, velocity and delta-V components."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Target object name."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Target international designator or producer object identifier."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Target satellite catalog number. Joins to CAT.NORAD_CAT_ID and\nOMM.NORAD_CAT_ID. 0 when unbound."
+              },
+        "IMPACTOR_OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Impactor object name. COLLISION events only."
+              },
+        "IMPACTOR_NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Impactor satellite catalog number. COLLISION events only. 0 when unbound."
+              },
+        "TARGET_MASS_KG" : {
+                "type" : "number",
+                "description" : "Target mass in kilograms."
+              },
+        "TARGET_L_C_M" : {
+                "type" : "number",
+                "description" : "Target characteristic length in meters."
+              },
+        "IMPACTOR_MASS_KG" : {
+                "type" : "number",
+                "description" : "Impactor mass in kilograms. COLLISION events only."
+              },
+        "IMPACTOR_L_C_M" : {
+                "type" : "number",
+                "description" : "Impactor characteristic length in meters. COLLISION events only."
+              },
+        "RELATIVE_VELOCITY_M_PER_S" : {
+                "type" : "number",
+                "description" : "Collision relative velocity in meters per second. COLLISION events only."
+              },
+        "CATASTROPHIC" : {
+                "type" : "boolean",
+                "description" : "True when the collision energy-to-mass ratio met the catastrophic\nthreshold and both bodies were fully fragmented."
+              },
+        "PARENT_POSITION_X_KM" : {
+                "type" : "number",
+                "description" : "Parent position X component in kilometers at EPOCH."
+              },
+        "PARENT_POSITION_Y_KM" : {
+                "type" : "number",
+                "description" : "Parent position Y component in kilometers at EPOCH."
+              },
+        "PARENT_POSITION_Z_KM" : {
+                "type" : "number",
+                "description" : "Parent position Z component in kilometers at EPOCH."
+              },
+        "PARENT_VELOCITY_X_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Parent velocity X component in kilometers per second at EPOCH."
+              },
+        "PARENT_VELOCITY_Y_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Parent velocity Y component in kilometers per second at EPOCH."
+              },
+        "PARENT_VELOCITY_Z_KM_PER_S" : {
+                "type" : "number",
+                "description" : "Parent velocity Z component in kilometers per second at EPOCH."
+              },
+        "MIN_LC_M" : {
+                "type" : "number",
+                "description" : "Lower characteristic-length cutoff in meters. Fragments smaller than\nthis were not generated."
+              },
+        "SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Random number generator seed. A producer that reports the same\nMODEL_NAME, MODEL_VERSION, inputs and SEED must reproduce FRAGMENTS\nexactly."
+              },
+        "MODEL_NAME" : {
+                "type" : "string",
+                "description" : "Breakup model name, e.g. \"NASA_SSBM\"."
+              },
+        "MODEL_VERSION" : {
+                "type" : "string",
+                "description" : "Breakup model implementation version."
+              },
+        "FRAGMENT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of fragments generated. Equals the length of FRAGMENTS when the\npopulation is carried in this record."
+              },
+        "INPUT_MASS_KG" : {
+                "type" : "number",
+                "description" : "Total parent mass fed to the model in kilograms."
+              },
+        "OUTPUT_MASS_KG" : {
+                "type" : "number",
+                "description" : "Total mass carried by the generated fragments in kilograms."
+              },
+        "FRAGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sbmFragment"},
+                "description" : "Generated fragment population."
+              },
+        "ASSUMPTIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Free-form model assumptions or limitations."
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Additional comments."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SBM"
+}

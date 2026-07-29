@@ -148,6 +148,7 @@ export * as RFO from './RFO/main.js';
 export * as ROC from './ROC/main.js';
 export * as RPT from './RPT/main.js';
 export * as SAR from './SAR/main.js';
+export * as SBM from './SBM/main.js';
 export * as SCC from './SCC/main.js';
 export * as SCM from './SCM/main.js';
 export * as SCN from './SCN/main.js';
