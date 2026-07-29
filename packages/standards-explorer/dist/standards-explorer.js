@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.164.0+1785305276001",
+  version: "1.165.0+1785320893224",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -2844,6 +2844,25 @@ file_identifier "$FPC";`,
         "./dist/TMF/TMF.ts.tar.gz"
       ]
     },
+    FSB: {
+      IDL: '// Hash: 0b23aa63d0e3f17d828fc84dd433605c2794cb81ade7c043cb200e954c84e945\n// Version: 1.164.0\n// -----------------------------------END_HEADER\nattribute "aligned_max_count";\nattribute "aligned_max_length";\n\n/// Meaning of the bytes in one bounded FlatSQL stream chunk. All durable\n/// variants are emitted as canonical FSB FlatBuffers. Aligned FSB frames are\n/// transient same-arena views and never the sole durable representation.\nenum flatSqlByteStreamKind : ubyte {\n  UNSPECIFIED,\n  RECORD_STREAM,\n  QUERY_RESULT,\n  SNAPSHOT,\n  WRITE_AHEAD_LOG\n}\n\n/// FlatSQL Byte Stream \u2014 a bounded, typed chunk used for append/query and\n/// opaque snapshot/WAL persistence. DATA carries at most one MiB so larger\n/// inputs and snapshots are delivered as ordered chunks. The host may persist\n/// canonical FSB bytes but must not interpret DATA as tables, rows, or SQL.\ntable FSB {\n  REQUEST_ID:ulong;\n  KIND:flatSqlByteStreamKind = UNSPECIFIED;\n  CHUNK_SEQUENCE:uint;\n  FINAL:bool;\n  TOTAL_BYTES:ulong;\n  RECORD_COUNT:ulong;\n  COLUMN_COUNT:uint;\n  SCHEMA_NAME:string (aligned_max_length: 64);\n  FILE_IDENTIFIER:string (aligned_max_length: 4);\n  DATA:[ubyte] (aligned_max_count: 1048576);\n  SHA256:[ubyte] (aligned_max_count: 32);\n}\n\nroot_type FSB;\nfile_identifier "$FSB";',
+      files: [
+        "./dist/FSB/FSB.sw.tar.gz",
+        "./dist/FSB/FSB.py.tar.gz",
+        "./dist/FSB/FSB.lob.tar.gz",
+        "./dist/FSB/FSB.go.tar.gz",
+        "./dist/FSB/FSB.js.tar.gz",
+        "./dist/FSB/FSB.dart.tar.gz",
+        "./dist/FSB/FSB.cs.tar.gz",
+        "./dist/FSB/FSB.java.tar.gz",
+        "./dist/FSB/FSB.rs.tar.gz",
+        "./dist/FSB/FSB.php.tar.gz",
+        "./dist/FSB/FSB.json.tar.gz",
+        "./dist/FSB/FSB.cpp.tar.gz",
+        "./dist/FSB/FSB.kt.tar.gz",
+        "./dist/FSB/FSB.ts.tar.gz"
+      ]
+    },
     STV: {
       IDL: '// Hash: 5685ddaa732fdb6703aa0c0e862b2af1f11fbd7933bca131181b30ce678d1c16\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum STVReferenceFrame : byte {\n  GCRF = 0,       // Geocentric Celestial Reference Frame\n  ITRF = 1,       // International Terrestrial Reference Frame\n  EME2000 = 2,    // Earth Mean Equator J2000\n  TEME = 3,       // True Equator Mean Equinox\n  ICRF = 4,       // International Celestial Reference Frame\n  MOON_CI = 5,    // Moon-centered inertial\n  MARS_CI = 6,    // Mars-centered inertial\n}\n\n/// State Vector\ntable STV {\n  EPOCH:double;\n  POS_X:double;\n  POS_Y:double;\n  POS_Z:double;\n  VEL_X:double;\n  VEL_Y:double;\n  VEL_Z:double;\n  REF_FRAME:ubyte;\n  FLAGS:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type STV;\nfile_identifier "$STV";',
       files: [
@@ -3611,7 +3630,7 @@ file_identifier "$NUM";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 9cd6d7904861fe75dae9211b2d943a4597af66668f3f3e2d8b9ad9c4f487bd98\n// Version: 1.44.40\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: 6e9dd331ededd1ea6cb0aebd2fde79db1dd7c75e0b6bbe7bbb57fce41841c210\n// Version: 1.44.41\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -8858,6 +8877,25 @@ file_identifier "$OCM";`,
         "./dist/TKG/TKG.cpp.tar.gz",
         "./dist/TKG/TKG.kt.tar.gz",
         "./dist/TKG/TKG.ts.tar.gz"
+      ]
+    },
+    FSO: {
+      IDL: '// Hash: 7698d54cba61bbb638104d37211cc2dbb15e446aefcfedfb4a66d0c46c70b90f\n// Version: 1.164.0\n// -----------------------------------END_HEADER\nattribute "aligned_max_count";\nattribute "aligned_max_length";\n\n/// FlatSQL node operation selected by an FSO control frame. These operations\n/// execute inside the independently instantiated FlatSQL WASM node; a host\n/// routes the bytes but never implements an operation.\nenum flatSqlNodeOperation : ubyte {\n  NONE,\n  APPEND_RECORDS,\n  QUERY_RECORDS,\n  CONFIGURE_INDEX,\n  UPSERT_VIEW,\n  COMPACT,\n  CONFIGURE_RETENTION,\n  SNAPSHOT,\n  RELOAD\n}\n\n/// FlatSQL operation outcome carried on the typed output port. Invocation ABI\n/// errors remain in PIV; this status reports database-operation semantics.\nenum flatSqlNodeStatus : ubyte {\n  UNSPECIFIED,\n  OK,\n  ACCEPTED,\n  YIELDED,\n  COMPLETE,\n  INVALID_ARGUMENT,\n  NOT_CONFIGURED,\n  NOT_FOUND,\n  CONFLICT,\n  RESOURCE_EXHAUSTED,\n  INTERNAL_ERROR\n}\n\n/// One canonical SDS file-identifier to FlatSQL table binding. A configured\n/// node rebuilds these bindings before replaying durable record bytes.\ntable FSOTableBinding {\n  FILE_IDENTIFIER:string (aligned_max_length: 4);\n  TABLE_NAME:string (aligned_max_length: 128);\n}\n\n/// FlatSQL Operation \u2014 generic control, policy, and status record for the\n/// independently packaged FlatSQL WASM node.\n///\n/// Bulk records, query results, snapshots, and WAL chunks travel separately as\n/// FSB frames so operations remain streamable and no host needs to interpret a\n/// database payload. SCHEMA_IDL is canonical SDS/FlatBuffers IDL supplied to\n/// the node for schema-derived table/index construction.\ntable FSO {\n  OPERATION:flatSqlNodeOperation = NONE;\n  REQUEST_ID:ulong;\n\n  DATABASE_NAME:string (aligned_max_length: 128);\n  /// UTF-8 FlatBuffers IDL bytes. A byte vector is used because the aligned\n  /// compiler intentionally limits fixed inline strings to 255 bytes.\n  SCHEMA_IDL:[ubyte] (aligned_max_count: 262144);\n  TABLE_BINDINGS:[FSOTableBinding] (aligned_max_count: 64);\n\n  TABLE_NAME:string (aligned_max_length: 128);\n  INDEX_NAME:string (aligned_max_length: 128);\n  /// UTF-8 index expression bytes.\n  INDEX_EXPRESSION:[ubyte] (aligned_max_count: 2048);\n  VIEW_NAME:string (aligned_max_length: 128);\n  /// UTF-8 SQL/query bytes.\n  QUERY:[ubyte] (aligned_max_count: 16384);\n  PARAMETERS:[ubyte] (aligned_max_count: 65536);\n  PARAMETER_COUNT:uint;\n  /// UTF-8 upsert-key expression bytes.\n  UPSERT_KEY_EXPRESSION:[ubyte] (aligned_max_count: 2048);\n\n  RETENTION_MAX_RECORDS:ulong;\n  RETENTION_MAX_AGE_MILLIS:ulong;\n  COMPACTION_TARGET_BYTES:ulong;\n\n  STATUS:flatSqlNodeStatus = UNSPECIFIED;\n  AFFECTED_RECORDS:ulong;\n  RESULT_BYTES:ulong;\n  ERROR_CODE:string (aligned_max_length: 128);\n  /// UTF-8 diagnostic bytes.\n  MESSAGE:[ubyte] (aligned_max_count: 4096);\n}\n\nroot_type FSO;\nfile_identifier "$FSO";',
+      files: [
+        "./dist/FSO/FSO.sw.tar.gz",
+        "./dist/FSO/FSO.py.tar.gz",
+        "./dist/FSO/FSO.lob.tar.gz",
+        "./dist/FSO/FSO.go.tar.gz",
+        "./dist/FSO/FSO.js.tar.gz",
+        "./dist/FSO/FSO.dart.tar.gz",
+        "./dist/FSO/FSO.cs.tar.gz",
+        "./dist/FSO/FSO.java.tar.gz",
+        "./dist/FSO/FSO.rs.tar.gz",
+        "./dist/FSO/FSO.php.tar.gz",
+        "./dist/FSO/FSO.json.tar.gz",
+        "./dist/FSO/FSO.cpp.tar.gz",
+        "./dist/FSO/FSO.kt.tar.gz",
+        "./dist/FSO/FSO.ts.tar.gz"
       ]
     },
     VAM: {
@@ -22531,6 +22569,82 @@ var json_default = {
         }
       },
       $ref: "#/definitions/TMF"
+    },
+    FSB: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        flatSqlByteStreamKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD_STREAM",
+            "QUERY_RESULT",
+            "SNAPSHOT",
+            "WRITE_AHEAD_LOG"
+          ]
+        },
+        FSB: {
+          type: "object",
+          description: "FlatSQL Byte Stream \u2014 a bounded, typed chunk used for append/query and\nopaque snapshot/WAL persistence. DATA carries at most one MiB so larger\ninputs and snapshots are delivered as ordered chunks. The host may persist\ncanonical FSB bytes but must not interpret DATA as tables, rows, or SQL.",
+          properties: {
+            REQUEST_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            KIND: {
+              $ref: "#/definitions/flatSqlByteStreamKind"
+            },
+            CHUNK_SEQUENCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            FINAL: {
+              type: "boolean"
+            },
+            TOTAL_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            RECORD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            COLUMN_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            SCHEMA_NAME: {
+              type: "string"
+            },
+            FILE_IDENTIFIER: {
+              type: "string"
+            },
+            DATA: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              }
+            },
+            SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/FSB"
     },
     STV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -47493,6 +47607,177 @@ var json_default = {
         }
       },
       $ref: "#/definitions/TKG"
+    },
+    FSO: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        flatSqlNodeOperation: {
+          type: "string",
+          enum: [
+            "NONE",
+            "APPEND_RECORDS",
+            "QUERY_RECORDS",
+            "CONFIGURE_INDEX",
+            "UPSERT_VIEW",
+            "COMPACT",
+            "CONFIGURE_RETENTION",
+            "SNAPSHOT",
+            "RELOAD"
+          ]
+        },
+        flatSqlNodeStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OK",
+            "ACCEPTED",
+            "YIELDED",
+            "COMPLETE",
+            "INVALID_ARGUMENT",
+            "NOT_CONFIGURED",
+            "NOT_FOUND",
+            "CONFLICT",
+            "RESOURCE_EXHAUSTED",
+            "INTERNAL_ERROR"
+          ]
+        },
+        FSOTableBinding: {
+          type: "object",
+          description: "One canonical SDS file-identifier to FlatSQL table binding. A configured\nnode rebuilds these bindings before replaying durable record bytes.",
+          properties: {
+            FILE_IDENTIFIER: {
+              type: "string"
+            },
+            TABLE_NAME: {
+              type: "string"
+            }
+          },
+          additionalProperties: false
+        },
+        FSO: {
+          type: "object",
+          description: "FlatSQL Operation \u2014 generic control, policy, and status record for the\nindependently packaged FlatSQL WASM node.\n\nBulk records, query results, snapshots, and WAL chunks travel separately as\nFSB frames so operations remain streamable and no host needs to interpret a\ndatabase payload. SCHEMA_IDL is canonical SDS/FlatBuffers IDL supplied to\nthe node for schema-derived table/index construction.",
+          properties: {
+            OPERATION: {
+              $ref: "#/definitions/flatSqlNodeOperation"
+            },
+            REQUEST_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            DATABASE_NAME: {
+              type: "string"
+            },
+            SCHEMA_IDL: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 FlatBuffers IDL bytes. A byte vector is used because the aligned\ncompiler intentionally limits fixed inline strings to 255 bytes."
+            },
+            TABLE_BINDINGS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/FSOTableBinding"
+              }
+            },
+            TABLE_NAME: {
+              type: "string"
+            },
+            INDEX_NAME: {
+              type: "string"
+            },
+            INDEX_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 index expression bytes."
+            },
+            VIEW_NAME: {
+              type: "string"
+            },
+            QUERY: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 SQL/query bytes."
+            },
+            PARAMETERS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              }
+            },
+            PARAMETER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            UPSERT_KEY_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 upsert-key expression bytes."
+            },
+            RETENTION_MAX_RECORDS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            RETENTION_MAX_AGE_MILLIS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            COMPACTION_TARGET_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            STATUS: {
+              $ref: "#/definitions/flatSqlNodeStatus"
+            },
+            AFFECTED_RECORDS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            RESULT_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3
+            },
+            ERROR_CODE: {
+              type: "string"
+            },
+            MESSAGE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 diagnostic bytes."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/FSO"
     },
     VAM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -108813,6 +109098,133 @@ var fbjson_default = {
       "x-flatbuffer-root-type": "TMF",
       "x-flatbuffer-file-identifier": "$TMF"
     },
+    FSB: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        flatSqlByteStreamKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD_STREAM",
+            "QUERY_RESULT",
+            "SNAPSHOT",
+            "WRITE_AHEAD_LOG"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RECORD_STREAM: {
+              value: 1
+            },
+            QUERY_RESULT: {
+              value: 2
+            },
+            SNAPSHOT: {
+              value: 3
+            },
+            WRITE_AHEAD_LOG: {
+              value: 4
+            }
+          }
+        },
+        FSB: {
+          type: "object",
+          description: "FlatSQL Byte Stream \u2014 a bounded, typed chunk used for append/query and\nopaque snapshot/WAL persistence. DATA carries at most one MiB so larger\ninputs and snapshots are delivered as ordered chunks. The host may persist\ncanonical FSB bytes but must not interpret DATA as tables, rows, or SQL.",
+          properties: {
+            REQUEST_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            KIND: {
+              $ref: "#/definitions/flatSqlByteStreamKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RECORD_STREAM: {
+                  value: 1
+                },
+                QUERY_RESULT: {
+                  value: 2
+                },
+                SNAPSHOT: {
+                  value: 3
+                },
+                WRITE_AHEAD_LOG: {
+                  value: 4
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CHUNK_SEQUENCE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint"
+            },
+            FINAL: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool"
+            },
+            TOTAL_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            RECORD_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            COLUMN_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint"
+            },
+            SCHEMA_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            FILE_IDENTIFIER: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            DATA: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            SHA256: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/FSB",
+      "x-flatbuffer-root-type": "FSB",
+      "x-flatbuffer-file-identifier": "$FSB"
+    },
     STV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -137451,6 +137863,36 @@ var fbjson_default = {
             }
           }
         },
+        flatSqlByteStreamKind: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "transient same-arena views and never the sole durable representation.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RECORD_STREAM: {
+              value: 1
+            },
+            QUERY_RESULT: {
+              value: 2
+            },
+            SNAPSHOT: {
+              value: 3
+            },
+            WRITE_AHEAD_LOG: {
+              value: 4
+            }
+          }
+        },
         fieldStreamValueStateCategory: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -137499,6 +137941,106 @@ var fbjson_default = {
             },
             TextUtf8: {
               value: 3
+            }
+          }
+        },
+        flatSqlNodeOperation: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "routes the bytes but never implements an operation.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            APPEND_RECORDS: {
+              value: 1
+            },
+            QUERY_RECORDS: {
+              value: 2
+            },
+            CONFIGURE_INDEX: {
+              value: 3
+            },
+            UPSERT_VIEW: {
+              value: 4
+            },
+            COMPACT: {
+              value: 5
+            },
+            CONFIGURE_RETENTION: {
+              value: 6
+            },
+            SNAPSHOT: {
+              value: 7
+            },
+            RELOAD: {
+              value: 8
+            }
+          }
+        },
+        flatSqlNodeStatus: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "errors remain in PIV; this status reports database-operation semantics.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            OK: {
+              value: 1
+            },
+            ACCEPTED: {
+              value: 2
+            },
+            YIELDED: {
+              value: 3
+            },
+            COMPLETE: {
+              value: 4
+            },
+            INVALID_ARGUMENT: {
+              value: 5
+            },
+            NOT_CONFIGURED: {
+              value: 6
+            },
+            NOT_FOUND: {
+              value: 7
+            },
+            CONFLICT: {
+              value: 8
+            },
+            RESOURCE_EXHAUSTED: {
+              value: 9
+            },
+            INTERNAL_ERROR: {
+              value: 10
             }
           }
         },
@@ -159937,6 +160479,82 @@ var fbjson_default = {
             }
           }
         },
+        FSB: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            REQUEST_ID: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            KIND: {
+              $ref: "#/definitions/flatSqlByteStreamKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RECORD_STREAM: {
+                  value: 1
+                },
+                QUERY_RESULT: {
+                  value: 2
+                },
+                SNAPSHOT: {
+                  value: 3
+                },
+                WRITE_AHEAD_LOG: {
+                  value: 4
+                }
+              }
+            },
+            CHUNK_SEQUENCE: {
+              type: "integer",
+              "x-flatbuffer-type": "uint"
+            },
+            FINAL: {
+              type: "boolean",
+              "x-flatbuffer-type": "bool"
+            },
+            TOTAL_BYTES: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            RECORD_COUNT: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            COLUMN_COUNT: {
+              type: "integer",
+              "x-flatbuffer-type": "uint"
+            },
+            SCHEMA_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            FILE_IDENTIFIER: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            DATA: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            SHA256: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          description: "FlatSQL Byte Stream \u2014 a bounded, typed chunk used for append/query and opaque snapshot/WAL persistence. DATA carries at most one MiB so larger inputs and snapshots are delivered as ordered chunks. The host may persist canonical FSB bytes but must not interpret DATA as tables, rows, or SQL."
+        },
         FieldStreamValue: {
           type: "object",
           additionalProperties: false,
@@ -160151,6 +160769,206 @@ var fbjson_default = {
             "SCHEMA_CODE",
             "POLICY_ID"
           ]
+        },
+        FSOTableBinding: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            FILE_IDENTIFIER: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TABLE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One canonical SDS file-identifier to FlatSQL table binding. A configured node rebuilds these bindings before replaying durable record bytes."
+        },
+        FSO: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            OPERATION: {
+              $ref: "#/definitions/flatSqlNodeOperation",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "NONE",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                APPEND_RECORDS: {
+                  value: 1
+                },
+                QUERY_RECORDS: {
+                  value: 2
+                },
+                CONFIGURE_INDEX: {
+                  value: 3
+                },
+                UPSERT_VIEW: {
+                  value: 4
+                },
+                COMPACT: {
+                  value: 5
+                },
+                CONFIGURE_RETENTION: {
+                  value: 6
+                },
+                SNAPSHOT: {
+                  value: 7
+                },
+                RELOAD: {
+                  value: 8
+                }
+              }
+            },
+            REQUEST_ID: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            DATABASE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SCHEMA_IDL: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "compiler intentionally limits fixed inline strings to 255 bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TABLE_BINDINGS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/FSOTableBinding"
+              },
+              "x-flatbuffer-type": "[FSOTableBinding]"
+            },
+            TABLE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            INDEX_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            INDEX_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "UTF-8 index expression bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            VIEW_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            QUERY: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "UTF-8 SQL/query bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            PARAMETERS: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            PARAMETER_COUNT: {
+              type: "integer",
+              "x-flatbuffer-type": "uint"
+            },
+            UPSERT_KEY_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "UTF-8 upsert-key expression bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RETENTION_MAX_RECORDS: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            RETENTION_MAX_AGE_MILLIS: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            COMPACTION_TARGET_BYTES: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            STATUS: {
+              $ref: "#/definitions/flatSqlNodeStatus",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                OK: {
+                  value: 1
+                },
+                ACCEPTED: {
+                  value: 2
+                },
+                YIELDED: {
+                  value: 3
+                },
+                COMPLETE: {
+                  value: 4
+                },
+                INVALID_ARGUMENT: {
+                  value: 5
+                },
+                NOT_CONFIGURED: {
+                  value: 6
+                },
+                NOT_FOUND: {
+                  value: 7
+                },
+                CONFLICT: {
+                  value: 8
+                },
+                RESOURCE_EXHAUSTED: {
+                  value: 9
+                },
+                INTERNAL_ERROR: {
+                  value: 10
+                }
+              }
+            },
+            AFFECTED_RECORDS: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            RESULT_BYTES: {
+              type: "integer",
+              "x-flatbuffer-type": "ulong"
+            },
+            ERROR_CODE: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "UTF-8 diagnostic bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          description: "FlatSQL Operation \u2014 generic control, policy, and status record for the independently packaged FlatSQL WASM node.  Bulk records, query results, snapshots, and WAL chunks travel separately as FSB frames so operations remain streamable and no host needs to interpret a database payload. SCHEMA_IDL is canonical SDS/FlatBuffers IDL supplied to the node for schema-derived table/index construction."
         },
         FieldStreamAudience: {
           type: "object",
@@ -249320,6 +250138,338 @@ var fbjson_default = {
       $ref: "#/definitions/TKG",
       "x-flatbuffer-root-type": "TKG",
       "x-flatbuffer-file-identifier": "$TKG"
+    },
+    FSO: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        flatSqlNodeOperation: {
+          type: "string",
+          enum: [
+            "NONE",
+            "APPEND_RECORDS",
+            "QUERY_RECORDS",
+            "CONFIGURE_INDEX",
+            "UPSERT_VIEW",
+            "COMPACT",
+            "CONFIGURE_RETENTION",
+            "SNAPSHOT",
+            "RELOAD"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            APPEND_RECORDS: {
+              value: 1
+            },
+            QUERY_RECORDS: {
+              value: 2
+            },
+            CONFIGURE_INDEX: {
+              value: 3
+            },
+            UPSERT_VIEW: {
+              value: 4
+            },
+            COMPACT: {
+              value: 5
+            },
+            CONFIGURE_RETENTION: {
+              value: 6
+            },
+            SNAPSHOT: {
+              value: 7
+            },
+            RELOAD: {
+              value: 8
+            }
+          }
+        },
+        flatSqlNodeStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OK",
+            "ACCEPTED",
+            "YIELDED",
+            "COMPLETE",
+            "INVALID_ARGUMENT",
+            "NOT_CONFIGURED",
+            "NOT_FOUND",
+            "CONFLICT",
+            "RESOURCE_EXHAUSTED",
+            "INTERNAL_ERROR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            OK: {
+              value: 1
+            },
+            ACCEPTED: {
+              value: 2
+            },
+            YIELDED: {
+              value: 3
+            },
+            COMPLETE: {
+              value: 4
+            },
+            INVALID_ARGUMENT: {
+              value: 5
+            },
+            NOT_CONFIGURED: {
+              value: 6
+            },
+            NOT_FOUND: {
+              value: 7
+            },
+            CONFLICT: {
+              value: 8
+            },
+            RESOURCE_EXHAUSTED: {
+              value: 9
+            },
+            INTERNAL_ERROR: {
+              value: 10
+            }
+          }
+        },
+        FSOTableBinding: {
+          type: "object",
+          description: "One canonical SDS file-identifier to FlatSQL table binding. A configured\nnode rebuilds these bindings before replaying durable record bytes.",
+          properties: {
+            FILE_IDENTIFIER: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            TABLE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        FSO: {
+          type: "object",
+          description: "FlatSQL Operation \u2014 generic control, policy, and status record for the\nindependently packaged FlatSQL WASM node.\n\nBulk records, query results, snapshots, and WAL chunks travel separately as\nFSB frames so operations remain streamable and no host needs to interpret a\ndatabase payload. SCHEMA_IDL is canonical SDS/FlatBuffers IDL supplied to\nthe node for schema-derived table/index construction.",
+          properties: {
+            OPERATION: {
+              $ref: "#/definitions/flatSqlNodeOperation",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                APPEND_RECORDS: {
+                  value: 1
+                },
+                QUERY_RECORDS: {
+                  value: 2
+                },
+                CONFIGURE_INDEX: {
+                  value: 3
+                },
+                UPSERT_VIEW: {
+                  value: 4
+                },
+                COMPACT: {
+                  value: 5
+                },
+                CONFIGURE_RETENTION: {
+                  value: 6
+                },
+                SNAPSHOT: {
+                  value: 7
+                },
+                RELOAD: {
+                  value: 8
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            REQUEST_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            DATABASE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SCHEMA_IDL: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 FlatBuffers IDL bytes. A byte vector is used because the aligned\ncompiler intentionally limits fixed inline strings to 255 bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TABLE_BINDINGS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/FSOTableBinding"
+              },
+              "x-flatbuffer-type": "[FSOTableBinding]"
+            },
+            TABLE_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            INDEX_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            INDEX_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 index expression bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            VIEW_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            QUERY: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 SQL/query bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            PARAMETERS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            PARAMETER_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint"
+            },
+            UPSERT_KEY_EXPRESSION: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 upsert-key expression bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            RETENTION_MAX_RECORDS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            RETENTION_MAX_AGE_MILLIS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            COMPACTION_TARGET_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            STATUS: {
+              $ref: "#/definitions/flatSqlNodeStatus",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                OK: {
+                  value: 1
+                },
+                ACCEPTED: {
+                  value: 2
+                },
+                YIELDED: {
+                  value: 3
+                },
+                COMPLETE: {
+                  value: 4
+                },
+                INVALID_ARGUMENT: {
+                  value: 5
+                },
+                NOT_CONFIGURED: {
+                  value: 6
+                },
+                NOT_FOUND: {
+                  value: 7
+                },
+                CONFLICT: {
+                  value: 8
+                },
+                RESOURCE_EXHAUSTED: {
+                  value: 9
+                },
+                INTERNAL_ERROR: {
+                  value: 10
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            AFFECTED_RECORDS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            RESULT_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              "x-flatbuffer-type": "ulong"
+            },
+            ERROR_CODE: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            MESSAGE: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "UTF-8 diagnostic bytes.",
+              "x-flatbuffer-type": "[ubyte]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/FSO",
+      "x-flatbuffer-root-type": "FSO",
+      "x-flatbuffer-file-identifier": "$FSO"
     },
     VAM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",

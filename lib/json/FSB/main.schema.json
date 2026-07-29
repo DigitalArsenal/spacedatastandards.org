@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "flatSqlByteStreamKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RECORD_STREAM", "QUERY_RESULT", "SNAPSHOT", "WRITE_AHEAD_LOG"]
+    },
+    "FSB" : {
+      "type" : "object",
+      "description" : "FlatSQL Byte Stream — a bounded, typed chunk used for append/query and\nopaque snapshot/WAL persistence. DATA carries at most one MiB so larger\ninputs and snapshots are delivered as ordered chunks. The host may persist\ncanonical FSB bytes but must not interpret DATA as tables, rows, or SQL.",
+      "properties" : {
+        "REQUEST_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/flatSqlByteStreamKind"
+              },
+        "CHUNK_SEQUENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FINAL" : {
+                "type" : "boolean"
+              },
+        "TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "COLUMN_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string"
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string"
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "SHA256" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FSB"
+}

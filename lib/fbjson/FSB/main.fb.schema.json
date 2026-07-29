@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "flatSqlByteStreamKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RECORD_STREAM",
+        "QUERY_RESULT",
+        "SNAPSHOT",
+        "WRITE_AHEAD_LOG"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RECORD_STREAM": {
+          "value": 1
+        },
+        "QUERY_RESULT": {
+          "value": 2
+        },
+        "SNAPSHOT": {
+          "value": 3
+        },
+        "WRITE_AHEAD_LOG": {
+          "value": 4
+        }
+      }
+    },
+    "FSB": {
+      "type": "object",
+      "description": "FlatSQL Byte Stream \u2014 a bounded, typed chunk used for append/query and\nopaque snapshot/WAL persistence. DATA carries at most one MiB so larger\ninputs and snapshots are delivered as ordered chunks. The host may persist\ncanonical FSB bytes but must not interpret DATA as tables, rows, or SQL.",
+      "properties": {
+        "REQUEST_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "KIND": {
+          "$ref": "#/definitions/flatSqlByteStreamKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RECORD_STREAM": {
+              "value": 1
+            },
+            "QUERY_RESULT": {
+              "value": 2
+            },
+            "SNAPSHOT": {
+              "value": 3
+            },
+            "WRITE_AHEAD_LOG": {
+              "value": 4
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CHUNK_SEQUENCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "FINAL": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "ulong"
+        },
+        "COLUMN_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_IDENTIFIER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SHA256": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FSB",
+  "x-flatbuffer-root-type": "FSB",
+  "x-flatbuffer-file-identifier": "$FSB"
+}
