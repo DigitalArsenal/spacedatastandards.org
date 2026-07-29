@@ -29,8 +29,16 @@ public final class publicationAssetKind {
   public static final byte QUERY_INDEX = 1;
   public static final byte MANIFEST = 2;
   public static final byte OTHER = 3;
+  /**
+   * A $CES catalog embedding shard (dense per-object vector table).
+   */
+  public static final byte EMBEDDING_SHARD = 4;
+  /**
+   * A $QEM query encoder model (pruned static token-embedding table).
+   */
+  public static final byte QUERY_ENCODER_MODEL = 5;
 
-  public static final String[] names = { "DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", };
+  public static final String[] names = { "DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL", };
 
   public static String name(int e) { return names[e]; }
 }

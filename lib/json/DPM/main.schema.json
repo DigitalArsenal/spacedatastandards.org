@@ -3,7 +3,7 @@
   "definitions": {
     "publicationAssetKind" : {
       "type" : "string",
-      "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER"]
+      "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL"]
     },
     "dpmTransportKind" : {
       "type" : "string",

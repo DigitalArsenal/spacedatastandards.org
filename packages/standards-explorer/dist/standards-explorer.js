@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.168.0+1785342625780",
+  version: "1.169.0+1785343787347",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -3828,6 +3828,117 @@ file_identifier "$NUM";`,
         "./dist/TAB/TAB.ts.tar.gz"
       ]
     },
+    CES: {
+      IDL: `// Hash: 5480e37e3b8a509ecbdc5bd269db05384db6471dc7781c1dc73f5ebb1be00291
+// Version: 1.168.0
+// -----------------------------------END_HEADER
+/// Row element encoding used by a CES or QEM vector table.
+enum cesVectorEncoding : byte {
+  INT8,
+  FLOAT32
+}
+
+/// Sentence/document pooling method an embedding encoder used.
+/// Append new values only; never reorder or reuse existing values.
+enum cesPoolingKind : byte {
+  MEAN,
+  CLS,
+  MAX,
+  UNKNOWN
+}
+
+/// Row-vector normalization applied before quantization.
+enum cesNormalizationKind : byte {
+  NONE,
+  L2
+}
+
+/// Similarity function rows are intended to be compared with.
+enum cesSimilarityKind : byte {
+  DOT_PRODUCT,
+  COSINE,
+  EUCLIDEAN
+}
+
+/// One catalog object's dense embedding row.
+table CESObjectVector {
+  /// Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID: uint32;
+  /// International designator. Joins to CAT.OBJECT_ID.
+  OBJECT_ID: string;
+  /// Row values when the parent CES.ENCODING is INT8. Length equals
+  /// CES.DIMENSIONS.
+  VECTOR_INT8: [int8];
+  /// Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.
+  /// Unused when ENCODING is FLOAT32.
+  SCALE: float32;
+  /// Row values when the parent CES.ENCODING is FLOAT32. Length equals
+  /// CES.DIMENSIONS.
+  VECTOR_FLOAT32: [float32];
+}
+
+/// Catalog Embedding Shard.
+///
+/// One CES publishes the dense semantic-search vector table for one dataset
+/// update: one row per catalog object, alongside that update's $OMM shard and
+/// $DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are
+/// L2-normalised at the encoder's output; similarity between two rows, or
+/// between a row and a query vector produced by a paired $QEM, is dot
+/// product (equivalent to cosine similarity for unit-norm vectors).
+///
+/// A consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,
+/// POOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting
+/// cross-encoding similarity between a query vector and CES rows; a mismatch
+/// on any one field means the two vector spaces are not comparable.
+table CES {
+  /// Joins to DPM.DATASET_ID for the publication this shard belongs to.
+  DATASET_ID: string;
+  /// Joins to DPM.UPDATE_ID for the specific update this shard was computed
+  /// against.
+  UPDATE_ID: string;
+  /// Fixed embedding dimensionality shared by every row (e.g. 384).
+  DIMENSIONS: uint32;
+  /// Row element encoding used across ROWS.
+  ENCODING: cesVectorEncoding = INT8;
+  /// Row-vector normalization applied before quantization.
+  NORMALIZATION: cesNormalizationKind = L2;
+  /// Similarity function rows are intended to be compared with.
+  SIMILARITY: cesSimilarityKind = DOT_PRODUCT;
+  /// Encoder model identifier/name.
+  MODEL_ID: string;
+  /// Encoder model version.
+  MODEL_VERSION: string;
+  /// SHA-256 of the encoder weights, lowercase hex. Same convention as
+  /// DPMAsset.BYTE_SHA256.
+  MODEL_WEIGHTS_SHA256: string;
+  /// Sentence/document pooling method the encoder used.
+  POOLING_METHOD: cesPoolingKind = MEAN;
+  /// Version of the text template documents were rendered from before
+  /// encoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.
+  TEMPLATE_VERSION: string;
+  /// One row per catalog object.
+  ROWS: [CESObjectVector];
+}
+
+root_type CES;
+file_identifier "$CES";`,
+      files: [
+        "./dist/CES/CES.sw.tar.gz",
+        "./dist/CES/CES.py.tar.gz",
+        "./dist/CES/CES.lob.tar.gz",
+        "./dist/CES/CES.go.tar.gz",
+        "./dist/CES/CES.js.tar.gz",
+        "./dist/CES/CES.dart.tar.gz",
+        "./dist/CES/CES.cs.tar.gz",
+        "./dist/CES/CES.java.tar.gz",
+        "./dist/CES/CES.rs.tar.gz",
+        "./dist/CES/CES.php.tar.gz",
+        "./dist/CES/CES.json.tar.gz",
+        "./dist/CES/CES.cpp.tar.gz",
+        "./dist/CES/CES.kt.tar.gz",
+        "./dist/CES/CES.ts.tar.gz"
+      ]
+    },
     BSP: {
       IDL: '// Hash: 0b5e65ffed2fecd1834e569b92284da23314468c2d5493acbeb054c25a7c1efb\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum bspInterpolationStatus : byte {\n  /// Interpolation completed.\n  OK,\n  /// The request is missing required waypoint, time, order, or sample data.\n  INVALID_INPUT,\n  /// The requested polynomial order is outside the supported B-spline range.\n  UNSUPPORTED_ORDER,\n  /// The interpolation linear system is singular or numerically unstable.\n  SINGULAR_SYSTEM\n}\n\n/// Three coordinate arrays sharing one time vector.\ntable BSPVector3Series {\n  /// Sample or waypoint time tags in seconds.\n  T:[double];\n  /// Coordinate 1 samples.\n  X1:[double];\n  /// Coordinate 2 samples.\n  X2:[double];\n  /// Coordinate 3 samples.\n  X3:[double];\n}\n\n/// Request for one 3D B-spline interpolation.\ntable BSPInterpolationRequest {\n  /// Waypoint times and coordinates. T, X1, X2, and X3 must have equal length.\n  WAYPOINTS:BSPVector3Series;\n  /// Number of equally spaced output samples.\n  SAMPLE_COUNT:uint;\n  /// Polynomial order of the B-spline basis.\n  POLYNOMIAL_ORDER:ushort;\n  /// Whether X_DOT_0 contains the first derivative at the first waypoint.\n  HAS_X_DOT_0:bool;\n  /// Optional first derivative at the first waypoint, length 3.\n  X_DOT_0:[double];\n  /// Whether X_DOT_N contains the first derivative at the last waypoint.\n  HAS_X_DOT_N:bool;\n  /// Optional first derivative at the last waypoint, length 3.\n  X_DOT_N:[double];\n  /// Whether X_D_DOT_0 contains the second derivative at the first waypoint.\n  HAS_X_D_DOT_0:bool;\n  /// Optional second derivative at the first waypoint, length 3.\n  X_D_DOT_0:[double];\n  /// Whether X_D_DOT_N contains the second derivative at the last waypoint.\n  HAS_X_D_DOT_N:bool;\n  /// Optional second derivative at the last waypoint, length 3.\n  X_D_DOT_N:[double];\n  /// Optional trace/correlation identifier.\n  TRACE_ID:string;\n}\n\n/// Result of one 3D B-spline interpolation.\ntable BSPInterpolationResult {\n  /// Interpolation status.\n  STATUS:bspInterpolationStatus;\n  /// Optional error detail when STATUS is not OK.\n  ERROR_MESSAGE:string;\n  /// Output sample positions.\n  SAMPLES:BSPVector3Series;\n  /// First derivative of coordinate 1 at each output sample.\n  XD1:[double];\n  /// First derivative of coordinate 2 at each output sample.\n  XD2:[double];\n  /// First derivative of coordinate 3 at each output sample.\n  XD3:[double];\n  /// Second derivative of coordinate 1 at each output sample.\n  XDD1:[double];\n  /// Second derivative of coordinate 2 at each output sample.\n  XDD2:[double];\n  /// Second derivative of coordinate 3 at each output sample.\n  XDD3:[double];\n  /// Caller trace/correlation identifier copied from the request when present.\n  TRACE_ID:string;\n}\n\n/// B-spline interpolation envelope.\ntable BSP {\n  /// B-spline interpolation request.\n  INTERPOLATION_REQUEST:BSPInterpolationRequest;\n  /// B-spline interpolation result.\n  INTERPOLATION_RESULT:BSPInterpolationResult;\n}\n\nroot_type BSP;\nfile_identifier "$BSP";',
       files: [
@@ -4057,7 +4168,7 @@ file_identifier "$NUM";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 11dc5d1e04e5185e801e3bb169e07c3c890153ee24139e1d140d178bbb5aaca7\n// Version: 1.44.42\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: ea78ce65992302b9567f90fe4e48d7f7736842f5ec892e456783d076cd8503cd\n// Version: 1.44.43\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -8240,6 +8351,89 @@ file_identifier "$AST";`,
         "./dist/EWR/EWR.ts.tar.gz"
       ]
     },
+    QEM: {
+      IDL: `// Hash: 961143521874341935ffb6a5bf9d2482b588cf96d7d4b8fcd3c06e1bb73843da
+// Version: 1.168.0
+// -----------------------------------END_HEADER
+include "../CES/main.fbs";
+
+/// One pruned-vocabulary token's static embedding row.
+table QEMTokenVector {
+  /// WordPiece token text, verbatim including any ## continuation marker.
+  TOKEN: string;
+  /// Vocabulary row index. Row order in TOKENS is not guaranteed stable
+  /// across MODEL_VERSION; look up by TOKEN_ID, not array position.
+  TOKEN_ID: uint32;
+  /// Row values when the parent QEM.ENCODING is INT8. Length equals
+  /// QEM.DIMENSIONS.
+  VECTOR_INT8: [int8];
+  /// Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.
+  /// Unused when ENCODING is FLOAT32.
+  SCALE: float32;
+  /// Row values when the parent QEM.ENCODING is FLOAT32. Length equals
+  /// QEM.DIMENSIONS.
+  VECTOR_FLOAT32: [float32];
+  /// Inverse document frequency weight for this token.
+  IDF: float32;
+}
+
+/// Query Encoder Model.
+///
+/// One QEM publishes the pruned static token-embedding table a lightweight
+/// client (e.g. a browser) loads to encode a search query into the same
+/// vector space a paired $CES shard's rows live in, without shipping a full
+/// transformer. A consumer pools the rows of the query's tokens (per
+/// POOLING_METHOD) into a query vector, then dot-products it against
+/// CES.ROWS.
+///
+/// A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION,
+/// MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a
+/// mismatch on any one means the two vector spaces are not comparable.
+table QEM {
+  /// Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.
+  MODEL_ID: string;
+  /// Encoder model version. Compared verbatim against CES.MODEL_VERSION.
+  MODEL_VERSION: string;
+  /// SHA-256 of the encoder weights, lowercase hex. Same convention as
+  /// DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.
+  MODEL_WEIGHTS_SHA256: string;
+  /// Sentence/document pooling method the encoder uses. Compared verbatim
+  /// against CES.POOLING_METHOD.
+  POOLING_METHOD: cesPoolingKind = MEAN;
+  /// Version of the text template documents were rendered from before
+  /// encoding. Compared verbatim against CES.TEMPLATE_VERSION.
+  TEMPLATE_VERSION: string;
+  /// Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.
+  DIMENSIONS: uint32;
+  /// Row element encoding used across TOKENS.
+  ENCODING: cesVectorEncoding = INT8;
+  /// Row-vector normalization applied before quantization.
+  NORMALIZATION: cesNormalizationKind = L2;
+  /// Number of tokens in the pruned vocabulary.
+  VOCAB_SIZE: uint32;
+  /// One row per pruned vocabulary token.
+  TOKENS: [QEMTokenVector];
+}
+
+root_type QEM;
+file_identifier "$QEM";`,
+      files: [
+        "./dist/QEM/QEM.sw.tar.gz",
+        "./dist/QEM/QEM.py.tar.gz",
+        "./dist/QEM/QEM.lob.tar.gz",
+        "./dist/QEM/QEM.go.tar.gz",
+        "./dist/QEM/QEM.js.tar.gz",
+        "./dist/QEM/QEM.dart.tar.gz",
+        "./dist/QEM/QEM.cs.tar.gz",
+        "./dist/QEM/QEM.java.tar.gz",
+        "./dist/QEM/QEM.rs.tar.gz",
+        "./dist/QEM/QEM.php.tar.gz",
+        "./dist/QEM/QEM.json.tar.gz",
+        "./dist/QEM/QEM.cpp.tar.gz",
+        "./dist/QEM/QEM.kt.tar.gz",
+        "./dist/QEM/QEM.ts.tar.gz"
+      ]
+    },
     SEN: {
       IDL: '// Hash: 7b54b4fce9b7f14c75c3c4d80929b8e5ec3bc09c3e0a542c2f562426cf6a08da\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum sensorStatus : byte {\n  OPERATIONAL,\n  DEGRADED,\n  MAINTENANCE,\n  OFFLINE,\n  CALIBRATING,\n  TESTING,\n  DECOMMISSIONED\n}\n\nenum maintenanceType : byte {\n  SCHEDULED,\n  UNSCHEDULED,\n  CORRECTIVE,\n  PREVENTIVE,\n  CALIBRATION,\n  UPGRADE,\n  INSPECTION\n}\n\n/// Sensor Maintenance Event\ntable sensorMaintenanceEvent {\n  /// Maintenance start time (ISO 8601)\n  START_TIME:string;\n  /// Maintenance end time (ISO 8601)\n  END_TIME:string;\n  /// Type of maintenance\n  TYPE:maintenanceType;\n  /// Description of maintenance performed\n  DESCRIPTION:string;\n  /// Components affected\n  COMPONENTS:[string];\n}\n\n/// Sensor Tasking Plan\ntable sensorPlan {\n  /// Plan start time (ISO 8601)\n  START_TIME:string;\n  /// Plan end time (ISO 8601)\n  END_TIME:string;\n  /// Target satellite number or designator\n  TARGET_ID:string;\n  /// Priority level (1=highest)\n  PRIORITY:uint8;\n  /// Requested observation mode\n  MODE:string;\n  /// Minimum elevation in degrees\n  MIN_ELEVATION:double;\n  /// Maximum range in km\n  MAX_RANGE:double;\n}\n\n/// Sensor Operational Statistics\ntable sensorStats {\n  /// Statistics period start (ISO 8601)\n  PERIOD_START:string;\n  /// Statistics period end (ISO 8601)\n  PERIOD_END:string;\n  /// Total observation attempts\n  OBS_ATTEMPTED:uint;\n  /// Successful observations\n  OBS_SUCCESSFUL:uint;\n  /// Failed observations\n  OBS_FAILED:uint;\n  /// Uptime fraction (0.0-1.0)\n  UPTIME:double;\n  /// Average tracking accuracy in arcseconds\n  AVG_ACCURACY:double;\n  /// Detected objects count\n  DETECTIONS:uint;\n  /// Uncorrelated tracks count\n  UCT_COUNT:uint;\n}\n\n/// Sensor Management\ntable SEN {\n  /// Unique sensor identifier\n  ID:string;\n  /// Sensor name\n  NAME:string;\n  /// Sensor type\n  TYPE:string;\n  /// Current operational status\n  STATUS:sensorStatus;\n  /// Site identifier\n  SITE_ID:string;\n  /// Geodetic latitude in degrees\n  LATITUDE:double;\n  /// Geodetic longitude in degrees\n  LONGITUDE:double;\n  /// Altitude in meters above WGS-84\n  ALTITUDE:double;\n  /// Last status update (ISO 8601)\n  STATUS_TIME:string;\n  /// Maintenance history\n  MAINTENANCE:[sensorMaintenanceEvent];\n  /// Observation plans/taskings\n  PLANS:[sensorPlan];\n  /// Operational statistics\n  STATISTICS:[sensorStats];\n  /// Additional notes\n  NOTES:string;\n}\n\nroot_type SEN;\nfile_identifier "$SEN";',
       files: [
@@ -9954,8 +10148,8 @@ file_identifier "$VAM";`,
       ]
     },
     DPM: {
-      IDL: `// Hash: e8843143dda68da65499faef69c3ffcf963c9aab4bba431b517f753113e57fed
-// Version: 1.0.7
+      IDL: `// Hash: 434e1c33d9de1859b6c00785c110be2866550b8880969849fe8c665496c0cef7
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -9982,7 +10176,11 @@ enum publicationAssetKind : byte {
   DATA_SHARD,
   QUERY_INDEX,
   MANIFEST,
-  OTHER
+  OTHER,
+  /// A $CES catalog embedding shard (dense per-object vector table).
+  EMBEDDING_SHARD,
+  /// A $QEM query encoder model (pruned static token-embedding table).
+  QUERY_ENCODER_MODEL
 }
 
 /// Transport profile used to resolve a dataset update asset.
@@ -27344,6 +27542,140 @@ var json_default = {
         }
       },
       $ref: "#/definitions/TAB"
+    },
+    CES: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        cesVectorEncoding: {
+          type: "string",
+          enum: [
+            "INT8",
+            "FLOAT32"
+          ]
+        },
+        cesPoolingKind: {
+          type: "string",
+          enum: [
+            "MEAN",
+            "CLS",
+            "MAX",
+            "UNKNOWN"
+          ]
+        },
+        cesNormalizationKind: {
+          type: "string",
+          enum: [
+            "NONE",
+            "L2"
+          ]
+        },
+        cesSimilarityKind: {
+          type: "string",
+          enum: [
+            "DOT_PRODUCT",
+            "COSINE",
+            "EUCLIDEAN"
+          ]
+        },
+        CESObjectVector: {
+          type: "object",
+          description: "One catalog object's dense embedding row.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "International designator. Joins to CAT.OBJECT_ID."
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -128,
+                maximum: 127
+              },
+              description: "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS."
+            },
+            SCALE: {
+              type: "number",
+              description: "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32."
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS."
+            }
+          },
+          additionalProperties: false
+        },
+        CES: {
+          type: "object",
+          description: "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Joins to DPM.DATASET_ID for the publication this shard belongs to."
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst."
+            },
+            DIMENSIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Fixed embedding dimensionality shared by every row (e.g. 384)."
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across ROWS."
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization."
+            },
+            SIMILARITY: {
+              $ref: "#/definitions/cesSimilarityKind",
+              description: "Similarity function rows are intended to be compared with."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name."
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version."
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256."
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "Sentence/document pooling method the encoder used."
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval."
+            },
+            ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CESObjectVector"
+              },
+              description: "One row per catalog object."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CES"
     },
     BSP: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -45283,6 +45615,140 @@ var json_default = {
       },
       $ref: "#/definitions/EWR"
     },
+    QEM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        cesVectorEncoding: {
+          type: "string",
+          enum: [
+            "INT8",
+            "FLOAT32"
+          ]
+        },
+        cesPoolingKind: {
+          type: "string",
+          enum: [
+            "MEAN",
+            "CLS",
+            "MAX",
+            "UNKNOWN"
+          ]
+        },
+        cesNormalizationKind: {
+          type: "string",
+          enum: [
+            "NONE",
+            "L2"
+          ]
+        },
+        cesSimilarityKind: {
+          type: "string",
+          enum: [
+            "DOT_PRODUCT",
+            "COSINE",
+            "EUCLIDEAN"
+          ]
+        },
+        CESObjectVector: {
+          type: "object",
+          description: "One catalog object's dense embedding row.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "International designator. Joins to CAT.OBJECT_ID."
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -128,
+                maximum: 127
+              },
+              description: "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS."
+            },
+            SCALE: {
+              type: "number",
+              description: "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32."
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS."
+            }
+          },
+          additionalProperties: false
+        },
+        CES: {
+          type: "object",
+          description: "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Joins to DPM.DATASET_ID for the publication this shard belongs to."
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst."
+            },
+            DIMENSIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Fixed embedding dimensionality shared by every row (e.g. 384)."
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across ROWS."
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization."
+            },
+            SIMILARITY: {
+              $ref: "#/definitions/cesSimilarityKind",
+              description: "Similarity function rows are intended to be compared with."
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name."
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version."
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256."
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "Sentence/document pooling method the encoder used."
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval."
+            },
+            ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CESObjectVector"
+              },
+              description: "One row per catalog object."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CES"
+    },
     SEN: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -50241,7 +50707,9 @@ var json_default = {
             "DATA_SHARD",
             "QUERY_INDEX",
             "MANIFEST",
-            "OTHER"
+            "OTHER",
+            "EMBEDDING_SHARD",
+            "QUERY_ENCODER_MODEL"
           ]
         },
         dpmTransportKind: {
@@ -121039,6 +121507,257 @@ var fbjson_default = {
       "x-flatbuffer-root-type": "TAB",
       "x-flatbuffer-file-identifier": "$TAB"
     },
+    CES: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        cesVectorEncoding: {
+          type: "string",
+          enum: [
+            "INT8",
+            "FLOAT32"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            INT8: {
+              value: 0
+            },
+            FLOAT32: {
+              value: 1
+            }
+          }
+        },
+        cesPoolingKind: {
+          type: "string",
+          enum: [
+            "MEAN",
+            "CLS",
+            "MAX",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            MEAN: {
+              value: 0
+            },
+            CLS: {
+              value: 1
+            },
+            MAX: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
+            }
+          }
+        },
+        cesNormalizationKind: {
+          type: "string",
+          enum: [
+            "NONE",
+            "L2"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            L2: {
+              value: 1
+            }
+          }
+        },
+        cesSimilarityKind: {
+          type: "string",
+          enum: [
+            "DOT_PRODUCT",
+            "COSINE",
+            "EUCLIDEAN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            DOT_PRODUCT: {
+              value: 0
+            },
+            COSINE: {
+              value: 1
+            },
+            EUCLIDEAN: {
+              value: 2
+            }
+          }
+        },
+        CESObjectVector: {
+          type: "object",
+          description: "One catalog object's dense embedding row.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint32"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "International designator. Joins to CAT.OBJECT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -128,
+                maximum: 127
+              },
+              description: "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS.",
+              "x-flatbuffer-type": "[int8]"
+            },
+            SCALE: {
+              type: "number",
+              description: "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32.",
+              "x-flatbuffer-type": "float32"
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS.",
+              "x-flatbuffer-type": "[float32]"
+            }
+          },
+          additionalProperties: false
+        },
+        CES: {
+          type: "object",
+          description: "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Joins to DPM.DATASET_ID for the publication this shard belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst.",
+              "x-flatbuffer-type": "string"
+            },
+            DIMENSIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Fixed embedding dimensionality shared by every row (e.g. 384).",
+              "x-flatbuffer-type": "uint32"
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across ROWS.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                INT8: {
+                  value: 0
+                },
+                FLOAT32: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "INT8"
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                L2: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "L2"
+            },
+            SIMILARITY: {
+              $ref: "#/definitions/cesSimilarityKind",
+              description: "Similarity function rows are intended to be compared with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                DOT_PRODUCT: {
+                  value: 0
+                },
+                COSINE: {
+                  value: 1
+                },
+                EUCLIDEAN: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "DOT_PRODUCT"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256.",
+              "x-flatbuffer-type": "string"
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "Sentence/document pooling method the encoder used.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                MEAN: {
+                  value: 0
+                },
+                CLS: {
+                  value: 1
+                },
+                MAX: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "MEAN"
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.",
+              "x-flatbuffer-type": "string"
+            },
+            ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CESObjectVector"
+              },
+              description: "One row per catalog object.",
+              "x-flatbuffer-type": "[CESObjectVector]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/CES",
+      "x-flatbuffer-root-type": "CES",
+      "x-flatbuffer-file-identifier": "$CES"
+    },
     BSP: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -138910,6 +139629,90 @@ var fbjson_default = {
             }
           }
         },
+        cesVectorEncoding: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Row element encoding used by a CES or QEM vector table.",
+          enum: [
+            0,
+            1
+          ],
+          "x-flatbuffer-enum-values": {
+            INT8: {
+              value: 0
+            },
+            FLOAT32: {
+              value: 1
+            }
+          }
+        },
+        cesPoolingKind: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Append new values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            MEAN: {
+              value: 0
+            },
+            CLS: {
+              value: 1
+            },
+            MAX: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
+            }
+          }
+        },
+        cesNormalizationKind: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Row-vector normalization applied before quantization.",
+          enum: [
+            0,
+            1
+          ],
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            L2: {
+              value: 1
+            }
+          }
+        },
+        cesSimilarityKind: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Similarity function rows are intended to be compared with.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            DOT_PRODUCT: {
+              value: 0
+            },
+            COSINE: {
+              value: 1
+            },
+            EUCLIDEAN: {
+              value: 2
+            }
+          }
+        },
         pduKind: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -140342,7 +141145,9 @@ var fbjson_default = {
             0,
             1,
             2,
-            3
+            3,
+            4,
+            5
           ],
           "x-flatbuffer-enum-values": {
             DATA_SHARD: {
@@ -140356,6 +141161,14 @@ var fbjson_default = {
             },
             OTHER: {
               value: 3
+            },
+            EMBEDDING_SHARD: {
+              value: 4,
+              description: "A $CES catalog embedding shard (dense per-object vector table)."
+            },
+            QUERY_ENCODER_MODEL: {
+              value: 5,
+              description: "A $QEM query encoder model (pruned static token-embedding table)."
             }
           }
         },
@@ -156966,6 +157779,163 @@ var fbjson_default = {
           },
           description: "Conjunction Data Message"
         },
+        CESObjectVector: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint32"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "International designator. Joins to CAT.OBJECT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "CES.DIMENSIONS.",
+              "x-flatbuffer-type": "[int8]"
+            },
+            SCALE: {
+              type: "number",
+              description: "Unused when ENCODING is FLOAT32.",
+              "x-flatbuffer-type": "float32"
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "CES.DIMENSIONS.",
+              "x-flatbuffer-type": "[float32]"
+            }
+          },
+          description: "One catalog object's dense embedding row."
+        },
+        CES: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Joins to DPM.DATASET_ID for the publication this shard belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "against.",
+              "x-flatbuffer-type": "string"
+            },
+            DIMENSIONS: {
+              type: "integer",
+              description: "Fixed embedding dimensionality shared by every row (e.g. 384).",
+              "x-flatbuffer-type": "uint32"
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across ROWS.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "INT8",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                INT8: {
+                  value: 0
+                },
+                FLOAT32: {
+                  value: 1
+                }
+              }
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "L2",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                L2: {
+                  value: 1
+                }
+              }
+            },
+            SIMILARITY: {
+              $ref: "#/definitions/cesSimilarityKind",
+              description: "Similarity function rows are intended to be compared with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "DOT_PRODUCT",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                DOT_PRODUCT: {
+                  value: 0
+                },
+                COSINE: {
+                  value: 1
+                },
+                EUCLIDEAN: {
+                  value: 2
+                }
+              }
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "DPMAsset.BYTE_SHA256.",
+              "x-flatbuffer-type": "string"
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "Sentence/document pooling method the encoder used.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "MEAN",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                MEAN: {
+                  value: 0
+                },
+                CLS: {
+                  value: 1
+                },
+                MAX: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "encoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.",
+              "x-flatbuffer-type": "string"
+            },
+            ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CESObjectVector"
+              },
+              description: "One row per catalog object.",
+              "x-flatbuffer-type": "[CESObjectVector]"
+            }
+          },
+          description: "Catalog Embedding Shard.  One CES publishes the dense semantic-search vector table for one dataset update: one row per catalog object, alongside that update's $OMM shard and $DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are L2-normalised at the encoder's output; similarity between two rows, or between a row and a query vector produced by a paired $QEM, is dot product (equivalent to cosine similarity for unit-norm vectors).  A consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting cross-encoding similarity between a query vector and CES rows; a mismatch on any one field means the two vector spaces are not comparable."
+        },
         CFP: {
           type: "object",
           additionalProperties: false,
@@ -161828,6 +162798,14 @@ var fbjson_default = {
                 },
                 OTHER: {
                   value: 3
+                },
+                EMBEDDING_SHARD: {
+                  value: 4,
+                  description: "A $CES catalog embedding shard (dense per-object vector table)."
+                },
+                QUERY_ENCODER_MODEL: {
+                  value: 5,
+                  description: "A $QEM query encoder model (pruned static token-embedding table)."
                 }
               }
             },
@@ -183531,6 +184509,145 @@ var fbjson_default = {
             "TIER_NAME",
             "BUYER_PEER_ID"
           ]
+        },
+        QEMTokenVector: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            TOKEN: {
+              type: "string",
+              description: "WordPiece token text, verbatim including any ## continuation marker.",
+              "x-flatbuffer-type": "string"
+            },
+            TOKEN_ID: {
+              type: "integer",
+              description: "across MODEL_VERSION; look up by TOKEN_ID, not array position.",
+              "x-flatbuffer-type": "uint32"
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "QEM.DIMENSIONS.",
+              "x-flatbuffer-type": "[int8]"
+            },
+            SCALE: {
+              type: "number",
+              description: "Unused when ENCODING is FLOAT32.",
+              "x-flatbuffer-type": "float32"
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "QEM.DIMENSIONS.",
+              "x-flatbuffer-type": "[float32]"
+            },
+            IDF: {
+              type: "number",
+              description: "Inverse document frequency weight for this token.",
+              "x-flatbuffer-type": "float32"
+            }
+          },
+          description: "One pruned-vocabulary token's static embedding row."
+        },
+        QEM: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version. Compared verbatim against CES.MODEL_VERSION.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.",
+              "x-flatbuffer-type": "string"
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "against CES.POOLING_METHOD.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "MEAN",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                MEAN: {
+                  value: 0
+                },
+                CLS: {
+                  value: 1
+                },
+                MAX: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "encoding. Compared verbatim against CES.TEMPLATE_VERSION.",
+              "x-flatbuffer-type": "string"
+            },
+            DIMENSIONS: {
+              type: "integer",
+              description: "Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.",
+              "x-flatbuffer-type": "uint32"
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across TOKENS.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "INT8",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                INT8: {
+                  value: 0
+                },
+                FLOAT32: {
+                  value: 1
+                }
+              }
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "L2",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                L2: {
+                  value: 1
+                }
+              }
+            },
+            VOCAB_SIZE: {
+              type: "integer",
+              description: "Number of tokens in the pruned vocabulary.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TOKENS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/QEMTokenVector"
+              },
+              description: "One row per pruned vocabulary token.",
+              "x-flatbuffer-type": "[QEMTokenVector]"
+            }
+          },
+          description: "Query Encoder Model.  One QEM publishes the pruned static token-embedding table a lightweight client (e.g. a browser) loads to encode a search query into the same vector space a paired $CES shard's rows live in, without shipping a full transformer. A consumer pools the rows of the query's tokens (per POOLING_METHOD) into a query vector, then dot-products it against CES.ROWS.  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a mismatch on any one means the two vector spaces are not comparable."
         },
         RAF: {
           type: "object",
@@ -229225,6 +230342,396 @@ var fbjson_default = {
       "x-flatbuffer-root-type": "EWR",
       "x-flatbuffer-file-identifier": "$EWR"
     },
+    QEM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        cesVectorEncoding: {
+          type: "string",
+          enum: [
+            "INT8",
+            "FLOAT32"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            INT8: {
+              value: 0
+            },
+            FLOAT32: {
+              value: 1
+            }
+          }
+        },
+        cesPoolingKind: {
+          type: "string",
+          enum: [
+            "MEAN",
+            "CLS",
+            "MAX",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            MEAN: {
+              value: 0
+            },
+            CLS: {
+              value: 1
+            },
+            MAX: {
+              value: 2
+            },
+            UNKNOWN: {
+              value: 3
+            }
+          }
+        },
+        cesNormalizationKind: {
+          type: "string",
+          enum: [
+            "NONE",
+            "L2"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0
+            },
+            L2: {
+              value: 1
+            }
+          }
+        },
+        cesSimilarityKind: {
+          type: "string",
+          enum: [
+            "DOT_PRODUCT",
+            "COSINE",
+            "EUCLIDEAN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            DOT_PRODUCT: {
+              value: 0
+            },
+            COSINE: {
+              value: 1
+            },
+            EUCLIDEAN: {
+              value: 2
+            }
+          }
+        },
+        CESObjectVector: {
+          type: "object",
+          description: "One catalog object's dense embedding row.",
+          properties: {
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint32"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "International designator. Joins to CAT.OBJECT_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -128,
+                maximum: 127
+              },
+              description: "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS.",
+              "x-flatbuffer-type": "[int8]"
+            },
+            SCALE: {
+              type: "number",
+              description: "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32.",
+              "x-flatbuffer-type": "float32"
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS.",
+              "x-flatbuffer-type": "[float32]"
+            }
+          },
+          additionalProperties: false
+        },
+        CES: {
+          type: "object",
+          description: "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Joins to DPM.DATASET_ID for the publication this shard belongs to.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATE_ID: {
+              type: "string",
+              description: "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst.",
+              "x-flatbuffer-type": "string"
+            },
+            DIMENSIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Fixed embedding dimensionality shared by every row (e.g. 384).",
+              "x-flatbuffer-type": "uint32"
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across ROWS.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                INT8: {
+                  value: 0
+                },
+                FLOAT32: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "INT8"
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                L2: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "L2"
+            },
+            SIMILARITY: {
+              $ref: "#/definitions/cesSimilarityKind",
+              description: "Similarity function rows are intended to be compared with.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                DOT_PRODUCT: {
+                  value: 0
+                },
+                COSINE: {
+                  value: 1
+                },
+                EUCLIDEAN: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "DOT_PRODUCT"
+            },
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256.",
+              "x-flatbuffer-type": "string"
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "Sentence/document pooling method the encoder used.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                MEAN: {
+                  value: 0
+                },
+                CLS: {
+                  value: 1
+                },
+                MAX: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "MEAN"
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.",
+              "x-flatbuffer-type": "string"
+            },
+            ROWS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CESObjectVector"
+              },
+              description: "One row per catalog object.",
+              "x-flatbuffer-type": "[CESObjectVector]"
+            }
+          },
+          additionalProperties: false
+        },
+        QEMTokenVector: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            TOKEN: {
+              type: "string",
+              description: "WordPiece token text, verbatim including any ## continuation marker.",
+              "x-flatbuffer-type": "string"
+            },
+            TOKEN_ID: {
+              type: "integer",
+              description: "across MODEL_VERSION; look up by TOKEN_ID, not array position.",
+              "x-flatbuffer-type": "uint32"
+            },
+            VECTOR_INT8: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "QEM.DIMENSIONS.",
+              "x-flatbuffer-type": "[int8]"
+            },
+            SCALE: {
+              type: "number",
+              description: "Unused when ENCODING is FLOAT32.",
+              "x-flatbuffer-type": "float32"
+            },
+            VECTOR_FLOAT32: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "QEM.DIMENSIONS.",
+              "x-flatbuffer-type": "[float32]"
+            },
+            IDF: {
+              type: "number",
+              description: "Inverse document frequency weight for this token.",
+              "x-flatbuffer-type": "float32"
+            }
+          },
+          description: "One pruned-vocabulary token's static embedding row."
+        },
+        QEM: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MODEL_ID: {
+              type: "string",
+              description: "Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_VERSION: {
+              type: "string",
+              description: "Encoder model version. Compared verbatim against CES.MODEL_VERSION.",
+              "x-flatbuffer-type": "string"
+            },
+            MODEL_WEIGHTS_SHA256: {
+              type: "string",
+              description: "DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.",
+              "x-flatbuffer-type": "string"
+            },
+            POOLING_METHOD: {
+              $ref: "#/definitions/cesPoolingKind",
+              description: "against CES.POOLING_METHOD.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "MEAN",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                MEAN: {
+                  value: 0
+                },
+                CLS: {
+                  value: 1
+                },
+                MAX: {
+                  value: 2
+                },
+                UNKNOWN: {
+                  value: 3
+                }
+              }
+            },
+            TEMPLATE_VERSION: {
+              type: "string",
+              description: "encoding. Compared verbatim against CES.TEMPLATE_VERSION.",
+              "x-flatbuffer-type": "string"
+            },
+            DIMENSIONS: {
+              type: "integer",
+              description: "Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.",
+              "x-flatbuffer-type": "uint32"
+            },
+            ENCODING: {
+              $ref: "#/definitions/cesVectorEncoding",
+              description: "Row element encoding used across TOKENS.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "INT8",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                INT8: {
+                  value: 0
+                },
+                FLOAT32: {
+                  value: 1
+                }
+              }
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/cesNormalizationKind",
+              description: "Row-vector normalization applied before quantization.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "L2",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0
+                },
+                L2: {
+                  value: 1
+                }
+              }
+            },
+            VOCAB_SIZE: {
+              type: "integer",
+              description: "Number of tokens in the pruned vocabulary.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TOKENS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/QEMTokenVector"
+              },
+              description: "One row per pruned vocabulary token.",
+              "x-flatbuffer-type": "[QEMTokenVector]"
+            }
+          },
+          description: "Query Encoder Model.  One QEM publishes the pruned static token-embedding table a lightweight client (e.g. a browser) loads to encode a search query into the same vector space a paired $CES shard's rows live in, without shipping a full transformer. A consumer pools the rows of the query's tokens (per POOLING_METHOD) into a query vector, then dot-products it against CES.ROWS.  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a mismatch on any one means the two vector spaces are not comparable."
+        }
+      },
+      $ref: "#/definitions/QEM",
+      "x-flatbuffer-root-type": "QEM",
+      "x-flatbuffer-file-identifier": "$QEM"
+    },
     SEN: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -257352,7 +258859,9 @@ var fbjson_default = {
             "DATA_SHARD",
             "QUERY_INDEX",
             "MANIFEST",
-            "OTHER"
+            "OTHER",
+            "EMBEDDING_SHARD",
+            "QUERY_ENCODER_MODEL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -257368,6 +258877,14 @@ var fbjson_default = {
             },
             OTHER: {
               value: 3
+            },
+            EMBEDDING_SHARD: {
+              value: 4,
+              description: "A $CES catalog embedding shard (dense per-object vector table)."
+            },
+            QUERY_ENCODER_MODEL: {
+              value: 5,
+              description: "A $QEM query encoder model (pruned static token-embedding table)."
             }
           }
         },
@@ -257448,6 +258965,14 @@ var fbjson_default = {
                 },
                 OTHER: {
                   value: 3
+                },
+                EMBEDDING_SHARD: {
+                  value: 4,
+                  description: "A $CES catalog embedding shard (dense per-object vector table)."
+                },
+                QUERY_ENCODER_MODEL: {
+                  value: 5,
+                  description: "A $QEM query encoder model (pruned static token-embedding table)."
                 }
               },
               "x-flatbuffer-default": "OTHER"

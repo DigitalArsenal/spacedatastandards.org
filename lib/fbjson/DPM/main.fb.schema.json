@@ -7,7 +7,9 @@
         "DATA_SHARD",
         "QUERY_INDEX",
         "MANIFEST",
-        "OTHER"
+        "OTHER",
+        "EMBEDDING_SHARD",
+        "QUERY_ENCODER_MODEL"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -23,6 +25,14 @@
         },
         "OTHER": {
           "value": 3
+        },
+        "EMBEDDING_SHARD": {
+          "value": 4,
+          "description": "A $CES catalog embedding shard (dense per-object vector table)."
+        },
+        "QUERY_ENCODER_MODEL": {
+          "value": 5,
+          "description": "A $QEM query encoder model (pruned static token-embedding table)."
         }
       }
     },
@@ -103,6 +113,14 @@
             },
             "OTHER": {
               "value": 3
+            },
+            "EMBEDDING_SHARD": {
+              "value": 4,
+              "description": "A $CES catalog embedding shard (dense per-object vector table)."
+            },
+            "QUERY_ENCODER_MODEL": {
+              "value": 5,
+              "description": "A $QEM query encoder model (pruned static token-embedding table)."
             }
           },
           "x-flatbuffer-default": "OTHER"

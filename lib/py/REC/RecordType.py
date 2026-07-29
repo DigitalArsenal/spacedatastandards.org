@@ -198,6 +198,8 @@ class RecordType(object):
     MDS = 192
     PNL = 193
     SHC = 194
+    CES = 195
+    QEM = 196
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -785,4 +787,10 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.SHC:
         import SHC
         return SHC.SHCT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CES:
+        import CES
+        return CES.CEST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.QEM:
+        import QEM
+        return QEM.QEMT.InitFromBuf(table.Bytes, table.Pos)
     return None

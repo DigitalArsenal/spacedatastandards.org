@@ -27,24 +27,32 @@ import "strconv"
 type publicationAssetKind int8
 
 const (
-	publicationAssetKindDATA_SHARD  publicationAssetKind = 0
-	publicationAssetKindQUERY_INDEX publicationAssetKind = 1
-	publicationAssetKindMANIFEST    publicationAssetKind = 2
-	publicationAssetKindOTHER       publicationAssetKind = 3
+	publicationAssetKindDATA_SHARD          publicationAssetKind = 0
+	publicationAssetKindQUERY_INDEX         publicationAssetKind = 1
+	publicationAssetKindMANIFEST            publicationAssetKind = 2
+	publicationAssetKindOTHER               publicationAssetKind = 3
+	/// A $CES catalog embedding shard (dense per-object vector table).
+	publicationAssetKindEMBEDDING_SHARD     publicationAssetKind = 4
+	/// A $QEM query encoder model (pruned static token-embedding table).
+	publicationAssetKindQUERY_ENCODER_MODEL publicationAssetKind = 5
 )
 
 var EnumNamespublicationAssetKind = map[publicationAssetKind]string{
-	publicationAssetKindDATA_SHARD:  "DATA_SHARD",
-	publicationAssetKindQUERY_INDEX: "QUERY_INDEX",
-	publicationAssetKindMANIFEST:    "MANIFEST",
-	publicationAssetKindOTHER:       "OTHER",
+	publicationAssetKindDATA_SHARD:          "DATA_SHARD",
+	publicationAssetKindQUERY_INDEX:         "QUERY_INDEX",
+	publicationAssetKindMANIFEST:            "MANIFEST",
+	publicationAssetKindOTHER:               "OTHER",
+	publicationAssetKindEMBEDDING_SHARD:     "EMBEDDING_SHARD",
+	publicationAssetKindQUERY_ENCODER_MODEL: "QUERY_ENCODER_MODEL",
 }
 
 var EnumValuespublicationAssetKind = map[string]publicationAssetKind{
-	"DATA_SHARD":  publicationAssetKindDATA_SHARD,
-	"QUERY_INDEX": publicationAssetKindQUERY_INDEX,
-	"MANIFEST":    publicationAssetKindMANIFEST,
-	"OTHER":       publicationAssetKindOTHER,
+	"DATA_SHARD":          publicationAssetKindDATA_SHARD,
+	"QUERY_INDEX":         publicationAssetKindQUERY_INDEX,
+	"MANIFEST":            publicationAssetKindMANIFEST,
+	"OTHER":               publicationAssetKindOTHER,
+	"EMBEDDING_SHARD":     publicationAssetKindEMBEDDING_SHARD,
+	"QUERY_ENCODER_MODEL": publicationAssetKindQUERY_ENCODER_MODEL,
 }
 
 func (v publicationAssetKind) String() string {

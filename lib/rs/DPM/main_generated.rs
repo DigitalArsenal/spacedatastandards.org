@@ -6,14 +6,16 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PUBLICATION_ASSET_KIND: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PUBLICATION_ASSET_KIND: i8 = 3;
+pub const ENUM_MAX_PUBLICATION_ASSET_KIND: i8 = 5;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PUBLICATION_ASSET_KIND: [publicationAssetKind; 4] = [
+pub const ENUM_VALUES_PUBLICATION_ASSET_KIND: [publicationAssetKind; 6] = [
   publicationAssetKind::DATA_SHARD,
   publicationAssetKind::QUERY_INDEX,
   publicationAssetKind::MANIFEST,
   publicationAssetKind::OTHER,
+  publicationAssetKind::EMBEDDING_SHARD,
+  publicationAssetKind::QUERY_ENCODER_MODEL,
 ];
 
 /// Dataset Publication Manifest.
@@ -45,14 +47,20 @@ impl publicationAssetKind {
   pub const QUERY_INDEX: Self = Self(1);
   pub const MANIFEST: Self = Self(2);
   pub const OTHER: Self = Self(3);
+  /// A $CES catalog embedding shard (dense per-object vector table).
+  pub const EMBEDDING_SHARD: Self = Self(4);
+  /// A $QEM query encoder model (pruned static token-embedding table).
+  pub const QUERY_ENCODER_MODEL: Self = Self(5);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_MAX: i8 = 5;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::DATA_SHARD,
     Self::QUERY_INDEX,
     Self::MANIFEST,
     Self::OTHER,
+    Self::EMBEDDING_SHARD,
+    Self::QUERY_ENCODER_MODEL,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -61,6 +69,8 @@ impl publicationAssetKind {
       Self::QUERY_INDEX => Some("QUERY_INDEX"),
       Self::MANIFEST => Some("MANIFEST"),
       Self::OTHER => Some("OTHER"),
+      Self::EMBEDDING_SHARD => Some("EMBEDDING_SHARD"),
+      Self::QUERY_ENCODER_MODEL => Some("QUERY_ENCODER_MODEL"),
       _ => None,
     }
   }

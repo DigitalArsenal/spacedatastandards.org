@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cesVectorEncoding": {
+      "type": "string",
+      "enum": [
+        "INT8",
+        "FLOAT32"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "INT8": {
+          "value": 0
+        },
+        "FLOAT32": {
+          "value": 1
+        }
+      }
+    },
+    "cesPoolingKind": {
+      "type": "string",
+      "enum": [
+        "MEAN",
+        "CLS",
+        "MAX",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MEAN": {
+          "value": 0
+        },
+        "CLS": {
+          "value": 1
+        },
+        "MAX": {
+          "value": 2
+        },
+        "UNKNOWN": {
+          "value": 3
+        }
+      }
+    },
+    "cesNormalizationKind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "L2"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "L2": {
+          "value": 1
+        }
+      }
+    },
+    "cesSimilarityKind": {
+      "type": "string",
+      "enum": [
+        "DOT_PRODUCT",
+        "COSINE",
+        "EUCLIDEAN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DOT_PRODUCT": {
+          "value": 0
+        },
+        "COSINE": {
+          "value": 1
+        },
+        "EUCLIDEAN": {
+          "value": 2
+        }
+      }
+    },
+    "CESObjectVector": {
+      "type": "object",
+      "description": "One catalog object's dense embedding row.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International designator. Joins to CAT.OBJECT_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "VECTOR_INT8": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -128,
+            "maximum": 127
+          },
+          "description": "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS.",
+          "x-flatbuffer-type": "[int8]"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32.",
+          "x-flatbuffer-type": "float32"
+        },
+        "VECTOR_FLOAT32": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS.",
+          "x-flatbuffer-type": "[float32]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CES": {
+      "type": "object",
+      "description": "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+      "properties": {
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Joins to DPM.DATASET_ID for the publication this shard belongs to.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATE_ID": {
+          "type": "string",
+          "description": "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst.",
+          "x-flatbuffer-type": "string"
+        },
+        "DIMENSIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fixed embedding dimensionality shared by every row (e.g. 384).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/cesVectorEncoding",
+          "description": "Row element encoding used across ROWS.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "INT8": {
+              "value": 0
+            },
+            "FLOAT32": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "INT8"
+        },
+        "NORMALIZATION": {
+          "$ref": "#/definitions/cesNormalizationKind",
+          "description": "Row-vector normalization applied before quantization.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "L2": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "L2"
+        },
+        "SIMILARITY": {
+          "$ref": "#/definitions/cesSimilarityKind",
+          "description": "Similarity function rows are intended to be compared with.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DOT_PRODUCT": {
+              "value": 0
+            },
+            "COSINE": {
+              "value": 1
+            },
+            "EUCLIDEAN": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "DOT_PRODUCT"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Encoder model identifier/name.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "description": "Encoder model version.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_WEIGHTS_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256.",
+          "x-flatbuffer-type": "string"
+        },
+        "POOLING_METHOD": {
+          "$ref": "#/definitions/cesPoolingKind",
+          "description": "Sentence/document pooling method the encoder used.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MEAN": {
+              "value": 0
+            },
+            "CLS": {
+              "value": 1
+            },
+            "MAX": {
+              "value": 2
+            },
+            "UNKNOWN": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "MEAN"
+        },
+        "TEMPLATE_VERSION": {
+          "type": "string",
+          "description": "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CESObjectVector"
+          },
+          "description": "One row per catalog object.",
+          "x-flatbuffer-type": "[CESObjectVector]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QEMTokenVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TOKEN": {
+          "type": "string",
+          "description": "WordPiece token text, verbatim including any ## continuation marker.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_ID": {
+          "type": "integer",
+          "description": "across MODEL_VERSION; look up by TOKEN_ID, not array position.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "VECTOR_INT8": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "QEM.DIMENSIONS.",
+          "x-flatbuffer-type": "[int8]"
+        },
+        "SCALE": {
+          "type": "number",
+          "description": "Unused when ENCODING is FLOAT32.",
+          "x-flatbuffer-type": "float32"
+        },
+        "VECTOR_FLOAT32": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "QEM.DIMENSIONS.",
+          "x-flatbuffer-type": "[float32]"
+        },
+        "IDF": {
+          "type": "number",
+          "description": "Inverse document frequency weight for this token.",
+          "x-flatbuffer-type": "float32"
+        }
+      },
+      "description": "One pruned-vocabulary token's static embedding row."
+    },
+    "QEM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Encoder model identifier/name. Compared verbatim against CES.MODEL_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_VERSION": {
+          "type": "string",
+          "description": "Encoder model version. Compared verbatim against CES.MODEL_VERSION.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_WEIGHTS_SHA256": {
+          "type": "string",
+          "description": "DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.",
+          "x-flatbuffer-type": "string"
+        },
+        "POOLING_METHOD": {
+          "$ref": "#/definitions/cesPoolingKind",
+          "description": "against CES.POOLING_METHOD.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "MEAN",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MEAN": {
+              "value": 0
+            },
+            "CLS": {
+              "value": 1
+            },
+            "MAX": {
+              "value": 2
+            },
+            "UNKNOWN": {
+              "value": 3
+            }
+          }
+        },
+        "TEMPLATE_VERSION": {
+          "type": "string",
+          "description": "encoding. Compared verbatim against CES.TEMPLATE_VERSION.",
+          "x-flatbuffer-type": "string"
+        },
+        "DIMENSIONS": {
+          "type": "integer",
+          "description": "Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ENCODING": {
+          "$ref": "#/definitions/cesVectorEncoding",
+          "description": "Row element encoding used across TOKENS.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "INT8",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "INT8": {
+              "value": 0
+            },
+            "FLOAT32": {
+              "value": 1
+            }
+          }
+        },
+        "NORMALIZATION": {
+          "$ref": "#/definitions/cesNormalizationKind",
+          "description": "Row-vector normalization applied before quantization.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "L2",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "L2": {
+              "value": 1
+            }
+          }
+        },
+        "VOCAB_SIZE": {
+          "type": "integer",
+          "description": "Number of tokens in the pruned vocabulary.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOKENS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QEMTokenVector"
+          },
+          "description": "One row per pruned vocabulary token.",
+          "x-flatbuffer-type": "[QEMTokenVector]"
+        }
+      },
+      "description": "Query Encoder Model.  One QEM publishes the pruned static token-embedding table a lightweight client (e.g. a browser) loads to encode a search query into the same vector space a paired $CES shard's rows live in, without shipping a full transformer. A consumer pools the rows of the query's tokens (per POOLING_METHOD) into a query vector, then dot-products it against CES.ROWS.  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a mismatch on any one means the two vector spaces are not comparable."
+    }
+  },
+  "$ref": "#/definitions/QEM",
+  "x-flatbuffer-root-type": "QEM",
+  "x-flatbuffer-file-identifier": "$QEM"
+}

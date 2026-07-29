@@ -27,3 +27,7 @@ class publicationAssetKind(object):
     QUERY_INDEX = 1
     MANIFEST = 2
     OTHER = 3
+    # A $CES catalog embedding shard (dense per-object vector table).
+    EMBEDDING_SHARD = 4
+    # A $QEM query encoder model (pruned static token-embedding table).
+    QUERY_ENCODER_MODEL = 5

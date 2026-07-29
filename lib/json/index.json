@@ -16399,6 +16399,140 @@
             },
             "$ref": "#/definitions/TAB"
         },
+        "CES": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "cesVectorEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "INT8",
+                        "FLOAT32"
+                    ]
+                },
+                "cesPoolingKind": {
+                    "type": "string",
+                    "enum": [
+                        "MEAN",
+                        "CLS",
+                        "MAX",
+                        "UNKNOWN"
+                    ]
+                },
+                "cesNormalizationKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "L2"
+                    ]
+                },
+                "cesSimilarityKind": {
+                    "type": "string",
+                    "enum": [
+                        "DOT_PRODUCT",
+                        "COSINE",
+                        "EUCLIDEAN"
+                    ]
+                },
+                "CESObjectVector": {
+                    "type": "object",
+                    "description": "One catalog object's dense embedding row.",
+                    "properties": {
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator. Joins to CAT.OBJECT_ID."
+                        },
+                        "VECTOR_INT8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": -128,
+                                "maximum": 127
+                            },
+                            "description": "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS."
+                        },
+                        "SCALE": {
+                            "type": "number",
+                            "description": "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32."
+                        },
+                        "VECTOR_FLOAT32": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CES": {
+                    "type": "object",
+                    "description": "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+                    "properties": {
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Joins to DPM.DATASET_ID for the publication this shard belongs to."
+                        },
+                        "UPDATE_ID": {
+                            "type": "string",
+                            "description": "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst."
+                        },
+                        "DIMENSIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Fixed embedding dimensionality shared by every row (e.g. 384)."
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/cesVectorEncoding",
+                            "description": "Row element encoding used across ROWS."
+                        },
+                        "NORMALIZATION": {
+                            "$ref": "#/definitions/cesNormalizationKind",
+                            "description": "Row-vector normalization applied before quantization."
+                        },
+                        "SIMILARITY": {
+                            "$ref": "#/definitions/cesSimilarityKind",
+                            "description": "Similarity function rows are intended to be compared with."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Encoder model identifier/name."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Encoder model version."
+                        },
+                        "MODEL_WEIGHTS_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256."
+                        },
+                        "POOLING_METHOD": {
+                            "$ref": "#/definitions/cesPoolingKind",
+                            "description": "Sentence/document pooling method the encoder used."
+                        },
+                        "TEMPLATE_VERSION": {
+                            "type": "string",
+                            "description": "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval."
+                        },
+                        "ROWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CESObjectVector"
+                            },
+                            "description": "One row per catalog object."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/CES"
+        },
         "BSP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -34337,6 +34471,140 @@
             },
             "$ref": "#/definitions/EWR"
         },
+        "QEM": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "cesVectorEncoding": {
+                    "type": "string",
+                    "enum": [
+                        "INT8",
+                        "FLOAT32"
+                    ]
+                },
+                "cesPoolingKind": {
+                    "type": "string",
+                    "enum": [
+                        "MEAN",
+                        "CLS",
+                        "MAX",
+                        "UNKNOWN"
+                    ]
+                },
+                "cesNormalizationKind": {
+                    "type": "string",
+                    "enum": [
+                        "NONE",
+                        "L2"
+                    ]
+                },
+                "cesSimilarityKind": {
+                    "type": "string",
+                    "enum": [
+                        "DOT_PRODUCT",
+                        "COSINE",
+                        "EUCLIDEAN"
+                    ]
+                },
+                "CESObjectVector": {
+                    "type": "object",
+                    "description": "One catalog object's dense embedding row.",
+                    "properties": {
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "International designator. Joins to CAT.OBJECT_ID."
+                        },
+                        "VECTOR_INT8": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": -128,
+                                "maximum": 127
+                            },
+                            "description": "Row values when the parent CES.ENCODING is INT8. Length equals\nCES.DIMENSIONS."
+                        },
+                        "SCALE": {
+                            "type": "number",
+                            "description": "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32."
+                        },
+                        "VECTOR_FLOAT32": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Row values when the parent CES.ENCODING is FLOAT32. Length equals\nCES.DIMENSIONS."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "CES": {
+                    "type": "object",
+                    "description": "Catalog Embedding Shard.\n\nOne CES publishes the dense semantic-search vector table for one dataset\nupdate: one row per catalog object, alongside that update's $OMM shard and\n$DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are\nL2-normalised at the encoder's output; similarity between two rows, or\nbetween a row and a query vector produced by a paired $QEM, is dot\nproduct (equivalent to cosine similarity for unit-norm vectors).\n\nA consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,\nPOOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting\ncross-encoding similarity between a query vector and CES rows; a mismatch\non any one field means the two vector spaces are not comparable.",
+                    "properties": {
+                        "DATASET_ID": {
+                            "type": "string",
+                            "description": "Joins to DPM.DATASET_ID for the publication this shard belongs to."
+                        },
+                        "UPDATE_ID": {
+                            "type": "string",
+                            "description": "Joins to DPM.UPDATE_ID for the specific update this shard was computed\nagainst."
+                        },
+                        "DIMENSIONS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Fixed embedding dimensionality shared by every row (e.g. 384)."
+                        },
+                        "ENCODING": {
+                            "$ref": "#/definitions/cesVectorEncoding",
+                            "description": "Row element encoding used across ROWS."
+                        },
+                        "NORMALIZATION": {
+                            "$ref": "#/definitions/cesNormalizationKind",
+                            "description": "Row-vector normalization applied before quantization."
+                        },
+                        "SIMILARITY": {
+                            "$ref": "#/definitions/cesSimilarityKind",
+                            "description": "Similarity function rows are intended to be compared with."
+                        },
+                        "MODEL_ID": {
+                            "type": "string",
+                            "description": "Encoder model identifier/name."
+                        },
+                        "MODEL_VERSION": {
+                            "type": "string",
+                            "description": "Encoder model version."
+                        },
+                        "MODEL_WEIGHTS_SHA256": {
+                            "type": "string",
+                            "description": "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256."
+                        },
+                        "POOLING_METHOD": {
+                            "$ref": "#/definitions/cesPoolingKind",
+                            "description": "Sentence/document pooling method the encoder used."
+                        },
+                        "TEMPLATE_VERSION": {
+                            "type": "string",
+                            "description": "Version of the text template documents were rendered from before\nencoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval."
+                        },
+                        "ROWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CESObjectVector"
+                            },
+                            "description": "One row per catalog object."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/CES"
+        },
         "SEN": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -39295,7 +39563,9 @@
                         "DATA_SHARD",
                         "QUERY_INDEX",
                         "MANIFEST",
-                        "OTHER"
+                        "OTHER",
+                        "EMBEDDING_SHARD",
+                        "QUERY_ENCODER_MODEL"
                     ]
                 },
                 "dpmTransportKind": {

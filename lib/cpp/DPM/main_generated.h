@@ -56,33 +56,41 @@ enum publicationAssetKind : int8_t {
   publicationAssetKind_QUERY_INDEX = 1,
   publicationAssetKind_MANIFEST = 2,
   publicationAssetKind_OTHER = 3,
+  /// A $CES catalog embedding shard (dense per-object vector table).
+  publicationAssetKind_EMBEDDING_SHARD = 4,
+  /// A $QEM query encoder model (pruned static token-embedding table).
+  publicationAssetKind_QUERY_ENCODER_MODEL = 5,
   publicationAssetKind_MIN = publicationAssetKind_DATA_SHARD,
-  publicationAssetKind_MAX = publicationAssetKind_OTHER
+  publicationAssetKind_MAX = publicationAssetKind_QUERY_ENCODER_MODEL
 };
 
-inline const publicationAssetKind (&EnumValuespublicationAssetKind())[4] {
+inline const publicationAssetKind (&EnumValuespublicationAssetKind())[6] {
   static const publicationAssetKind values[] = {
     publicationAssetKind_DATA_SHARD,
     publicationAssetKind_QUERY_INDEX,
     publicationAssetKind_MANIFEST,
-    publicationAssetKind_OTHER
+    publicationAssetKind_OTHER,
+    publicationAssetKind_EMBEDDING_SHARD,
+    publicationAssetKind_QUERY_ENCODER_MODEL
   };
   return values;
 }
 
 inline const char * const *EnumNamespublicationAssetKind() {
-  static const char * const names[5] = {
+  static const char * const names[7] = {
     "DATA_SHARD",
     "QUERY_INDEX",
     "MANIFEST",
     "OTHER",
+    "EMBEDDING_SHARD",
+    "QUERY_ENCODER_MODEL",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepublicationAssetKind(publicationAssetKind e) {
-  if (::flatbuffers::IsOutRange(e, publicationAssetKind_DATA_SHARD, publicationAssetKind_OTHER)) return "";
+  if (::flatbuffers::IsOutRange(e, publicationAssetKind_DATA_SHARD, publicationAssetKind_QUERY_ENCODER_MODEL)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespublicationAssetKind()[index];
 }

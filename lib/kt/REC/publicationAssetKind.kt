@@ -29,5 +29,13 @@ class publicationAssetKind private constructor() {
         const val QUERY_INDEX: Byte = 1
         const val MANIFEST: Byte = 2
         const val OTHER: Byte = 3
+        /**
+         * A $CES catalog embedding shard (dense per-object vector table).
+         */
+        const val EMBEDDING_SHARD: Byte = 4
+        /**
+         * A $QEM query encoder model (pruned static token-embedding table).
+         */
+        const val QUERY_ENCODER_MODEL: Byte = 5
     }
 }

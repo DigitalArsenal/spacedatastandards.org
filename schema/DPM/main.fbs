@@ -1,5 +1,5 @@
-// Hash: e8843143dda68da65499faef69c3ffcf963c9aab4bba431b517f753113e57fed
-// Version: 1.0.7
+// Hash: 434e1c33d9de1859b6c00785c110be2866550b8880969849fe8c665496c0cef7
+// Version: 1.0.8
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -26,7 +26,11 @@ enum publicationAssetKind : byte {
   DATA_SHARD,
   QUERY_INDEX,
   MANIFEST,
-  OTHER
+  OTHER,
+  /// A $CES catalog embedding shard (dense per-object vector table).
+  EMBEDDING_SHARD,
+  /// A $QEM query encoder model (pruned static token-embedding table).
+  QUERY_ENCODER_MODEL
 }
 
 /// Transport profile used to resolve a dataset update asset.

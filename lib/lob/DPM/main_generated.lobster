@@ -26,6 +26,10 @@ enum publicationAssetKind:
     publicationAssetKind_QUERY_INDEX = 1
     publicationAssetKind_MANIFEST = 2
     publicationAssetKind_OTHER = 3
+    /// A $CES catalog embedding shard (dense per-object vector table).
+    publicationAssetKind_EMBEDDING_SHARD = 4
+    /// A $QEM query encoder model (pruned static token-embedding table).
+    publicationAssetKind_QUERY_ENCODER_MODEL = 5
 
 /// Transport profile used to resolve a dataset update asset.
 enum dpmTransportKind:

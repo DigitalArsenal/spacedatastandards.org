@@ -36,8 +36,12 @@ public enum publicationAssetKind: Int8, FlatbuffersVectorInitializable, Enum, Ve
   case queryIndex = 1
   case manifest = 2
   case other = 3
+  ///  A $CES catalog embedding shard (dense per-object vector table).
+  case embeddingShard = 4
+  ///  A $QEM query encoder model (pruned static token-embedding table).
+  case queryEncoderModel = 5
 
-  public static var max: publicationAssetKind { return .other }
+  public static var max: publicationAssetKind { return .queryEncoderModel }
   public static var min: publicationAssetKind { return .dataShard }
 }
 

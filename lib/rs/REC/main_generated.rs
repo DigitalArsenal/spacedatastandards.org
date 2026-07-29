@@ -195,6 +195,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -329,10 +331,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 194;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 196;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 195] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 197] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -528,6 +530,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 195] = [
   RecordType::MDS,
   RecordType::PNL,
   RecordType::SHC,
+  RecordType::CES,
+  RecordType::QEM,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -730,9 +734,11 @@ impl RecordType {
   pub const MDS: Self = Self(192);
   pub const PNL: Self = Self(193);
   pub const SHC: Self = Self(194);
+  pub const CES: Self = Self(195);
+  pub const QEM: Self = Self(196);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 194;
+  pub const ENUM_MAX: u8 = 196;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -929,6 +935,8 @@ impl RecordType {
     Self::MDS,
     Self::PNL,
     Self::SHC,
+    Self::CES,
+    Self::QEM,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1128,6 +1136,8 @@ impl RecordType {
       Self::MDS => Some("MDS"),
       Self::PNL => Some("PNL"),
       Self::SHC => Some("SHC"),
+      Self::CES => Some("CES"),
+      Self::QEM => Some("QEM"),
       _ => None,
     }
   }
@@ -1383,6 +1393,8 @@ pub enum RecordTypeT {
   MDS(alloc::boxed::Box<MDST>),
   PNL(alloc::boxed::Box<PNLT>),
   SHC(alloc::boxed::Box<SHCT>),
+  CES(alloc::boxed::Box<CEST>),
+  QEM(alloc::boxed::Box<QEMT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1587,6 +1599,8 @@ impl RecordTypeT {
       Self::MDS(_) => RecordType::MDS,
       Self::PNL(_) => RecordType::PNL,
       Self::SHC(_) => RecordType::SHC,
+      Self::CES(_) => RecordType::CES,
+      Self::QEM(_) => RecordType::QEM,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1786,6 +1800,8 @@ impl RecordTypeT {
       Self::MDS(v) => Some(v.pack(fbb).as_union_value()),
       Self::PNL(v) => Some(v.pack(fbb).as_union_value()),
       Self::SHC(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CES(v) => Some(v.pack(fbb).as_union_value()),
+      Self::QEM(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5862,6 +5878,48 @@ impl RecordTypeT {
   pub fn as_shc_mut(&mut self) -> Option<&mut SHCT> {
     if let Self::SHC(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned CEST, setting the union to NONE.
+  pub fn take_ces(&mut self) -> Option<alloc::boxed::Box<CEST>> {
+    if let Self::CES(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CES(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CEST.
+  pub fn as_ces(&self) -> Option<&CEST> {
+    if let Self::CES(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CEST.
+  pub fn as_ces_mut(&mut self) -> Option<&mut CEST> {
+    if let Self::CES(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned QEMT, setting the union to NONE.
+  pub fn take_qem(&mut self) -> Option<alloc::boxed::Box<QEMT>> {
+    if let Self::QEM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::QEM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the QEMT.
+  pub fn as_qem(&self) -> Option<&QEMT> {
+    if let Self::QEM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the QEMT.
+  pub fn as_qem_mut(&mut self) -> Option<&mut QEMT> {
+    if let Self::QEM(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6871,6 +6929,16 @@ impl<'a> Record<'a> {
       RecordType::SHC => RecordTypeT::SHC(alloc::boxed::Box::new(
         self.value_as_shc()
             .expect("Invalid union table, expected `RecordType::SHC`.")
+            .unpack()
+      )),
+      RecordType::CES => RecordTypeT::CES(alloc::boxed::Box::new(
+        self.value_as_ces()
+            .expect("Invalid union table, expected `RecordType::CES`.")
+            .unpack()
+      )),
+      RecordType::QEM => RecordTypeT::QEM(alloc::boxed::Box::new(
+        self.value_as_qem()
+            .expect("Invalid union table, expected `RecordType::QEM`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -9817,6 +9885,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_ces(&self) -> Option<CES<'a>> {
+    if self.value_type() == RecordType::CES {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CES::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_qem(&self) -> Option<QEM<'a>> {
+    if self.value_type() == RecordType::QEM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { QEM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10021,6 +10119,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::MDS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<MDS>>("RecordType::MDS", pos),
           RecordType::PNL => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PNL>>("RecordType::PNL", pos),
           RecordType::SHC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SHC>>("RecordType::SHC", pos),
+          RecordType::CES => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CES>>("RecordType::CES", pos),
+          RecordType::QEM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<QEM>>("RecordType::QEM", pos),
           _ => Ok(()),
         }
      })?
@@ -11435,6 +11535,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::SHC => {
           if let Some(x) = self.value_as_shc() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CES => {
+          if let Some(x) = self.value_as_ces() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::QEM => {
+          if let Some(x) = self.value_as_qem() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

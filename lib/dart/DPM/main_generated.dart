@@ -30,7 +30,9 @@ enum publicationAssetKind {
   DATA_SHARD(0),
   QUERY_INDEX(1),
   MANIFEST(2),
-  OTHER(3);
+  OTHER(3),
+  EMBEDDING_SHARD(4),
+  QUERY_ENCODER_MODEL(5);
 
   final int value;
   const publicationAssetKind(this.value);
@@ -41,6 +43,8 @@ enum publicationAssetKind {
       case 1: return publicationAssetKind.QUERY_INDEX;
       case 2: return publicationAssetKind.MANIFEST;
       case 3: return publicationAssetKind.OTHER;
+      case 4: return publicationAssetKind.EMBEDDING_SHARD;
+      case 5: return publicationAssetKind.QUERY_ENCODER_MODEL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -49,7 +53,7 @@ enum publicationAssetKind {
       value == null ? null : publicationAssetKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 5;
   static const fb.Reader<publicationAssetKind> reader = _publicationAssetKindReader();
 }
 

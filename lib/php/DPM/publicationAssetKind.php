@@ -27,12 +27,18 @@ class publicationAssetKind
     const QUERY_INDEX = 1;
     const MANIFEST = 2;
     const OTHER = 3;
+    /// A $CES catalog embedding shard (dense per-object vector table).
+    const EMBEDDING_SHARD = 4;
+    /// A $QEM query encoder model (pruned static token-embedding table).
+    const QUERY_ENCODER_MODEL = 5;
 
     private static $names = array(
         publicationAssetKind::DATA_SHARD=>"DATA_SHARD",
         publicationAssetKind::QUERY_INDEX=>"QUERY_INDEX",
         publicationAssetKind::MANIFEST=>"MANIFEST",
         publicationAssetKind::OTHER=>"OTHER",
+        publicationAssetKind::EMBEDDING_SHARD=>"EMBEDDING_SHARD",
+        publicationAssetKind::QUERY_ENCODER_MODEL=>"QUERY_ENCODER_MODEL",
     );
 
     public static function Name($e)

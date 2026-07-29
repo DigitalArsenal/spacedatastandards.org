@@ -1,0 +1,93 @@
+// Hash: 5480e37e3b8a509ecbdc5bd269db05384db6471dc7781c1dc73f5ebb1be00291
+// Version: 1.168.0
+// -----------------------------------END_HEADER
+/// Row element encoding used by a CES or QEM vector table.
+enum cesVectorEncoding : byte {
+  INT8,
+  FLOAT32
+}
+
+/// Sentence/document pooling method an embedding encoder used.
+/// Append new values only; never reorder or reuse existing values.
+enum cesPoolingKind : byte {
+  MEAN,
+  CLS,
+  MAX,
+  UNKNOWN
+}
+
+/// Row-vector normalization applied before quantization.
+enum cesNormalizationKind : byte {
+  NONE,
+  L2
+}
+
+/// Similarity function rows are intended to be compared with.
+enum cesSimilarityKind : byte {
+  DOT_PRODUCT,
+  COSINE,
+  EUCLIDEAN
+}
+
+/// One catalog object's dense embedding row.
+table CESObjectVector {
+  /// Joins to CAT.NORAD_CAT_ID / OMM.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID: uint32;
+  /// International designator. Joins to CAT.OBJECT_ID.
+  OBJECT_ID: string;
+  /// Row values when the parent CES.ENCODING is INT8. Length equals
+  /// CES.DIMENSIONS.
+  VECTOR_INT8: [int8];
+  /// Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.
+  /// Unused when ENCODING is FLOAT32.
+  SCALE: float32;
+  /// Row values when the parent CES.ENCODING is FLOAT32. Length equals
+  /// CES.DIMENSIONS.
+  VECTOR_FLOAT32: [float32];
+}
+
+/// Catalog Embedding Shard.
+///
+/// One CES publishes the dense semantic-search vector table for one dataset
+/// update: one row per catalog object, alongside that update's $OMM shard and
+/// $DPM manifest (DPMAsset.ASSET_KIND = EMBEDDING_SHARD). Vectors are
+/// L2-normalised at the encoder's output; similarity between two rows, or
+/// between a row and a query vector produced by a paired $QEM, is dot
+/// product (equivalent to cosine similarity for unit-norm vectors).
+///
+/// A consumer MUST compare MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256,
+/// POOLING_METHOD and TEMPLATE_VERSION against a QEM record before trusting
+/// cross-encoding similarity between a query vector and CES rows; a mismatch
+/// on any one field means the two vector spaces are not comparable.
+table CES {
+  /// Joins to DPM.DATASET_ID for the publication this shard belongs to.
+  DATASET_ID: string;
+  /// Joins to DPM.UPDATE_ID for the specific update this shard was computed
+  /// against.
+  UPDATE_ID: string;
+  /// Fixed embedding dimensionality shared by every row (e.g. 384).
+  DIMENSIONS: uint32;
+  /// Row element encoding used across ROWS.
+  ENCODING: cesVectorEncoding = INT8;
+  /// Row-vector normalization applied before quantization.
+  NORMALIZATION: cesNormalizationKind = L2;
+  /// Similarity function rows are intended to be compared with.
+  SIMILARITY: cesSimilarityKind = DOT_PRODUCT;
+  /// Encoder model identifier/name.
+  MODEL_ID: string;
+  /// Encoder model version.
+  MODEL_VERSION: string;
+  /// SHA-256 of the encoder weights, lowercase hex. Same convention as
+  /// DPMAsset.BYTE_SHA256.
+  MODEL_WEIGHTS_SHA256: string;
+  /// Sentence/document pooling method the encoder used.
+  POOLING_METHOD: cesPoolingKind = MEAN;
+  /// Version of the text template documents were rendered from before
+  /// encoding. Must match a QEM's TEMPLATE_VERSION for compatible retrieval.
+  TEMPLATE_VERSION: string;
+  /// One row per catalog object.
+  ROWS: [CESObjectVector];
+}
+
+root_type CES;
+file_identifier "$CES";

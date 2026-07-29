@@ -199,6 +199,8 @@ public enum RecordType : byte
   MDS = 192,
   PNL = 193,
   SHC = 194,
+  CES = 195,
+  QEM = 196,
 };
 
 public class RecordTypeUnion {
@@ -599,6 +601,10 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromPNL(PNLT _pnl) { return new RecordTypeUnion{ Type = RecordType.PNL, Value = _pnl }; }
   public SHCT AsSHC() { return this.As<SHCT>(); }
   public static RecordTypeUnion FromSHC(SHCT _shc) { return new RecordTypeUnion{ Type = RecordType.SHC, Value = _shc }; }
+  public CEST AsCES() { return this.As<CEST>(); }
+  public static RecordTypeUnion FromCES(CEST _ces) { return new RecordTypeUnion{ Type = RecordType.CES, Value = _ces }; }
+  public QEMT AsQEM() { return this.As<QEMT>(); }
+  public static RecordTypeUnion FromQEM(QEMT _qem) { return new RecordTypeUnion{ Type = RecordType.QEM, Value = _qem }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -797,6 +803,8 @@ public class RecordTypeUnion {
       case RecordType.MDS: return MDS.Pack(builder, _o.AsMDS()).Value;
       case RecordType.PNL: return PNL.Pack(builder, _o.AsPNL()).Value;
       case RecordType.SHC: return SHC.Pack(builder, _o.AsSHC()).Value;
+      case RecordType.CES: return CES.Pack(builder, _o.AsCES()).Value;
+      case RecordType.QEM: return QEM.Pack(builder, _o.AsQEM()).Value;
     }
   }
 }
@@ -1391,6 +1399,12 @@ static public class RecordTypeVerify
         break;
       case RecordType.SHC:
         result = SHCVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CES:
+        result = CESVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.QEM:
+        result = QEMVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
