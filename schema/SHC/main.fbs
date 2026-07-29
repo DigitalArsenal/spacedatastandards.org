@@ -1,0 +1,112 @@
+// Hash: 1bd9fa8ec917725dfd7769d1c7a8a4870090d8edbf0728940650d71d6c33cf60
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// Normalization convention of the spherical-harmonic coefficients. Applying a
+/// set under the wrong convention is wrong by many orders of magnitude at high
+/// degree, so there is no safe default. Append new values only.
+enum shcNormalization : ubyte {
+  UNSPECIFIED = 0,
+  /// 4-pi (fully) normalized, the geodesy convention.
+  FULLY_NORMALIZED = 1,
+  /// Unnormalized (raw) coefficients.
+  UNNORMALIZED = 2
+}
+
+/// Treatment of the permanent tide in the degree-2 zonal term. Sets differing
+/// only in tide system disagree in C20 by roughly 4e-9, which is far above the
+/// accuracy of any modern field. Append new values only.
+enum shcTideSystem : ubyte {
+  UNSPECIFIED = 0,
+  TIDE_FREE = 1,
+  ZERO_TIDE = 2,
+  MEAN_TIDE = 3
+}
+
+/// One time-variable coefficient term: a rate or a periodic variation applied
+/// to the static coefficient at DEGREE/ORDER.
+table SHCVariableTerm {
+  DEGREE: ushort;
+  ORDER: ushort;
+  /// Kind of variation: "TREND", "ASIN", "ACOS".
+  TERM_TYPE: string;
+  /// Coefficient of the variation for the cosine (C) and sine (S) terms.
+  C_VALUE: double;
+  S_VALUE: double;
+  /// Period of a periodic term, years. Unused for a trend.
+  PERIOD_YEARS: double;
+  /// Epoch the term is referenced to, ISO 8601.
+  REFERENCE_EPOCH: string;
+}
+
+/// Spherical-Harmonic Coefficient Set — an actual gravity field, as opposed to
+/// the NAME of one.
+///
+/// This is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,
+/// bounds its degree/order, toggles third-body and tidal effects, and carries
+/// scalar J2..J6. It cannot carry a coefficient set, and a named model without
+/// its coefficients is not interchange — it is a citation.
+///
+/// Coefficients are carried as four parallel arrays of equal length, indexed
+/// together: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine
+/// term C[i] and sine term S[i]. Parallel arrays rather than a table per
+/// coefficient because a 200x200 field is ~40,000 coefficients and a
+/// table-per-coefficient encoding is pathological in both size and decode cost.
+table SHC {
+  /// Identifier of the coefficient set, e.g. "EGM2008", "GGGRX1200".
+  MODEL_NAME: string (required);
+
+  /// Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,
+  /// 499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a
+  /// barycenter (e.g. 4) is NOT the body (e.g. 499).
+  CENTRAL_BODY_NAIF_ID: int;
+
+  /// Advisory body name.
+  BODY_NAME: string;
+
+  /// Gravitational parameter of the body, m^3/s^2. Part of the set: a field's
+  /// coefficients are only meaningful with the GM they were solved against.
+  GM: double;
+
+  /// Reference radius of the expansion, metres. Also part of the set.
+  REFERENCE_RADIUS: double;
+
+  /// Maximum degree and order present in the arrays.
+  MAX_DEGREE: ushort;
+  MAX_ORDER: ushort;
+
+  /// Normalization convention. A set published without this is unusable;
+  /// consumers MUST reject UNSPECIFIED rather than assuming a convention.
+  NORMALIZATION: shcNormalization = UNSPECIFIED;
+
+  /// Permanent-tide system. Consumers MUST reject UNSPECIFIED for any
+  /// application sensitive at the 1e-9 level in C20.
+  PERMANENT_TIDE_SYSTEM: shcTideSystem = UNSPECIFIED;
+
+  /// Epoch the static coefficients are referenced to, ISO 8601. Required when
+  /// VARIABLE_TERMS is present.
+  REFERENCE_EPOCH: string;
+
+  /// Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical
+  /// lengths; a record where they do not is invalid.
+  DEGREES: [ushort];
+  ORDERS: [ushort];
+  C: [double];
+  S: [double];
+
+  /// Optional 1-sigma uncertainties, parallel to C and S when present.
+  C_SIGMA: [double];
+  S_SIGMA: [double];
+
+  /// Optional time-variable terms applied on top of the static field.
+  VARIABLE_TERMS: [SHCVariableTerm];
+
+  /// Tide-free/zero-tide conversion already applied, publication reference, or
+  /// any other provenance needed to reproduce the set.
+  SOURCE: string;
+
+  /// Citation for the field, e.g. the paper or data-centre DOI.
+  CITATION: string;
+}
+
+root_type SHC;
+file_identifier "$SHC";

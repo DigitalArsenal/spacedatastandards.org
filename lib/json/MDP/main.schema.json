@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "mdpTransferDirection" : {
+      "type" : "string",
+      "enum": ["EITHER", "PROGRADE", "RETROGRADE"]
+    },
+    "mdpDsmMode" : {
+      "type" : "string",
+      "enum": ["NONE", "DEPARTURE", "ARRIVAL", "EITHER_END"]
+    },
+    "MDPEncounterStage" : {
+      "type" : "object",
+      "description" : "One encounter stage of the body sequence: the set of bodies admissible at\nthis position in the sequence, and the epoch grid searched for it.\n\nBodies are named by NAIF integer ID, which is normative. SDS carries no\nbody enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it\nmust not be repurposed here. Note that a barycenter and a body center are\ndifferent objects (4 is the Mars barycenter, 499 is Mars) and the\ndistinction is operationally load-bearing.",
+      "properties" : {
+        "STAGE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based position in the ordered sequence."
+              },
+        "ALLOWED_BODY_NAIF_IDS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647},
+                "description" : "NAIF integer IDs admissible at this stage. A single entry pins the body."
+              },
+        "ALLOWED_BODY_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present."
+              },
+        "EPOCH_WINDOW_START" : {
+                "type" : "string",
+                "description" : "Earliest and latest epoch searched at this stage, ISO 8601."
+              },
+        "EPOCH_WINDOW_END" : {
+                "type" : "string"
+              },
+        "EPOCH_GRID_STEP_DAYS" : {
+                "type" : "number",
+                "description" : "Epoch grid step searched within the window, days."
+              },
+        "V_INFINITY_MIN_KM_S" : {
+                "type" : "number",
+                "description" : "Bounds on hyperbolic excess speed at this encounter, km/s."
+              },
+        "V_INFINITY_MAX_KM_S" : {
+                "type" : "number"
+              },
+        "MIN_FLYBY_ALTITUDE_KM" : {
+                "type" : "number",
+                "description" : "Minimum admissible flyby altitude above the body's reference surface, km."
+              },
+        "MAX_POWERED_FLYBY_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Cap on powered-flyby delta-V applied at this encounter, km/s."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDPFlightTimeBound" : {
+      "type" : "object",
+      "description" : "Time-of-flight bound between two encounters. Adjacent stages give per-leg\nbounds; non-adjacent stages give cumulative bounds such as\n\"Earth to Mars to Earth within 3 years\".",
+      "properties" : {
+        "FROM_STAGE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX."
+              },
+        "TO_STAGE_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MIN_DAYS" : {
+                "type" : "number",
+                "description" : "Inclusive bounds on elapsed time between those two encounters, days."
+              },
+        "MAX_DAYS" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDP" : {
+      "type" : "object",
+      "description" : "Mission Design Problem — the definition of a patched-conic broad search over\nan ordered sequence of body encounters.\n\nThis is the PROBLEM, not a solution: it states what is being searched and\nunder what constraints. Candidate trajectories produced by solving it are\ncarried in $MDS. Nothing existing covers this: $LMS is a single Lambert\nboundary-value problem with no body/epoch grid and no sequence, $MPE is an\nEarth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an\nSSA-detected maneuver on a catalogued Earth object.",
+      "properties" : {
+        "PROBLEM_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this problem definition."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name."
+              },
+        "ENCOUNTER_STAGES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDPEncounterStage"},
+                "description" : "Ordered encounter stages. Order in this vector IS the body sequence."
+              },
+        "FLIGHT_TIME_BOUNDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDPFlightTimeBound"},
+                "description" : "Per-leg and cumulative time-of-flight bounds."
+              },
+        "MAX_TOTAL_FLIGHT_TIME_DAYS" : {
+                "type" : "number",
+                "description" : "Cap on total mission duration, days."
+              },
+        "MAX_LAUNCH_C3_KM2_S2" : {
+                "type" : "number",
+                "description" : "Cap on launch characteristic energy C3, km^2/s^2."
+              },
+        "MAX_TOTAL_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Cap on total post-launch delta-V, km/s."
+              },
+        "DSM_MODE" : {
+                "$ref" : "#/definitions/mdpDsmMode",
+                "description" : "Deep-space maneuver search controls."
+              },
+        "MAX_DSM_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Cap on the magnitude of any single deep-space maneuver, km/s."
+              },
+        "DSM_GRID_STEP_KM_S" : {
+                "type" : "number",
+                "description" : "Grid step used when searching deep-space maneuver magnitude, km/s."
+              },
+        "MAX_REVOLUTIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Lambert controls: maximum number of complete revolutions considered on a\nleg, and the admissible transfer direction."
+              },
+        "TRANSFER_DIRECTION" : {
+                "$ref" : "#/definitions/mdpTransferDirection"
+              },
+        "OUTPUT_TIME_BIN_DAYS" : {
+                "type" : "number",
+                "description" : "Output decimation: width of the time bin within which only the best\ncandidate is retained. Zero means no decimation."
+              },
+        "MAX_THRUST_N" : {
+                "type" : "number",
+                "description" : "Optional spacecraft propulsion limits constraining admissible solutions."
+              },
+        "SPECIFIC_IMPULSE_S" : {
+                "type" : "number"
+              },
+        "DRY_MASS_KG" : {
+                "type" : "number"
+              },
+        "INITIAL_MASS_KG" : {
+                "type" : "number"
+              },
+        "EPHEMERIS_SOURCE" : {
+                "type" : "string",
+                "description" : "Ephemeris source the search was posed against, e.g. a SPICE kernel set\nidentifier. Recorded so a solution set can be reproduced."
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Free-form notes."
+              }
+      },
+      "required" : ["PROBLEM_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MDP"
+}

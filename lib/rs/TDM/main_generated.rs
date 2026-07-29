@@ -391,7 +391,10 @@ impl<'a> TDM<'a> {
   pub const VT_TEMPERATURE: ::flatbuffers::VOffsetT = 120;
   pub const VT_CLOCK_BIAS: ::flatbuffers::VOffsetT = 122;
   pub const VT_CLOCK_DRIFT: ::flatbuffers::VOffsetT = 124;
-  pub const VT_TRANSMIT_RAMPS: ::flatbuffers::VOffsetT = 126;
+  pub const VT_SIGNAL_TO_NOISE: ::flatbuffers::VOffsetT = 126;
+  pub const VT_SPECTRAL_MAX: ::flatbuffers::VOffsetT = 128;
+  pub const VT_DOPPLER_NOISE_HZ: ::flatbuffers::VOffsetT = 130;
+  pub const VT_TRANSMIT_RAMPS: ::flatbuffers::VOffsetT = 132;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -417,6 +420,9 @@ impl<'a> TDM<'a> {
     builder.add_OBSERVER_Y(args.OBSERVER_Y);
     builder.add_OBSERVER_X(args.OBSERVER_X);
     if let Some(x) = args.TRANSMIT_RAMPS { builder.add_TRANSMIT_RAMPS(x); }
+    if let Some(x) = args.DOPPLER_NOISE_HZ { builder.add_DOPPLER_NOISE_HZ(x); }
+    if let Some(x) = args.SPECTRAL_MAX { builder.add_SPECTRAL_MAX(x); }
+    if let Some(x) = args.SIGNAL_TO_NOISE { builder.add_SIGNAL_TO_NOISE(x); }
     if let Some(x) = args.CLOCK_DRIFT { builder.add_CLOCK_DRIFT(x); }
     if let Some(x) = args.CLOCK_BIAS { builder.add_CLOCK_BIAS(x); }
     if let Some(x) = args.TEMPERATURE { builder.add_TEMPERATURE(x); }
@@ -612,6 +618,15 @@ impl<'a> TDM<'a> {
     let CLOCK_DRIFT = self.CLOCK_DRIFT().map(|x| {
       x.into_iter().collect()
     });
+    let SIGNAL_TO_NOISE = self.SIGNAL_TO_NOISE().map(|x| {
+      x.into_iter().collect()
+    });
+    let SPECTRAL_MAX = self.SPECTRAL_MAX().map(|x| {
+      x.into_iter().collect()
+    });
+    let DOPPLER_NOISE_HZ = self.DOPPLER_NOISE_HZ().map(|x| {
+      x.into_iter().collect()
+    });
     let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
@@ -677,6 +692,9 @@ impl<'a> TDM<'a> {
       TEMPERATURE,
       CLOCK_BIAS,
       CLOCK_DRIFT,
+      SIGNAL_TO_NOISE,
+      SPECTRAL_MAX,
+      DOPPLER_NOISE_HZ,
       TRANSMIT_RAMPS,
     }
   }
@@ -1172,6 +1190,37 @@ impl<'a> TDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(TDM::VT_CLOCK_DRIFT, None)}
   }
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+  /// quality metrics, one entry per observation, parallel to the other
+  /// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+  /// i * OBSERVATION_STEP_SIZE grid.
+  ///
+  /// Signal-to-noise ratio of the detection.
+  #[inline]
+  pub fn SIGNAL_TO_NOISE(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(TDM::VT_SIGNAL_TO_NOISE, None)}
+  }
+  /// SDS EXTENSION. Normalised spectral maximum of the detection.
+  #[inline]
+  pub fn SPECTRAL_MAX(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(TDM::VT_SPECTRAL_MAX, None)}
+  }
+  /// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+  /// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+  /// uncertainty, which CCSDS 503.0-B-1 has no field for.
+  #[inline]
+  pub fn DOPPLER_NOISE_HZ(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(TDM::VT_DOPPLER_NOISE_HZ, None)}
+  }
   /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
   /// table covering this segment, ordered by START_TIME and non-overlapping.
   /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -1253,6 +1302,9 @@ impl ::flatbuffers::Verifiable for TDM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("TEMPERATURE", Self::VT_TEMPERATURE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CLOCK_BIAS", Self::VT_CLOCK_BIAS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("CLOCK_DRIFT", Self::VT_CLOCK_DRIFT, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SIGNAL_TO_NOISE", Self::VT_SIGNAL_TO_NOISE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("SPECTRAL_MAX", Self::VT_SPECTRAL_MAX, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("DOPPLER_NOISE_HZ", Self::VT_DOPPLER_NOISE_HZ, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp>>>>("TRANSMIT_RAMPS", Self::VT_TRANSMIT_RAMPS, false)?
      .finish();
     Ok(())
@@ -1320,6 +1372,9 @@ pub struct TDMArgs<'a> {
     pub TEMPERATURE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub CLOCK_BIAS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub CLOCK_DRIFT: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SIGNAL_TO_NOISE: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub SPECTRAL_MAX: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub DOPPLER_NOISE_HZ: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub TRANSMIT_RAMPS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'a>>>>>,
 }
 impl<'a> Default for TDMArgs<'a> {
@@ -1387,6 +1442,9 @@ impl<'a> Default for TDMArgs<'a> {
       TEMPERATURE: None,
       CLOCK_BIAS: None,
       CLOCK_DRIFT: None,
+      SIGNAL_TO_NOISE: None,
+      SPECTRAL_MAX: None,
+      DOPPLER_NOISE_HZ: None,
       TRANSMIT_RAMPS: None,
     }
   }
@@ -1642,6 +1700,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> TDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_CLOCK_DRIFT, CLOCK_DRIFT);
   }
   #[inline]
+  pub fn add_SIGNAL_TO_NOISE(&mut self, SIGNAL_TO_NOISE: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_SIGNAL_TO_NOISE, SIGNAL_TO_NOISE);
+  }
+  #[inline]
+  pub fn add_SPECTRAL_MAX(&mut self, SPECTRAL_MAX: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_SPECTRAL_MAX, SPECTRAL_MAX);
+  }
+  #[inline]
+  pub fn add_DOPPLER_NOISE_HZ(&mut self, DOPPLER_NOISE_HZ: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_DOPPLER_NOISE_HZ, DOPPLER_NOISE_HZ);
+  }
+  #[inline]
   pub fn add_TRANSMIT_RAMPS(&mut self, TRANSMIT_RAMPS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<TDMTransmitRamp<'b >>>>) {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(TDM::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
   }
@@ -1724,6 +1794,9 @@ impl ::core::fmt::Debug for TDM<'_> {
       ds.field("TEMPERATURE", &self.TEMPERATURE());
       ds.field("CLOCK_BIAS", &self.CLOCK_BIAS());
       ds.field("CLOCK_DRIFT", &self.CLOCK_DRIFT());
+      ds.field("SIGNAL_TO_NOISE", &self.SIGNAL_TO_NOISE());
+      ds.field("SPECTRAL_MAX", &self.SPECTRAL_MAX());
+      ds.field("DOPPLER_NOISE_HZ", &self.DOPPLER_NOISE_HZ());
       ds.field("TRANSMIT_RAMPS", &self.TRANSMIT_RAMPS());
       ds.finish()
   }
@@ -1792,6 +1865,9 @@ pub struct TDMT {
   pub TEMPERATURE: Option<alloc::vec::Vec<f64>>,
   pub CLOCK_BIAS: Option<alloc::vec::Vec<f64>>,
   pub CLOCK_DRIFT: Option<alloc::vec::Vec<f64>>,
+  pub SIGNAL_TO_NOISE: Option<alloc::vec::Vec<f64>>,
+  pub SPECTRAL_MAX: Option<alloc::vec::Vec<f64>>,
+  pub DOPPLER_NOISE_HZ: Option<alloc::vec::Vec<f64>>,
   pub TRANSMIT_RAMPS: Option<alloc::vec::Vec<TDMTransmitRampT>>,
 }
 impl Default for TDMT {
@@ -1858,6 +1934,9 @@ impl Default for TDMT {
       TEMPERATURE: None,
       CLOCK_BIAS: None,
       CLOCK_DRIFT: None,
+      SIGNAL_TO_NOISE: None,
+      SPECTRAL_MAX: None,
+      DOPPLER_NOISE_HZ: None,
       TRANSMIT_RAMPS: None,
     }
   }
@@ -2010,6 +2089,15 @@ impl TDMT {
     let CLOCK_DRIFT = self.CLOCK_DRIFT.as_ref().map(|x|{
       _fbb.create_vector(x)
     });
+    let SIGNAL_TO_NOISE = self.SIGNAL_TO_NOISE.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SPECTRAL_MAX = self.SPECTRAL_MAX.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let DOPPLER_NOISE_HZ = self.DOPPLER_NOISE_HZ.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let TRANSMIT_RAMPS = self.TRANSMIT_RAMPS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
@@ -2075,6 +2163,9 @@ impl TDMT {
       TEMPERATURE,
       CLOCK_BIAS,
       CLOCK_DRIFT,
+      SIGNAL_TO_NOISE,
+      SPECTRAL_MAX,
+      DOPPLER_NOISE_HZ,
       TRANSMIT_RAMPS,
     })
   }

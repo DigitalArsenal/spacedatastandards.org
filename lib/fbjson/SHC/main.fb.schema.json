@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shcNormalization": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "FULLY_NORMALIZED",
+        "UNNORMALIZED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FULLY_NORMALIZED": {
+          "value": 1,
+          "description": "4-pi (fully) normalized, the geodesy convention."
+        },
+        "UNNORMALIZED": {
+          "value": 2,
+          "description": "Unnormalized (raw) coefficients."
+        }
+      }
+    },
+    "shcTideSystem": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TIDE_FREE",
+        "ZERO_TIDE",
+        "MEAN_TIDE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "TIDE_FREE": {
+          "value": 1
+        },
+        "ZERO_TIDE": {
+          "value": 2
+        },
+        "MEAN_TIDE": {
+          "value": 3
+        }
+      }
+    },
+    "SHCVariableTerm": {
+      "type": "object",
+      "description": "One time-variable coefficient term: a rate or a periodic variation applied\nto the static coefficient at DEGREE/ORDER.",
+      "properties": {
+        "DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "TERM_TYPE": {
+          "type": "string",
+          "description": "Kind of variation: \"TREND\", \"ASIN\", \"ACOS\".",
+          "x-flatbuffer-type": "string"
+        },
+        "C_VALUE": {
+          "type": "number",
+          "description": "Coefficient of the variation for the cosine (C) and sine (S) terms.",
+          "x-flatbuffer-type": "double"
+        },
+        "S_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD_YEARS": {
+          "type": "number",
+          "description": "Period of a periodic term, years. Unused for a trend.",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_EPOCH": {
+          "type": "string",
+          "description": "Epoch the term is referenced to, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SHC": {
+      "type": "object",
+      "description": "Spherical-Harmonic Coefficient Set \u2014 an actual gravity field, as opposed to\nthe NAME of one.\n\nThis is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,\nbounds its degree/order, toggles third-body and tidal effects, and carries\nscalar J2..J6. It cannot carry a coefficient set, and a named model without\nits coefficients is not interchange \u2014 it is a citation.\n\nCoefficients are carried as four parallel arrays of equal length, indexed\ntogether: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine\nterm C[i] and sine term S[i]. Parallel arrays rather than a table per\ncoefficient because a 200x200 field is ~40,000 coefficients and a\ntable-per-coefficient encoding is pathological in both size and decode cost.",
+      "properties": {
+        "MODEL_NAME": {
+          "type": "string",
+          "description": "Identifier of the coefficient set, e.g. \"EGM2008\", \"GGGRX1200\".",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "CENTRAL_BODY_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,\n499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a\nbarycenter (e.g. 4) is NOT the body (e.g. 499).",
+          "x-flatbuffer-type": "int"
+        },
+        "BODY_NAME": {
+          "type": "string",
+          "description": "Advisory body name.",
+          "x-flatbuffer-type": "string"
+        },
+        "GM": {
+          "type": "number",
+          "description": "Gravitational parameter of the body, m^3/s^2. Part of the set: a field's\ncoefficients are only meaningful with the GM they were solved against.",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_RADIUS": {
+          "type": "number",
+          "description": "Reference radius of the expansion, metres. Also part of the set.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Maximum degree and order present in the arrays.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "MAX_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "ushort"
+        },
+        "NORMALIZATION": {
+          "$ref": "#/definitions/shcNormalization",
+          "description": "Normalization convention. A set published without this is unusable;\nconsumers MUST reject UNSPECIFIED rather than assuming a convention.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FULLY_NORMALIZED": {
+              "value": 1,
+              "description": "4-pi (fully) normalized, the geodesy convention."
+            },
+            "UNNORMALIZED": {
+              "value": 2,
+              "description": "Unnormalized (raw) coefficients."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PERMANENT_TIDE_SYSTEM": {
+          "$ref": "#/definitions/shcTideSystem",
+          "description": "Permanent-tide system. Consumers MUST reject UNSPECIFIED for any\napplication sensitive at the 1e-9 level in C20.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "TIDE_FREE": {
+              "value": 1
+            },
+            "ZERO_TIDE": {
+              "value": 2
+            },
+            "MEAN_TIDE": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REFERENCE_EPOCH": {
+          "type": "string",
+          "description": "Epoch the static coefficients are referenced to, ISO 8601. Required when\nVARIABLE_TERMS is present.",
+          "x-flatbuffer-type": "string"
+        },
+        "DEGREES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "description": "Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical\nlengths; a record where they do not is invalid.",
+          "x-flatbuffer-type": "[ushort]"
+        },
+        "ORDERS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "x-flatbuffer-type": "[ushort]"
+        },
+        "C": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "C_SIGMA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Optional 1-sigma uncertainties, parallel to C and S when present.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "S_SIGMA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "VARIABLE_TERMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SHCVariableTerm"
+          },
+          "description": "Optional time-variable terms applied on top of the static field.",
+          "x-flatbuffer-type": "[SHCVariableTerm]"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Tide-free/zero-tide conversion already applied, publication reference, or\nany other provenance needed to reproduce the set.",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Citation for the field, e.g. the paper or data-centre DOI.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "MODEL_NAME"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SHC",
+  "x-flatbuffer-root-type": "SHC",
+  "x-flatbuffer-file-identifier": "$SHC"
+}

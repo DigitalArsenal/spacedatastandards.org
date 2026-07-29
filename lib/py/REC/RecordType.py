@@ -193,6 +193,11 @@ class RecordType(object):
     CPS = 187
     FSB = 188
     FSO = 189
+    GST = 190
+    MDP = 191
+    MDS = 192
+    PNL = 193
+    SHC = 194
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -765,4 +770,19 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.FSO:
         import FSO
         return FSO.FSOT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.GST:
+        import GST
+        return GST.GSTT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MDP:
+        import MDP
+        return MDP.MDPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.MDS:
+        import MDS
+        return MDS.MDST.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.PNL:
+        import PNL
+        return PNL.PNLT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.SHC:
+        import SHC
+        return SHC.SHCT.InitFromBuf(table.Bytes, table.Pos)
     return None

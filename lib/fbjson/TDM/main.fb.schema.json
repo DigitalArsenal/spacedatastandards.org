@@ -1225,6 +1225,30 @@
           "description": "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
           "x-flatbuffer-type": "[double]"
         },
+        "SIGNAL_TO_NOISE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "/// Signal-to-noise ratio of the detection.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SPECTRAL_MAX": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "SDS EXTENSION. Normalised spectral maximum of the detection.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DOPPLER_NOISE_HZ": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "uncertainty, which CCSDS 503.0-B-1 has no field for.",
+          "x-flatbuffer-type": "[double]"
+        },
         "TRANSMIT_RAMPS": {
           "type": "array",
           "items": {

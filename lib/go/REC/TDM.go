@@ -1383,13 +1383,147 @@ func (rcv *TDM) MutateClockDrift(j int, n float64) bool {
 	return rcv.MutateCLOCK_DRIFT(j, n)
 }
 
+/// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+/// quality metrics, one entry per observation, parallel to the other
+/// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+/// i * OBSERVATION_STEP_SIZE grid.
+///
+/// Signal-to-noise ratio of the detection.
+func (rcv *TDM) SIGNAL_TO_NOISE(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TDM) SignalToNoise(j int) float64 {
+	return rcv.SIGNAL_TO_NOISE(j)
+}
+
+func (rcv *TDM) SIGNAL_TO_NOISELength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) SignalToNoiseLength() int {
+	return rcv.SIGNAL_TO_NOISELength()
+}
+
+/// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+/// quality metrics, one entry per observation, parallel to the other
+/// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+/// i * OBSERVATION_STEP_SIZE grid.
+///
+/// Signal-to-noise ratio of the detection.
+func (rcv *TDM) MutateSIGNAL_TO_NOISE(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *TDM) MutateSignalToNoise(j int, n float64) bool {
+	return rcv.MutateSIGNAL_TO_NOISE(j, n)
+}
+
+/// SDS EXTENSION. Normalised spectral maximum of the detection.
+func (rcv *TDM) SPECTRAL_MAX(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TDM) SpectralMax(j int) float64 {
+	return rcv.SPECTRAL_MAX(j)
+}
+
+func (rcv *TDM) SPECTRAL_MAXLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) SpectralMaxLength() int {
+	return rcv.SPECTRAL_MAXLength()
+}
+
+/// SDS EXTENSION. Normalised spectral maximum of the detection.
+func (rcv *TDM) MutateSPECTRAL_MAX(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *TDM) MutateSpectralMax(j int, n float64) bool {
+	return rcv.MutateSPECTRAL_MAX(j, n)
+}
+
+/// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+/// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+/// uncertainty, which CCSDS 503.0-B-1 has no field for.
+func (rcv *TDM) DOPPLER_NOISE_HZ(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *TDM) DopplerNoiseHz(j int) float64 {
+	return rcv.DOPPLER_NOISE_HZ(j)
+}
+
+func (rcv *TDM) DOPPLER_NOISE_HZLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *TDM) DopplerNoiseHzLength() int {
+	return rcv.DOPPLER_NOISE_HZLength()
+}
+
+/// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+/// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+/// uncertainty, which CCSDS 503.0-B-1 has no field for.
+func (rcv *TDM) MutateDOPPLER_NOISE_HZ(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *TDM) MutateDopplerNoiseHz(j int, n float64) bool {
+	return rcv.MutateDOPPLER_NOISE_HZ(j, n)
+}
+
 /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
 /// table covering this segment, ordered by START_TIME and non-overlapping.
 /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
 /// cannot reconstruct the observables. Absent for unramped tracking, which
 /// leaves the record exactly CCSDS-conformant.
 func (rcv *TDM) TRANSMIT_RAMPS(obj *TDMTransmitRamp, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -1408,7 +1542,7 @@ func (rcv *TDM) TransmitRamps(obj *TDMTransmitRamp, j int) bool {
 }
 
 func (rcv *TDM) TRANSMIT_RAMPSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -1425,7 +1559,7 @@ func (rcv *TDM) TransmitRampsLength() int {
 /// cannot reconstruct the observables. Absent for unramped tracking, which
 /// leaves the record exactly CCSDS-conformant.
 func TDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(62)
+	builder.StartObject(65)
 }
 func TDMAddOBSERVER_ID(builder *flatbuffers.Builder, OBSERVER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBSERVER_ID), 0)
@@ -1865,8 +1999,44 @@ func TDMStartCLOCK_DRIFTVector(builder *flatbuffers.Builder, numElems int) flatb
 func TDMStartClockDriftVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return TDMStartCLOCK_DRIFTVector(builder, numElems)
 }
+func TDMAddSIGNAL_TO_NOISE(builder *flatbuffers.Builder, SIGNAL_TO_NOISE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(SIGNAL_TO_NOISE), 0)
+}
+func TDMAddSignalToNoise(builder *flatbuffers.Builder, SIGNAL_TO_NOISE flatbuffers.UOffsetT) {
+	TDMAddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE)
+}
+func TDMStartSIGNAL_TO_NOISEVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TDMStartSignalToNoiseVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartSIGNAL_TO_NOISEVector(builder, numElems)
+}
+func TDMAddSPECTRAL_MAX(builder *flatbuffers.Builder, SPECTRAL_MAX flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(62, flatbuffers.UOffsetT(SPECTRAL_MAX), 0)
+}
+func TDMAddSpectralMax(builder *flatbuffers.Builder, SPECTRAL_MAX flatbuffers.UOffsetT) {
+	TDMAddSPECTRAL_MAX(builder, SPECTRAL_MAX)
+}
+func TDMStartSPECTRAL_MAXVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TDMStartSpectralMaxVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartSPECTRAL_MAXVector(builder, numElems)
+}
+func TDMAddDOPPLER_NOISE_HZ(builder *flatbuffers.Builder, DOPPLER_NOISE_HZ flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(63, flatbuffers.UOffsetT(DOPPLER_NOISE_HZ), 0)
+}
+func TDMAddDopplerNoiseHz(builder *flatbuffers.Builder, DOPPLER_NOISE_HZ flatbuffers.UOffsetT) {
+	TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ)
+}
+func TDMStartDOPPLER_NOISE_HZVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func TDMStartDopplerNoiseHzVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return TDMStartDOPPLER_NOISE_HZVector(builder, numElems)
+}
 func TDMAddTRANSMIT_RAMPS(builder *flatbuffers.Builder, TRANSMIT_RAMPS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(TRANSMIT_RAMPS), 0)
+	builder.PrependUOffsetTSlot(64, flatbuffers.UOffsetT(TRANSMIT_RAMPS), 0)
 }
 func TDMAddTransmitRamps(builder *flatbuffers.Builder, TRANSMIT_RAMPS flatbuffers.UOffsetT) {
 	TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)

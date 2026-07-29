@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "shcNormalization" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "FULLY_NORMALIZED", "UNNORMALIZED"]
+    },
+    "shcTideSystem" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TIDE_FREE", "ZERO_TIDE", "MEAN_TIDE"]
+    },
+    "SHCVariableTerm" : {
+      "type" : "object",
+      "description" : "One time-variable coefficient term: a rate or a periodic variation applied\nto the static coefficient at DEGREE/ORDER.",
+      "properties" : {
+        "DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "TERM_TYPE" : {
+                "type" : "string",
+                "description" : "Kind of variation: \"TREND\", \"ASIN\", \"ACOS\"."
+              },
+        "C_VALUE" : {
+                "type" : "number",
+                "description" : "Coefficient of the variation for the cosine (C) and sine (S) terms."
+              },
+        "S_VALUE" : {
+                "type" : "number"
+              },
+        "PERIOD_YEARS" : {
+                "type" : "number",
+                "description" : "Period of a periodic term, years. Unused for a trend."
+              },
+        "REFERENCE_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the term is referenced to, ISO 8601."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SHC" : {
+      "type" : "object",
+      "description" : "Spherical-Harmonic Coefficient Set — an actual gravity field, as opposed to\nthe NAME of one.\n\nThis is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,\nbounds its degree/order, toggles third-body and tidal effects, and carries\nscalar J2..J6. It cannot carry a coefficient set, and a named model without\nits coefficients is not interchange — it is a citation.\n\nCoefficients are carried as four parallel arrays of equal length, indexed\ntogether: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine\nterm C[i] and sine term S[i]. Parallel arrays rather than a table per\ncoefficient because a 200x200 field is ~40,000 coefficients and a\ntable-per-coefficient encoding is pathological in both size and decode cost.",
+      "properties" : {
+        "MODEL_NAME" : {
+                "type" : "string",
+                "description" : "Identifier of the coefficient set, e.g. \"EGM2008\", \"GGGRX1200\"."
+              },
+        "CENTRAL_BODY_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,\n499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a\nbarycenter (e.g. 4) is NOT the body (e.g. 499)."
+              },
+        "BODY_NAME" : {
+                "type" : "string",
+                "description" : "Advisory body name."
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "Gravitational parameter of the body, m^3/s^2. Part of the set: a field's\ncoefficients are only meaningful with the GM they were solved against."
+              },
+        "REFERENCE_RADIUS" : {
+                "type" : "number",
+                "description" : "Reference radius of the expansion, metres. Also part of the set."
+              },
+        "MAX_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum degree and order present in the arrays."
+              },
+        "MAX_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "NORMALIZATION" : {
+                "$ref" : "#/definitions/shcNormalization",
+                "description" : "Normalization convention. A set published without this is unusable;\nconsumers MUST reject UNSPECIFIED rather than assuming a convention."
+              },
+        "PERMANENT_TIDE_SYSTEM" : {
+                "$ref" : "#/definitions/shcTideSystem",
+                "description" : "Permanent-tide system. Consumers MUST reject UNSPECIFIED for any\napplication sensitive at the 1e-9 level in C20."
+              },
+        "REFERENCE_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the static coefficients are referenced to, ISO 8601. Required when\nVARIABLE_TERMS is present."
+              },
+        "DEGREES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 65535},
+                "description" : "Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical\nlengths; a record where they do not is invalid."
+              },
+        "ORDERS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 65535}
+              },
+        "C" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "S" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "C_SIGMA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Optional 1-sigma uncertainties, parallel to C and S when present."
+              },
+        "S_SIGMA" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "VARIABLE_TERMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SHCVariableTerm"},
+                "description" : "Optional time-variable terms applied on top of the static field."
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Tide-free/zero-tide conversion already applied, publication reference, or\nany other provenance needed to reproduce the set."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Citation for the field, e.g. the paper or data-centre DOI."
+              }
+      },
+      "required" : ["MODEL_NAME"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SHC"
+}

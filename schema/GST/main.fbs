@@ -1,0 +1,145 @@
+// Hash: 873e99b02f3f229a2dc2cc48e8276a8b48dea055baa562b122f146f388603660
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// Network a tracking station belongs to. Append new values only; never
+/// reorder or reuse existing values.
+enum gstNetwork : ubyte {
+  UNSPECIFIED = 0,
+  /// NASA Deep Space Network.
+  DSN = 1,
+  /// ESA tracking station network.
+  ESTRACK = 2,
+  /// European VLBI Network.
+  EVN = 3,
+  /// International Laser Ranging Service.
+  ILRS = 4,
+  /// International GNSS Service.
+  IGS = 5,
+  /// A network not covered above.
+  OTHER = 6
+}
+
+/// Terrestrial reference frame realization the station coordinates are given
+/// in. A position without its realization is not usable at the centimetre
+/// level. Append new values only.
+enum gstFrameRealization : ubyte {
+  UNSPECIFIED = 0,
+  ITRF93 = 1,
+  ITRF2000 = 2,
+  ITRF2005 = 3,
+  ITRF2008 = 4,
+  ITRF2014 = 5,
+  ITRF2020 = 6,
+  /// A realization not covered above; name it in FRAME_REALIZATION_NAME.
+  OTHER = 7
+}
+
+/// Antenna mount geometry, which determines how the axis offset is applied.
+/// Append new values only.
+enum gstAntennaAxisType : ubyte {
+  UNSPECIFIED = 0,
+  AZ_EL = 1,
+  X_Y_EAST = 2,
+  X_Y_NORTH = 3,
+  HA_DEC = 4,
+  /// Fixed / non-steerable.
+  FIXED = 5,
+  OTHER = 6
+}
+
+/// Ground/Tracking Station Definition — the geodetic identity and geometry of
+/// one tracking station, sufficient to reduce a radiometric or laser
+/// observation taken from it.
+///
+/// This is deliberately NOT $SEN. $SEN describes an SSA sensor site by
+/// latitude/longitude/altitude with tasking plans and statistics; it carries no
+/// terrestrial frame realization, no station velocity, no reference epoch, and
+/// no antenna axis geometry. Station coordinates without a frame realization
+/// and an epoch cannot be propagated for plate motion and are therefore not
+/// usable for orbit determination.
+table GST {
+  /// Stable station identifier as used by the operating network, e.g. "DSS-63".
+  STATION_ID: string (required);
+
+  /// Human-readable station name.
+  NAME: string;
+
+  /// Operating network.
+  NETWORK: gstNetwork = UNSPECIFIED;
+
+  /// IERS DOMES number, when the station has one.
+  DOMES_NUMBER: string;
+
+  /// NASA CDP / SLR site number, when the station has one.
+  CDP_NUMBER: string;
+
+  /// Terrestrial reference frame realization of POSITION_* and VELOCITY_*.
+  FRAME_REALIZATION: gstFrameRealization = UNSPECIFIED;
+
+  /// Free-text realization name, required when FRAME_REALIZATION is OTHER.
+  FRAME_REALIZATION_NAME: string;
+
+  /// Epoch at which POSITION_* is valid, ISO 8601. Positions MUST be
+  /// propagated to the observation epoch with VELOCITY_* before use.
+  REFERENCE_EPOCH: string;
+
+  /// Station position in the stated realization, metres.
+  POSITION_X: double;
+  POSITION_Y: double;
+  POSITION_Z: double;
+
+  /// Station velocity (plate motion) in the stated realization, metres per
+  /// year. Zero is a claim that the station does not move, not a default.
+  VELOCITY_X: double;
+  VELOCITY_Y: double;
+  VELOCITY_Z: double;
+
+  /// 1-sigma position uncertainty, metres.
+  POSITION_SIGMA_X: double;
+  POSITION_SIGMA_Y: double;
+  POSITION_SIGMA_Z: double;
+
+  /// Antenna mount geometry.
+  ANTENNA_AXIS_TYPE: gstAntennaAxisType = UNSPECIFIED;
+
+  /// Distance between the two mount axes, metres. Zero for an intersecting-axis
+  /// mount.
+  AXIS_OFFSET_M: double;
+
+  /// Vector from the monument marker to the antenna reference point, metres.
+  ECCENTRICITY_X: double;
+  ECCENTRICITY_Y: double;
+  ECCENTRICITY_Z: double;
+
+  /// Frame the eccentricity vector is expressed in, e.g. "XYZ" (geocentric
+  /// Cartesian) or "NEU" (local north-east-up).
+  ECCENTRICITY_FRAME: string;
+
+  /// Uplink bands the station can transmit, e.g. ["S", "X", "Ka"].
+  TRANSMIT_BANDS: [string];
+
+  /// Downlink bands the station can receive.
+  RECEIVE_BANDS: [string];
+
+  /// Station clock offset from the stated time scale, seconds.
+  CLOCK_OFFSET_S: double;
+
+  /// Station clock rate, seconds per second.
+  CLOCK_RATE_S_PER_S: double;
+
+  /// Time scale the clock terms are referenced to, e.g. "UTC", "TAI".
+  CLOCK_TIME_SCALE: string;
+
+  /// Start of the interval over which this definition applies, ISO 8601.
+  VALID_FROM: string;
+
+  /// End of the interval over which this definition applies, ISO 8601.
+  VALID_TO: string;
+
+  /// Provenance of these coordinates, e.g. "DSN 810-005 rev. E", an ILRS SINEX
+  /// file name, or a VLBI station catalogue identifier.
+  SOURCE: string;
+}
+
+root_type GST;
+file_identifier "$GST";

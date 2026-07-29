@@ -384,13 +384,47 @@ public struct TDM : IFlatbufferObject
   public ArraySegment<byte>? GetCLOCK_DRIFTBytes() { return __p.__vector_as_arraysegment(124); }
 #endif
   public double[] GetCLOCK_DRIFTArray() { return __p.__vector_as_array<double>(124); }
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+  /// quality metrics, one entry per observation, parallel to the other
+  /// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+  /// i * OBSERVATION_STEP_SIZE grid.
+  ///
+  /// Signal-to-noise ratio of the detection.
+  public double SIGNAL_TO_NOISE(int j) { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SIGNAL_TO_NOISELength { get { int o = __p.__offset(126); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSIGNAL_TO_NOISEBytes() { return __p.__vector_as_span<double>(126, 8); }
+#else
+  public ArraySegment<byte>? GetSIGNAL_TO_NOISEBytes() { return __p.__vector_as_arraysegment(126); }
+#endif
+  public double[] GetSIGNAL_TO_NOISEArray() { return __p.__vector_as_array<double>(126); }
+  /// SDS EXTENSION. Normalised spectral maximum of the detection.
+  public double SPECTRAL_MAX(int j) { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SPECTRAL_MAXLength { get { int o = __p.__offset(128); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSPECTRAL_MAXBytes() { return __p.__vector_as_span<double>(128, 8); }
+#else
+  public ArraySegment<byte>? GetSPECTRAL_MAXBytes() { return __p.__vector_as_arraysegment(128); }
+#endif
+  public double[] GetSPECTRAL_MAXArray() { return __p.__vector_as_array<double>(128); }
+  /// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+  /// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+  /// uncertainty, which CCSDS 503.0-B-1 has no field for.
+  public double DOPPLER_NOISE_HZ(int j) { int o = __p.__offset(130); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DOPPLER_NOISE_HZLength { get { int o = __p.__offset(130); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDOPPLER_NOISE_HZBytes() { return __p.__vector_as_span<double>(130, 8); }
+#else
+  public ArraySegment<byte>? GetDOPPLER_NOISE_HZBytes() { return __p.__vector_as_arraysegment(130); }
+#endif
+  public double[] GetDOPPLER_NOISE_HZArray() { return __p.__vector_as_array<double>(130); }
   /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
   /// table covering this segment, ordered by START_TIME and non-overlapping.
   /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
   /// cannot reconstruct the observables. Absent for unramped tracking, which
   /// leaves the record exactly CCSDS-conformant.
-  public TDMTransmitRamp? TRANSMIT_RAMPS(int j) { int o = __p.__offset(126); return o != 0 ? (TDMTransmitRamp?)(new TDMTransmitRamp()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int TRANSMIT_RAMPSLength { get { int o = __p.__offset(126); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public TDMTransmitRamp? TRANSMIT_RAMPS(int j) { int o = __p.__offset(132); return o != 0 ? (TDMTransmitRamp?)(new TDMTransmitRamp()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRANSMIT_RAMPSLength { get { int o = __p.__offset(132); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<TDM> CreateTDM(FlatBufferBuilder builder,
       StringOffset OBSERVER_IDOffset = default(StringOffset),
@@ -454,8 +488,11 @@ public struct TDM : IFlatbufferObject
       VectorOffset TEMPERATUREOffset = default(VectorOffset),
       VectorOffset CLOCK_BIASOffset = default(VectorOffset),
       VectorOffset CLOCK_DRIFTOffset = default(VectorOffset),
+      VectorOffset SIGNAL_TO_NOISEOffset = default(VectorOffset),
+      VectorOffset SPECTRAL_MAXOffset = default(VectorOffset),
+      VectorOffset DOPPLER_NOISE_HZOffset = default(VectorOffset),
       VectorOffset TRANSMIT_RAMPSOffset = default(VectorOffset)) {
-    builder.StartTable(62);
+    builder.StartTable(65);
     TDM.AddRANGE_MODULUS(builder, RANGE_MODULUS);
     TDM.AddRANGE_UNCERTAINTY(builder, RANGE_UNCERTAINTY);
     TDM.AddRANGE_RATE(builder, RANGE_RATE);
@@ -470,6 +507,9 @@ public struct TDM : IFlatbufferObject
     TDM.AddOBSERVER_Y(builder, OBSERVER_Y);
     TDM.AddOBSERVER_X(builder, OBSERVER_X);
     TDM.AddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPSOffset);
+    TDM.AddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZOffset);
+    TDM.AddSPECTRAL_MAX(builder, SPECTRAL_MAXOffset);
+    TDM.AddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISEOffset);
     TDM.AddCLOCK_DRIFT(builder, CLOCK_DRIFTOffset);
     TDM.AddCLOCK_BIAS(builder, CLOCK_BIASOffset);
     TDM.AddTEMPERATURE(builder, TEMPERATUREOffset);
@@ -521,7 +561,7 @@ public struct TDM : IFlatbufferObject
     return TDM.EndTDM(builder);
   }
 
-  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(62); }
+  public static void StartTDM(FlatBufferBuilder builder) { builder.StartTable(65); }
   public static void AddOBSERVER_ID(FlatBufferBuilder builder, StringOffset OBSERVER_IDOffset) { builder.AddOffset(0, OBSERVER_IDOffset.Value, 0); }
   public static void AddOBSERVER_X(FlatBufferBuilder builder, double OBSERVER_X) { builder.AddDouble(1, OBSERVER_X, 0.0); }
   public static void AddOBSERVER_Y(FlatBufferBuilder builder, double OBSERVER_Y) { builder.AddDouble(2, OBSERVER_Y, 0.0); }
@@ -643,7 +683,25 @@ public struct TDM : IFlatbufferObject
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCLOCK_DRIFTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCLOCK_DRIFTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
-  public static void AddTRANSMIT_RAMPS(FlatBufferBuilder builder, VectorOffset TRANSMIT_RAMPSOffset) { builder.AddOffset(61, TRANSMIT_RAMPSOffset.Value, 0); }
+  public static void AddSIGNAL_TO_NOISE(FlatBufferBuilder builder, VectorOffset SIGNAL_TO_NOISEOffset) { builder.AddOffset(61, SIGNAL_TO_NOISEOffset.Value, 0); }
+  public static VectorOffset CreateSIGNAL_TO_NOISEVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNAL_TO_NOISEVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNAL_TO_NOISEVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIGNAL_TO_NOISEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSIGNAL_TO_NOISEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddSPECTRAL_MAX(FlatBufferBuilder builder, VectorOffset SPECTRAL_MAXOffset) { builder.AddOffset(62, SPECTRAL_MAXOffset.Value, 0); }
+  public static VectorOffset CreateSPECTRAL_MAXVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_MAXVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_MAXVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_MAXVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPECTRAL_MAXVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDOPPLER_NOISE_HZ(FlatBufferBuilder builder, VectorOffset DOPPLER_NOISE_HZOffset) { builder.AddOffset(63, DOPPLER_NOISE_HZOffset.Value, 0); }
+  public static VectorOffset CreateDOPPLER_NOISE_HZVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDOPPLER_NOISE_HZVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOPPLER_NOISE_HZVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOPPLER_NOISE_HZVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDOPPLER_NOISE_HZVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddTRANSMIT_RAMPS(FlatBufferBuilder builder, VectorOffset TRANSMIT_RAMPSOffset) { builder.AddOffset(64, TRANSMIT_RAMPSOffset.Value, 0); }
   public static VectorOffset CreateTRANSMIT_RAMPSVector(FlatBufferBuilder builder, Offset<TDMTransmitRamp>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, Offset<TDMTransmitRamp>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTRANSMIT_RAMPSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<TDMTransmitRamp>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -734,6 +792,12 @@ public struct TDM : IFlatbufferObject
     for (var _j = 0; _j < this.CLOCK_BIASLength; ++_j) {_o.CLOCK_BIAS.Add(this.CLOCK_BIAS(_j));}
     _o.CLOCK_DRIFT = new List<double>();
     for (var _j = 0; _j < this.CLOCK_DRIFTLength; ++_j) {_o.CLOCK_DRIFT.Add(this.CLOCK_DRIFT(_j));}
+    _o.SIGNAL_TO_NOISE = new List<double>();
+    for (var _j = 0; _j < this.SIGNAL_TO_NOISELength; ++_j) {_o.SIGNAL_TO_NOISE.Add(this.SIGNAL_TO_NOISE(_j));}
+    _o.SPECTRAL_MAX = new List<double>();
+    for (var _j = 0; _j < this.SPECTRAL_MAXLength; ++_j) {_o.SPECTRAL_MAX.Add(this.SPECTRAL_MAX(_j));}
+    _o.DOPPLER_NOISE_HZ = new List<double>();
+    for (var _j = 0; _j < this.DOPPLER_NOISE_HZLength; ++_j) {_o.DOPPLER_NOISE_HZ.Add(this.DOPPLER_NOISE_HZ(_j));}
     _o.TRANSMIT_RAMPS = new List<TDMTransmitRampT>();
     for (var _j = 0; _j < this.TRANSMIT_RAMPSLength; ++_j) {_o.TRANSMIT_RAMPS.Add(this.TRANSMIT_RAMPS(_j).HasValue ? this.TRANSMIT_RAMPS(_j).Value.UnPack() : null);}
   }
@@ -829,6 +893,21 @@ public struct TDM : IFlatbufferObject
       var __CLOCK_DRIFT = _o.CLOCK_DRIFT.ToArray();
       _CLOCK_DRIFT = CreateCLOCK_DRIFTVector(builder, __CLOCK_DRIFT);
     }
+    var _SIGNAL_TO_NOISE = default(VectorOffset);
+    if (_o.SIGNAL_TO_NOISE != null) {
+      var __SIGNAL_TO_NOISE = _o.SIGNAL_TO_NOISE.ToArray();
+      _SIGNAL_TO_NOISE = CreateSIGNAL_TO_NOISEVector(builder, __SIGNAL_TO_NOISE);
+    }
+    var _SPECTRAL_MAX = default(VectorOffset);
+    if (_o.SPECTRAL_MAX != null) {
+      var __SPECTRAL_MAX = _o.SPECTRAL_MAX.ToArray();
+      _SPECTRAL_MAX = CreateSPECTRAL_MAXVector(builder, __SPECTRAL_MAX);
+    }
+    var _DOPPLER_NOISE_HZ = default(VectorOffset);
+    if (_o.DOPPLER_NOISE_HZ != null) {
+      var __DOPPLER_NOISE_HZ = _o.DOPPLER_NOISE_HZ.ToArray();
+      _DOPPLER_NOISE_HZ = CreateDOPPLER_NOISE_HZVector(builder, __DOPPLER_NOISE_HZ);
+    }
     var _TRANSMIT_RAMPS = default(VectorOffset);
     if (_o.TRANSMIT_RAMPS != null) {
       var __TRANSMIT_RAMPS = new Offset<TDMTransmitRamp>[_o.TRANSMIT_RAMPS.Count];
@@ -898,6 +977,9 @@ public struct TDM : IFlatbufferObject
       _TEMPERATURE,
       _CLOCK_BIAS,
       _CLOCK_DRIFT,
+      _SIGNAL_TO_NOISE,
+      _SPECTRAL_MAX,
+      _DOPPLER_NOISE_HZ,
       _TRANSMIT_RAMPS);
   }
 }
@@ -965,6 +1047,9 @@ public class TDMT
   public List<double> TEMPERATURE { get; set; }
   public List<double> CLOCK_BIAS { get; set; }
   public List<double> CLOCK_DRIFT { get; set; }
+  public List<double> SIGNAL_TO_NOISE { get; set; }
+  public List<double> SPECTRAL_MAX { get; set; }
+  public List<double> DOPPLER_NOISE_HZ { get; set; }
   public List<TDMTransmitRampT> TRANSMIT_RAMPS { get; set; }
 
   public TDMT() {
@@ -1029,6 +1114,9 @@ public class TDMT
     this.TEMPERATURE = null;
     this.CLOCK_BIAS = null;
     this.CLOCK_DRIFT = null;
+    this.SIGNAL_TO_NOISE = null;
+    this.SPECTRAL_MAX = null;
+    this.DOPPLER_NOISE_HZ = null;
     this.TRANSMIT_RAMPS = null;
   }
   public static TDMT DeserializeFromBinary(byte[] fbBuffer) {
@@ -1108,7 +1196,10 @@ static public class TDMVerify
       && verifier.VerifyVectorOfData(tablePos, 120 /*TEMPERATURE*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 122 /*CLOCK_BIAS*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 124 /*CLOCK_DRIFT*/, 8 /*double*/, false)
-      && verifier.VerifyVectorOfTables(tablePos, 126 /*TRANSMIT_RAMPS*/, TDMTransmitRampVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 126 /*SIGNAL_TO_NOISE*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 128 /*SPECTRAL_MAX*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 130 /*DOPPLER_NOISE_HZ*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 132 /*TRANSMIT_RAMPS*/, TDMTransmitRampVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

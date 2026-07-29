@@ -1,0 +1,158 @@
+// Hash: 635d04781efe3c54ee591277009fb7c660503047ad9038e30ad2082d05c6eadb
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// One body encounter along a candidate trajectory.
+///
+/// Encounter-indexed rather than leg-indexed on purpose. A search implementation
+/// typically emits leg-indexed arrays: for nE encounters there are nL = nE - 1
+/// legs, the departure v-infinity of leg i is the OUTGOING vector at encounter
+/// i, and the arrival v-infinity of leg i is the INCOMING vector at encounter
+/// i + 1. Carrying both vectors on the encounter they physically occur at
+/// removes that off-by-one from every consumer.
+table MDSEncounter {
+  /// Zero-based position along the trajectory.
+  ENCOUNTER_INDEX: uint;
+
+  /// Body encountered, NAIF integer ID (normative). A barycenter is not the
+  /// body: 4 is the Mars barycenter, 499 is Mars.
+  BODY_NAIF_ID: int;
+
+  /// Advisory body name.
+  BODY_NAME: string;
+
+  /// Encounter epoch as ephemeris time, seconds past J2000 TDB. This is the
+  /// form solvers work in and is carried verbatim to avoid a lossy round trip.
+  EPOCH_ET_S: double;
+
+  /// Same epoch in ISO 8601 (UTC), for consumers that do not carry an
+  /// ephemeris time implementation. Advisory; EPOCH_ET_S is normative.
+  EPOCH_UTC: string;
+
+  /// Incoming hyperbolic excess velocity vector, km/s. Absent at the first
+  /// encounter.
+  INCOMING_V_INFINITY_X_KM_S: double;
+  INCOMING_V_INFINITY_Y_KM_S: double;
+  INCOMING_V_INFINITY_Z_KM_S: double;
+
+  /// Outgoing hyperbolic excess velocity vector, km/s. Absent at the final
+  /// encounter.
+  OUTGOING_V_INFINITY_X_KM_S: double;
+  OUTGOING_V_INFINITY_Y_KM_S: double;
+  OUTGOING_V_INFINITY_Z_KM_S: double;
+
+  /// Turn angle between incoming and outgoing asymptotes, radians.
+  TURN_ANGLE_RAD: double;
+
+  /// Flyby periapsis radius measured from the body's center, km.
+  PERIAPSIS_RADIUS_KM: double;
+
+  /// Delta-V applied at periapsis for a powered flyby, km/s. Zero for an
+  /// unpowered (ballistic) flyby.
+  POWERED_FLYBY_DELTA_V_KM_S: double;
+
+  /// Index of the Lambert solution selected for the leg DEPARTING this
+  /// encounter, as reported by the solver.
+  LAMBERT_SOLUTION_INDEX: int;
+
+  /// Index of the flyby solution branch selected at this encounter, as
+  /// reported by the solver.
+  FLYBY_SOLUTION_INDEX: int;
+}
+
+/// One deep-space maneuver on a transfer leg.
+table MDSDeepSpaceManeuver {
+  /// Zero-based leg the maneuver occurs on. Leg i connects encounter i to
+  /// encounter i + 1.
+  LEG_INDEX: uint;
+
+  /// Position along the leg as a fraction of its flight time, in [0, 1].
+  ARC_FRACTION: double;
+
+  /// Maneuver epoch as ephemeris time, seconds past J2000 TDB, when the solver
+  /// reports it directly.
+  EPOCH_ET_S: double;
+
+  /// Maneuver magnitude, km/s.
+  DELTA_V_KM_S: double;
+
+  /// Maneuver vector when the solver reports one, km/s.
+  DELTA_V_X_KM_S: double;
+  DELTA_V_Y_KM_S: double;
+  DELTA_V_Z_KM_S: double;
+}
+
+/// One candidate trajectory on the front.
+table MDSCandidate {
+  /// Solver-assigned trajectory identifier, unique within the set.
+  CANDIDATE_ID: string;
+
+  /// Ordered encounters, first to last.
+  ENCOUNTERS: [MDSEncounter];
+
+  /// Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION.
+  DEEP_SPACE_MANEUVERS: [MDSDeepSpaceManeuver];
+
+  /// Total post-launch delta-V, km/s.
+  TOTAL_DELTA_V_KM_S: double;
+
+  /// Total flight time from first to last encounter, days.
+  TOTAL_FLIGHT_TIME_DAYS: double;
+
+  /// Launch characteristic energy, km^2/s^2.
+  LAUNCH_C3_KM2_S2: double;
+
+  /// Hyperbolic excess speed at arrival, km/s.
+  ARRIVAL_V_INFINITY_KM_S: double;
+
+  /// Reference escape delta-V from the departure body, km/s.
+  ESCAPE_DELTA_V_KM_S: double;
+
+  /// Reference insertion delta-V at the arrival body, km/s.
+  INSERTION_DELTA_V_KM_S: double;
+
+  /// True when this candidate is non-dominated within the set. A set MAY carry
+  /// dominated candidates for context; a consumer plotting a front MUST filter
+  /// on this rather than assume every member is non-dominated.
+  NON_DOMINATED: bool = true;
+}
+
+/// Mission Design Solution Set — a set of candidate trajectories produced by
+/// solving a mission design broad search, typically a Pareto front over
+/// competing objectives (total delta-V against total flight time).
+///
+/// SDS had no multi-candidate container of any kind before this record. The
+/// closest existing carrier for a single planned burn is OCM.Maneuver, whose
+/// payload is untyped DATA:[string] with MAN_UNITS:[string] and which has no
+/// v-infinity, turn angle, flyby periapsis radius, or C3.
+table MDS {
+  /// Stable identifier for this solution set.
+  SOLUTION_SET_ID: string (required);
+
+  /// PROBLEM_ID of the $MDP this set solves. A solution set whose problem
+  /// definition is unknown is not reproducible.
+  PROBLEM_ID: string;
+
+  /// Objectives the front is expressed over, e.g.
+  /// ["TOTAL_DELTA_V_KM_S", "TOTAL_FLIGHT_TIME_DAYS"]. Names MUST be field
+  /// names of MDSCandidate.
+  OBJECTIVES: [string];
+
+  /// The candidates.
+  CANDIDATES: [MDSCandidate];
+
+  /// Solver identity and version that produced the set.
+  SOLVER: string;
+  SOLVER_VERSION: string;
+
+  /// Ephemeris source used, e.g. a SPICE kernel set identifier.
+  EPHEMERIS_SOURCE: string;
+
+  /// When the set was generated, ISO 8601.
+  CREATION_DATE: string;
+
+  /// Free-form notes.
+  COMMENT: string;
+}
+
+root_type MDS;
+file_identifier "$MDS";

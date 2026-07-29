@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pnlTrackingMode" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "BODY_FIXED", "SUN_TRACKING", "BODY_TRACKING", "VELOCITY_TRACKING", "OTHER"]
+    },
+    "PNLPanel" : {
+      "type" : "object",
+      "description" : "One flat panel of a macro model.\n\nThe reflection coefficients describe how incident radiation is disposed of:\nSPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to\n1 for a physically consistent panel. Producers SHOULD state the source of\nthe optical properties in the parent record's SOURCE field; a panel model\nwhose coefficients have no provenance is worse than none.",
+      "properties" : {
+        "PANEL_ID" : {
+                "type" : "string",
+                "description" : "Stable panel identifier within the model."
+              },
+        "AREA_M2" : {
+                "type" : "number",
+                "description" : "Panel area, square metres."
+              },
+        "NORMAL_X" : {
+                "type" : "number",
+                "description" : "Outward panel normal in the body frame, unit vector."
+              },
+        "NORMAL_Y" : {
+                "type" : "number"
+              },
+        "NORMAL_Z" : {
+                "type" : "number"
+              },
+        "TRACKING_MODE" : {
+                "$ref" : "#/definitions/pnlTrackingMode",
+                "description" : "Orientation behaviour of the panel."
+              },
+        "SPECULAR_REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Fraction of incident radiation reflected specularly."
+              },
+        "DIFFUSE_REFLECTIVITY" : {
+                "type" : "number",
+                "description" : "Fraction reflected diffusely."
+              },
+        "ABSORPTIVITY" : {
+                "type" : "number",
+                "description" : "Fraction absorbed."
+              },
+        "EMISSIVITY" : {
+                "type" : "number",
+                "description" : "Infrared emissivity of the panel surface."
+              },
+        "INSTANTANEOUS_RERADIATION" : {
+                "type" : "boolean",
+                "description" : "True when absorbed energy is re-radiated instantaneously (no thermal\nlag). False means the consumer must model thermal inertia."
+              },
+        "DRAG_COEFFICIENT" : {
+                "type" : "number",
+                "description" : "Panel drag coefficient, when the model is used for aerodynamic forces."
+              },
+        "MATERIAL_NAME" : {
+                "type" : "string",
+                "description" : "Material name, for traceability back to a materials table."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PNL" : {
+      "type" : "object",
+      "description" : "Panelled (box-wing) Spacecraft Macro Model — the surface geometry and\noptical properties needed to compute non-conservative forces (solar\nradiation pressure, atmospheric drag, thermal re-radiation) on one object.\n\nThis is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for\nrendering and a render mesh is not a force model; $BUS/$OOD are descriptive\ninventory; $PHY is simulation configuration (integration method, force-type\ntoggles). None of them carries per-panel area, normal, and optical\ncoefficients.",
+      "properties" : {
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Object this macro model describes."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Advisory object name."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number, when the object is catalogued."
+              },
+        "BODY_FRAME" : {
+                "type" : "string",
+                "description" : "Body-fixed frame the panel normals are expressed in, e.g. \"SC_BODY\"."
+              },
+        "TOTAL_MASS_KG" : {
+                "type" : "number",
+                "description" : "Total spacecraft mass the model corresponds to, kilograms."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch the model is valid at, ISO 8601. Mass and panel configuration\nchange over a mission; a macro model without an epoch is ambiguous."
+              },
+        "PANELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PNLPanel"},
+                "description" : "The panels."
+              },
+        "REFERENCE_AREA_M2" : {
+                "type" : "number",
+                "description" : "Reference cross-sectional area used by a consumer that falls back to a\ncannonball model, square metres."
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Provenance of the geometry and the optical coefficients."
+              }
+      },
+      "required" : ["OBJECT_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PNL"
+}

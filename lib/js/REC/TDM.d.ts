@@ -310,6 +310,31 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
     clockDriftLength(): number;
     clockDriftArray(): Float64Array | null;
     /**
+     * SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+     * quality metrics, one entry per observation, parallel to the other
+     * observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+     * i * OBSERVATION_STEP_SIZE grid.
+     *
+     * Signal-to-noise ratio of the detection.
+     */
+    SIGNAL_TO_NOISE(index: number): number | null;
+    signalToNoiseLength(): number;
+    signalToNoiseArray(): Float64Array | null;
+    /**
+     * SDS EXTENSION. Normalised spectral maximum of the detection.
+     */
+    SPECTRAL_MAX(index: number): number | null;
+    spectralMaxLength(): number;
+    spectralMaxArray(): Float64Array | null;
+    /**
+     * SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+     * measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+     * uncertainty, which CCSDS 503.0-B-1 has no field for.
+     */
+    DOPPLER_NOISE_HZ(index: number): number | null;
+    dopplerNoiseHzLength(): number;
+    dopplerNoiseHzArray(): Float64Array | null;
+    /**
      * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
      * table covering this segment, ordered by START_TIME and non-overlapping.
      * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -448,6 +473,27 @@ export declare class TDM implements flatbuffers.IUnpackableObject<TDMT> {
      */
     static createClockDriftVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startClockDriftVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSignalToNoise(builder: flatbuffers.Builder, SIGNAL_TO_NOISEOffset: flatbuffers.Offset): void;
+    static createSignalToNoiseVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createSignalToNoiseVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSignalToNoiseVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSpectralMax(builder: flatbuffers.Builder, SPECTRAL_MAXOffset: flatbuffers.Offset): void;
+    static createSpectralMaxVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createSpectralMaxVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startSpectralMaxVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDopplerNoiseHz(builder: flatbuffers.Builder, DOPPLER_NOISE_HZOffset: flatbuffers.Offset): void;
+    static createDopplerNoiseHzVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createDopplerNoiseHzVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startDopplerNoiseHzVector(builder: flatbuffers.Builder, numElems: number): void;
     static addTransmitRamps(builder: flatbuffers.Builder, TRANSMIT_RAMPSOffset: flatbuffers.Offset): void;
     static createTransmitRampsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startTransmitRampsVector(builder: flatbuffers.Builder, numElems: number): void;
@@ -519,8 +565,11 @@ export declare class TDMT implements flatbuffers.IGeneratedObject {
     TEMPERATURE: (number)[];
     CLOCK_BIAS: (number)[];
     CLOCK_DRIFT: (number)[];
+    SIGNAL_TO_NOISE: (number)[];
+    SPECTRAL_MAX: (number)[];
+    DOPPLER_NOISE_HZ: (number)[];
     TRANSMIT_RAMPS: (TDMTransmitRampT)[];
-    constructor(OBSERVER_ID?: string | Uint8Array | null, OBSERVER_X?: number, OBSERVER_Y?: number, OBSERVER_Z?: number, OBSERVER_VX?: number, OBSERVER_VY?: number, OBSERVER_VZ?: number, OBSERVER_POSITION_REFERENCE_FRAME?: RFMT | null, OBS_REFERENCE_FRAME?: RFMT | null, EPOCH?: string | Uint8Array | null, OBSERVATION_STEP_SIZE?: number, OBSERVATION_START_TIME?: string | Uint8Array | null, CCSDS_TDM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, META_START?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, PARTICIPANT_1?: string | Uint8Array | null, PARTICIPANT_2?: string | Uint8Array | null, PARTICIPANT_3?: string | Uint8Array | null, PARTICIPANT_4?: string | Uint8Array | null, PARTICIPANT_5?: string | Uint8Array | null, MODE?: string | Uint8Array | null, PATH_1?: number, PATH_2?: number, TRANSMIT_BAND?: string | Uint8Array | null, RECEIVE_BAND?: string | Uint8Array | null, INTEGRATION_INTERVAL?: number, INTEGRATION_REF?: string | Uint8Array | null, RECEIVE_DELAY_2?: number, RECEIVE_DELAY_3?: number, DATA_QUALITY?: string | Uint8Array | null, META_STOP?: string | Uint8Array | null, DATA_START?: string | Uint8Array | null, TRANSMIT_FREQ_1?: number, RECEIVE_FREQ?: (number)[], DATA_STOP?: string | Uint8Array | null, TIMETAG_REF?: string | Uint8Array | null, ANGLE_TYPE?: string | Uint8Array | null, ANGLE_1?: (number)[], ANGLE_2?: (number)[], ANGLE_UNCERTAINTY_1?: number, ANGLE_UNCERTAINTY_2?: number, RANGE_RATE?: number, RANGE_UNCERTAINTY?: number, RANGE_MODE?: string | Uint8Array | null, RANGE_MODULUS?: number, CORRECTION_ANGLE_1?: number, CORRECTION_ANGLE_2?: number, CORRECTIONS_APPLIED?: string | Uint8Array | null, TROPO_DRY?: (number)[], TROPO_WET?: (number)[], STEC?: (number)[], PRESSURE?: (number)[], RHUMIDITY?: (number)[], TEMPERATURE?: (number)[], CLOCK_BIAS?: (number)[], CLOCK_DRIFT?: (number)[], TRANSMIT_RAMPS?: (TDMTransmitRampT)[]);
+    constructor(OBSERVER_ID?: string | Uint8Array | null, OBSERVER_X?: number, OBSERVER_Y?: number, OBSERVER_Z?: number, OBSERVER_VX?: number, OBSERVER_VY?: number, OBSERVER_VZ?: number, OBSERVER_POSITION_REFERENCE_FRAME?: RFMT | null, OBS_REFERENCE_FRAME?: RFMT | null, EPOCH?: string | Uint8Array | null, OBSERVATION_STEP_SIZE?: number, OBSERVATION_START_TIME?: string | Uint8Array | null, CCSDS_TDM_VERS?: string | Uint8Array | null, COMMENT?: (string)[], CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, META_START?: string | Uint8Array | null, TIME_SYSTEM?: string | Uint8Array | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, PARTICIPANT_1?: string | Uint8Array | null, PARTICIPANT_2?: string | Uint8Array | null, PARTICIPANT_3?: string | Uint8Array | null, PARTICIPANT_4?: string | Uint8Array | null, PARTICIPANT_5?: string | Uint8Array | null, MODE?: string | Uint8Array | null, PATH_1?: number, PATH_2?: number, TRANSMIT_BAND?: string | Uint8Array | null, RECEIVE_BAND?: string | Uint8Array | null, INTEGRATION_INTERVAL?: number, INTEGRATION_REF?: string | Uint8Array | null, RECEIVE_DELAY_2?: number, RECEIVE_DELAY_3?: number, DATA_QUALITY?: string | Uint8Array | null, META_STOP?: string | Uint8Array | null, DATA_START?: string | Uint8Array | null, TRANSMIT_FREQ_1?: number, RECEIVE_FREQ?: (number)[], DATA_STOP?: string | Uint8Array | null, TIMETAG_REF?: string | Uint8Array | null, ANGLE_TYPE?: string | Uint8Array | null, ANGLE_1?: (number)[], ANGLE_2?: (number)[], ANGLE_UNCERTAINTY_1?: number, ANGLE_UNCERTAINTY_2?: number, RANGE_RATE?: number, RANGE_UNCERTAINTY?: number, RANGE_MODE?: string | Uint8Array | null, RANGE_MODULUS?: number, CORRECTION_ANGLE_1?: number, CORRECTION_ANGLE_2?: number, CORRECTIONS_APPLIED?: string | Uint8Array | null, TROPO_DRY?: (number)[], TROPO_WET?: (number)[], STEC?: (number)[], PRESSURE?: (number)[], RHUMIDITY?: (number)[], TEMPERATURE?: (number)[], CLOCK_BIAS?: (number)[], CLOCK_DRIFT?: (number)[], SIGNAL_TO_NOISE?: (number)[], SPECTRAL_MAX?: (number)[], DOPPLER_NOISE_HZ?: (number)[], TRANSMIT_RAMPS?: (TDMTransmitRampT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=TDM.d.ts.map

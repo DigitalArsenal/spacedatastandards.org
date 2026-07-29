@@ -1,0 +1,137 @@
+// Hash: 7f718ea6fcd6c81401f913683e161e9198039b496d4a7762404ba8e35d9a982b
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// Direction constraint applied to a Lambert transfer leg. Append new values
+/// only; never reorder or reuse existing values.
+enum mdpTransferDirection : ubyte {
+  /// Either direction is admissible.
+  EITHER = 0,
+  PROGRADE = 1,
+  RETROGRADE = 2
+}
+
+/// Which end of a leg a deep-space maneuver is allowed to raise or lower.
+/// Append new values only.
+enum mdpDsmMode : ubyte {
+  /// No deep-space maneuver on this leg.
+  NONE = 0,
+  /// Raise/lower the departure end.
+  DEPARTURE = 1,
+  /// Raise/lower the arrival end.
+  ARRIVAL = 2,
+  /// Either end may be adjusted.
+  EITHER_END = 3
+}
+
+/// One encounter stage of the body sequence: the set of bodies admissible at
+/// this position in the sequence, and the epoch grid searched for it.
+///
+/// Bodies are named by NAIF integer ID, which is normative. SDS carries no
+/// body enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it
+/// must not be repurposed here. Note that a barycenter and a body center are
+/// different objects (4 is the Mars barycenter, 499 is Mars) and the
+/// distinction is operationally load-bearing.
+table MDPEncounterStage {
+  /// Zero-based position in the ordered sequence.
+  STAGE_INDEX: uint;
+
+  /// NAIF integer IDs admissible at this stage. A single entry pins the body.
+  ALLOWED_BODY_NAIF_IDS: [int];
+
+  /// Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present.
+  ALLOWED_BODY_NAMES: [string];
+
+  /// Earliest and latest epoch searched at this stage, ISO 8601.
+  EPOCH_WINDOW_START: string;
+  EPOCH_WINDOW_END: string;
+
+  /// Epoch grid step searched within the window, days.
+  EPOCH_GRID_STEP_DAYS: double;
+
+  /// Bounds on hyperbolic excess speed at this encounter, km/s.
+  V_INFINITY_MIN_KM_S: double;
+  V_INFINITY_MAX_KM_S: double;
+
+  /// Minimum admissible flyby altitude above the body's reference surface, km.
+  MIN_FLYBY_ALTITUDE_KM: double;
+
+  /// Cap on powered-flyby delta-V applied at this encounter, km/s.
+  MAX_POWERED_FLYBY_DELTA_V_KM_S: double;
+}
+
+/// Time-of-flight bound between two encounters. Adjacent stages give per-leg
+/// bounds; non-adjacent stages give cumulative bounds such as
+/// "Earth to Mars to Earth within 3 years".
+table MDPFlightTimeBound {
+  /// Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX.
+  FROM_STAGE_INDEX: uint;
+  TO_STAGE_INDEX: uint;
+
+  /// Inclusive bounds on elapsed time between those two encounters, days.
+  MIN_DAYS: double;
+  MAX_DAYS: double;
+}
+
+/// Mission Design Problem — the definition of a patched-conic broad search over
+/// an ordered sequence of body encounters.
+///
+/// This is the PROBLEM, not a solution: it states what is being searched and
+/// under what constraints. Candidate trajectories produced by solving it are
+/// carried in $MDS. Nothing existing covers this: $LMS is a single Lambert
+/// boundary-value problem with no body/epoch grid and no sequence, $MPE is an
+/// Earth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an
+/// SSA-detected maneuver on a catalogued Earth object.
+table MDP {
+  /// Stable identifier for this problem definition.
+  PROBLEM_ID: string (required);
+
+  /// Human-readable name.
+  NAME: string;
+
+  /// Ordered encounter stages. Order in this vector IS the body sequence.
+  ENCOUNTER_STAGES: [MDPEncounterStage];
+
+  /// Per-leg and cumulative time-of-flight bounds.
+  FLIGHT_TIME_BOUNDS: [MDPFlightTimeBound];
+
+  /// Cap on total mission duration, days.
+  MAX_TOTAL_FLIGHT_TIME_DAYS: double;
+
+  /// Cap on launch characteristic energy C3, km^2/s^2.
+  MAX_LAUNCH_C3_KM2_S2: double;
+
+  /// Cap on total post-launch delta-V, km/s.
+  MAX_TOTAL_DELTA_V_KM_S: double;
+
+  /// Deep-space maneuver search controls.
+  DSM_MODE: mdpDsmMode = NONE;
+  /// Cap on the magnitude of any single deep-space maneuver, km/s.
+  MAX_DSM_DELTA_V_KM_S: double;
+  /// Grid step used when searching deep-space maneuver magnitude, km/s.
+  DSM_GRID_STEP_KM_S: double;
+
+  /// Lambert controls: maximum number of complete revolutions considered on a
+  /// leg, and the admissible transfer direction.
+  MAX_REVOLUTIONS: ubyte;
+  TRANSFER_DIRECTION: mdpTransferDirection = EITHER;
+
+  /// Output decimation: width of the time bin within which only the best
+  /// candidate is retained. Zero means no decimation.
+  OUTPUT_TIME_BIN_DAYS: double;
+
+  /// Optional spacecraft propulsion limits constraining admissible solutions.
+  MAX_THRUST_N: double;
+  SPECIFIC_IMPULSE_S: double;
+  DRY_MASS_KG: double;
+  INITIAL_MASS_KG: double;
+
+  /// Ephemeris source the search was posed against, e.g. a SPICE kernel set
+  /// identifier. Recorded so a solution set can be reproduced.
+  EPHEMERIS_SOURCE: string;
+
+  /// Free-form notes.
+  COMMENT: string;
+}
+
+root_type MDP;
+file_identifier "$MDP";

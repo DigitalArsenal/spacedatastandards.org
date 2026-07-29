@@ -797,6 +797,64 @@ class TDM : Table() {
     val clockDriftAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(124, 8)
     fun clockDriftInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 124, 8)
     /**
+     * SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+     * quality metrics, one entry per observation, parallel to the other
+     * observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+     * i * OBSERVATION_STEP_SIZE grid.
+     *
+     * Signal-to-noise ratio of the detection.
+     */
+    fun signalToNoise(j: Int) : Double {
+        val o = __offset(126)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val signalToNoiseLength : Int
+        get() {
+            val o = __offset(126); return if (o != 0) __vector_len(o) else 0
+        }
+    val signalToNoiseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(126, 8)
+    fun signalToNoiseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 126, 8)
+    /**
+     * SDS EXTENSION. Normalised spectral maximum of the detection.
+     */
+    fun spectralMax(j: Int) : Double {
+        val o = __offset(128)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val spectralMaxLength : Int
+        get() {
+            val o = __offset(128); return if (o != 0) __vector_len(o) else 0
+        }
+    val spectralMaxAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(128, 8)
+    fun spectralMaxInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 128, 8)
+    /**
+     * SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+     * measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+     * uncertainty, which CCSDS 503.0-B-1 has no field for.
+     */
+    fun dopplerNoiseHz(j: Int) : Double {
+        val o = __offset(130)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val dopplerNoiseHzLength : Int
+        get() {
+            val o = __offset(130); return if (o != 0) __vector_len(o) else 0
+        }
+    val dopplerNoiseHzAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(130, 8)
+    fun dopplerNoiseHzInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 130, 8)
+    /**
      * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
      * table covering this segment, ordered by START_TIME and non-overlapping.
      * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -805,7 +863,7 @@ class TDM : Table() {
      */
     fun transmitRamps(j: Int) : TDMTransmitRamp? = transmitRamps(TDMTransmitRamp(), j)
     fun transmitRamps(obj: TDMTransmitRamp, j: Int) : TDMTransmitRamp? {
-        val o = __offset(126)
+        val o = __offset(132)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -814,7 +872,7 @@ class TDM : Table() {
     }
     val transmitRampsLength : Int
         get() {
-            val o = __offset(126); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(132); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
@@ -824,8 +882,8 @@ class TDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TDM")
-        fun createTDM(builder: FlatBufferBuilder, observerIdOffset: Int, observerX: Double, observerY: Double, observerZ: Double, observerVx: Double, observerVy: Double, observerVz: Double, observerPositionReferenceFrameOffset: Int, obsReferenceFrameOffset: Int, epochOffset: Int, observationStepSize: Double, observationStartTimeOffset: Int, ccsdsTdmVersOffset: Int, commentOffset: Int, creationDateOffset: Int, originatorOffset: Int, metaStartOffset: Int, timeSystemOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, participant1Offset: Int, participant2Offset: Int, participant3Offset: Int, participant4Offset: Int, participant5Offset: Int, modeOffset: Int, path1: UShort, path2: UShort, transmitBandOffset: Int, receiveBandOffset: Int, integrationInterval: Float, integrationRefOffset: Int, receiveDelay2: Double, receiveDelay3: Double, dataQualityOffset: Int, metaStopOffset: Int, dataStartOffset: Int, transmitFreq1: Double, receiveFreqOffset: Int, dataStopOffset: Int, timetagRefOffset: Int, angleTypeOffset: Int, angle1Offset: Int, angle2Offset: Int, angleUncertainty1: Float, angleUncertainty2: Float, rangeRate: Double, rangeUncertainty: Double, rangeModeOffset: Int, rangeModulus: Double, correctionAngle1: Float, correctionAngle2: Float, correctionsAppliedOffset: Int, tropoDryOffset: Int, tropoWetOffset: Int, stecOffset: Int, pressureOffset: Int, rhumidityOffset: Int, temperatureOffset: Int, clockBiasOffset: Int, clockDriftOffset: Int, transmitRampsOffset: Int) : Int {
-            builder.startTable(62)
+        fun createTDM(builder: FlatBufferBuilder, observerIdOffset: Int, observerX: Double, observerY: Double, observerZ: Double, observerVx: Double, observerVy: Double, observerVz: Double, observerPositionReferenceFrameOffset: Int, obsReferenceFrameOffset: Int, epochOffset: Int, observationStepSize: Double, observationStartTimeOffset: Int, ccsdsTdmVersOffset: Int, commentOffset: Int, creationDateOffset: Int, originatorOffset: Int, metaStartOffset: Int, timeSystemOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, participant1Offset: Int, participant2Offset: Int, participant3Offset: Int, participant4Offset: Int, participant5Offset: Int, modeOffset: Int, path1: UShort, path2: UShort, transmitBandOffset: Int, receiveBandOffset: Int, integrationInterval: Float, integrationRefOffset: Int, receiveDelay2: Double, receiveDelay3: Double, dataQualityOffset: Int, metaStopOffset: Int, dataStartOffset: Int, transmitFreq1: Double, receiveFreqOffset: Int, dataStopOffset: Int, timetagRefOffset: Int, angleTypeOffset: Int, angle1Offset: Int, angle2Offset: Int, angleUncertainty1: Float, angleUncertainty2: Float, rangeRate: Double, rangeUncertainty: Double, rangeModeOffset: Int, rangeModulus: Double, correctionAngle1: Float, correctionAngle2: Float, correctionsAppliedOffset: Int, tropoDryOffset: Int, tropoWetOffset: Int, stecOffset: Int, pressureOffset: Int, rhumidityOffset: Int, temperatureOffset: Int, clockBiasOffset: Int, clockDriftOffset: Int, signalToNoiseOffset: Int, spectralMaxOffset: Int, dopplerNoiseHzOffset: Int, transmitRampsOffset: Int) : Int {
+            builder.startTable(65)
             addRANGEMODULUS(builder, rangeModulus)
             addRANGEUNCERTAINTY(builder, rangeUncertainty)
             addRANGERATE(builder, rangeRate)
@@ -840,6 +898,9 @@ class TDM : Table() {
             addOBSERVERY(builder, observerY)
             addOBSERVERX(builder, observerX)
             addTRANSMITRAMPS(builder, transmitRampsOffset)
+            addDOPPLERNOISEHZ(builder, dopplerNoiseHzOffset)
+            addSPECTRALMAX(builder, spectralMaxOffset)
+            addSIGNALTONOISE(builder, signalToNoiseOffset)
             addCLOCKDRIFT(builder, clockDriftOffset)
             addCLOCKBIAS(builder, clockBiasOffset)
             addTEMPERATURE(builder, temperatureOffset)
@@ -890,7 +951,7 @@ class TDM : Table() {
             addPATH1(builder, path1)
             return endTDM(builder)
         }
-        fun startTDM(builder: FlatBufferBuilder) = builder.startTable(62)
+        fun startTDM(builder: FlatBufferBuilder) = builder.startTable(65)
         fun addOBSERVERID(builder: FlatBufferBuilder, observerId: Int) = builder.addOffset(0, observerId, 0)
         fun addOBSERVERX(builder: FlatBufferBuilder, observerX: Double) = builder.addDouble(1, observerX, 0.0)
         fun addOBSERVERY(builder: FlatBufferBuilder, observerY: Double) = builder.addDouble(2, observerY, 0.0)
@@ -1048,7 +1109,34 @@ class TDM : Table() {
             return builder.endVector()
         }
         fun startClockDriftVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
-        fun addTRANSMITRAMPS(builder: FlatBufferBuilder, transmitRamps: Int) = builder.addOffset(61, transmitRamps, 0)
+        fun addSIGNALTONOISE(builder: FlatBufferBuilder, signalToNoise: Int) = builder.addOffset(61, signalToNoise, 0)
+        fun createSignalToNoiseVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSignalToNoiseVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addSPECTRALMAX(builder: FlatBufferBuilder, spectralMax: Int) = builder.addOffset(62, spectralMax, 0)
+        fun createSpectralMaxVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSpectralMaxVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDOPPLERNOISEHZ(builder: FlatBufferBuilder, dopplerNoiseHz: Int) = builder.addOffset(63, dopplerNoiseHz, 0)
+        fun createDopplerNoiseHzVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDopplerNoiseHzVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addTRANSMITRAMPS(builder: FlatBufferBuilder, transmitRamps: Int) = builder.addOffset(64, transmitRamps, 0)
         fun createTransmitRampsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

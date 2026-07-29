@@ -761,6 +761,97 @@ class TDM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
         return o == 0
 
+    # SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+    # quality metrics, one entry per observation, parallel to the other
+    # observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+    # i * OBSERVATION_STEP_SIZE grid.
+    #
+    # Signal-to-noise ratio of the detection.
+    # TDM
+    def SIGNAL_TO_NOISE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TDM
+    def SIGNAL_TO_NOISEAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TDM
+    def SIGNAL_TO_NOISELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def SIGNAL_TO_NOISEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        return o == 0
+
+    # SDS EXTENSION. Normalised spectral maximum of the detection.
+    # TDM
+    def SPECTRAL_MAX(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TDM
+    def SPECTRAL_MAXAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TDM
+    def SPECTRAL_MAXLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def SPECTRAL_MAXIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        return o == 0
+
+    # SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+    # measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+    # uncertainty, which CCSDS 503.0-B-1 has no field for.
+    # TDM
+    def DOPPLER_NOISE_HZ(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # TDM
+    def DOPPLER_NOISE_HZAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # TDM
+    def DOPPLER_NOISE_HZLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # TDM
+    def DOPPLER_NOISE_HZIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        return o == 0
+
     # SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
     # table covering this segment, ordered by START_TIME and non-overlapping.
     # Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -768,7 +859,7 @@ class TDM(object):
     # leaves the record exactly CCSDS-conformant.
     # TDM
     def TRANSMIT_RAMPS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         if o != 0:
             x = self._tab.Vector(o)
             x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
@@ -781,18 +872,18 @@ class TDM(object):
 
     # TDM
     def TRANSMIT_RAMPSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # TDM
     def TRANSMIT_RAMPSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         return o == 0
 
 def TDMStart(builder):
-    builder.StartObject(62)
+    builder.StartObject(65)
 
 def Start(builder):
     TDMStart(builder)
@@ -1351,8 +1442,74 @@ def TDMCreateCLOCK_DRIFTVector(builder, data):
 def CreateCLOCK_DRIFTVector(builder, data):
     TDMCreateCLOCK_DRIFTVector(builder, data)
 
+def TDMAddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE):
+    builder.PrependUOffsetTRelativeSlot(61, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNAL_TO_NOISE), 0)
+
+def AddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE):
+    TDMAddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE)
+
+def TDMStartSIGNAL_TO_NOISEVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSIGNAL_TO_NOISEVector(builder, numElems):
+    return TDMStartSIGNAL_TO_NOISEVector(builder, numElems)
+
+def TDMCreateSIGNAL_TO_NOISEVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSIGNAL_TO_NOISEVector(builder, data):
+    TDMCreateSIGNAL_TO_NOISEVector(builder, data)
+
+def TDMAddSPECTRAL_MAX(builder, SPECTRAL_MAX):
+    builder.PrependUOffsetTRelativeSlot(62, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_MAX), 0)
+
+def AddSPECTRAL_MAX(builder, SPECTRAL_MAX):
+    TDMAddSPECTRAL_MAX(builder, SPECTRAL_MAX)
+
+def TDMStartSPECTRAL_MAXVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPECTRAL_MAXVector(builder, numElems):
+    return TDMStartSPECTRAL_MAXVector(builder, numElems)
+
+def TDMCreateSPECTRAL_MAXVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateSPECTRAL_MAXVector(builder, data):
+    TDMCreateSPECTRAL_MAXVector(builder, data)
+
+def TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ):
+    builder.PrependUOffsetTRelativeSlot(63, flatbuffers.number_types.UOffsetTFlags.py_type(DOPPLER_NOISE_HZ), 0)
+
+def AddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ):
+    TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ)
+
+def TDMStartDOPPLER_NOISE_HZVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartDOPPLER_NOISE_HZVector(builder, numElems):
+    return TDMStartDOPPLER_NOISE_HZVector(builder, numElems)
+
+def TDMCreateDOPPLER_NOISE_HZVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateDOPPLER_NOISE_HZVector(builder, data):
+    TDMCreateDOPPLER_NOISE_HZVector(builder, data)
+
 def TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS):
-    builder.PrependUOffsetTRelativeSlot(61, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_RAMPS), 0)
+    builder.PrependUOffsetTRelativeSlot(64, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSMIT_RAMPS), 0)
 
 def AddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS):
     TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
@@ -1448,6 +1605,9 @@ class TDMT(object):
         TEMPERATURE = None,
         CLOCK_BIAS = None,
         CLOCK_DRIFT = None,
+        SIGNAL_TO_NOISE = None,
+        SPECTRAL_MAX = None,
+        DOPPLER_NOISE_HZ = None,
         TRANSMIT_RAMPS = None,
     ):
         self.OBSERVER_ID = OBSERVER_ID  # type: Optional[str]
@@ -1511,6 +1671,9 @@ class TDMT(object):
         self.TEMPERATURE = TEMPERATURE  # type: Optional[List[float]]
         self.CLOCK_BIAS = CLOCK_BIAS  # type: Optional[List[float]]
         self.CLOCK_DRIFT = CLOCK_DRIFT  # type: Optional[List[float]]
+        self.SIGNAL_TO_NOISE = SIGNAL_TO_NOISE  # type: Optional[List[float]]
+        self.SPECTRAL_MAX = SPECTRAL_MAX  # type: Optional[List[float]]
+        self.DOPPLER_NOISE_HZ = DOPPLER_NOISE_HZ  # type: Optional[List[float]]
         self.TRANSMIT_RAMPS = TRANSMIT_RAMPS  # type: Optional[List[TDMTransmitRamp.TDMTransmitRampT]]
 
     @classmethod
@@ -1666,6 +1829,27 @@ class TDMT(object):
                     self.CLOCK_DRIFT.append(TDM.CLOCK_DRIFT(i))
             else:
                 self.CLOCK_DRIFT = TDM.CLOCK_DRIFTAsNumpy()
+        if not TDM.SIGNAL_TO_NOISEIsNone():
+            if np is None:
+                self.SIGNAL_TO_NOISE = []
+                for i in range(TDM.SIGNAL_TO_NOISELength()):
+                    self.SIGNAL_TO_NOISE.append(TDM.SIGNAL_TO_NOISE(i))
+            else:
+                self.SIGNAL_TO_NOISE = TDM.SIGNAL_TO_NOISEAsNumpy()
+        if not TDM.SPECTRAL_MAXIsNone():
+            if np is None:
+                self.SPECTRAL_MAX = []
+                for i in range(TDM.SPECTRAL_MAXLength()):
+                    self.SPECTRAL_MAX.append(TDM.SPECTRAL_MAX(i))
+            else:
+                self.SPECTRAL_MAX = TDM.SPECTRAL_MAXAsNumpy()
+        if not TDM.DOPPLER_NOISE_HZIsNone():
+            if np is None:
+                self.DOPPLER_NOISE_HZ = []
+                for i in range(TDM.DOPPLER_NOISE_HZLength()):
+                    self.DOPPLER_NOISE_HZ.append(TDM.DOPPLER_NOISE_HZ(i))
+            else:
+                self.DOPPLER_NOISE_HZ = TDM.DOPPLER_NOISE_HZAsNumpy()
         if not TDM.TRANSMIT_RAMPSIsNone():
             self.TRANSMIT_RAMPS = []
             for i in range(TDM.TRANSMIT_RAMPSLength()):
@@ -1831,6 +2015,30 @@ class TDMT(object):
                 for i in reversed(range(len(self.CLOCK_DRIFT))):
                     builder.PrependFloat64(self.CLOCK_DRIFT[i])
                 CLOCK_DRIFT = builder.EndVector()
+        if self.SIGNAL_TO_NOISE is not None:
+            if np is not None and type(self.SIGNAL_TO_NOISE) is np.ndarray:
+                SIGNAL_TO_NOISE = builder.CreateNumpyVector(self.SIGNAL_TO_NOISE)
+            else:
+                TDMStartSIGNAL_TO_NOISEVector(builder, len(self.SIGNAL_TO_NOISE))
+                for i in reversed(range(len(self.SIGNAL_TO_NOISE))):
+                    builder.PrependFloat64(self.SIGNAL_TO_NOISE[i])
+                SIGNAL_TO_NOISE = builder.EndVector()
+        if self.SPECTRAL_MAX is not None:
+            if np is not None and type(self.SPECTRAL_MAX) is np.ndarray:
+                SPECTRAL_MAX = builder.CreateNumpyVector(self.SPECTRAL_MAX)
+            else:
+                TDMStartSPECTRAL_MAXVector(builder, len(self.SPECTRAL_MAX))
+                for i in reversed(range(len(self.SPECTRAL_MAX))):
+                    builder.PrependFloat64(self.SPECTRAL_MAX[i])
+                SPECTRAL_MAX = builder.EndVector()
+        if self.DOPPLER_NOISE_HZ is not None:
+            if np is not None and type(self.DOPPLER_NOISE_HZ) is np.ndarray:
+                DOPPLER_NOISE_HZ = builder.CreateNumpyVector(self.DOPPLER_NOISE_HZ)
+            else:
+                TDMStartDOPPLER_NOISE_HZVector(builder, len(self.DOPPLER_NOISE_HZ))
+                for i in reversed(range(len(self.DOPPLER_NOISE_HZ))):
+                    builder.PrependFloat64(self.DOPPLER_NOISE_HZ[i])
+                DOPPLER_NOISE_HZ = builder.EndVector()
         if self.TRANSMIT_RAMPS is not None:
             TRANSMIT_RAMPSlist = []
             for i in range(len(self.TRANSMIT_RAMPS)):
@@ -1942,6 +2150,12 @@ class TDMT(object):
             TDMAddCLOCK_BIAS(builder, CLOCK_BIAS)
         if self.CLOCK_DRIFT is not None:
             TDMAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
+        if self.SIGNAL_TO_NOISE is not None:
+            TDMAddSIGNAL_TO_NOISE(builder, SIGNAL_TO_NOISE)
+        if self.SPECTRAL_MAX is not None:
+            TDMAddSPECTRAL_MAX(builder, SPECTRAL_MAX)
+        if self.DOPPLER_NOISE_HZ is not None:
+            TDMAddDOPPLER_NOISE_HZ(builder, DOPPLER_NOISE_HZ)
         if self.TRANSMIT_RAMPS is not None:
             TDMAddTRANSMIT_RAMPS(builder, TRANSMIT_RAMPS)
         TDM = TDMEnd(builder)

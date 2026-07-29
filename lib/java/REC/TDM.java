@@ -390,6 +390,40 @@ public final class TDM extends com.google.flatbuffers.Table {
   public ByteBuffer CLOCK_DRIFTAsByteBuffer() { return __vector_as_bytebuffer(124, 8); }
   public ByteBuffer CLOCK_DRIFTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 124, 8); }
   /**
+   * SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+   * quality metrics, one entry per observation, parallel to the other
+   * observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+   * i * OBSERVATION_STEP_SIZE grid.
+   *
+   * Signal-to-noise ratio of the detection.
+   */
+  public double SIGNAL_TO_NOISE(int j) { int o = __offset(126); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SIGNAL_TO_NOISELength() { int o = __offset(126); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector signalToNoiseVector() { return signalToNoiseVector(new DoubleVector()); }
+  public DoubleVector signalToNoiseVector(DoubleVector obj) { int o = __offset(126); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIGNAL_TO_NOISEAsByteBuffer() { return __vector_as_bytebuffer(126, 8); }
+  public ByteBuffer SIGNAL_TO_NOISEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 126, 8); }
+  /**
+   * SDS EXTENSION. Normalised spectral maximum of the detection.
+   */
+  public double SPECTRAL_MAX(int j) { int o = __offset(128); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SPECTRAL_MAXLength() { int o = __offset(128); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector spectralMaxVector() { return spectralMaxVector(new DoubleVector()); }
+  public DoubleVector spectralMaxVector(DoubleVector obj) { int o = __offset(128); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SPECTRAL_MAXAsByteBuffer() { return __vector_as_bytebuffer(128, 8); }
+  public ByteBuffer SPECTRAL_MAXInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 128, 8); }
+  /**
+   * SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+   * measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+   * uncertainty, which CCSDS 503.0-B-1 has no field for.
+   */
+  public double DOPPLER_NOISE_HZ(int j) { int o = __offset(130); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DOPPLER_NOISE_HZLength() { int o = __offset(130); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector dopplerNoiseHzVector() { return dopplerNoiseHzVector(new DoubleVector()); }
+  public DoubleVector dopplerNoiseHzVector(DoubleVector obj) { int o = __offset(130); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DOPPLER_NOISE_HZAsByteBuffer() { return __vector_as_bytebuffer(130, 8); }
+  public ByteBuffer DOPPLER_NOISE_HZInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 130, 8); }
+  /**
    * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
    * table covering this segment, ordered by START_TIME and non-overlapping.
    * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -397,10 +431,10 @@ public final class TDM extends com.google.flatbuffers.Table {
    * leaves the record exactly CCSDS-conformant.
    */
   public TDMTransmitRamp TRANSMIT_RAMPS(int j) { return TRANSMIT_RAMPS(new TDMTransmitRamp(), j); }
-  public TDMTransmitRamp TRANSMIT_RAMPS(TDMTransmitRamp obj, int j) { int o = __offset(126); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
-  public int TRANSMIT_RAMPSLength() { int o = __offset(126); return o != 0 ? __vector_len(o) : 0; }
+  public TDMTransmitRamp TRANSMIT_RAMPS(TDMTransmitRamp obj, int j) { int o = __offset(132); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRANSMIT_RAMPSLength() { int o = __offset(132); return o != 0 ? __vector_len(o) : 0; }
   public TDMTransmitRamp.Vector transmitRampsVector() { return transmitRampsVector(new TDMTransmitRamp.Vector()); }
-  public TDMTransmitRamp.Vector transmitRampsVector(TDMTransmitRamp.Vector obj) { int o = __offset(126); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public TDMTransmitRamp.Vector transmitRampsVector(TDMTransmitRamp.Vector obj) { int o = __offset(132); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createTDM(FlatBufferBuilder builder,
       int OBSERVER_IDOffset,
@@ -464,8 +498,11 @@ public final class TDM extends com.google.flatbuffers.Table {
       int TEMPERATUREOffset,
       int CLOCK_BIASOffset,
       int CLOCK_DRIFTOffset,
+      int SIGNAL_TO_NOISEOffset,
+      int SPECTRAL_MAXOffset,
+      int DOPPLER_NOISE_HZOffset,
       int TRANSMIT_RAMPSOffset) {
-    builder.startTable(62);
+    builder.startTable(65);
     TDM.addRangeModulus(builder, RANGE_MODULUS);
     TDM.addRangeUncertainty(builder, RANGE_UNCERTAINTY);
     TDM.addRangeRate(builder, RANGE_RATE);
@@ -480,6 +517,9 @@ public final class TDM extends com.google.flatbuffers.Table {
     TDM.addObserverY(builder, OBSERVER_Y);
     TDM.addObserverX(builder, OBSERVER_X);
     TDM.addTransmitRamps(builder, TRANSMIT_RAMPSOffset);
+    TDM.addDopplerNoiseHz(builder, DOPPLER_NOISE_HZOffset);
+    TDM.addSpectralMax(builder, SPECTRAL_MAXOffset);
+    TDM.addSignalToNoise(builder, SIGNAL_TO_NOISEOffset);
     TDM.addClockDrift(builder, CLOCK_DRIFTOffset);
     TDM.addClockBias(builder, CLOCK_BIASOffset);
     TDM.addTemperature(builder, TEMPERATUREOffset);
@@ -531,7 +571,7 @@ public final class TDM extends com.google.flatbuffers.Table {
     return TDM.endTDM(builder);
   }
 
-  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(62); }
+  public static void startTDM(FlatBufferBuilder builder) { builder.startTable(65); }
   public static void addObserverId(FlatBufferBuilder builder, int OBSERVER_IDOffset) { builder.addOffset(0, OBSERVER_IDOffset, 0); }
   public static void addObserverX(FlatBufferBuilder builder, double OBSERVER_X) { builder.addDouble(1, OBSERVER_X, 0.0); }
   public static void addObserverY(FlatBufferBuilder builder, double OBSERVER_Y) { builder.addDouble(2, OBSERVER_Y, 0.0); }
@@ -617,7 +657,16 @@ public final class TDM extends com.google.flatbuffers.Table {
   public static void addClockDrift(FlatBufferBuilder builder, int CLOCK_DRIFTOffset) { builder.addOffset(60, CLOCK_DRIFTOffset, 0); }
   public static int createClockDriftVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startClockDriftVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
-  public static void addTransmitRamps(FlatBufferBuilder builder, int TRANSMIT_RAMPSOffset) { builder.addOffset(61, TRANSMIT_RAMPSOffset, 0); }
+  public static void addSignalToNoise(FlatBufferBuilder builder, int SIGNAL_TO_NOISEOffset) { builder.addOffset(61, SIGNAL_TO_NOISEOffset, 0); }
+  public static int createSignalToNoiseVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSignalToNoiseVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addSpectralMax(FlatBufferBuilder builder, int SPECTRAL_MAXOffset) { builder.addOffset(62, SPECTRAL_MAXOffset, 0); }
+  public static int createSpectralMaxVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSpectralMaxVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDopplerNoiseHz(FlatBufferBuilder builder, int DOPPLER_NOISE_HZOffset) { builder.addOffset(63, DOPPLER_NOISE_HZOffset, 0); }
+  public static int createDopplerNoiseHzVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDopplerNoiseHzVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addTransmitRamps(FlatBufferBuilder builder, int TRANSMIT_RAMPSOffset) { builder.addOffset(64, TRANSMIT_RAMPSOffset, 0); }
   public static int createTransmitRampsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTransmitRampsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endTDM(FlatBufferBuilder builder) {

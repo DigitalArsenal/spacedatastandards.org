@@ -209,6 +209,11 @@ public struct Record : IFlatbufferObject
   public CPS valueAsCPS() { return value<CPS>().Value; }
   public FSB valueAsFSB() { return value<FSB>().Value; }
   public FSO valueAsFSO() { return value<FSO>().Value; }
+  public GST valueAsGST() { return value<GST>().Value; }
+  public MDP valueAsMDP() { return value<MDP>().Value; }
+  public MDS valueAsMDS() { return value<MDS>().Value; }
+  public PNL valueAsPNL() { return value<PNL>().Value; }
+  public SHC valueAsSHC() { return value<SHC>().Value; }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   public string standard { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -813,6 +818,21 @@ public struct Record : IFlatbufferObject
         break;
       case RecordType.FSO:
         _o.value.Value = this.value<FSO>().HasValue ? this.value<FSO>().Value.UnPack() : null;
+        break;
+      case RecordType.GST:
+        _o.value.Value = this.value<GST>().HasValue ? this.value<GST>().Value.UnPack() : null;
+        break;
+      case RecordType.MDP:
+        _o.value.Value = this.value<MDP>().HasValue ? this.value<MDP>().Value.UnPack() : null;
+        break;
+      case RecordType.MDS:
+        _o.value.Value = this.value<MDS>().HasValue ? this.value<MDS>().Value.UnPack() : null;
+        break;
+      case RecordType.PNL:
+        _o.value.Value = this.value<PNL>().HasValue ? this.value<PNL>().Value.UnPack() : null;
+        break;
+      case RecordType.SHC:
+        _o.value.Value = this.value<SHC>().HasValue ? this.value<SHC>().Value.UnPack() : null;
         break;
     }
     _o.standard = this.standard;

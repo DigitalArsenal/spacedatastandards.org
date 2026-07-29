@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.166.0+1785322362516",
+  version: "1.167.0+1785329791092",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -512,6 +512,161 @@ file_identifier "$CDM";`,
         "./dist/PLD/PLD.ts.tar.gz"
       ]
     },
+    MDP: {
+      IDL: `// Hash: 7f718ea6fcd6c81401f913683e161e9198039b496d4a7762404ba8e35d9a982b
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// Direction constraint applied to a Lambert transfer leg. Append new values
+/// only; never reorder or reuse existing values.
+enum mdpTransferDirection : ubyte {
+  /// Either direction is admissible.
+  EITHER = 0,
+  PROGRADE = 1,
+  RETROGRADE = 2
+}
+
+/// Which end of a leg a deep-space maneuver is allowed to raise or lower.
+/// Append new values only.
+enum mdpDsmMode : ubyte {
+  /// No deep-space maneuver on this leg.
+  NONE = 0,
+  /// Raise/lower the departure end.
+  DEPARTURE = 1,
+  /// Raise/lower the arrival end.
+  ARRIVAL = 2,
+  /// Either end may be adjusted.
+  EITHER_END = 3
+}
+
+/// One encounter stage of the body sequence: the set of bodies admissible at
+/// this position in the sequence, and the epoch grid searched for it.
+///
+/// Bodies are named by NAIF integer ID, which is normative. SDS carries no
+/// body enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it
+/// must not be repurposed here. Note that a barycenter and a body center are
+/// different objects (4 is the Mars barycenter, 499 is Mars) and the
+/// distinction is operationally load-bearing.
+table MDPEncounterStage {
+  /// Zero-based position in the ordered sequence.
+  STAGE_INDEX: uint;
+
+  /// NAIF integer IDs admissible at this stage. A single entry pins the body.
+  ALLOWED_BODY_NAIF_IDS: [int];
+
+  /// Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present.
+  ALLOWED_BODY_NAMES: [string];
+
+  /// Earliest and latest epoch searched at this stage, ISO 8601.
+  EPOCH_WINDOW_START: string;
+  EPOCH_WINDOW_END: string;
+
+  /// Epoch grid step searched within the window, days.
+  EPOCH_GRID_STEP_DAYS: double;
+
+  /// Bounds on hyperbolic excess speed at this encounter, km/s.
+  V_INFINITY_MIN_KM_S: double;
+  V_INFINITY_MAX_KM_S: double;
+
+  /// Minimum admissible flyby altitude above the body's reference surface, km.
+  MIN_FLYBY_ALTITUDE_KM: double;
+
+  /// Cap on powered-flyby delta-V applied at this encounter, km/s.
+  MAX_POWERED_FLYBY_DELTA_V_KM_S: double;
+}
+
+/// Time-of-flight bound between two encounters. Adjacent stages give per-leg
+/// bounds; non-adjacent stages give cumulative bounds such as
+/// "Earth to Mars to Earth within 3 years".
+table MDPFlightTimeBound {
+  /// Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX.
+  FROM_STAGE_INDEX: uint;
+  TO_STAGE_INDEX: uint;
+
+  /// Inclusive bounds on elapsed time between those two encounters, days.
+  MIN_DAYS: double;
+  MAX_DAYS: double;
+}
+
+/// Mission Design Problem \u2014 the definition of a patched-conic broad search over
+/// an ordered sequence of body encounters.
+///
+/// This is the PROBLEM, not a solution: it states what is being searched and
+/// under what constraints. Candidate trajectories produced by solving it are
+/// carried in $MDS. Nothing existing covers this: $LMS is a single Lambert
+/// boundary-value problem with no body/epoch grid and no sequence, $MPE is an
+/// Earth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an
+/// SSA-detected maneuver on a catalogued Earth object.
+table MDP {
+  /// Stable identifier for this problem definition.
+  PROBLEM_ID: string (required);
+
+  /// Human-readable name.
+  NAME: string;
+
+  /// Ordered encounter stages. Order in this vector IS the body sequence.
+  ENCOUNTER_STAGES: [MDPEncounterStage];
+
+  /// Per-leg and cumulative time-of-flight bounds.
+  FLIGHT_TIME_BOUNDS: [MDPFlightTimeBound];
+
+  /// Cap on total mission duration, days.
+  MAX_TOTAL_FLIGHT_TIME_DAYS: double;
+
+  /// Cap on launch characteristic energy C3, km^2/s^2.
+  MAX_LAUNCH_C3_KM2_S2: double;
+
+  /// Cap on total post-launch delta-V, km/s.
+  MAX_TOTAL_DELTA_V_KM_S: double;
+
+  /// Deep-space maneuver search controls.
+  DSM_MODE: mdpDsmMode = NONE;
+  /// Cap on the magnitude of any single deep-space maneuver, km/s.
+  MAX_DSM_DELTA_V_KM_S: double;
+  /// Grid step used when searching deep-space maneuver magnitude, km/s.
+  DSM_GRID_STEP_KM_S: double;
+
+  /// Lambert controls: maximum number of complete revolutions considered on a
+  /// leg, and the admissible transfer direction.
+  MAX_REVOLUTIONS: ubyte;
+  TRANSFER_DIRECTION: mdpTransferDirection = EITHER;
+
+  /// Output decimation: width of the time bin within which only the best
+  /// candidate is retained. Zero means no decimation.
+  OUTPUT_TIME_BIN_DAYS: double;
+
+  /// Optional spacecraft propulsion limits constraining admissible solutions.
+  MAX_THRUST_N: double;
+  SPECIFIC_IMPULSE_S: double;
+  DRY_MASS_KG: double;
+  INITIAL_MASS_KG: double;
+
+  /// Ephemeris source the search was posed against, e.g. a SPICE kernel set
+  /// identifier. Recorded so a solution set can be reproduced.
+  EPHEMERIS_SOURCE: string;
+
+  /// Free-form notes.
+  COMMENT: string;
+}
+
+root_type MDP;
+file_identifier "$MDP";`,
+      files: [
+        "./dist/MDP/MDP.sw.tar.gz",
+        "./dist/MDP/MDP.py.tar.gz",
+        "./dist/MDP/MDP.lob.tar.gz",
+        "./dist/MDP/MDP.go.tar.gz",
+        "./dist/MDP/MDP.js.tar.gz",
+        "./dist/MDP/MDP.dart.tar.gz",
+        "./dist/MDP/MDP.cs.tar.gz",
+        "./dist/MDP/MDP.java.tar.gz",
+        "./dist/MDP/MDP.rs.tar.gz",
+        "./dist/MDP/MDP.php.tar.gz",
+        "./dist/MDP/MDP.json.tar.gz",
+        "./dist/MDP/MDP.cpp.tar.gz",
+        "./dist/MDP/MDP.kt.tar.gz",
+        "./dist/MDP/MDP.ts.tar.gz"
+      ]
+    },
     OBD: {
       IDL: `// Hash: 54d8bd485b48986b3676eb09b38043c3adad42a6b442821b8779f578b734053e
 // Version: 0.0.3
@@ -775,6 +930,25 @@ file_identifier "$OBD";`,
         "./dist/DOA/DOA.ts.tar.gz"
       ]
     },
+    GST: {
+      IDL: '// Hash: 873e99b02f3f229a2dc2cc48e8276a8b48dea055baa562b122f146f388603660\n// Version: 1.166.0\n// -----------------------------------END_HEADER\n/// Network a tracking station belongs to. Append new values only; never\n/// reorder or reuse existing values.\nenum gstNetwork : ubyte {\n  UNSPECIFIED = 0,\n  /// NASA Deep Space Network.\n  DSN = 1,\n  /// ESA tracking station network.\n  ESTRACK = 2,\n  /// European VLBI Network.\n  EVN = 3,\n  /// International Laser Ranging Service.\n  ILRS = 4,\n  /// International GNSS Service.\n  IGS = 5,\n  /// A network not covered above.\n  OTHER = 6\n}\n\n/// Terrestrial reference frame realization the station coordinates are given\n/// in. A position without its realization is not usable at the centimetre\n/// level. Append new values only.\nenum gstFrameRealization : ubyte {\n  UNSPECIFIED = 0,\n  ITRF93 = 1,\n  ITRF2000 = 2,\n  ITRF2005 = 3,\n  ITRF2008 = 4,\n  ITRF2014 = 5,\n  ITRF2020 = 6,\n  /// A realization not covered above; name it in FRAME_REALIZATION_NAME.\n  OTHER = 7\n}\n\n/// Antenna mount geometry, which determines how the axis offset is applied.\n/// Append new values only.\nenum gstAntennaAxisType : ubyte {\n  UNSPECIFIED = 0,\n  AZ_EL = 1,\n  X_Y_EAST = 2,\n  X_Y_NORTH = 3,\n  HA_DEC = 4,\n  /// Fixed / non-steerable.\n  FIXED = 5,\n  OTHER = 6\n}\n\n/// Ground/Tracking Station Definition \u2014 the geodetic identity and geometry of\n/// one tracking station, sufficient to reduce a radiometric or laser\n/// observation taken from it.\n///\n/// This is deliberately NOT $SEN. $SEN describes an SSA sensor site by\n/// latitude/longitude/altitude with tasking plans and statistics; it carries no\n/// terrestrial frame realization, no station velocity, no reference epoch, and\n/// no antenna axis geometry. Station coordinates without a frame realization\n/// and an epoch cannot be propagated for plate motion and are therefore not\n/// usable for orbit determination.\ntable GST {\n  /// Stable station identifier as used by the operating network, e.g. "DSS-63".\n  STATION_ID: string (required);\n\n  /// Human-readable station name.\n  NAME: string;\n\n  /// Operating network.\n  NETWORK: gstNetwork = UNSPECIFIED;\n\n  /// IERS DOMES number, when the station has one.\n  DOMES_NUMBER: string;\n\n  /// NASA CDP / SLR site number, when the station has one.\n  CDP_NUMBER: string;\n\n  /// Terrestrial reference frame realization of POSITION_* and VELOCITY_*.\n  FRAME_REALIZATION: gstFrameRealization = UNSPECIFIED;\n\n  /// Free-text realization name, required when FRAME_REALIZATION is OTHER.\n  FRAME_REALIZATION_NAME: string;\n\n  /// Epoch at which POSITION_* is valid, ISO 8601. Positions MUST be\n  /// propagated to the observation epoch with VELOCITY_* before use.\n  REFERENCE_EPOCH: string;\n\n  /// Station position in the stated realization, metres.\n  POSITION_X: double;\n  POSITION_Y: double;\n  POSITION_Z: double;\n\n  /// Station velocity (plate motion) in the stated realization, metres per\n  /// year. Zero is a claim that the station does not move, not a default.\n  VELOCITY_X: double;\n  VELOCITY_Y: double;\n  VELOCITY_Z: double;\n\n  /// 1-sigma position uncertainty, metres.\n  POSITION_SIGMA_X: double;\n  POSITION_SIGMA_Y: double;\n  POSITION_SIGMA_Z: double;\n\n  /// Antenna mount geometry.\n  ANTENNA_AXIS_TYPE: gstAntennaAxisType = UNSPECIFIED;\n\n  /// Distance between the two mount axes, metres. Zero for an intersecting-axis\n  /// mount.\n  AXIS_OFFSET_M: double;\n\n  /// Vector from the monument marker to the antenna reference point, metres.\n  ECCENTRICITY_X: double;\n  ECCENTRICITY_Y: double;\n  ECCENTRICITY_Z: double;\n\n  /// Frame the eccentricity vector is expressed in, e.g. "XYZ" (geocentric\n  /// Cartesian) or "NEU" (local north-east-up).\n  ECCENTRICITY_FRAME: string;\n\n  /// Uplink bands the station can transmit, e.g. ["S", "X", "Ka"].\n  TRANSMIT_BANDS: [string];\n\n  /// Downlink bands the station can receive.\n  RECEIVE_BANDS: [string];\n\n  /// Station clock offset from the stated time scale, seconds.\n  CLOCK_OFFSET_S: double;\n\n  /// Station clock rate, seconds per second.\n  CLOCK_RATE_S_PER_S: double;\n\n  /// Time scale the clock terms are referenced to, e.g. "UTC", "TAI".\n  CLOCK_TIME_SCALE: string;\n\n  /// Start of the interval over which this definition applies, ISO 8601.\n  VALID_FROM: string;\n\n  /// End of the interval over which this definition applies, ISO 8601.\n  VALID_TO: string;\n\n  /// Provenance of these coordinates, e.g. "DSN 810-005 rev. E", an ILRS SINEX\n  /// file name, or a VLBI station catalogue identifier.\n  SOURCE: string;\n}\n\nroot_type GST;\nfile_identifier "$GST";',
+      files: [
+        "./dist/GST/GST.sw.tar.gz",
+        "./dist/GST/GST.py.tar.gz",
+        "./dist/GST/GST.lob.tar.gz",
+        "./dist/GST/GST.go.tar.gz",
+        "./dist/GST/GST.js.tar.gz",
+        "./dist/GST/GST.dart.tar.gz",
+        "./dist/GST/GST.cs.tar.gz",
+        "./dist/GST/GST.java.tar.gz",
+        "./dist/GST/GST.rs.tar.gz",
+        "./dist/GST/GST.php.tar.gz",
+        "./dist/GST/GST.json.tar.gz",
+        "./dist/GST/GST.cpp.tar.gz",
+        "./dist/GST/GST.kt.tar.gz",
+        "./dist/GST/GST.ts.tar.gz"
+      ]
+    },
     TRN: {
       IDL: '// Hash: 70847b4cadae30109f0716de75bd5d0c1d85da5c507c09de8bf27d65d58187a7\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum TerrainDataSource : byte {\n  SRTM,                   // Shuttle Radar Topography Mission,\n  ASTER,                  // Advanced Spaceborne Thermal Emission,\n  DTED_0,                 // Digital Terrain Elevation Data Level 0,\n  DTED_1,                 // Level 1 (~90m),\n  DTED_2,                 // Level 2 (~30m),\n  NED,                    // National Elevation Dataset,\n  LIDAR,                  // LiDAR point cloud,\n  CUSTOM\n}\n\nenum LandCoverType : byte {\n  WATER,\n  URBAN,\n  SUBURBAN,\n  FOREST_DECIDUOUS,\n  FOREST_CONIFEROUS,\n  FOREST_MIXED,\n  GRASSLAND,\n  SHRUBLAND,\n  CROPLAND,\n  BARREN,\n  WETLAND,\n  SNOW_ICE,\n  DESERT,\n  ROCK,\n  ROAD,\n  RUNWAY,\n  BUILDING\n}\n\nenum TerrainInterpolation : byte {\n  NEAREST,\n  BILINEAR,\n  BICUBIC,\n  KRIGING\n}\n\n/// Terrain Models\ntable TRN {\n  SOURCES:[TerrainDataSource];\n  INTERPOLATION:TerrainInterpolation = BILINEAR;\n  CACHE_ENABLED:bool = true;\n  MAX_CACHE_TILES:uint16 = 100;\n  VERTICAL_EXAGGERATION:double = 1.0;\n}\n\nroot_type TRN;\nfile_identifier "$TRN";',
       files: [
@@ -945,6 +1119,136 @@ file_identifier "$CPS";`,
         "./dist/CPS/CPS.cpp.tar.gz",
         "./dist/CPS/CPS.kt.tar.gz",
         "./dist/CPS/CPS.ts.tar.gz"
+      ]
+    },
+    SHC: {
+      IDL: `// Hash: 1bd9fa8ec917725dfd7769d1c7a8a4870090d8edbf0728940650d71d6c33cf60
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// Normalization convention of the spherical-harmonic coefficients. Applying a
+/// set under the wrong convention is wrong by many orders of magnitude at high
+/// degree, so there is no safe default. Append new values only.
+enum shcNormalization : ubyte {
+  UNSPECIFIED = 0,
+  /// 4-pi (fully) normalized, the geodesy convention.
+  FULLY_NORMALIZED = 1,
+  /// Unnormalized (raw) coefficients.
+  UNNORMALIZED = 2
+}
+
+/// Treatment of the permanent tide in the degree-2 zonal term. Sets differing
+/// only in tide system disagree in C20 by roughly 4e-9, which is far above the
+/// accuracy of any modern field. Append new values only.
+enum shcTideSystem : ubyte {
+  UNSPECIFIED = 0,
+  TIDE_FREE = 1,
+  ZERO_TIDE = 2,
+  MEAN_TIDE = 3
+}
+
+/// One time-variable coefficient term: a rate or a periodic variation applied
+/// to the static coefficient at DEGREE/ORDER.
+table SHCVariableTerm {
+  DEGREE: ushort;
+  ORDER: ushort;
+  /// Kind of variation: "TREND", "ASIN", "ACOS".
+  TERM_TYPE: string;
+  /// Coefficient of the variation for the cosine (C) and sine (S) terms.
+  C_VALUE: double;
+  S_VALUE: double;
+  /// Period of a periodic term, years. Unused for a trend.
+  PERIOD_YEARS: double;
+  /// Epoch the term is referenced to, ISO 8601.
+  REFERENCE_EPOCH: string;
+}
+
+/// Spherical-Harmonic Coefficient Set \u2014 an actual gravity field, as opposed to
+/// the NAME of one.
+///
+/// This is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,
+/// bounds its degree/order, toggles third-body and tidal effects, and carries
+/// scalar J2..J6. It cannot carry a coefficient set, and a named model without
+/// its coefficients is not interchange \u2014 it is a citation.
+///
+/// Coefficients are carried as four parallel arrays of equal length, indexed
+/// together: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine
+/// term C[i] and sine term S[i]. Parallel arrays rather than a table per
+/// coefficient because a 200x200 field is ~40,000 coefficients and a
+/// table-per-coefficient encoding is pathological in both size and decode cost.
+table SHC {
+  /// Identifier of the coefficient set, e.g. "EGM2008", "GGGRX1200".
+  MODEL_NAME: string (required);
+
+  /// Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,
+  /// 499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a
+  /// barycenter (e.g. 4) is NOT the body (e.g. 499).
+  CENTRAL_BODY_NAIF_ID: int;
+
+  /// Advisory body name.
+  BODY_NAME: string;
+
+  /// Gravitational parameter of the body, m^3/s^2. Part of the set: a field's
+  /// coefficients are only meaningful with the GM they were solved against.
+  GM: double;
+
+  /// Reference radius of the expansion, metres. Also part of the set.
+  REFERENCE_RADIUS: double;
+
+  /// Maximum degree and order present in the arrays.
+  MAX_DEGREE: ushort;
+  MAX_ORDER: ushort;
+
+  /// Normalization convention. A set published without this is unusable;
+  /// consumers MUST reject UNSPECIFIED rather than assuming a convention.
+  NORMALIZATION: shcNormalization = UNSPECIFIED;
+
+  /// Permanent-tide system. Consumers MUST reject UNSPECIFIED for any
+  /// application sensitive at the 1e-9 level in C20.
+  PERMANENT_TIDE_SYSTEM: shcTideSystem = UNSPECIFIED;
+
+  /// Epoch the static coefficients are referenced to, ISO 8601. Required when
+  /// VARIABLE_TERMS is present.
+  REFERENCE_EPOCH: string;
+
+  /// Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical
+  /// lengths; a record where they do not is invalid.
+  DEGREES: [ushort];
+  ORDERS: [ushort];
+  C: [double];
+  S: [double];
+
+  /// Optional 1-sigma uncertainties, parallel to C and S when present.
+  C_SIGMA: [double];
+  S_SIGMA: [double];
+
+  /// Optional time-variable terms applied on top of the static field.
+  VARIABLE_TERMS: [SHCVariableTerm];
+
+  /// Tide-free/zero-tide conversion already applied, publication reference, or
+  /// any other provenance needed to reproduce the set.
+  SOURCE: string;
+
+  /// Citation for the field, e.g. the paper or data-centre DOI.
+  CITATION: string;
+}
+
+root_type SHC;
+file_identifier "$SHC";`,
+      files: [
+        "./dist/SHC/SHC.sw.tar.gz",
+        "./dist/SHC/SHC.py.tar.gz",
+        "./dist/SHC/SHC.lob.tar.gz",
+        "./dist/SHC/SHC.go.tar.gz",
+        "./dist/SHC/SHC.js.tar.gz",
+        "./dist/SHC/SHC.dart.tar.gz",
+        "./dist/SHC/SHC.cs.tar.gz",
+        "./dist/SHC/SHC.java.tar.gz",
+        "./dist/SHC/SHC.rs.tar.gz",
+        "./dist/SHC/SHC.php.tar.gz",
+        "./dist/SHC/SHC.json.tar.gz",
+        "./dist/SHC/SHC.cpp.tar.gz",
+        "./dist/SHC/SHC.kt.tar.gz",
+        "./dist/SHC/SHC.ts.tar.gz"
       ]
     },
     OPM: {
@@ -3630,7 +3934,7 @@ file_identifier "$NUM";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 6e9dd331ededd1ea6cb0aebd2fde79db1dd7c75e0b6bbe7bbb57fce41841c210\n// Version: 1.44.41\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: 11dc5d1e04e5185e801e3bb169e07c3c890153ee24139e1d140d178bbb5aaca7\n// Version: 1.44.42\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -4390,6 +4694,182 @@ file_identifier "$RFM";`,
         "./dist/PIV/PIV.cpp.tar.gz",
         "./dist/PIV/PIV.kt.tar.gz",
         "./dist/PIV/PIV.ts.tar.gz"
+      ]
+    },
+    MDS: {
+      IDL: `// Hash: 635d04781efe3c54ee591277009fb7c660503047ad9038e30ad2082d05c6eadb
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// One body encounter along a candidate trajectory.
+///
+/// Encounter-indexed rather than leg-indexed on purpose. A search implementation
+/// typically emits leg-indexed arrays: for nE encounters there are nL = nE - 1
+/// legs, the departure v-infinity of leg i is the OUTGOING vector at encounter
+/// i, and the arrival v-infinity of leg i is the INCOMING vector at encounter
+/// i + 1. Carrying both vectors on the encounter they physically occur at
+/// removes that off-by-one from every consumer.
+table MDSEncounter {
+  /// Zero-based position along the trajectory.
+  ENCOUNTER_INDEX: uint;
+
+  /// Body encountered, NAIF integer ID (normative). A barycenter is not the
+  /// body: 4 is the Mars barycenter, 499 is Mars.
+  BODY_NAIF_ID: int;
+
+  /// Advisory body name.
+  BODY_NAME: string;
+
+  /// Encounter epoch as ephemeris time, seconds past J2000 TDB. This is the
+  /// form solvers work in and is carried verbatim to avoid a lossy round trip.
+  EPOCH_ET_S: double;
+
+  /// Same epoch in ISO 8601 (UTC), for consumers that do not carry an
+  /// ephemeris time implementation. Advisory; EPOCH_ET_S is normative.
+  EPOCH_UTC: string;
+
+  /// Incoming hyperbolic excess velocity vector, km/s. Absent at the first
+  /// encounter.
+  INCOMING_V_INFINITY_X_KM_S: double;
+  INCOMING_V_INFINITY_Y_KM_S: double;
+  INCOMING_V_INFINITY_Z_KM_S: double;
+
+  /// Outgoing hyperbolic excess velocity vector, km/s. Absent at the final
+  /// encounter.
+  OUTGOING_V_INFINITY_X_KM_S: double;
+  OUTGOING_V_INFINITY_Y_KM_S: double;
+  OUTGOING_V_INFINITY_Z_KM_S: double;
+
+  /// Turn angle between incoming and outgoing asymptotes, radians.
+  TURN_ANGLE_RAD: double;
+
+  /// Flyby periapsis radius measured from the body's center, km.
+  PERIAPSIS_RADIUS_KM: double;
+
+  /// Delta-V applied at periapsis for a powered flyby, km/s. Zero for an
+  /// unpowered (ballistic) flyby.
+  POWERED_FLYBY_DELTA_V_KM_S: double;
+
+  /// Index of the Lambert solution selected for the leg DEPARTING this
+  /// encounter, as reported by the solver.
+  LAMBERT_SOLUTION_INDEX: int;
+
+  /// Index of the flyby solution branch selected at this encounter, as
+  /// reported by the solver.
+  FLYBY_SOLUTION_INDEX: int;
+}
+
+/// One deep-space maneuver on a transfer leg.
+table MDSDeepSpaceManeuver {
+  /// Zero-based leg the maneuver occurs on. Leg i connects encounter i to
+  /// encounter i + 1.
+  LEG_INDEX: uint;
+
+  /// Position along the leg as a fraction of its flight time, in [0, 1].
+  ARC_FRACTION: double;
+
+  /// Maneuver epoch as ephemeris time, seconds past J2000 TDB, when the solver
+  /// reports it directly.
+  EPOCH_ET_S: double;
+
+  /// Maneuver magnitude, km/s.
+  DELTA_V_KM_S: double;
+
+  /// Maneuver vector when the solver reports one, km/s.
+  DELTA_V_X_KM_S: double;
+  DELTA_V_Y_KM_S: double;
+  DELTA_V_Z_KM_S: double;
+}
+
+/// One candidate trajectory on the front.
+table MDSCandidate {
+  /// Solver-assigned trajectory identifier, unique within the set.
+  CANDIDATE_ID: string;
+
+  /// Ordered encounters, first to last.
+  ENCOUNTERS: [MDSEncounter];
+
+  /// Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION.
+  DEEP_SPACE_MANEUVERS: [MDSDeepSpaceManeuver];
+
+  /// Total post-launch delta-V, km/s.
+  TOTAL_DELTA_V_KM_S: double;
+
+  /// Total flight time from first to last encounter, days.
+  TOTAL_FLIGHT_TIME_DAYS: double;
+
+  /// Launch characteristic energy, km^2/s^2.
+  LAUNCH_C3_KM2_S2: double;
+
+  /// Hyperbolic excess speed at arrival, km/s.
+  ARRIVAL_V_INFINITY_KM_S: double;
+
+  /// Reference escape delta-V from the departure body, km/s.
+  ESCAPE_DELTA_V_KM_S: double;
+
+  /// Reference insertion delta-V at the arrival body, km/s.
+  INSERTION_DELTA_V_KM_S: double;
+
+  /// True when this candidate is non-dominated within the set. A set MAY carry
+  /// dominated candidates for context; a consumer plotting a front MUST filter
+  /// on this rather than assume every member is non-dominated.
+  NON_DOMINATED: bool = true;
+}
+
+/// Mission Design Solution Set \u2014 a set of candidate trajectories produced by
+/// solving a mission design broad search, typically a Pareto front over
+/// competing objectives (total delta-V against total flight time).
+///
+/// SDS had no multi-candidate container of any kind before this record. The
+/// closest existing carrier for a single planned burn is OCM.Maneuver, whose
+/// payload is untyped DATA:[string] with MAN_UNITS:[string] and which has no
+/// v-infinity, turn angle, flyby periapsis radius, or C3.
+table MDS {
+  /// Stable identifier for this solution set.
+  SOLUTION_SET_ID: string (required);
+
+  /// PROBLEM_ID of the $MDP this set solves. A solution set whose problem
+  /// definition is unknown is not reproducible.
+  PROBLEM_ID: string;
+
+  /// Objectives the front is expressed over, e.g.
+  /// ["TOTAL_DELTA_V_KM_S", "TOTAL_FLIGHT_TIME_DAYS"]. Names MUST be field
+  /// names of MDSCandidate.
+  OBJECTIVES: [string];
+
+  /// The candidates.
+  CANDIDATES: [MDSCandidate];
+
+  /// Solver identity and version that produced the set.
+  SOLVER: string;
+  SOLVER_VERSION: string;
+
+  /// Ephemeris source used, e.g. a SPICE kernel set identifier.
+  EPHEMERIS_SOURCE: string;
+
+  /// When the set was generated, ISO 8601.
+  CREATION_DATE: string;
+
+  /// Free-form notes.
+  COMMENT: string;
+}
+
+root_type MDS;
+file_identifier "$MDS";`,
+      files: [
+        "./dist/MDS/MDS.sw.tar.gz",
+        "./dist/MDS/MDS.py.tar.gz",
+        "./dist/MDS/MDS.lob.tar.gz",
+        "./dist/MDS/MDS.go.tar.gz",
+        "./dist/MDS/MDS.js.tar.gz",
+        "./dist/MDS/MDS.dart.tar.gz",
+        "./dist/MDS/MDS.cs.tar.gz",
+        "./dist/MDS/MDS.java.tar.gz",
+        "./dist/MDS/MDS.rs.tar.gz",
+        "./dist/MDS/MDS.php.tar.gz",
+        "./dist/MDS/MDS.json.tar.gz",
+        "./dist/MDS/MDS.cpp.tar.gz",
+        "./dist/MDS/MDS.kt.tar.gz",
+        "./dist/MDS/MDS.ts.tar.gz"
       ]
     },
     PLG: {
@@ -8369,7 +8849,7 @@ file_identifier "$EOO";`,
       ]
     },
     TDM: {
-      IDL: '// Hash: 4942a0c3b5baa66fc83c978085b6df7429ec677e4e0098fdc322d2d3105d7752\n// Version: 2.0.2\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\n\n// Based on CCSDS 503.0-B-1 standard, November 2007\n//\n// Time Reconstruction:\n// Individual observation times can be reconstructed using the step-size formula:\n//   time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)\n// where i is the zero-based index into the observation arrays.\n//\n/// One uplink transmitter frequency ramp applying over a closed time interval.\n///\n/// SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single\n/// TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space\n/// radiometric archives carry an explicit ramp table and the Doppler observables\n/// are NOT reconstructible without it. Ramps are optional; a record that omits\n/// TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.\n///\n/// Frequency over the interval is the linear polynomial\n///   f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)\n/// which is the common form of the two archive representations: DSN ODF\n/// (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp\n/// start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a\n/// ramp reference time with constant and linear transmission-frequency terms,\n/// so REFERENCE_TIME is that reference time and may precede START_TIME.\n/// Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer\n/// assume which convention was used.\ntable TDMTransmitRamp {\n  /// Start of the interval over which this ramp applies, ISO 8601.\n  START_TIME: string;\n  /// End of the interval over which this ramp applies, ISO 8601.\n  END_TIME: string;\n  /// Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.\n  REFERENCE_TIME: string;\n  /// Transmitted frequency at REFERENCE_TIME, Hz.\n  FREQUENCY_HZ: double;\n  /// Constant ramp rate over the interval, Hz per second.\n  FREQUENCY_RATE_HZ_PER_S: double;\n  /// Identifier of the transmitting station the ramp applies to. Must match\n  /// the PARTICIPANT_n naming used by the segment when both are present.\n  TRANSMITTING_STATION_ID: string;\n  /// Uplink band the ramp applies to, using the same vocabulary as\n  /// TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").\n  TRANSMIT_BAND: string;\n}\n\n/// Tracking Data Message\ntable TDM {\n\n  /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]\n  OBSERVER_ID: string;\n\n  /// Cartesian X coordinate of the OBSERVER location in chosen reference frame\n  OBSERVER_X: double;\n\n  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame \n  OBSERVER_Y: double;\n\n  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame \n  OBSERVER_Z: double;\n\n  /// Cartesian X coordinate of the OBSERVER velocity in chosen reference frame\n  OBSERVER_VX: double;\n\n  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame \n  OBSERVER_VY: double;\n\n  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame \n  OBSERVER_VZ: double;\n  \n  /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)\n  OBSERVER_POSITION_REFERENCE_FRAME: RFM;\n\n  /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)\n  OBS_REFERENCE_FRAME: RFM;\n\n  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1\n  EPOCH: string;\n\n  /// Time interval between observations in seconds (required).\n  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)\n  OBSERVATION_STEP_SIZE:double;\n\n  /// Start time for observation time reconstruction (ISO 8601 UTC format).\n  OBSERVATION_START_TIME:string;\n\n  /// TDM version number -  CCSDS 503.0-B-1, Page D-9\n  CCSDS_TDM_VERS: string;\n\n  /// Comments regarding TDM -  various sections, e.g., Page D-9\n  COMMENT: [string];\n\n  /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9\n  CREATION_DATE: string;\n\n  /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9\n  ORIGINATOR: string;\n\n  /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9\n  META_START: string;\n\n  /// Time system used -  CCSDS 503.0-B-1, Page D-9\n  TIME_SYSTEM: string;\n\n  /// Start time of the data -  CCSDS 503.0-B-1, Page D-9\n  START_TIME: string;\n\n  /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9\n  STOP_TIME: string;\n\n  /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_1: string;\n\n  /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_2: string;\n\n  /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_3: string;\n\n  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_4: string;\n\n  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants\n  PARTICIPANT_5: string;\n\n  /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9\n  MODE: string;\n\n  /// First path in TDM -  CCSDS 503.0-B-1, Page D-9\n  PATH_1: ushort;\n\n  /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PATH_2: ushort;\n\n  /// Transmit band -  CCSDS 503.0-B-1, Page D-9\n  TRANSMIT_BAND: string;\n\n  /// Receive band -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_BAND: string;\n\n  /// Integration interval -  CCSDS 503.0-B-1, Page D-9\n  INTEGRATION_INTERVAL: float;\n\n  /// Integration reference -  CCSDS 503.0-B-1, Page D-9\n  INTEGRATION_REF: string;\n\n  /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_DELAY_2: double;\n\n  /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_DELAY_3: double;\n\n  /// Data quality -  CCSDS 503.0-B-1, Page D-9\n  DATA_QUALITY: string;\n\n  /// End of metadata section -  CCSDS 503.0-B-1, Page D-9\n  META_STOP: string;\n\n  /// Start of data section -  CCSDS 503.0-B-1, Page D-9\n  DATA_START: string;\n\n  /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9\n  TRANSMIT_FREQ_1: double;\n\n  /// Receive frequency -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_FREQ: [double];\n\n  /// End of data section -  CCSDS 503.0-B-1, Page D-9\n  DATA_STOP: string;\n\n  /// Additional properties as required by the specific application of the TDM...\n  /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10\n  TIMETAG_REF: string;\n\n  /// Type of angle data -  CCSDS 503.0-B-1, Page D-12\n  /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD\n  ANGLE_TYPE: string;\n\n  /// First angle value -  CCSDS 503.0-B-1, Page D-12\n  ANGLE_1: [float];\n\n  /// Second angle value -  CCSDS 503.0-B-1, Page D-12\n  ANGLE_2: [float];\n\n  /// Uncertainty of first angle -  CCSDS 503.0-B-1\n  ANGLE_UNCERTAINTY_1: float;\n\n  /// Uncertainty of second angle -  CCSDS 503.0-B-1\n  ANGLE_UNCERTAINTY_2: float;\n\n  /// Rate of change of range -  CCSDS 503.0-B-1\n  RANGE_RATE: double;\n\n  /// Uncertainty in range -  CCSDS 503.0-B-1\n  RANGE_UNCERTAINTY: double;\n\n  /// Mode of range data -  CCSDS 503.0-B-1, Page D-10\n  RANGE_MODE: string;\n\n  /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10\n  RANGE_MODULUS: double;\n\n  /// First correction angle -  CCSDS 503.0-B-1, Page D-12\n  CORRECTION_ANGLE_1: float;\n\n  /// Second correction angle -  CCSDS 503.0-B-1, Page D-12\n  CORRECTION_ANGLE_2: float;\n\n  /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12\n  CORRECTIONS_APPLIED: string;\n\n  /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14\n  TROPO_DRY: [double];\n\n  /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14\n  TROPO_WET: [double];\n\n  /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13\n  STEC: [double];\n\n  /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14\n  PRESSURE: [double];\n\n  /// Relative humidity -  CCSDS 503.0-B-1, Page D-14\n  RHUMIDITY: [double];\n\n  /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14\n  TEMPERATURE: [double];\n\n  /// Clock bias values -  CCSDS 503.0-B-1, Page D-15\n  CLOCK_BIAS: [double];\n\n  /// Clock drift values -  CCSDS 503.0-B-1, Page D-15\n  CLOCK_DRIFT: [double];\n\n  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp\n  /// table covering this segment, ordered by START_TIME and non-overlapping.\n  /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone\n  /// cannot reconstruct the observables. Absent for unramped tracking, which\n  /// leaves the record exactly CCSDS-conformant.\n  TRANSMIT_RAMPS: [TDMTransmitRamp];\n}\n\nroot_type TDM;\nfile_identifier "$TDM";',
+      IDL: '// Hash: f9243ef533502d930a48ae2961fc321ae1882a4d5e178ce68268bae0caebcd80\n// Version: 2.0.3\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\n\n// Based on CCSDS 503.0-B-1 standard, November 2007\n//\n// Time Reconstruction:\n// Individual observation times can be reconstructed using the step-size formula:\n//   time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)\n// where i is the zero-based index into the observation arrays.\n//\n/// One uplink transmitter frequency ramp applying over a closed time interval.\n///\n/// SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single\n/// TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space\n/// radiometric archives carry an explicit ramp table and the Doppler observables\n/// are NOT reconstructible without it. Ramps are optional; a record that omits\n/// TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.\n///\n/// Frequency over the interval is the linear polynomial\n///   f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)\n/// which is the common form of the two archive representations: DSN ODF\n/// (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp\n/// start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a\n/// ramp reference time with constant and linear transmission-frequency terms,\n/// so REFERENCE_TIME is that reference time and may precede START_TIME.\n/// Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer\n/// assume which convention was used.\ntable TDMTransmitRamp {\n  /// Start of the interval over which this ramp applies, ISO 8601.\n  START_TIME: string;\n  /// End of the interval over which this ramp applies, ISO 8601.\n  END_TIME: string;\n  /// Epoch at which FREQUENCY_HZ is the instantaneous value, ISO 8601.\n  REFERENCE_TIME: string;\n  /// Transmitted frequency at REFERENCE_TIME, Hz.\n  FREQUENCY_HZ: double;\n  /// Constant ramp rate over the interval, Hz per second.\n  FREQUENCY_RATE_HZ_PER_S: double;\n  /// Identifier of the transmitting station the ramp applies to. Must match\n  /// the PARTICIPANT_n naming used by the segment when both are present.\n  TRANSMITTING_STATION_ID: string;\n  /// Uplink band the ramp applies to, using the same vocabulary as\n  /// TRANSMIT_BAND (e.g. "S", "X", "Ka", "Ku").\n  TRANSMIT_BAND: string;\n}\n\n/// Tracking Data Message\ntable TDM {\n\n  /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]\n  OBSERVER_ID: string;\n\n  /// Cartesian X coordinate of the OBSERVER location in chosen reference frame\n  OBSERVER_X: double;\n\n  /// Cartesian Y coordinate of the OBSERVER location in chosen reference frame \n  OBSERVER_Y: double;\n\n  /// Cartesian Z coordinate of the OBSERVER location in chosen reference frame \n  OBSERVER_Z: double;\n\n  /// Cartesian X coordinate of the OBSERVER velocity in chosen reference frame\n  OBSERVER_VX: double;\n\n  /// Cartesian Y coordinate of the OBSERVER velocity in chosen reference frame \n  OBSERVER_VY: double;\n\n  /// Cartesian Z coordinate of the OBSERVER velocity in chosen reference frame \n  OBSERVER_VZ: double;\n  \n  /// Reference frame used for OBSERVER location Cartesian coordinates (e.g., ECEF, ECI)\n  OBSERVER_POSITION_REFERENCE_FRAME: RFM;\n\n  /// Reference frame used for obs location Cartesian coordinates (e.g., ECEF, ECI)\n  OBS_REFERENCE_FRAME: RFM;\n\n  /// Epoch time or observation time, in ISO 8601 UTC format -  CCSDS 503.0-B-1\n  EPOCH: string;\n\n  /// Time interval between observations in seconds (required).\n  /// Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)\n  OBSERVATION_STEP_SIZE:double;\n\n  /// Start time for observation time reconstruction (ISO 8601 UTC format).\n  OBSERVATION_START_TIME:string;\n\n  /// TDM version number -  CCSDS 503.0-B-1, Page D-9\n  CCSDS_TDM_VERS: string;\n\n  /// Comments regarding TDM -  various sections, e.g., Page D-9\n  COMMENT: [string];\n\n  /// Date of TDM creation -  CCSDS 503.0-B-1, Page D-9\n  CREATION_DATE: string;\n\n  /// Originator of the TDM -  CCSDS 503.0-B-1, Page D-9\n  ORIGINATOR: string;\n\n  /// Start of metadata section -  CCSDS 503.0-B-1, Page D-9\n  META_START: string;\n\n  /// Time system used -  CCSDS 503.0-B-1, Page D-9\n  TIME_SYSTEM: string;\n\n  /// Start time of the data -  CCSDS 503.0-B-1, Page D-9\n  START_TIME: string;\n\n  /// Stop time of the data -  CCSDS 503.0-B-1, Page D-9\n  STOP_TIME: string;\n\n  /// First participant in the TDM -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_1: string;\n\n  /// Second participant in the TDM -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_2: string;\n\n  /// Third participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_3: string;\n\n  /// Fourth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PARTICIPANT_4: string;\n\n  /// Fifth participant in the TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9, max participants\n  PARTICIPANT_5: string;\n\n  /// Mode of TDM -  CCSDS 503.0-B-1, Page D-9\n  MODE: string;\n\n  /// First path in TDM -  CCSDS 503.0-B-1, Page D-9\n  PATH_1: ushort;\n\n  /// Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9\n  PATH_2: ushort;\n\n  /// Transmit band -  CCSDS 503.0-B-1, Page D-9\n  TRANSMIT_BAND: string;\n\n  /// Receive band -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_BAND: string;\n\n  /// Integration interval -  CCSDS 503.0-B-1, Page D-9\n  INTEGRATION_INTERVAL: float;\n\n  /// Integration reference -  CCSDS 503.0-B-1, Page D-9\n  INTEGRATION_REF: string;\n\n  /// Receive delay for second participant -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_DELAY_2: double;\n\n  /// Receive delay for third participant -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_DELAY_3: double;\n\n  /// Data quality -  CCSDS 503.0-B-1, Page D-9\n  DATA_QUALITY: string;\n\n  /// End of metadata section -  CCSDS 503.0-B-1, Page D-9\n  META_STOP: string;\n\n  /// Start of data section -  CCSDS 503.0-B-1, Page D-9\n  DATA_START: string;\n\n  /// Transmit frequency for first participant -  CCSDS 503.0-B-1, Page D-9\n  TRANSMIT_FREQ_1: double;\n\n  /// Receive frequency -  CCSDS 503.0-B-1, Page D-9\n  RECEIVE_FREQ: [double];\n\n  /// End of data section -  CCSDS 503.0-B-1, Page D-9\n  DATA_STOP: string;\n\n  /// Additional properties as required by the specific application of the TDM...\n  /// Reference for time tagging -  CCSDS 503.0-B-1, Page D-10\n  TIMETAG_REF: string;\n\n  /// Type of angle data -  CCSDS 503.0-B-1, Page D-12\n  /// Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD\n  ANGLE_TYPE: string;\n\n  /// First angle value -  CCSDS 503.0-B-1, Page D-12\n  ANGLE_1: [float];\n\n  /// Second angle value -  CCSDS 503.0-B-1, Page D-12\n  ANGLE_2: [float];\n\n  /// Uncertainty of first angle -  CCSDS 503.0-B-1\n  ANGLE_UNCERTAINTY_1: float;\n\n  /// Uncertainty of second angle -  CCSDS 503.0-B-1\n  ANGLE_UNCERTAINTY_2: float;\n\n  /// Rate of change of range -  CCSDS 503.0-B-1\n  RANGE_RATE: double;\n\n  /// Uncertainty in range -  CCSDS 503.0-B-1\n  RANGE_UNCERTAINTY: double;\n\n  /// Mode of range data -  CCSDS 503.0-B-1, Page D-10\n  RANGE_MODE: string;\n\n  /// Modulus value for range data -  CCSDS 503.0-B-1, Page D-10\n  RANGE_MODULUS: double;\n\n  /// First correction angle -  CCSDS 503.0-B-1, Page D-12\n  CORRECTION_ANGLE_1: float;\n\n  /// Second correction angle -  CCSDS 503.0-B-1, Page D-12\n  CORRECTION_ANGLE_2: float;\n\n  /// Indicator of corrections applied -  CCSDS 503.0-B-1, Page D-12\n  CORRECTIONS_APPLIED: string;\n\n  /// Dry component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14\n  TROPO_DRY: [double];\n\n  /// Wet component of tropospheric delay -  CCSDS 503.0-B-1, Page D-14\n  TROPO_WET: [double];\n\n  /// Slant total electron content -  CCSDS 503.0-B-1, Page D-13\n  STEC: [double];\n\n  /// Atmospheric pressure -  CCSDS 503.0-B-1, Page D-14\n  PRESSURE: [double];\n\n  /// Relative humidity -  CCSDS 503.0-B-1, Page D-14\n  RHUMIDITY: [double];\n\n  /// Ambient temperature -  CCSDS 503.0-B-1, Page D-14\n  TEMPERATURE: [double];\n\n  /// Clock bias values -  CCSDS 503.0-B-1, Page D-15\n  CLOCK_BIAS: [double];\n\n  /// Clock drift values -  CCSDS 503.0-B-1, Page D-15\n  CLOCK_DRIFT: [double];\n\n  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler\n  /// quality metrics, one entry per observation, parallel to the other\n  /// observation arrays and reconstructed on the same OBSERVATION_START_TIME +\n  /// i * OBSERVATION_STEP_SIZE grid.\n  ///\n  /// Signal-to-noise ratio of the detection.\n  SIGNAL_TO_NOISE: [double];\n\n  /// SDS EXTENSION. Normalised spectral maximum of the detection.\n  SPECTRAL_MAX: [double];\n\n  /// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The\n  /// measured sky frequency itself is carried by RECEIVE_FREQ; this is its\n  /// uncertainty, which CCSDS 503.0-B-1 has no field for.\n  DOPPLER_NOISE_HZ: [double];\n\n  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp\n  /// table covering this segment, ordered by START_TIME and non-overlapping.\n  /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone\n  /// cannot reconstruct the observables. Absent for unramped tracking, which\n  /// leaves the record exactly CCSDS-conformant.\n  TRANSMIT_RAMPS: [TDMTransmitRamp];\n}\n\nroot_type TDM;\nfile_identifier "$TDM";',
       files: [
         "./dist/TDM/TDM.sw.tar.gz",
         "./dist/TDM/TDM.py.tar.gz",
@@ -8858,6 +9338,130 @@ file_identifier "$OCM";`,
         "./dist/ACW/ACW.cpp.tar.gz",
         "./dist/ACW/ACW.kt.tar.gz",
         "./dist/ACW/ACW.ts.tar.gz"
+      ]
+    },
+    PNL: {
+      IDL: `// Hash: 373d1f199e4c3a1fe20c7a494d85d4c58896aa2ba47ef2f3819a5aea8cbe1bab
+// Version: 1.166.0
+// -----------------------------------END_HEADER
+/// How a panel is oriented over time. Append new values only; never reorder or
+/// reuse existing values.
+enum pnlTrackingMode : ubyte {
+  UNSPECIFIED = 0,
+  /// Panel normal is fixed in the body frame.
+  BODY_FIXED = 1,
+  /// Panel normal tracks the Sun (typical solar array).
+  SUN_TRACKING = 2,
+  /// Panel normal tracks the central body (typical nadir-pointing radiator or
+  /// antenna face).
+  BODY_TRACKING = 3,
+  /// Panel normal tracks the velocity direction.
+  VELOCITY_TRACKING = 4,
+  OTHER = 5
+}
+
+/// One flat panel of a macro model.
+///
+/// The reflection coefficients describe how incident radiation is disposed of:
+/// SPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to
+/// 1 for a physically consistent panel. Producers SHOULD state the source of
+/// the optical properties in the parent record's SOURCE field; a panel model
+/// whose coefficients have no provenance is worse than none.
+table PNLPanel {
+  /// Stable panel identifier within the model.
+  PANEL_ID: string;
+
+  /// Panel area, square metres.
+  AREA_M2: double;
+
+  /// Outward panel normal in the body frame, unit vector.
+  NORMAL_X: double;
+  NORMAL_Y: double;
+  NORMAL_Z: double;
+
+  /// Orientation behaviour of the panel.
+  TRACKING_MODE: pnlTrackingMode = BODY_FIXED;
+
+  /// Fraction of incident radiation reflected specularly.
+  SPECULAR_REFLECTIVITY: double;
+
+  /// Fraction reflected diffusely.
+  DIFFUSE_REFLECTIVITY: double;
+
+  /// Fraction absorbed.
+  ABSORPTIVITY: double;
+
+  /// Infrared emissivity of the panel surface.
+  EMISSIVITY: double;
+
+  /// True when absorbed energy is re-radiated instantaneously (no thermal
+  /// lag). False means the consumer must model thermal inertia.
+  INSTANTANEOUS_RERADIATION: bool = true;
+
+  /// Panel drag coefficient, when the model is used for aerodynamic forces.
+  DRAG_COEFFICIENT: double;
+
+  /// Material name, for traceability back to a materials table.
+  MATERIAL_NAME: string;
+}
+
+/// Panelled (box-wing) Spacecraft Macro Model \u2014 the surface geometry and
+/// optical properties needed to compute non-conservative forces (solar
+/// radiation pressure, atmospheric drag, thermal re-radiation) on one object.
+///
+/// This is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for
+/// rendering and a render mesh is not a force model; $BUS/$OOD are descriptive
+/// inventory; $PHY is simulation configuration (integration method, force-type
+/// toggles). None of them carries per-panel area, normal, and optical
+/// coefficients.
+table PNL {
+  /// Object this macro model describes.
+  OBJECT_ID: string (required);
+
+  /// Advisory object name.
+  OBJECT_NAME: string;
+
+  /// Satellite catalog number, when the object is catalogued.
+  NORAD_CAT_ID: uint32;
+
+  /// Body-fixed frame the panel normals are expressed in, e.g. "SC_BODY".
+  BODY_FRAME: string;
+
+  /// Total spacecraft mass the model corresponds to, kilograms.
+  TOTAL_MASS_KG: double;
+
+  /// Epoch the model is valid at, ISO 8601. Mass and panel configuration
+  /// change over a mission; a macro model without an epoch is ambiguous.
+  EPOCH: string;
+
+  /// The panels.
+  PANELS: [PNLPanel];
+
+  /// Reference cross-sectional area used by a consumer that falls back to a
+  /// cannonball model, square metres.
+  REFERENCE_AREA_M2: double;
+
+  /// Provenance of the geometry and the optical coefficients.
+  SOURCE: string;
+}
+
+root_type PNL;
+file_identifier "$PNL";`,
+      files: [
+        "./dist/PNL/PNL.sw.tar.gz",
+        "./dist/PNL/PNL.py.tar.gz",
+        "./dist/PNL/PNL.lob.tar.gz",
+        "./dist/PNL/PNL.go.tar.gz",
+        "./dist/PNL/PNL.js.tar.gz",
+        "./dist/PNL/PNL.dart.tar.gz",
+        "./dist/PNL/PNL.cs.tar.gz",
+        "./dist/PNL/PNL.java.tar.gz",
+        "./dist/PNL/PNL.rs.tar.gz",
+        "./dist/PNL/PNL.php.tar.gz",
+        "./dist/PNL/PNL.json.tar.gz",
+        "./dist/PNL/PNL.cpp.tar.gz",
+        "./dist/PNL/PNL.kt.tar.gz",
+        "./dist/PNL/PNL.ts.tar.gz"
       ]
     },
     TKG: {
@@ -12430,6 +13034,199 @@ var json_default = {
       },
       $ref: "#/definitions/IDM"
     },
+    MDP: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        mdpTransferDirection: {
+          type: "string",
+          enum: [
+            "EITHER",
+            "PROGRADE",
+            "RETROGRADE"
+          ]
+        },
+        mdpDsmMode: {
+          type: "string",
+          enum: [
+            "NONE",
+            "DEPARTURE",
+            "ARRIVAL",
+            "EITHER_END"
+          ]
+        },
+        MDPEncounterStage: {
+          type: "object",
+          description: "One encounter stage of the body sequence: the set of bodies admissible at\nthis position in the sequence, and the epoch grid searched for it.\n\nBodies are named by NAIF integer ID, which is normative. SDS carries no\nbody enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it\nmust not be repurposed here. Note that a barycenter and a body center are\ndifferent objects (4 is the Mars barycenter, 499 is Mars) and the\ndistinction is operationally load-bearing.",
+          properties: {
+            STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based position in the ordered sequence."
+            },
+            ALLOWED_BODY_NAIF_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -2147483648,
+                maximum: 2147483647
+              },
+              description: "NAIF integer IDs admissible at this stage. A single entry pins the body."
+            },
+            ALLOWED_BODY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present."
+            },
+            EPOCH_WINDOW_START: {
+              type: "string",
+              description: "Earliest and latest epoch searched at this stage, ISO 8601."
+            },
+            EPOCH_WINDOW_END: {
+              type: "string"
+            },
+            EPOCH_GRID_STEP_DAYS: {
+              type: "number",
+              description: "Epoch grid step searched within the window, days."
+            },
+            V_INFINITY_MIN_KM_S: {
+              type: "number",
+              description: "Bounds on hyperbolic excess speed at this encounter, km/s."
+            },
+            V_INFINITY_MAX_KM_S: {
+              type: "number"
+            },
+            MIN_FLYBY_ALTITUDE_KM: {
+              type: "number",
+              description: "Minimum admissible flyby altitude above the body's reference surface, km."
+            },
+            MAX_POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on powered-flyby delta-V applied at this encounter, km/s."
+            }
+          },
+          additionalProperties: false
+        },
+        MDPFlightTimeBound: {
+          type: "object",
+          description: 'Time-of-flight bound between two encounters. Adjacent stages give per-leg\nbounds; non-adjacent stages give cumulative bounds such as\n"Earth to Mars to Earth within 3 years".',
+          properties: {
+            FROM_STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX."
+            },
+            TO_STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            MIN_DAYS: {
+              type: "number",
+              description: "Inclusive bounds on elapsed time between those two encounters, days."
+            },
+            MAX_DAYS: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MDP: {
+          type: "object",
+          description: "Mission Design Problem \u2014 the definition of a patched-conic broad search over\nan ordered sequence of body encounters.\n\nThis is the PROBLEM, not a solution: it states what is being searched and\nunder what constraints. Candidate trajectories produced by solving it are\ncarried in $MDS. Nothing existing covers this: $LMS is a single Lambert\nboundary-value problem with no body/epoch grid and no sequence, $MPE is an\nEarth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an\nSSA-detected maneuver on a catalogued Earth object.",
+          properties: {
+            PROBLEM_ID: {
+              type: "string",
+              description: "Stable identifier for this problem definition."
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable name."
+            },
+            ENCOUNTER_STAGES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPEncounterStage"
+              },
+              description: "Ordered encounter stages. Order in this vector IS the body sequence."
+            },
+            FLIGHT_TIME_BOUNDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPFlightTimeBound"
+              },
+              description: "Per-leg and cumulative time-of-flight bounds."
+            },
+            MAX_TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Cap on total mission duration, days."
+            },
+            MAX_LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Cap on launch characteristic energy C3, km^2/s^2."
+            },
+            MAX_TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on total post-launch delta-V, km/s."
+            },
+            DSM_MODE: {
+              $ref: "#/definitions/mdpDsmMode",
+              description: "Deep-space maneuver search controls."
+            },
+            MAX_DSM_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on the magnitude of any single deep-space maneuver, km/s."
+            },
+            DSM_GRID_STEP_KM_S: {
+              type: "number",
+              description: "Grid step used when searching deep-space maneuver magnitude, km/s."
+            },
+            MAX_REVOLUTIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Lambert controls: maximum number of complete revolutions considered on a\nleg, and the admissible transfer direction."
+            },
+            TRANSFER_DIRECTION: {
+              $ref: "#/definitions/mdpTransferDirection"
+            },
+            OUTPUT_TIME_BIN_DAYS: {
+              type: "number",
+              description: "Output decimation: width of the time bin within which only the best\ncandidate is retained. Zero means no decimation."
+            },
+            MAX_THRUST_N: {
+              type: "number",
+              description: "Optional spacecraft propulsion limits constraining admissible solutions."
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number"
+            },
+            DRY_MASS_KG: {
+              type: "number"
+            },
+            INITIAL_MASS_KG: {
+              type: "number"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "Ephemeris source the search was posed against, e.g. a SPICE kernel set\nidentifier. Recorded so a solution set can be reproduced."
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes."
+            }
+          },
+          required: [
+            "PROBLEM_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MDP"
+    },
     OBD: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -13512,6 +14309,181 @@ var json_default = {
       },
       $ref: "#/definitions/DOA"
     },
+    GST: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        gstNetwork: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DSN",
+            "ESTRACK",
+            "EVN",
+            "ILRS",
+            "IGS",
+            "OTHER"
+          ]
+        },
+        gstFrameRealization: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ITRF93",
+            "ITRF2000",
+            "ITRF2005",
+            "ITRF2008",
+            "ITRF2014",
+            "ITRF2020",
+            "OTHER"
+          ]
+        },
+        gstAntennaAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AZ_EL",
+            "X_Y_EAST",
+            "X_Y_NORTH",
+            "HA_DEC",
+            "FIXED",
+            "OTHER"
+          ]
+        },
+        GST: {
+          type: "object",
+          description: "Ground/Tracking Station Definition \u2014 the geodetic identity and geometry of\none tracking station, sufficient to reduce a radiometric or laser\nobservation taken from it.\n\nThis is deliberately NOT $SEN. $SEN describes an SSA sensor site by\nlatitude/longitude/altitude with tasking plans and statistics; it carries no\nterrestrial frame realization, no station velocity, no reference epoch, and\nno antenna axis geometry. Station coordinates without a frame realization\nand an epoch cannot be propagated for plate motion and are therefore not\nusable for orbit determination.",
+          properties: {
+            STATION_ID: {
+              type: "string",
+              description: 'Stable station identifier as used by the operating network, e.g. "DSS-63".'
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable station name."
+            },
+            NETWORK: {
+              $ref: "#/definitions/gstNetwork",
+              description: "Operating network."
+            },
+            DOMES_NUMBER: {
+              type: "string",
+              description: "IERS DOMES number, when the station has one."
+            },
+            CDP_NUMBER: {
+              type: "string",
+              description: "NASA CDP / SLR site number, when the station has one."
+            },
+            FRAME_REALIZATION: {
+              $ref: "#/definitions/gstFrameRealization",
+              description: "Terrestrial reference frame realization of POSITION_* and VELOCITY_*."
+            },
+            FRAME_REALIZATION_NAME: {
+              type: "string",
+              description: "Free-text realization name, required when FRAME_REALIZATION is OTHER."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch at which POSITION_* is valid, ISO 8601. Positions MUST be\npropagated to the observation epoch with VELOCITY_* before use."
+            },
+            POSITION_X: {
+              type: "number",
+              description: "Station position in the stated realization, metres."
+            },
+            POSITION_Y: {
+              type: "number"
+            },
+            POSITION_Z: {
+              type: "number"
+            },
+            VELOCITY_X: {
+              type: "number",
+              description: "Station velocity (plate motion) in the stated realization, metres per\nyear. Zero is a claim that the station does not move, not a default."
+            },
+            VELOCITY_Y: {
+              type: "number"
+            },
+            VELOCITY_Z: {
+              type: "number"
+            },
+            POSITION_SIGMA_X: {
+              type: "number",
+              description: "1-sigma position uncertainty, metres."
+            },
+            POSITION_SIGMA_Y: {
+              type: "number"
+            },
+            POSITION_SIGMA_Z: {
+              type: "number"
+            },
+            ANTENNA_AXIS_TYPE: {
+              $ref: "#/definitions/gstAntennaAxisType",
+              description: "Antenna mount geometry."
+            },
+            AXIS_OFFSET_M: {
+              type: "number",
+              description: "Distance between the two mount axes, metres. Zero for an intersecting-axis\nmount."
+            },
+            ECCENTRICITY_X: {
+              type: "number",
+              description: "Vector from the monument marker to the antenna reference point, metres."
+            },
+            ECCENTRICITY_Y: {
+              type: "number"
+            },
+            ECCENTRICITY_Z: {
+              type: "number"
+            },
+            ECCENTRICITY_FRAME: {
+              type: "string",
+              description: 'Frame the eccentricity vector is expressed in, e.g. "XYZ" (geocentric\nCartesian) or "NEU" (local north-east-up).'
+            },
+            TRANSMIT_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Uplink bands the station can transmit, e.g. ["S", "X", "Ka"].'
+            },
+            RECEIVE_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Downlink bands the station can receive."
+            },
+            CLOCK_OFFSET_S: {
+              type: "number",
+              description: "Station clock offset from the stated time scale, seconds."
+            },
+            CLOCK_RATE_S_PER_S: {
+              type: "number",
+              description: "Station clock rate, seconds per second."
+            },
+            CLOCK_TIME_SCALE: {
+              type: "string",
+              description: 'Time scale the clock terms are referenced to, e.g. "UTC", "TAI".'
+            },
+            VALID_FROM: {
+              type: "string",
+              description: "Start of the interval over which this definition applies, ISO 8601."
+            },
+            VALID_TO: {
+              type: "string",
+              description: "End of the interval over which this definition applies, ISO 8601."
+            },
+            SOURCE: {
+              type: "string",
+              description: 'Provenance of these coordinates, e.g. "DSN 810-005 rev. E", an ILRS SINEX\nfile name, or a VLBI station catalogue identifier.'
+            }
+          },
+          required: [
+            "STATION_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/GST"
+    },
     TRN: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -13911,6 +14883,177 @@ var json_default = {
         }
       },
       $ref: "#/definitions/CPS"
+    },
+    SHC: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        shcNormalization: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "FULLY_NORMALIZED",
+            "UNNORMALIZED"
+          ]
+        },
+        shcTideSystem: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "TIDE_FREE",
+            "ZERO_TIDE",
+            "MEAN_TIDE"
+          ]
+        },
+        SHCVariableTerm: {
+          type: "object",
+          description: "One time-variable coefficient term: a rate or a periodic variation applied\nto the static coefficient at DEGREE/ORDER.",
+          properties: {
+            DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535
+            },
+            ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535
+            },
+            TERM_TYPE: {
+              type: "string",
+              description: 'Kind of variation: "TREND", "ASIN", "ACOS".'
+            },
+            C_VALUE: {
+              type: "number",
+              description: "Coefficient of the variation for the cosine (C) and sine (S) terms."
+            },
+            S_VALUE: {
+              type: "number"
+            },
+            PERIOD_YEARS: {
+              type: "number",
+              description: "Period of a periodic term, years. Unused for a trend."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch the term is referenced to, ISO 8601."
+            }
+          },
+          additionalProperties: false
+        },
+        SHC: {
+          type: "object",
+          description: "Spherical-Harmonic Coefficient Set \u2014 an actual gravity field, as opposed to\nthe NAME of one.\n\nThis is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,\nbounds its degree/order, toggles third-body and tidal effects, and carries\nscalar J2..J6. It cannot carry a coefficient set, and a named model without\nits coefficients is not interchange \u2014 it is a citation.\n\nCoefficients are carried as four parallel arrays of equal length, indexed\ntogether: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine\nterm C[i] and sine term S[i]. Parallel arrays rather than a table per\ncoefficient because a 200x200 field is ~40,000 coefficients and a\ntable-per-coefficient encoding is pathological in both size and decode cost.",
+          properties: {
+            MODEL_NAME: {
+              type: "string",
+              description: 'Identifier of the coefficient set, e.g. "EGM2008", "GGGRX1200".'
+            },
+            CENTRAL_BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,\n499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a\nbarycenter (e.g. 4) is NOT the body (e.g. 499)."
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name."
+            },
+            GM: {
+              type: "number",
+              description: "Gravitational parameter of the body, m^3/s^2. Part of the set: a field's\ncoefficients are only meaningful with the GM they were solved against."
+            },
+            REFERENCE_RADIUS: {
+              type: "number",
+              description: "Reference radius of the expansion, metres. Also part of the set."
+            },
+            MAX_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Maximum degree and order present in the arrays."
+            },
+            MAX_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/shcNormalization",
+              description: "Normalization convention. A set published without this is unusable;\nconsumers MUST reject UNSPECIFIED rather than assuming a convention."
+            },
+            PERMANENT_TIDE_SYSTEM: {
+              $ref: "#/definitions/shcTideSystem",
+              description: "Permanent-tide system. Consumers MUST reject UNSPECIFIED for any\napplication sensitive at the 1e-9 level in C20."
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch the static coefficients are referenced to, ISO 8601. Required when\nVARIABLE_TERMS is present."
+            },
+            DEGREES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 65535
+              },
+              description: "Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical\nlengths; a record where they do not is invalid."
+            },
+            ORDERS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 65535
+              }
+            },
+            C: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            S: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            C_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional 1-sigma uncertainties, parallel to C and S when present."
+            },
+            S_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            VARIABLE_TERMS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SHCVariableTerm"
+              },
+              description: "Optional time-variable terms applied on top of the static field."
+            },
+            SOURCE: {
+              type: "string",
+              description: "Tide-free/zero-tide conversion already applied, publication reference, or\nany other provenance needed to reproduce the set."
+            },
+            CITATION: {
+              type: "string",
+              description: "Citation for the field, e.g. the paper or data-centre DOI."
+            }
+          },
+          required: [
+            "MODEL_NAME"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SHC"
     },
     OPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -34855,6 +35998,226 @@ var json_default = {
       },
       $ref: "#/definitions/TAB"
     },
+    MDS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        MDSEncounter: {
+          type: "object",
+          description: "One body encounter along a candidate trajectory.\n\nEncounter-indexed rather than leg-indexed on purpose. A search implementation\ntypically emits leg-indexed arrays: for nE encounters there are nL = nE - 1\nlegs, the departure v-infinity of leg i is the OUTGOING vector at encounter\ni, and the arrival v-infinity of leg i is the INCOMING vector at encounter\ni + 1. Carrying both vectors on the encounter they physically occur at\nremoves that off-by-one from every consumer.",
+          properties: {
+            ENCOUNTER_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based position along the trajectory."
+            },
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Body encountered, NAIF integer ID (normative). A barycenter is not the\nbody: 4 is the Mars barycenter, 499 is Mars."
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name."
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "Encounter epoch as ephemeris time, seconds past J2000 TDB. This is the\nform solvers work in and is carried verbatim to avoid a lossy round trip."
+            },
+            EPOCH_UTC: {
+              type: "string",
+              description: "Same epoch in ISO 8601 (UTC), for consumers that do not carry an\nephemeris time implementation. Advisory; EPOCH_ET_S is normative."
+            },
+            INCOMING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "Incoming hyperbolic excess velocity vector, km/s. Absent at the first\nencounter."
+            },
+            INCOMING_V_INFINITY_Y_KM_S: {
+              type: "number"
+            },
+            INCOMING_V_INFINITY_Z_KM_S: {
+              type: "number"
+            },
+            OUTGOING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "Outgoing hyperbolic excess velocity vector, km/s. Absent at the final\nencounter."
+            },
+            OUTGOING_V_INFINITY_Y_KM_S: {
+              type: "number"
+            },
+            OUTGOING_V_INFINITY_Z_KM_S: {
+              type: "number"
+            },
+            TURN_ANGLE_RAD: {
+              type: "number",
+              description: "Turn angle between incoming and outgoing asymptotes, radians."
+            },
+            PERIAPSIS_RADIUS_KM: {
+              type: "number",
+              description: "Flyby periapsis radius measured from the body's center, km."
+            },
+            POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "Delta-V applied at periapsis for a powered flyby, km/s. Zero for an\nunpowered (ballistic) flyby."
+            },
+            LAMBERT_SOLUTION_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Index of the Lambert solution selected for the leg DEPARTING this\nencounter, as reported by the solver."
+            },
+            FLYBY_SOLUTION_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Index of the flyby solution branch selected at this encounter, as\nreported by the solver."
+            }
+          },
+          additionalProperties: false
+        },
+        MDSDeepSpaceManeuver: {
+          type: "object",
+          description: "One deep-space maneuver on a transfer leg.",
+          properties: {
+            LEG_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based leg the maneuver occurs on. Leg i connects encounter i to\nencounter i + 1."
+            },
+            ARC_FRACTION: {
+              type: "number",
+              description: "Position along the leg as a fraction of its flight time, in [0, 1]."
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "Maneuver epoch as ephemeris time, seconds past J2000 TDB, when the solver\nreports it directly."
+            },
+            DELTA_V_KM_S: {
+              type: "number",
+              description: "Maneuver magnitude, km/s."
+            },
+            DELTA_V_X_KM_S: {
+              type: "number",
+              description: "Maneuver vector when the solver reports one, km/s."
+            },
+            DELTA_V_Y_KM_S: {
+              type: "number"
+            },
+            DELTA_V_Z_KM_S: {
+              type: "number"
+            }
+          },
+          additionalProperties: false
+        },
+        MDSCandidate: {
+          type: "object",
+          description: "One candidate trajectory on the front.",
+          properties: {
+            CANDIDATE_ID: {
+              type: "string",
+              description: "Solver-assigned trajectory identifier, unique within the set."
+            },
+            ENCOUNTERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSEncounter"
+              },
+              description: "Ordered encounters, first to last."
+            },
+            DEEP_SPACE_MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSDeepSpaceManeuver"
+              },
+              description: "Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION."
+            },
+            TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Total post-launch delta-V, km/s."
+            },
+            TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Total flight time from first to last encounter, days."
+            },
+            LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Launch characteristic energy, km^2/s^2."
+            },
+            ARRIVAL_V_INFINITY_KM_S: {
+              type: "number",
+              description: "Hyperbolic excess speed at arrival, km/s."
+            },
+            ESCAPE_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference escape delta-V from the departure body, km/s."
+            },
+            INSERTION_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference insertion delta-V at the arrival body, km/s."
+            },
+            NON_DOMINATED: {
+              type: "boolean",
+              description: "True when this candidate is non-dominated within the set. A set MAY carry\ndominated candidates for context; a consumer plotting a front MUST filter\non this rather than assume every member is non-dominated."
+            }
+          },
+          additionalProperties: false
+        },
+        MDS: {
+          type: "object",
+          description: "Mission Design Solution Set \u2014 a set of candidate trajectories produced by\nsolving a mission design broad search, typically a Pareto front over\ncompeting objectives (total delta-V against total flight time).\n\nSDS had no multi-candidate container of any kind before this record. The\nclosest existing carrier for a single planned burn is OCM.Maneuver, whose\npayload is untyped DATA:[string] with MAN_UNITS:[string] and which has no\nv-infinity, turn angle, flyby periapsis radius, or C3.",
+          properties: {
+            SOLUTION_SET_ID: {
+              type: "string",
+              description: "Stable identifier for this solution set."
+            },
+            PROBLEM_ID: {
+              type: "string",
+              description: "PROBLEM_ID of the $MDP this set solves. A solution set whose problem\ndefinition is unknown is not reproducible."
+            },
+            OBJECTIVES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Objectives the front is expressed over, e.g.\n["TOTAL_DELTA_V_KM_S", "TOTAL_FLIGHT_TIME_DAYS"]. Names MUST be field\nnames of MDSCandidate.'
+            },
+            CANDIDATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSCandidate"
+              },
+              description: "The candidates."
+            },
+            SOLVER: {
+              type: "string",
+              description: "Solver identity and version that produced the set."
+            },
+            SOLVER_VERSION: {
+              type: "string"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "Ephemeris source used, e.g. a SPICE kernel set identifier."
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "When the set was generated, ISO 8601."
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes."
+            }
+          },
+          required: [
+            "SOLUTION_SET_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MDS"
+    },
     PLG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -47542,6 +48905,131 @@ var json_default = {
         }
       },
       $ref: "#/definitions/ACW"
+    },
+    PNL: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pnlTrackingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BODY_FIXED",
+            "SUN_TRACKING",
+            "BODY_TRACKING",
+            "VELOCITY_TRACKING",
+            "OTHER"
+          ]
+        },
+        PNLPanel: {
+          type: "object",
+          description: "One flat panel of a macro model.\n\nThe reflection coefficients describe how incident radiation is disposed of:\nSPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to\n1 for a physically consistent panel. Producers SHOULD state the source of\nthe optical properties in the parent record's SOURCE field; a panel model\nwhose coefficients have no provenance is worse than none.",
+          properties: {
+            PANEL_ID: {
+              type: "string",
+              description: "Stable panel identifier within the model."
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Panel area, square metres."
+            },
+            NORMAL_X: {
+              type: "number",
+              description: "Outward panel normal in the body frame, unit vector."
+            },
+            NORMAL_Y: {
+              type: "number"
+            },
+            NORMAL_Z: {
+              type: "number"
+            },
+            TRACKING_MODE: {
+              $ref: "#/definitions/pnlTrackingMode",
+              description: "Orientation behaviour of the panel."
+            },
+            SPECULAR_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction of incident radiation reflected specularly."
+            },
+            DIFFUSE_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction reflected diffusely."
+            },
+            ABSORPTIVITY: {
+              type: "number",
+              description: "Fraction absorbed."
+            },
+            EMISSIVITY: {
+              type: "number",
+              description: "Infrared emissivity of the panel surface."
+            },
+            INSTANTANEOUS_RERADIATION: {
+              type: "boolean",
+              description: "True when absorbed energy is re-radiated instantaneously (no thermal\nlag). False means the consumer must model thermal inertia."
+            },
+            DRAG_COEFFICIENT: {
+              type: "number",
+              description: "Panel drag coefficient, when the model is used for aerodynamic forces."
+            },
+            MATERIAL_NAME: {
+              type: "string",
+              description: "Material name, for traceability back to a materials table."
+            }
+          },
+          additionalProperties: false
+        },
+        PNL: {
+          type: "object",
+          description: "Panelled (box-wing) Spacecraft Macro Model \u2014 the surface geometry and\noptical properties needed to compute non-conservative forces (solar\nradiation pressure, atmospheric drag, thermal re-radiation) on one object.\n\nThis is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for\nrendering and a render mesh is not a force model; $BUS/$OOD are descriptive\ninventory; $PHY is simulation configuration (integration method, force-type\ntoggles). None of them carries per-panel area, normal, and optical\ncoefficients.",
+          properties: {
+            OBJECT_ID: {
+              type: "string",
+              description: "Object this macro model describes."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Advisory object name."
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Satellite catalog number, when the object is catalogued."
+            },
+            BODY_FRAME: {
+              type: "string",
+              description: 'Body-fixed frame the panel normals are expressed in, e.g. "SC_BODY".'
+            },
+            TOTAL_MASS_KG: {
+              type: "number",
+              description: "Total spacecraft mass the model corresponds to, kilograms."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch the model is valid at, ISO 8601. Mass and panel configuration\nchange over a mission; a macro model without an epoch is ambiguous."
+            },
+            PANELS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PNLPanel"
+              },
+              description: "The panels."
+            },
+            REFERENCE_AREA_M2: {
+              type: "number",
+              description: "Reference cross-sectional area used by a consumer that falls back to a\ncannonball model, square metres."
+            },
+            SOURCE: {
+              type: "string",
+              description: "Provenance of the geometry and the optical coefficients."
+            }
+          },
+          required: [
+            "OBJECT_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PNL"
     },
     TKG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -66157,6 +67645,303 @@ var fbjson_default = {
       "x-flatbuffer-root-type": "PLD",
       "x-flatbuffer-file-identifier": "$PLD"
     },
+    MDP: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        mdpTransferDirection: {
+          type: "string",
+          enum: [
+            "EITHER",
+            "PROGRADE",
+            "RETROGRADE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            EITHER: {
+              value: 0,
+              description: "Either direction is admissible."
+            },
+            PROGRADE: {
+              value: 1
+            },
+            RETROGRADE: {
+              value: 2
+            }
+          }
+        },
+        mdpDsmMode: {
+          type: "string",
+          enum: [
+            "NONE",
+            "DEPARTURE",
+            "ARRIVAL",
+            "EITHER_END"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "No deep-space maneuver on this leg."
+            },
+            DEPARTURE: {
+              value: 1,
+              description: "Raise/lower the departure end."
+            },
+            ARRIVAL: {
+              value: 2,
+              description: "Raise/lower the arrival end."
+            },
+            EITHER_END: {
+              value: 3,
+              description: "Either end may be adjusted."
+            }
+          }
+        },
+        MDPEncounterStage: {
+          type: "object",
+          description: "One encounter stage of the body sequence: the set of bodies admissible at\nthis position in the sequence, and the epoch grid searched for it.\n\nBodies are named by NAIF integer ID, which is normative. SDS carries no\nbody enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it\nmust not be repurposed here. Note that a barycenter and a body center are\ndifferent objects (4 is the Mars barycenter, 499 is Mars) and the\ndistinction is operationally load-bearing.",
+          properties: {
+            STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based position in the ordered sequence.",
+              "x-flatbuffer-type": "uint"
+            },
+            ALLOWED_BODY_NAIF_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: -2147483648,
+                maximum: 2147483647
+              },
+              description: "NAIF integer IDs admissible at this stage. A single entry pins the body.",
+              "x-flatbuffer-type": "[int]"
+            },
+            ALLOWED_BODY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present.",
+              "x-flatbuffer-type": "[string]"
+            },
+            EPOCH_WINDOW_START: {
+              type: "string",
+              description: "Earliest and latest epoch searched at this stage, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_WINDOW_END: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_GRID_STEP_DAYS: {
+              type: "number",
+              description: "Epoch grid step searched within the window, days.",
+              "x-flatbuffer-type": "double"
+            },
+            V_INFINITY_MIN_KM_S: {
+              type: "number",
+              description: "Bounds on hyperbolic excess speed at this encounter, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            V_INFINITY_MAX_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_FLYBY_ALTITUDE_KM: {
+              type: "number",
+              description: "Minimum admissible flyby altitude above the body's reference surface, km.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on powered-flyby delta-V applied at this encounter, km/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MDPFlightTimeBound: {
+          type: "object",
+          description: 'Time-of-flight bound between two encounters. Adjacent stages give per-leg\nbounds; non-adjacent stages give cumulative bounds such as\n"Earth to Mars to Earth within 3 years".',
+          properties: {
+            FROM_STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX.",
+              "x-flatbuffer-type": "uint"
+            },
+            TO_STAGE_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint"
+            },
+            MIN_DAYS: {
+              type: "number",
+              description: "Inclusive bounds on elapsed time between those two encounters, days.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_DAYS: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MDP: {
+          type: "object",
+          description: "Mission Design Problem \u2014 the definition of a patched-conic broad search over\nan ordered sequence of body encounters.\n\nThis is the PROBLEM, not a solution: it states what is being searched and\nunder what constraints. Candidate trajectories produced by solving it are\ncarried in $MDS. Nothing existing covers this: $LMS is a single Lambert\nboundary-value problem with no body/epoch grid and no sequence, $MPE is an\nEarth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an\nSSA-detected maneuver on a catalogued Earth object.",
+          properties: {
+            PROBLEM_ID: {
+              type: "string",
+              description: "Stable identifier for this problem definition.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable name.",
+              "x-flatbuffer-type": "string"
+            },
+            ENCOUNTER_STAGES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPEncounterStage"
+              },
+              description: "Ordered encounter stages. Order in this vector IS the body sequence.",
+              "x-flatbuffer-type": "[MDPEncounterStage]"
+            },
+            FLIGHT_TIME_BOUNDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPFlightTimeBound"
+              },
+              description: "Per-leg and cumulative time-of-flight bounds.",
+              "x-flatbuffer-type": "[MDPFlightTimeBound]"
+            },
+            MAX_TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Cap on total mission duration, days.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Cap on launch characteristic energy C3, km^2/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on total post-launch delta-V, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DSM_MODE: {
+              $ref: "#/definitions/mdpDsmMode",
+              description: "Deep-space maneuver search controls.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "No deep-space maneuver on this leg."
+                },
+                DEPARTURE: {
+                  value: 1,
+                  description: "Raise/lower the departure end."
+                },
+                ARRIVAL: {
+                  value: 2,
+                  description: "Raise/lower the arrival end."
+                },
+                EITHER_END: {
+                  value: 3,
+                  description: "Either end may be adjusted."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            MAX_DSM_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on the magnitude of any single deep-space maneuver, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DSM_GRID_STEP_KM_S: {
+              type: "number",
+              description: "Grid step used when searching deep-space maneuver magnitude, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_REVOLUTIONS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Lambert controls: maximum number of complete revolutions considered on a\nleg, and the admissible transfer direction.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            TRANSFER_DIRECTION: {
+              $ref: "#/definitions/mdpTransferDirection",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                EITHER: {
+                  value: 0,
+                  description: "Either direction is admissible."
+                },
+                PROGRADE: {
+                  value: 1
+                },
+                RETROGRADE: {
+                  value: 2
+                }
+              },
+              "x-flatbuffer-default": "EITHER"
+            },
+            OUTPUT_TIME_BIN_DAYS: {
+              type: "number",
+              description: "Output decimation: width of the time bin within which only the best\ncandidate is retained. Zero means no decimation.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_THRUST_N: {
+              type: "number",
+              description: "Optional spacecraft propulsion limits constraining admissible solutions.",
+              "x-flatbuffer-type": "double"
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            DRY_MASS_KG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "Ephemeris source the search was posed against, e.g. a SPICE kernel set\nidentifier. Recorded so a solution set can be reproduced.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "PROBLEM_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MDP",
+      "x-flatbuffer-root-type": "MDP",
+      "x-flatbuffer-file-identifier": "$MDP"
+    },
     OBD: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -67916,6 +69701,387 @@ var fbjson_default = {
       "x-flatbuffer-root-type": "DOA",
       "x-flatbuffer-file-identifier": "$DOA"
     },
+    GST: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        gstNetwork: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "DSN",
+            "ESTRACK",
+            "EVN",
+            "ILRS",
+            "IGS",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            DSN: {
+              value: 1,
+              description: "NASA Deep Space Network."
+            },
+            ESTRACK: {
+              value: 2,
+              description: "ESA tracking station network."
+            },
+            EVN: {
+              value: 3,
+              description: "European VLBI Network."
+            },
+            ILRS: {
+              value: 4,
+              description: "International Laser Ranging Service."
+            },
+            IGS: {
+              value: 5,
+              description: "International GNSS Service."
+            },
+            OTHER: {
+              value: 6,
+              description: "A network not covered above."
+            }
+          }
+        },
+        gstFrameRealization: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ITRF93",
+            "ITRF2000",
+            "ITRF2005",
+            "ITRF2008",
+            "ITRF2014",
+            "ITRF2020",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ITRF93: {
+              value: 1
+            },
+            ITRF2000: {
+              value: 2
+            },
+            ITRF2005: {
+              value: 3
+            },
+            ITRF2008: {
+              value: 4
+            },
+            ITRF2014: {
+              value: 5
+            },
+            ITRF2020: {
+              value: 6
+            },
+            OTHER: {
+              value: 7,
+              description: "A realization not covered above; name it in FRAME_REALIZATION_NAME."
+            }
+          }
+        },
+        gstAntennaAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AZ_EL",
+            "X_Y_EAST",
+            "X_Y_NORTH",
+            "HA_DEC",
+            "FIXED",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            AZ_EL: {
+              value: 1
+            },
+            X_Y_EAST: {
+              value: 2
+            },
+            X_Y_NORTH: {
+              value: 3
+            },
+            HA_DEC: {
+              value: 4
+            },
+            FIXED: {
+              value: 5,
+              description: "Fixed / non-steerable."
+            },
+            OTHER: {
+              value: 6
+            }
+          }
+        },
+        GST: {
+          type: "object",
+          description: "Ground/Tracking Station Definition \u2014 the geodetic identity and geometry of\none tracking station, sufficient to reduce a radiometric or laser\nobservation taken from it.\n\nThis is deliberately NOT $SEN. $SEN describes an SSA sensor site by\nlatitude/longitude/altitude with tasking plans and statistics; it carries no\nterrestrial frame realization, no station velocity, no reference epoch, and\nno antenna axis geometry. Station coordinates without a frame realization\nand an epoch cannot be propagated for plate motion and are therefore not\nusable for orbit determination.",
+          properties: {
+            STATION_ID: {
+              type: "string",
+              description: 'Stable station identifier as used by the operating network, e.g. "DSS-63".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable station name.",
+              "x-flatbuffer-type": "string"
+            },
+            NETWORK: {
+              $ref: "#/definitions/gstNetwork",
+              description: "Operating network.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                DSN: {
+                  value: 1,
+                  description: "NASA Deep Space Network."
+                },
+                ESTRACK: {
+                  value: 2,
+                  description: "ESA tracking station network."
+                },
+                EVN: {
+                  value: 3,
+                  description: "European VLBI Network."
+                },
+                ILRS: {
+                  value: 4,
+                  description: "International Laser Ranging Service."
+                },
+                IGS: {
+                  value: 5,
+                  description: "International GNSS Service."
+                },
+                OTHER: {
+                  value: 6,
+                  description: "A network not covered above."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DOMES_NUMBER: {
+              type: "string",
+              description: "IERS DOMES number, when the station has one.",
+              "x-flatbuffer-type": "string"
+            },
+            CDP_NUMBER: {
+              type: "string",
+              description: "NASA CDP / SLR site number, when the station has one.",
+              "x-flatbuffer-type": "string"
+            },
+            FRAME_REALIZATION: {
+              $ref: "#/definitions/gstFrameRealization",
+              description: "Terrestrial reference frame realization of POSITION_* and VELOCITY_*.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ITRF93: {
+                  value: 1
+                },
+                ITRF2000: {
+                  value: 2
+                },
+                ITRF2005: {
+                  value: 3
+                },
+                ITRF2008: {
+                  value: 4
+                },
+                ITRF2014: {
+                  value: 5
+                },
+                ITRF2020: {
+                  value: 6
+                },
+                OTHER: {
+                  value: 7,
+                  description: "A realization not covered above; name it in FRAME_REALIZATION_NAME."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            FRAME_REALIZATION_NAME: {
+              type: "string",
+              description: "Free-text realization name, required when FRAME_REALIZATION is OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch at which POSITION_* is valid, ISO 8601. Positions MUST be\npropagated to the observation epoch with VELOCITY_* before use.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_X: {
+              type: "number",
+              description: "Station position in the stated realization, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_X: {
+              type: "number",
+              description: "Station velocity (plate motion) in the stated realization, metres per\nyear. Zero is a claim that the station does not move, not a default.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_X: {
+              type: "number",
+              description: "1-sigma position uncertainty, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ANTENNA_AXIS_TYPE: {
+              $ref: "#/definitions/gstAntennaAxisType",
+              description: "Antenna mount geometry.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                AZ_EL: {
+                  value: 1
+                },
+                X_Y_EAST: {
+                  value: 2
+                },
+                X_Y_NORTH: {
+                  value: 3
+                },
+                HA_DEC: {
+                  value: 4
+                },
+                FIXED: {
+                  value: 5,
+                  description: "Fixed / non-steerable."
+                },
+                OTHER: {
+                  value: 6
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            AXIS_OFFSET_M: {
+              type: "number",
+              description: "Distance between the two mount axes, metres. Zero for an intersecting-axis\nmount.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_X: {
+              type: "number",
+              description: "Vector from the monument marker to the antenna reference point, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_FRAME: {
+              type: "string",
+              description: 'Frame the eccentricity vector is expressed in, e.g. "XYZ" (geocentric\nCartesian) or "NEU" (local north-east-up).',
+              "x-flatbuffer-type": "string"
+            },
+            TRANSMIT_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Uplink bands the station can transmit, e.g. ["S", "X", "Ka"].',
+              "x-flatbuffer-type": "[string]"
+            },
+            RECEIVE_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Downlink bands the station can receive.",
+              "x-flatbuffer-type": "[string]"
+            },
+            CLOCK_OFFSET_S: {
+              type: "number",
+              description: "Station clock offset from the stated time scale, seconds.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_RATE_S_PER_S: {
+              type: "number",
+              description: "Station clock rate, seconds per second.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_TIME_SCALE: {
+              type: "string",
+              description: 'Time scale the clock terms are referenced to, e.g. "UTC", "TAI".',
+              "x-flatbuffer-type": "string"
+            },
+            VALID_FROM: {
+              type: "string",
+              description: "Start of the interval over which this definition applies, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            VALID_TO: {
+              type: "string",
+              description: "End of the interval over which this definition applies, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE: {
+              type: "string",
+              description: 'Provenance of these coordinates, e.g. "DSN 810-005 rev. E", an ILRS SINEX\nfile name, or a VLBI station catalogue identifier.',
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "STATION_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/GST",
+      "x-flatbuffer-root-type": "GST",
+      "x-flatbuffer-file-identifier": "$GST"
+    },
     TRN: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -68606,6 +70772,268 @@ var fbjson_default = {
       $ref: "#/definitions/CPS",
       "x-flatbuffer-root-type": "CPS",
       "x-flatbuffer-file-identifier": "$CPS"
+    },
+    SHC: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        shcNormalization: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "FULLY_NORMALIZED",
+            "UNNORMALIZED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            FULLY_NORMALIZED: {
+              value: 1,
+              description: "4-pi (fully) normalized, the geodesy convention."
+            },
+            UNNORMALIZED: {
+              value: 2,
+              description: "Unnormalized (raw) coefficients."
+            }
+          }
+        },
+        shcTideSystem: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "TIDE_FREE",
+            "ZERO_TIDE",
+            "MEAN_TIDE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            TIDE_FREE: {
+              value: 1
+            },
+            ZERO_TIDE: {
+              value: 2
+            },
+            MEAN_TIDE: {
+              value: 3
+            }
+          }
+        },
+        SHCVariableTerm: {
+          type: "object",
+          description: "One time-variable coefficient term: a rate or a periodic variation applied\nto the static coefficient at DEGREE/ORDER.",
+          properties: {
+            DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              "x-flatbuffer-type": "ushort"
+            },
+            ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              "x-flatbuffer-type": "ushort"
+            },
+            TERM_TYPE: {
+              type: "string",
+              description: 'Kind of variation: "TREND", "ASIN", "ACOS".',
+              "x-flatbuffer-type": "string"
+            },
+            C_VALUE: {
+              type: "number",
+              description: "Coefficient of the variation for the cosine (C) and sine (S) terms.",
+              "x-flatbuffer-type": "double"
+            },
+            S_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            PERIOD_YEARS: {
+              type: "number",
+              description: "Period of a periodic term, years. Unused for a trend.",
+              "x-flatbuffer-type": "double"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch the term is referenced to, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SHC: {
+          type: "object",
+          description: "Spherical-Harmonic Coefficient Set \u2014 an actual gravity field, as opposed to\nthe NAME of one.\n\nThis is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model,\nbounds its degree/order, toggles third-body and tidal effects, and carries\nscalar J2..J6. It cannot carry a coefficient set, and a named model without\nits coefficients is not interchange \u2014 it is a citation.\n\nCoefficients are carried as four parallel arrays of equal length, indexed\ntogether: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine\nterm C[i] and sine term S[i]. Parallel arrays rather than a table per\ncoefficient because a 200x200 field is ~40,000 coefficients and a\ntable-per-coefficient encoding is pathological in both size and decode cost.",
+          properties: {
+            MODEL_NAME: {
+              type: "string",
+              description: 'Identifier of the coefficient set, e.g. "EGM2008", "GGGRX1200".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            CENTRAL_BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Body the field describes, as a NAIF integer ID (399 = Earth, 301 = Moon,\n499 = Mars). NAIF ID is normative; BODY_NAME is advisory. Note that a\nbarycenter (e.g. 4) is NOT the body (e.g. 499).",
+              "x-flatbuffer-type": "int"
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name.",
+              "x-flatbuffer-type": "string"
+            },
+            GM: {
+              type: "number",
+              description: "Gravitational parameter of the body, m^3/s^2. Part of the set: a field's\ncoefficients are only meaningful with the GM they were solved against.",
+              "x-flatbuffer-type": "double"
+            },
+            REFERENCE_RADIUS: {
+              type: "number",
+              description: "Reference radius of the expansion, metres. Also part of the set.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Maximum degree and order present in the arrays.",
+              "x-flatbuffer-type": "ushort"
+            },
+            MAX_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              "x-flatbuffer-type": "ushort"
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/shcNormalization",
+              description: "Normalization convention. A set published without this is unusable;\nconsumers MUST reject UNSPECIFIED rather than assuming a convention.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                FULLY_NORMALIZED: {
+                  value: 1,
+                  description: "4-pi (fully) normalized, the geodesy convention."
+                },
+                UNNORMALIZED: {
+                  value: 2,
+                  description: "Unnormalized (raw) coefficients."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PERMANENT_TIDE_SYSTEM: {
+              $ref: "#/definitions/shcTideSystem",
+              description: "Permanent-tide system. Consumers MUST reject UNSPECIFIED for any\napplication sensitive at the 1e-9 level in C20.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                TIDE_FREE: {
+                  value: 1
+                },
+                ZERO_TIDE: {
+                  value: 2
+                },
+                MEAN_TIDE: {
+                  value: 3
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch the static coefficients are referenced to, ISO 8601. Required when\nVARIABLE_TERMS is present.",
+              "x-flatbuffer-type": "string"
+            },
+            DEGREES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 65535
+              },
+              description: "Parallel coefficient arrays. DEGREES, ORDERS, C and S MUST have identical\nlengths; a record where they do not is invalid.",
+              "x-flatbuffer-type": "[ushort]"
+            },
+            ORDERS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 65535
+              },
+              "x-flatbuffer-type": "[ushort]"
+            },
+            C: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            S: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            C_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional 1-sigma uncertainties, parallel to C and S when present.",
+              "x-flatbuffer-type": "[double]"
+            },
+            S_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            VARIABLE_TERMS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SHCVariableTerm"
+              },
+              description: "Optional time-variable terms applied on top of the static field.",
+              "x-flatbuffer-type": "[SHCVariableTerm]"
+            },
+            SOURCE: {
+              type: "string",
+              description: "Tide-free/zero-tide conversion already applied, publication reference, or\nany other provenance needed to reproduce the set.",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "Citation for the field, e.g. the paper or data-centre DOI.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "MODEL_NAME"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SHC",
+      "x-flatbuffer-root-type": "SHC",
+      "x-flatbuffer-file-identifier": "$SHC"
     },
     OPM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -138933,6 +141361,132 @@ var fbjson_default = {
             }
           }
         },
+        gstNetwork: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            DSN: {
+              value: 1,
+              description: "NASA Deep Space Network."
+            },
+            ESTRACK: {
+              value: 2,
+              description: "ESA tracking station network."
+            },
+            EVN: {
+              value: 3,
+              description: "European VLBI Network."
+            },
+            ILRS: {
+              value: 4,
+              description: "International Laser Ranging Service."
+            },
+            IGS: {
+              value: 5,
+              description: "International GNSS Service."
+            },
+            OTHER: {
+              value: 6,
+              description: "A network not covered above."
+            }
+          }
+        },
+        gstFrameRealization: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "level. Append new values only.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ITRF93: {
+              value: 1
+            },
+            ITRF2000: {
+              value: 2
+            },
+            ITRF2005: {
+              value: 3
+            },
+            ITRF2008: {
+              value: 4
+            },
+            ITRF2014: {
+              value: 5
+            },
+            ITRF2020: {
+              value: 6
+            },
+            OTHER: {
+              value: 7,
+              description: "A realization not covered above; name it in FRAME_REALIZATION_NAME."
+            }
+          }
+        },
+        gstAntennaAxisType: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "Append new values only.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            AZ_EL: {
+              value: 1
+            },
+            X_Y_EAST: {
+              value: 2
+            },
+            X_Y_NORTH: {
+              value: 3
+            },
+            HA_DEC: {
+              value: 4
+            },
+            FIXED: {
+              value: 5,
+              description: "Fixed / non-steerable."
+            },
+            OTHER: {
+              value: 6
+            }
+          }
+        },
         VehicleType: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -141257,6 +143811,59 @@ var fbjson_default = {
             }
           }
         },
+        mdpTransferDirection: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            EITHER: {
+              value: 0,
+              description: "Either direction is admissible."
+            },
+            PROGRADE: {
+              value: 1
+            },
+            RETROGRADE: {
+              value: 2
+            }
+          }
+        },
+        mdpDsmMode: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "Append new values only.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "No deep-space maneuver on this leg."
+            },
+            DEPARTURE: {
+              value: 1,
+              description: "Raise/lower the departure end."
+            },
+            ARRIVAL: {
+              value: 2,
+              description: "Raise/lower the arrival end."
+            },
+            EITHER_END: {
+              value: 3,
+              description: "Either end may be adjusted."
+            }
+          }
+        },
         meanElementSource: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -142669,6 +145276,44 @@ var fbjson_default = {
             Internal: {
               value: 5,
               description: "Internal OrbPro default plugins"
+            }
+          }
+        },
+        pnlTrackingMode: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            BODY_FIXED: {
+              value: 1,
+              description: "Panel normal is fixed in the body frame."
+            },
+            SUN_TRACKING: {
+              value: 2,
+              description: "Panel normal tracks the Sun (typical solar array)."
+            },
+            BODY_TRACKING: {
+              value: 3,
+              description: "Panel normal tracks the central body (typical nadir-pointing radiator or antenna face)."
+            },
+            VELOCITY_TRACKING: {
+              value: 4,
+              description: "Panel normal tracks the velocity direction."
+            },
+            OTHER: {
+              value: 5
             }
           }
         },
@@ -144870,6 +147515,56 @@ var fbjson_default = {
             },
             SOLAR: {
               value: 6
+            }
+          }
+        },
+        shcNormalization: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "degree, so there is no safe default. Append new values only.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            FULLY_NORMALIZED: {
+              value: 1,
+              description: "4-pi (fully) normalized, the geodesy convention."
+            },
+            UNNORMALIZED: {
+              value: 2,
+              description: "Unnormalized (raw) coefficients."
+            }
+          }
+        },
+        shcTideSystem: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "accuracy of any modern field. Append new values only.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            TIDE_FREE: {
+              value: 1
+            },
+            ZERO_TIDE: {
+              value: 2
+            },
+            MEAN_TIDE: {
+              value: 3
             }
           }
         },
@@ -163131,6 +165826,256 @@ var fbjson_default = {
           },
           description: "Gravity Models"
         },
+        GST: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            STATION_ID: {
+              type: "string",
+              description: 'Stable station identifier as used by the operating network, e.g. "DSS-63".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable station name.",
+              "x-flatbuffer-type": "string"
+            },
+            NETWORK: {
+              $ref: "#/definitions/gstNetwork",
+              description: "Operating network.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                DSN: {
+                  value: 1,
+                  description: "NASA Deep Space Network."
+                },
+                ESTRACK: {
+                  value: 2,
+                  description: "ESA tracking station network."
+                },
+                EVN: {
+                  value: 3,
+                  description: "European VLBI Network."
+                },
+                ILRS: {
+                  value: 4,
+                  description: "International Laser Ranging Service."
+                },
+                IGS: {
+                  value: 5,
+                  description: "International GNSS Service."
+                },
+                OTHER: {
+                  value: 6,
+                  description: "A network not covered above."
+                }
+              }
+            },
+            DOMES_NUMBER: {
+              type: "string",
+              description: "IERS DOMES number, when the station has one.",
+              "x-flatbuffer-type": "string"
+            },
+            CDP_NUMBER: {
+              type: "string",
+              description: "NASA CDP / SLR site number, when the station has one.",
+              "x-flatbuffer-type": "string"
+            },
+            FRAME_REALIZATION: {
+              $ref: "#/definitions/gstFrameRealization",
+              description: "Terrestrial reference frame realization of POSITION_* and VELOCITY_*.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ITRF93: {
+                  value: 1
+                },
+                ITRF2000: {
+                  value: 2
+                },
+                ITRF2005: {
+                  value: 3
+                },
+                ITRF2008: {
+                  value: 4
+                },
+                ITRF2014: {
+                  value: 5
+                },
+                ITRF2020: {
+                  value: 6
+                },
+                OTHER: {
+                  value: 7,
+                  description: "A realization not covered above; name it in FRAME_REALIZATION_NAME."
+                }
+              }
+            },
+            FRAME_REALIZATION_NAME: {
+              type: "string",
+              description: "Free-text realization name, required when FRAME_REALIZATION is OTHER.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "propagated to the observation epoch with VELOCITY_* before use.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_X: {
+              type: "number",
+              description: "Station position in the stated realization, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_X: {
+              type: "number",
+              description: "year. Zero is a claim that the station does not move, not a default.",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VELOCITY_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_X: {
+              type: "number",
+              description: "1-sigma position uncertainty, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            POSITION_SIGMA_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ANTENNA_AXIS_TYPE: {
+              $ref: "#/definitions/gstAntennaAxisType",
+              description: "Antenna mount geometry.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                AZ_EL: {
+                  value: 1
+                },
+                X_Y_EAST: {
+                  value: 2
+                },
+                X_Y_NORTH: {
+                  value: 3
+                },
+                HA_DEC: {
+                  value: 4
+                },
+                FIXED: {
+                  value: 5,
+                  description: "Fixed / non-steerable."
+                },
+                OTHER: {
+                  value: 6
+                }
+              }
+            },
+            AXIS_OFFSET_M: {
+              type: "number",
+              description: "mount.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_X: {
+              type: "number",
+              description: "Vector from the monument marker to the antenna reference point, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY_FRAME: {
+              type: "string",
+              description: 'Cartesian) or "NEU" (local north-east-up).',
+              "x-flatbuffer-type": "string"
+            },
+            TRANSMIT_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Uplink bands the station can transmit, e.g. ["S", "X", "Ka"].',
+              "x-flatbuffer-type": "[string]"
+            },
+            RECEIVE_BANDS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Downlink bands the station can receive.",
+              "x-flatbuffer-type": "[string]"
+            },
+            CLOCK_OFFSET_S: {
+              type: "number",
+              description: "Station clock offset from the stated time scale, seconds.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_RATE_S_PER_S: {
+              type: "number",
+              description: "Station clock rate, seconds per second.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_TIME_SCALE: {
+              type: "string",
+              description: 'Time scale the clock terms are referenced to, e.g. "UTC", "TAI".',
+              "x-flatbuffer-type": "string"
+            },
+            VALID_FROM: {
+              type: "string",
+              description: "Start of the interval over which this definition applies, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            VALID_TO: {
+              type: "string",
+              description: "End of the interval over which this definition applies, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE: {
+              type: "string",
+              description: "file name, or a VLBI station catalogue identifier.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Ground/Tracking Station Definition \u2014 the geodetic identity and geometry of one tracking station, sufficient to reduce a radiometric or laser observation taken from it.  This is deliberately NOT $SEN. $SEN describes an SSA sensor site by latitude/longitude/altitude with tasking plans and statistics; it carries no terrestrial frame realization, no station velocity, no reference epoch, and no antenna axis geometry. Station coordinates without a frame realization and an epoch cannot be propagated for plate motion and are therefore not usable for orbit determination.",
+          required: [
+            "STATION_ID"
+          ]
+        },
         GVH: {
           type: "object",
           additionalProperties: false,
@@ -173709,6 +176654,482 @@ var fbjson_default = {
           },
           description: "Metadata stored in the REC trailer for one module delivery artifact."
         },
+        MDPEncounterStage: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            STAGE_INDEX: {
+              type: "integer",
+              description: "Zero-based position in the ordered sequence.",
+              "x-flatbuffer-type": "uint"
+            },
+            ALLOWED_BODY_NAIF_IDS: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "NAIF integer IDs admissible at this stage. A single entry pins the body.",
+              "x-flatbuffer-type": "[int]"
+            },
+            ALLOWED_BODY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Advisory names, parallel to ALLOWED_BODY_NAIF_IDS when present.",
+              "x-flatbuffer-type": "[string]"
+            },
+            EPOCH_WINDOW_START: {
+              type: "string",
+              description: "Earliest and latest epoch searched at this stage, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_WINDOW_END: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_GRID_STEP_DAYS: {
+              type: "number",
+              description: "Epoch grid step searched within the window, days.",
+              "x-flatbuffer-type": "double"
+            },
+            V_INFINITY_MIN_KM_S: {
+              type: "number",
+              description: "Bounds on hyperbolic excess speed at this encounter, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            V_INFINITY_MAX_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_FLYBY_ALTITUDE_KM: {
+              type: "number",
+              description: "Minimum admissible flyby altitude above the body's reference surface, km.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on powered-flyby delta-V applied at this encounter, km/s.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          description: "One encounter stage of the body sequence: the set of bodies admissible at this position in the sequence, and the epoch grid searched for it.  Bodies are named by NAIF integer ID, which is normative. SDS carries no body enum and $GRV.CentralBody is gravity-model-scoped and incomplete, so it must not be repurposed here. Note that a barycenter and a body center are different objects (4 is the Mars barycenter, 499 is Mars) and the distinction is operationally load-bearing."
+        },
+        MDPFlightTimeBound: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            FROM_STAGE_INDEX: {
+              type: "integer",
+              description: "Stage indices the bound spans. TO_STAGE_INDEX > FROM_STAGE_INDEX.",
+              "x-flatbuffer-type": "uint"
+            },
+            TO_STAGE_INDEX: {
+              type: "integer",
+              "x-flatbuffer-type": "uint"
+            },
+            MIN_DAYS: {
+              type: "number",
+              description: "Inclusive bounds on elapsed time between those two encounters, days.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_DAYS: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          description: 'Time-of-flight bound between two encounters. Adjacent stages give per-leg bounds; non-adjacent stages give cumulative bounds such as "Earth to Mars to Earth within 3 years".'
+        },
+        MDP: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PROBLEM_ID: {
+              type: "string",
+              description: "Stable identifier for this problem definition.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable name.",
+              "x-flatbuffer-type": "string"
+            },
+            ENCOUNTER_STAGES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPEncounterStage"
+              },
+              description: "Ordered encounter stages. Order in this vector IS the body sequence.",
+              "x-flatbuffer-type": "[MDPEncounterStage]"
+            },
+            FLIGHT_TIME_BOUNDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDPFlightTimeBound"
+              },
+              description: "Per-leg and cumulative time-of-flight bounds.",
+              "x-flatbuffer-type": "[MDPFlightTimeBound]"
+            },
+            MAX_TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Cap on total mission duration, days.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Cap on launch characteristic energy C3, km^2/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on total post-launch delta-V, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DSM_MODE: {
+              $ref: "#/definitions/mdpDsmMode",
+              description: "Deep-space maneuver search controls.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "NONE",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "No deep-space maneuver on this leg."
+                },
+                DEPARTURE: {
+                  value: 1,
+                  description: "Raise/lower the departure end."
+                },
+                ARRIVAL: {
+                  value: 2,
+                  description: "Raise/lower the arrival end."
+                },
+                EITHER_END: {
+                  value: 3,
+                  description: "Either end may be adjusted."
+                }
+              }
+            },
+            MAX_DSM_DELTA_V_KM_S: {
+              type: "number",
+              description: "Cap on the magnitude of any single deep-space maneuver, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DSM_GRID_STEP_KM_S: {
+              type: "number",
+              description: "Grid step used when searching deep-space maneuver magnitude, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_REVOLUTIONS: {
+              type: "integer",
+              description: "leg, and the admissible transfer direction.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            TRANSFER_DIRECTION: {
+              $ref: "#/definitions/mdpTransferDirection",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "EITHER",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                EITHER: {
+                  value: 0,
+                  description: "Either direction is admissible."
+                },
+                PROGRADE: {
+                  value: 1
+                },
+                RETROGRADE: {
+                  value: 2
+                }
+              }
+            },
+            OUTPUT_TIME_BIN_DAYS: {
+              type: "number",
+              description: "candidate is retained. Zero means no decimation.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_THRUST_N: {
+              type: "number",
+              description: "Optional spacecraft propulsion limits constraining admissible solutions.",
+              "x-flatbuffer-type": "double"
+            },
+            SPECIFIC_IMPULSE_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            DRY_MASS_KG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INITIAL_MASS_KG: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "identifier. Recorded so a solution set can be reproduced.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Mission Design Problem \u2014 the definition of a patched-conic broad search over an ordered sequence of body encounters.  This is the PROBLEM, not a solution: it states what is being searched and under what constraints. Candidate trajectories produced by solving it are carried in $MDS. Nothing existing covers this: $LMS is a single Lambert boundary-value problem with no body/epoch grid and no sequence, $MPE is an Earth mean-element targeter, $MNF is an Earth manifold sweep, and $MNV is an SSA-detected maneuver on a catalogued Earth object.",
+          required: [
+            "PROBLEM_ID"
+          ]
+        },
+        MDSEncounter: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            ENCOUNTER_INDEX: {
+              type: "integer",
+              description: "Zero-based position along the trajectory.",
+              "x-flatbuffer-type": "uint"
+            },
+            BODY_NAIF_ID: {
+              type: "integer",
+              description: "body: 4 is the Mars barycenter, 499 is Mars.",
+              "x-flatbuffer-type": "int"
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "form solvers work in and is carried verbatim to avoid a lossy round trip.",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH_UTC: {
+              type: "string",
+              description: "ephemeris time implementation. Advisory; EPOCH_ET_S is normative.",
+              "x-flatbuffer-type": "string"
+            },
+            INCOMING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "encounter.",
+              "x-flatbuffer-type": "double"
+            },
+            INCOMING_V_INFINITY_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INCOMING_V_INFINITY_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "encounter.",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TURN_ANGLE_RAD: {
+              type: "number",
+              description: "Turn angle between incoming and outgoing asymptotes, radians.",
+              "x-flatbuffer-type": "double"
+            },
+            PERIAPSIS_RADIUS_KM: {
+              type: "number",
+              description: "Flyby periapsis radius measured from the body's center, km.",
+              "x-flatbuffer-type": "double"
+            },
+            POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "unpowered (ballistic) flyby.",
+              "x-flatbuffer-type": "double"
+            },
+            LAMBERT_SOLUTION_INDEX: {
+              type: "integer",
+              description: "encounter, as reported by the solver.",
+              "x-flatbuffer-type": "int"
+            },
+            FLYBY_SOLUTION_INDEX: {
+              type: "integer",
+              description: "reported by the solver.",
+              "x-flatbuffer-type": "int"
+            }
+          },
+          description: "One body encounter along a candidate trajectory.  Encounter-indexed rather than leg-indexed on purpose. A search implementation typically emits leg-indexed arrays: for nE encounters there are nL = nE - 1 legs, the departure v-infinity of leg i is the OUTGOING vector at encounter i, and the arrival v-infinity of leg i is the INCOMING vector at encounter i + 1. Carrying both vectors on the encounter they physically occur at removes that off-by-one from every consumer."
+        },
+        MDSDeepSpaceManeuver: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            LEG_INDEX: {
+              type: "integer",
+              description: "encounter i + 1.",
+              "x-flatbuffer-type": "uint"
+            },
+            ARC_FRACTION: {
+              type: "number",
+              description: "Position along the leg as a fraction of its flight time, in [0, 1].",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "reports it directly.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_KM_S: {
+              type: "number",
+              description: "Maneuver magnitude, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_X_KM_S: {
+              type: "number",
+              description: "Maneuver vector when the solver reports one, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          description: "One deep-space maneuver on a transfer leg."
+        },
+        MDSCandidate: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            CANDIDATE_ID: {
+              type: "string",
+              description: "Solver-assigned trajectory identifier, unique within the set.",
+              "x-flatbuffer-type": "string"
+            },
+            ENCOUNTERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSEncounter"
+              },
+              description: "Ordered encounters, first to last.",
+              "x-flatbuffer-type": "[MDSEncounter]"
+            },
+            DEEP_SPACE_MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSDeepSpaceManeuver"
+              },
+              description: "Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION.",
+              "x-flatbuffer-type": "[MDSDeepSpaceManeuver]"
+            },
+            TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Total post-launch delta-V, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Total flight time from first to last encounter, days.",
+              "x-flatbuffer-type": "double"
+            },
+            LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Launch characteristic energy, km^2/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            ARRIVAL_V_INFINITY_KM_S: {
+              type: "number",
+              description: "Hyperbolic excess speed at arrival, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ESCAPE_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference escape delta-V from the departure body, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            INSERTION_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference insertion delta-V at the arrival body, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            NON_DOMINATED: {
+              type: "boolean",
+              description: "on this rather than assume every member is non-dominated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          description: "One candidate trajectory on the front."
+        },
+        MDS: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            SOLUTION_SET_ID: {
+              type: "string",
+              description: "Stable identifier for this solution set.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PROBLEM_ID: {
+              type: "string",
+              description: "definition is unknown is not reproducible.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECTIVES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "names of MDSCandidate.",
+              "x-flatbuffer-type": "[string]"
+            },
+            CANDIDATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSCandidate"
+              },
+              description: "The candidates.",
+              "x-flatbuffer-type": "[MDSCandidate]"
+            },
+            SOLVER: {
+              type: "string",
+              description: "Solver identity and version that produced the set.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLVER_VERSION: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "Ephemeris source used, e.g. a SPICE kernel set identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "When the set was generated, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Mission Design Solution Set \u2014 a set of candidate trajectories produced by solving a mission design broad search, typically a Pareto front over competing objectives (total delta-V against total flight time).  SDS had no multi-candidate container of any kind before this record. The closest existing carrier for a single planned burn is OCM.Maneuver, whose payload is untyped DATA:[string] with MAN_UNITS:[string] and which has no v-infinity, turn angle, flyby periapsis radius, or C3.",
+          required: [
+            "SOLUTION_SET_ID"
+          ]
+        },
         MET: {
           type: "object",
           additionalProperties: false,
@@ -178590,6 +182011,162 @@ var fbjson_default = {
             "LICENSE_ID",
             "PLUGIN_ID",
             "LICENSEE_ORG"
+          ]
+        },
+        PNLPanel: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PANEL_ID: {
+              type: "string",
+              description: "Stable panel identifier within the model.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Panel area, square metres.",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_X: {
+              type: "number",
+              description: "Outward panel normal in the body frame, unit vector.",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TRACKING_MODE: {
+              $ref: "#/definitions/pnlTrackingMode",
+              description: "Orientation behaviour of the panel.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "BODY_FIXED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1,
+                  description: "Panel normal is fixed in the body frame."
+                },
+                SUN_TRACKING: {
+                  value: 2,
+                  description: "Panel normal tracks the Sun (typical solar array)."
+                },
+                BODY_TRACKING: {
+                  value: 3,
+                  description: "Panel normal tracks the central body (typical nadir-pointing radiator or antenna face)."
+                },
+                VELOCITY_TRACKING: {
+                  value: 4,
+                  description: "Panel normal tracks the velocity direction."
+                },
+                OTHER: {
+                  value: 5
+                }
+              }
+            },
+            SPECULAR_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction of incident radiation reflected specularly.",
+              "x-flatbuffer-type": "double"
+            },
+            DIFFUSE_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction reflected diffusely.",
+              "x-flatbuffer-type": "double"
+            },
+            ABSORPTIVITY: {
+              type: "number",
+              description: "Fraction absorbed.",
+              "x-flatbuffer-type": "double"
+            },
+            EMISSIVITY: {
+              type: "number",
+              description: "Infrared emissivity of the panel surface.",
+              "x-flatbuffer-type": "double"
+            },
+            INSTANTANEOUS_RERADIATION: {
+              type: "boolean",
+              description: "lag). False means the consumer must model thermal inertia.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            DRAG_COEFFICIENT: {
+              type: "number",
+              description: "Panel drag coefficient, when the model is used for aerodynamic forces.",
+              "x-flatbuffer-type": "double"
+            },
+            MATERIAL_NAME: {
+              type: "string",
+              description: "Material name, for traceability back to a materials table.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One flat panel of a macro model.  The reflection coefficients describe how incident radiation is disposed of: SPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to 1 for a physically consistent panel. Producers SHOULD state the source of the optical properties in the parent record's SOURCE field; a panel model whose coefficients have no provenance is worse than none."
+        },
+        PNL: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            OBJECT_ID: {
+              type: "string",
+              description: "Object this macro model describes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Advisory object name.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "Satellite catalog number, when the object is catalogued.",
+              "x-flatbuffer-type": "uint32"
+            },
+            BODY_FRAME: {
+              type: "string",
+              description: 'Body-fixed frame the panel normals are expressed in, e.g. "SC_BODY".',
+              "x-flatbuffer-type": "string"
+            },
+            TOTAL_MASS_KG: {
+              type: "number",
+              description: "Total spacecraft mass the model corresponds to, kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH: {
+              type: "string",
+              description: "change over a mission; a macro model without an epoch is ambiguous.",
+              "x-flatbuffer-type": "string"
+            },
+            PANELS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PNLPanel"
+              },
+              description: "The panels.",
+              "x-flatbuffer-type": "[PNLPanel]"
+            },
+            REFERENCE_AREA_M2: {
+              type: "number",
+              description: "cannonball model, square metres.",
+              "x-flatbuffer-type": "double"
+            },
+            SOURCE: {
+              type: "string",
+              description: "Provenance of the geometry and the optical coefficients.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Panelled (box-wing) Spacecraft Macro Model \u2014 the surface geometry and optical properties needed to compute non-conservative forces (solar radiation pressure, atmospheric drag, thermal re-radiation) on one object.  This is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for rendering and a render mesh is not a force model; $BUS/$OOD are descriptive inventory; $PHY is simulation configuration (integration method, force-type toggles). None of them carries per-panel area, normal, and optical coefficients.",
+          required: [
+            "OBJECT_ID"
           ]
         },
         PRG: {
@@ -186596,6 +190173,198 @@ var fbjson_default = {
           },
           description: "Space Environment Observation Detail"
         },
+        SHCVariableTerm: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            DEGREE: {
+              type: "integer",
+              "x-flatbuffer-type": "ushort"
+            },
+            ORDER: {
+              type: "integer",
+              "x-flatbuffer-type": "ushort"
+            },
+            TERM_TYPE: {
+              type: "string",
+              description: 'Kind of variation: "TREND", "ASIN", "ACOS".',
+              "x-flatbuffer-type": "string"
+            },
+            C_VALUE: {
+              type: "number",
+              description: "Coefficient of the variation for the cosine (C) and sine (S) terms.",
+              "x-flatbuffer-type": "double"
+            },
+            S_VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            PERIOD_YEARS: {
+              type: "number",
+              description: "Period of a periodic term, years. Unused for a trend.",
+              "x-flatbuffer-type": "double"
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "Epoch the term is referenced to, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One time-variable coefficient term: a rate or a periodic variation applied to the static coefficient at DEGREE/ORDER."
+        },
+        SHC: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MODEL_NAME: {
+              type: "string",
+              description: 'Identifier of the coefficient set, e.g. "EGM2008", "GGGRX1200".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            CENTRAL_BODY_NAIF_ID: {
+              type: "integer",
+              description: "barycenter (e.g. 4) is NOT the body (e.g. 499).",
+              "x-flatbuffer-type": "int"
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name.",
+              "x-flatbuffer-type": "string"
+            },
+            GM: {
+              type: "number",
+              description: "coefficients are only meaningful with the GM they were solved against.",
+              "x-flatbuffer-type": "double"
+            },
+            REFERENCE_RADIUS: {
+              type: "number",
+              description: "Reference radius of the expansion, metres. Also part of the set.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_DEGREE: {
+              type: "integer",
+              description: "Maximum degree and order present in the arrays.",
+              "x-flatbuffer-type": "ushort"
+            },
+            MAX_ORDER: {
+              type: "integer",
+              "x-flatbuffer-type": "ushort"
+            },
+            NORMALIZATION: {
+              $ref: "#/definitions/shcNormalization",
+              description: "consumers MUST reject UNSPECIFIED rather than assuming a convention.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                FULLY_NORMALIZED: {
+                  value: 1,
+                  description: "4-pi (fully) normalized, the geodesy convention."
+                },
+                UNNORMALIZED: {
+                  value: 2,
+                  description: "Unnormalized (raw) coefficients."
+                }
+              }
+            },
+            PERMANENT_TIDE_SYSTEM: {
+              $ref: "#/definitions/shcTideSystem",
+              description: "application sensitive at the 1e-9 level in C20.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                TIDE_FREE: {
+                  value: 1
+                },
+                ZERO_TIDE: {
+                  value: 2
+                },
+                MEAN_TIDE: {
+                  value: 3
+                }
+              }
+            },
+            REFERENCE_EPOCH: {
+              type: "string",
+              description: "VARIABLE_TERMS is present.",
+              "x-flatbuffer-type": "string"
+            },
+            DEGREES: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "lengths; a record where they do not is invalid.",
+              "x-flatbuffer-type": "[ushort]"
+            },
+            ORDERS: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              "x-flatbuffer-type": "[ushort]"
+            },
+            C: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            S: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            C_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Optional 1-sigma uncertainties, parallel to C and S when present.",
+              "x-flatbuffer-type": "[double]"
+            },
+            S_SIGMA: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            VARIABLE_TERMS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SHCVariableTerm"
+              },
+              description: "Optional time-variable terms applied on top of the static field.",
+              "x-flatbuffer-type": "[SHCVariableTerm]"
+            },
+            SOURCE: {
+              type: "string",
+              description: "any other provenance needed to reproduce the set.",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "Citation for the field, e.g. the paper or data-centre DOI.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Spherical-Harmonic Coefficient Set \u2014 an actual gravity field, as opposed to the NAME of one.  This is deliberately NOT $GRV. $GRV is a model SELECTOR: it names a model, bounds its degree/order, toggles third-body and tidal effects, and carries scalar J2..J6. It cannot carry a coefficient set, and a named model without its coefficients is not interchange \u2014 it is a citation.  Coefficients are carried as four parallel arrays of equal length, indexed together: entry i is the coefficient at DEGREES[i], ORDERS[i] with cosine term C[i] and sine term S[i]. Parallel arrays rather than a table per coefficient because a 200x200 field is ~40,000 coefficients and a table-per-coefficient encoding is pathological in both size and decode cost.",
+          required: [
+            "MODEL_NAME"
+          ]
+        },
         SHWUniform: {
           type: "object",
           additionalProperties: false,
@@ -188985,6 +192754,30 @@ var fbjson_default = {
                 type: "number"
               },
               description: "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
+              "x-flatbuffer-type": "[double]"
+            },
+            SIGNAL_TO_NOISE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "/// Signal-to-noise ratio of the detection.",
+              "x-flatbuffer-type": "[double]"
+            },
+            SPECTRAL_MAX: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SDS EXTENSION. Normalised spectral maximum of the detection.",
+              "x-flatbuffer-type": "[double]"
+            },
+            DOPPLER_NOISE_HZ: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "uncertainty, which CCSDS 503.0-B-1 has no field for.",
               "x-flatbuffer-type": "[double]"
             },
             TRANSMIT_RAMPS: {
@@ -202405,6 +206198,272 @@ var fbjson_default = {
       $ref: "#/definitions/PIV",
       "x-flatbuffer-root-type": "PIV",
       "x-flatbuffer-file-identifier": "$PIV"
+    },
+    MDS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        MDSEncounter: {
+          type: "object",
+          description: "One body encounter along a candidate trajectory.\n\nEncounter-indexed rather than leg-indexed on purpose. A search implementation\ntypically emits leg-indexed arrays: for nE encounters there are nL = nE - 1\nlegs, the departure v-infinity of leg i is the OUTGOING vector at encounter\ni, and the arrival v-infinity of leg i is the INCOMING vector at encounter\ni + 1. Carrying both vectors on the encounter they physically occur at\nremoves that off-by-one from every consumer.",
+          properties: {
+            ENCOUNTER_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based position along the trajectory.",
+              "x-flatbuffer-type": "uint"
+            },
+            BODY_NAIF_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Body encountered, NAIF integer ID (normative). A barycenter is not the\nbody: 4 is the Mars barycenter, 499 is Mars.",
+              "x-flatbuffer-type": "int"
+            },
+            BODY_NAME: {
+              type: "string",
+              description: "Advisory body name.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "Encounter epoch as ephemeris time, seconds past J2000 TDB. This is the\nform solvers work in and is carried verbatim to avoid a lossy round trip.",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH_UTC: {
+              type: "string",
+              description: "Same epoch in ISO 8601 (UTC), for consumers that do not carry an\nephemeris time implementation. Advisory; EPOCH_ET_S is normative.",
+              "x-flatbuffer-type": "string"
+            },
+            INCOMING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "Incoming hyperbolic excess velocity vector, km/s. Absent at the first\nencounter.",
+              "x-flatbuffer-type": "double"
+            },
+            INCOMING_V_INFINITY_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            INCOMING_V_INFINITY_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_X_KM_S: {
+              type: "number",
+              description: "Outgoing hyperbolic excess velocity vector, km/s. Absent at the final\nencounter.",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            OUTGOING_V_INFINITY_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TURN_ANGLE_RAD: {
+              type: "number",
+              description: "Turn angle between incoming and outgoing asymptotes, radians.",
+              "x-flatbuffer-type": "double"
+            },
+            PERIAPSIS_RADIUS_KM: {
+              type: "number",
+              description: "Flyby periapsis radius measured from the body's center, km.",
+              "x-flatbuffer-type": "double"
+            },
+            POWERED_FLYBY_DELTA_V_KM_S: {
+              type: "number",
+              description: "Delta-V applied at periapsis for a powered flyby, km/s. Zero for an\nunpowered (ballistic) flyby.",
+              "x-flatbuffer-type": "double"
+            },
+            LAMBERT_SOLUTION_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Index of the Lambert solution selected for the leg DEPARTING this\nencounter, as reported by the solver.",
+              "x-flatbuffer-type": "int"
+            },
+            FLYBY_SOLUTION_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Index of the flyby solution branch selected at this encounter, as\nreported by the solver.",
+              "x-flatbuffer-type": "int"
+            }
+          },
+          additionalProperties: false
+        },
+        MDSDeepSpaceManeuver: {
+          type: "object",
+          description: "One deep-space maneuver on a transfer leg.",
+          properties: {
+            LEG_INDEX: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zero-based leg the maneuver occurs on. Leg i connects encounter i to\nencounter i + 1.",
+              "x-flatbuffer-type": "uint"
+            },
+            ARC_FRACTION: {
+              type: "number",
+              description: "Position along the leg as a fraction of its flight time, in [0, 1].",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH_ET_S: {
+              type: "number",
+              description: "Maneuver epoch as ephemeris time, seconds past J2000 TDB, when the solver\nreports it directly.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_KM_S: {
+              type: "number",
+              description: "Maneuver magnitude, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_X_KM_S: {
+              type: "number",
+              description: "Maneuver vector when the solver reports one, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Y_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_V_Z_KM_S: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        MDSCandidate: {
+          type: "object",
+          description: "One candidate trajectory on the front.",
+          properties: {
+            CANDIDATE_ID: {
+              type: "string",
+              description: "Solver-assigned trajectory identifier, unique within the set.",
+              "x-flatbuffer-type": "string"
+            },
+            ENCOUNTERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSEncounter"
+              },
+              description: "Ordered encounters, first to last.",
+              "x-flatbuffer-type": "[MDSEncounter]"
+            },
+            DEEP_SPACE_MANEUVERS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSDeepSpaceManeuver"
+              },
+              description: "Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION.",
+              "x-flatbuffer-type": "[MDSDeepSpaceManeuver]"
+            },
+            TOTAL_DELTA_V_KM_S: {
+              type: "number",
+              description: "Total post-launch delta-V, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            TOTAL_FLIGHT_TIME_DAYS: {
+              type: "number",
+              description: "Total flight time from first to last encounter, days.",
+              "x-flatbuffer-type": "double"
+            },
+            LAUNCH_C3_KM2_S2: {
+              type: "number",
+              description: "Launch characteristic energy, km^2/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            ARRIVAL_V_INFINITY_KM_S: {
+              type: "number",
+              description: "Hyperbolic excess speed at arrival, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            ESCAPE_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference escape delta-V from the departure body, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            INSERTION_DELTA_V_KM_S: {
+              type: "number",
+              description: "Reference insertion delta-V at the arrival body, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            NON_DOMINATED: {
+              type: "boolean",
+              description: "True when this candidate is non-dominated within the set. A set MAY carry\ndominated candidates for context; a consumer plotting a front MUST filter\non this rather than assume every member is non-dominated.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            }
+          },
+          additionalProperties: false
+        },
+        MDS: {
+          type: "object",
+          description: "Mission Design Solution Set \u2014 a set of candidate trajectories produced by\nsolving a mission design broad search, typically a Pareto front over\ncompeting objectives (total delta-V against total flight time).\n\nSDS had no multi-candidate container of any kind before this record. The\nclosest existing carrier for a single planned burn is OCM.Maneuver, whose\npayload is untyped DATA:[string] with MAN_UNITS:[string] and which has no\nv-infinity, turn angle, flyby periapsis radius, or C3.",
+          properties: {
+            SOLUTION_SET_ID: {
+              type: "string",
+              description: "Stable identifier for this solution set.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PROBLEM_ID: {
+              type: "string",
+              description: "PROBLEM_ID of the $MDP this set solves. A solution set whose problem\ndefinition is unknown is not reproducible.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECTIVES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Objectives the front is expressed over, e.g.\n["TOTAL_DELTA_V_KM_S", "TOTAL_FLIGHT_TIME_DAYS"]. Names MUST be field\nnames of MDSCandidate.',
+              "x-flatbuffer-type": "[string]"
+            },
+            CANDIDATES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/MDSCandidate"
+              },
+              description: "The candidates.",
+              "x-flatbuffer-type": "[MDSCandidate]"
+            },
+            SOLVER: {
+              type: "string",
+              description: "Solver identity and version that produced the set.",
+              "x-flatbuffer-type": "string"
+            },
+            SOLVER_VERSION: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            EPHEMERIS_SOURCE: {
+              type: "string",
+              description: "Ephemeris source used, e.g. a SPICE kernel set identifier.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATION_DATE: {
+              type: "string",
+              description: "When the set was generated, ISO 8601.",
+              "x-flatbuffer-type": "string"
+            },
+            COMMENT: {
+              type: "string",
+              description: "Free-form notes.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "SOLUTION_SET_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/MDS",
+      "x-flatbuffer-root-type": "MDS",
+      "x-flatbuffer-file-identifier": "$MDS"
     },
     PLG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -243912,6 +247971,30 @@ var fbjson_default = {
               description: "Clock drift values -  CCSDS 503.0-B-1, Page D-15",
               "x-flatbuffer-type": "[double]"
             },
+            SIGNAL_TO_NOISE: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "/// Signal-to-noise ratio of the detection.",
+              "x-flatbuffer-type": "[double]"
+            },
+            SPECTRAL_MAX: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "SDS EXTENSION. Normalised spectral maximum of the detection.",
+              "x-flatbuffer-type": "[double]"
+            },
+            DOPPLER_NOISE_HZ: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "uncertainty, which CCSDS 503.0-B-1 has no field for.",
+              "x-flatbuffer-type": "[double]"
+            },
             TRANSMIT_RAMPS: {
               type: "array",
               items: {
@@ -250442,6 +254525,209 @@ var fbjson_default = {
       $ref: "#/definitions/ACW",
       "x-flatbuffer-root-type": "ACW",
       "x-flatbuffer-file-identifier": "$ACW"
+    },
+    PNL: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pnlTrackingMode: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BODY_FIXED",
+            "SUN_TRACKING",
+            "BODY_TRACKING",
+            "VELOCITY_TRACKING",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            BODY_FIXED: {
+              value: 1,
+              description: "Panel normal is fixed in the body frame."
+            },
+            SUN_TRACKING: {
+              value: 2,
+              description: "Panel normal tracks the Sun (typical solar array)."
+            },
+            BODY_TRACKING: {
+              value: 3,
+              description: "Panel normal tracks the central body (typical nadir-pointing radiator or antenna face)."
+            },
+            VELOCITY_TRACKING: {
+              value: 4,
+              description: "Panel normal tracks the velocity direction."
+            },
+            OTHER: {
+              value: 5
+            }
+          }
+        },
+        PNLPanel: {
+          type: "object",
+          description: "One flat panel of a macro model.\n\nThe reflection coefficients describe how incident radiation is disposed of:\nSPECULAR_REFLECTIVITY + DIFFUSE_REFLECTIVITY + ABSORPTIVITY should sum to\n1 for a physically consistent panel. Producers SHOULD state the source of\nthe optical properties in the parent record's SOURCE field; a panel model\nwhose coefficients have no provenance is worse than none.",
+          properties: {
+            PANEL_ID: {
+              type: "string",
+              description: "Stable panel identifier within the model.",
+              "x-flatbuffer-type": "string"
+            },
+            AREA_M2: {
+              type: "number",
+              description: "Panel area, square metres.",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_X: {
+              type: "number",
+              description: "Outward panel normal in the body frame, unit vector.",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            NORMAL_Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TRACKING_MODE: {
+              $ref: "#/definitions/pnlTrackingMode",
+              description: "Orientation behaviour of the panel.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                BODY_FIXED: {
+                  value: 1,
+                  description: "Panel normal is fixed in the body frame."
+                },
+                SUN_TRACKING: {
+                  value: 2,
+                  description: "Panel normal tracks the Sun (typical solar array)."
+                },
+                BODY_TRACKING: {
+                  value: 3,
+                  description: "Panel normal tracks the central body (typical nadir-pointing radiator or antenna face)."
+                },
+                VELOCITY_TRACKING: {
+                  value: 4,
+                  description: "Panel normal tracks the velocity direction."
+                },
+                OTHER: {
+                  value: 5
+                }
+              },
+              "x-flatbuffer-default": "BODY_FIXED"
+            },
+            SPECULAR_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction of incident radiation reflected specularly.",
+              "x-flatbuffer-type": "double"
+            },
+            DIFFUSE_REFLECTIVITY: {
+              type: "number",
+              description: "Fraction reflected diffusely.",
+              "x-flatbuffer-type": "double"
+            },
+            ABSORPTIVITY: {
+              type: "number",
+              description: "Fraction absorbed.",
+              "x-flatbuffer-type": "double"
+            },
+            EMISSIVITY: {
+              type: "number",
+              description: "Infrared emissivity of the panel surface.",
+              "x-flatbuffer-type": "double"
+            },
+            INSTANTANEOUS_RERADIATION: {
+              type: "boolean",
+              description: "True when absorbed energy is re-radiated instantaneously (no thermal\nlag). False means the consumer must model thermal inertia.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "true"
+            },
+            DRAG_COEFFICIENT: {
+              type: "number",
+              description: "Panel drag coefficient, when the model is used for aerodynamic forces.",
+              "x-flatbuffer-type": "double"
+            },
+            MATERIAL_NAME: {
+              type: "string",
+              description: "Material name, for traceability back to a materials table.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PNL: {
+          type: "object",
+          description: "Panelled (box-wing) Spacecraft Macro Model \u2014 the surface geometry and\noptical properties needed to compute non-conservative forces (solar\nradiation pressure, atmospheric drag, thermal re-radiation) on one object.\n\nThis is deliberately NOT $VAM, $BUS or $PHY. $VAM ranks visual assets for\nrendering and a render mesh is not a force model; $BUS/$OOD are descriptive\ninventory; $PHY is simulation configuration (integration method, force-type\ntoggles). None of them carries per-panel area, normal, and optical\ncoefficients.",
+          properties: {
+            OBJECT_ID: {
+              type: "string",
+              description: "Object this macro model describes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "Advisory object name.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Satellite catalog number, when the object is catalogued.",
+              "x-flatbuffer-type": "uint32"
+            },
+            BODY_FRAME: {
+              type: "string",
+              description: 'Body-fixed frame the panel normals are expressed in, e.g. "SC_BODY".',
+              "x-flatbuffer-type": "string"
+            },
+            TOTAL_MASS_KG: {
+              type: "number",
+              description: "Total spacecraft mass the model corresponds to, kilograms.",
+              "x-flatbuffer-type": "double"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Epoch the model is valid at, ISO 8601. Mass and panel configuration\nchange over a mission; a macro model without an epoch is ambiguous.",
+              "x-flatbuffer-type": "string"
+            },
+            PANELS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PNLPanel"
+              },
+              description: "The panels.",
+              "x-flatbuffer-type": "[PNLPanel]"
+            },
+            REFERENCE_AREA_M2: {
+              type: "number",
+              description: "Reference cross-sectional area used by a consumer that falls back to a\ncannonball model, square metres.",
+              "x-flatbuffer-type": "double"
+            },
+            SOURCE: {
+              type: "string",
+              description: "Provenance of the geometry and the optical coefficients.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "OBJECT_ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PNL",
+      "x-flatbuffer-root-type": "PNL",
+      "x-flatbuffer-file-identifier": "$PNL"
     },
     TKG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",

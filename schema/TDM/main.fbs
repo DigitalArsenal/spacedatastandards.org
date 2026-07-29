@@ -1,5 +1,5 @@
-// Hash: 4942a0c3b5baa66fc83c978085b6df7429ec677e4e0098fdc322d2d3105d7752
-// Version: 2.0.2
+// Hash: f9243ef533502d930a48ae2961fc321ae1882a4d5e178ce68268bae0caebcd80
+// Version: 2.0.3
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 
@@ -234,6 +234,22 @@ table TDM {
 
   /// Clock drift values -  CCSDS 503.0-B-1, Page D-15
   CLOCK_DRIFT: [double];
+
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+  /// quality metrics, one entry per observation, parallel to the other
+  /// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+  /// i * OBSERVATION_STEP_SIZE grid.
+  ///
+  /// Signal-to-noise ratio of the detection.
+  SIGNAL_TO_NOISE: [double];
+
+  /// SDS EXTENSION. Normalised spectral maximum of the detection.
+  SPECTRAL_MAX: [double];
+
+  /// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+  /// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+  /// uncertainty, which CCSDS 503.0-B-1 has no field for.
+  DOPPLER_NOISE_HZ: [double];
 
   /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
   /// table covering this segment, ordered by START_TIME and non-overlapping.

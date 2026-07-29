@@ -696,6 +696,67 @@ clockDriftArray():Float64Array|null {
 }
 
 /**
+ * SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+ * quality metrics, one entry per observation, parallel to the other
+ * observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+ * i * OBSERVATION_STEP_SIZE grid.
+ *
+ * Signal-to-noise ratio of the detection.
+ */
+SIGNAL_TO_NOISE(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+signalToNoiseLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+signalToNoiseArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * SDS EXTENSION. Normalised spectral maximum of the detection.
+ */
+SPECTRAL_MAX(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+spectralMaxLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+spectralMaxArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+ * measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+ * uncertainty, which CCSDS 503.0-B-1 has no field for.
+ */
+DOPPLER_NOISE_HZ(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+dopplerNoiseHzLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+dopplerNoiseHzArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
  * SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
  * table covering this segment, ordered by START_TIME and non-overlapping.
  * Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -703,17 +764,17 @@ clockDriftArray():Float64Array|null {
  * leaves the record exactly CCSDS-conformant.
  */
 TRANSMIT_RAMPS(index: number, obj?:TDMTransmitRamp):TDMTransmitRamp|null {
-  const offset = this.bb!.__offset(this.bb_pos, 126);
+  const offset = this.bb!.__offset(this.bb_pos, 132);
   return offset ? (obj || new TDMTransmitRamp()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 transmitRampsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 126);
+  const offset = this.bb!.__offset(this.bb_pos, 132);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startTDM(builder:flatbuffers.Builder) {
-  builder.startObject(62);
+  builder.startObject(65);
 }
 
 static addObserverId(builder:flatbuffers.Builder, OBSERVER_IDOffset:flatbuffers.Offset) {
@@ -1159,8 +1220,71 @@ static startClockDriftVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addSignalToNoise(builder:flatbuffers.Builder, SIGNAL_TO_NOISEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(61, SIGNAL_TO_NOISEOffset, 0);
+}
+
+static createSignalToNoiseVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSignalToNoiseVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSignalToNoiseVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSignalToNoiseVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addSpectralMax(builder:flatbuffers.Builder, SPECTRAL_MAXOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(62, SPECTRAL_MAXOffset, 0);
+}
+
+static createSpectralMaxVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSpectralMaxVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSpectralMaxVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSpectralMaxVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addDopplerNoiseHz(builder:flatbuffers.Builder, DOPPLER_NOISE_HZOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(63, DOPPLER_NOISE_HZOffset, 0);
+}
+
+static createDopplerNoiseHzVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDopplerNoiseHzVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDopplerNoiseHzVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDopplerNoiseHzVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static addTransmitRamps(builder:flatbuffers.Builder, TRANSMIT_RAMPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(61, TRANSMIT_RAMPSOffset, 0);
+  builder.addFieldOffset(64, TRANSMIT_RAMPSOffset, 0);
 }
 
 static createTransmitRampsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -1252,6 +1376,9 @@ unpack(): TDMT {
     this.bb!.createScalarList<number>(this.TEMPERATURE.bind(this), this.temperatureLength()),
     this.bb!.createScalarList<number>(this.CLOCK_BIAS.bind(this), this.clockBiasLength()),
     this.bb!.createScalarList<number>(this.CLOCK_DRIFT.bind(this), this.clockDriftLength()),
+    this.bb!.createScalarList<number>(this.SIGNAL_TO_NOISE.bind(this), this.signalToNoiseLength()),
+    this.bb!.createScalarList<number>(this.SPECTRAL_MAX.bind(this), this.spectralMaxLength()),
+    this.bb!.createScalarList<number>(this.DOPPLER_NOISE_HZ.bind(this), this.dopplerNoiseHzLength()),
     this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength())
   );
 }
@@ -1319,6 +1446,9 @@ unpackTo(_o: TDMT): void {
   _o.TEMPERATURE = this.bb!.createScalarList<number>(this.TEMPERATURE.bind(this), this.temperatureLength());
   _o.CLOCK_BIAS = this.bb!.createScalarList<number>(this.CLOCK_BIAS.bind(this), this.clockBiasLength());
   _o.CLOCK_DRIFT = this.bb!.createScalarList<number>(this.CLOCK_DRIFT.bind(this), this.clockDriftLength());
+  _o.SIGNAL_TO_NOISE = this.bb!.createScalarList<number>(this.SIGNAL_TO_NOISE.bind(this), this.signalToNoiseLength());
+  _o.SPECTRAL_MAX = this.bb!.createScalarList<number>(this.SPECTRAL_MAX.bind(this), this.spectralMaxLength());
+  _o.DOPPLER_NOISE_HZ = this.bb!.createScalarList<number>(this.DOPPLER_NOISE_HZ.bind(this), this.dopplerNoiseHzLength());
   _o.TRANSMIT_RAMPS = this.bb!.createObjList<TDMTransmitRamp, TDMTransmitRampT>(this.TRANSMIT_RAMPS.bind(this), this.transmitRampsLength());
 }
 }
@@ -1386,6 +1516,9 @@ constructor(
   public TEMPERATURE: (number)[] = [],
   public CLOCK_BIAS: (number)[] = [],
   public CLOCK_DRIFT: (number)[] = [],
+  public SIGNAL_TO_NOISE: (number)[] = [],
+  public SPECTRAL_MAX: (number)[] = [],
+  public DOPPLER_NOISE_HZ: (number)[] = [],
   public TRANSMIT_RAMPS: (TDMTransmitRampT)[] = []
 ){}
 
@@ -1432,6 +1565,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TEMPERATURE = TDM.createTemperatureVector(builder, this.TEMPERATURE);
   const CLOCK_BIAS = TDM.createClockBiasVector(builder, this.CLOCK_BIAS);
   const CLOCK_DRIFT = TDM.createClockDriftVector(builder, this.CLOCK_DRIFT);
+  const SIGNAL_TO_NOISE = TDM.createSignalToNoiseVector(builder, this.SIGNAL_TO_NOISE);
+  const SPECTRAL_MAX = TDM.createSpectralMaxVector(builder, this.SPECTRAL_MAX);
+  const DOPPLER_NOISE_HZ = TDM.createDopplerNoiseHzVector(builder, this.DOPPLER_NOISE_HZ);
   const TRANSMIT_RAMPS = TDM.createTransmitRampsVector(builder, builder.createObjectOffsetList(this.TRANSMIT_RAMPS));
 
   TDM.startTDM(builder);
@@ -1496,6 +1632,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   TDM.addTemperature(builder, TEMPERATURE);
   TDM.addClockBias(builder, CLOCK_BIAS);
   TDM.addClockDrift(builder, CLOCK_DRIFT);
+  TDM.addSignalToNoise(builder, SIGNAL_TO_NOISE);
+  TDM.addSpectralMax(builder, SPECTRAL_MAX);
+  TDM.addDopplerNoiseHz(builder, DOPPLER_NOISE_HZ);
   TDM.addTransmitRamps(builder, TRANSMIT_RAMPS);
 
   return TDM.endTDM(builder);

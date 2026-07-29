@@ -244,7 +244,10 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_TEMPERATURE = 120,
     VT_CLOCK_BIAS = 122,
     VT_CLOCK_DRIFT = 124,
-    VT_TRANSMIT_RAMPS = 126
+    VT_SIGNAL_TO_NOISE = 126,
+    VT_SPECTRAL_MAX = 128,
+    VT_DOPPLER_NOISE_HZ = 130,
+    VT_TRANSMIT_RAMPS = 132
   };
   /// Unique identifier for the observation OBSERVER -  [Specific CCSDS Document]
   const ::flatbuffers::String *OBSERVER_ID() const {
@@ -493,6 +496,25 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *CLOCK_DRIFT() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CLOCK_DRIFT);
   }
+  /// SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler
+  /// quality metrics, one entry per observation, parallel to the other
+  /// observation arrays and reconstructed on the same OBSERVATION_START_TIME +
+  /// i * OBSERVATION_STEP_SIZE grid.
+  ///
+  /// Signal-to-noise ratio of the detection.
+  const ::flatbuffers::Vector<double> *SIGNAL_TO_NOISE() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SIGNAL_TO_NOISE);
+  }
+  /// SDS EXTENSION. Normalised spectral maximum of the detection.
+  const ::flatbuffers::Vector<double> *SPECTRAL_MAX() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SPECTRAL_MAX);
+  }
+  /// SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The
+  /// measured sky frequency itself is carried by RECEIVE_FREQ; this is its
+  /// uncertainty, which CCSDS 503.0-B-1 has no field for.
+  const ::flatbuffers::Vector<double> *DOPPLER_NOISE_HZ() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DOPPLER_NOISE_HZ);
+  }
   /// SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp
   /// table covering this segment, ordered by START_TIME and non-overlapping.
   /// Required in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone
@@ -607,6 +629,12 @@ struct TDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(CLOCK_BIAS()) &&
            VerifyOffset(verifier, VT_CLOCK_DRIFT) &&
            verifier.VerifyVector(CLOCK_DRIFT()) &&
+           VerifyOffset(verifier, VT_SIGNAL_TO_NOISE) &&
+           verifier.VerifyVector(SIGNAL_TO_NOISE()) &&
+           VerifyOffset(verifier, VT_SPECTRAL_MAX) &&
+           verifier.VerifyVector(SPECTRAL_MAX()) &&
+           VerifyOffset(verifier, VT_DOPPLER_NOISE_HZ) &&
+           verifier.VerifyVector(DOPPLER_NOISE_HZ()) &&
            VerifyOffset(verifier, VT_TRANSMIT_RAMPS) &&
            verifier.VerifyVector(TRANSMIT_RAMPS()) &&
            verifier.VerifyVectorOfTables(TRANSMIT_RAMPS()) &&
@@ -801,6 +829,15 @@ struct TDMBuilder {
   void add_CLOCK_DRIFT(::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_DRIFT) {
     fbb_.AddOffset(TDM::VT_CLOCK_DRIFT, CLOCK_DRIFT);
   }
+  void add_SIGNAL_TO_NOISE(::flatbuffers::Offset<::flatbuffers::Vector<double>> SIGNAL_TO_NOISE) {
+    fbb_.AddOffset(TDM::VT_SIGNAL_TO_NOISE, SIGNAL_TO_NOISE);
+  }
+  void add_SPECTRAL_MAX(::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_MAX) {
+    fbb_.AddOffset(TDM::VT_SPECTRAL_MAX, SPECTRAL_MAX);
+  }
+  void add_DOPPLER_NOISE_HZ(::flatbuffers::Offset<::flatbuffers::Vector<double>> DOPPLER_NOISE_HZ) {
+    fbb_.AddOffset(TDM::VT_DOPPLER_NOISE_HZ, DOPPLER_NOISE_HZ);
+  }
   void add_TRANSMIT_RAMPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS) {
     fbb_.AddOffset(TDM::VT_TRANSMIT_RAMPS, TRANSMIT_RAMPS);
   }
@@ -878,6 +915,9 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> TEMPERATURE = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_BIAS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<double>> CLOCK_DRIFT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SIGNAL_TO_NOISE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_MAX = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DOPPLER_NOISE_HZ = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<TDMTransmitRamp>>> TRANSMIT_RAMPS = 0) {
   TDMBuilder builder_(_fbb);
   builder_.add_RANGE_MODULUS(RANGE_MODULUS);
@@ -894,6 +934,9 @@ inline ::flatbuffers::Offset<TDM> CreateTDM(
   builder_.add_OBSERVER_Y(OBSERVER_Y);
   builder_.add_OBSERVER_X(OBSERVER_X);
   builder_.add_TRANSMIT_RAMPS(TRANSMIT_RAMPS);
+  builder_.add_DOPPLER_NOISE_HZ(DOPPLER_NOISE_HZ);
+  builder_.add_SPECTRAL_MAX(SPECTRAL_MAX);
+  builder_.add_SIGNAL_TO_NOISE(SIGNAL_TO_NOISE);
   builder_.add_CLOCK_DRIFT(CLOCK_DRIFT);
   builder_.add_CLOCK_BIAS(CLOCK_BIAS);
   builder_.add_TEMPERATURE(TEMPERATURE);
@@ -1008,6 +1051,9 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
     const std::vector<double> *TEMPERATURE = nullptr,
     const std::vector<double> *CLOCK_BIAS = nullptr,
     const std::vector<double> *CLOCK_DRIFT = nullptr,
+    const std::vector<double> *SIGNAL_TO_NOISE = nullptr,
+    const std::vector<double> *SPECTRAL_MAX = nullptr,
+    const std::vector<double> *DOPPLER_NOISE_HZ = nullptr,
     const std::vector<::flatbuffers::Offset<TDMTransmitRamp>> *TRANSMIT_RAMPS = nullptr) {
   auto OBSERVER_ID__ = OBSERVER_ID ? _fbb.CreateString(OBSERVER_ID) : 0;
   auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
@@ -1048,6 +1094,9 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
   auto TEMPERATURE__ = TEMPERATURE ? _fbb.CreateVector<double>(*TEMPERATURE) : 0;
   auto CLOCK_BIAS__ = CLOCK_BIAS ? _fbb.CreateVector<double>(*CLOCK_BIAS) : 0;
   auto CLOCK_DRIFT__ = CLOCK_DRIFT ? _fbb.CreateVector<double>(*CLOCK_DRIFT) : 0;
+  auto SIGNAL_TO_NOISE__ = SIGNAL_TO_NOISE ? _fbb.CreateVector<double>(*SIGNAL_TO_NOISE) : 0;
+  auto SPECTRAL_MAX__ = SPECTRAL_MAX ? _fbb.CreateVector<double>(*SPECTRAL_MAX) : 0;
+  auto DOPPLER_NOISE_HZ__ = DOPPLER_NOISE_HZ ? _fbb.CreateVector<double>(*DOPPLER_NOISE_HZ) : 0;
   auto TRANSMIT_RAMPS__ = TRANSMIT_RAMPS ? _fbb.CreateVector<::flatbuffers::Offset<TDMTransmitRamp>>(*TRANSMIT_RAMPS) : 0;
   return CreateTDM(
       _fbb,
@@ -1112,6 +1161,9 @@ inline ::flatbuffers::Offset<TDM> CreateTDMDirect(
       TEMPERATURE__,
       CLOCK_BIAS__,
       CLOCK_DRIFT__,
+      SIGNAL_TO_NOISE__,
+      SPECTRAL_MAX__,
+      DOPPLER_NOISE_HZ__,
       TRANSMIT_RAMPS__);
 }
 

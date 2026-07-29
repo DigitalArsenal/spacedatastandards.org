@@ -194,6 +194,11 @@ public enum RecordType : byte
   CPS = 187,
   FSB = 188,
   FSO = 189,
+  GST = 190,
+  MDP = 191,
+  MDS = 192,
+  PNL = 193,
+  SHC = 194,
 };
 
 public class RecordTypeUnion {
@@ -584,6 +589,16 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromFSB(FSBT _fsb) { return new RecordTypeUnion{ Type = RecordType.FSB, Value = _fsb }; }
   public FSOT AsFSO() { return this.As<FSOT>(); }
   public static RecordTypeUnion FromFSO(FSOT _fso) { return new RecordTypeUnion{ Type = RecordType.FSO, Value = _fso }; }
+  public GSTT AsGST() { return this.As<GSTT>(); }
+  public static RecordTypeUnion FromGST(GSTT _gst) { return new RecordTypeUnion{ Type = RecordType.GST, Value = _gst }; }
+  public MDPT AsMDP() { return this.As<MDPT>(); }
+  public static RecordTypeUnion FromMDP(MDPT _mdp) { return new RecordTypeUnion{ Type = RecordType.MDP, Value = _mdp }; }
+  public MDST AsMDS() { return this.As<MDST>(); }
+  public static RecordTypeUnion FromMDS(MDST _mds) { return new RecordTypeUnion{ Type = RecordType.MDS, Value = _mds }; }
+  public PNLT AsPNL() { return this.As<PNLT>(); }
+  public static RecordTypeUnion FromPNL(PNLT _pnl) { return new RecordTypeUnion{ Type = RecordType.PNL, Value = _pnl }; }
+  public SHCT AsSHC() { return this.As<SHCT>(); }
+  public static RecordTypeUnion FromSHC(SHCT _shc) { return new RecordTypeUnion{ Type = RecordType.SHC, Value = _shc }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -777,6 +792,11 @@ public class RecordTypeUnion {
       case RecordType.CPS: return CPS.Pack(builder, _o.AsCPS()).Value;
       case RecordType.FSB: return FSB.Pack(builder, _o.AsFSB()).Value;
       case RecordType.FSO: return FSO.Pack(builder, _o.AsFSO()).Value;
+      case RecordType.GST: return GST.Pack(builder, _o.AsGST()).Value;
+      case RecordType.MDP: return MDP.Pack(builder, _o.AsMDP()).Value;
+      case RecordType.MDS: return MDS.Pack(builder, _o.AsMDS()).Value;
+      case RecordType.PNL: return PNL.Pack(builder, _o.AsPNL()).Value;
+      case RecordType.SHC: return SHC.Pack(builder, _o.AsSHC()).Value;
     }
   }
 }
@@ -1356,6 +1376,21 @@ static public class RecordTypeVerify
         break;
       case RecordType.FSO:
         result = FSOVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.GST:
+        result = GSTVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MDP:
+        result = MDPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.MDS:
+        result = MDSVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PNL:
+        result = PNLVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.SHC:
+        result = SHCVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

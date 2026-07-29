@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "MDSEncounter" : {
+      "type" : "object",
+      "description" : "One body encounter along a candidate trajectory.\n\nEncounter-indexed rather than leg-indexed on purpose. A search implementation\ntypically emits leg-indexed arrays: for nE encounters there are nL = nE - 1\nlegs, the departure v-infinity of leg i is the OUTGOING vector at encounter\ni, and the arrival v-infinity of leg i is the INCOMING vector at encounter\ni + 1. Carrying both vectors on the encounter they physically occur at\nremoves that off-by-one from every consumer.",
+      "properties" : {
+        "ENCOUNTER_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based position along the trajectory."
+              },
+        "BODY_NAIF_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Body encountered, NAIF integer ID (normative). A barycenter is not the\nbody: 4 is the Mars barycenter, 499 is Mars."
+              },
+        "BODY_NAME" : {
+                "type" : "string",
+                "description" : "Advisory body name."
+              },
+        "EPOCH_ET_S" : {
+                "type" : "number",
+                "description" : "Encounter epoch as ephemeris time, seconds past J2000 TDB. This is the\nform solvers work in and is carried verbatim to avoid a lossy round trip."
+              },
+        "EPOCH_UTC" : {
+                "type" : "string",
+                "description" : "Same epoch in ISO 8601 (UTC), for consumers that do not carry an\nephemeris time implementation. Advisory; EPOCH_ET_S is normative."
+              },
+        "INCOMING_V_INFINITY_X_KM_S" : {
+                "type" : "number",
+                "description" : "Incoming hyperbolic excess velocity vector, km/s. Absent at the first\nencounter."
+              },
+        "INCOMING_V_INFINITY_Y_KM_S" : {
+                "type" : "number"
+              },
+        "INCOMING_V_INFINITY_Z_KM_S" : {
+                "type" : "number"
+              },
+        "OUTGOING_V_INFINITY_X_KM_S" : {
+                "type" : "number",
+                "description" : "Outgoing hyperbolic excess velocity vector, km/s. Absent at the final\nencounter."
+              },
+        "OUTGOING_V_INFINITY_Y_KM_S" : {
+                "type" : "number"
+              },
+        "OUTGOING_V_INFINITY_Z_KM_S" : {
+                "type" : "number"
+              },
+        "TURN_ANGLE_RAD" : {
+                "type" : "number",
+                "description" : "Turn angle between incoming and outgoing asymptotes, radians."
+              },
+        "PERIAPSIS_RADIUS_KM" : {
+                "type" : "number",
+                "description" : "Flyby periapsis radius measured from the body's center, km."
+              },
+        "POWERED_FLYBY_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Delta-V applied at periapsis for a powered flyby, km/s. Zero for an\nunpowered (ballistic) flyby."
+              },
+        "LAMBERT_SOLUTION_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index of the Lambert solution selected for the leg DEPARTING this\nencounter, as reported by the solver."
+              },
+        "FLYBY_SOLUTION_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index of the flyby solution branch selected at this encounter, as\nreported by the solver."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDSDeepSpaceManeuver" : {
+      "type" : "object",
+      "description" : "One deep-space maneuver on a transfer leg.",
+      "properties" : {
+        "LEG_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Zero-based leg the maneuver occurs on. Leg i connects encounter i to\nencounter i + 1."
+              },
+        "ARC_FRACTION" : {
+                "type" : "number",
+                "description" : "Position along the leg as a fraction of its flight time, in [0, 1]."
+              },
+        "EPOCH_ET_S" : {
+                "type" : "number",
+                "description" : "Maneuver epoch as ephemeris time, seconds past J2000 TDB, when the solver\nreports it directly."
+              },
+        "DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Maneuver magnitude, km/s."
+              },
+        "DELTA_V_X_KM_S" : {
+                "type" : "number",
+                "description" : "Maneuver vector when the solver reports one, km/s."
+              },
+        "DELTA_V_Y_KM_S" : {
+                "type" : "number"
+              },
+        "DELTA_V_Z_KM_S" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDSCandidate" : {
+      "type" : "object",
+      "description" : "One candidate trajectory on the front.",
+      "properties" : {
+        "CANDIDATE_ID" : {
+                "type" : "string",
+                "description" : "Solver-assigned trajectory identifier, unique within the set."
+              },
+        "ENCOUNTERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDSEncounter"},
+                "description" : "Ordered encounters, first to last."
+              },
+        "DEEP_SPACE_MANEUVERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDSDeepSpaceManeuver"},
+                "description" : "Deep-space maneuvers, ordered by LEG_INDEX then ARC_FRACTION."
+              },
+        "TOTAL_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Total post-launch delta-V, km/s."
+              },
+        "TOTAL_FLIGHT_TIME_DAYS" : {
+                "type" : "number",
+                "description" : "Total flight time from first to last encounter, days."
+              },
+        "LAUNCH_C3_KM2_S2" : {
+                "type" : "number",
+                "description" : "Launch characteristic energy, km^2/s^2."
+              },
+        "ARRIVAL_V_INFINITY_KM_S" : {
+                "type" : "number",
+                "description" : "Hyperbolic excess speed at arrival, km/s."
+              },
+        "ESCAPE_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Reference escape delta-V from the departure body, km/s."
+              },
+        "INSERTION_DELTA_V_KM_S" : {
+                "type" : "number",
+                "description" : "Reference insertion delta-V at the arrival body, km/s."
+              },
+        "NON_DOMINATED" : {
+                "type" : "boolean",
+                "description" : "True when this candidate is non-dominated within the set. A set MAY carry\ndominated candidates for context; a consumer plotting a front MUST filter\non this rather than assume every member is non-dominated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDS" : {
+      "type" : "object",
+      "description" : "Mission Design Solution Set — a set of candidate trajectories produced by\nsolving a mission design broad search, typically a Pareto front over\ncompeting objectives (total delta-V against total flight time).\n\nSDS had no multi-candidate container of any kind before this record. The\nclosest existing carrier for a single planned burn is OCM.Maneuver, whose\npayload is untyped DATA:[string] with MAN_UNITS:[string] and which has no\nv-infinity, turn angle, flyby periapsis radius, or C3.",
+      "properties" : {
+        "SOLUTION_SET_ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this solution set."
+              },
+        "PROBLEM_ID" : {
+                "type" : "string",
+                "description" : "PROBLEM_ID of the $MDP this set solves. A solution set whose problem\ndefinition is unknown is not reproducible."
+              },
+        "OBJECTIVES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Objectives the front is expressed over, e.g.\n[\"TOTAL_DELTA_V_KM_S\", \"TOTAL_FLIGHT_TIME_DAYS\"]. Names MUST be field\nnames of MDSCandidate."
+              },
+        "CANDIDATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDSCandidate"},
+                "description" : "The candidates."
+              },
+        "SOLVER" : {
+                "type" : "string",
+                "description" : "Solver identity and version that produced the set."
+              },
+        "SOLVER_VERSION" : {
+                "type" : "string"
+              },
+        "EPHEMERIS_SOURCE" : {
+                "type" : "string",
+                "description" : "Ephemeris source used, e.g. a SPICE kernel set identifier."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "When the set was generated, ISO 8601."
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Free-form notes."
+              }
+      },
+      "required" : ["SOLUTION_SET_ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MDS"
+}
