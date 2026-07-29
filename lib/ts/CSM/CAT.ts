@@ -241,8 +241,21 @@ payloadsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Join key to the BUS record describing this object's satellite bus; holds
+ * that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+ * and WET_MASS are properties of the bus design and live on BUS — they are
+ * NOT duplicated here. Empty when the bus is unknown.
+ */
+BUS_ID():string|null
+BUS_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BUS_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCAT(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(24);
 }
 
 static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
@@ -349,6 +362,10 @@ static startPayloadsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addBusId(builder:flatbuffers.Builder, BUS_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, BUS_IDOffset, 0);
+}
+
 static endCAT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -362,7 +379,7 @@ static finishSizePrefixedCATBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CAT', true);
 }
 
-static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, NORAD_CAT_ID:number, OBJECT_TYPE:spaceObjectClass, OPS_STATUS_CODE:operationalState, OWNER:legacyCountryCode, LAUNCH_DATEOffset:flatbuffers.Offset, LAUNCH_SITEOffset:flatbuffers.Offset, DECAY_DATEOffset:flatbuffers.Offset, PERIOD:number, INCLINATION:number, APOGEE:number, PERIGEE:number, RCS:number, DATA_STATUS_CODE:dataAvailability, ORBIT_CENTEROffset:flatbuffers.Offset, ORBIT_TYPE:orbitRegime, DEPLOYMENT_DATEOffset:flatbuffers.Offset, MANEUVERABLE:boolean, SIZE:number, MASS:number, MASS_TYPE:massCategory, PAYLOADSOffset:flatbuffers.Offset, BUS_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   CAT.startCAT(builder);
   CAT.addObjectName(builder, OBJECT_NAMEOffset);
   CAT.addObjectId(builder, OBJECT_IDOffset);
@@ -387,6 +404,7 @@ static createCAT(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offs
   CAT.addMass(builder, MASS);
   CAT.addMassType(builder, MASS_TYPE);
   CAT.addPayloads(builder, PAYLOADSOffset);
+  CAT.addBusId(builder, BUS_IDOffset);
   return CAT.endCAT(builder);
 }
 
@@ -414,7 +432,8 @@ unpack(): CATT {
     this.SIZE(),
     this.MASS(),
     this.MASS_TYPE(),
-    this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength())
+    this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength()),
+    this.BUS_ID()
   );
 }
 
@@ -443,6 +462,7 @@ unpackTo(_o: CATT): void {
   _o.MASS = this.MASS();
   _o.MASS_TYPE = this.MASS_TYPE();
   _o.PAYLOADS = this.bb!.createObjList<PLD, PLDT>(this.PAYLOADS.bind(this), this.payloadsLength());
+  _o.BUS_ID = this.BUS_ID();
 }
 }
 
@@ -470,7 +490,8 @@ constructor(
   public SIZE: number = 0.0,
   public MASS: number = 0.0,
   public MASS_TYPE: massCategory = massCategory.DRY,
-  public PAYLOADS: (PLDT)[] = []
+  public PAYLOADS: (PLDT)[] = [],
+  public BUS_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -483,6 +504,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORBIT_CENTER = (this.ORBIT_CENTER !== null ? builder.createString(this.ORBIT_CENTER!) : 0);
   const DEPLOYMENT_DATE = (this.DEPLOYMENT_DATE !== null ? builder.createString(this.DEPLOYMENT_DATE!) : 0);
   const PAYLOADS = CAT.createPayloadsVector(builder, builder.createObjectOffsetList(this.PAYLOADS));
+  const BUS_ID = (this.BUS_ID !== null ? builder.createString(this.BUS_ID!) : 0);
 
   return CAT.createCAT(builder,
     OBJECT_NAME,
@@ -507,7 +529,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SIZE,
     this.MASS,
     this.MASS_TYPE,
-    PAYLOADS
+    PAYLOADS,
+    BUS_ID
   );
 }
 }

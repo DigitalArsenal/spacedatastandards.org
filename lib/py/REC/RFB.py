@@ -7,6 +7,17 @@ from flatbuffers.compat import import_numpy
 np = import_numpy()
 
 # RF Band Specification
+#
+# UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+# that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+# that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+# never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+# convention.
+#
+# One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+# transponder is therefore represented as TWO RFB records — one UPLINK and
+# one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+# FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 class RFB(object):
     __slots__ = ['_tab']
 
@@ -157,8 +168,84 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # NORAD catalog number of the spacecraft carrying this emitter. Joins to
+    # CAT.NORAD_CAT_ID. 0 when unbound.
+    # RFB
+    def NORAD_CAT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Identifier of the physical transmitter, transceiver or transponder this
+    # record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+    # records of the same device share this value.
+    # RFB
+    def ID_TRANSMITTER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Direction of this emission relative to the spacecraft.
+    # RFB
+    def LINK_DIRECTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Symbol rate in baud (symbols per second), NOT kilobaud.
+    # RFB
+    def BAUD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+    # RFB
+    def SERVICE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operational state of this emitter.
+    # RFB
+    def XMT_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # True when the modulation sideband is inverted.
+    # RFB
+    def INVERT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+    # RFB
+    def IARU_COORDINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Attribution/citation string the source license requires this record to
+    # carry downstream.
+    # RFB
+    def CITATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def RFBStart(builder):
-    builder.StartObject(16)
+    builder.StartObject(25)
 
 def Start(builder):
     RFBStart(builder)
@@ -259,6 +346,60 @@ def RFBAddEIRP(builder, EIRP):
 def AddEIRP(builder, EIRP):
     RFBAddEIRP(builder, EIRP)
 
+def RFBAddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    builder.PrependUint32Slot(16, NORAD_CAT_ID, 0)
+
+def AddNORAD_CAT_ID(builder, NORAD_CAT_ID):
+    RFBAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+
+def RFBAddID_TRANSMITTER(builder, ID_TRANSMITTER):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ID_TRANSMITTER), 0)
+
+def AddID_TRANSMITTER(builder, ID_TRANSMITTER):
+    RFBAddID_TRANSMITTER(builder, ID_TRANSMITTER)
+
+def RFBAddLINK_DIRECTION(builder, LINK_DIRECTION):
+    builder.PrependInt8Slot(18, LINK_DIRECTION, 0)
+
+def AddLINK_DIRECTION(builder, LINK_DIRECTION):
+    RFBAddLINK_DIRECTION(builder, LINK_DIRECTION)
+
+def RFBAddBAUD(builder, BAUD):
+    builder.PrependFloat64Slot(19, BAUD, 0.0)
+
+def AddBAUD(builder, BAUD):
+    RFBAddBAUD(builder, BAUD)
+
+def RFBAddSERVICE(builder, SERVICE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SERVICE), 0)
+
+def AddSERVICE(builder, SERVICE):
+    RFBAddSERVICE(builder, SERVICE)
+
+def RFBAddXMT_STATUS(builder, XMT_STATUS):
+    builder.PrependInt8Slot(21, XMT_STATUS, 0)
+
+def AddXMT_STATUS(builder, XMT_STATUS):
+    RFBAddXMT_STATUS(builder, XMT_STATUS)
+
+def RFBAddINVERT(builder, INVERT):
+    builder.PrependBoolSlot(22, INVERT, 0)
+
+def AddINVERT(builder, INVERT):
+    RFBAddINVERT(builder, INVERT)
+
+def RFBAddIARU_COORDINATION(builder, IARU_COORDINATION):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(IARU_COORDINATION), 0)
+
+def AddIARU_COORDINATION(builder, IARU_COORDINATION):
+    RFBAddIARU_COORDINATION(builder, IARU_COORDINATION)
+
+def RFBAddCITATION(builder, CITATION):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CITATION), 0)
+
+def AddCITATION(builder, CITATION):
+    RFBAddCITATION(builder, CITATION)
+
 def RFBEnd(builder):
     return builder.EndObject()
 
@@ -287,6 +428,15 @@ class RFBT(object):
         POLARIZATION = 0,
         ERP = 0.0,
         EIRP = 0.0,
+        NORAD_CAT_ID = 0,
+        ID_TRANSMITTER = None,
+        LINK_DIRECTION = 0,
+        BAUD = 0.0,
+        SERVICE = None,
+        XMT_STATUS = 0,
+        INVERT = False,
+        IARU_COORDINATION = None,
+        CITATION = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.ID_ENTITY = ID_ENTITY  # type: Optional[str]
@@ -304,6 +454,15 @@ class RFBT(object):
         self.POLARIZATION = POLARIZATION  # type: int
         self.ERP = ERP  # type: float
         self.EIRP = EIRP  # type: float
+        self.NORAD_CAT_ID = NORAD_CAT_ID  # type: int
+        self.ID_TRANSMITTER = ID_TRANSMITTER  # type: Optional[str]
+        self.LINK_DIRECTION = LINK_DIRECTION  # type: int
+        self.BAUD = BAUD  # type: float
+        self.SERVICE = SERVICE  # type: Optional[str]
+        self.XMT_STATUS = XMT_STATUS  # type: int
+        self.INVERT = INVERT  # type: bool
+        self.IARU_COORDINATION = IARU_COORDINATION  # type: Optional[str]
+        self.CITATION = CITATION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -342,6 +501,15 @@ class RFBT(object):
         self.POLARIZATION = RFB.POLARIZATION()
         self.ERP = RFB.ERP()
         self.EIRP = RFB.EIRP()
+        self.NORAD_CAT_ID = RFB.NORAD_CAT_ID()
+        self.ID_TRANSMITTER = RFB.ID_TRANSMITTER()
+        self.LINK_DIRECTION = RFB.LINK_DIRECTION()
+        self.BAUD = RFB.BAUD()
+        self.SERVICE = RFB.SERVICE()
+        self.XMT_STATUS = RFB.XMT_STATUS()
+        self.INVERT = RFB.INVERT()
+        self.IARU_COORDINATION = RFB.IARU_COORDINATION()
+        self.CITATION = RFB.CITATION()
 
     # RFBT
     def Pack(self, builder):
@@ -355,6 +523,14 @@ class RFBT(object):
             MODE = builder.CreateString(self.MODE)
         if self.PURPOSE is not None:
             PURPOSE = builder.CreateString(self.PURPOSE)
+        if self.ID_TRANSMITTER is not None:
+            ID_TRANSMITTER = builder.CreateString(self.ID_TRANSMITTER)
+        if self.SERVICE is not None:
+            SERVICE = builder.CreateString(self.SERVICE)
+        if self.IARU_COORDINATION is not None:
+            IARU_COORDINATION = builder.CreateString(self.IARU_COORDINATION)
+        if self.CITATION is not None:
+            CITATION = builder.CreateString(self.CITATION)
         RFBStart(builder)
         if self.ID is not None:
             RFBAddID(builder, ID)
@@ -377,5 +553,18 @@ class RFBT(object):
         RFBAddPOLARIZATION(builder, self.POLARIZATION)
         RFBAddERP(builder, self.ERP)
         RFBAddEIRP(builder, self.EIRP)
+        RFBAddNORAD_CAT_ID(builder, self.NORAD_CAT_ID)
+        if self.ID_TRANSMITTER is not None:
+            RFBAddID_TRANSMITTER(builder, ID_TRANSMITTER)
+        RFBAddLINK_DIRECTION(builder, self.LINK_DIRECTION)
+        RFBAddBAUD(builder, self.BAUD)
+        if self.SERVICE is not None:
+            RFBAddSERVICE(builder, SERVICE)
+        RFBAddXMT_STATUS(builder, self.XMT_STATUS)
+        RFBAddINVERT(builder, self.INVERT)
+        if self.IARU_COORDINATION is not None:
+            RFBAddIARU_COORDINATION(builder, IARU_COORDINATION)
+        if self.CITATION is not None:
+            RFBAddCITATION(builder, CITATION)
         RFB = RFBEnd(builder)
         return RFB

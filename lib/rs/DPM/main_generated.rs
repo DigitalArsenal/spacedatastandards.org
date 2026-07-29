@@ -967,6 +967,9 @@ impl<'a> DPMSourceBatch<'a> {
   pub const VT_PARSER_VERSION: ::flatbuffers::VOffsetT = 16;
   pub const VT_RECORD_COUNT: ::flatbuffers::VOffsetT = 18;
   pub const VT_WARNINGS: ::flatbuffers::VOffsetT = 20;
+  pub const VT_LICENSE: ::flatbuffers::VOffsetT = 22;
+  pub const VT_LICENSE_URL: ::flatbuffers::VOffsetT = 24;
+  pub const VT_CITATION: ::flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -979,6 +982,9 @@ impl<'a> DPMSourceBatch<'a> {
   ) -> ::flatbuffers::WIPOffset<DPMSourceBatch<'bldr>> {
     let mut builder = DPMSourceBatchBuilder::new(_fbb);
     builder.add_RECORD_COUNT(args.RECORD_COUNT);
+    if let Some(x) = args.CITATION { builder.add_CITATION(x); }
+    if let Some(x) = args.LICENSE_URL { builder.add_LICENSE_URL(x); }
+    if let Some(x) = args.LICENSE { builder.add_LICENSE(x); }
     if let Some(x) = args.WARNINGS { builder.add_WARNINGS(x); }
     if let Some(x) = args.PARSER_VERSION { builder.add_PARSER_VERSION(x); }
     if let Some(x) = args.RETRIEVED_AT { builder.add_RETRIEVED_AT(x); }
@@ -1016,6 +1022,15 @@ impl<'a> DPMSourceBatch<'a> {
     let WARNINGS = self.WARNINGS().map(|x| {
       x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
     });
+    let LICENSE = self.LICENSE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let LICENSE_URL = self.LICENSE_URL().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let CITATION = self.CITATION().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     DPMSourceBatchT {
       SOURCE_NAME,
       SOURCE_URL,
@@ -1026,6 +1041,9 @@ impl<'a> DPMSourceBatch<'a> {
       PARSER_VERSION,
       RECORD_COUNT,
       WARNINGS,
+      LICENSE,
+      LICENSE_URL,
+      CITATION,
     }
   }
 
@@ -1101,6 +1119,34 @@ impl<'a> DPMSourceBatch<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(DPMSourceBatch::VT_WARNINGS, None)}
   }
+  /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  /// record derived from this batch may be republished; share-alike terms
+  /// propagate from this batch to every derived record.
+  #[inline]
+  pub fn LICENSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMSourceBatch::VT_LICENSE, None)}
+  }
+  /// Canonical URL of the license text.
+  #[inline]
+  pub fn LICENSE_URL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMSourceBatch::VT_LICENSE_URL, None)}
+  }
+  /// Attribution/citation string the source license requires downstream
+  /// republication to carry.
+  #[inline]
+  pub fn CITATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMSourceBatch::VT_CITATION, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for DPMSourceBatch<'_> {
@@ -1118,6 +1164,9 @@ impl ::flatbuffers::Verifiable for DPMSourceBatch<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PARSER_VERSION", Self::VT_PARSER_VERSION, false)?
      .visit_field::<u64>("RECORD_COUNT", Self::VT_RECORD_COUNT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("WARNINGS", Self::VT_WARNINGS, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE", Self::VT_LICENSE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_URL", Self::VT_LICENSE_URL, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
      .finish();
     Ok(())
   }
@@ -1132,6 +1181,9 @@ pub struct DPMSourceBatchArgs<'a> {
     pub PARSER_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub RECORD_COUNT: u64,
     pub WARNINGS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub LICENSE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LICENSE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for DPMSourceBatchArgs<'a> {
   #[inline]
@@ -1146,6 +1198,9 @@ impl<'a> Default for DPMSourceBatchArgs<'a> {
       PARSER_VERSION: None,
       RECORD_COUNT: 0,
       WARNINGS: None,
+      LICENSE: None,
+      LICENSE_URL: None,
+      CITATION: None,
     }
   }
 }
@@ -1192,6 +1247,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMSourceBatchBuilder<'a, 'b,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMSourceBatch::VT_WARNINGS, WARNINGS);
   }
   #[inline]
+  pub fn add_LICENSE(&mut self, LICENSE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMSourceBatch::VT_LICENSE, LICENSE);
+  }
+  #[inline]
+  pub fn add_LICENSE_URL(&mut self, LICENSE_URL: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMSourceBatch::VT_LICENSE_URL, LICENSE_URL);
+  }
+  #[inline]
+  pub fn add_CITATION(&mut self, CITATION: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DPMSourceBatch::VT_CITATION, CITATION);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DPMSourceBatchBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     DPMSourceBatchBuilder {
@@ -1218,6 +1285,9 @@ impl ::core::fmt::Debug for DPMSourceBatch<'_> {
       ds.field("PARSER_VERSION", &self.PARSER_VERSION());
       ds.field("RECORD_COUNT", &self.RECORD_COUNT());
       ds.field("WARNINGS", &self.WARNINGS());
+      ds.field("LICENSE", &self.LICENSE());
+      ds.field("LICENSE_URL", &self.LICENSE_URL());
+      ds.field("CITATION", &self.CITATION());
       ds.finish()
   }
 }
@@ -1233,6 +1303,9 @@ pub struct DPMSourceBatchT {
   pub PARSER_VERSION: Option<alloc::string::String>,
   pub RECORD_COUNT: u64,
   pub WARNINGS: Option<alloc::vec::Vec<alloc::string::String>>,
+  pub LICENSE: Option<alloc::string::String>,
+  pub LICENSE_URL: Option<alloc::string::String>,
+  pub CITATION: Option<alloc::string::String>,
 }
 impl Default for DPMSourceBatchT {
   fn default() -> Self {
@@ -1246,6 +1319,9 @@ impl Default for DPMSourceBatchT {
       PARSER_VERSION: None,
       RECORD_COUNT: 0,
       WARNINGS: None,
+      LICENSE: None,
+      LICENSE_URL: None,
+      CITATION: None,
     }
   }
 }
@@ -1279,6 +1355,15 @@ impl DPMSourceBatchT {
     let WARNINGS = self.WARNINGS.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
+    let LICENSE = self.LICENSE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LICENSE_URL = self.LICENSE_URL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CITATION = self.CITATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     DPMSourceBatch::create(_fbb, &DPMSourceBatchArgs{
       SOURCE_NAME,
       SOURCE_URL,
@@ -1289,6 +1374,9 @@ impl DPMSourceBatchT {
       PARSER_VERSION,
       RECORD_COUNT,
       WARNINGS,
+      LICENSE,
+      LICENSE_URL,
+      CITATION,
     })
   }
 }

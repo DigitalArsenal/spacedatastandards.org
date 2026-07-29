@@ -6,243 +6,290 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum rfBandDesignation {
-  UHF(0),
-  L(1),
-  S(2),
-  C(3),
-  X(4),
-  KU(5),
-  K(6),
-  KA(7),
-  V(8),
-  W(9),
-  Q(10),
-  EHF(11),
-  OTHER(12);
+enum linkCategory {
+  UPLINK(0),
+  DOWNLINK(1),
+  CROSSLINK(2),
+  INTER_SATELLITE(3),
+  GROUND_TO_GROUND(4),
+  RELAY(5);
 
   final int value;
-  const rfBandDesignation(this.value);
+  const linkCategory(this.value);
 
-  factory rfBandDesignation.fromValue(int value) {
+  factory linkCategory.fromValue(int value) {
     switch (value) {
-      case 0: return rfBandDesignation.UHF;
-      case 1: return rfBandDesignation.L;
-      case 2: return rfBandDesignation.S;
-      case 3: return rfBandDesignation.C;
-      case 4: return rfBandDesignation.X;
-      case 5: return rfBandDesignation.KU;
-      case 6: return rfBandDesignation.K;
-      case 7: return rfBandDesignation.KA;
-      case 8: return rfBandDesignation.V;
-      case 9: return rfBandDesignation.W;
-      case 10: return rfBandDesignation.Q;
-      case 11: return rfBandDesignation.EHF;
-      case 12: return rfBandDesignation.OTHER;
+      case 0: return linkCategory.UPLINK;
+      case 1: return linkCategory.DOWNLINK;
+      case 2: return linkCategory.CROSSLINK;
+      case 3: return linkCategory.INTER_SATELLITE;
+      case 4: return linkCategory.GROUND_TO_GROUND;
+      case 5: return linkCategory.RELAY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static rfBandDesignation? _createOrNull(int? value) =>
-      value == null ? null : rfBandDesignation.fromValue(value);
+  static linkCategory? _createOrNull(int? value) =>
+      value == null ? null : linkCategory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 12;
-  static const fb.Reader<rfBandDesignation> reader = _rfBandDesignationReader();
+  static const int maxValue = 5;
+  static const fb.Reader<linkCategory> reader = _linkCategoryReader();
 }
 
-class _rfBandDesignationReader extends fb.Reader<rfBandDesignation> {
-  const _rfBandDesignationReader();
+class _linkCategoryReader extends fb.Reader<linkCategory> {
+  const _linkCategoryReader();
 
   @override
   int get size => 1;
 
   @override
-  rfBandDesignation read(fb.BufferContext bc, int offset) =>
-      rfBandDesignation.fromValue(const fb.Int8Reader().read(bc, offset));
+  linkCategory read(fb.BufferContext bc, int offset) =>
+      linkCategory.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-enum rfPolarization {
-  LHCP(0),
-  RHCP(1),
-  LINEAR_H(2),
-  LINEAR_V(3),
-  DUAL(4),
-  CROSS(5),
-  UNKNOWN(6);
+enum linkCondition {
+  ESTABLISHED(0),
+  DEGRADED(1),
+  INTERRUPTED(2),
+  PLANNED(3),
+  TERMINATED(4),
+  UNKNOWN(5);
 
   final int value;
-  const rfPolarization(this.value);
+  const linkCondition(this.value);
 
-  factory rfPolarization.fromValue(int value) {
+  factory linkCondition.fromValue(int value) {
     switch (value) {
-      case 0: return rfPolarization.LHCP;
-      case 1: return rfPolarization.RHCP;
-      case 2: return rfPolarization.LINEAR_H;
-      case 3: return rfPolarization.LINEAR_V;
-      case 4: return rfPolarization.DUAL;
-      case 5: return rfPolarization.CROSS;
-      case 6: return rfPolarization.UNKNOWN;
+      case 0: return linkCondition.ESTABLISHED;
+      case 1: return linkCondition.DEGRADED;
+      case 2: return linkCondition.INTERRUPTED;
+      case 3: return linkCondition.PLANNED;
+      case 4: return linkCondition.TERMINATED;
+      case 5: return linkCondition.UNKNOWN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static rfPolarization? _createOrNull(int? value) =>
-      value == null ? null : rfPolarization.fromValue(value);
+  static linkCondition? _createOrNull(int? value) =>
+      value == null ? null : linkCondition.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
-  static const fb.Reader<rfPolarization> reader = _rfPolarizationReader();
+  static const int maxValue = 5;
+  static const fb.Reader<linkCondition> reader = _linkConditionReader();
 }
 
-class _rfPolarizationReader extends fb.Reader<rfPolarization> {
-  const _rfPolarizationReader();
+class _linkConditionReader extends fb.Reader<linkCondition> {
+  const _linkConditionReader();
 
   @override
   int get size => 1;
 
   @override
-  rfPolarization read(fb.BufferContext bc, int offset) =>
-      rfPolarization.fromValue(const fb.Int8Reader().read(bc, offset));
+  linkCondition read(fb.BufferContext bc, int offset) =>
+      linkCondition.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  RF Band Specification
-class RFB {
-  RFB._(this._bc, this._bcOffset);
-  factory RFB(List<int> bytes) {
+///  Link Status
+class LKS {
+  LKS._(this._bc, this._bcOffset);
+  factory LKS(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<RFB> reader = _RFBReader();
+  static const fb.Reader<LKS> reader = _LKSReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
   ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Parent entity identifier
-  String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get idEntity => ID_ENTITY;
-  ///  Band name or designation
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  RF band designation
-  rfBandDesignation get BAND => rfBandDesignation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
-  ///  Operating mode
-  String? get MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Band purpose (e.g., TT&C, PAYLOAD, BEACON)
-  String? get PURPOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Minimum frequency (MHz)
-  double get FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get freqMin => FREQ_MIN;
-  ///  Maximum frequency (MHz)
-  double get FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get freqMax => FREQ_MAX;
-  ///  Center frequency (MHz)
-  double get CENTER_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get centerFreq => CENTER_FREQ;
-  ///  Bandwidth (MHz)
-  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  ///  Peak antenna gain (dBi)
-  double get PEAK_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get peakGain => PEAK_GAIN;
-  ///  Edge-of-coverage gain (dBi)
-  double get EDGE_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get edgeGain => EDGE_GAIN;
-  ///  Antenna beamwidth (degrees)
-  double get BEAMWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  ///  Polarization
-  rfPolarization get POLARIZATION => rfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
-  ///  Effective radiated power (dBW)
-  double get ERP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  ///  Effective isotropic radiated power (dBW)
-  double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  First endpoint on-orbit identifier
+  String? get ID_ON_ORBIT1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get idOnOrbit1 => ID_ON_ORBIT1;
+  ///  First endpoint satellite catalog number
+  int get SAT_NO1 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get satNo1 => SAT_NO1;
+  ///  Second endpoint on-orbit identifier
+  String? get ID_ON_ORBIT2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get idOnOrbit2 => ID_ON_ORBIT2;
+  ///  Second endpoint satellite catalog number
+  int get SAT_NO2 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get satNo2 => SAT_NO2;
+  ///  Constellation name
+  String? get CONSTELLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Link name or identifier
+  String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  String? get linkName => LINK_NAME;
+  ///  Link type
+  linkCategory get LINK_TYPE => linkCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  linkCategory get linkType => LINK_TYPE;
+  ///  Link state
+  linkCondition get LINK_STATE => linkCondition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  linkCondition get linkState => LINK_STATE;
+  ///  RF band
+  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Link start time (ISO 8601)
+  String? get LINK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get linkStartTime => LINK_START_TIME;
+  ///  Link stop time (ISO 8601)
+  String? get LINK_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  String? get linkStopTime => LINK_STOP_TIME;
+  ///  First endpoint beam identifier
+  String? get ID_BEAM1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  String? get idBeam1 => ID_BEAM1;
+  ///  First endpoint name
+  String? get END_POINT1_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  String? get endPoint1Name => END_POINT1_NAME;
+  ///  First endpoint latitude (degrees)
+  double get END_POINT1_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  double get endPoint1Lat => END_POINT1_LAT;
+  ///  First endpoint longitude (degrees)
+  double get END_POINT1_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get endPoint1Lon => END_POINT1_LON;
+  ///  Second endpoint beam identifier
+  String? get ID_BEAM2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get idBeam2 => ID_BEAM2;
+  ///  Second endpoint name
+  String? get END_POINT2_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  String? get endPoint2Name => END_POINT2_NAME;
+  ///  Second endpoint latitude (degrees)
+  double get END_POINT2_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  double get endPoint2Lat => END_POINT2_LAT;
+  ///  Second endpoint longitude (degrees)
+  double get END_POINT2_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  double get endPoint2Lon => END_POINT2_LON;
+  ///  Data rate from endpoint 1 to 2 (Mbps)
+  double get DATA_RATE1_TO2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  double get dataRate1To2 => DATA_RATE1_TO2;
+  ///  Data rate from endpoint 2 to 1 (Mbps)
+  double get DATA_RATE2_TO1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  double get dataRate2To1 => DATA_RATE2_TO1;
+  ///  System capability status
+  String? get SYS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  String? get sysCap => SYS_CAP;
+  ///  Operational capability status
+  String? get OPS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get opsCap => OPS_CAP;
 
   @override
   String toString() {
-    return 'RFB{ID: ${ID}, idEntity: ${idEntity}, NAME: ${NAME}, BAND: ${BAND}, MODE: ${MODE}, PURPOSE: ${PURPOSE}, freqMin: ${freqMin}, freqMax: ${freqMax}, centerFreq: ${centerFreq}, BANDWIDTH: ${BANDWIDTH}, peakGain: ${peakGain}, edgeGain: ${edgeGain}, BEAMWIDTH: ${BEAMWIDTH}, POLARIZATION: ${POLARIZATION}, ERP: ${ERP}, EIRP: ${EIRP}}';
+    return 'LKS{ID: ${ID}, idOnOrbit1: ${idOnOrbit1}, satNo1: ${satNo1}, idOnOrbit2: ${idOnOrbit2}, satNo2: ${satNo2}, CONSTELLATION: ${CONSTELLATION}, linkName: ${linkName}, linkType: ${linkType}, linkState: ${linkState}, BAND: ${BAND}, linkStartTime: ${linkStartTime}, linkStopTime: ${linkStopTime}, idBeam1: ${idBeam1}, endPoint1Name: ${endPoint1Name}, endPoint1Lat: ${endPoint1Lat}, endPoint1Lon: ${endPoint1Lon}, idBeam2: ${idBeam2}, endPoint2Name: ${endPoint2Name}, endPoint2Lat: ${endPoint2Lat}, endPoint2Lon: ${endPoint2Lon}, dataRate1To2: ${dataRate1To2}, dataRate2To1: ${dataRate2To1}, sysCap: ${sysCap}, opsCap: ${opsCap}}';
   }
 }
 
-class _RFBReader extends fb.TableReader<RFB> {
-  const _RFBReader();
+class _LKSReader extends fb.TableReader<LKS> {
+  const _LKSReader();
 
   @override
-  RFB createObject(fb.BufferContext bc, int offset) =>
-    RFB._(bc, offset);
+  LKS createObject(fb.BufferContext bc, int offset) =>
+    LKS._(bc, offset);
 }
 
-class RFBBuilder {
-  RFBBuilder(this.fbBuilder);
+class LKSBuilder {
+  LKSBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(16);
+    fbBuilder.startTable(24);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addIdEntityOffset(int? offset) {
+  int addIdOnOrbit1Offset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addSatNo1(int? SAT_NO1) {
+    fbBuilder.addUint32(2, SAT_NO1);
     return fbBuilder.offset;
   }
-  int addBand(rfBandDesignation? BAND) {
-    fbBuilder.addInt8(3, BAND?.value);
+  int addIdOnOrbit2Offset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addModeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addSatNo2(int? SAT_NO2) {
+    fbBuilder.addUint32(4, SAT_NO2);
     return fbBuilder.offset;
   }
-  int addPurposeOffset(int? offset) {
+  int addConstellationOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addFreqMin(double? FREQ_MIN) {
-    fbBuilder.addFloat64(6, FREQ_MIN);
+  int addLinkNameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addFreqMax(double? FREQ_MAX) {
-    fbBuilder.addFloat64(7, FREQ_MAX);
+  int addLinkType(linkCategory? LINK_TYPE) {
+    fbBuilder.addInt8(7, LINK_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addCenterFreq(double? CENTER_FREQ) {
-    fbBuilder.addFloat64(8, CENTER_FREQ);
+  int addLinkState(linkCondition? LINK_STATE) {
+    fbBuilder.addInt8(8, LINK_STATE?.value);
     return fbBuilder.offset;
   }
-  int addBandwidth(double? BANDWIDTH) {
-    fbBuilder.addFloat64(9, BANDWIDTH);
+  int addBandOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addPeakGain(double? PEAK_GAIN) {
-    fbBuilder.addFloat64(10, PEAK_GAIN);
+  int addLinkStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addEdgeGain(double? EDGE_GAIN) {
-    fbBuilder.addFloat64(11, EDGE_GAIN);
+  int addLinkStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addBeamwidth(double? BEAMWIDTH) {
-    fbBuilder.addFloat64(12, BEAMWIDTH);
+  int addIdBeam1Offset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addPolarization(rfPolarization? POLARIZATION) {
-    fbBuilder.addInt8(13, POLARIZATION?.value);
+  int addEndPoint1NameOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addErp(double? ERP) {
-    fbBuilder.addFloat64(14, ERP);
+  int addEndPoint1Lat(double? END_POINT1_LAT) {
+    fbBuilder.addFloat64(14, END_POINT1_LAT);
     return fbBuilder.offset;
   }
-  int addEirp(double? EIRP) {
-    fbBuilder.addFloat64(15, EIRP);
+  int addEndPoint1Lon(double? END_POINT1_LON) {
+    fbBuilder.addFloat64(15, END_POINT1_LON);
+    return fbBuilder.offset;
+  }
+  int addIdBeam2Offset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addEndPoint2NameOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addEndPoint2Lat(double? END_POINT2_LAT) {
+    fbBuilder.addFloat64(18, END_POINT2_LAT);
+    return fbBuilder.offset;
+  }
+  int addEndPoint2Lon(double? END_POINT2_LON) {
+    fbBuilder.addFloat64(19, END_POINT2_LON);
+    return fbBuilder.offset;
+  }
+  int addDataRate1To2(double? DATA_RATE1_TO2) {
+    fbBuilder.addFloat64(20, DATA_RATE1_TO2);
+    return fbBuilder.offset;
+  }
+  int addDataRate2To1(double? DATA_RATE2_TO1) {
+    fbBuilder.addFloat64(21, DATA_RATE2_TO1);
+    return fbBuilder.offset;
+  }
+  int addSysCapOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addOpsCapOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
 
@@ -251,95 +298,160 @@ class RFBBuilder {
   }
 }
 
-class RFBObjectBuilder extends fb.ObjectBuilder {
+class LKSObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
-  final String? _ID_ENTITY;
-  final String? _NAME;
-  final rfBandDesignation? _BAND;
-  final String? _MODE;
-  final String? _PURPOSE;
-  final double? _FREQ_MIN;
-  final double? _FREQ_MAX;
-  final double? _CENTER_FREQ;
-  final double? _BANDWIDTH;
-  final double? _PEAK_GAIN;
-  final double? _EDGE_GAIN;
-  final double? _BEAMWIDTH;
-  final rfPolarization? _POLARIZATION;
-  final double? _ERP;
-  final double? _EIRP;
+  final String? _ID_ON_ORBIT1;
+  final int? _SAT_NO1;
+  final String? _ID_ON_ORBIT2;
+  final int? _SAT_NO2;
+  final String? _CONSTELLATION;
+  final String? _LINK_NAME;
+  final linkCategory? _LINK_TYPE;
+  final linkCondition? _LINK_STATE;
+  final String? _BAND;
+  final String? _LINK_START_TIME;
+  final String? _LINK_STOP_TIME;
+  final String? _ID_BEAM1;
+  final String? _END_POINT1_NAME;
+  final double? _END_POINT1_LAT;
+  final double? _END_POINT1_LON;
+  final String? _ID_BEAM2;
+  final String? _END_POINT2_NAME;
+  final double? _END_POINT2_LAT;
+  final double? _END_POINT2_LON;
+  final double? _DATA_RATE1_TO2;
+  final double? _DATA_RATE2_TO1;
+  final String? _SYS_CAP;
+  final String? _OPS_CAP;
 
-  RFBObjectBuilder({
+  LKSObjectBuilder({
     String? ID,
-    String? ID_ENTITY,
-    String? idEntity,
-    String? NAME,
-    rfBandDesignation? BAND,
-    String? MODE,
-    String? PURPOSE,
-    double? FREQ_MIN,
-    double? freqMin,
-    double? FREQ_MAX,
-    double? freqMax,
-    double? CENTER_FREQ,
-    double? centerFreq,
-    double? BANDWIDTH,
-    double? PEAK_GAIN,
-    double? peakGain,
-    double? EDGE_GAIN,
-    double? edgeGain,
-    double? BEAMWIDTH,
-    rfPolarization? POLARIZATION,
-    double? ERP,
-    double? EIRP,
+    String? ID_ON_ORBIT1,
+    String? idOnOrbit1,
+    int? SAT_NO1,
+    int? satNo1,
+    String? ID_ON_ORBIT2,
+    String? idOnOrbit2,
+    int? SAT_NO2,
+    int? satNo2,
+    String? CONSTELLATION,
+    String? LINK_NAME,
+    String? linkName,
+    linkCategory? LINK_TYPE,
+    linkCategory? linkType,
+    linkCondition? LINK_STATE,
+    linkCondition? linkState,
+    String? BAND,
+    String? LINK_START_TIME,
+    String? linkStartTime,
+    String? LINK_STOP_TIME,
+    String? linkStopTime,
+    String? ID_BEAM1,
+    String? idBeam1,
+    String? END_POINT1_NAME,
+    String? endPoint1Name,
+    double? END_POINT1_LAT,
+    double? endPoint1Lat,
+    double? END_POINT1_LON,
+    double? endPoint1Lon,
+    String? ID_BEAM2,
+    String? idBeam2,
+    String? END_POINT2_NAME,
+    String? endPoint2Name,
+    double? END_POINT2_LAT,
+    double? endPoint2Lat,
+    double? END_POINT2_LON,
+    double? endPoint2Lon,
+    double? DATA_RATE1_TO2,
+    double? dataRate1To2,
+    double? DATA_RATE2_TO1,
+    double? dataRate2To1,
+    String? SYS_CAP,
+    String? sysCap,
+    String? OPS_CAP,
+    String? opsCap,
   })
       : _ID = ID,
-        _ID_ENTITY = idEntity ?? ID_ENTITY,
-        _NAME = NAME,
+        _ID_ON_ORBIT1 = idOnOrbit1 ?? ID_ON_ORBIT1,
+        _SAT_NO1 = satNo1 ?? SAT_NO1,
+        _ID_ON_ORBIT2 = idOnOrbit2 ?? ID_ON_ORBIT2,
+        _SAT_NO2 = satNo2 ?? SAT_NO2,
+        _CONSTELLATION = CONSTELLATION,
+        _LINK_NAME = linkName ?? LINK_NAME,
+        _LINK_TYPE = linkType ?? LINK_TYPE,
+        _LINK_STATE = linkState ?? LINK_STATE,
         _BAND = BAND,
-        _MODE = MODE,
-        _PURPOSE = PURPOSE,
-        _FREQ_MIN = freqMin ?? FREQ_MIN,
-        _FREQ_MAX = freqMax ?? FREQ_MAX,
-        _CENTER_FREQ = centerFreq ?? CENTER_FREQ,
-        _BANDWIDTH = BANDWIDTH,
-        _PEAK_GAIN = peakGain ?? PEAK_GAIN,
-        _EDGE_GAIN = edgeGain ?? EDGE_GAIN,
-        _BEAMWIDTH = BEAMWIDTH,
-        _POLARIZATION = POLARIZATION,
-        _ERP = ERP,
-        _EIRP = EIRP;
+        _LINK_START_TIME = linkStartTime ?? LINK_START_TIME,
+        _LINK_STOP_TIME = linkStopTime ?? LINK_STOP_TIME,
+        _ID_BEAM1 = idBeam1 ?? ID_BEAM1,
+        _END_POINT1_NAME = endPoint1Name ?? END_POINT1_NAME,
+        _END_POINT1_LAT = endPoint1Lat ?? END_POINT1_LAT,
+        _END_POINT1_LON = endPoint1Lon ?? END_POINT1_LON,
+        _ID_BEAM2 = idBeam2 ?? ID_BEAM2,
+        _END_POINT2_NAME = endPoint2Name ?? END_POINT2_NAME,
+        _END_POINT2_LAT = endPoint2Lat ?? END_POINT2_LAT,
+        _END_POINT2_LON = endPoint2Lon ?? END_POINT2_LON,
+        _DATA_RATE1_TO2 = dataRate1To2 ?? DATA_RATE1_TO2,
+        _DATA_RATE2_TO1 = dataRate2To1 ?? DATA_RATE2_TO1,
+        _SYS_CAP = sysCap ?? SYS_CAP,
+        _OPS_CAP = opsCap ?? OPS_CAP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? ID_ENTITYOffset = _ID_ENTITY == null ? null
-        : fbBuilder.writeString(_ID_ENTITY!);
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? MODEOffset = _MODE == null ? null
-        : fbBuilder.writeString(_MODE!);
-    final int? PURPOSEOffset = _PURPOSE == null ? null
-        : fbBuilder.writeString(_PURPOSE!);
-    fbBuilder.startTable(16);
+    final int? ID_ON_ORBIT1Offset = _ID_ON_ORBIT1 == null ? null
+        : fbBuilder.writeString(_ID_ON_ORBIT1!);
+    final int? ID_ON_ORBIT2Offset = _ID_ON_ORBIT2 == null ? null
+        : fbBuilder.writeString(_ID_ON_ORBIT2!);
+    final int? CONSTELLATIONOffset = _CONSTELLATION == null ? null
+        : fbBuilder.writeString(_CONSTELLATION!);
+    final int? LINK_NAMEOffset = _LINK_NAME == null ? null
+        : fbBuilder.writeString(_LINK_NAME!);
+    final int? BANDOffset = _BAND == null ? null
+        : fbBuilder.writeString(_BAND!);
+    final int? LINK_START_TIMEOffset = _LINK_START_TIME == null ? null
+        : fbBuilder.writeString(_LINK_START_TIME!);
+    final int? LINK_STOP_TIMEOffset = _LINK_STOP_TIME == null ? null
+        : fbBuilder.writeString(_LINK_STOP_TIME!);
+    final int? ID_BEAM1Offset = _ID_BEAM1 == null ? null
+        : fbBuilder.writeString(_ID_BEAM1!);
+    final int? END_POINT1_NAMEOffset = _END_POINT1_NAME == null ? null
+        : fbBuilder.writeString(_END_POINT1_NAME!);
+    final int? ID_BEAM2Offset = _ID_BEAM2 == null ? null
+        : fbBuilder.writeString(_ID_BEAM2!);
+    final int? END_POINT2_NAMEOffset = _END_POINT2_NAME == null ? null
+        : fbBuilder.writeString(_END_POINT2_NAME!);
+    final int? SYS_CAPOffset = _SYS_CAP == null ? null
+        : fbBuilder.writeString(_SYS_CAP!);
+    final int? OPS_CAPOffset = _OPS_CAP == null ? null
+        : fbBuilder.writeString(_OPS_CAP!);
+    fbBuilder.startTable(24);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, ID_ENTITYOffset);
-    fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addInt8(3, _BAND?.value);
-    fbBuilder.addOffset(4, MODEOffset);
-    fbBuilder.addOffset(5, PURPOSEOffset);
-    fbBuilder.addFloat64(6, _FREQ_MIN);
-    fbBuilder.addFloat64(7, _FREQ_MAX);
-    fbBuilder.addFloat64(8, _CENTER_FREQ);
-    fbBuilder.addFloat64(9, _BANDWIDTH);
-    fbBuilder.addFloat64(10, _PEAK_GAIN);
-    fbBuilder.addFloat64(11, _EDGE_GAIN);
-    fbBuilder.addFloat64(12, _BEAMWIDTH);
-    fbBuilder.addInt8(13, _POLARIZATION?.value);
-    fbBuilder.addFloat64(14, _ERP);
-    fbBuilder.addFloat64(15, _EIRP);
+    fbBuilder.addOffset(1, ID_ON_ORBIT1Offset);
+    fbBuilder.addUint32(2, _SAT_NO1);
+    fbBuilder.addOffset(3, ID_ON_ORBIT2Offset);
+    fbBuilder.addUint32(4, _SAT_NO2);
+    fbBuilder.addOffset(5, CONSTELLATIONOffset);
+    fbBuilder.addOffset(6, LINK_NAMEOffset);
+    fbBuilder.addInt8(7, _LINK_TYPE?.value);
+    fbBuilder.addInt8(8, _LINK_STATE?.value);
+    fbBuilder.addOffset(9, BANDOffset);
+    fbBuilder.addOffset(10, LINK_START_TIMEOffset);
+    fbBuilder.addOffset(11, LINK_STOP_TIMEOffset);
+    fbBuilder.addOffset(12, ID_BEAM1Offset);
+    fbBuilder.addOffset(13, END_POINT1_NAMEOffset);
+    fbBuilder.addFloat64(14, _END_POINT1_LAT);
+    fbBuilder.addFloat64(15, _END_POINT1_LON);
+    fbBuilder.addOffset(16, ID_BEAM2Offset);
+    fbBuilder.addOffset(17, END_POINT2_NAMEOffset);
+    fbBuilder.addFloat64(18, _END_POINT2_LAT);
+    fbBuilder.addFloat64(19, _END_POINT2_LON);
+    fbBuilder.addFloat64(20, _DATA_RATE1_TO2);
+    fbBuilder.addFloat64(21, _DATA_RATE2_TO1);
+    fbBuilder.addOffset(22, SYS_CAPOffset);
+    fbBuilder.addOffset(23, OPS_CAPOffset);
     return fbBuilder.endTable();
   }
 

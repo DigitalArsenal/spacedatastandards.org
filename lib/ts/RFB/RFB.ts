@@ -4,12 +4,25 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { linkCategory } from './linkCategory.js';
 import { rfBandDesignation } from './rfBandDesignation.js';
 import { rfPolarization } from './rfPolarization.js';
+import { rfTransmitterState } from './rfTransmitterState.js';
 
 
 /**
  * RF Band Specification
+ *
+ * UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+ * that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+ * that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+ * never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+ * convention.
+ *
+ * One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+ * transponder is therefore represented as TWO RFB records — one UPLINK and
+ * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+ * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  */
 export class RFB implements flatbuffers.IUnpackableObject<RFBT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -171,8 +184,92 @@ EIRP():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * NORAD catalog number of the spacecraft carrying this emitter. Joins to
+ * CAT.NORAD_CAT_ID. 0 when unbound.
+ */
+NORAD_CAT_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Identifier of the physical transmitter, transceiver or transponder this
+ * record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+ * records of the same device share this value.
+ */
+ID_TRANSMITTER():string|null
+ID_TRANSMITTER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_TRANSMITTER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Direction of this emission relative to the spacecraft.
+ */
+LINK_DIRECTION():linkCategory {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkCategory.UPLINK;
+}
+
+/**
+ * Symbol rate in baud (symbols per second), NOT kilobaud.
+ */
+BAUD():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+ */
+SERVICE():string|null
+SERVICE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SERVICE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Operational state of this emitter.
+ */
+XMT_STATUS():rfTransmitterState {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rfTransmitterState.UNKNOWN;
+}
+
+/**
+ * True when the modulation sideband is inverted.
+ */
+INVERT():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+ */
+IARU_COORDINATION():string|null
+IARU_COORDINATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IARU_COORDINATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Attribution/citation string the source license requires this record to
+ * carry downstream.
+ */
+CITATION():string|null
+CITATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CITATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startRFB(builder:flatbuffers.Builder) {
-  builder.startObject(16);
+  builder.startObject(25);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -239,6 +336,42 @@ static addEirp(builder:flatbuffers.Builder, EIRP:number) {
   builder.addFieldFloat64(15, EIRP, 0.0);
 }
 
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(16, NORAD_CAT_ID, 0);
+}
+
+static addIdTransmitter(builder:flatbuffers.Builder, ID_TRANSMITTEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, ID_TRANSMITTEROffset, 0);
+}
+
+static addLinkDirection(builder:flatbuffers.Builder, LINK_DIRECTION:linkCategory) {
+  builder.addFieldInt8(18, LINK_DIRECTION, linkCategory.UPLINK);
+}
+
+static addBaud(builder:flatbuffers.Builder, BAUD:number) {
+  builder.addFieldFloat64(19, BAUD, 0.0);
+}
+
+static addService(builder:flatbuffers.Builder, SERVICEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, SERVICEOffset, 0);
+}
+
+static addXmtStatus(builder:flatbuffers.Builder, XMT_STATUS:rfTransmitterState) {
+  builder.addFieldInt8(21, XMT_STATUS, rfTransmitterState.UNKNOWN);
+}
+
+static addInvert(builder:flatbuffers.Builder, INVERT:boolean) {
+  builder.addFieldInt8(22, +INVERT, +false);
+}
+
+static addIaruCoordination(builder:flatbuffers.Builder, IARU_COORDINATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, IARU_COORDINATIONOffset, 0);
+}
+
+static addCitation(builder:flatbuffers.Builder, CITATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, CITATIONOffset, 0);
+}
+
 static endRFB(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -252,7 +385,7 @@ static finishSizePrefixedRFBBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFB', true);
 }
 
-static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BAND:rfBandDesignation, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, BANDWIDTH:number, PEAK_GAIN:number, EDGE_GAIN:number, BEAMWIDTH:number, POLARIZATION:rfPolarization, ERP:number, EIRP:number):flatbuffers.Offset {
+static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BAND:rfBandDesignation, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, BANDWIDTH:number, PEAK_GAIN:number, EDGE_GAIN:number, BEAMWIDTH:number, POLARIZATION:rfPolarization, ERP:number, EIRP:number, NORAD_CAT_ID:number, ID_TRANSMITTEROffset:flatbuffers.Offset, LINK_DIRECTION:linkCategory, BAUD:number, SERVICEOffset:flatbuffers.Offset, XMT_STATUS:rfTransmitterState, INVERT:boolean, IARU_COORDINATIONOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFB.startRFB(builder);
   RFB.addId(builder, IDOffset);
   RFB.addIdEntity(builder, ID_ENTITYOffset);
@@ -270,6 +403,15 @@ static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_EN
   RFB.addPolarization(builder, POLARIZATION);
   RFB.addErp(builder, ERP);
   RFB.addEirp(builder, EIRP);
+  RFB.addNoradCatId(builder, NORAD_CAT_ID);
+  RFB.addIdTransmitter(builder, ID_TRANSMITTEROffset);
+  RFB.addLinkDirection(builder, LINK_DIRECTION);
+  RFB.addBaud(builder, BAUD);
+  RFB.addService(builder, SERVICEOffset);
+  RFB.addXmtStatus(builder, XMT_STATUS);
+  RFB.addInvert(builder, INVERT);
+  RFB.addIaruCoordination(builder, IARU_COORDINATIONOffset);
+  RFB.addCitation(builder, CITATIONOffset);
   return RFB.endRFB(builder);
 }
 
@@ -290,7 +432,16 @@ unpack(): RFBT {
     this.BEAMWIDTH(),
     this.POLARIZATION(),
     this.ERP(),
-    this.EIRP()
+    this.EIRP(),
+    this.NORAD_CAT_ID(),
+    this.ID_TRANSMITTER(),
+    this.LINK_DIRECTION(),
+    this.BAUD(),
+    this.SERVICE(),
+    this.XMT_STATUS(),
+    this.INVERT(),
+    this.IARU_COORDINATION(),
+    this.CITATION()
   );
 }
 
@@ -312,6 +463,15 @@ unpackTo(_o: RFBT): void {
   _o.POLARIZATION = this.POLARIZATION();
   _o.ERP = this.ERP();
   _o.EIRP = this.EIRP();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
+  _o.ID_TRANSMITTER = this.ID_TRANSMITTER();
+  _o.LINK_DIRECTION = this.LINK_DIRECTION();
+  _o.BAUD = this.BAUD();
+  _o.SERVICE = this.SERVICE();
+  _o.XMT_STATUS = this.XMT_STATUS();
+  _o.INVERT = this.INVERT();
+  _o.IARU_COORDINATION = this.IARU_COORDINATION();
+  _o.CITATION = this.CITATION();
 }
 }
 
@@ -332,7 +492,16 @@ constructor(
   public BEAMWIDTH: number = 0.0,
   public POLARIZATION: rfPolarization = rfPolarization.LHCP,
   public ERP: number = 0.0,
-  public EIRP: number = 0.0
+  public EIRP: number = 0.0,
+  public NORAD_CAT_ID: number = 0,
+  public ID_TRANSMITTER: string|Uint8Array|null = null,
+  public LINK_DIRECTION: linkCategory = linkCategory.UPLINK,
+  public BAUD: number = 0.0,
+  public SERVICE: string|Uint8Array|null = null,
+  public XMT_STATUS: rfTransmitterState = rfTransmitterState.UNKNOWN,
+  public INVERT: boolean = false,
+  public IARU_COORDINATION: string|Uint8Array|null = null,
+  public CITATION: string|Uint8Array|null = null
 ){}
 
 
@@ -342,6 +511,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const MODE = (this.MODE !== null ? builder.createString(this.MODE!) : 0);
   const PURPOSE = (this.PURPOSE !== null ? builder.createString(this.PURPOSE!) : 0);
+  const ID_TRANSMITTER = (this.ID_TRANSMITTER !== null ? builder.createString(this.ID_TRANSMITTER!) : 0);
+  const SERVICE = (this.SERVICE !== null ? builder.createString(this.SERVICE!) : 0);
+  const IARU_COORDINATION = (this.IARU_COORDINATION !== null ? builder.createString(this.IARU_COORDINATION!) : 0);
+  const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
 
   return RFB.createRFB(builder,
     ID,
@@ -359,7 +532,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.BEAMWIDTH,
     this.POLARIZATION,
     this.ERP,
-    this.EIRP
+    this.EIRP,
+    this.NORAD_CAT_ID,
+    ID_TRANSMITTER,
+    this.LINK_DIRECTION,
+    this.BAUD,
+    SERVICE,
+    this.XMT_STATUS,
+    this.INVERT,
+    IARU_COORDINATION,
+    CITATION
   );
 }
 }

@@ -108,6 +108,17 @@ public struct CAT : IFlatbufferObject
   /// Vector of PAYLOADS
   public PLD? PAYLOADS(int j) { int o = __p.__offset(48); return o != 0 ? (PLD?)(new PLD()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int PAYLOADSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Join key to the BUS record describing this object's satellite bus; holds
+  /// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+  /// and WET_MASS are properties of the bus design and live on BUS — they are
+  /// NOT duplicated here. Empty when the bus is unknown.
+  public string BUS_ID { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBUS_IDBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetBUS_IDBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetBUS_IDArray() { return __p.__vector_as_array<byte>(50); }
 
   public static Offset<CAT> CreateCAT(FlatBufferBuilder builder,
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
@@ -132,8 +143,9 @@ public struct CAT : IFlatbufferObject
       double SIZE = 0.0,
       double MASS = 0.0,
       massCategory MASS_TYPE = massCategory.DRY,
-      VectorOffset PAYLOADSOffset = default(VectorOffset)) {
-    builder.StartTable(23);
+      VectorOffset PAYLOADSOffset = default(VectorOffset),
+      StringOffset BUS_IDOffset = default(StringOffset)) {
+    builder.StartTable(24);
     CAT.AddMASS(builder, MASS);
     CAT.AddSIZE(builder, SIZE);
     CAT.AddRCS(builder, RCS);
@@ -141,6 +153,7 @@ public struct CAT : IFlatbufferObject
     CAT.AddAPOGEE(builder, APOGEE);
     CAT.AddINCLINATION(builder, INCLINATION);
     CAT.AddPERIOD(builder, PERIOD);
+    CAT.AddBUS_ID(builder, BUS_IDOffset);
     CAT.AddPAYLOADS(builder, PAYLOADSOffset);
     CAT.AddDEPLOYMENT_DATE(builder, DEPLOYMENT_DATEOffset);
     CAT.AddORBIT_CENTER(builder, ORBIT_CENTEROffset);
@@ -160,7 +173,7 @@ public struct CAT : IFlatbufferObject
     return CAT.EndCAT(builder);
   }
 
-  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void StartCAT(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(0, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(1, OBJECT_IDOffset.Value, 0); }
   public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(2, NORAD_CAT_ID, 0); }
@@ -189,6 +202,7 @@ public struct CAT : IFlatbufferObject
   public static VectorOffset CreatePAYLOADSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PLD>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePAYLOADSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PLD>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPAYLOADSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddBUS_ID(FlatBufferBuilder builder, StringOffset BUS_IDOffset) { builder.AddOffset(23, BUS_IDOffset.Value, 0); }
   public static Offset<CAT> EndCAT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CAT>(o);
@@ -225,6 +239,7 @@ public struct CAT : IFlatbufferObject
     _o.MASS_TYPE = this.MASS_TYPE;
     _o.PAYLOADS = new List<PLDT>();
     for (var _j = 0; _j < this.PAYLOADSLength; ++_j) {_o.PAYLOADS.Add(this.PAYLOADS(_j).HasValue ? this.PAYLOADS(_j).Value.UnPack() : null);}
+    _o.BUS_ID = this.BUS_ID;
   }
   public static Offset<CAT> Pack(FlatBufferBuilder builder, CATT _o) {
     if (_o == null) return default(Offset<CAT>);
@@ -241,6 +256,7 @@ public struct CAT : IFlatbufferObject
       for (var _j = 0; _j < __PAYLOADS.Length; ++_j) { __PAYLOADS[_j] = PLD.Pack(builder, _o.PAYLOADS[_j]); }
       _PAYLOADS = CreatePAYLOADSVector(builder, __PAYLOADS);
     }
+    var _BUS_ID = _o.BUS_ID == null ? default(StringOffset) : builder.CreateString(_o.BUS_ID);
     return CreateCAT(
       builder,
       _OBJECT_NAME,
@@ -265,7 +281,8 @@ public struct CAT : IFlatbufferObject
       _o.SIZE,
       _o.MASS,
       _o.MASS_TYPE,
-      _PAYLOADS);
+      _PAYLOADS,
+      _BUS_ID);
   }
 }
 
@@ -294,6 +311,7 @@ public class CATT
   public double MASS { get; set; }
   public massCategory MASS_TYPE { get; set; }
   public List<PLDT> PAYLOADS { get; set; }
+  public string BUS_ID { get; set; }
 
   public CATT() {
     this.OBJECT_NAME = null;
@@ -319,6 +337,7 @@ public class CATT
     this.MASS = 0.0;
     this.MASS_TYPE = massCategory.DRY;
     this.PAYLOADS = null;
+    this.BUS_ID = null;
   }
   public static CATT DeserializeFromBinary(byte[] fbBuffer) {
     return CAT.GetRootAsCAT(new ByteBuffer(fbBuffer)).UnPack();
@@ -359,6 +378,7 @@ static public class CATVerify
       && verifier.VerifyField(tablePos, 44 /*MASS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 46 /*MASS_TYPE*/, 1 /*massCategory*/, 1, false)
       && verifier.VerifyVectorOfTables(tablePos, 48 /*PAYLOADS*/, PLDVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 50 /*BUS_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

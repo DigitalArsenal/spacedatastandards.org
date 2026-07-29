@@ -8,189 +8,246 @@ import Common
 
 import FlatBuffers
 
-public enum rfBandDesignation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum linkCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case uhf = 0
-  case l = 1
-  case s = 2
-  case c = 3
-  case x = 4
-  case ku = 5
-  case k = 6
-  case ka = 7
-  case v = 8
-  case w = 9
-  case q = 10
-  case ehf = 11
-  case other = 12
+  case uplink = 0
+  case downlink = 1
+  case crosslink = 2
+  case interSatellite = 3
+  case groundToGround = 4
+  case relay = 5
 
-  public static var max: rfBandDesignation { return .other }
-  public static var min: rfBandDesignation { return .uhf }
+  public static var max: linkCategory { return .relay }
+  public static var min: linkCategory { return .uplink }
 }
 
 
-public enum rfPolarization: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+public enum linkCondition: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  case lhcp = 0
-  case rhcp = 1
-  case linearH = 2
-  case linearV = 3
-  case dual = 4
-  case cross = 5
-  case unknown = 6
+  case established = 0
+  case degraded = 1
+  case interrupted = 2
+  case planned = 3
+  case terminated = 4
+  case unknown = 5
 
-  public static var max: rfPolarization { return .unknown }
-  public static var min: rfPolarization { return .lhcp }
+  public static var max: linkCondition { return .unknown }
+  public static var min: linkCondition { return .established }
 }
 
 
-///  RF Band Specification
-public struct RFB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Link Status
+public struct LKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$RFB" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: RFB.id, addPrefix: prefix) }
+  public static var id: String { "$LKS" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: LKS.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
     static let ID: VOffset = 4
-    static let ID_ENTITY: VOffset = 6
-    static let NAME: VOffset = 8
-    static let BAND: VOffset = 10
-    static let MODE: VOffset = 12
-    static let PURPOSE: VOffset = 14
-    static let FREQ_MIN: VOffset = 16
-    static let FREQ_MAX: VOffset = 18
-    static let CENTER_FREQ: VOffset = 20
-    static let BANDWIDTH: VOffset = 22
-    static let PEAK_GAIN: VOffset = 24
-    static let EDGE_GAIN: VOffset = 26
-    static let BEAMWIDTH: VOffset = 28
-    static let POLARIZATION: VOffset = 30
-    static let ERP: VOffset = 32
-    static let EIRP: VOffset = 34
+    static let ID_ON_ORBIT1: VOffset = 6
+    static let SAT_NO1: VOffset = 8
+    static let ID_ON_ORBIT2: VOffset = 10
+    static let SAT_NO2: VOffset = 12
+    static let CONSTELLATION: VOffset = 14
+    static let LINK_NAME: VOffset = 16
+    static let LINK_TYPE: VOffset = 18
+    static let LINK_STATE: VOffset = 20
+    static let BAND: VOffset = 22
+    static let LINK_START_TIME: VOffset = 24
+    static let LINK_STOP_TIME: VOffset = 26
+    static let ID_BEAM1: VOffset = 28
+    static let END_POINT1_NAME: VOffset = 30
+    static let END_POINT1_LAT: VOffset = 32
+    static let END_POINT1_LON: VOffset = 34
+    static let ID_BEAM2: VOffset = 36
+    static let END_POINT2_NAME: VOffset = 38
+    static let END_POINT2_LAT: VOffset = 40
+    static let END_POINT2_LON: VOffset = 42
+    static let DATA_RATE1_TO2: VOffset = 44
+    static let DATA_RATE2_TO1: VOffset = 46
+    static let SYS_CAP: VOffset = 48
+    static let OPS_CAP: VOffset = 50
   }
 
   ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  Parent entity identifier
-  public var ID_ENTITY: String? { let o = _accessor.offset(VT.ID_ENTITY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ID_ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ENTITY) }
-  ///  Band name or designation
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  RF band designation
-  public var BAND: rfBandDesignation { let o = _accessor.offset(VT.BAND); return o == 0 ? .uhf : rfBandDesignation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uhf }
-  ///  Operating mode
-  public var MODE: String? { let o = _accessor.offset(VT.MODE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODE) }
-  ///  Band purpose (e.g., TT&C, PAYLOAD, BEACON)
-  public var PURPOSE: String? { let o = _accessor.offset(VT.PURPOSE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PURPOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PURPOSE) }
-  ///  Minimum frequency (MHz)
-  public var FREQ_MIN: Double { let o = _accessor.offset(VT.FREQ_MIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Maximum frequency (MHz)
-  public var FREQ_MAX: Double { let o = _accessor.offset(VT.FREQ_MAX); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Center frequency (MHz)
-  public var CENTER_FREQ: Double { let o = _accessor.offset(VT.CENTER_FREQ); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Bandwidth (MHz)
-  public var BANDWIDTH: Double { let o = _accessor.offset(VT.BANDWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Peak antenna gain (dBi)
-  public var PEAK_GAIN: Double { let o = _accessor.offset(VT.PEAK_GAIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Edge-of-coverage gain (dBi)
-  public var EDGE_GAIN: Double { let o = _accessor.offset(VT.EDGE_GAIN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Antenna beamwidth (degrees)
-  public var BEAMWIDTH: Double { let o = _accessor.offset(VT.BEAMWIDTH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Polarization
-  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VT.POLARIZATION); return o == 0 ? .lhcp : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .lhcp }
-  ///  Effective radiated power (dBW)
-  public var ERP: Double { let o = _accessor.offset(VT.ERP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Effective isotropic radiated power (dBW)
-  public var EIRP: Double { let o = _accessor.offset(VT.EIRP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startRFB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  ///  First endpoint on-orbit identifier
+  public var ID_ON_ORBIT1: String? { let o = _accessor.offset(VT.ID_ON_ORBIT1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBIT1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT1) }
+  ///  First endpoint satellite catalog number
+  public var SAT_NO1: UInt32 { let o = _accessor.offset(VT.SAT_NO1); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Second endpoint on-orbit identifier
+  public var ID_ON_ORBIT2: String? { let o = _accessor.offset(VT.ID_ON_ORBIT2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ON_ORBIT2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_ON_ORBIT2) }
+  ///  Second endpoint satellite catalog number
+  public var SAT_NO2: UInt32 { let o = _accessor.offset(VT.SAT_NO2); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Constellation name
+  public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
+  ///  Link name or identifier
+  public var LINK_NAME: String? { let o = _accessor.offset(VT.LINK_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_NAME) }
+  ///  Link type
+  public var LINK_TYPE: linkCategory { let o = _accessor.offset(VT.LINK_TYPE); return o == 0 ? .uplink : linkCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uplink }
+  ///  Link state
+  public var LINK_STATE: linkCondition { let o = _accessor.offset(VT.LINK_STATE); return o == 0 ? .established : linkCondition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .established }
+  ///  RF band
+  public var BAND: String? { let o = _accessor.offset(VT.BAND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAND) }
+  ///  Link start time (ISO 8601)
+  public var LINK_START_TIME: String? { let o = _accessor.offset(VT.LINK_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_START_TIME) }
+  ///  Link stop time (ISO 8601)
+  public var LINK_STOP_TIME: String? { let o = _accessor.offset(VT.LINK_STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LINK_STOP_TIME) }
+  ///  First endpoint beam identifier
+  public var ID_BEAM1: String? { let o = _accessor.offset(VT.ID_BEAM1); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_BEAM1SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM1) }
+  ///  First endpoint name
+  public var END_POINT1_NAME: String? { let o = _accessor.offset(VT.END_POINT1_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_POINT1_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_POINT1_NAME) }
+  ///  First endpoint latitude (degrees)
+  public var END_POINT1_LAT: Double { let o = _accessor.offset(VT.END_POINT1_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  First endpoint longitude (degrees)
+  public var END_POINT1_LON: Double { let o = _accessor.offset(VT.END_POINT1_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Second endpoint beam identifier
+  public var ID_BEAM2: String? { let o = _accessor.offset(VT.ID_BEAM2); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_BEAM2SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID_BEAM2) }
+  ///  Second endpoint name
+  public var END_POINT2_NAME: String? { let o = _accessor.offset(VT.END_POINT2_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_POINT2_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.END_POINT2_NAME) }
+  ///  Second endpoint latitude (degrees)
+  public var END_POINT2_LAT: Double { let o = _accessor.offset(VT.END_POINT2_LAT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Second endpoint longitude (degrees)
+  public var END_POINT2_LON: Double { let o = _accessor.offset(VT.END_POINT2_LON); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data rate from endpoint 1 to 2 (Mbps)
+  public var DATA_RATE1_TO2: Double { let o = _accessor.offset(VT.DATA_RATE1_TO2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data rate from endpoint 2 to 1 (Mbps)
+  public var DATA_RATE2_TO1: Double { let o = _accessor.offset(VT.DATA_RATE2_TO1); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  System capability status
+  public var SYS_CAP: String? { let o = _accessor.offset(VT.SYS_CAP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SYS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SYS_CAP) }
+  ///  Operational capability status
+  public var OPS_CAP: String? { let o = _accessor.offset(VT.OPS_CAP); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPS_CAP) }
+  public static func startLKS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
-  public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VT.ID_ENTITY) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(BAND: rfBandDesignation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BAND.rawValue, def: 0, at: VT.BAND) }
-  public static func add(MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODE, at: VT.MODE) }
-  public static func add(PURPOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PURPOSE, at: VT.PURPOSE) }
-  public static func add(FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MIN, def: 0.0, at: VT.FREQ_MIN) }
-  public static func add(FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MAX, def: 0.0, at: VT.FREQ_MAX) }
-  public static func add(CENTER_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQ, def: 0.0, at: VT.CENTER_FREQ) }
-  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VT.BANDWIDTH) }
-  public static func add(PEAK_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_GAIN, def: 0.0, at: VT.PEAK_GAIN) }
-  public static func add(EDGE_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDGE_GAIN, def: 0.0, at: VT.EDGE_GAIN) }
-  public static func add(BEAMWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH, def: 0.0, at: VT.BEAMWIDTH) }
-  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 0, at: VT.POLARIZATION) }
-  public static func add(ERP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERP, def: 0.0, at: VT.ERP) }
-  public static func add(EIRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP, def: 0.0, at: VT.EIRP) }
-  public static func endRFB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createRFB(
+  public static func add(ID_ON_ORBIT1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT1, at: VT.ID_ON_ORBIT1) }
+  public static func add(SAT_NO1: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO1, def: 0, at: VT.SAT_NO1) }
+  public static func add(ID_ON_ORBIT2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT2, at: VT.ID_ON_ORBIT2) }
+  public static func add(SAT_NO2: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO2, def: 0, at: VT.SAT_NO2) }
+  public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VT.CONSTELLATION) }
+  public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VT.LINK_NAME) }
+  public static func add(LINK_TYPE: linkCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_TYPE.rawValue, def: 0, at: VT.LINK_TYPE) }
+  public static func add(LINK_STATE: linkCondition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_STATE.rawValue, def: 0, at: VT.LINK_STATE) }
+  public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VT.BAND) }
+  public static func add(LINK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_START_TIME, at: VT.LINK_START_TIME) }
+  public static func add(LINK_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STOP_TIME, at: VT.LINK_STOP_TIME) }
+  public static func add(ID_BEAM1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM1, at: VT.ID_BEAM1) }
+  public static func add(END_POINT1_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_POINT1_NAME, at: VT.END_POINT1_NAME) }
+  public static func add(END_POINT1_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT1_LAT, def: 0.0, at: VT.END_POINT1_LAT) }
+  public static func add(END_POINT1_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT1_LON, def: 0.0, at: VT.END_POINT1_LON) }
+  public static func add(ID_BEAM2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM2, at: VT.ID_BEAM2) }
+  public static func add(END_POINT2_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_POINT2_NAME, at: VT.END_POINT2_NAME) }
+  public static func add(END_POINT2_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT2_LAT, def: 0.0, at: VT.END_POINT2_LAT) }
+  public static func add(END_POINT2_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT2_LON, def: 0.0, at: VT.END_POINT2_LON) }
+  public static func add(DATA_RATE1_TO2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE1_TO2, def: 0.0, at: VT.DATA_RATE1_TO2) }
+  public static func add(DATA_RATE2_TO1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE2_TO1, def: 0.0, at: VT.DATA_RATE2_TO1) }
+  public static func add(SYS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYS_CAP, at: VT.SYS_CAP) }
+  public static func add(OPS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPS_CAP, at: VT.OPS_CAP) }
+  public static func endLKS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createLKS(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
-    ID_ENTITYOffset ID_ENTITY: Offset = Offset(),
-    NAMEOffset NAME: Offset = Offset(),
-    BAND: rfBandDesignation = .uhf,
-    MODEOffset MODE: Offset = Offset(),
-    PURPOSEOffset PURPOSE: Offset = Offset(),
-    FREQ_MIN: Double = 0.0,
-    FREQ_MAX: Double = 0.0,
-    CENTER_FREQ: Double = 0.0,
-    BANDWIDTH: Double = 0.0,
-    PEAK_GAIN: Double = 0.0,
-    EDGE_GAIN: Double = 0.0,
-    BEAMWIDTH: Double = 0.0,
-    POLARIZATION: rfPolarization = .lhcp,
-    ERP: Double = 0.0,
-    EIRP: Double = 0.0
+    ID_ON_ORBIT1Offset ID_ON_ORBIT1: Offset = Offset(),
+    SAT_NO1: UInt32 = 0,
+    ID_ON_ORBIT2Offset ID_ON_ORBIT2: Offset = Offset(),
+    SAT_NO2: UInt32 = 0,
+    CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
+    LINK_NAMEOffset LINK_NAME: Offset = Offset(),
+    LINK_TYPE: linkCategory = .uplink,
+    LINK_STATE: linkCondition = .established,
+    BANDOffset BAND: Offset = Offset(),
+    LINK_START_TIMEOffset LINK_START_TIME: Offset = Offset(),
+    LINK_STOP_TIMEOffset LINK_STOP_TIME: Offset = Offset(),
+    ID_BEAM1Offset ID_BEAM1: Offset = Offset(),
+    END_POINT1_NAMEOffset END_POINT1_NAME: Offset = Offset(),
+    END_POINT1_LAT: Double = 0.0,
+    END_POINT1_LON: Double = 0.0,
+    ID_BEAM2Offset ID_BEAM2: Offset = Offset(),
+    END_POINT2_NAMEOffset END_POINT2_NAME: Offset = Offset(),
+    END_POINT2_LAT: Double = 0.0,
+    END_POINT2_LON: Double = 0.0,
+    DATA_RATE1_TO2: Double = 0.0,
+    DATA_RATE2_TO1: Double = 0.0,
+    SYS_CAPOffset SYS_CAP: Offset = Offset(),
+    OPS_CAPOffset OPS_CAP: Offset = Offset()
   ) -> Offset {
-    let __start = RFB.startRFB(&fbb)
-    RFB.add(ID: ID, &fbb)
-    RFB.add(ID_ENTITY: ID_ENTITY, &fbb)
-    RFB.add(NAME: NAME, &fbb)
-    RFB.add(BAND: BAND, &fbb)
-    RFB.add(MODE: MODE, &fbb)
-    RFB.add(PURPOSE: PURPOSE, &fbb)
-    RFB.add(FREQ_MIN: FREQ_MIN, &fbb)
-    RFB.add(FREQ_MAX: FREQ_MAX, &fbb)
-    RFB.add(CENTER_FREQ: CENTER_FREQ, &fbb)
-    RFB.add(BANDWIDTH: BANDWIDTH, &fbb)
-    RFB.add(PEAK_GAIN: PEAK_GAIN, &fbb)
-    RFB.add(EDGE_GAIN: EDGE_GAIN, &fbb)
-    RFB.add(BEAMWIDTH: BEAMWIDTH, &fbb)
-    RFB.add(POLARIZATION: POLARIZATION, &fbb)
-    RFB.add(ERP: ERP, &fbb)
-    RFB.add(EIRP: EIRP, &fbb)
-    return RFB.endRFB(&fbb, start: __start)
+    let __start = LKS.startLKS(&fbb)
+    LKS.add(ID: ID, &fbb)
+    LKS.add(ID_ON_ORBIT1: ID_ON_ORBIT1, &fbb)
+    LKS.add(SAT_NO1: SAT_NO1, &fbb)
+    LKS.add(ID_ON_ORBIT2: ID_ON_ORBIT2, &fbb)
+    LKS.add(SAT_NO2: SAT_NO2, &fbb)
+    LKS.add(CONSTELLATION: CONSTELLATION, &fbb)
+    LKS.add(LINK_NAME: LINK_NAME, &fbb)
+    LKS.add(LINK_TYPE: LINK_TYPE, &fbb)
+    LKS.add(LINK_STATE: LINK_STATE, &fbb)
+    LKS.add(BAND: BAND, &fbb)
+    LKS.add(LINK_START_TIME: LINK_START_TIME, &fbb)
+    LKS.add(LINK_STOP_TIME: LINK_STOP_TIME, &fbb)
+    LKS.add(ID_BEAM1: ID_BEAM1, &fbb)
+    LKS.add(END_POINT1_NAME: END_POINT1_NAME, &fbb)
+    LKS.add(END_POINT1_LAT: END_POINT1_LAT, &fbb)
+    LKS.add(END_POINT1_LON: END_POINT1_LON, &fbb)
+    LKS.add(ID_BEAM2: ID_BEAM2, &fbb)
+    LKS.add(END_POINT2_NAME: END_POINT2_NAME, &fbb)
+    LKS.add(END_POINT2_LAT: END_POINT2_LAT, &fbb)
+    LKS.add(END_POINT2_LON: END_POINT2_LON, &fbb)
+    LKS.add(DATA_RATE1_TO2: DATA_RATE1_TO2, &fbb)
+    LKS.add(DATA_RATE2_TO1: DATA_RATE2_TO1, &fbb)
+    LKS.add(SYS_CAP: SYS_CAP, &fbb)
+    LKS.add(OPS_CAP: OPS_CAP, &fbb)
+    return LKS.endLKS(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ID_ENTITY, fieldName: "ID_ENTITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.BAND, fieldName: "BAND", required: false, type: rfBandDesignation.self)
-    try _v.visit(field: VT.MODE, fieldName: "MODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PURPOSE, fieldName: "PURPOSE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FREQ_MIN, fieldName: "FREQ_MIN", required: false, type: Double.self)
-    try _v.visit(field: VT.FREQ_MAX, fieldName: "FREQ_MAX", required: false, type: Double.self)
-    try _v.visit(field: VT.CENTER_FREQ, fieldName: "CENTER_FREQ", required: false, type: Double.self)
-    try _v.visit(field: VT.BANDWIDTH, fieldName: "BANDWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VT.PEAK_GAIN, fieldName: "PEAK_GAIN", required: false, type: Double.self)
-    try _v.visit(field: VT.EDGE_GAIN, fieldName: "EDGE_GAIN", required: false, type: Double.self)
-    try _v.visit(field: VT.BEAMWIDTH, fieldName: "BEAMWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VT.POLARIZATION, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
-    try _v.visit(field: VT.ERP, fieldName: "ERP", required: false, type: Double.self)
-    try _v.visit(field: VT.EIRP, fieldName: "EIRP", required: false, type: Double.self)
+    try _v.visit(field: VT.ID_ON_ORBIT1, fieldName: "ID_ON_ORBIT1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO1, fieldName: "SAT_NO1", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ID_ON_ORBIT2, fieldName: "ID_ON_ORBIT2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SAT_NO2, fieldName: "SAT_NO2", required: false, type: UInt32.self)
+    try _v.visit(field: VT.CONSTELLATION, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_NAME, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_TYPE, fieldName: "LINK_TYPE", required: false, type: linkCategory.self)
+    try _v.visit(field: VT.LINK_STATE, fieldName: "LINK_STATE", required: false, type: linkCondition.self)
+    try _v.visit(field: VT.BAND, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_START_TIME, fieldName: "LINK_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LINK_STOP_TIME, fieldName: "LINK_STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ID_BEAM1, fieldName: "ID_BEAM1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_POINT1_NAME, fieldName: "END_POINT1_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_POINT1_LAT, fieldName: "END_POINT1_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.END_POINT1_LON, fieldName: "END_POINT1_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.ID_BEAM2, fieldName: "ID_BEAM2", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_POINT2_NAME, fieldName: "END_POINT2_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.END_POINT2_LAT, fieldName: "END_POINT2_LAT", required: false, type: Double.self)
+    try _v.visit(field: VT.END_POINT2_LON, fieldName: "END_POINT2_LON", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_RATE1_TO2, fieldName: "DATA_RATE1_TO2", required: false, type: Double.self)
+    try _v.visit(field: VT.DATA_RATE2_TO1, fieldName: "DATA_RATE2_TO1", required: false, type: Double.self)
+    try _v.visit(field: VT.SYS_CAP, fieldName: "SYS_CAP", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OPS_CAP, fieldName: "OPS_CAP", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

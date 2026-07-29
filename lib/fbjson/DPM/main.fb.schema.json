@@ -231,6 +231,21 @@
           },
           "description": "Warnings or policy notes produced during normalization.",
           "x-flatbuffer-type": "[string]"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "SPDX license identifier governing the source data, e.g. CC-BY-4.0 or\nCC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any\nrecord derived from this batch may be republished; share-alike terms\npropagate from this batch to every derived record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "Canonical URL of the license text.",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Attribution/citation string the source license requires downstream\nrepublication to carry.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

@@ -260,22 +260,32 @@ class CAT extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Join key to the BUS record describing this object's satellite bus; holds
+    /// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+    /// and WET_MASS are properties of the bus design and live on BUS — they are
+    /// NOT duplicated here. Empty when the bus is unknown.
+    public function getBUS_ID()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCAT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(24);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CAT
      */
-    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS)
+    public static function createCAT(FlatBufferBuilder $builder, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $OPS_STATUS_CODE, $OWNER, $LAUNCH_DATE, $LAUNCH_SITE, $DECAY_DATE, $PERIOD, $INCLINATION, $APOGEE, $PERIGEE, $RCS, $DATA_STATUS_CODE, $ORBIT_CENTER, $ORBIT_TYPE, $DEPLOYMENT_DATE, $MANEUVERABLE, $SIZE, $MASS, $MASS_TYPE, $PAYLOADS, $BUS_ID)
     {
-        $builder->startObject(23);
+        $builder->startObject(24);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
         self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
@@ -299,6 +309,7 @@ class CAT extends Table
         self::addMASS($builder, $MASS);
         self::addMASS_TYPE($builder, $MASS_TYPE);
         self::addPAYLOADS($builder, $PAYLOADS);
+        self::addBUS_ID($builder, $BUS_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -555,6 +566,16 @@ class CAT extends Table
     public static function startPAYLOADSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBUS_ID(FlatBufferBuilder $builder, $BUS_ID)
+    {
+        $builder->addOffsetX(23, $BUS_ID, 0);
     }
 
     /**

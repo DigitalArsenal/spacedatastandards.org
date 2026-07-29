@@ -763,6 +763,7 @@ export * from './RFMUnion.js';
 export * from './RFO.js';
 export * from './rfObsType.js';
 export * from './rfPolarization.js';
+export * from './rfTransmitterState.js';
 export * from './ROC.js';
 export * from './RotorFlags.js';
 export * from './RotorType.js';

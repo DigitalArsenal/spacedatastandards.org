@@ -150,6 +150,52 @@ class DPMSourceBatch : Table() {
         get() {
             val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+     * CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+     * record derived from this batch may be republished; share-alike terms
+     * propagate from this batch to every derived record.
+     */
+    val license : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun licenseInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Canonical URL of the license text.
+     */
+    val licenseUrl : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val licenseUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
+    fun licenseUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Attribution/citation string the source license requires downstream
+     * republication to carry.
+     */
+    val citation : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(26, 1)
+    fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 26, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMSourceBatch(_bb: ByteBuffer): DPMSourceBatch = getRootAsDPMSourceBatch(_bb, DPMSourceBatch())
@@ -157,9 +203,12 @@ class DPMSourceBatch : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMSourceBatch(builder: FlatBufferBuilder, sourceNameOffset: Int, sourceUrlOffset: Int, sourceSha256Offset: Int, httpEtagOffset: Int, httpLastModifiedOffset: Int, retrievedAtOffset: Int, parserVersionOffset: Int, recordCount: ULong, warningsOffset: Int) : Int {
-            builder.startTable(9)
+        fun createDPMSourceBatch(builder: FlatBufferBuilder, sourceNameOffset: Int, sourceUrlOffset: Int, sourceSha256Offset: Int, httpEtagOffset: Int, httpLastModifiedOffset: Int, retrievedAtOffset: Int, parserVersionOffset: Int, recordCount: ULong, warningsOffset: Int, licenseOffset: Int, licenseUrlOffset: Int, citationOffset: Int) : Int {
+            builder.startTable(12)
             addRECORDCOUNT(builder, recordCount)
+            addCITATION(builder, citationOffset)
+            addLICENSEURL(builder, licenseUrlOffset)
+            addLICENSE(builder, licenseOffset)
             addWARNINGS(builder, warningsOffset)
             addPARSERVERSION(builder, parserVersionOffset)
             addRETRIEVEDAT(builder, retrievedAtOffset)
@@ -170,7 +219,7 @@ class DPMSourceBatch : Table() {
             addSOURCENAME(builder, sourceNameOffset)
             return endDPMSourceBatch(builder)
         }
-        fun startDPMSourceBatch(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun startDPMSourceBatch(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addSOURCENAME(builder: FlatBufferBuilder, sourceName: Int) = builder.addOffset(0, sourceName, 0)
         fun addSOURCEURL(builder: FlatBufferBuilder, sourceUrl: Int) = builder.addOffset(1, sourceUrl, 0)
         fun addSOURCESHA256(builder: FlatBufferBuilder, sourceSha256: Int) = builder.addOffset(2, sourceSha256, 0)
@@ -188,6 +237,9 @@ class DPMSourceBatch : Table() {
             return builder.endVector()
         }
         fun startWarningsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addLICENSE(builder: FlatBufferBuilder, license: Int) = builder.addOffset(9, license, 0)
+        fun addLICENSEURL(builder: FlatBufferBuilder, licenseUrl: Int) = builder.addOffset(10, licenseUrl, 0)
+        fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(11, citation, 0)
         fun endDPMSourceBatch(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

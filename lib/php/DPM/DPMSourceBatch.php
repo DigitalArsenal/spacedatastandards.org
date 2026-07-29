@@ -120,22 +120,47 @@ class DPMSourceBatch extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+    /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+    /// record derived from this batch may be republished; share-alike terms
+    /// propagate from this batch to every derived record.
+    public function getLICENSE()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Canonical URL of the license text.
+    public function getLICENSE_URL()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Attribution/citation string the source license requires downstream
+    /// republication to carry.
+    public function getCITATION()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDPMSourceBatch(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(9);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPMSourceBatch
      */
-    public static function createDPMSourceBatch(FlatBufferBuilder $builder, $SOURCE_NAME, $SOURCE_URL, $SOURCE_SHA256, $HTTP_ETAG, $HTTP_LAST_MODIFIED, $RETRIEVED_AT, $PARSER_VERSION, $RECORD_COUNT, $WARNINGS)
+    public static function createDPMSourceBatch(FlatBufferBuilder $builder, $SOURCE_NAME, $SOURCE_URL, $SOURCE_SHA256, $HTTP_ETAG, $HTTP_LAST_MODIFIED, $RETRIEVED_AT, $PARSER_VERSION, $RECORD_COUNT, $WARNINGS, $LICENSE, $LICENSE_URL, $CITATION)
     {
-        $builder->startObject(9);
+        $builder->startObject(12);
         self::addSOURCE_NAME($builder, $SOURCE_NAME);
         self::addSOURCE_URL($builder, $SOURCE_URL);
         self::addSOURCE_SHA256($builder, $SOURCE_SHA256);
@@ -145,6 +170,9 @@ class DPMSourceBatch extends Table
         self::addPARSER_VERSION($builder, $PARSER_VERSION);
         self::addRECORD_COUNT($builder, $RECORD_COUNT);
         self::addWARNINGS($builder, $WARNINGS);
+        self::addLICENSE($builder, $LICENSE);
+        self::addLICENSE_URL($builder, $LICENSE_URL);
+        self::addCITATION($builder, $CITATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -261,6 +289,36 @@ class DPMSourceBatch extends Table
     public static function startWARNINGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLICENSE(FlatBufferBuilder $builder, $LICENSE)
+    {
+        $builder->addOffsetX(9, $LICENSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLICENSE_URL(FlatBufferBuilder $builder, $LICENSE_URL)
+    {
+        $builder->addOffsetX(10, $LICENSE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCITATION(FlatBufferBuilder $builder, $CITATION)
+    {
+        $builder->addOffsetX(11, $CITATION, 0);
     }
 
     /**

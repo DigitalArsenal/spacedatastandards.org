@@ -263,6 +263,23 @@ class CAT : Table() {
         get() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Join key to the BUS record describing this object's satellite bus; holds
+     * that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+     * and WET_MASS are properties of the bus design and live on BUS — they are
+     * NOT duplicated here. Empty when the bus is unknown.
+     */
+    val busId : String?
+        get() {
+            val o = __offset(50)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val busIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun busIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCAT(_bb: ByteBuffer): CAT = getRootAsCAT(_bb, CAT())
@@ -271,8 +288,8 @@ class CAT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CATBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAT")
-        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int) : Int {
-            builder.startTable(23)
+        fun createCAT(builder: FlatBufferBuilder, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, objectType: Byte, opsStatusCode: Byte, owner: Byte, launchDateOffset: Int, launchSiteOffset: Int, decayDateOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, rcs: Double, dataStatusCode: Byte, orbitCenterOffset: Int, orbitType: Byte, deploymentDateOffset: Int, maneuverable: Boolean, size: Double, mass: Double, massType: Byte, payloadsOffset: Int, busIdOffset: Int) : Int {
+            builder.startTable(24)
             addMASS(builder, mass)
             addSIZE(builder, size)
             addRCS(builder, rcs)
@@ -280,6 +297,7 @@ class CAT : Table() {
             addAPOGEE(builder, apogee)
             addINCLINATION(builder, inclination)
             addPERIOD(builder, period)
+            addBUSID(builder, busIdOffset)
             addPAYLOADS(builder, payloadsOffset)
             addDEPLOYMENTDATE(builder, deploymentDateOffset)
             addORBITCENTER(builder, orbitCenterOffset)
@@ -298,7 +316,7 @@ class CAT : Table() {
             addOBJECTTYPE(builder, objectType)
             return endCAT(builder)
         }
-        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startCAT(builder: FlatBufferBuilder) = builder.startTable(24)
         fun addOBJECTNAME(builder: FlatBufferBuilder, objectName: Int) = builder.addOffset(0, objectName, 0)
         fun addOBJECTID(builder: FlatBufferBuilder, objectId: Int) = builder.addOffset(1, objectId, 0)
         fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(2, noradCatId.toInt(), 0)
@@ -330,6 +348,7 @@ class CAT : Table() {
             return builder.endVector()
         }
         fun startPayloadsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addBUSID(builder: FlatBufferBuilder, busId: Int) = builder.addOffset(23, busId, 0)
         fun endCAT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

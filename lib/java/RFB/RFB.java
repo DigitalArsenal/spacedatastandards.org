@@ -18,6 +18,17 @@ import java.nio.ByteOrder;
 
 /**
  * RF Band Specification
+ *
+ * UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+ * that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+ * that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+ * never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+ * convention.
+ *
+ * One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+ * transponder is therefore represented as TWO RFB records — one UPLINK and
+ * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+ * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  */
 @SuppressWarnings("unused")
 public final class RFB extends com.google.flatbuffers.Table {
@@ -102,6 +113,54 @@ public final class RFB extends com.google.flatbuffers.Table {
    * Effective isotropic radiated power (dBW)
    */
   public double EIRP() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * NORAD catalog number of the spacecraft carrying this emitter. Joins to
+   * CAT.NORAD_CAT_ID. 0 when unbound.
+   */
+  public long NORAD_CAT_ID() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Identifier of the physical transmitter, transceiver or transponder this
+   * record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+   * records of the same device share this value.
+   */
+  public String ID_TRANSMITTER() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_TRANSMITTERAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer ID_TRANSMITTERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Direction of this emission relative to the spacecraft.
+   */
+  public byte LINK_DIRECTION() { int o = __offset(40); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Symbol rate in baud (symbols per second), NOT kilobaud.
+   */
+  public double BAUD() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+   */
+  public String SERVICE() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SERVICEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer SERVICEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Operational state of this emitter.
+   */
+  public byte XMT_STATUS() { int o = __offset(46); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * True when the modulation sideband is inverted.
+   */
+  public boolean INVERT() { int o = __offset(48); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+   */
+  public String IARU_COORDINATION() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IARU_COORDINATIONAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer IARU_COORDINATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * Attribution/citation string the source license requires this record to
+   * carry downstream.
+   */
+  public String CITATION() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
 
   public static int createRFB(FlatBufferBuilder builder,
       int IDOffset,
@@ -119,8 +178,18 @@ public final class RFB extends com.google.flatbuffers.Table {
       double BEAMWIDTH,
       byte POLARIZATION,
       double ERP,
-      double EIRP) {
-    builder.startTable(16);
+      double EIRP,
+      long NORAD_CAT_ID,
+      int ID_TRANSMITTEROffset,
+      byte LINK_DIRECTION,
+      double BAUD,
+      int SERVICEOffset,
+      byte XMT_STATUS,
+      boolean INVERT,
+      int IARU_COORDINATIONOffset,
+      int CITATIONOffset) {
+    builder.startTable(25);
+    RFB.addBaud(builder, BAUD);
     RFB.addEirp(builder, EIRP);
     RFB.addErp(builder, ERP);
     RFB.addBeamwidth(builder, BEAMWIDTH);
@@ -130,17 +199,25 @@ public final class RFB extends com.google.flatbuffers.Table {
     RFB.addCenterFreq(builder, CENTER_FREQ);
     RFB.addFreqMax(builder, FREQ_MAX);
     RFB.addFreqMin(builder, FREQ_MIN);
+    RFB.addCitation(builder, CITATIONOffset);
+    RFB.addIaruCoordination(builder, IARU_COORDINATIONOffset);
+    RFB.addService(builder, SERVICEOffset);
+    RFB.addIdTransmitter(builder, ID_TRANSMITTEROffset);
+    RFB.addNoradCatId(builder, NORAD_CAT_ID);
     RFB.addPurpose(builder, PURPOSEOffset);
     RFB.addMode(builder, MODEOffset);
     RFB.addName(builder, NAMEOffset);
     RFB.addIdEntity(builder, ID_ENTITYOffset);
     RFB.addId(builder, IDOffset);
+    RFB.addInvert(builder, INVERT);
+    RFB.addXmtStatus(builder, XMT_STATUS);
+    RFB.addLinkDirection(builder, LINK_DIRECTION);
     RFB.addPolarization(builder, POLARIZATION);
     RFB.addBand(builder, BAND);
     return RFB.endRFB(builder);
   }
 
-  public static void startRFB(FlatBufferBuilder builder) { builder.startTable(16); }
+  public static void startRFB(FlatBufferBuilder builder) { builder.startTable(25); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
@@ -157,6 +234,15 @@ public final class RFB extends com.google.flatbuffers.Table {
   public static void addPolarization(FlatBufferBuilder builder, byte POLARIZATION) { builder.addByte(13, POLARIZATION, 0); }
   public static void addErp(FlatBufferBuilder builder, double ERP) { builder.addDouble(14, ERP, 0.0); }
   public static void addEirp(FlatBufferBuilder builder, double EIRP) { builder.addDouble(15, EIRP, 0.0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(16, (int) NORAD_CAT_ID, (int) 0L); }
+  public static void addIdTransmitter(FlatBufferBuilder builder, int ID_TRANSMITTEROffset) { builder.addOffset(17, ID_TRANSMITTEROffset, 0); }
+  public static void addLinkDirection(FlatBufferBuilder builder, byte LINK_DIRECTION) { builder.addByte(18, LINK_DIRECTION, 0); }
+  public static void addBaud(FlatBufferBuilder builder, double BAUD) { builder.addDouble(19, BAUD, 0.0); }
+  public static void addService(FlatBufferBuilder builder, int SERVICEOffset) { builder.addOffset(20, SERVICEOffset, 0); }
+  public static void addXmtStatus(FlatBufferBuilder builder, byte XMT_STATUS) { builder.addByte(21, XMT_STATUS, 0); }
+  public static void addInvert(FlatBufferBuilder builder, boolean INVERT) { builder.addBoolean(22, INVERT, false); }
+  public static void addIaruCoordination(FlatBufferBuilder builder, int IARU_COORDINATIONOffset) { builder.addOffset(23, IARU_COORDINATIONOffset, 0); }
+  public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(24, CITATIONOffset, 0); }
   public static int endRFB(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

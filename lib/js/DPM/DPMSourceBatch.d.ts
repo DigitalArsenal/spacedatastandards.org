@@ -53,6 +53,25 @@ export declare class DPMSourceBatch implements flatbuffers.IUnpackableObject<DPM
     WARNINGS(index: number): string;
     WARNINGS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     warningsLength(): number;
+    /**
+     * SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+     * CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+     * record derived from this batch may be republished; share-alike terms
+     * propagate from this batch to every derived record.
+     */
+    LICENSE(): string | null;
+    LICENSE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Canonical URL of the license text.
+     */
+    LICENSE_URL(): string | null;
+    LICENSE_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Attribution/citation string the source license requires downstream
+     * republication to carry.
+     */
+    CITATION(): string | null;
+    CITATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startDPMSourceBatch(builder: flatbuffers.Builder): void;
     static addSourceName(builder: flatbuffers.Builder, SOURCE_NAMEOffset: flatbuffers.Offset): void;
     static addSourceUrl(builder: flatbuffers.Builder, SOURCE_URLOffset: flatbuffers.Offset): void;
@@ -65,8 +84,11 @@ export declare class DPMSourceBatch implements flatbuffers.IUnpackableObject<DPM
     static addWarnings(builder: flatbuffers.Builder, WARNINGSOffset: flatbuffers.Offset): void;
     static createWarningsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startWarningsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addLicense(builder: flatbuffers.Builder, LICENSEOffset: flatbuffers.Offset): void;
+    static addLicenseUrl(builder: flatbuffers.Builder, LICENSE_URLOffset: flatbuffers.Offset): void;
+    static addCitation(builder: flatbuffers.Builder, CITATIONOffset: flatbuffers.Offset): void;
     static endDPMSourceBatch(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createDPMSourceBatch(builder: flatbuffers.Builder, SOURCE_NAMEOffset: flatbuffers.Offset, SOURCE_URLOffset: flatbuffers.Offset, SOURCE_SHA256Offset: flatbuffers.Offset, HTTP_ETAGOffset: flatbuffers.Offset, HTTP_LAST_MODIFIEDOffset: flatbuffers.Offset, RETRIEVED_ATOffset: flatbuffers.Offset, PARSER_VERSIONOffset: flatbuffers.Offset, RECORD_COUNT: bigint, WARNINGSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createDPMSourceBatch(builder: flatbuffers.Builder, SOURCE_NAMEOffset: flatbuffers.Offset, SOURCE_URLOffset: flatbuffers.Offset, SOURCE_SHA256Offset: flatbuffers.Offset, HTTP_ETAGOffset: flatbuffers.Offset, HTTP_LAST_MODIFIEDOffset: flatbuffers.Offset, RETRIEVED_ATOffset: flatbuffers.Offset, PARSER_VERSIONOffset: flatbuffers.Offset, RECORD_COUNT: bigint, WARNINGSOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, LICENSE_URLOffset: flatbuffers.Offset, CITATIONOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): DPMSourceBatchT;
     unpackTo(_o: DPMSourceBatchT): void;
 }
@@ -80,7 +102,10 @@ export declare class DPMSourceBatchT implements flatbuffers.IGeneratedObject {
     PARSER_VERSION: string | Uint8Array | null;
     RECORD_COUNT: bigint;
     WARNINGS: (string)[];
-    constructor(SOURCE_NAME?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, SOURCE_SHA256?: string | Uint8Array | null, HTTP_ETAG?: string | Uint8Array | null, HTTP_LAST_MODIFIED?: string | Uint8Array | null, RETRIEVED_AT?: string | Uint8Array | null, PARSER_VERSION?: string | Uint8Array | null, RECORD_COUNT?: bigint, WARNINGS?: (string)[]);
+    LICENSE: string | Uint8Array | null;
+    LICENSE_URL: string | Uint8Array | null;
+    CITATION: string | Uint8Array | null;
+    constructor(SOURCE_NAME?: string | Uint8Array | null, SOURCE_URL?: string | Uint8Array | null, SOURCE_SHA256?: string | Uint8Array | null, HTTP_ETAG?: string | Uint8Array | null, HTTP_LAST_MODIFIED?: string | Uint8Array | null, RETRIEVED_AT?: string | Uint8Array | null, PARSER_VERSION?: string | Uint8Array | null, RECORD_COUNT?: bigint, WARNINGS?: (string)[], LICENSE?: string | Uint8Array | null, LICENSE_URL?: string | Uint8Array | null, CITATION?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DPMSourceBatch.d.ts.map

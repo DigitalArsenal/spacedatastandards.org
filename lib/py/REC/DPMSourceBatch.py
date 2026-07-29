@@ -114,8 +114,36 @@ class DPMSourceBatch(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
+    # SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+    # CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+    # record derived from this batch may be republished; share-alike terms
+    # propagate from this batch to every derived record.
+    # DPMSourceBatch
+    def LICENSE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Canonical URL of the license text.
+    # DPMSourceBatch
+    def LICENSE_URL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Attribution/citation string the source license requires downstream
+    # republication to carry.
+    # DPMSourceBatch
+    def CITATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def DPMSourceBatchStart(builder):
-    builder.StartObject(9)
+    builder.StartObject(12)
 
 def Start(builder):
     DPMSourceBatchStart(builder)
@@ -186,6 +214,24 @@ def DPMSourceBatchCreateWARNINGSVector(builder, data):
 def CreateWARNINGSVector(builder, data):
     DPMSourceBatchCreateWARNINGSVector(builder, data)
 
+def DPMSourceBatchAddLICENSE(builder, LICENSE):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE), 0)
+
+def AddLICENSE(builder, LICENSE):
+    DPMSourceBatchAddLICENSE(builder, LICENSE)
+
+def DPMSourceBatchAddLICENSE_URL(builder, LICENSE_URL):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LICENSE_URL), 0)
+
+def AddLICENSE_URL(builder, LICENSE_URL):
+    DPMSourceBatchAddLICENSE_URL(builder, LICENSE_URL)
+
+def DPMSourceBatchAddCITATION(builder, CITATION):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CITATION), 0)
+
+def AddCITATION(builder, CITATION):
+    DPMSourceBatchAddCITATION(builder, CITATION)
+
 def DPMSourceBatchEnd(builder):
     return builder.EndObject()
 
@@ -211,6 +257,9 @@ class DPMSourceBatchT(object):
         PARSER_VERSION = None,
         RECORD_COUNT = 0,
         WARNINGS = None,
+        LICENSE = None,
+        LICENSE_URL = None,
+        CITATION = None,
     ):
         self.SOURCE_NAME = SOURCE_NAME  # type: Optional[str]
         self.SOURCE_URL = SOURCE_URL  # type: Optional[str]
@@ -221,6 +270,9 @@ class DPMSourceBatchT(object):
         self.PARSER_VERSION = PARSER_VERSION  # type: Optional[str]
         self.RECORD_COUNT = RECORD_COUNT  # type: int
         self.WARNINGS = WARNINGS  # type: Optional[List[Optional[str]]]
+        self.LICENSE = LICENSE  # type: Optional[str]
+        self.LICENSE_URL = LICENSE_URL  # type: Optional[str]
+        self.CITATION = CITATION  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -255,6 +307,9 @@ class DPMSourceBatchT(object):
             self.WARNINGS = []
             for i in range(DPMSourceBatch.WARNINGSLength()):
                 self.WARNINGS.append(DPMSourceBatch.WARNINGS(i))
+        self.LICENSE = DPMSourceBatch.LICENSE()
+        self.LICENSE_URL = DPMSourceBatch.LICENSE_URL()
+        self.CITATION = DPMSourceBatch.CITATION()
 
     # DPMSourceBatchT
     def Pack(self, builder):
@@ -280,6 +335,12 @@ class DPMSourceBatchT(object):
             for i in reversed(range(len(self.WARNINGS))):
                 builder.PrependUOffsetTRelative(WARNINGSlist[i])
             WARNINGS = builder.EndVector()
+        if self.LICENSE is not None:
+            LICENSE = builder.CreateString(self.LICENSE)
+        if self.LICENSE_URL is not None:
+            LICENSE_URL = builder.CreateString(self.LICENSE_URL)
+        if self.CITATION is not None:
+            CITATION = builder.CreateString(self.CITATION)
         DPMSourceBatchStart(builder)
         if self.SOURCE_NAME is not None:
             DPMSourceBatchAddSOURCE_NAME(builder, SOURCE_NAME)
@@ -298,5 +359,11 @@ class DPMSourceBatchT(object):
         DPMSourceBatchAddRECORD_COUNT(builder, self.RECORD_COUNT)
         if self.WARNINGS is not None:
             DPMSourceBatchAddWARNINGS(builder, WARNINGS)
+        if self.LICENSE is not None:
+            DPMSourceBatchAddLICENSE(builder, LICENSE)
+        if self.LICENSE_URL is not None:
+            DPMSourceBatchAddLICENSE_URL(builder, LICENSE_URL)
+        if self.CITATION is not None:
+            DPMSourceBatchAddCITATION(builder, CITATION)
         DPMSourceBatch = DPMSourceBatchEnd(builder)
         return DPMSourceBatch

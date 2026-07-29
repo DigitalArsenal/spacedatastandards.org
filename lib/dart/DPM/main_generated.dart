@@ -546,10 +546,21 @@ class DPMSourceBatch {
   int get recordCount => RECORD_COUNT;
   ///  Warnings or policy notes produced during normalization.
   List<String>? get WARNINGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  ///  CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  ///  record derived from this batch may be republished; share-alike terms
+  ///  propagate from this batch to every derived record.
+  String? get LICENSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Canonical URL of the license text.
+  String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  String? get licenseUrl => LICENSE_URL;
+  ///  Attribution/citation string the source license requires downstream
+  ///  republication to carry.
+  String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
 
   @override
   String toString() {
-    return 'DPMSourceBatch{sourceName: ${sourceName}, sourceUrl: ${sourceUrl}, sourceSha256: ${sourceSha256}, httpEtag: ${httpEtag}, httpLastModified: ${httpLastModified}, retrievedAt: ${retrievedAt}, parserVersion: ${parserVersion}, recordCount: ${recordCount}, WARNINGS: ${WARNINGS}}';
+    return 'DPMSourceBatch{sourceName: ${sourceName}, sourceUrl: ${sourceUrl}, sourceSha256: ${sourceSha256}, httpEtag: ${httpEtag}, httpLastModified: ${httpLastModified}, retrievedAt: ${retrievedAt}, parserVersion: ${parserVersion}, recordCount: ${recordCount}, WARNINGS: ${WARNINGS}, LICENSE: ${LICENSE}, licenseUrl: ${licenseUrl}, CITATION: ${CITATION}}';
   }
 }
 
@@ -567,7 +578,7 @@ class DPMSourceBatchBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(9);
+    fbBuilder.startTable(12);
   }
 
   int addSourceNameOffset(int? offset) {
@@ -606,6 +617,18 @@ class DPMSourceBatchBuilder {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
+  int addLicenseOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addLicenseUrlOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -622,6 +645,9 @@ class DPMSourceBatchObjectBuilder extends fb.ObjectBuilder {
   final String? _PARSER_VERSION;
   final int? _RECORD_COUNT;
   final List<String>? _WARNINGS;
+  final String? _LICENSE;
+  final String? _LICENSE_URL;
+  final String? _CITATION;
 
   DPMSourceBatchObjectBuilder({
     String? SOURCE_NAME,
@@ -641,6 +667,10 @@ class DPMSourceBatchObjectBuilder extends fb.ObjectBuilder {
     int? RECORD_COUNT,
     int? recordCount,
     List<String>? WARNINGS,
+    String? LICENSE,
+    String? LICENSE_URL,
+    String? licenseUrl,
+    String? CITATION,
   })
       : _SOURCE_NAME = sourceName ?? SOURCE_NAME,
         _SOURCE_URL = sourceUrl ?? SOURCE_URL,
@@ -650,7 +680,10 @@ class DPMSourceBatchObjectBuilder extends fb.ObjectBuilder {
         _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT,
         _PARSER_VERSION = parserVersion ?? PARSER_VERSION,
         _RECORD_COUNT = recordCount ?? RECORD_COUNT,
-        _WARNINGS = WARNINGS;
+        _WARNINGS = WARNINGS,
+        _LICENSE = LICENSE,
+        _LICENSE_URL = licenseUrl ?? LICENSE_URL,
+        _CITATION = CITATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -671,7 +704,13 @@ class DPMSourceBatchObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_PARSER_VERSION!);
     final int? WARNINGSOffset = _WARNINGS == null ? null
         : fbBuilder.writeList(_WARNINGS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(9);
+    final int? LICENSEOffset = _LICENSE == null ? null
+        : fbBuilder.writeString(_LICENSE!);
+    final int? LICENSE_URLOffset = _LICENSE_URL == null ? null
+        : fbBuilder.writeString(_LICENSE_URL!);
+    final int? CITATIONOffset = _CITATION == null ? null
+        : fbBuilder.writeString(_CITATION!);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, SOURCE_NAMEOffset);
     fbBuilder.addOffset(1, SOURCE_URLOffset);
     fbBuilder.addOffset(2, SOURCE_SHA256Offset);
@@ -681,6 +720,9 @@ class DPMSourceBatchObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(6, PARSER_VERSIONOffset);
     fbBuilder.addUint64(7, _RECORD_COUNT);
     fbBuilder.addOffset(8, WARNINGSOffset);
+    fbBuilder.addOffset(9, LICENSEOffset);
+    fbBuilder.addOffset(10, LICENSE_URLOffset);
+    fbBuilder.addOffset(11, CITATIONOffset);
     return fbBuilder.endTable();
   }
 

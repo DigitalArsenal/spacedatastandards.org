@@ -7,6 +7,17 @@ import (
 )
 
 /// RF Band Specification
+///
+/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+/// convention.
+///
+/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+/// transponder is therefore represented as TWO RFB records — one UPLINK and
+/// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 type RFB struct {
 	_tab flatbuffers.Table
 }
@@ -366,8 +377,182 @@ func (rcv *RFB) MutateEirp(n float64) bool {
 	return rcv.MutateEIRP(n)
 }
 
+/// NORAD catalog number of the spacecraft carrying this emitter. Joins to
+/// CAT.NORAD_CAT_ID. 0 when unbound.
+func (rcv *RFB) NORAD_CAT_ID() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *RFB) NoradCatId() uint32 {
+	return rcv.NORAD_CAT_ID()
+}
+
+/// NORAD catalog number of the spacecraft carrying this emitter. Joins to
+/// CAT.NORAD_CAT_ID. 0 when unbound.
+func (rcv *RFB) MutateNORAD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(36, n)
+}
+
+func (rcv *RFB) MutateNoradCatId(n uint32) bool {
+	return rcv.MutateNORAD_CAT_ID(n)
+}
+
+/// Identifier of the physical transmitter, transceiver or transponder this
+/// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+/// records of the same device share this value.
+func (rcv *RFB) ID_TRANSMITTER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFB) IdTransmitter() []byte {
+	return rcv.ID_TRANSMITTER()
+}
+
+/// Identifier of the physical transmitter, transceiver or transponder this
+/// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+/// records of the same device share this value.
+/// Direction of this emission relative to the spacecraft.
+func (rcv *RFB) LINK_DIRECTION() linkCategory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return linkCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *RFB) LinkDirection() linkCategory {
+	return rcv.LINK_DIRECTION()
+}
+
+/// Direction of this emission relative to the spacecraft.
+func (rcv *RFB) MutateLINK_DIRECTION(n linkCategory) bool {
+	return rcv._tab.MutateInt8Slot(40, int8(n))
+}
+
+func (rcv *RFB) MutateLinkDirection(n linkCategory) bool {
+	return rcv.MutateLINK_DIRECTION(n)
+}
+
+/// Symbol rate in baud (symbols per second), NOT kilobaud.
+func (rcv *RFB) BAUD() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *RFB) Baud() float64 {
+	return rcv.BAUD()
+}
+
+/// Symbol rate in baud (symbols per second), NOT kilobaud.
+func (rcv *RFB) MutateBAUD(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+func (rcv *RFB) MutateBaud(n float64) bool {
+	return rcv.MutateBAUD(n)
+}
+
+/// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+func (rcv *RFB) SERVICE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFB) Service() []byte {
+	return rcv.SERVICE()
+}
+
+/// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+/// Operational state of this emitter.
+func (rcv *RFB) XMT_STATUS() rfTransmitterState {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rfTransmitterState(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *RFB) XmtStatus() rfTransmitterState {
+	return rcv.XMT_STATUS()
+}
+
+/// Operational state of this emitter.
+func (rcv *RFB) MutateXMT_STATUS(n rfTransmitterState) bool {
+	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+func (rcv *RFB) MutateXmtStatus(n rfTransmitterState) bool {
+	return rcv.MutateXMT_STATUS(n)
+}
+
+/// True when the modulation sideband is inverted.
+func (rcv *RFB) INVERT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *RFB) Invert() bool {
+	return rcv.INVERT()
+}
+
+/// True when the modulation sideband is inverted.
+func (rcv *RFB) MutateINVERT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(48, n)
+}
+
+func (rcv *RFB) MutateInvert(n bool) bool {
+	return rcv.MutateINVERT(n)
+}
+
+/// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+func (rcv *RFB) IARU_COORDINATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFB) IaruCoordination() []byte {
+	return rcv.IARU_COORDINATION()
+}
+
+/// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+/// Attribution/citation string the source license requires this record to
+/// carry downstream.
+func (rcv *RFB) CITATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *RFB) Citation() []byte {
+	return rcv.CITATION()
+}
+
+/// Attribution/citation string the source license requires this record to
+/// carry downstream.
 func RFBStart(builder *flatbuffers.Builder) {
-	builder.StartObject(16)
+	builder.StartObject(25)
 }
 func RFBAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -464,6 +649,60 @@ func RFBAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
 }
 func RFBAddEirp(builder *flatbuffers.Builder, EIRP float64) {
 	RFBAddEIRP(builder, EIRP)
+}
+func RFBAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(16, NORAD_CAT_ID, 0)
+}
+func RFBAddNoradCatId(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	RFBAddNORAD_CAT_ID(builder, NORAD_CAT_ID)
+}
+func RFBAddID_TRANSMITTER(builder *flatbuffers.Builder, ID_TRANSMITTER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ID_TRANSMITTER), 0)
+}
+func RFBAddIdTransmitter(builder *flatbuffers.Builder, ID_TRANSMITTER flatbuffers.UOffsetT) {
+	RFBAddID_TRANSMITTER(builder, ID_TRANSMITTER)
+}
+func RFBAddLINK_DIRECTION(builder *flatbuffers.Builder, LINK_DIRECTION linkCategory) {
+	builder.PrependInt8Slot(18, int8(LINK_DIRECTION), 0)
+}
+func RFBAddLinkDirection(builder *flatbuffers.Builder, LINK_DIRECTION linkCategory) {
+	RFBAddLINK_DIRECTION(builder, LINK_DIRECTION)
+}
+func RFBAddBAUD(builder *flatbuffers.Builder, BAUD float64) {
+	builder.PrependFloat64Slot(19, BAUD, 0.0)
+}
+func RFBAddBaud(builder *flatbuffers.Builder, BAUD float64) {
+	RFBAddBAUD(builder, BAUD)
+}
+func RFBAddSERVICE(builder *flatbuffers.Builder, SERVICE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SERVICE), 0)
+}
+func RFBAddService(builder *flatbuffers.Builder, SERVICE flatbuffers.UOffsetT) {
+	RFBAddSERVICE(builder, SERVICE)
+}
+func RFBAddXMT_STATUS(builder *flatbuffers.Builder, XMT_STATUS rfTransmitterState) {
+	builder.PrependInt8Slot(21, int8(XMT_STATUS), 0)
+}
+func RFBAddXmtStatus(builder *flatbuffers.Builder, XMT_STATUS rfTransmitterState) {
+	RFBAddXMT_STATUS(builder, XMT_STATUS)
+}
+func RFBAddINVERT(builder *flatbuffers.Builder, INVERT bool) {
+	builder.PrependBoolSlot(22, INVERT, false)
+}
+func RFBAddInvert(builder *flatbuffers.Builder, INVERT bool) {
+	RFBAddINVERT(builder, INVERT)
+}
+func RFBAddIARU_COORDINATION(builder *flatbuffers.Builder, IARU_COORDINATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(IARU_COORDINATION), 0)
+}
+func RFBAddIaruCoordination(builder *flatbuffers.Builder, IARU_COORDINATION flatbuffers.UOffsetT) {
+	RFBAddIARU_COORDINATION(builder, IARU_COORDINATION)
+}
+func RFBAddCITATION(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(CITATION), 0)
+}
+func RFBAddCitation(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	RFBAddCITATION(builder, CITATION)
 }
 func RFBEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -189,8 +189,58 @@ func (rcv *DPMSourceBatch) WarningsLength() int {
 }
 
 /// Warnings or policy notes produced during normalization.
+/// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+/// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+/// record derived from this batch may be republished; share-alike terms
+/// propagate from this batch to every derived record.
+func (rcv *DPMSourceBatch) LICENSE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMSourceBatch) License() []byte {
+	return rcv.LICENSE()
+}
+
+/// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+/// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+/// record derived from this batch may be republished; share-alike terms
+/// propagate from this batch to every derived record.
+/// Canonical URL of the license text.
+func (rcv *DPMSourceBatch) LICENSE_URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMSourceBatch) LicenseUrl() []byte {
+	return rcv.LICENSE_URL()
+}
+
+/// Canonical URL of the license text.
+/// Attribution/citation string the source license requires downstream
+/// republication to carry.
+func (rcv *DPMSourceBatch) CITATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DPMSourceBatch) Citation() []byte {
+	return rcv.CITATION()
+}
+
+/// Attribution/citation string the source license requires downstream
+/// republication to carry.
 func DPMSourceBatchStart(builder *flatbuffers.Builder) {
-	builder.StartObject(9)
+	builder.StartObject(12)
 }
 func DPMSourceBatchAddSOURCE_NAME(builder *flatbuffers.Builder, SOURCE_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(SOURCE_NAME), 0)
@@ -251,6 +301,24 @@ func DPMSourceBatchStartWARNINGSVector(builder *flatbuffers.Builder, numElems in
 }
 func DPMSourceBatchStartWarningsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return DPMSourceBatchStartWARNINGSVector(builder, numElems)
+}
+func DPMSourceBatchAddLICENSE(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LICENSE), 0)
+}
+func DPMSourceBatchAddLicense(builder *flatbuffers.Builder, LICENSE flatbuffers.UOffsetT) {
+	DPMSourceBatchAddLICENSE(builder, LICENSE)
+}
+func DPMSourceBatchAddLICENSE_URL(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LICENSE_URL), 0)
+}
+func DPMSourceBatchAddLicenseUrl(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOffsetT) {
+	DPMSourceBatchAddLICENSE_URL(builder, LICENSE_URL)
+}
+func DPMSourceBatchAddCITATION(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CITATION), 0)
+}
+func DPMSourceBatchAddCitation(builder *flatbuffers.Builder, CITATION flatbuffers.UOffsetT) {
+	DPMSourceBatchAddCITATION(builder, CITATION)
 }
 func DPMSourceBatchEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

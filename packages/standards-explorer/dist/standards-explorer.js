@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.167.0+1785329791092",
+  version: "1.168.0+1785342625780",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -72,7 +72,130 @@ var manifest_default = {
       ]
     },
     CAT: {
-      IDL: '// Hash: 639bbf26a8fef59aee5e18e8d94fc383bbde72269c12971914e859279a2cf88b\n// Version: 1.0.2\n// -----------------------------------END_HEADER\ninclude "../PLD/main.fbs";\ninclude "../LCC/main.fbs";\n\n// https://www.celestrak.com/satcat/satcat-format.php\n\nenum spaceObjectClass: byte {\n  /// 0\n  PAYLOAD,\n  /// 1\n  ROCKET_BODY,\n  /// 2\n  DEBRIS,\n  /// 3\n  UNKNOWN\n}\n\nenum operationalState: byte {\n  /// +\n  OPERATIONAL,\n  /// -\n  NONOPERATIONAL,\n  /// P\n  PARTIALLY_OPERATIONAL,\n  /// B\n  BACKUP_STANDBY,\n  /// S\n  SPARE,\n  /// X\n  EXTENDED_MISSION,\n  /// D\n  DECAYED,\n  /// ?\n  UNKNOWN\n}\n\nenum dataAvailability: byte {\n  /// NCE\n  NO_CURRENT_ELEMENTS,\n  /// NIE\n  NO_INITIAL_ELEMENTS,\n  /// NEA\n  NO_ELEMENTS_AVAILABLE,\n  /// OK\n  OK\n}\n\nenum orbitRegime: byte {\n  /// 0\n  ORBIT,\n  /// 1\n  LANDING,\n  /// 2\n  IMPACT,\n  /// 3\n  DOCKED,\n  /// 4\n  ROUNDTRIP\n}\n\nenum massCategory: byte {\n  DRY,\n  WET\n}\n\n/// Catalog Entity Message\ntable CAT {\n  /// Satellite Name(s)\n  OBJECT_NAME: string;\n  /// International Designator (YYYY-NNNAAA)\n  OBJECT_ID: string;\n  /// NORAD Catalog Number\n  NORAD_CAT_ID: uint;\n  /// Object type (Payload, Rocket body, Debris, Unknown)\n  OBJECT_TYPE: spaceObjectClass = UNKNOWN;\n  /// Operational Status Code\n  OPS_STATUS_CODE: operationalState = UNKNOWN;\n  /// Ownership, typically country or company\n  OWNER: legacyCountryCode;\n  /// Launch Date [year-month-day] (ISO 8601)\n  LAUNCH_DATE: string;\n  /// Launch Site\n  LAUNCH_SITE: string;\n  /// Decay Date, if applicable [year-month-day] (ISO 8601)\n  DECAY_DATE: string;\n  /// Orbital period [minutes]\n  PERIOD: double;\n  /// Inclination [degrees]\n  INCLINATION: double;\n  /// Apogee Altitude [kilometers]\n  APOGEE: double;\n  /// Perigee Altitude [kilometers]\n  PERIGEE: double;\n  /// Radar Cross Section [meters2]; blank if no data available\n  RCS: double;\n  /// Data status code; blank otherwise\n  DATA_STATUS_CODE: dataAvailability;\n  /// Orbit center\n  ORBIT_CENTER: string;\n  /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)\n  ORBIT_TYPE: orbitRegime;\n  /// Deployment Date [year-month-day] (ISO 8601)\n  DEPLOYMENT_DATE: string;\n  /// Indicates if the object is maneuverable\n  MANEUVERABLE: bool;\n  /// Size [meters]; blank if no data available\n  SIZE: double;\n  /// Mass [kilograms]; blank if no data available\n  MASS: double;\n  /// Mass type (Dry, Wet)\n  MASS_TYPE: massCategory = DRY;\n  /// Vector of PAYLOADS\n  PAYLOADS: [PLD];\n}\n\nroot_type CAT;\nfile_identifier "$CAT";',
+      IDL: `// Hash: 5e5815830049eba64055f87a5c027434592fe5acafc9da044af35b79e474a247
+// Version: 1.0.3
+// -----------------------------------END_HEADER
+include "../PLD/main.fbs";
+include "../LCC/main.fbs";
+
+// https://www.celestrak.com/satcat/satcat-format.php
+
+enum spaceObjectClass: byte {
+  /// 0
+  PAYLOAD,
+  /// 1
+  ROCKET_BODY,
+  /// 2
+  DEBRIS,
+  /// 3
+  UNKNOWN
+}
+
+enum operationalState: byte {
+  /// +
+  OPERATIONAL,
+  /// -
+  NONOPERATIONAL,
+  /// P
+  PARTIALLY_OPERATIONAL,
+  /// B
+  BACKUP_STANDBY,
+  /// S
+  SPARE,
+  /// X
+  EXTENDED_MISSION,
+  /// D
+  DECAYED,
+  /// ?
+  UNKNOWN
+}
+
+enum dataAvailability: byte {
+  /// NCE
+  NO_CURRENT_ELEMENTS,
+  /// NIE
+  NO_INITIAL_ELEMENTS,
+  /// NEA
+  NO_ELEMENTS_AVAILABLE,
+  /// OK
+  OK
+}
+
+enum orbitRegime: byte {
+  /// 0
+  ORBIT,
+  /// 1
+  LANDING,
+  /// 2
+  IMPACT,
+  /// 3
+  DOCKED,
+  /// 4
+  ROUNDTRIP
+}
+
+enum massCategory: byte {
+  DRY,
+  WET
+}
+
+/// Catalog Entity Message
+table CAT {
+  /// Satellite Name(s)
+  OBJECT_NAME: string;
+  /// International Designator (YYYY-NNNAAA)
+  OBJECT_ID: string;
+  /// NORAD Catalog Number
+  NORAD_CAT_ID: uint;
+  /// Object type (Payload, Rocket body, Debris, Unknown)
+  OBJECT_TYPE: spaceObjectClass = UNKNOWN;
+  /// Operational Status Code
+  OPS_STATUS_CODE: operationalState = UNKNOWN;
+  /// Ownership, typically country or company
+  OWNER: legacyCountryCode;
+  /// Launch Date [year-month-day] (ISO 8601)
+  LAUNCH_DATE: string;
+  /// Launch Site
+  LAUNCH_SITE: string;
+  /// Decay Date, if applicable [year-month-day] (ISO 8601)
+  DECAY_DATE: string;
+  /// Orbital period [minutes]
+  PERIOD: double;
+  /// Inclination [degrees]
+  INCLINATION: double;
+  /// Apogee Altitude [kilometers]
+  APOGEE: double;
+  /// Perigee Altitude [kilometers]
+  PERIGEE: double;
+  /// Radar Cross Section [meters2]; blank if no data available
+  RCS: double;
+  /// Data status code; blank otherwise
+  DATA_STATUS_CODE: dataAvailability;
+  /// Orbit center
+  ORBIT_CENTER: string;
+  /// Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)
+  ORBIT_TYPE: orbitRegime;
+  /// Deployment Date [year-month-day] (ISO 8601)
+  DEPLOYMENT_DATE: string;
+  /// Indicates if the object is maneuverable
+  MANEUVERABLE: bool;
+  /// Size [meters]; blank if no data available
+  SIZE: double;
+  /// Mass [kilograms]; blank if no data available
+  MASS: double;
+  /// Mass type (Dry, Wet)
+  MASS_TYPE: massCategory = DRY;
+  /// Vector of PAYLOADS
+  PAYLOADS: [PLD];
+  /// Join key to the BUS record describing this object's satellite bus; holds
+  /// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+  /// and WET_MASS are properties of the bus design and live on BUS \u2014 they are
+  /// NOT duplicated here. Empty when the bus is unknown.
+  BUS_ID: string;
+}
+
+root_type CAT;
+file_identifier "$CAT";`,
       files: [
         "./dist/CAT/CAT.sw.tar.gz",
         "./dist/CAT/CAT.py.tar.gz",
@@ -3858,7 +3981,7 @@ file_identifier "$NUM";`,
       ]
     },
     RFB: {
-      IDL: '// Hash: dcf36e9b75490fdbbac2e3075176538b91ff26b8ee0f9ad75d32e7e5e30aaf76\n// Version: 0.0.3\n// -----------------------------------END_HEADER\nenum rfBandDesignation : byte {\n  UHF,\n  L,\n  S,\n  C,\n  X,\n  KU,\n  K,\n  KA,\n  V,\n  W,\n  Q,\n  EHF,\n  OTHER\n}\n\nenum rfPolarization : byte {\n  LHCP,\n  RHCP,\n  LINEAR_H,\n  LINEAR_V,\n  DUAL,\n  CROSS,\n  UNKNOWN\n}\n\n/// RF Band Specification\ntable RFB {\n  /// Unique identifier\n  ID:string;\n  /// Parent entity identifier\n  ID_ENTITY:string;\n  /// Band name or designation\n  NAME:string;\n  /// RF band designation\n  BAND:rfBandDesignation;\n  /// Operating mode\n  MODE:string;\n  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)\n  PURPOSE:string;\n  /// Minimum frequency (MHz)\n  FREQ_MIN:double;\n  /// Maximum frequency (MHz)\n  FREQ_MAX:double;\n  /// Center frequency (MHz)\n  CENTER_FREQ:double;\n  /// Bandwidth (MHz)\n  BANDWIDTH:double;\n  /// Peak antenna gain (dBi)\n  PEAK_GAIN:double;\n  /// Edge-of-coverage gain (dBi)\n  EDGE_GAIN:double;\n  /// Antenna beamwidth (degrees)\n  BEAMWIDTH:double;\n  /// Polarization\n  POLARIZATION:rfPolarization;\n  /// Effective radiated power (dBW)\n  ERP:double;\n  /// Effective isotropic radiated power (dBW)\n  EIRP:double;\n}\n\nroot_type RFB;\nfile_identifier "$RFB";',
+      IDL: '// Hash: 604a2fc92512f2f4f55e2a092fee86f509112556e8e359a2a570ce4bbba75d33\n// Version: 0.0.4\n// -----------------------------------END_HEADER\ninclude "../LKS/main.fbs";\n\nenum rfBandDesignation : byte {\n  UHF,\n  L,\n  S,\n  C,\n  X,\n  KU,\n  K,\n  KA,\n  V,\n  W,\n  Q,\n  EHF,\n  OTHER\n}\n\nenum rfPolarization : byte {\n  LHCP,\n  RHCP,\n  LINEAR_H,\n  LINEAR_V,\n  DUAL,\n  CROSS,\n  UNKNOWN\n}\n\n/// Operational state of a single emitter.\nenum rfTransmitterState : byte {\n  UNKNOWN,\n  ACTIVE,\n  INACTIVE,\n  INVALID\n}\n\n/// RF Band Specification\n///\n/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\n/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\n/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\n/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a\n/// convention.\n///\n/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or\n/// transponder is therefore represented as TWO RFB records \u2014 one UPLINK and\n/// one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\n/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.\ntable RFB {\n  /// Unique identifier\n  ID:string;\n  /// Parent entity identifier\n  ID_ENTITY:string;\n  /// Band name or designation\n  NAME:string;\n  /// RF band designation\n  BAND:rfBandDesignation;\n  /// Operating mode\n  MODE:string;\n  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)\n  PURPOSE:string;\n  /// Minimum frequency (MHz)\n  FREQ_MIN:double;\n  /// Maximum frequency (MHz)\n  FREQ_MAX:double;\n  /// Center frequency (MHz)\n  CENTER_FREQ:double;\n  /// Bandwidth (MHz)\n  BANDWIDTH:double;\n  /// Peak antenna gain (dBi)\n  PEAK_GAIN:double;\n  /// Edge-of-coverage gain (dBi)\n  EDGE_GAIN:double;\n  /// Antenna beamwidth (degrees)\n  BEAMWIDTH:double;\n  /// Polarization\n  POLARIZATION:rfPolarization;\n  /// Effective radiated power (dBW)\n  ERP:double;\n  /// Effective isotropic radiated power (dBW)\n  EIRP:double;\n  /// NORAD catalog number of the spacecraft carrying this emitter. Joins to\n  /// CAT.NORAD_CAT_ID. 0 when unbound.\n  NORAD_CAT_ID:uint;\n  /// Identifier of the physical transmitter, transceiver or transponder this\n  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\n  /// records of the same device share this value.\n  ID_TRANSMITTER:string;\n  /// Direction of this emission relative to the spacecraft.\n  LINK_DIRECTION:linkCategory;\n  /// Symbol rate in baud (symbols per second), NOT kilobaud.\n  BAUD:double;\n  /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).\n  SERVICE:string;\n  /// Operational state of this emitter.\n  XMT_STATUS:rfTransmitterState = UNKNOWN;\n  /// True when the modulation sideband is inverted.\n  INVERT:bool;\n  /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).\n  IARU_COORDINATION:string;\n  /// Attribution/citation string the source license requires this record to\n  /// carry downstream.\n  CITATION:string;\n}\n\nroot_type RFB;\nfile_identifier "$RFB";',
       files: [
         "./dist/RFB/RFB.sw.tar.gz",
         "./dist/RFB/RFB.py.tar.gz",
@@ -9831,8 +9954,8 @@ file_identifier "$VAM";`,
       ]
     },
     DPM: {
-      IDL: `// Hash: 9b1fec18b177cbc5362fddd6db3215a42050ae1f851c65831e0f0b311ab45dca
-// Version: 1.0.6
+      IDL: `// Hash: e8843143dda68da65499faef69c3ffcf963c9aab4bba431b517f753113e57fed
+// Version: 1.0.7
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -9976,6 +10099,16 @@ table DPMSourceBatch {
   RECORD_COUNT: uint64;
   /// Warnings or policy notes produced during normalization.
   WARNINGS: [string];
+  /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  /// record derived from this batch may be republished; share-alike terms
+  /// propagate from this batch to every derived record.
+  LICENSE: string;
+  /// Canonical URL of the license text.
+  LICENSE_URL: string;
+  /// Attribution/citation string the source license requires downstream
+  /// republication to carry.
+  CITATION: string;
 }
 
 /// Canonical query metadata that can replay the dataset selection.
@@ -17846,6 +17979,10 @@ var json_default = {
                 $ref: "#/definitions/PLD"
               },
               description: "Vector of PAYLOADS"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown."
             }
           },
           additionalProperties: false
@@ -26812,6 +26949,10 @@ var json_default = {
                 $ref: "#/definitions/PLD"
               },
               description: "Vector of PAYLOADS"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown."
             }
           },
           additionalProperties: false
@@ -28590,109 +28731,137 @@ var json_default = {
     RFB: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
-        rfBandDesignation: {
+        linkCategory: {
           type: "string",
           enum: [
-            "UHF",
-            "L",
-            "S",
-            "C",
-            "X",
-            "KU",
-            "K",
-            "KA",
-            "V",
-            "W",
-            "Q",
-            "EHF",
-            "OTHER"
+            "UPLINK",
+            "DOWNLINK",
+            "CROSSLINK",
+            "INTER_SATELLITE",
+            "GROUND_TO_GROUND",
+            "RELAY"
           ]
         },
-        rfPolarization: {
+        linkCondition: {
           type: "string",
           enum: [
-            "LHCP",
-            "RHCP",
-            "LINEAR_H",
-            "LINEAR_V",
-            "DUAL",
-            "CROSS",
+            "ESTABLISHED",
+            "DEGRADED",
+            "INTERRUPTED",
+            "PLANNED",
+            "TERMINATED",
             "UNKNOWN"
           ]
         },
-        RFB: {
+        LKS: {
           type: "object",
-          description: "RF Band Specification",
+          description: "Link Status",
           properties: {
             ID: {
               type: "string",
               description: "Unique identifier"
             },
-            ID_ENTITY: {
+            ID_ON_ORBIT1: {
               type: "string",
-              description: "Parent entity identifier"
+              description: "First endpoint on-orbit identifier"
             },
-            NAME: {
+            SAT_NO1: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "First endpoint satellite catalog number"
+            },
+            ID_ON_ORBIT2: {
               type: "string",
-              description: "Band name or designation"
+              description: "Second endpoint on-orbit identifier"
+            },
+            SAT_NO2: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Second endpoint satellite catalog number"
+            },
+            CONSTELLATION: {
+              type: "string",
+              description: "Constellation name"
+            },
+            LINK_NAME: {
+              type: "string",
+              description: "Link name or identifier"
+            },
+            LINK_TYPE: {
+              $ref: "#/definitions/linkCategory",
+              description: "Link type"
+            },
+            LINK_STATE: {
+              $ref: "#/definitions/linkCondition",
+              description: "Link state"
             },
             BAND: {
-              $ref: "#/definitions/rfBandDesignation",
-              description: "RF band designation"
-            },
-            MODE: {
               type: "string",
-              description: "Operating mode"
+              description: "RF band"
             },
-            PURPOSE: {
+            LINK_START_TIME: {
               type: "string",
-              description: "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+              description: "Link start time (ISO 8601)"
             },
-            FREQ_MIN: {
+            LINK_STOP_TIME: {
+              type: "string",
+              description: "Link stop time (ISO 8601)"
+            },
+            ID_BEAM1: {
+              type: "string",
+              description: "First endpoint beam identifier"
+            },
+            END_POINT1_NAME: {
+              type: "string",
+              description: "First endpoint name"
+            },
+            END_POINT1_LAT: {
               type: "number",
-              description: "Minimum frequency (MHz)"
+              description: "First endpoint latitude (degrees)"
             },
-            FREQ_MAX: {
+            END_POINT1_LON: {
               type: "number",
-              description: "Maximum frequency (MHz)"
+              description: "First endpoint longitude (degrees)"
             },
-            CENTER_FREQ: {
+            ID_BEAM2: {
+              type: "string",
+              description: "Second endpoint beam identifier"
+            },
+            END_POINT2_NAME: {
+              type: "string",
+              description: "Second endpoint name"
+            },
+            END_POINT2_LAT: {
               type: "number",
-              description: "Center frequency (MHz)"
+              description: "Second endpoint latitude (degrees)"
             },
-            BANDWIDTH: {
+            END_POINT2_LON: {
               type: "number",
-              description: "Bandwidth (MHz)"
+              description: "Second endpoint longitude (degrees)"
             },
-            PEAK_GAIN: {
+            DATA_RATE1_TO2: {
               type: "number",
-              description: "Peak antenna gain (dBi)"
+              description: "Data rate from endpoint 1 to 2 (Mbps)"
             },
-            EDGE_GAIN: {
+            DATA_RATE2_TO1: {
               type: "number",
-              description: "Edge-of-coverage gain (dBi)"
+              description: "Data rate from endpoint 2 to 1 (Mbps)"
             },
-            BEAMWIDTH: {
-              type: "number",
-              description: "Antenna beamwidth (degrees)"
+            SYS_CAP: {
+              type: "string",
+              description: "System capability status"
             },
-            POLARIZATION: {
-              $ref: "#/definitions/rfPolarization",
-              description: "Polarization"
-            },
-            ERP: {
-              type: "number",
-              description: "Effective radiated power (dBW)"
-            },
-            EIRP: {
-              type: "number",
-              description: "Effective isotropic radiated power (dBW)"
+            OPS_CAP: {
+              type: "string",
+              description: "Operational capability status"
             }
           },
           additionalProperties: false
         }
       },
-      $ref: "#/definitions/RFB"
+      $ref: "#/definitions/LKS"
     },
     RFE: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -50215,6 +50384,18 @@ var json_default = {
                 type: "string"
               },
               description: "Warnings or policy notes produced during normalization."
+            },
+            LICENSE: {
+              type: "string",
+              description: "SPDX license identifier governing the source data, e.g. CC-BY-4.0 or\nCC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any\nrecord derived from this batch may be republished; share-alike terms\npropagate from this batch to every derived record."
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "Canonical URL of the license text."
+            },
+            CITATION: {
+              type: "string",
+              description: "Attribution/citation string the source license requires downstream\nrepublication to carry."
             }
           },
           additionalProperties: false
@@ -57287,6 +57468,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -65420,6 +65606,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -78821,6 +79012,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -87031,6 +87227,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -95450,6 +95651,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -119702,6 +119908,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -127890,6 +128101,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -130364,25 +130580,264 @@ var fbjson_default = {
     RFB: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
-        rfBandDesignation: {
+        linkCategory: {
           type: "string",
           enum: [
-            "UHF",
-            "L",
-            "S",
-            "C",
-            "X",
-            "KU",
-            "K",
-            "KA",
-            "V",
-            "W",
-            "Q",
-            "EHF",
-            "OTHER"
+            "UPLINK",
+            "DOWNLINK",
+            "CROSSLINK",
+            "INTER_SATELLITE",
+            "GROUND_TO_GROUND",
+            "RELAY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UPLINK: {
+              value: 0
+            },
+            DOWNLINK: {
+              value: 1
+            },
+            CROSSLINK: {
+              value: 2
+            },
+            INTER_SATELLITE: {
+              value: 3
+            },
+            GROUND_TO_GROUND: {
+              value: 4
+            },
+            RELAY: {
+              value: 5
+            }
+          }
+        },
+        linkCondition: {
+          type: "string",
+          enum: [
+            "ESTABLISHED",
+            "DEGRADED",
+            "INTERRUPTED",
+            "PLANNED",
+            "TERMINATED",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ESTABLISHED: {
+              value: 0
+            },
+            DEGRADED: {
+              value: 1
+            },
+            INTERRUPTED: {
+              value: 2
+            },
+            PLANNED: {
+              value: 3
+            },
+            TERMINATED: {
+              value: 4
+            },
+            UNKNOWN: {
+              value: 5
+            }
+          }
+        },
+        LKS: {
+          type: "object",
+          description: "Link Status",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier",
+              "x-flatbuffer-type": "string"
+            },
+            ID_ON_ORBIT1: {
+              type: "string",
+              description: "First endpoint on-orbit identifier",
+              "x-flatbuffer-type": "string"
+            },
+            SAT_NO1: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "First endpoint satellite catalog number",
+              "x-flatbuffer-type": "uint32"
+            },
+            ID_ON_ORBIT2: {
+              type: "string",
+              description: "Second endpoint on-orbit identifier",
+              "x-flatbuffer-type": "string"
+            },
+            SAT_NO2: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Second endpoint satellite catalog number",
+              "x-flatbuffer-type": "uint32"
+            },
+            CONSTELLATION: {
+              type: "string",
+              description: "Constellation name",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_NAME: {
+              type: "string",
+              description: "Link name or identifier",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_TYPE: {
+              $ref: "#/definitions/linkCategory",
+              description: "Link type",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UPLINK: {
+                  value: 0
+                },
+                DOWNLINK: {
+                  value: 1
+                },
+                CROSSLINK: {
+                  value: 2
+                },
+                INTER_SATELLITE: {
+                  value: 3
+                },
+                GROUND_TO_GROUND: {
+                  value: 4
+                },
+                RELAY: {
+                  value: 5
+                }
+              }
+            },
+            LINK_STATE: {
+              $ref: "#/definitions/linkCondition",
+              description: "Link state",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ESTABLISHED: {
+                  value: 0
+                },
+                DEGRADED: {
+                  value: 1
+                },
+                INTERRUPTED: {
+                  value: 2
+                },
+                PLANNED: {
+                  value: 3
+                },
+                TERMINATED: {
+                  value: 4
+                },
+                UNKNOWN: {
+                  value: 5
+                }
+              }
+            },
+            BAND: {
+              type: "string",
+              description: "RF band",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_START_TIME: {
+              type: "string",
+              description: "Link start time (ISO 8601)",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_STOP_TIME: {
+              type: "string",
+              description: "Link stop time (ISO 8601)",
+              "x-flatbuffer-type": "string"
+            },
+            ID_BEAM1: {
+              type: "string",
+              description: "First endpoint beam identifier",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT1_NAME: {
+              type: "string",
+              description: "First endpoint name",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT1_LAT: {
+              type: "number",
+              description: "First endpoint latitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            END_POINT1_LON: {
+              type: "number",
+              description: "First endpoint longitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            ID_BEAM2: {
+              type: "string",
+              description: "Second endpoint beam identifier",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT2_NAME: {
+              type: "string",
+              description: "Second endpoint name",
+              "x-flatbuffer-type": "string"
+            },
+            END_POINT2_LAT: {
+              type: "number",
+              description: "Second endpoint latitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            END_POINT2_LON: {
+              type: "number",
+              description: "Second endpoint longitude (degrees)",
+              "x-flatbuffer-type": "double"
+            },
+            DATA_RATE1_TO2: {
+              type: "number",
+              description: "Data rate from endpoint 1 to 2 (Mbps)",
+              "x-flatbuffer-type": "double"
+            },
+            DATA_RATE2_TO1: {
+              type: "number",
+              description: "Data rate from endpoint 2 to 1 (Mbps)",
+              "x-flatbuffer-type": "double"
+            },
+            SYS_CAP: {
+              type: "string",
+              description: "System capability status",
+              "x-flatbuffer-type": "string"
+            },
+            OPS_CAP: {
+              type: "string",
+              description: "Operational capability status",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        rfBandDesignation: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
           "x-flatbuffer-enum-values": {
             UHF: {
               value: 0
@@ -130426,18 +130881,18 @@ var fbjson_default = {
           }
         },
         rfPolarization: {
-          type: "string",
-          enum: [
-            "LHCP",
-            "RHCP",
-            "LINEAR_H",
-            "LINEAR_V",
-            "DUAL",
-            "CROSS",
-            "UNKNOWN"
-          ],
+          type: "integer",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
           "x-flatbuffer-enum-values": {
             LHCP: {
               value: 0
@@ -130462,9 +130917,35 @@ var fbjson_default = {
             }
           }
         },
+        rfTransmitterState: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Operational state of a single emitter.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            ACTIVE: {
+              value: 1
+            },
+            INACTIVE: {
+              value: 2
+            },
+            INVALID: {
+              value: 3
+            }
+          }
+        },
         RFB: {
           type: "object",
-          description: "RF Band Specification",
+          additionalProperties: false,
           properties: {
             ID: {
               type: "string",
@@ -130611,9 +131092,91 @@ var fbjson_default = {
               type: "number",
               description: "Effective isotropic radiated power (dBW)",
               "x-flatbuffer-type": "double"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "CAT.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            ID_TRANSMITTER: {
+              type: "string",
+              description: "records of the same device share this value.",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_DIRECTION: {
+              $ref: "#/definitions/linkCategory",
+              description: "Direction of this emission relative to the spacecraft.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UPLINK: {
+                  value: 0
+                },
+                DOWNLINK: {
+                  value: 1
+                },
+                CROSSLINK: {
+                  value: 2
+                },
+                INTER_SATELLITE: {
+                  value: 3
+                },
+                GROUND_TO_GROUND: {
+                  value: 4
+                },
+                RELAY: {
+                  value: 5
+                }
+              }
+            },
+            BAUD: {
+              type: "number",
+              description: "Symbol rate in baud (symbols per second), NOT kilobaud.",
+              "x-flatbuffer-type": "double"
+            },
+            SERVICE: {
+              type: "string",
+              description: "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
+              "x-flatbuffer-type": "string"
+            },
+            XMT_STATUS: {
+              $ref: "#/definitions/rfTransmitterState",
+              description: "Operational state of this emitter.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNKNOWN",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                ACTIVE: {
+                  value: 1
+                },
+                INACTIVE: {
+                  value: 2
+                },
+                INVALID: {
+                  value: 3
+                }
+              }
+            },
+            INVERT: {
+              type: "boolean",
+              description: "True when the modulation sideband is inverted.",
+              "x-flatbuffer-type": "bool"
+            },
+            IARU_COORDINATION: {
+              type: "string",
+              description: "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "carry downstream.",
+              "x-flatbuffer-type": "string"
             }
           },
-          additionalProperties: false
+          description: "RF Band Specification  UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second), never kilobaud. Encoding a Hz value into a MHz field is a defect, not a convention.  One RFB record carries exactly one LINK_DIRECTION. A transceiver or transponder is therefore represented as TWO RFB records \u2014 one UPLINK and one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE, FREQ_MIN, FREQ_MAX and CENTER_FREQ."
         }
       },
       $ref: "#/definitions/RFB",
@@ -146259,6 +146822,32 @@ var fbjson_default = {
             }
           }
         },
+        rfTransmitterState: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "Operational state of a single emitter.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            UNKNOWN: {
+              value: 0
+            },
+            ACTIVE: {
+              value: 1
+            },
+            INACTIVE: {
+              value: 2
+            },
+            INVALID: {
+              value: 3
+            }
+          }
+        },
         emitterType: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -155311,6 +155900,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -161317,6 +161911,21 @@ var fbjson_default = {
               },
               description: "Warnings or policy notes produced during normalization.",
               "x-flatbuffer-type": "[string]"
+            },
+            LICENSE: {
+              type: "string",
+              description: "propagate from this batch to every derived record.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "Canonical URL of the license text.",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "republication to carry.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Source batch metadata bound into the dataset publication."
@@ -184843,9 +185452,91 @@ var fbjson_default = {
               type: "number",
               description: "Effective isotropic radiated power (dBW)",
               "x-flatbuffer-type": "double"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "CAT.NORAD_CAT_ID. 0 when unbound.",
+              "x-flatbuffer-type": "uint"
+            },
+            ID_TRANSMITTER: {
+              type: "string",
+              description: "records of the same device share this value.",
+              "x-flatbuffer-type": "string"
+            },
+            LINK_DIRECTION: {
+              $ref: "#/definitions/linkCategory",
+              description: "Direction of this emission relative to the spacecraft.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UPLINK: {
+                  value: 0
+                },
+                DOWNLINK: {
+                  value: 1
+                },
+                CROSSLINK: {
+                  value: 2
+                },
+                INTER_SATELLITE: {
+                  value: 3
+                },
+                GROUND_TO_GROUND: {
+                  value: 4
+                },
+                RELAY: {
+                  value: 5
+                }
+              }
+            },
+            BAUD: {
+              type: "number",
+              description: "Symbol rate in baud (symbols per second), NOT kilobaud.",
+              "x-flatbuffer-type": "double"
+            },
+            SERVICE: {
+              type: "string",
+              description: "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
+              "x-flatbuffer-type": "string"
+            },
+            XMT_STATUS: {
+              $ref: "#/definitions/rfTransmitterState",
+              description: "Operational state of this emitter.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNKNOWN",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNKNOWN: {
+                  value: 0
+                },
+                ACTIVE: {
+                  value: 1
+                },
+                INACTIVE: {
+                  value: 2
+                },
+                INVALID: {
+                  value: 3
+                }
+              }
+            },
+            INVERT: {
+              type: "boolean",
+              description: "True when the modulation sideband is inverted.",
+              "x-flatbuffer-type": "bool"
+            },
+            IARU_COORDINATION: {
+              type: "string",
+              description: "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "carry downstream.",
+              "x-flatbuffer-type": "string"
             }
           },
-          description: "RF Band Specification"
+          description: "RF Band Specification  UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second), never kilobaud. Encoding a Hz value into a MHz field is a defect, not a convention.  One RFB record carries exactly one LINK_DIRECTION. A transceiver or transponder is therefore represented as TWO RFB records \u2014 one UPLINK and one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE, FREQ_MIN, FREQ_MAX and CENTER_FREQ."
         },
         rfEmitterDetail: {
           type: "object",
@@ -216673,6 +217364,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -232404,6 +233100,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -252797,6 +253498,11 @@ var fbjson_default = {
               },
               description: "Vector of PAYLOADS",
               "x-flatbuffer-type": "[PLD]"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "NOT duplicated here. Empty when the bus is unknown.",
+              "x-flatbuffer-type": "string"
             }
           },
           description: "Catalog Entity Message"
@@ -256870,6 +257576,21 @@ var fbjson_default = {
               },
               description: "Warnings or policy notes produced during normalization.",
               "x-flatbuffer-type": "[string]"
+            },
+            LICENSE: {
+              type: "string",
+              description: "SPDX license identifier governing the source data, e.g. CC-BY-4.0 or\nCC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any\nrecord derived from this batch may be republished; share-alike terms\npropagate from this batch to every derived record.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "Canonical URL of the license text.",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              type: "string",
+              description: "Attribution/citation string the source license requires downstream\nrepublication to carry.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

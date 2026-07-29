@@ -4813,6 +4813,11 @@
           },
           "description": "Vector of PAYLOADS",
           "x-flatbuffer-type": "[PLD]"
+        },
+        "BUS_ID": {
+          "type": "string",
+          "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

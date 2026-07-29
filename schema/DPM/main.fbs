@@ -1,5 +1,5 @@
-// Hash: 9b1fec18b177cbc5362fddd6db3215a42050ae1f851c65831e0f0b311ab45dca
-// Version: 1.0.6
+// Hash: e8843143dda68da65499faef69c3ffcf963c9aab4bba431b517f753113e57fed
+// Version: 1.0.7
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -143,6 +143,16 @@ table DPMSourceBatch {
   RECORD_COUNT: uint64;
   /// Warnings or policy notes produced during normalization.
   WARNINGS: [string];
+  /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  /// record derived from this batch may be republished; share-alike terms
+  /// propagate from this batch to every derived record.
+  LICENSE: string;
+  /// Canonical URL of the license text.
+  LICENSE_URL: string;
+  /// Attribution/citation string the source license requires downstream
+  /// republication to carry.
+  CITATION: string;
 }
 
 /// Canonical query metadata that can replay the dataset selection.

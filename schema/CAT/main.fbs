@@ -1,5 +1,5 @@
-// Hash: 639bbf26a8fef59aee5e18e8d94fc383bbde72269c12971914e859279a2cf88b
-// Version: 1.0.2
+// Hash: 5e5815830049eba64055f87a5c027434592fe5acafc9da044af35b79e474a247
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
@@ -113,6 +113,11 @@ table CAT {
   MASS_TYPE: massCategory = DRY;
   /// Vector of PAYLOADS
   PAYLOADS: [PLD];
+  /// Join key to the BUS record describing this object's satellite bus; holds
+  /// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+  /// and WET_MASS are properties of the bus design and live on BUS — they are
+  /// NOT duplicated here. Empty when the bus is unknown.
+  BUS_ID: string;
 }
 
 root_type CAT;

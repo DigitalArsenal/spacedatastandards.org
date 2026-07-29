@@ -18,6 +18,17 @@ import kotlin.math.sign
 
 /**
  * RF Band Specification
+ *
+ * UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+ * that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+ * that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+ * never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+ * convention.
+ *
+ * One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+ * transponder is therefore represented as TWO RFB records — one UPLINK and
+ * one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+ * FREQ_MIN, FREQ_MAX and CENTER_FREQ.
  */
 @Suppress("unused")
 class RFB : Table() {
@@ -187,6 +198,106 @@ class RFB : Table() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * NORAD catalog number of the spacecraft carrying this emitter. Joins to
+     * CAT.NORAD_CAT_ID. 0 when unbound.
+     */
+    val noradCatId : UInt
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Identifier of the physical transmitter, transceiver or transponder this
+     * record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+     * records of the same device share this value.
+     */
+    val idTransmitter : String?
+        get() {
+            val o = __offset(38)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val idTransmitterAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(38, 1)
+    fun idTransmitterInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Direction of this emission relative to the spacecraft.
+     */
+    val linkDirection : Byte
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Symbol rate in baud (symbols per second), NOT kilobaud.
+     */
+    val baud : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+     */
+    val service : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val serviceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun serviceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Operational state of this emitter.
+     */
+    val xmtStatus : Byte
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * True when the modulation sideband is inverted.
+     */
+    val invert : Boolean
+        get() {
+            val o = __offset(48)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+     */
+    val iaruCoordination : String?
+        get() {
+            val o = __offset(50)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val iaruCoordinationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun iaruCoordinationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * Attribution/citation string the source license requires this record to
+     * carry downstream.
+     */
+    val citation : String?
+        get() {
+            val o = __offset(52)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(52, 1)
+    fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 52, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFB(_bb: ByteBuffer): RFB = getRootAsRFB(_bb, RFB())
@@ -195,8 +306,9 @@ class RFB : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFB")
-        fun createRFB(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, band: Byte, modeOffset: Int, purposeOffset: Int, freqMin: Double, freqMax: Double, centerFreq: Double, bandwidth: Double, peakGain: Double, edgeGain: Double, beamwidth: Double, polarization: Byte, erp: Double, eirp: Double) : Int {
-            builder.startTable(16)
+        fun createRFB(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, band: Byte, modeOffset: Int, purposeOffset: Int, freqMin: Double, freqMax: Double, centerFreq: Double, bandwidth: Double, peakGain: Double, edgeGain: Double, beamwidth: Double, polarization: Byte, erp: Double, eirp: Double, noradCatId: UInt, idTransmitterOffset: Int, linkDirection: Byte, baud: Double, serviceOffset: Int, xmtStatus: Byte, invert: Boolean, iaruCoordinationOffset: Int, citationOffset: Int) : Int {
+            builder.startTable(25)
+            addBAUD(builder, baud)
             addEIRP(builder, eirp)
             addERP(builder, erp)
             addBEAMWIDTH(builder, beamwidth)
@@ -206,16 +318,24 @@ class RFB : Table() {
             addCENTERFREQ(builder, centerFreq)
             addFREQMAX(builder, freqMax)
             addFREQMIN(builder, freqMin)
+            addCITATION(builder, citationOffset)
+            addIARUCOORDINATION(builder, iaruCoordinationOffset)
+            addSERVICE(builder, serviceOffset)
+            addIDTRANSMITTER(builder, idTransmitterOffset)
+            addNORADCATID(builder, noradCatId)
             addPURPOSE(builder, purposeOffset)
             addMODE(builder, modeOffset)
             addNAME(builder, nameOffset)
             addIDENTITY(builder, idEntityOffset)
             addID(builder, idOffset)
+            addINVERT(builder, invert)
+            addXMTSTATUS(builder, xmtStatus)
+            addLINKDIRECTION(builder, linkDirection)
             addPOLARIZATION(builder, polarization)
             addBAND(builder, band)
             return endRFB(builder)
         }
-        fun startRFB(builder: FlatBufferBuilder) = builder.startTable(16)
+        fun startRFB(builder: FlatBufferBuilder) = builder.startTable(25)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addIDENTITY(builder: FlatBufferBuilder, idEntity: Int) = builder.addOffset(1, idEntity, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(2, name, 0)
@@ -232,6 +352,15 @@ class RFB : Table() {
         fun addPOLARIZATION(builder: FlatBufferBuilder, polarization: Byte) = builder.addByte(13, polarization, 0)
         fun addERP(builder: FlatBufferBuilder, erp: Double) = builder.addDouble(14, erp, 0.0)
         fun addEIRP(builder: FlatBufferBuilder, eirp: Double) = builder.addDouble(15, eirp, 0.0)
+        fun addNORADCATID(builder: FlatBufferBuilder, noradCatId: UInt) = builder.addInt(16, noradCatId.toInt(), 0)
+        fun addIDTRANSMITTER(builder: FlatBufferBuilder, idTransmitter: Int) = builder.addOffset(17, idTransmitter, 0)
+        fun addLINKDIRECTION(builder: FlatBufferBuilder, linkDirection: Byte) = builder.addByte(18, linkDirection, 0)
+        fun addBAUD(builder: FlatBufferBuilder, baud: Double) = builder.addDouble(19, baud, 0.0)
+        fun addSERVICE(builder: FlatBufferBuilder, service: Int) = builder.addOffset(20, service, 0)
+        fun addXMTSTATUS(builder: FlatBufferBuilder, xmtStatus: Byte) = builder.addByte(21, xmtStatus, 0)
+        fun addINVERT(builder: FlatBufferBuilder, invert: Boolean) = builder.addBoolean(22, invert, false)
+        fun addIARUCOORDINATION(builder: FlatBufferBuilder, iaruCoordination: Int) = builder.addOffset(23, iaruCoordination, 0)
+        fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(24, citation, 0)
         fun endRFB(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

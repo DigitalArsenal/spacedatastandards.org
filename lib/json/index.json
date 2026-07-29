@@ -7033,6 +7033,10 @@
                                 "$ref": "#/definitions/PLD"
                             },
                             "description": "Vector of PAYLOADS"
+                        },
+                        "BUS_ID": {
+                            "type": "string",
+                            "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown."
                         }
                     },
                     "additionalProperties": false
@@ -15999,6 +16003,10 @@
                                 "$ref": "#/definitions/PLD"
                             },
                             "description": "Vector of PAYLOADS"
+                        },
+                        "BUS_ID": {
+                            "type": "string",
+                            "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown."
                         }
                     },
                     "additionalProperties": false
@@ -17777,109 +17785,137 @@
         "RFB": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
-                "rfBandDesignation": {
+                "linkCategory": {
                     "type": "string",
                     "enum": [
-                        "UHF",
-                        "L",
-                        "S",
-                        "C",
-                        "X",
-                        "KU",
-                        "K",
-                        "KA",
-                        "V",
-                        "W",
-                        "Q",
-                        "EHF",
-                        "OTHER"
+                        "UPLINK",
+                        "DOWNLINK",
+                        "CROSSLINK",
+                        "INTER_SATELLITE",
+                        "GROUND_TO_GROUND",
+                        "RELAY"
                     ]
                 },
-                "rfPolarization": {
+                "linkCondition": {
                     "type": "string",
                     "enum": [
-                        "LHCP",
-                        "RHCP",
-                        "LINEAR_H",
-                        "LINEAR_V",
-                        "DUAL",
-                        "CROSS",
+                        "ESTABLISHED",
+                        "DEGRADED",
+                        "INTERRUPTED",
+                        "PLANNED",
+                        "TERMINATED",
                         "UNKNOWN"
                     ]
                 },
-                "RFB": {
+                "LKS": {
                     "type": "object",
-                    "description": "RF Band Specification",
+                    "description": "Link Status",
                     "properties": {
                         "ID": {
                             "type": "string",
                             "description": "Unique identifier"
                         },
-                        "ID_ENTITY": {
+                        "ID_ON_ORBIT1": {
                             "type": "string",
-                            "description": "Parent entity identifier"
+                            "description": "First endpoint on-orbit identifier"
                         },
-                        "NAME": {
+                        "SAT_NO1": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "First endpoint satellite catalog number"
+                        },
+                        "ID_ON_ORBIT2": {
                             "type": "string",
-                            "description": "Band name or designation"
+                            "description": "Second endpoint on-orbit identifier"
+                        },
+                        "SAT_NO2": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Second endpoint satellite catalog number"
+                        },
+                        "CONSTELLATION": {
+                            "type": "string",
+                            "description": "Constellation name"
+                        },
+                        "LINK_NAME": {
+                            "type": "string",
+                            "description": "Link name or identifier"
+                        },
+                        "LINK_TYPE": {
+                            "$ref": "#/definitions/linkCategory",
+                            "description": "Link type"
+                        },
+                        "LINK_STATE": {
+                            "$ref": "#/definitions/linkCondition",
+                            "description": "Link state"
                         },
                         "BAND": {
-                            "$ref": "#/definitions/rfBandDesignation",
-                            "description": "RF band designation"
-                        },
-                        "MODE": {
                             "type": "string",
-                            "description": "Operating mode"
+                            "description": "RF band"
                         },
-                        "PURPOSE": {
+                        "LINK_START_TIME": {
                             "type": "string",
-                            "description": "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+                            "description": "Link start time (ISO 8601)"
                         },
-                        "FREQ_MIN": {
+                        "LINK_STOP_TIME": {
+                            "type": "string",
+                            "description": "Link stop time (ISO 8601)"
+                        },
+                        "ID_BEAM1": {
+                            "type": "string",
+                            "description": "First endpoint beam identifier"
+                        },
+                        "END_POINT1_NAME": {
+                            "type": "string",
+                            "description": "First endpoint name"
+                        },
+                        "END_POINT1_LAT": {
                             "type": "number",
-                            "description": "Minimum frequency (MHz)"
+                            "description": "First endpoint latitude (degrees)"
                         },
-                        "FREQ_MAX": {
+                        "END_POINT1_LON": {
                             "type": "number",
-                            "description": "Maximum frequency (MHz)"
+                            "description": "First endpoint longitude (degrees)"
                         },
-                        "CENTER_FREQ": {
+                        "ID_BEAM2": {
+                            "type": "string",
+                            "description": "Second endpoint beam identifier"
+                        },
+                        "END_POINT2_NAME": {
+                            "type": "string",
+                            "description": "Second endpoint name"
+                        },
+                        "END_POINT2_LAT": {
                             "type": "number",
-                            "description": "Center frequency (MHz)"
+                            "description": "Second endpoint latitude (degrees)"
                         },
-                        "BANDWIDTH": {
+                        "END_POINT2_LON": {
                             "type": "number",
-                            "description": "Bandwidth (MHz)"
+                            "description": "Second endpoint longitude (degrees)"
                         },
-                        "PEAK_GAIN": {
+                        "DATA_RATE1_TO2": {
                             "type": "number",
-                            "description": "Peak antenna gain (dBi)"
+                            "description": "Data rate from endpoint 1 to 2 (Mbps)"
                         },
-                        "EDGE_GAIN": {
+                        "DATA_RATE2_TO1": {
                             "type": "number",
-                            "description": "Edge-of-coverage gain (dBi)"
+                            "description": "Data rate from endpoint 2 to 1 (Mbps)"
                         },
-                        "BEAMWIDTH": {
-                            "type": "number",
-                            "description": "Antenna beamwidth (degrees)"
+                        "SYS_CAP": {
+                            "type": "string",
+                            "description": "System capability status"
                         },
-                        "POLARIZATION": {
-                            "$ref": "#/definitions/rfPolarization",
-                            "description": "Polarization"
-                        },
-                        "ERP": {
-                            "type": "number",
-                            "description": "Effective radiated power (dBW)"
-                        },
-                        "EIRP": {
-                            "type": "number",
-                            "description": "Effective isotropic radiated power (dBW)"
+                        "OPS_CAP": {
+                            "type": "string",
+                            "description": "Operational capability status"
                         }
                     },
                     "additionalProperties": false
                 }
             },
-            "$ref": "#/definitions/RFB"
+            "$ref": "#/definitions/LKS"
         },
         "RFE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -39402,6 +39438,18 @@
                                 "type": "string"
                             },
                             "description": "Warnings or policy notes produced during normalization."
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "SPDX license identifier governing the source data, e.g. CC-BY-4.0 or\nCC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any\nrecord derived from this batch may be republished; share-alike terms\npropagate from this batch to every derived record."
+                        },
+                        "LICENSE_URL": {
+                            "type": "string",
+                            "description": "Canonical URL of the license text."
+                        },
+                        "CITATION": {
+                            "type": "string",
+                            "description": "Attribution/citation string the source license requires downstream\nrepublication to carry."
                         }
                     },
                     "additionalProperties": false

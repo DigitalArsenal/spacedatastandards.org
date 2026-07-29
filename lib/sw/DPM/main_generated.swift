@@ -322,6 +322,9 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
     static let PARSER_VERSION: VOffset = 16
     static let RECORD_COUNT: VOffset = 18
     static let WARNINGS: VOffset = 20
+    static let LICENSE: VOffset = 22
+    static let LICENSE_URL: VOffset = 24
+    static let CITATION: VOffset = 26
   }
 
   ///  Provider-controlled source name.
@@ -349,7 +352,20 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
   public var RECORD_COUNT: UInt64 { let o = _accessor.offset(VT.RECORD_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Warnings or policy notes produced during normalization.
   public var WARNINGS: FlatbufferVector<String?> { return _accessor.vector(at: VT.WARNINGS, byteSize: 4) }
-  public static func startDPMSourceBatch(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  ///  SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  ///  CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  ///  record derived from this batch may be republished; share-alike terms
+  ///  propagate from this batch to every derived record.
+  public var LICENSE: String? { let o = _accessor.offset(VT.LICENSE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE) }
+  ///  Canonical URL of the license text.
+  public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
+  ///  Attribution/citation string the source license requires downstream
+  ///  republication to carry.
+  public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
+  public static func startDPMSourceBatch(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(SOURCE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_NAME, at: VT.SOURCE_NAME) }
   public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
   public static func add(SOURCE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_SHA256, at: VT.SOURCE_SHA256) }
@@ -359,6 +375,9 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
   public static func add(PARSER_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARSER_VERSION, at: VT.PARSER_VERSION) }
   public static func add(RECORD_COUNT: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_COUNT, def: 0, at: VT.RECORD_COUNT) }
   public static func addVectorOf(WARNINGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WARNINGS, at: VT.WARNINGS) }
+  public static func add(LICENSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE, at: VT.LICENSE) }
+  public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
   public static func endDPMSourceBatch(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDPMSourceBatch(
     _ fbb: inout FlatBufferBuilder,
@@ -370,7 +389,10 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
     RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset(),
     PARSER_VERSIONOffset PARSER_VERSION: Offset = Offset(),
     RECORD_COUNT: UInt64 = 0,
-    WARNINGSVectorOffset WARNINGS: Offset = Offset()
+    WARNINGSVectorOffset WARNINGS: Offset = Offset(),
+    LICENSEOffset LICENSE: Offset = Offset(),
+    LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset()
   ) -> Offset {
     let __start = DPMSourceBatch.startDPMSourceBatch(&fbb)
     DPMSourceBatch.add(SOURCE_NAME: SOURCE_NAME, &fbb)
@@ -382,6 +404,9 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
     DPMSourceBatch.add(PARSER_VERSION: PARSER_VERSION, &fbb)
     DPMSourceBatch.add(RECORD_COUNT: RECORD_COUNT, &fbb)
     DPMSourceBatch.addVectorOf(WARNINGS: WARNINGS, &fbb)
+    DPMSourceBatch.add(LICENSE: LICENSE, &fbb)
+    DPMSourceBatch.add(LICENSE_URL: LICENSE_URL, &fbb)
+    DPMSourceBatch.add(CITATION: CITATION, &fbb)
     return DPMSourceBatch.endDPMSourceBatch(&fbb, start: __start)
   }
 
@@ -396,6 +421,9 @@ public struct DPMSourceBatch: FlatBufferTable, FlatbuffersVectorInitializable, V
     try _v.visit(field: VT.PARSER_VERSION, fieldName: "PARSER_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.RECORD_COUNT, fieldName: "RECORD_COUNT", required: false, type: UInt64.self)
     try _v.visit(field: VT.WARNINGS, fieldName: "WARNINGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.LICENSE, fieldName: "LICENSE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

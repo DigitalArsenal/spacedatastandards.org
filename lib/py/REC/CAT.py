@@ -231,8 +231,19 @@ class CAT(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
+    # Join key to the BUS record describing this object's satellite bus; holds
+    # that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+    # and WET_MASS are properties of the bus design and live on BUS — they are
+    # NOT duplicated here. Empty when the bus is unknown.
+    # CAT
+    def BUS_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CATStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(24)
 
 def Start(builder):
     CATStart(builder)
@@ -387,6 +398,12 @@ def CATCreatePAYLOADSVector(builder, data):
 def CreatePAYLOADSVector(builder, data):
     CATCreatePAYLOADSVector(builder, data)
 
+def CATAddBUS_ID(builder, BUS_ID):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(BUS_ID), 0)
+
+def AddBUS_ID(builder, BUS_ID):
+    CATAddBUS_ID(builder, BUS_ID)
+
 def CATEnd(builder):
     return builder.EndObject()
 
@@ -427,6 +444,7 @@ class CATT(object):
         MASS = 0.0,
         MASS_TYPE = 0,
         PAYLOADS = None,
+        BUS_ID = None,
     ):
         self.OBJECT_NAME = OBJECT_NAME  # type: Optional[str]
         self.OBJECT_ID = OBJECT_ID  # type: Optional[str]
@@ -451,6 +469,7 @@ class CATT(object):
         self.MASS = MASS  # type: float
         self.MASS_TYPE = MASS_TYPE  # type: int
         self.PAYLOADS = PAYLOADS  # type: Optional[List[PLD.PLDT]]
+        self.BUS_ID = BUS_ID  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -503,6 +522,7 @@ class CATT(object):
                 else:
                     pLD_ = PLD.PLDT.InitFromObj(CAT.PAYLOADS(i))
                     self.PAYLOADS.append(pLD_)
+        self.BUS_ID = CAT.BUS_ID()
 
     # CATT
     def Pack(self, builder):
@@ -528,6 +548,8 @@ class CATT(object):
             for i in reversed(range(len(self.PAYLOADS))):
                 builder.PrependUOffsetTRelative(PAYLOADSlist[i])
             PAYLOADS = builder.EndVector()
+        if self.BUS_ID is not None:
+            BUS_ID = builder.CreateString(self.BUS_ID)
         CATStart(builder)
         if self.OBJECT_NAME is not None:
             CATAddOBJECT_NAME(builder, OBJECT_NAME)
@@ -560,5 +582,7 @@ class CATT(object):
         CATAddMASS_TYPE(builder, self.MASS_TYPE)
         if self.PAYLOADS is not None:
             CATAddPAYLOADS(builder, PAYLOADS)
+        if self.BUS_ID is not None:
+            CATAddBUS_ID(builder, BUS_ID)
         CAT = CATEnd(builder)
         return CAT

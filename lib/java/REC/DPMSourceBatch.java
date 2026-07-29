@@ -80,6 +80,28 @@ public final class DPMSourceBatch extends com.google.flatbuffers.Table {
   public int WARNINGSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public StringVector warningsVector() { return warningsVector(new StringVector()); }
   public StringVector warningsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+   * CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+   * record derived from this batch may be republished; share-alike terms
+   * propagate from this batch to every derived record.
+   */
+  public String LICENSE() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer LICENSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Canonical URL of the license text.
+   */
+  public String LICENSE_URL() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LICENSE_URLAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer LICENSE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Attribution/citation string the source license requires downstream
+   * republication to carry.
+   */
+  public String CITATION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
 
   public static int createDPMSourceBatch(FlatBufferBuilder builder,
       int SOURCE_NAMEOffset,
@@ -90,9 +112,15 @@ public final class DPMSourceBatch extends com.google.flatbuffers.Table {
       int RETRIEVED_ATOffset,
       int PARSER_VERSIONOffset,
       long RECORD_COUNT,
-      int WARNINGSOffset) {
-    builder.startTable(9);
+      int WARNINGSOffset,
+      int LICENSEOffset,
+      int LICENSE_URLOffset,
+      int CITATIONOffset) {
+    builder.startTable(12);
     DPMSourceBatch.addRecordCount(builder, RECORD_COUNT);
+    DPMSourceBatch.addCitation(builder, CITATIONOffset);
+    DPMSourceBatch.addLicenseUrl(builder, LICENSE_URLOffset);
+    DPMSourceBatch.addLicense(builder, LICENSEOffset);
     DPMSourceBatch.addWarnings(builder, WARNINGSOffset);
     DPMSourceBatch.addParserVersion(builder, PARSER_VERSIONOffset);
     DPMSourceBatch.addRetrievedAt(builder, RETRIEVED_ATOffset);
@@ -104,7 +132,7 @@ public final class DPMSourceBatch extends com.google.flatbuffers.Table {
     return DPMSourceBatch.endDPMSourceBatch(builder);
   }
 
-  public static void startDPMSourceBatch(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void startDPMSourceBatch(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addSourceName(FlatBufferBuilder builder, int SOURCE_NAMEOffset) { builder.addOffset(0, SOURCE_NAMEOffset, 0); }
   public static void addSourceUrl(FlatBufferBuilder builder, int SOURCE_URLOffset) { builder.addOffset(1, SOURCE_URLOffset, 0); }
   public static void addSourceSha256(FlatBufferBuilder builder, int SOURCE_SHA256Offset) { builder.addOffset(2, SOURCE_SHA256Offset, 0); }
@@ -116,6 +144,9 @@ public final class DPMSourceBatch extends com.google.flatbuffers.Table {
   public static void addWarnings(FlatBufferBuilder builder, int WARNINGSOffset) { builder.addOffset(8, WARNINGSOffset, 0); }
   public static int createWarningsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startWarningsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addLicense(FlatBufferBuilder builder, int LICENSEOffset) { builder.addOffset(9, LICENSEOffset, 0); }
+  public static void addLicenseUrl(FlatBufferBuilder builder, int LICENSE_URLOffset) { builder.addOffset(10, LICENSE_URLOffset, 0); }
+  public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(11, CITATIONOffset, 0); }
   public static int endDPMSourceBatch(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

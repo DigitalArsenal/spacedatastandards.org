@@ -1,6 +1,8 @@
-// Hash: dcf36e9b75490fdbbac2e3075176538b91ff26b8ee0f9ad75d32e7e5e30aaf76
-// Version: 0.0.3
+// Hash: 604a2fc92512f2f4f55e2a092fee86f509112556e8e359a2a570ce4bbba75d33
+// Version: 0.0.4
 // -----------------------------------END_HEADER
+include "../LKS/main.fbs";
+
 enum rfBandDesignation : byte {
   UHF,
   L,
@@ -27,7 +29,26 @@ enum rfPolarization : byte {
   UNKNOWN
 }
 
+/// Operational state of a single emitter.
+enum rfTransmitterState : byte {
+  UNKNOWN,
+  ACTIVE,
+  INACTIVE,
+  INVALID
+}
+
 /// RF Band Specification
+///
+/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+/// convention.
+///
+/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+/// transponder is therefore represented as TWO RFB records — one UPLINK and
+/// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 table RFB {
   /// Unique identifier
   ID:string;
@@ -61,6 +82,28 @@ table RFB {
   ERP:double;
   /// Effective isotropic radiated power (dBW)
   EIRP:double;
+  /// NORAD catalog number of the spacecraft carrying this emitter. Joins to
+  /// CAT.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID:uint;
+  /// Identifier of the physical transmitter, transceiver or transponder this
+  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+  /// records of the same device share this value.
+  ID_TRANSMITTER:string;
+  /// Direction of this emission relative to the spacecraft.
+  LINK_DIRECTION:linkCategory;
+  /// Symbol rate in baud (symbols per second), NOT kilobaud.
+  BAUD:double;
+  /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+  SERVICE:string;
+  /// Operational state of this emitter.
+  XMT_STATUS:rfTransmitterState = UNKNOWN;
+  /// True when the modulation sideband is inverted.
+  INVERT:bool;
+  /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+  IARU_COORDINATION:string;
+  /// Attribution/citation string the source license requires this record to
+  /// carry downstream.
+  CITATION:string;
 }
 
 root_type RFB;

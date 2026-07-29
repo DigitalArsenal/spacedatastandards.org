@@ -138,6 +138,15 @@ public final class CAT extends com.google.flatbuffers.Table {
   public int PAYLOADSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
   public PLD.Vector payloadsVector() { return payloadsVector(new PLD.Vector()); }
   public PLD.Vector payloadsVector(PLD.Vector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Join key to the BUS record describing this object's satellite bus; holds
+   * that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+   * and WET_MASS are properties of the bus design and live on BUS — they are
+   * NOT duplicated here. Empty when the bus is unknown.
+   */
+  public String BUS_ID() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BUS_IDAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer BUS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
 
   public static int createCAT(FlatBufferBuilder builder,
       int OBJECT_NAMEOffset,
@@ -162,8 +171,9 @@ public final class CAT extends com.google.flatbuffers.Table {
       double SIZE,
       double MASS,
       byte MASS_TYPE,
-      int PAYLOADSOffset) {
-    builder.startTable(23);
+      int PAYLOADSOffset,
+      int BUS_IDOffset) {
+    builder.startTable(24);
     CAT.addMass(builder, MASS);
     CAT.addSize(builder, SIZE);
     CAT.addRcs(builder, RCS);
@@ -171,6 +181,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     CAT.addApogee(builder, APOGEE);
     CAT.addInclination(builder, INCLINATION);
     CAT.addPeriod(builder, PERIOD);
+    CAT.addBusId(builder, BUS_IDOffset);
     CAT.addPayloads(builder, PAYLOADSOffset);
     CAT.addDeploymentDate(builder, DEPLOYMENT_DATEOffset);
     CAT.addOrbitCenter(builder, ORBIT_CENTEROffset);
@@ -190,7 +201,7 @@ public final class CAT extends com.google.flatbuffers.Table {
     return CAT.endCAT(builder);
   }
 
-  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startCAT(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(0, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(1, OBJECT_IDOffset, 0); }
   public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(2, (int) NORAD_CAT_ID, (int) 0L); }
@@ -216,6 +227,7 @@ public final class CAT extends com.google.flatbuffers.Table {
   public static void addPayloads(FlatBufferBuilder builder, int PAYLOADSOffset) { builder.addOffset(22, PAYLOADSOffset, 0); }
   public static int createPayloadsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPayloadsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addBusId(FlatBufferBuilder builder, int BUS_IDOffset) { builder.addOffset(23, BUS_IDOffset, 0); }
   public static int endCAT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

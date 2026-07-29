@@ -515,8 +515,28 @@ func (rcv *CAT) PayloadsLength() int {
 }
 
 /// Vector of PAYLOADS
+/// Join key to the BUS record describing this object's satellite bus; holds
+/// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+/// and WET_MASS are properties of the bus design and live on BUS — they are
+/// NOT duplicated here. Empty when the bus is unknown.
+func (rcv *CAT) BUS_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CAT) BusId() []byte {
+	return rcv.BUS_ID()
+}
+
+/// Join key to the BUS record describing this object's satellite bus; holds
+/// that record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS
+/// and WET_MASS are properties of the bus design and live on BUS — they are
+/// NOT duplicated here. Empty when the bus is unknown.
 func CATStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(24)
 }
 func CATAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(OBJECT_NAME), 0)
@@ -661,6 +681,12 @@ func CATStartPAYLOADSVector(builder *flatbuffers.Builder, numElems int) flatbuff
 }
 func CATStartPayloadsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return CATStartPAYLOADSVector(builder, numElems)
+}
+func CATAddBUS_ID(builder *flatbuffers.Builder, BUS_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(BUS_ID), 0)
+}
+func CATAddBusId(builder *flatbuffers.Builder, BUS_ID flatbuffers.UOffsetT) {
+	CATAddBUS_ID(builder, BUS_ID)
 }
 func CATEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

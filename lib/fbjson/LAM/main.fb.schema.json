@@ -5657,6 +5657,11 @@
           },
           "description": "Vector of PAYLOADS",
           "x-flatbuffer-type": "[PLD]"
+        },
+        "BUS_ID": {
+          "type": "string",
+          "description": "NOT duplicated here. Empty when the bus is unknown.",
+          "x-flatbuffer-type": "string"
         }
       },
       "description": "Catalog Entity Message"

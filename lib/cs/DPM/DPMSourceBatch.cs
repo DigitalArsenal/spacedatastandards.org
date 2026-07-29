@@ -78,6 +78,34 @@ public struct DPMSourceBatch : IFlatbufferObject
   /// Warnings or policy notes produced during normalization.
   public string WARNINGS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int WARNINGSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+  /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+  /// record derived from this batch may be republished; share-alike terms
+  /// propagate from this batch to every derived record.
+  public string LICENSE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLICENSEBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetLICENSEBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetLICENSEArray() { return __p.__vector_as_array<byte>(22); }
+  /// Canonical URL of the license text.
+  public string LICENSE_URL { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLICENSE_URLBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetLICENSE_URLBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetLICENSE_URLArray() { return __p.__vector_as_array<byte>(24); }
+  /// Attribution/citation string the source license requires downstream
+  /// republication to carry.
+  public string CITATION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCITATIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(26); }
 
   public static Offset<DPMSourceBatch> CreateDPMSourceBatch(FlatBufferBuilder builder,
       StringOffset SOURCE_NAMEOffset = default(StringOffset),
@@ -88,9 +116,15 @@ public struct DPMSourceBatch : IFlatbufferObject
       StringOffset RETRIEVED_ATOffset = default(StringOffset),
       StringOffset PARSER_VERSIONOffset = default(StringOffset),
       ulong RECORD_COUNT = 0,
-      VectorOffset WARNINGSOffset = default(VectorOffset)) {
-    builder.StartTable(9);
+      VectorOffset WARNINGSOffset = default(VectorOffset),
+      StringOffset LICENSEOffset = default(StringOffset),
+      StringOffset LICENSE_URLOffset = default(StringOffset),
+      StringOffset CITATIONOffset = default(StringOffset)) {
+    builder.StartTable(12);
     DPMSourceBatch.AddRECORD_COUNT(builder, RECORD_COUNT);
+    DPMSourceBatch.AddCITATION(builder, CITATIONOffset);
+    DPMSourceBatch.AddLICENSE_URL(builder, LICENSE_URLOffset);
+    DPMSourceBatch.AddLICENSE(builder, LICENSEOffset);
     DPMSourceBatch.AddWARNINGS(builder, WARNINGSOffset);
     DPMSourceBatch.AddPARSER_VERSION(builder, PARSER_VERSIONOffset);
     DPMSourceBatch.AddRETRIEVED_AT(builder, RETRIEVED_ATOffset);
@@ -102,7 +136,7 @@ public struct DPMSourceBatch : IFlatbufferObject
     return DPMSourceBatch.EndDPMSourceBatch(builder);
   }
 
-  public static void StartDPMSourceBatch(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void StartDPMSourceBatch(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddSOURCE_NAME(FlatBufferBuilder builder, StringOffset SOURCE_NAMEOffset) { builder.AddOffset(0, SOURCE_NAMEOffset.Value, 0); }
   public static void AddSOURCE_URL(FlatBufferBuilder builder, StringOffset SOURCE_URLOffset) { builder.AddOffset(1, SOURCE_URLOffset.Value, 0); }
   public static void AddSOURCE_SHA256(FlatBufferBuilder builder, StringOffset SOURCE_SHA256Offset) { builder.AddOffset(2, SOURCE_SHA256Offset.Value, 0); }
@@ -117,6 +151,9 @@ public struct DPMSourceBatch : IFlatbufferObject
   public static VectorOffset CreateWARNINGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateWARNINGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartWARNINGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLICENSE(FlatBufferBuilder builder, StringOffset LICENSEOffset) { builder.AddOffset(9, LICENSEOffset.Value, 0); }
+  public static void AddLICENSE_URL(FlatBufferBuilder builder, StringOffset LICENSE_URLOffset) { builder.AddOffset(10, LICENSE_URLOffset.Value, 0); }
+  public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(11, CITATIONOffset.Value, 0); }
   public static Offset<DPMSourceBatch> EndDPMSourceBatch(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DPMSourceBatch>(o);
@@ -137,6 +174,9 @@ public struct DPMSourceBatch : IFlatbufferObject
     _o.RECORD_COUNT = this.RECORD_COUNT;
     _o.WARNINGS = new List<string>();
     for (var _j = 0; _j < this.WARNINGSLength; ++_j) {_o.WARNINGS.Add(this.WARNINGS(_j));}
+    _o.LICENSE = this.LICENSE;
+    _o.LICENSE_URL = this.LICENSE_URL;
+    _o.CITATION = this.CITATION;
   }
   public static Offset<DPMSourceBatch> Pack(FlatBufferBuilder builder, DPMSourceBatchT _o) {
     if (_o == null) return default(Offset<DPMSourceBatch>);
@@ -153,6 +193,9 @@ public struct DPMSourceBatch : IFlatbufferObject
       for (var _j = 0; _j < __WARNINGS.Length; ++_j) { __WARNINGS[_j] = builder.CreateString(_o.WARNINGS[_j]); }
       _WARNINGS = CreateWARNINGSVector(builder, __WARNINGS);
     }
+    var _LICENSE = _o.LICENSE == null ? default(StringOffset) : builder.CreateString(_o.LICENSE);
+    var _LICENSE_URL = _o.LICENSE_URL == null ? default(StringOffset) : builder.CreateString(_o.LICENSE_URL);
+    var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
     return CreateDPMSourceBatch(
       builder,
       _SOURCE_NAME,
@@ -163,7 +206,10 @@ public struct DPMSourceBatch : IFlatbufferObject
       _RETRIEVED_AT,
       _PARSER_VERSION,
       _o.RECORD_COUNT,
-      _WARNINGS);
+      _WARNINGS,
+      _LICENSE,
+      _LICENSE_URL,
+      _CITATION);
   }
 }
 
@@ -178,6 +224,9 @@ public class DPMSourceBatchT
   public string PARSER_VERSION { get; set; }
   public ulong RECORD_COUNT { get; set; }
   public List<string> WARNINGS { get; set; }
+  public string LICENSE { get; set; }
+  public string LICENSE_URL { get; set; }
+  public string CITATION { get; set; }
 
   public DPMSourceBatchT() {
     this.SOURCE_NAME = null;
@@ -189,6 +238,9 @@ public class DPMSourceBatchT
     this.PARSER_VERSION = null;
     this.RECORD_COUNT = 0;
     this.WARNINGS = null;
+    this.LICENSE = null;
+    this.LICENSE_URL = null;
+    this.CITATION = null;
   }
 }
 
@@ -207,6 +259,9 @@ static public class DPMSourceBatchVerify
       && verifier.VerifyString(tablePos, 16 /*PARSER_VERSION*/, false)
       && verifier.VerifyField(tablePos, 18 /*RECORD_COUNT*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyVectorOfStrings(tablePos, 20 /*WARNINGS*/, false)
+      && verifier.VerifyString(tablePos, 22 /*LICENSE*/, false)
+      && verifier.VerifyString(tablePos, 24 /*LICENSE_URL*/, false)
+      && verifier.VerifyString(tablePos, 26 /*CITATION*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

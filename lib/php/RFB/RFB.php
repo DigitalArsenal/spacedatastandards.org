@@ -7,6 +7,17 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// RF Band Specification
+///
+/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+/// convention.
+///
+/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+/// transponder is therefore represented as TWO RFB records — one UPLINK and
+/// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 class RFB extends Table
 {
     /**
@@ -186,22 +197,104 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// NORAD catalog number of the spacecraft carrying this emitter. Joins to
+    /// CAT.NORAD_CAT_ID. 0 when unbound.
+    /**
+     * @return uint
+     */
+    public function getNORAD_CAT_ID()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Identifier of the physical transmitter, transceiver or transponder this
+    /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+    /// records of the same device share this value.
+    public function getID_TRANSMITTER()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Direction of this emission relative to the spacecraft.
+    /**
+     * @return sbyte
+     */
+    public function getLINK_DIRECTION()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkCategory::UPLINK;
+    }
+
+    /// Symbol rate in baud (symbols per second), NOT kilobaud.
+    /**
+     * @return double
+     */
+    public function getBAUD()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+    public function getSERVICE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Operational state of this emitter.
+    /**
+     * @return sbyte
+     */
+    public function getXMT_STATUS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rfTransmitterState::UNKNOWN;
+    }
+
+    /// True when the modulation sideband is inverted.
+    /**
+     * @return bool
+     */
+    public function getINVERT()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+    public function getIARU_COORDINATION()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Attribution/citation string the source license requires this record to
+    /// carry downstream.
+    public function getCITATION()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFB(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(16);
+        $builder->StartObject(25);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFB
      */
-    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $BANDWIDTH, $PEAK_GAIN, $EDGE_GAIN, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP)
+    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $BANDWIDTH, $PEAK_GAIN, $EDGE_GAIN, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP, $NORAD_CAT_ID, $ID_TRANSMITTER, $LINK_DIRECTION, $BAUD, $SERVICE, $XMT_STATUS, $INVERT, $IARU_COORDINATION, $CITATION)
     {
-        $builder->startObject(16);
+        $builder->startObject(25);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
@@ -218,6 +311,15 @@ class RFB extends Table
         self::addPOLARIZATION($builder, $POLARIZATION);
         self::addERP($builder, $ERP);
         self::addEIRP($builder, $EIRP);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
+        self::addID_TRANSMITTER($builder, $ID_TRANSMITTER);
+        self::addLINK_DIRECTION($builder, $LINK_DIRECTION);
+        self::addBAUD($builder, $BAUD);
+        self::addSERVICE($builder, $SERVICE);
+        self::addXMT_STATUS($builder, $XMT_STATUS);
+        self::addINVERT($builder, $INVERT);
+        self::addIARU_COORDINATION($builder, $IARU_COORDINATION);
+        self::addCITATION($builder, $CITATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -380,6 +482,96 @@ class RFB extends Table
     public static function addEIRP(FlatBufferBuilder $builder, $EIRP)
     {
         $builder->addDoubleX(15, $EIRP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
+    {
+        $builder->addUintX(16, $NORAD_CAT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID_TRANSMITTER(FlatBufferBuilder $builder, $ID_TRANSMITTER)
+    {
+        $builder->addOffsetX(17, $ID_TRANSMITTER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addLINK_DIRECTION(FlatBufferBuilder $builder, $LINK_DIRECTION)
+    {
+        $builder->addSbyteX(18, $LINK_DIRECTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBAUD(FlatBufferBuilder $builder, $BAUD)
+    {
+        $builder->addDoubleX(19, $BAUD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSERVICE(FlatBufferBuilder $builder, $SERVICE)
+    {
+        $builder->addOffsetX(20, $SERVICE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addXMT_STATUS(FlatBufferBuilder $builder, $XMT_STATUS)
+    {
+        $builder->addSbyteX(21, $XMT_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINVERT(FlatBufferBuilder $builder, $INVERT)
+    {
+        $builder->addBoolX(22, $INVERT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addIARU_COORDINATION(FlatBufferBuilder $builder, $IARU_COORDINATION)
+    {
+        $builder->addOffsetX(23, $IARU_COORDINATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCITATION(FlatBufferBuilder $builder, $CITATION)
+    {
+        $builder->addOffsetX(24, $CITATION, 0);
     }
 
     /**

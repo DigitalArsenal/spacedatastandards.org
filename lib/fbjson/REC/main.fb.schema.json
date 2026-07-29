@@ -14828,6 +14828,32 @@
         }
       }
     },
+    "rfTransmitterState": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "description": "Operational state of a single emitter.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ACTIVE": {
+          "value": 1
+        },
+        "INACTIVE": {
+          "value": 2
+        },
+        "INVALID": {
+          "value": 3
+        }
+      }
+    },
     "emitterType": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -23880,6 +23906,11 @@
           },
           "description": "Vector of PAYLOADS",
           "x-flatbuffer-type": "[PLD]"
+        },
+        "BUS_ID": {
+          "type": "string",
+          "description": "NOT duplicated here. Empty when the bus is unknown.",
+          "x-flatbuffer-type": "string"
         }
       },
       "description": "Catalog Entity Message"
@@ -29886,6 +29917,21 @@
           },
           "description": "Warnings or policy notes produced during normalization.",
           "x-flatbuffer-type": "[string]"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "propagate from this batch to every derived record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "Canonical URL of the license text.",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "republication to carry.",
+          "x-flatbuffer-type": "string"
         }
       },
       "description": "Source batch metadata bound into the dataset publication."
@@ -53412,9 +53458,91 @@
           "type": "number",
           "description": "Effective isotropic radiated power (dBW)",
           "x-flatbuffer-type": "double"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "description": "CAT.NORAD_CAT_ID. 0 when unbound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ID_TRANSMITTER": {
+          "type": "string",
+          "description": "records of the same device share this value.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_DIRECTION": {
+          "$ref": "#/definitions/linkCategory",
+          "description": "Direction of this emission relative to the spacecraft.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UPLINK": {
+              "value": 0
+            },
+            "DOWNLINK": {
+              "value": 1
+            },
+            "CROSSLINK": {
+              "value": 2
+            },
+            "INTER_SATELLITE": {
+              "value": 3
+            },
+            "GROUND_TO_GROUND": {
+              "value": 4
+            },
+            "RELAY": {
+              "value": 5
+            }
+          }
+        },
+        "BAUD": {
+          "type": "number",
+          "description": "Symbol rate in baud (symbols per second), NOT kilobaud.",
+          "x-flatbuffer-type": "double"
+        },
+        "SERVICE": {
+          "type": "string",
+          "description": "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
+          "x-flatbuffer-type": "string"
+        },
+        "XMT_STATUS": {
+          "$ref": "#/definitions/rfTransmitterState",
+          "description": "Operational state of this emitter.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "UNKNOWN",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ACTIVE": {
+              "value": 1
+            },
+            "INACTIVE": {
+              "value": 2
+            },
+            "INVALID": {
+              "value": 3
+            }
+          }
+        },
+        "INVERT": {
+          "type": "boolean",
+          "description": "True when the modulation sideband is inverted.",
+          "x-flatbuffer-type": "bool"
+        },
+        "IARU_COORDINATION": {
+          "type": "string",
+          "description": "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "carry downstream.",
+          "x-flatbuffer-type": "string"
         }
       },
-      "description": "RF Band Specification"
+      "description": "RF Band Specification  UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second), never kilobaud. Encoding a Hz value into a MHz field is a defect, not a convention.  One RFB record carries exactly one LINK_DIRECTION. A transceiver or transponder is therefore represented as TWO RFB records \u2014 one UPLINK and one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE, FREQ_MIN, FREQ_MAX and CENTER_FREQ."
     },
     "rfEmitterDetail": {
       "type": "object",

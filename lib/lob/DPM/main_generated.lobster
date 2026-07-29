@@ -253,13 +253,26 @@ class DPMSourceBatch : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
     def WARNINGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+    /// CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+    /// record derived from this batch may be republished; share-alike terms
+    /// propagate from this batch to every derived record.
+    def LICENSE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Canonical URL of the license text.
+    def LICENSE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 24)
+    /// Attribution/citation string the source license requires downstream
+    /// republication to carry.
+    def CITATION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 26)
 
 def GetRootAsDPMSourceBatch(buf:string): return DPMSourceBatch { buf, flatbuffers.indirect(buf, 0) }
 
 struct DPMSourceBatchBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(9)
+        b_.StartObject(12)
         return this
     def add_SOURCE_NAME(SOURCE_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, SOURCE_NAME)
@@ -287,6 +300,15 @@ struct DPMSourceBatchBuilder:
         return this
     def add_WARNINGS(WARNINGS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, WARNINGS)
+        return this
+    def add_LICENSE(LICENSE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, LICENSE)
+        return this
+    def add_LICENSE_URL(LICENSE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, LICENSE_URL)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, CITATION)
         return this
     def end():
         return b_.EndObject()

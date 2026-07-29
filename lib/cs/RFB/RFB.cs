@@ -7,6 +7,17 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// RF Band Specification
+///
+/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
+/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
+/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
+/// convention.
+///
+/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or
+/// transponder is therefore represented as TWO RFB records — one UPLINK and
+/// one DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,
+/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.
 public struct RFB : IFlatbufferObject
 {
   private Table __p;
@@ -81,6 +92,52 @@ public struct RFB : IFlatbufferObject
   public double ERP { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Effective isotropic radiated power (dBW)
   public double EIRP { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// NORAD catalog number of the spacecraft carrying this emitter. Joins to
+  /// CAT.NORAD_CAT_ID. 0 when unbound.
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Identifier of the physical transmitter, transceiver or transponder this
+  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+  /// records of the same device share this value.
+  public string ID_TRANSMITTER { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetID_TRANSMITTERBytes() { return __p.__vector_as_span<byte>(38, 1); }
+#else
+  public ArraySegment<byte>? GetID_TRANSMITTERBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public byte[] GetID_TRANSMITTERArray() { return __p.__vector_as_array<byte>(38); }
+  /// Direction of this emission relative to the spacecraft.
+  public linkCategory LINK_DIRECTION { get { int o = __p.__offset(40); return o != 0 ? (linkCategory)__p.bb.GetSbyte(o + __p.bb_pos) : linkCategory.UPLINK; } }
+  /// Symbol rate in baud (symbols per second), NOT kilobaud.
+  public double BAUD { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).
+  public string SERVICE { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSERVICEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetSERVICEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetSERVICEArray() { return __p.__vector_as_array<byte>(44); }
+  /// Operational state of this emitter.
+  public rfTransmitterState XMT_STATUS { get { int o = __p.__offset(46); return o != 0 ? (rfTransmitterState)__p.bb.GetSbyte(o + __p.bb_pos) : rfTransmitterState.UNKNOWN; } }
+  /// True when the modulation sideband is inverted.
+  public bool INVERT { get { int o = __p.__offset(48); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).
+  public string IARU_COORDINATION { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetIARU_COORDINATIONBytes() { return __p.__vector_as_span<byte>(50, 1); }
+#else
+  public ArraySegment<byte>? GetIARU_COORDINATIONBytes() { return __p.__vector_as_arraysegment(50); }
+#endif
+  public byte[] GetIARU_COORDINATIONArray() { return __p.__vector_as_array<byte>(50); }
+  /// Attribution/citation string the source license requires this record to
+  /// carry downstream.
+  public string CITATION { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCITATIONBytes() { return __p.__vector_as_span<byte>(52, 1); }
+#else
+  public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(52); }
+#endif
+  public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(52); }
 
   public static Offset<RFB> CreateRFB(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -98,8 +155,18 @@ public struct RFB : IFlatbufferObject
       double BEAMWIDTH = 0.0,
       rfPolarization POLARIZATION = rfPolarization.LHCP,
       double ERP = 0.0,
-      double EIRP = 0.0) {
-    builder.StartTable(16);
+      double EIRP = 0.0,
+      uint NORAD_CAT_ID = 0,
+      StringOffset ID_TRANSMITTEROffset = default(StringOffset),
+      linkCategory LINK_DIRECTION = linkCategory.UPLINK,
+      double BAUD = 0.0,
+      StringOffset SERVICEOffset = default(StringOffset),
+      rfTransmitterState XMT_STATUS = rfTransmitterState.UNKNOWN,
+      bool INVERT = false,
+      StringOffset IARU_COORDINATIONOffset = default(StringOffset),
+      StringOffset CITATIONOffset = default(StringOffset)) {
+    builder.StartTable(25);
+    RFB.AddBAUD(builder, BAUD);
     RFB.AddEIRP(builder, EIRP);
     RFB.AddERP(builder, ERP);
     RFB.AddBEAMWIDTH(builder, BEAMWIDTH);
@@ -109,17 +176,25 @@ public struct RFB : IFlatbufferObject
     RFB.AddCENTER_FREQ(builder, CENTER_FREQ);
     RFB.AddFREQ_MAX(builder, FREQ_MAX);
     RFB.AddFREQ_MIN(builder, FREQ_MIN);
+    RFB.AddCITATION(builder, CITATIONOffset);
+    RFB.AddIARU_COORDINATION(builder, IARU_COORDINATIONOffset);
+    RFB.AddSERVICE(builder, SERVICEOffset);
+    RFB.AddID_TRANSMITTER(builder, ID_TRANSMITTEROffset);
+    RFB.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     RFB.AddPURPOSE(builder, PURPOSEOffset);
     RFB.AddMODE(builder, MODEOffset);
     RFB.AddNAME(builder, NAMEOffset);
     RFB.AddID_ENTITY(builder, ID_ENTITYOffset);
     RFB.AddID(builder, IDOffset);
+    RFB.AddINVERT(builder, INVERT);
+    RFB.AddXMT_STATUS(builder, XMT_STATUS);
+    RFB.AddLINK_DIRECTION(builder, LINK_DIRECTION);
     RFB.AddPOLARIZATION(builder, POLARIZATION);
     RFB.AddBAND(builder, BAND);
     return RFB.EndRFB(builder);
   }
 
-  public static void StartRFB(FlatBufferBuilder builder) { builder.StartTable(16); }
+  public static void StartRFB(FlatBufferBuilder builder) { builder.StartTable(25); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
@@ -136,6 +211,15 @@ public struct RFB : IFlatbufferObject
   public static void AddPOLARIZATION(FlatBufferBuilder builder, rfPolarization POLARIZATION) { builder.AddSbyte(13, (sbyte)POLARIZATION, 0); }
   public static void AddERP(FlatBufferBuilder builder, double ERP) { builder.AddDouble(14, ERP, 0.0); }
   public static void AddEIRP(FlatBufferBuilder builder, double EIRP) { builder.AddDouble(15, EIRP, 0.0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(16, NORAD_CAT_ID, 0); }
+  public static void AddID_TRANSMITTER(FlatBufferBuilder builder, StringOffset ID_TRANSMITTEROffset) { builder.AddOffset(17, ID_TRANSMITTEROffset.Value, 0); }
+  public static void AddLINK_DIRECTION(FlatBufferBuilder builder, linkCategory LINK_DIRECTION) { builder.AddSbyte(18, (sbyte)LINK_DIRECTION, 0); }
+  public static void AddBAUD(FlatBufferBuilder builder, double BAUD) { builder.AddDouble(19, BAUD, 0.0); }
+  public static void AddSERVICE(FlatBufferBuilder builder, StringOffset SERVICEOffset) { builder.AddOffset(20, SERVICEOffset.Value, 0); }
+  public static void AddXMT_STATUS(FlatBufferBuilder builder, rfTransmitterState XMT_STATUS) { builder.AddSbyte(21, (sbyte)XMT_STATUS, 0); }
+  public static void AddINVERT(FlatBufferBuilder builder, bool INVERT) { builder.AddBool(22, INVERT, false); }
+  public static void AddIARU_COORDINATION(FlatBufferBuilder builder, StringOffset IARU_COORDINATIONOffset) { builder.AddOffset(23, IARU_COORDINATIONOffset.Value, 0); }
+  public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(24, CITATIONOffset.Value, 0); }
   public static Offset<RFB> EndRFB(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFB>(o);
@@ -164,6 +248,15 @@ public struct RFB : IFlatbufferObject
     _o.POLARIZATION = this.POLARIZATION;
     _o.ERP = this.ERP;
     _o.EIRP = this.EIRP;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
+    _o.ID_TRANSMITTER = this.ID_TRANSMITTER;
+    _o.LINK_DIRECTION = this.LINK_DIRECTION;
+    _o.BAUD = this.BAUD;
+    _o.SERVICE = this.SERVICE;
+    _o.XMT_STATUS = this.XMT_STATUS;
+    _o.INVERT = this.INVERT;
+    _o.IARU_COORDINATION = this.IARU_COORDINATION;
+    _o.CITATION = this.CITATION;
   }
   public static Offset<RFB> Pack(FlatBufferBuilder builder, RFBT _o) {
     if (_o == null) return default(Offset<RFB>);
@@ -172,6 +265,10 @@ public struct RFB : IFlatbufferObject
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _MODE = _o.MODE == null ? default(StringOffset) : builder.CreateString(_o.MODE);
     var _PURPOSE = _o.PURPOSE == null ? default(StringOffset) : builder.CreateString(_o.PURPOSE);
+    var _ID_TRANSMITTER = _o.ID_TRANSMITTER == null ? default(StringOffset) : builder.CreateString(_o.ID_TRANSMITTER);
+    var _SERVICE = _o.SERVICE == null ? default(StringOffset) : builder.CreateString(_o.SERVICE);
+    var _IARU_COORDINATION = _o.IARU_COORDINATION == null ? default(StringOffset) : builder.CreateString(_o.IARU_COORDINATION);
+    var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
     return CreateRFB(
       builder,
       _ID,
@@ -189,7 +286,16 @@ public struct RFB : IFlatbufferObject
       _o.BEAMWIDTH,
       _o.POLARIZATION,
       _o.ERP,
-      _o.EIRP);
+      _o.EIRP,
+      _o.NORAD_CAT_ID,
+      _ID_TRANSMITTER,
+      _o.LINK_DIRECTION,
+      _o.BAUD,
+      _SERVICE,
+      _o.XMT_STATUS,
+      _o.INVERT,
+      _IARU_COORDINATION,
+      _CITATION);
   }
 }
 
@@ -211,6 +317,15 @@ public class RFBT
   public rfPolarization POLARIZATION { get; set; }
   public double ERP { get; set; }
   public double EIRP { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
+  public string ID_TRANSMITTER { get; set; }
+  public linkCategory LINK_DIRECTION { get; set; }
+  public double BAUD { get; set; }
+  public string SERVICE { get; set; }
+  public rfTransmitterState XMT_STATUS { get; set; }
+  public bool INVERT { get; set; }
+  public string IARU_COORDINATION { get; set; }
+  public string CITATION { get; set; }
 
   public RFBT() {
     this.ID = null;
@@ -229,6 +344,15 @@ public class RFBT
     this.POLARIZATION = rfPolarization.LHCP;
     this.ERP = 0.0;
     this.EIRP = 0.0;
+    this.NORAD_CAT_ID = 0;
+    this.ID_TRANSMITTER = null;
+    this.LINK_DIRECTION = linkCategory.UPLINK;
+    this.BAUD = 0.0;
+    this.SERVICE = null;
+    this.XMT_STATUS = rfTransmitterState.UNKNOWN;
+    this.INVERT = false;
+    this.IARU_COORDINATION = null;
+    this.CITATION = null;
   }
   public static RFBT DeserializeFromBinary(byte[] fbBuffer) {
     return RFB.GetRootAsRFB(new ByteBuffer(fbBuffer)).UnPack();
@@ -262,6 +386,15 @@ static public class RFBVerify
       && verifier.VerifyField(tablePos, 30 /*POLARIZATION*/, 1 /*rfPolarization*/, 1, false)
       && verifier.VerifyField(tablePos, 32 /*ERP*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 34 /*EIRP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 38 /*ID_TRANSMITTER*/, false)
+      && verifier.VerifyField(tablePos, 40 /*LINK_DIRECTION*/, 1 /*linkCategory*/, 1, false)
+      && verifier.VerifyField(tablePos, 42 /*BAUD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 44 /*SERVICE*/, false)
+      && verifier.VerifyField(tablePos, 46 /*XMT_STATUS*/, 1 /*rfTransmitterState*/, 1, false)
+      && verifier.VerifyField(tablePos, 48 /*INVERT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 50 /*IARU_COORDINATION*/, false)
+      && verifier.VerifyString(tablePos, 52 /*CITATION*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

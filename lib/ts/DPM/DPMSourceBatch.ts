@@ -120,8 +120,42 @@ warningsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * SPDX license identifier governing the source data, e.g. CC-BY-4.0 or
+ * CC-BY-SA-4.0. Machine-readable license provenance is REQUIRED before any
+ * record derived from this batch may be republished; share-alike terms
+ * propagate from this batch to every derived record.
+ */
+LICENSE():string|null
+LICENSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LICENSE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Canonical URL of the license text.
+ */
+LICENSE_URL():string|null
+LICENSE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LICENSE_URL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Attribution/citation string the source license requires downstream
+ * republication to carry.
+ */
+CITATION():string|null
+CITATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CITATION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startDPMSourceBatch(builder:flatbuffers.Builder) {
-  builder.startObject(9);
+  builder.startObject(12);
 }
 
 static addSourceName(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset) {
@@ -172,12 +206,24 @@ static startWarningsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addLicense(builder:flatbuffers.Builder, LICENSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, LICENSEOffset, 0);
+}
+
+static addLicenseUrl(builder:flatbuffers.Builder, LICENSE_URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, LICENSE_URLOffset, 0);
+}
+
+static addCitation(builder:flatbuffers.Builder, CITATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, CITATIONOffset, 0);
+}
+
 static endDPMSourceBatch(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createDPMSourceBatch(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset, SOURCE_URLOffset:flatbuffers.Offset, SOURCE_SHA256Offset:flatbuffers.Offset, HTTP_ETAGOffset:flatbuffers.Offset, HTTP_LAST_MODIFIEDOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset, PARSER_VERSIONOffset:flatbuffers.Offset, RECORD_COUNT:bigint, WARNINGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDPMSourceBatch(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatbuffers.Offset, SOURCE_URLOffset:flatbuffers.Offset, SOURCE_SHA256Offset:flatbuffers.Offset, HTTP_ETAGOffset:flatbuffers.Offset, HTTP_LAST_MODIFIEDOffset:flatbuffers.Offset, RETRIEVED_ATOffset:flatbuffers.Offset, PARSER_VERSIONOffset:flatbuffers.Offset, RECORD_COUNT:bigint, WARNINGSOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, LICENSE_URLOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset):flatbuffers.Offset {
   DPMSourceBatch.startDPMSourceBatch(builder);
   DPMSourceBatch.addSourceName(builder, SOURCE_NAMEOffset);
   DPMSourceBatch.addSourceUrl(builder, SOURCE_URLOffset);
@@ -188,6 +234,9 @@ static createDPMSourceBatch(builder:flatbuffers.Builder, SOURCE_NAMEOffset:flatb
   DPMSourceBatch.addParserVersion(builder, PARSER_VERSIONOffset);
   DPMSourceBatch.addRecordCount(builder, RECORD_COUNT);
   DPMSourceBatch.addWarnings(builder, WARNINGSOffset);
+  DPMSourceBatch.addLicense(builder, LICENSEOffset);
+  DPMSourceBatch.addLicenseUrl(builder, LICENSE_URLOffset);
+  DPMSourceBatch.addCitation(builder, CITATIONOffset);
   return DPMSourceBatch.endDPMSourceBatch(builder);
 }
 
@@ -201,7 +250,10 @@ unpack(): DPMSourceBatchT {
     this.RETRIEVED_AT(),
     this.PARSER_VERSION(),
     this.RECORD_COUNT(),
-    this.bb!.createScalarList<string>(this.WARNINGS.bind(this), this.warningsLength())
+    this.bb!.createScalarList<string>(this.WARNINGS.bind(this), this.warningsLength()),
+    this.LICENSE(),
+    this.LICENSE_URL(),
+    this.CITATION()
   );
 }
 
@@ -216,6 +268,9 @@ unpackTo(_o: DPMSourceBatchT): void {
   _o.PARSER_VERSION = this.PARSER_VERSION();
   _o.RECORD_COUNT = this.RECORD_COUNT();
   _o.WARNINGS = this.bb!.createScalarList<string>(this.WARNINGS.bind(this), this.warningsLength());
+  _o.LICENSE = this.LICENSE();
+  _o.LICENSE_URL = this.LICENSE_URL();
+  _o.CITATION = this.CITATION();
 }
 }
 
@@ -229,7 +284,10 @@ constructor(
   public RETRIEVED_AT: string|Uint8Array|null = null,
   public PARSER_VERSION: string|Uint8Array|null = null,
   public RECORD_COUNT: bigint = BigInt('0'),
-  public WARNINGS: (string)[] = []
+  public WARNINGS: (string)[] = [],
+  public LICENSE: string|Uint8Array|null = null,
+  public LICENSE_URL: string|Uint8Array|null = null,
+  public CITATION: string|Uint8Array|null = null
 ){}
 
 
@@ -242,6 +300,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const RETRIEVED_AT = (this.RETRIEVED_AT !== null ? builder.createString(this.RETRIEVED_AT!) : 0);
   const PARSER_VERSION = (this.PARSER_VERSION !== null ? builder.createString(this.PARSER_VERSION!) : 0);
   const WARNINGS = DPMSourceBatch.createWarningsVector(builder, builder.createObjectOffsetList(this.WARNINGS));
+  const LICENSE = (this.LICENSE !== null ? builder.createString(this.LICENSE!) : 0);
+  const LICENSE_URL = (this.LICENSE_URL !== null ? builder.createString(this.LICENSE_URL!) : 0);
+  const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
 
   return DPMSourceBatch.createDPMSourceBatch(builder,
     SOURCE_NAME,
@@ -252,7 +313,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     RETRIEVED_AT,
     PARSER_VERSION,
     this.RECORD_COUNT,
-    WARNINGS
+    WARNINGS,
+    LICENSE,
+    LICENSE_URL,
+    CITATION
   );
 }
 }
