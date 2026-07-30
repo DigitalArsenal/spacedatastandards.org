@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.171.0+1785408377428",
+  version: "1.172.0+1785430892211",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -2295,6 +2295,417 @@ file_identifier "$LCH";`,
         "./dist/LCH/LCH.ts.tar.gz"
       ]
     },
+    OPP: {
+      IDL: `// Hash: f98f02698c8b5e704762f9f6a665efff550f665eedcd87cdfebe0cd851e0574e
+// Version: 1.171.0
+// -----------------------------------END_HEADER
+/// How one physical value was determined. Append new values only; never
+/// reorder or reuse existing values.
+enum oppDeterminationMethod : byte {
+  /// The source published the value without stating how it was obtained.
+  UNSPECIFIED,
+  /// Direct physical measurement: radar range measurement, laboratory weigh-in,
+  /// photometric observation, tape measure on the flight article.
+  MEASURED,
+  /// Published by the operator, manufacturer or launch provider for this
+  /// specific object.
+  OPERATOR_STATED,
+  /// The source's own estimate, stated as an estimate.
+  ESTIMATED,
+  /// Computed by the record's publisher from other values that each carry their
+  /// own provenance in this same record.
+  DERIVED,
+  /// Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model,
+  /// not the flight article, and is never presented as a physical measurement.
+  MODEL_DERIVED,
+  /// Taken from the bus design or from a sibling object in the same family
+  /// because no per-object value exists. Always an approximation.
+  INFERRED_FROM_FAMILY
+}
+
+/// Aspect convention a radar cross-section value was reported under. Append new
+/// values only; never reorder or reuse existing values.
+enum oppRcsAspect : byte {
+  /// The source states no aspect convention. ESA DISCOS characteristic
+  /// cross-sections and CelesTrak SATCAT RCS use this value.
+  UNSPECIFIED,
+  AVERAGE,
+  MINIMUM,
+  MAXIMUM,
+  MEDIAN,
+  HEAD_ON,
+  BROADSIDE,
+  NADIR
+}
+
+/// Functional role of one exterior surface. Append new values only; never
+/// reorder or reuse existing values.
+enum oppSurfaceKind : byte {
+  UNSPECIFIED,
+  BUS_BODY,
+  SOLAR_ARRAY,
+  ANTENNA_DISH,
+  ANTENNA_PANEL,
+  RADIATOR,
+  THERMAL_BLANKET,
+  OPTICAL_APERTURE,
+  BOOM,
+  TRUSS,
+  TANK,
+  NOZZLE,
+  SHIELD,
+  DOCKING_INTERFACE,
+  OTHER
+}
+
+/// Coarse material classification for surfaces whose exact material name is
+/// unknown or unhelpful. MATERIAL always carries the source's verbatim name;
+/// this enum is only a grouping. Append new values only; never reorder or reuse
+/// existing values.
+enum oppMaterialClass : byte {
+  UNSPECIFIED,
+  ALUMINIUM,
+  TITANIUM,
+  STEEL,
+  CARBON_COMPOSITE,
+  MULTI_LAYER_INSULATION,
+  SOLAR_CELL,
+  COVER_GLASS,
+  PAINT_WHITE,
+  PAINT_BLACK,
+  OPTICAL_SOLAR_REFLECTOR,
+  POLYIMIDE_FILM,
+  MESH,
+  CERAMIC,
+  GOLD_FOIL,
+  OTHER
+}
+
+/// Provenance for exactly one physical value.
+///
+/// This table is the mechanism by which the never-invent-data law is enforced
+/// in the IDL rather than in prose: no physical quantity in an $OPP can be
+/// expressed without one of these attached, so a value with no admissible
+/// source cannot be encoded at all. Unknown values are ABSENT. They are never
+/// zero, never a placeholder, and never carried forward from a different
+/// object.
+table OPPProvenance {
+  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
+  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  SOURCE:string (required);
+  /// The source's own identifier for the record this value was read from, such
+  /// as a DISCOS object id. Verbatim, never normalized.
+  SOURCE_RECORD_ID:string;
+  /// Deep link to the exact source record when the source publishes one.
+  SOURCE_URL:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the
+  /// instant the value describes: the epoch at which the property held. A
+  /// design or as-built value that does not change over time omits EPOCH.
+  EPOCH:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when
+  /// this record retrieved the value from SOURCE.
+  RETRIEVED_AT:string;
+  /// The source's own revision, edition or publication marker, verbatim.
+  SOURCE_VERSION:string;
+  METHOD:oppDeterminationMethod = UNSPECIFIED;
+  /// Terms under which SOURCE permits redistribution of the value, verbatim.
+  LICENSE:string;
+  /// Attribution string the source requires be displayed with the value.
+  ATTRIBUTION:string;
+  /// 64 lowercase hexadecimal characters encoding SHA-256 of the exact source
+  /// payload bytes the value was parsed from.
+  SOURCE_SHA256:string;
+  /// Free text qualifying the value, such as the source's own caveat.
+  NOTES:string;
+}
+
+/// One scalar physical quantity, its unit and its own provenance.
+///
+/// PROVENANCE is required: an OPPQuantity that exists names where it came from.
+/// Presence of the table is the signal that a value exists, so VALUE zero is a
+/// real zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.
+table OPPQuantity {
+  VALUE:double;
+  /// Unit symbol verbatim, never silently converted: "kg", "m", "m2", "m2/kg",
+  /// "kg/m2", "dBsm", "W", "mag". A converted value states the unit it was
+  /// converted to and records the conversion in PROVENANCE.NOTES with
+  /// PROVENANCE.METHOD DERIVED.
+  UNITS:string (required);
+  /// 1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;
+  /// a genuine stated sigma is never exactly zero.
+  SIGMA:double;
+  PROVENANCE:OPPProvenance (required);
+}
+
+/// Radar cross-section as reported for one band, polarization and aspect
+/// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
+/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
+/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
+/// MAXIMUM sharing one SOURCE.
+table OPPRadarCrossSection {
+  /// Radar band designation verbatim from the source: "UHF", "L", "S", "C",
+  /// "X", "Ku". Empty when the source states no band.
+  BAND:string;
+  /// Centre frequency [megahertz] when the source states one. Zero means
+  /// unstated.
+  FREQUENCY_MHZ:double;
+  /// Polarization verbatim from the source: "HH", "VV", "HV", "RCRC". Empty
+  /// when the source states none.
+  POLARIZATION:string;
+  ASPECT:oppRcsAspect = UNSPECIFIED;
+  /// The cross-section itself. UNITS is "m2" or "dBsm" as the source published
+  /// it; the two are never mixed within one entry and never silently converted.
+  CROSS_SECTION:OPPQuantity (required);
+  /// Size bucket verbatim when a source publishes a bucket instead of a number,
+  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// turned into a number.
+  SIZE_CLASS:string;
+  /// Sensor or facility that produced the measurement, when stated.
+  SENSOR:string;
+}
+
+/// Mass breakdown. Each component is independently sourced; a wet mass and a
+/// dry mass may legitimately come from different publishers and epochs.
+table OPPMass {
+  /// Mass without propellant or consumables [kg].
+  DRY:OPPQuantity;
+  /// Mass with propellant, at the stated epoch [kg].
+  WET:OPPQuantity;
+  /// Mass at separation from the launch vehicle [kg].
+  LAUNCH:OPPQuantity;
+  /// Propellant mass at the stated epoch [kg].
+  PROPELLANT:OPPQuantity;
+  /// Payload mass carried by the bus [kg].
+  PAYLOAD:OPPQuantity;
+  /// Best current estimate of mass at the record's epoch [kg].
+  CURRENT:OPPQuantity;
+}
+
+/// Physical envelope. Every extent is a sourced quantity. Extents measured off
+/// 3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the
+/// model, not the flight article.
+table OPPDimensions {
+  /// Extents along the object's own body axes [m].
+  BODY_X:OPPQuantity;
+  BODY_Y:OPPQuantity;
+  BODY_Z:OPPQuantity;
+  /// Envelope terms as ESA DISCOS publishes them [m].
+  HEIGHT:OPPQuantity;
+  WIDTH:OPPQuantity;
+  DEPTH:OPPQuantity;
+  DIAMETER:OPPQuantity;
+  /// Largest extent with appendages stowed [m].
+  SPAN_STOWED:OPPQuantity;
+  /// Largest extent with appendages deployed [m].
+  SPAN_DEPLOYED:OPPQuantity;
+  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
+  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  SHAPE:string;
+  /// Provenance of SHAPE. Present whenever SHAPE is nonempty.
+  SHAPE_PROVENANCE:OPPProvenance;
+}
+
+/// Projected areas and the ratios derived from them.
+table OPPAreas {
+  /// Average projected cross-sectional area over all aspects [m2].
+  CROSS_SECTIONAL_AVERAGE:OPPQuantity;
+  /// Smallest projected cross-sectional area [m2].
+  CROSS_SECTIONAL_MINIMUM:OPPQuantity;
+  /// Largest projected cross-sectional area [m2].
+  CROSS_SECTIONAL_MAXIMUM:OPPQuantity;
+  /// Total solar-array area [m2].
+  SOLAR_ARRAY:OPPQuantity;
+  /// Area-to-mass ratio [m2/kg], only when a source publishes one directly or
+  /// the publisher derives it with PROVENANCE.METHOD DERIVED.
+  AREA_TO_MASS_RATIO:OPPQuantity;
+  /// Ballistic coefficient [kg/m2].
+  BALLISTIC_COEFFICIENT:OPPQuantity;
+}
+
+/// One exterior surface of the object: what it is made of, how large it is and
+/// how it interacts with light.
+///
+/// $PNL carries the articulated panel model used for solar-radiation-pressure
+/// propagation; an $OPP surface is the sourced material inventory. When both
+/// exist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and
+/// GLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant
+/// named by OPP.ASSET.
+table OPPSurface {
+  /// Stable identifier for this surface within the record.
+  ID:string (required);
+  KIND:oppSurfaceKind = UNSPECIFIED;
+  /// Material name verbatim from the source: "Kapton MLI", "GaAs
+  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  MATERIAL:string;
+  MATERIAL_CLASS:oppMaterialClass = UNSPECIFIED;
+  /// How many identical surfaces this entry represents, such as two solar-array
+  /// wings.
+  COUNT:uint = 1;
+  /// Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned
+  /// field below carries its own.
+  PROVENANCE:OPPProvenance;
+  /// Area of one surface, not of COUNT surfaces [m2].
+  AREA:OPPQuantity;
+  /// Mass of one surface [kg].
+  MASS:OPPQuantity;
+  /// Fraction of incident radiation reflected specularly, dimensionless.
+  SPECULAR_REFLECTIVITY:OPPQuantity;
+  /// Fraction of incident radiation reflected diffusely, dimensionless.
+  DIFFUSE_REFLECTIVITY:OPPQuantity;
+  /// Solar absorptivity, dimensionless.
+  ABSORPTIVITY:OPPQuantity;
+  /// Infrared emissivity, dimensionless.
+  EMISSIVITY:OPPQuantity;
+  /// Join key to the $PNL panel representing this surface; holds that record's
+  /// PNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists.
+  PANEL_ID:string;
+  /// Name of the glTF material that renders this surface, verbatim, in the
+  /// variant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not
+  /// represented in the asset.
+  GLTF_MATERIAL_NAME:string;
+  /// Zero-based index into the glTF materials array of that same variant.
+  /// Negative one means no glTF material corresponds to this surface.
+  GLTF_MATERIAL_INDEX:int = -1;
+  NOTES:string;
+}
+
+/// Binding to the exact 3D asset bytes this record accompanies.
+///
+/// Every field is copied verbatim from the $VAM that governs the asset, so an
+/// $OPP is valid for exactly one reviewed variant. Different bytes are a
+/// different asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than
+/// repointing an existing one.
+table OPPAssetRef {
+  /// $VAM.ID verbatim.
+  VAM_ID:string (required);
+  /// $VAM.VERSION verbatim.
+  VAM_VERSION:string;
+  /// CIDv1 containing a multihash of the exact $VAM bytes.
+  VAM_CID:string;
+  /// $VAMVariant.ID verbatim: the specific glTF or GLB this record describes.
+  VARIANT_ID:string (required);
+  /// $VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters
+  /// encoding SHA-256 of the exact asset file bytes.
+  ASSET_SHA256:string (required);
+  /// $VAMVariant.CID verbatim.
+  ASSET_CID:string;
+  /// $VAMVariant.FILE_NAME verbatim.
+  ASSET_FILE_NAME:string;
+  /// $VAMVariant.MEDIA_TYPE verbatim.
+  ASSET_MEDIA_TYPE:string;
+  /// $VAMVariant.GLTF_VERSION verbatim.
+  GLTF_VERSION:string;
+  /// $VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID.
+  ENTITY_ID:string;
+  /// True only when the asset geometry was authored or rescaled to the physical
+  /// dimensions in this record. False, the default, means the asset is
+  /// representative and its geometry is not a source of physical dimensions.
+  GEOMETRY_MATCHES_PHYSICAL:bool = false;
+  /// Metres per asset unit for the named variant. Restates
+  /// $VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP.
+  METERS_PER_ASSET_UNIT:double = 1.0;
+}
+
+/// Object Physical Properties - the sourced physical description of one space
+/// object and, when one exists, of the exact 3D asset that represents it.
+///
+/// Division of labour with the neighbouring standards. $CAT is catalogue
+/// identity and orbit, and its RCS, SIZE and MASS scalars are unattributed
+/// convenience fields carried from the catalogue publisher. $BUS is the bus
+/// DESIGN, shared by every object built on it. $VAM is the asset manifest: the
+/// bytes, the licence, the review and the geometry metrics. $PNL is the
+/// articulated panel model consumed by solar-radiation-pressure propagation.
+/// $OPP is the per-object physical truth in which EVERY value names its own
+/// source, epoch and method. $OPP never restates orbital elements and never
+/// duplicates bus-design values; a per-object value that came from the bus
+/// design is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see
+/// that it is an approximation.
+///
+/// Joins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.
+/// ASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable
+/// non-catalogue key shared with $VAM for objects that have no catalogue entry.
+///
+/// Never-invent law, enforced by the shape rather than by prose: a physical
+/// quantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is
+/// required, so there is no encoding for a mass, dimension, area or
+/// cross-section that does not name where it came from. Unknown values are
+/// absent. A consumer that finds a field missing has learned that no admissible
+/// source published it.
+table OPP {
+  /// Stable identifier for this record.
+  ID:string (required);
+  /// SemVer 2.0.0 record-format version, not a content revision.
+  VERSION:string;
+  /// $CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number.
+  NORAD_CAT_ID:uint;
+  /// $CAT.OBJECT_ID verbatim: the COSPAR international designator.
+  OBJECT_ID:string;
+  /// $CAT.OBJECT_NAME verbatim, for display only. Never a join key.
+  OBJECT_NAME:string;
+  /// Stable non-catalogue entity key, such as an asset catalogue entity path.
+  /// MUST equal ASSET.ENTITY_ID when ASSET is present.
+  ENTITY_ID:string;
+  /// Join key to the $BUS record describing this object's bus design; holds
+  /// that record's BUS.ID verbatim. Empty when the bus is unknown or has no
+  /// $BUS record.
+  BUS_ID:string;
+  /// Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,
+  /// for objects whose family is known but has no $BUS record.
+  BUS_FAMILY:string;
+  /// Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty.
+  BUS_FAMILY_PROVENANCE:OPPProvenance;
+  /// Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE.
+  MANUFACTURER:string;
+  /// Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty.
+  MANUFACTURER_PROVENANCE:OPPProvenance;
+  MASS:OPPMass;
+  DIMENSIONS:OPPDimensions;
+  AREAS:OPPAreas;
+  /// One entry per band, polarization and aspect the sources publish. Empty
+  /// means no source published a radar cross-section for this object.
+  RADAR_CROSS_SECTIONS:[OPPRadarCrossSection];
+  /// Visual magnitude, UNITS "mag", with the observing conditions in
+  /// PROVENANCE.NOTES.
+  VISUAL_MAGNITUDE:OPPQuantity;
+  /// Material and surface inventory.
+  SURFACES:[OPPSurface];
+  /// Binding to the exact reviewed 3D asset this record accompanies. Absent for
+  /// an object with no asset; the physical values remain valid without it.
+  ASSET:OPPAssetRef;
+  /// Every source consulted while building this record, including sources that
+  /// yielded no value. Lets a consumer distinguish "not looked for" from
+  /// "looked for and not published".
+  SOURCES:[OPPProvenance];
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when
+  /// the record was created.
+  CREATED_AT:string;
+  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when
+  /// the record was last updated.
+  UPDATED_AT:string;
+  /// CIDv1 containing a multihash of the exact superseded $OPP bytes.
+  SUPERSEDES_OPP_CID:string;
+  NOTES:string;
+}
+
+root_type OPP;
+file_identifier "$OPP";`,
+      files: [
+        "./dist/OPP/OPP.sw.tar.gz",
+        "./dist/OPP/OPP.py.tar.gz",
+        "./dist/OPP/OPP.lob.tar.gz",
+        "./dist/OPP/OPP.go.tar.gz",
+        "./dist/OPP/OPP.js.tar.gz",
+        "./dist/OPP/OPP.dart.tar.gz",
+        "./dist/OPP/OPP.cs.tar.gz",
+        "./dist/OPP/OPP.java.tar.gz",
+        "./dist/OPP/OPP.rs.tar.gz",
+        "./dist/OPP/OPP.php.tar.gz",
+        "./dist/OPP/OPP.json.tar.gz",
+        "./dist/OPP/OPP.cpp.tar.gz",
+        "./dist/OPP/OPP.kt.tar.gz",
+        "./dist/OPP/OPP.ts.tar.gz"
+      ]
+    },
     HFC: {
       IDL: '// Hash: 813497646bfa599d98019350ba0f9d2d4c7f78a8dc9c7f72179efe45f3c6e1b4\n// Version: 1.100.0\n// -----------------------------------END_HEADER\ninclude "../ATM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OCM/main.fbs";\n\n/// Hypersonic flight regime classification.\nenum hfcFlowRegime : byte {\n  UNKNOWN,\n  SUPERSONIC,\n  HYPERSONIC,\n  RAREFIED,\n  TRANSITIONAL,\n  CONTINUUM\n}\n\n/// How the hypersonic propagator is coupled to atmosphere providers.\nenum hfcAtmosphereCouplingMode : byte {\n  UNKNOWN,\n  STATIC_PROFILE,\n  BATCH_QUERY,\n  STEP_QUERY,\n  EXTERNAL_PROVIDER\n}\n\n/// Hypersonic Flight Conditions\ntable HFC {\n  /// Producer-defined message identifier.\n  MESSAGE_ID:string;\n  /// Message creation date in ISO 8601 UTC format.\n  CREATION_DATE:string;\n  /// Creating agency, application, or service.\n  ORIGINATOR:string;\n  /// Object, vehicle, or trajectory name.\n  OBJECT_NAME:string;\n  /// Time system used by all epochs.\n  TIME_SYSTEM:string;\n  /// Reference frame for state vectors.\n  REF_FRAME:string;\n  /// Start epoch for compact trajectory and condition arrays.\n  START_TIME:string;\n  /// Stop epoch for compact trajectory and condition arrays.\n  STOP_TIME:string;\n  /// Uniform step size in seconds. Use zero when samples are epoch-tagged elsewhere.\n  STEP_SIZE:double;\n  /// Source OEM ephemeris when conditions were evaluated from orbit ephemeris data.\n  SOURCE_OEM:OEM;\n  /// Source OCM trajectory when conditions were evaluated from comprehensive orbit data.\n  SOURCE_OCM:OCM;\n  /// Atmosphere model request used by the propagator.\n  ATMOSPHERE:ATM;\n  /// Atmosphere provider or module identifier.\n  ATMOSPHERE_PROVIDER:string;\n  /// Atmosphere model revision, data release, or configuration hash.\n  ATMOSPHERE_MODEL_REVISION:string;\n  /// Coupling mode used between the propagator and atmosphere provider.\n  ATMOSPHERE_COUPLING:hfcAtmosphereCouplingMode;\n  /// Aerothermal model name.\n  AEROTHERMAL_MODEL:string;\n  /// Gas model name.\n  GAS_MODEL:string;\n  /// Flow regime classification for the sampled trajectory.\n  FLOW_REGIME:hfcFlowRegime;\n  /// Number of position/velocity components per state sample.\n  STATE_VECTOR_SIZE:uint = 6;\n  /// Flat state array [x, y, z, vx, vy, vz, ...] in km and km/s.\n  STATE_DATA:[double];\n  /// Epochs for irregularly sampled condition arrays.\n  SAMPLE_EPOCHS:[string];\n  /// Geodetic latitude samples in degrees.\n  LATITUDE_DEG:[double];\n  /// Geodetic longitude samples in degrees.\n  LONGITUDE_DEG:[double];\n  /// Altitude samples in meters.\n  ALTITUDE_M:[double];\n  /// Inertial or relative speed samples in meters per second.\n  SPEED_M_PER_S:[double];\n  /// Mach number samples.\n  MACH:[double];\n  /// Dynamic pressure samples in pascals.\n  DYNAMIC_PRESSURE_PA:[double];\n  /// Atmospheric density samples in kilograms per cubic meter.\n  DENSITY_KG_PER_M3:[double];\n  /// Atmospheric temperature samples in kelvin.\n  TEMPERATURE_K:[double];\n  /// Static pressure samples in pascals.\n  PRESSURE_PA:[double];\n  /// Speed of sound samples in meters per second.\n  SPEED_OF_SOUND_M_PER_S:[double];\n  /// Knudsen number samples.\n  KNUDSEN_NUMBER:[double];\n  /// Reynolds number samples.\n  REYNOLDS_NUMBER:[double];\n  /// Convective heat flux samples in watts per square meter.\n  CONVECTIVE_HEAT_FLUX_W_PER_M2:[double];\n  /// Radiative heat flux samples in watts per square meter.\n  RADIATIVE_HEAT_FLUX_W_PER_M2:[double];\n  /// Stagnation heat flux samples in watts per square meter.\n  STAGNATION_HEAT_FLUX_W_PER_M2:[double];\n  /// Normal load factor samples in g.\n  LOAD_FACTOR_G:[double];\n  /// Angle of attack samples in degrees.\n  ANGLE_OF_ATTACK_DEG:[double];\n  /// Sideslip angle samples in degrees.\n  SIDESLIP_DEG:[double];\n  /// Bank angle samples in degrees.\n  BANK_ANGLE_DEG:[double];\n  /// Vehicle reference area in square meters.\n  REFERENCE_AREA_M2:double;\n  /// Vehicle reference length in meters.\n  REFERENCE_LENGTH_M:double;\n  /// Nose radius in meters.\n  NOSE_RADIUS_M:double;\n  /// Vehicle mass in kilograms.\n  MASS_KG:double;\n  /// Wall or surface temperature in kelvin.\n  SURFACE_TEMPERATURE_K:double;\n  /// Free-form model assumptions or limitations.\n  ASSUMPTIONS:[string];\n  /// Additional comments.\n  COMMENT:string;\n}\n\nroot_type HFC;\nfile_identifier "$HFC";',
       files: [
@@ -4353,7 +4764,7 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 31fd3da2aad11ec967d9978432d556a70ceb8792613f55cc13c37f4287571686\n// Version: 1.44.45\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PMM/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM, PMM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: fb89ee90483e60993ea3d585c0a5516c50413b75d8d02cce05f3c8b807e41732\n// Version: 1.44.46\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OPP/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PMM/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM, PMM, OPP\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -17551,6 +17962,546 @@ var json_default = {
         }
       },
       $ref: "#/definitions/LCH"
+    },
+    OPP: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        oppDeterminationMethod: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEASURED",
+            "OPERATOR_STATED",
+            "ESTIMATED",
+            "DERIVED",
+            "MODEL_DERIVED",
+            "INFERRED_FROM_FAMILY"
+          ]
+        },
+        oppRcsAspect: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AVERAGE",
+            "MINIMUM",
+            "MAXIMUM",
+            "MEDIAN",
+            "HEAD_ON",
+            "BROADSIDE",
+            "NADIR"
+          ]
+        },
+        oppSurfaceKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BUS_BODY",
+            "SOLAR_ARRAY",
+            "ANTENNA_DISH",
+            "ANTENNA_PANEL",
+            "RADIATOR",
+            "THERMAL_BLANKET",
+            "OPTICAL_APERTURE",
+            "BOOM",
+            "TRUSS",
+            "TANK",
+            "NOZZLE",
+            "SHIELD",
+            "DOCKING_INTERFACE",
+            "OTHER"
+          ]
+        },
+        oppMaterialClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ALUMINIUM",
+            "TITANIUM",
+            "STEEL",
+            "CARBON_COMPOSITE",
+            "MULTI_LAYER_INSULATION",
+            "SOLAR_CELL",
+            "COVER_GLASS",
+            "PAINT_WHITE",
+            "PAINT_BLACK",
+            "OPTICAL_SOLAR_REFLECTOR",
+            "POLYIMIDE_FILM",
+            "MESH",
+            "CERAMIC",
+            "GOLD_FOIL",
+            "OTHER"
+          ]
+        },
+        OPPProvenance: {
+          type: "object",
+          description: "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
+          properties: {
+            SOURCE: {
+              type: "string",
+              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
+"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Deep link to the exact source record when the source publishes one."
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE."
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's own revision, edition or publication marker, verbatim."
+            },
+            METHOD: {
+              $ref: "#/definitions/oppDeterminationMethod"
+            },
+            LICENSE: {
+              type: "string",
+              description: "Terms under which SOURCE permits redistribution of the value, verbatim."
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution string the source requires be displayed with the value."
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from."
+            },
+            NOTES: {
+              type: "string",
+              description: "Free text qualifying the value, such as the source's own caveat."
+            }
+          },
+          required: [
+            "SOURCE"
+          ],
+          additionalProperties: false
+        },
+        OPPQuantity: {
+          type: "object",
+          description: "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+          properties: {
+            VALUE: {
+              type: "number"
+            },
+            UNITS: {
+              type: "string",
+              description: 'Unit symbol verbatim, never silently converted: "kg", "m", "m2", "m2/kg",\n"kg/m2", "dBsm", "W", "mag". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED.'
+            },
+            SIGMA: {
+              type: "number",
+              description: "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance"
+            }
+          },
+          required: [
+            "UNITS",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        OPPRadarCrossSection: {
+          type: "object",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          properties: {
+            BAND: {
+              type: "string",
+              description: 'Radar band designation verbatim from the source: "UHF", "L", "S", "C",\n"X", "Ku". Empty when the source states no band.'
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Centre frequency [megahertz] when the source states one. Zero means\nunstated."
+            },
+            POLARIZATION: {
+              type: "string",
+              description: 'Polarization verbatim from the source: "HH", "VV", "HV", "RCRC". Empty\nwhen the source states none.'
+            },
+            ASPECT: {
+              $ref: "#/definitions/oppRcsAspect"
+            },
+            CROSS_SECTION: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'The cross-section itself. UNITS is "m2" or "dBsm" as the source published\nit; the two are never mixed within one entry and never silently converted.'
+            },
+            SIZE_CLASS: {
+              type: "string",
+              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.'
+            },
+            SENSOR: {
+              type: "string",
+              description: "Sensor or facility that produced the measurement, when stated."
+            }
+          },
+          required: [
+            "CROSS_SECTION"
+          ],
+          additionalProperties: false
+        },
+        OPPMass: {
+          type: "object",
+          description: "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+          properties: {
+            DRY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass without propellant or consumables [kg]."
+            },
+            WET: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass with propellant, at the stated epoch [kg]."
+            },
+            LAUNCH: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass at separation from the launch vehicle [kg]."
+            },
+            PROPELLANT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Propellant mass at the stated epoch [kg]."
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Payload mass carried by the bus [kg]."
+            },
+            CURRENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Best current estimate of mass at the record's epoch [kg]."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPDimensions: {
+          type: "object",
+          description: "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+          properties: {
+            BODY_X: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Extents along the object's own body axes [m]."
+            },
+            BODY_Y: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            BODY_Z: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            HEIGHT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Envelope terms as ESA DISCOS publishes them [m]."
+            },
+            WIDTH: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            DEPTH: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            DIAMETER: {
+              $ref: "#/definitions/OPPQuantity"
+            },
+            SPAN_STOWED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages stowed [m]."
+            },
+            SPAN_DEPLOYED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages deployed [m]."
+            },
+            SHAPE: {
+              type: "string",
+              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
+            },
+            SHAPE_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of SHAPE. Present whenever SHAPE is nonempty."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPAreas: {
+          type: "object",
+          description: "Projected areas and the ratios derived from them.",
+          properties: {
+            CROSS_SECTIONAL_AVERAGE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Average projected cross-sectional area over all aspects [m2]."
+            },
+            CROSS_SECTIONAL_MINIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Smallest projected cross-sectional area [m2]."
+            },
+            CROSS_SECTIONAL_MAXIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest projected cross-sectional area [m2]."
+            },
+            SOLAR_ARRAY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Total solar-array area [m2]."
+            },
+            AREA_TO_MASS_RATIO: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED."
+            },
+            BALLISTIC_COEFFICIENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Ballistic coefficient [kg/m2]."
+            }
+          },
+          additionalProperties: false
+        },
+        OPPSurface: {
+          type: "object",
+          description: "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this surface within the record."
+            },
+            KIND: {
+              $ref: "#/definitions/oppSurfaceKind"
+            },
+            MATERIAL: {
+              type: "string",
+              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.'
+            },
+            MATERIAL_CLASS: {
+              $ref: "#/definitions/oppMaterialClass"
+            },
+            COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "How many identical surfaces this entry represents, such as two solar-array\nwings."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own."
+            },
+            AREA: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area of one surface, not of COUNT surfaces [m2]."
+            },
+            MASS: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass of one surface [kg]."
+            },
+            SPECULAR_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected specularly, dimensionless."
+            },
+            DIFFUSE_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected diffusely, dimensionless."
+            },
+            ABSORPTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Solar absorptivity, dimensionless."
+            },
+            EMISSIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Infrared emissivity, dimensionless."
+            },
+            PANEL_ID: {
+              type: "string",
+              description: "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists."
+            },
+            GLTF_MATERIAL_NAME: {
+              type: "string",
+              description: "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset."
+            },
+            GLTF_MATERIAL_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        OPPAssetRef: {
+          type: "object",
+          description: "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+          properties: {
+            VAM_ID: {
+              type: "string",
+              description: "$VAM.ID verbatim."
+            },
+            VAM_VERSION: {
+              type: "string",
+              description: "$VAM.VERSION verbatim."
+            },
+            VAM_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact $VAM bytes."
+            },
+            VARIANT_ID: {
+              type: "string",
+              description: "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes."
+            },
+            ASSET_SHA256: {
+              type: "string",
+              description: "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes."
+            },
+            ASSET_CID: {
+              type: "string",
+              description: "$VAMVariant.CID verbatim."
+            },
+            ASSET_FILE_NAME: {
+              type: "string",
+              description: "$VAMVariant.FILE_NAME verbatim."
+            },
+            ASSET_MEDIA_TYPE: {
+              type: "string",
+              description: "$VAMVariant.MEDIA_TYPE verbatim."
+            },
+            GLTF_VERSION: {
+              type: "string",
+              description: "$VAMVariant.GLTF_VERSION verbatim."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID."
+            },
+            GEOMETRY_MATCHES_PHYSICAL: {
+              type: "boolean",
+              description: "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions."
+            },
+            METERS_PER_ASSET_UNIT: {
+              type: "number",
+              description: "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP."
+            }
+          },
+          required: [
+            "VAM_ID",
+            "VARIANT_ID",
+            "ASSET_SHA256"
+          ],
+          additionalProperties: false
+        },
+        OPP: {
+          type: "object",
+          description: "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this record."
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 record-format version, not a content revision."
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID verbatim: the COSPAR international designator."
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "$CAT.OBJECT_NAME verbatim, for display only. Never a join key."
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present."
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record."
+            },
+            BUS_FAMILY: {
+              type: "string",
+              description: "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record."
+            },
+            BUS_FAMILY_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty."
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE."
+            },
+            MANUFACTURER_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty."
+            },
+            MASS: {
+              $ref: "#/definitions/OPPMass"
+            },
+            DIMENSIONS: {
+              $ref: "#/definitions/OPPDimensions"
+            },
+            AREAS: {
+              $ref: "#/definitions/OPPAreas"
+            },
+            RADAR_CROSS_SECTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPRadarCrossSection"
+              },
+              description: "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object."
+            },
+            VISUAL_MAGNITUDE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'Visual magnitude, UNITS "mag", with the observing conditions in\nPROVENANCE.NOTES.'
+            },
+            SURFACES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPSurface"
+              },
+              description: "Material and surface inventory."
+            },
+            ASSET: {
+              $ref: "#/definitions/OPPAssetRef",
+              description: "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it."
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPProvenance"
+              },
+              description: 'Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish "not looked for" from\n"looked for and not published".'
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created."
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated."
+            },
+            SUPERSEDES_OPP_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact superseded $OPP bytes."
+            },
+            NOTES: {
+              type: "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/OPP"
     },
     HFC: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -75733,6 +76684,981 @@ var fbjson_default = {
       $ref: "#/definitions/LCH",
       "x-flatbuffer-root-type": "LCH",
       "x-flatbuffer-file-identifier": "$LCH"
+    },
+    OPP: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        oppDeterminationMethod: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEASURED",
+            "OPERATOR_STATED",
+            "ESTIMATED",
+            "DERIVED",
+            "MODEL_DERIVED",
+            "INFERRED_FROM_FAMILY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source published the value without stating how it was obtained."
+            },
+            MEASURED: {
+              value: 1,
+              description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+            },
+            OPERATOR_STATED: {
+              value: 2,
+              description: "Published by the operator, manufacturer or launch provider for this specific object."
+            },
+            ESTIMATED: {
+              value: 3,
+              description: "The source's own estimate, stated as an estimate."
+            },
+            DERIVED: {
+              value: 4,
+              description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+            },
+            MODEL_DERIVED: {
+              value: 5,
+              description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+            },
+            INFERRED_FROM_FAMILY: {
+              value: 6,
+              description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            }
+          }
+        },
+        oppRcsAspect: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AVERAGE",
+            "MINIMUM",
+            "MAXIMUM",
+            "MEDIAN",
+            "HEAD_ON",
+            "BROADSIDE",
+            "NADIR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+            },
+            AVERAGE: {
+              value: 1
+            },
+            MINIMUM: {
+              value: 2
+            },
+            MAXIMUM: {
+              value: 3
+            },
+            MEDIAN: {
+              value: 4
+            },
+            HEAD_ON: {
+              value: 5
+            },
+            BROADSIDE: {
+              value: 6
+            },
+            NADIR: {
+              value: 7
+            }
+          }
+        },
+        oppSurfaceKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BUS_BODY",
+            "SOLAR_ARRAY",
+            "ANTENNA_DISH",
+            "ANTENNA_PANEL",
+            "RADIATOR",
+            "THERMAL_BLANKET",
+            "OPTICAL_APERTURE",
+            "BOOM",
+            "TRUSS",
+            "TANK",
+            "NOZZLE",
+            "SHIELD",
+            "DOCKING_INTERFACE",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            BUS_BODY: {
+              value: 1
+            },
+            SOLAR_ARRAY: {
+              value: 2
+            },
+            ANTENNA_DISH: {
+              value: 3
+            },
+            ANTENNA_PANEL: {
+              value: 4
+            },
+            RADIATOR: {
+              value: 5
+            },
+            THERMAL_BLANKET: {
+              value: 6
+            },
+            OPTICAL_APERTURE: {
+              value: 7
+            },
+            BOOM: {
+              value: 8
+            },
+            TRUSS: {
+              value: 9
+            },
+            TANK: {
+              value: 10
+            },
+            NOZZLE: {
+              value: 11
+            },
+            SHIELD: {
+              value: 12
+            },
+            DOCKING_INTERFACE: {
+              value: 13
+            },
+            OTHER: {
+              value: 14
+            }
+          }
+        },
+        oppMaterialClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ALUMINIUM",
+            "TITANIUM",
+            "STEEL",
+            "CARBON_COMPOSITE",
+            "MULTI_LAYER_INSULATION",
+            "SOLAR_CELL",
+            "COVER_GLASS",
+            "PAINT_WHITE",
+            "PAINT_BLACK",
+            "OPTICAL_SOLAR_REFLECTOR",
+            "POLYIMIDE_FILM",
+            "MESH",
+            "CERAMIC",
+            "GOLD_FOIL",
+            "OTHER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ALUMINIUM: {
+              value: 1
+            },
+            TITANIUM: {
+              value: 2
+            },
+            STEEL: {
+              value: 3
+            },
+            CARBON_COMPOSITE: {
+              value: 4
+            },
+            MULTI_LAYER_INSULATION: {
+              value: 5
+            },
+            SOLAR_CELL: {
+              value: 6
+            },
+            COVER_GLASS: {
+              value: 7
+            },
+            PAINT_WHITE: {
+              value: 8
+            },
+            PAINT_BLACK: {
+              value: 9
+            },
+            OPTICAL_SOLAR_REFLECTOR: {
+              value: 10
+            },
+            POLYIMIDE_FILM: {
+              value: 11
+            },
+            MESH: {
+              value: 12
+            },
+            CERAMIC: {
+              value: 13
+            },
+            GOLD_FOIL: {
+              value: 14
+            },
+            OTHER: {
+              value: 15
+            }
+          }
+        },
+        OPPProvenance: {
+          type: "object",
+          description: "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
+          properties: {
+            SOURCE: {
+              type: "string",
+              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
+"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`,
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Deep link to the exact source record when the source publishes one.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's own revision, edition or publication marker, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            METHOD: {
+              $ref: "#/definitions/oppDeterminationMethod",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source published the value without stating how it was obtained."
+                },
+                MEASURED: {
+                  value: 1,
+                  description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+                },
+                OPERATOR_STATED: {
+                  value: 2,
+                  description: "Published by the operator, manufacturer or launch provider for this specific object."
+                },
+                ESTIMATED: {
+                  value: 3,
+                  description: "The source's own estimate, stated as an estimate."
+                },
+                DERIVED: {
+                  value: 4,
+                  description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+                },
+                MODEL_DERIVED: {
+                  value: 5,
+                  description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+                },
+                INFERRED_FROM_FAMILY: {
+                  value: 6,
+                  description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LICENSE: {
+              type: "string",
+              description: "Terms under which SOURCE permits redistribution of the value, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution string the source requires be displayed with the value.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              description: "Free text qualifying the value, such as the source's own caveat.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "SOURCE"
+          ],
+          additionalProperties: false
+        },
+        OPPQuantity: {
+          type: "object",
+          description: "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+          properties: {
+            VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: 'Unit symbol verbatim, never silently converted: "kg", "m", "m2", "m2/kg",\n"kg/m2", "dBsm", "W", "mag". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED.',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SIGMA: {
+              type: "number",
+              description: "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero.",
+              "x-flatbuffer-type": "double"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              "x-flatbuffer-type": "OPPProvenance",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "UNITS",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        OPPRadarCrossSection: {
+          type: "object",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          properties: {
+            BAND: {
+              type: "string",
+              description: 'Radar band designation verbatim from the source: "UHF", "L", "S", "C",\n"X", "Ku". Empty when the source states no band.',
+              "x-flatbuffer-type": "string"
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Centre frequency [megahertz] when the source states one. Zero means\nunstated.",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              type: "string",
+              description: 'Polarization verbatim from the source: "HH", "VV", "HV", "RCRC". Empty\nwhen the source states none.',
+              "x-flatbuffer-type": "string"
+            },
+            ASPECT: {
+              $ref: "#/definitions/oppRcsAspect",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+                },
+                AVERAGE: {
+                  value: 1
+                },
+                MINIMUM: {
+                  value: 2
+                },
+                MAXIMUM: {
+                  value: 3
+                },
+                MEDIAN: {
+                  value: 4
+                },
+                HEAD_ON: {
+                  value: 5
+                },
+                BROADSIDE: {
+                  value: 6
+                },
+                NADIR: {
+                  value: 7
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CROSS_SECTION: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'The cross-section itself. UNITS is "m2" or "dBsm" as the source published\nit; the two are never mixed within one entry and never silently converted.',
+              "x-flatbuffer-type": "OPPQuantity",
+              "x-flatbuffer-required": true
+            },
+            SIZE_CLASS: {
+              type: "string",
+              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.',
+              "x-flatbuffer-type": "string"
+            },
+            SENSOR: {
+              type: "string",
+              description: "Sensor or facility that produced the measurement, when stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "CROSS_SECTION"
+          ],
+          additionalProperties: false
+        },
+        OPPMass: {
+          type: "object",
+          description: "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+          properties: {
+            DRY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass without propellant or consumables [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WET: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass with propellant, at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            LAUNCH: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass at separation from the launch vehicle [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PROPELLANT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Propellant mass at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Payload mass carried by the bus [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CURRENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Best current estimate of mass at the record's epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPDimensions: {
+          type: "object",
+          description: "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+          properties: {
+            BODY_X: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Extents along the object's own body axes [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Y: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Z: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            HEIGHT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Envelope terms as ESA DISCOS publishes them [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WIDTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DEPTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIAMETER: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_STOWED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages stowed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_DEPLOYED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages deployed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SHAPE: {
+              type: "string",
+              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
+              "x-flatbuffer-type": "string"
+            },
+            SHAPE_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of SHAPE. Present whenever SHAPE is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPAreas: {
+          type: "object",
+          description: "Projected areas and the ratios derived from them.",
+          properties: {
+            CROSS_SECTIONAL_AVERAGE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Average projected cross-sectional area over all aspects [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MINIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Smallest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MAXIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SOLAR_ARRAY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Total solar-array area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            AREA_TO_MASS_RATIO: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BALLISTIC_COEFFICIENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Ballistic coefficient [kg/m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          additionalProperties: false
+        },
+        OPPSurface: {
+          type: "object",
+          description: "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this surface within the record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            KIND: {
+              $ref: "#/definitions/oppSurfaceKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                BUS_BODY: {
+                  value: 1
+                },
+                SOLAR_ARRAY: {
+                  value: 2
+                },
+                ANTENNA_DISH: {
+                  value: 3
+                },
+                ANTENNA_PANEL: {
+                  value: 4
+                },
+                RADIATOR: {
+                  value: 5
+                },
+                THERMAL_BLANKET: {
+                  value: 6
+                },
+                OPTICAL_APERTURE: {
+                  value: 7
+                },
+                BOOM: {
+                  value: 8
+                },
+                TRUSS: {
+                  value: 9
+                },
+                TANK: {
+                  value: 10
+                },
+                NOZZLE: {
+                  value: 11
+                },
+                SHIELD: {
+                  value: 12
+                },
+                DOCKING_INTERFACE: {
+                  value: 13
+                },
+                OTHER: {
+                  value: 14
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            MATERIAL: {
+              type: "string",
+              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.',
+              "x-flatbuffer-type": "string"
+            },
+            MATERIAL_CLASS: {
+              $ref: "#/definitions/oppMaterialClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ALUMINIUM: {
+                  value: 1
+                },
+                TITANIUM: {
+                  value: 2
+                },
+                STEEL: {
+                  value: 3
+                },
+                CARBON_COMPOSITE: {
+                  value: 4
+                },
+                MULTI_LAYER_INSULATION: {
+                  value: 5
+                },
+                SOLAR_CELL: {
+                  value: 6
+                },
+                COVER_GLASS: {
+                  value: 7
+                },
+                PAINT_WHITE: {
+                  value: 8
+                },
+                PAINT_BLACK: {
+                  value: 9
+                },
+                OPTICAL_SOLAR_REFLECTOR: {
+                  value: 10
+                },
+                POLYIMIDE_FILM: {
+                  value: 11
+                },
+                MESH: {
+                  value: 12
+                },
+                CERAMIC: {
+                  value: 13
+                },
+                GOLD_FOIL: {
+                  value: 14
+                },
+                OTHER: {
+                  value: 15
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "How many identical surfaces this entry represents, such as two solar-array\nwings.",
+              "x-flatbuffer-type": "uint",
+              "x-flatbuffer-default": "1"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            AREA: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area of one surface, not of COUNT surfaces [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass of one surface [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPECULAR_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected specularly, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIFFUSE_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected diffusely, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            ABSORPTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Solar absorptivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            EMISSIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Infrared emissivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PANEL_ID: {
+              type: "string",
+              description: "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_NAME: {
+              type: "string",
+              description: "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        },
+        OPPAssetRef: {
+          type: "object",
+          description: "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+          properties: {
+            VAM_ID: {
+              type: "string",
+              description: "$VAM.ID verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VAM_VERSION: {
+              type: "string",
+              description: "$VAM.VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            VAM_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact $VAM bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            VARIANT_ID: {
+              type: "string",
+              description: "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_SHA256: {
+              type: "string",
+              description: "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_CID: {
+              type: "string",
+              description: "$VAMVariant.CID verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_FILE_NAME: {
+              type: "string",
+              description: "$VAMVariant.FILE_NAME verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_MEDIA_TYPE: {
+              type: "string",
+              description: "$VAMVariant.MEDIA_TYPE verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_VERSION: {
+              type: "string",
+              description: "$VAMVariant.GLTF_VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            GEOMETRY_MATCHES_PHYSICAL: {
+              type: "boolean",
+              description: "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            METERS_PER_ASSET_UNIT: {
+              type: "number",
+              description: "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "1.0"
+            }
+          },
+          required: [
+            "VAM_ID",
+            "VARIANT_ID",
+            "ASSET_SHA256"
+          ],
+          additionalProperties: false
+        },
+        OPP: {
+          type: "object",
+          description: "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 record-format version, not a content revision.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID verbatim: the COSPAR international designator.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "$CAT.OBJECT_NAME verbatim, for display only. Never a join key.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY: {
+              type: "string",
+              description: "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            MANUFACTURER_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPMass",
+              "x-flatbuffer-type": "OPPMass"
+            },
+            DIMENSIONS: {
+              $ref: "#/definitions/OPPDimensions",
+              "x-flatbuffer-type": "OPPDimensions"
+            },
+            AREAS: {
+              $ref: "#/definitions/OPPAreas",
+              "x-flatbuffer-type": "OPPAreas"
+            },
+            RADAR_CROSS_SECTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPRadarCrossSection"
+              },
+              description: "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object.",
+              "x-flatbuffer-type": "[OPPRadarCrossSection]"
+            },
+            VISUAL_MAGNITUDE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: 'Visual magnitude, UNITS "mag", with the observing conditions in\nPROVENANCE.NOTES.',
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SURFACES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPSurface"
+              },
+              description: "Material and surface inventory.",
+              "x-flatbuffer-type": "[OPPSurface]"
+            },
+            ASSET: {
+              $ref: "#/definitions/OPPAssetRef",
+              description: "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it.",
+              "x-flatbuffer-type": "OPPAssetRef"
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPProvenance"
+              },
+              description: 'Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish "not looked for" from\n"looked for and not published".',
+              "x-flatbuffer-type": "[OPPProvenance]"
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated.",
+              "x-flatbuffer-type": "string"
+            },
+            SUPERSEDES_OPP_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact superseded $OPP bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "ID"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/OPP",
+      "x-flatbuffer-root-type": "OPP",
+      "x-flatbuffer-file-identifier": "$OPP"
     },
     HFC: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -147332,6 +149258,238 @@ var fbjson_default = {
             }
           }
         },
+        oppDeterminationMethod: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source published the value without stating how it was obtained."
+            },
+            MEASURED: {
+              value: 1,
+              description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+            },
+            OPERATOR_STATED: {
+              value: 2,
+              description: "Published by the operator, manufacturer or launch provider for this specific object."
+            },
+            ESTIMATED: {
+              value: 3,
+              description: "The source's own estimate, stated as an estimate."
+            },
+            DERIVED: {
+              value: 4,
+              description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+            },
+            MODEL_DERIVED: {
+              value: 5,
+              description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+            },
+            INFERRED_FROM_FAMILY: {
+              value: 6,
+              description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            }
+          }
+        },
+        oppRcsAspect: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+            },
+            AVERAGE: {
+              value: 1
+            },
+            MINIMUM: {
+              value: 2
+            },
+            MAXIMUM: {
+              value: 3
+            },
+            MEDIAN: {
+              value: 4
+            },
+            HEAD_ON: {
+              value: 5
+            },
+            BROADSIDE: {
+              value: 6
+            },
+            NADIR: {
+              value: 7
+            }
+          }
+        },
+        oppSurfaceKind: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            BUS_BODY: {
+              value: 1
+            },
+            SOLAR_ARRAY: {
+              value: 2
+            },
+            ANTENNA_DISH: {
+              value: 3
+            },
+            ANTENNA_PANEL: {
+              value: 4
+            },
+            RADIATOR: {
+              value: 5
+            },
+            THERMAL_BLANKET: {
+              value: 6
+            },
+            OPTICAL_APERTURE: {
+              value: 7
+            },
+            BOOM: {
+              value: 8
+            },
+            TRUSS: {
+              value: 9
+            },
+            TANK: {
+              value: 10
+            },
+            NOZZLE: {
+              value: 11
+            },
+            SHIELD: {
+              value: 12
+            },
+            DOCKING_INTERFACE: {
+              value: 13
+            },
+            OTHER: {
+              value: 14
+            }
+          }
+        },
+        oppMaterialClass: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          description: "existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            ALUMINIUM: {
+              value: 1
+            },
+            TITANIUM: {
+              value: 2
+            },
+            STEEL: {
+              value: 3
+            },
+            CARBON_COMPOSITE: {
+              value: 4
+            },
+            MULTI_LAYER_INSULATION: {
+              value: 5
+            },
+            SOLAR_CELL: {
+              value: 6
+            },
+            COVER_GLASS: {
+              value: 7
+            },
+            PAINT_WHITE: {
+              value: 8
+            },
+            PAINT_BLACK: {
+              value: 9
+            },
+            OPTICAL_SOLAR_REFLECTOR: {
+              value: 10
+            },
+            POLYIMIDE_FILM: {
+              value: 11
+            },
+            MESH: {
+              value: 12
+            },
+            CERAMIC: {
+              value: 13
+            },
+            GOLD_FOIL: {
+              value: 14
+            },
+            OTHER: {
+              value: 15
+            }
+          }
+        },
         IntegratorType: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -184153,6 +186311,738 @@ var fbjson_default = {
             }
           },
           description: "Orbit Parameter Message"
+        },
+        OPPProvenance: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            SOURCE: {
+              type: "string",
+              description: `"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`,
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: "as a DISCOS object id. Verbatim, never normalized.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Deep link to the exact source record when the source publishes one.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "design or as-built value that does not change over time omits EPOCH.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "this record retrieved the value from SOURCE.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's own revision, edition or publication marker, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            METHOD: {
+              $ref: "#/definitions/oppDeterminationMethod",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source published the value without stating how it was obtained."
+                },
+                MEASURED: {
+                  value: 1,
+                  description: "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+                },
+                OPERATOR_STATED: {
+                  value: 2,
+                  description: "Published by the operator, manufacturer or launch provider for this specific object."
+                },
+                ESTIMATED: {
+                  value: 3,
+                  description: "The source's own estimate, stated as an estimate."
+                },
+                DERIVED: {
+                  value: 4,
+                  description: "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+                },
+                MODEL_DERIVED: {
+                  value: 5,
+                  description: "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+                },
+                INFERRED_FROM_FAMILY: {
+                  value: 6,
+                  description: "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+                }
+              }
+            },
+            LICENSE: {
+              type: "string",
+              description: "Terms under which SOURCE permits redistribution of the value, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution string the source requires be displayed with the value.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_SHA256: {
+              type: "string",
+              description: "payload bytes the value was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              description: "Free text qualifying the value, such as the source's own caveat.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Provenance for exactly one physical value.  This table is the mechanism by which the never-invent-data law is enforced in the IDL rather than in prose: no physical quantity in an $OPP can be expressed without one of these attached, so a value with no admissible source cannot be encoded at all. Unknown values are ABSENT. They are never zero, never a placeholder, and never carried forward from a different object.",
+          required: [
+            "SOURCE"
+          ]
+        },
+        OPPQuantity: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            VALUE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "PROVENANCE.METHOD DERIVED.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            SIGMA: {
+              type: "number",
+              description: "a genuine stated sigma is never exactly zero.",
+              "x-flatbuffer-type": "double"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              "x-flatbuffer-type": "OPPProvenance",
+              "x-flatbuffer-required": true
+            }
+          },
+          description: "One scalar physical quantity, its unit and its own provenance.  PROVENANCE is required: an OPPQuantity that exists names where it came from. Presence of the table is the signal that a value exists, so VALUE zero is a real zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+          required: [
+            "UNITS",
+            "PROVENANCE"
+          ]
+        },
+        OPPRadarCrossSection: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            BAND: {
+              type: "string",
+              description: '"X", "Ku". Empty when the source states no band.',
+              "x-flatbuffer-type": "string"
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "unstated.",
+              "x-flatbuffer-type": "double"
+            },
+            POLARIZATION: {
+              type: "string",
+              description: "when the source states none.",
+              "x-flatbuffer-type": "string"
+            },
+            ASPECT: {
+              $ref: "#/definitions/oppRcsAspect",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+                },
+                AVERAGE: {
+                  value: 1
+                },
+                MINIMUM: {
+                  value: 2
+                },
+                MAXIMUM: {
+                  value: 3
+                },
+                MEDIAN: {
+                  value: 4
+                },
+                HEAD_ON: {
+                  value: 5
+                },
+                BROADSIDE: {
+                  value: 6
+                },
+                NADIR: {
+                  value: 7
+                }
+              }
+            },
+            CROSS_SECTION: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "it; the two are never mixed within one entry and never silently converted.",
+              "x-flatbuffer-type": "OPPQuantity",
+              "x-flatbuffer-required": true
+            },
+            SIZE_CLASS: {
+              type: "string",
+              description: "turned into a number.",
+              "x-flatbuffer-type": "string"
+            },
+            SENSOR: {
+              type: "string",
+              description: "Sensor or facility that produced the measurement, when stated.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Radar cross-section as reported for one band, polarization and aspect convention. Radar cross-section is band- and aspect-dependent, so an $OPP carries a list of these and never a single scalar. ESA DISCOS xSectMin, xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
+          required: [
+            "CROSS_SECTION"
+          ]
+        },
+        OPPMass: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            DRY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass without propellant or consumables [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WET: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass with propellant, at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            LAUNCH: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass at separation from the launch vehicle [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PROPELLANT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Propellant mass at the stated epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Payload mass carried by the bus [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CURRENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Best current estimate of mass at the record's epoch [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          description: "Mass breakdown. Each component is independently sourced; a wet mass and a dry mass may legitimately come from different publishers and epochs."
+        },
+        OPPDimensions: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            BODY_X: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Extents along the object's own body axes [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Y: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BODY_Z: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            HEIGHT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Envelope terms as ESA DISCOS publishes them [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            WIDTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DEPTH: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIAMETER: {
+              $ref: "#/definitions/OPPQuantity",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_STOWED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages stowed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPAN_DEPLOYED: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest extent with appendages deployed [m].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SHAPE: {
+              type: "string",
+              description: 'string "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
+              "x-flatbuffer-type": "string"
+            },
+            SHAPE_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of SHAPE. Present whenever SHAPE is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            }
+          },
+          description: "Physical envelope. Every extent is a sourced quantity. Extents measured off 3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the model, not the flight article."
+        },
+        OPPAreas: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            CROSS_SECTIONAL_AVERAGE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Average projected cross-sectional area over all aspects [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MINIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Smallest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            CROSS_SECTIONAL_MAXIMUM: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Largest projected cross-sectional area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SOLAR_ARRAY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Total solar-array area [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            AREA_TO_MASS_RATIO: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "the publisher derives it with PROVENANCE.METHOD DERIVED.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            BALLISTIC_COEFFICIENT: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Ballistic coefficient [kg/m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            }
+          },
+          description: "Projected areas and the ratios derived from them."
+        },
+        OPPSurface: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this surface within the record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            KIND: {
+              $ref: "#/definitions/oppSurfaceKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                BUS_BODY: {
+                  value: 1
+                },
+                SOLAR_ARRAY: {
+                  value: 2
+                },
+                ANTENNA_DISH: {
+                  value: 3
+                },
+                ANTENNA_PANEL: {
+                  value: 4
+                },
+                RADIATOR: {
+                  value: 5
+                },
+                THERMAL_BLANKET: {
+                  value: 6
+                },
+                OPTICAL_APERTURE: {
+                  value: 7
+                },
+                BOOM: {
+                  value: 8
+                },
+                TRUSS: {
+                  value: 9
+                },
+                TANK: {
+                  value: 10
+                },
+                NOZZLE: {
+                  value: 11
+                },
+                SHIELD: {
+                  value: 12
+                },
+                DOCKING_INTERFACE: {
+                  value: 13
+                },
+                OTHER: {
+                  value: 14
+                }
+              }
+            },
+            MATERIAL: {
+              type: "string",
+              description: 'triple-junction", "Al 6061-T6". Empty when unstated.',
+              "x-flatbuffer-type": "string"
+            },
+            MATERIAL_CLASS: {
+              $ref: "#/definitions/oppMaterialClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                ALUMINIUM: {
+                  value: 1
+                },
+                TITANIUM: {
+                  value: 2
+                },
+                STEEL: {
+                  value: 3
+                },
+                CARBON_COMPOSITE: {
+                  value: 4
+                },
+                MULTI_LAYER_INSULATION: {
+                  value: 5
+                },
+                SOLAR_CELL: {
+                  value: 6
+                },
+                COVER_GLASS: {
+                  value: 7
+                },
+                PAINT_WHITE: {
+                  value: 8
+                },
+                PAINT_BLACK: {
+                  value: 9
+                },
+                OPTICAL_SOLAR_REFLECTOR: {
+                  value: 10
+                },
+                POLYIMIDE_FILM: {
+                  value: 11
+                },
+                MESH: {
+                  value: 12
+                },
+                CERAMIC: {
+                  value: 13
+                },
+                GOLD_FOIL: {
+                  value: 14
+                },
+                OTHER: {
+                  value: 15
+                }
+              }
+            },
+            COUNT: {
+              type: "integer",
+              description: "wings.",
+              "x-flatbuffer-type": "uint",
+              "x-flatbuffer-default": "1"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "field below carries its own.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            AREA: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Area of one surface, not of COUNT surfaces [m2].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Mass of one surface [kg].",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SPECULAR_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected specularly, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            DIFFUSE_REFLECTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Fraction of incident radiation reflected diffusely, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            ABSORPTIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Solar absorptivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            EMISSIVITY: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "Infrared emissivity, dimensionless.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            PANEL_ID: {
+              type: "string",
+              description: "PNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_NAME: {
+              type: "string",
+              description: "represented in the asset.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_MATERIAL_INDEX: {
+              type: "integer",
+              description: "Negative one means no glTF material corresponds to this surface.",
+              "x-flatbuffer-type": "int",
+              "x-flatbuffer-default": "-1"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One exterior surface of the object: what it is made of, how large it is and how it interacts with light.  $PNL carries the articulated panel model used for solar-radiation-pressure propagation; an $OPP surface is the sourced material inventory. When both exist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and GLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant named by OPP.ASSET.",
+          required: [
+            "ID"
+          ]
+        },
+        OPPAssetRef: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            VAM_ID: {
+              type: "string",
+              description: "$VAM.ID verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VAM_VERSION: {
+              type: "string",
+              description: "$VAM.VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            VAM_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact $VAM bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            VARIANT_ID: {
+              type: "string",
+              description: "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_SHA256: {
+              type: "string",
+              description: "encoding SHA-256 of the exact asset file bytes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            ASSET_CID: {
+              type: "string",
+              description: "$VAMVariant.CID verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_FILE_NAME: {
+              type: "string",
+              description: "$VAMVariant.FILE_NAME verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ASSET_MEDIA_TYPE: {
+              type: "string",
+              description: "$VAMVariant.MEDIA_TYPE verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            GLTF_VERSION: {
+              type: "string",
+              description: "$VAMVariant.GLTF_VERSION verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID.",
+              "x-flatbuffer-type": "string"
+            },
+            GEOMETRY_MATCHES_PHYSICAL: {
+              type: "boolean",
+              description: "representative and its geometry is not a source of physical dimensions.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            METERS_PER_ASSET_UNIT: {
+              type: "number",
+              description: "$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "1.0"
+            }
+          },
+          description: "Binding to the exact 3D asset bytes this record accompanies.  Every field is copied verbatim from the $VAM that governs the asset, so an $OPP is valid for exactly one reviewed variant. Different bytes are a different asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than repointing an existing one.",
+          required: [
+            "VAM_ID",
+            "VARIANT_ID",
+            "ASSET_SHA256"
+          ]
+        },
+        OPP: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            ID: {
+              type: "string",
+              description: "Stable identifier for this record.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 record-format version, not a content revision.",
+              "x-flatbuffer-type": "string"
+            },
+            NORAD_CAT_ID: {
+              type: "integer",
+              description: "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number.",
+              "x-flatbuffer-type": "uint"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "$CAT.OBJECT_ID verbatim: the COSPAR international designator.",
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_NAME: {
+              type: "string",
+              description: "$CAT.OBJECT_NAME verbatim, for display only. Never a join key.",
+              "x-flatbuffer-type": "string"
+            },
+            ENTITY_ID: {
+              type: "string",
+              description: "MUST equal ASSET.ENTITY_ID when ASSET is present.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_ID: {
+              type: "string",
+              description: "$BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY: {
+              type: "string",
+              description: "for objects whose family is known but has no $BUS record.",
+              "x-flatbuffer-type": "string"
+            },
+            BUS_FAMILY_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MANUFACTURER: {
+              type: "string",
+              description: "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE.",
+              "x-flatbuffer-type": "string"
+            },
+            MANUFACTURER_PROVENANCE: {
+              $ref: "#/definitions/OPPProvenance",
+              description: "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty.",
+              "x-flatbuffer-type": "OPPProvenance"
+            },
+            MASS: {
+              $ref: "#/definitions/OPPMass",
+              "x-flatbuffer-type": "OPPMass"
+            },
+            DIMENSIONS: {
+              $ref: "#/definitions/OPPDimensions",
+              "x-flatbuffer-type": "OPPDimensions"
+            },
+            AREAS: {
+              $ref: "#/definitions/OPPAreas",
+              "x-flatbuffer-type": "OPPAreas"
+            },
+            RADAR_CROSS_SECTIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPRadarCrossSection"
+              },
+              description: "means no source published a radar cross-section for this object.",
+              "x-flatbuffer-type": "[OPPRadarCrossSection]"
+            },
+            VISUAL_MAGNITUDE: {
+              $ref: "#/definitions/OPPQuantity",
+              description: "PROVENANCE.NOTES.",
+              "x-flatbuffer-type": "OPPQuantity"
+            },
+            SURFACES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPSurface"
+              },
+              description: "Material and surface inventory.",
+              "x-flatbuffer-type": "[OPPSurface]"
+            },
+            ASSET: {
+              $ref: "#/definitions/OPPAssetRef",
+              description: "an object with no asset; the physical values remain valid without it.",
+              "x-flatbuffer-type": "OPPAssetRef"
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/OPPProvenance"
+              },
+              description: '"looked for and not published".',
+              "x-flatbuffer-type": "[OPPProvenance]"
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "the record was created.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "the record was last updated.",
+              "x-flatbuffer-type": "string"
+            },
+            SUPERSEDES_OPP_CID: {
+              type: "string",
+              description: "CIDv1 containing a multihash of the exact superseded $OPP bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            NOTES: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Object Physical Properties - the sourced physical description of one space object and, when one exists, of the exact 3D asset that represents it.  Division of labour with the neighbouring standards. $CAT is catalogue identity and orbit, and its RCS, SIZE and MASS scalars are unattributed convenience fields carried from the catalogue publisher. $BUS is the bus DESIGN, shared by every object built on it. $VAM is the asset manifest: the bytes, the licence, the review and the geometry metrics. $PNL is the articulated panel model consumed by solar-radiation-pressure propagation. $OPP is the per-object physical truth in which EVERY value names its own source, epoch and method. $OPP never restates orbital elements and never duplicates bus-design values; a per-object value that came from the bus design is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see that it is an approximation.  Joins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS. ASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable non-catalogue key shared with $VAM for objects that have no catalogue entry.  Never-invent law, enforced by the shape rather than by prose: a physical quantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is required, so there is no encoding for a mass, dimension, area or cross-section that does not name where it came from. Unknown values are absent. A consumer that finds a field missing has learned that no admissible source published it.",
+          required: [
+            "ID"
+          ]
         },
         OSM: {
           type: "object",
@@ -268716,7 +271606,7 @@ var fbjson_default = {
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../../../../../../../../Users/tj/software/spacedatanetwork-stack/repos/main-packages/spacedatastandards.org/node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

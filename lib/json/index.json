@@ -6204,6 +6204,545 @@
             },
             "$ref": "#/definitions/LCH"
         },
+        "OPP": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "oppDeterminationMethod": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "MEASURED",
+                        "OPERATOR_STATED",
+                        "ESTIMATED",
+                        "DERIVED",
+                        "MODEL_DERIVED",
+                        "INFERRED_FROM_FAMILY"
+                    ]
+                },
+                "oppRcsAspect": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "AVERAGE",
+                        "MINIMUM",
+                        "MAXIMUM",
+                        "MEDIAN",
+                        "HEAD_ON",
+                        "BROADSIDE",
+                        "NADIR"
+                    ]
+                },
+                "oppSurfaceKind": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "BUS_BODY",
+                        "SOLAR_ARRAY",
+                        "ANTENNA_DISH",
+                        "ANTENNA_PANEL",
+                        "RADIATOR",
+                        "THERMAL_BLANKET",
+                        "OPTICAL_APERTURE",
+                        "BOOM",
+                        "TRUSS",
+                        "TANK",
+                        "NOZZLE",
+                        "SHIELD",
+                        "DOCKING_INTERFACE",
+                        "OTHER"
+                    ]
+                },
+                "oppMaterialClass": {
+                    "type": "string",
+                    "enum": [
+                        "UNSPECIFIED",
+                        "ALUMINIUM",
+                        "TITANIUM",
+                        "STEEL",
+                        "CARBON_COMPOSITE",
+                        "MULTI_LAYER_INSULATION",
+                        "SOLAR_CELL",
+                        "COVER_GLASS",
+                        "PAINT_WHITE",
+                        "PAINT_BLACK",
+                        "OPTICAL_SOLAR_REFLECTOR",
+                        "POLYIMIDE_FILM",
+                        "MESH",
+                        "CERAMIC",
+                        "GOLD_FOIL",
+                        "OTHER"
+                    ]
+                },
+                "OPPProvenance": {
+                    "type": "object",
+                    "description": "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
+                    "properties": {
+                        "SOURCE": {
+                            "type": "string",
+                            "description": "Publisher of the value, named as the publisher names itself: \"ESA DISCOS\",\n\"CelesTrak SATCAT\", \"Gunter's Space Page\", \"NASA\", the operator's name."
+                        },
+                        "SOURCE_RECORD_ID": {
+                            "type": "string",
+                            "description": "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+                        },
+                        "SOURCE_URL": {
+                            "type": "string",
+                            "description": "Deep link to the exact source record when the source publishes one."
+                        },
+                        "EPOCH": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH."
+                        },
+                        "RETRIEVED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE."
+                        },
+                        "SOURCE_VERSION": {
+                            "type": "string",
+                            "description": "The source's own revision, edition or publication marker, verbatim."
+                        },
+                        "METHOD": {
+                            "$ref": "#/definitions/oppDeterminationMethod"
+                        },
+                        "LICENSE": {
+                            "type": "string",
+                            "description": "Terms under which SOURCE permits redistribution of the value, verbatim."
+                        },
+                        "ATTRIBUTION": {
+                            "type": "string",
+                            "description": "Attribution string the source requires be displayed with the value."
+                        },
+                        "SOURCE_SHA256": {
+                            "type": "string",
+                            "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from."
+                        },
+                        "NOTES": {
+                            "type": "string",
+                            "description": "Free text qualifying the value, such as the source's own caveat."
+                        }
+                    },
+                    "required": [
+                        "SOURCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPQuantity": {
+                    "type": "object",
+                    "description": "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+                    "properties": {
+                        "VALUE": {
+                            "type": "number"
+                        },
+                        "UNITS": {
+                            "type": "string",
+                            "description": "Unit symbol verbatim, never silently converted: \"kg\", \"m\", \"m2\", \"m2/kg\",\n\"kg/m2\", \"dBsm\", \"W\", \"mag\". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED."
+                        },
+                        "SIGMA": {
+                            "type": "number",
+                            "description": "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance"
+                        }
+                    },
+                    "required": [
+                        "UNITS",
+                        "PROVENANCE"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPRadarCrossSection": {
+                    "type": "object",
+                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+                    "properties": {
+                        "BAND": {
+                            "type": "string",
+                            "description": "Radar band designation verbatim from the source: \"UHF\", \"L\", \"S\", \"C\",\n\"X\", \"Ku\". Empty when the source states no band."
+                        },
+                        "FREQUENCY_MHZ": {
+                            "type": "number",
+                            "description": "Centre frequency [megahertz] when the source states one. Zero means\nunstated."
+                        },
+                        "POLARIZATION": {
+                            "type": "string",
+                            "description": "Polarization verbatim from the source: \"HH\", \"VV\", \"HV\", \"RCRC\". Empty\nwhen the source states none."
+                        },
+                        "ASPECT": {
+                            "$ref": "#/definitions/oppRcsAspect"
+                        },
+                        "CROSS_SECTION": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "The cross-section itself. UNITS is \"m2\" or \"dBsm\" as the source published\nit; the two are never mixed within one entry and never silently converted."
+                        },
+                        "SIZE_CLASS": {
+                            "type": "string",
+                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
+                        },
+                        "SENSOR": {
+                            "type": "string",
+                            "description": "Sensor or facility that produced the measurement, when stated."
+                        }
+                    },
+                    "required": [
+                        "CROSS_SECTION"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPMass": {
+                    "type": "object",
+                    "description": "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+                    "properties": {
+                        "DRY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass without propellant or consumables [kg]."
+                        },
+                        "WET": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass with propellant, at the stated epoch [kg]."
+                        },
+                        "LAUNCH": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass at separation from the launch vehicle [kg]."
+                        },
+                        "PROPELLANT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Propellant mass at the stated epoch [kg]."
+                        },
+                        "PAYLOAD": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Payload mass carried by the bus [kg]."
+                        },
+                        "CURRENT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Best current estimate of mass at the record's epoch [kg]."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPDimensions": {
+                    "type": "object",
+                    "description": "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+                    "properties": {
+                        "BODY_X": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Extents along the object's own body axes [m]."
+                        },
+                        "BODY_Y": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "BODY_Z": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "HEIGHT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Envelope terms as ESA DISCOS publishes them [m]."
+                        },
+                        "WIDTH": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "DEPTH": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "DIAMETER": {
+                            "$ref": "#/definitions/OPPQuantity"
+                        },
+                        "SPAN_STOWED": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest extent with appendages stowed [m]."
+                        },
+                        "SPAN_DEPLOYED": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest extent with appendages deployed [m]."
+                        },
+                        "SHAPE": {
+                            "type": "string",
+                            "description": "Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
+                        },
+                        "SHAPE_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of SHAPE. Present whenever SHAPE is nonempty."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPAreas": {
+                    "type": "object",
+                    "description": "Projected areas and the ratios derived from them.",
+                    "properties": {
+                        "CROSS_SECTIONAL_AVERAGE": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Average projected cross-sectional area over all aspects [m2]."
+                        },
+                        "CROSS_SECTIONAL_MINIMUM": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Smallest projected cross-sectional area [m2]."
+                        },
+                        "CROSS_SECTIONAL_MAXIMUM": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Largest projected cross-sectional area [m2]."
+                        },
+                        "SOLAR_ARRAY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Total solar-array area [m2]."
+                        },
+                        "AREA_TO_MASS_RATIO": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED."
+                        },
+                        "BALLISTIC_COEFFICIENT": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Ballistic coefficient [kg/m2]."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "OPPSurface": {
+                    "type": "object",
+                    "description": "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Stable identifier for this surface within the record."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/oppSurfaceKind"
+                        },
+                        "MATERIAL": {
+                            "type": "string",
+                            "description": "Material name verbatim from the source: \"Kapton MLI\", \"GaAs\ntriple-junction\", \"Al 6061-T6\". Empty when unstated."
+                        },
+                        "MATERIAL_CLASS": {
+                            "$ref": "#/definitions/oppMaterialClass"
+                        },
+                        "COUNT": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "How many identical surfaces this entry represents, such as two solar-array\nwings."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own."
+                        },
+                        "AREA": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Area of one surface, not of COUNT surfaces [m2]."
+                        },
+                        "MASS": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Mass of one surface [kg]."
+                        },
+                        "SPECULAR_REFLECTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Fraction of incident radiation reflected specularly, dimensionless."
+                        },
+                        "DIFFUSE_REFLECTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Fraction of incident radiation reflected diffusely, dimensionless."
+                        },
+                        "ABSORPTIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Solar absorptivity, dimensionless."
+                        },
+                        "EMISSIVITY": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Infrared emissivity, dimensionless."
+                        },
+                        "PANEL_ID": {
+                            "type": "string",
+                            "description": "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists."
+                        },
+                        "GLTF_MATERIAL_NAME": {
+                            "type": "string",
+                            "description": "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset."
+                        },
+                        "GLTF_MATERIAL_INDEX": {
+                            "type": "integer",
+                            "minimum": -2147483648,
+                            "maximum": 2147483647,
+                            "description": "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPPAssetRef": {
+                    "type": "object",
+                    "description": "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+                    "properties": {
+                        "VAM_ID": {
+                            "type": "string",
+                            "description": "$VAM.ID verbatim."
+                        },
+                        "VAM_VERSION": {
+                            "type": "string",
+                            "description": "$VAM.VERSION verbatim."
+                        },
+                        "VAM_CID": {
+                            "type": "string",
+                            "description": "CIDv1 containing a multihash of the exact $VAM bytes."
+                        },
+                        "VARIANT_ID": {
+                            "type": "string",
+                            "description": "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes."
+                        },
+                        "ASSET_SHA256": {
+                            "type": "string",
+                            "description": "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes."
+                        },
+                        "ASSET_CID": {
+                            "type": "string",
+                            "description": "$VAMVariant.CID verbatim."
+                        },
+                        "ASSET_FILE_NAME": {
+                            "type": "string",
+                            "description": "$VAMVariant.FILE_NAME verbatim."
+                        },
+                        "ASSET_MEDIA_TYPE": {
+                            "type": "string",
+                            "description": "$VAMVariant.MEDIA_TYPE verbatim."
+                        },
+                        "GLTF_VERSION": {
+                            "type": "string",
+                            "description": "$VAMVariant.GLTF_VERSION verbatim."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID."
+                        },
+                        "GEOMETRY_MATCHES_PHYSICAL": {
+                            "type": "boolean",
+                            "description": "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions."
+                        },
+                        "METERS_PER_ASSET_UNIT": {
+                            "type": "number",
+                            "description": "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP."
+                        }
+                    },
+                    "required": [
+                        "VAM_ID",
+                        "VARIANT_ID",
+                        "ASSET_SHA256"
+                    ],
+                    "additionalProperties": false
+                },
+                "OPP": {
+                    "type": "object",
+                    "description": "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+                    "properties": {
+                        "ID": {
+                            "type": "string",
+                            "description": "Stable identifier for this record."
+                        },
+                        "VERSION": {
+                            "type": "string",
+                            "description": "SemVer 2.0.0 record-format version, not a content revision."
+                        },
+                        "NORAD_CAT_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number."
+                        },
+                        "OBJECT_ID": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_ID verbatim: the COSPAR international designator."
+                        },
+                        "OBJECT_NAME": {
+                            "type": "string",
+                            "description": "$CAT.OBJECT_NAME verbatim, for display only. Never a join key."
+                        },
+                        "ENTITY_ID": {
+                            "type": "string",
+                            "description": "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present."
+                        },
+                        "BUS_ID": {
+                            "type": "string",
+                            "description": "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record."
+                        },
+                        "BUS_FAMILY": {
+                            "type": "string",
+                            "description": "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record."
+                        },
+                        "BUS_FAMILY_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty."
+                        },
+                        "MANUFACTURER": {
+                            "type": "string",
+                            "description": "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE."
+                        },
+                        "MANUFACTURER_PROVENANCE": {
+                            "$ref": "#/definitions/OPPProvenance",
+                            "description": "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty."
+                        },
+                        "MASS": {
+                            "$ref": "#/definitions/OPPMass"
+                        },
+                        "DIMENSIONS": {
+                            "$ref": "#/definitions/OPPDimensions"
+                        },
+                        "AREAS": {
+                            "$ref": "#/definitions/OPPAreas"
+                        },
+                        "RADAR_CROSS_SECTIONS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPRadarCrossSection"
+                            },
+                            "description": "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object."
+                        },
+                        "VISUAL_MAGNITUDE": {
+                            "$ref": "#/definitions/OPPQuantity",
+                            "description": "Visual magnitude, UNITS \"mag\", with the observing conditions in\nPROVENANCE.NOTES."
+                        },
+                        "SURFACES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPSurface"
+                            },
+                            "description": "Material and surface inventory."
+                        },
+                        "ASSET": {
+                            "$ref": "#/definitions/OPPAssetRef",
+                            "description": "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it."
+                        },
+                        "SOURCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OPPProvenance"
+                            },
+                            "description": "Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish \"not looked for\" from\n\"looked for and not published\"."
+                        },
+                        "CREATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created."
+                        },
+                        "UPDATED_AT": {
+                            "type": "string",
+                            "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated."
+                        },
+                        "SUPERSEDES_OPP_CID": {
+                            "type": "string",
+                            "description": "CIDv1 containing a multihash of the exact superseded $OPP bytes."
+                        },
+                        "NOTES": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "ID"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/OPP"
+        },
         "HFC": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {

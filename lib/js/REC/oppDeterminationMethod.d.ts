@@ -1,0 +1,40 @@
+/**
+ * How one physical value was determined. Append new values only; never
+ * reorder or reuse existing values.
+ */
+export declare enum oppDeterminationMethod {
+    /**
+     * The source published the value without stating how it was obtained.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Direct physical measurement: radar range measurement, laboratory weigh-in,
+     * photometric observation, tape measure on the flight article.
+     */
+    MEASURED = 1,
+    /**
+     * Published by the operator, manufacturer or launch provider for this
+     * specific object.
+     */
+    OPERATOR_STATED = 2,
+    /**
+     * The source's own estimate, stated as an estimate.
+     */
+    ESTIMATED = 3,
+    /**
+     * Computed by the record's publisher from other values that each carry their
+     * own provenance in this same record.
+     */
+    DERIVED = 4,
+    /**
+     * Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model,
+     * not the flight article, and is never presented as a physical measurement.
+     */
+    MODEL_DERIVED = 5,
+    /**
+     * Taken from the bus design or from a sibling object in the same family
+     * because no per-object value exists. Always an approximation.
+     */
+    INFERRED_FROM_FAMILY = 6
+}
+//# sourceMappingURL=oppDeterminationMethod.d.ts.map

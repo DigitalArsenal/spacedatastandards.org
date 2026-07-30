@@ -199,6 +199,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -333,10 +334,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 198;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 199;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 199] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 200] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -536,6 +537,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 199] = [
   RecordType::QEM,
   RecordType::SBM,
   RecordType::PMM,
+  RecordType::OPP,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -742,9 +744,10 @@ impl RecordType {
   pub const QEM: Self = Self(196);
   pub const SBM: Self = Self(197);
   pub const PMM: Self = Self(198);
+  pub const OPP: Self = Self(199);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 198;
+  pub const ENUM_MAX: u8 = 199;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -945,6 +948,7 @@ impl RecordType {
     Self::QEM,
     Self::SBM,
     Self::PMM,
+    Self::OPP,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1148,6 +1152,7 @@ impl RecordType {
       Self::QEM => Some("QEM"),
       Self::SBM => Some("SBM"),
       Self::PMM => Some("PMM"),
+      Self::OPP => Some("OPP"),
       _ => None,
     }
   }
@@ -1407,6 +1412,7 @@ pub enum RecordTypeT {
   QEM(alloc::boxed::Box<QEMT>),
   SBM(alloc::boxed::Box<SBMT>),
   PMM(alloc::boxed::Box<PMMT>),
+  OPP(alloc::boxed::Box<OPPT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1615,6 +1621,7 @@ impl RecordTypeT {
       Self::QEM(_) => RecordType::QEM,
       Self::SBM(_) => RecordType::SBM,
       Self::PMM(_) => RecordType::PMM,
+      Self::OPP(_) => RecordType::OPP,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1818,6 +1825,7 @@ impl RecordTypeT {
       Self::QEM(v) => Some(v.pack(fbb).as_union_value()),
       Self::SBM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PMM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OPP(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5978,6 +5986,27 @@ impl RecordTypeT {
   pub fn as_pmm_mut(&mut self) -> Option<&mut PMMT> {
     if let Self::PMM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned OPPT, setting the union to NONE.
+  pub fn take_opp(&mut self) -> Option<alloc::boxed::Box<OPPT>> {
+    if let Self::OPP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::OPP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OPPT.
+  pub fn as_opp(&self) -> Option<&OPPT> {
+    if let Self::OPP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OPPT.
+  pub fn as_opp_mut(&mut self) -> Option<&mut OPPT> {
+    if let Self::OPP(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7007,6 +7036,11 @@ impl<'a> Record<'a> {
       RecordType::PMM => RecordTypeT::PMM(alloc::boxed::Box::new(
         self.value_as_pmm()
             .expect("Invalid union table, expected `RecordType::PMM`.")
+            .unpack()
+      )),
+      RecordType::OPP => RecordTypeT::OPP(alloc::boxed::Box::new(
+        self.value_as_opp()
+            .expect("Invalid union table, expected `RecordType::OPP`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10013,6 +10047,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_opp(&self) -> Option<OPP<'a>> {
+    if self.value_type() == RecordType::OPP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OPP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10221,6 +10270,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::QEM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<QEM>>("RecordType::QEM", pos),
           RecordType::SBM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SBM>>("RecordType::SBM", pos),
           RecordType::PMM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PMM>>("RecordType::PMM", pos),
+          RecordType::OPP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<OPP>>("RecordType::OPP", pos),
           _ => Ok(()),
         }
      })?
@@ -11663,6 +11713,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::PMM => {
           if let Some(x) = self.value_as_pmm() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OPP => {
+          if let Some(x) = self.value_as_opp() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

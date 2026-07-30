@@ -1,0 +1,19 @@
+/**
+ * Aspect convention a radar cross-section value was reported under. Append new
+ * values only; never reorder or reuse existing values.
+ */
+export declare enum oppRcsAspect {
+    /**
+     * The source states no aspect convention. ESA DISCOS characteristic
+     * cross-sections and CelesTrak SATCAT RCS use this value.
+     */
+    UNSPECIFIED = 0,
+    AVERAGE = 1,
+    MINIMUM = 2,
+    MAXIMUM = 3,
+    MEDIAN = 4,
+    HEAD_ON = 5,
+    BROADSIDE = 6,
+    NADIR = 7
+}
+//# sourceMappingURL=oppRcsAspect.d.ts.map

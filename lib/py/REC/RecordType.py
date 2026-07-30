@@ -202,6 +202,7 @@ class RecordType(object):
     QEM = 196
     SBM = 197
     PMM = 198
+    OPP = 199
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -801,4 +802,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.PMM:
         import PMM
         return PMM.PMMT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.OPP:
+        import OPP
+        return OPP.OPPT.InitFromBuf(table.Bytes, table.Pos)
     return None

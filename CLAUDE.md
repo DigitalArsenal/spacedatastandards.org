@@ -125,3 +125,43 @@ the Adversarial-Security bond in `PMMTrustAnchor.BOND_ADDRESSES`.
 Division of labour: `$PMM` = which modules a provider serves and what an
 anonymous client may load; `$PLG` = the full per-module listing; `$STO`/`$STF` =
 commerce; `$APP` = which modules one application composes.
+
+### Physical properties live in SDS ($OPP, 1.172.0)
+
+A mass, dimension, area or radar cross-section is published as `$OPP`, never as
+a bare number in a sidecar JSON. The record is per OBJECT, joins to `$CAT` by
+`NORAD_CAT_ID`/`OBJECT_ID`, to `$BUS` by `BUS_ID`, and to the exact reviewed 3D
+asset by `OPPAssetRef` (`VAM_ID` + `VARIANT_ID` + `ASSET_SHA256` copied verbatim
+from `$VAM`).
+
+Never-invent-data is enforced by the SHAPE, not by prose: a physical quantity
+exists only as an `OPPQuantity`, and
+
+    UNITS:string (required);
+    PROVENANCE:OPPProvenance (required);
+
+so there is no encoding for a value that does not name its `SOURCE`, `EPOCH`,
+`RETRIEVED_AT` and `METHOD`. Unknown values are ABSENT — never zero, never a
+placeholder, never carried across from a sibling object. `OPP.SOURCES` lists
+every source consulted, including ones that yielded nothing, so a consumer can
+tell "not looked for" from "looked for and not published".
+
+Radar cross-section is band- and aspect-dependent, so `RADAR_CROSS_SECTIONS` is
+a LIST of `OPPRadarCrossSection`, never one scalar. ESA DISCOS `xSectMin` /
+`xSectAvg` / `xSectMax` become three entries with `ASPECT` MINIMUM / AVERAGE /
+MAXIMUM sharing one `OPPProvenance`. `m2` and `dBsm` are never silently
+converted. A source that publishes a bucket instead of a number uses
+`SIZE_CLASS` verbatim; a bucket is never turned into a number.
+
+Geometry measured off a 3D model is `METHOD: MODEL_DERIVED` and describes the
+MODEL, not the flight article. A value borrowed from the bus design is
+`METHOD: INFERRED_FROM_FAMILY` and is visibly an approximation.
+
+Division of labour: `$CAT` = catalogue identity, orbit, and the publisher's own
+unattributed RCS/SIZE/MASS convenience scalars; `$BUS` = the bus DESIGN shared
+by every object built on it; `$VAM` = asset bytes, licence, review, geometry
+metrics; `$PNL` = the articulated panel model consumed by SRP propagation;
+`$OPP` = per-object physical truth where every value names its own source.
+`OPPSurface.PANEL_ID` joins a surface to its `$PNL` panel and
+`OPPSurface.GLTF_MATERIAL_NAME`/`GLTF_MATERIAL_INDEX` join it to the exact glTF
+material of the variant named in `ASSET`.

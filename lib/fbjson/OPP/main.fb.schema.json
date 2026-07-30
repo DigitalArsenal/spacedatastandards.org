@@ -1,0 +1,974 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "oppDeterminationMethod": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEASURED",
+        "OPERATOR_STATED",
+        "ESTIMATED",
+        "DERIVED",
+        "MODEL_DERIVED",
+        "INFERRED_FROM_FAMILY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source published the value without stating how it was obtained."
+        },
+        "MEASURED": {
+          "value": 1,
+          "description": "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+        },
+        "OPERATOR_STATED": {
+          "value": 2,
+          "description": "Published by the operator, manufacturer or launch provider for this specific object."
+        },
+        "ESTIMATED": {
+          "value": 3,
+          "description": "The source's own estimate, stated as an estimate."
+        },
+        "DERIVED": {
+          "value": 4,
+          "description": "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+        },
+        "MODEL_DERIVED": {
+          "value": 5,
+          "description": "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+        },
+        "INFERRED_FROM_FAMILY": {
+          "value": 6,
+          "description": "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+        }
+      }
+    },
+    "oppRcsAspect": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "AVERAGE",
+        "MINIMUM",
+        "MAXIMUM",
+        "MEDIAN",
+        "HEAD_ON",
+        "BROADSIDE",
+        "NADIR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+        },
+        "AVERAGE": {
+          "value": 1
+        },
+        "MINIMUM": {
+          "value": 2
+        },
+        "MAXIMUM": {
+          "value": 3
+        },
+        "MEDIAN": {
+          "value": 4
+        },
+        "HEAD_ON": {
+          "value": 5
+        },
+        "BROADSIDE": {
+          "value": 6
+        },
+        "NADIR": {
+          "value": 7
+        }
+      }
+    },
+    "oppSurfaceKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "BUS_BODY",
+        "SOLAR_ARRAY",
+        "ANTENNA_DISH",
+        "ANTENNA_PANEL",
+        "RADIATOR",
+        "THERMAL_BLANKET",
+        "OPTICAL_APERTURE",
+        "BOOM",
+        "TRUSS",
+        "TANK",
+        "NOZZLE",
+        "SHIELD",
+        "DOCKING_INTERFACE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "BUS_BODY": {
+          "value": 1
+        },
+        "SOLAR_ARRAY": {
+          "value": 2
+        },
+        "ANTENNA_DISH": {
+          "value": 3
+        },
+        "ANTENNA_PANEL": {
+          "value": 4
+        },
+        "RADIATOR": {
+          "value": 5
+        },
+        "THERMAL_BLANKET": {
+          "value": 6
+        },
+        "OPTICAL_APERTURE": {
+          "value": 7
+        },
+        "BOOM": {
+          "value": 8
+        },
+        "TRUSS": {
+          "value": 9
+        },
+        "TANK": {
+          "value": 10
+        },
+        "NOZZLE": {
+          "value": 11
+        },
+        "SHIELD": {
+          "value": 12
+        },
+        "DOCKING_INTERFACE": {
+          "value": 13
+        },
+        "OTHER": {
+          "value": 14
+        }
+      }
+    },
+    "oppMaterialClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ALUMINIUM",
+        "TITANIUM",
+        "STEEL",
+        "CARBON_COMPOSITE",
+        "MULTI_LAYER_INSULATION",
+        "SOLAR_CELL",
+        "COVER_GLASS",
+        "PAINT_WHITE",
+        "PAINT_BLACK",
+        "OPTICAL_SOLAR_REFLECTOR",
+        "POLYIMIDE_FILM",
+        "MESH",
+        "CERAMIC",
+        "GOLD_FOIL",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ALUMINIUM": {
+          "value": 1
+        },
+        "TITANIUM": {
+          "value": 2
+        },
+        "STEEL": {
+          "value": 3
+        },
+        "CARBON_COMPOSITE": {
+          "value": 4
+        },
+        "MULTI_LAYER_INSULATION": {
+          "value": 5
+        },
+        "SOLAR_CELL": {
+          "value": 6
+        },
+        "COVER_GLASS": {
+          "value": 7
+        },
+        "PAINT_WHITE": {
+          "value": 8
+        },
+        "PAINT_BLACK": {
+          "value": 9
+        },
+        "OPTICAL_SOLAR_REFLECTOR": {
+          "value": 10
+        },
+        "POLYIMIDE_FILM": {
+          "value": 11
+        },
+        "MESH": {
+          "value": 12
+        },
+        "CERAMIC": {
+          "value": 13
+        },
+        "GOLD_FOIL": {
+          "value": 14
+        },
+        "OTHER": {
+          "value": 15
+        }
+      }
+    },
+    "OPPProvenance": {
+      "type": "object",
+      "description": "Provenance for exactly one physical value.\n\nThis table is the mechanism by which the never-invent-data law is enforced\nin the IDL rather than in prose: no physical quantity in an $OPP can be\nexpressed without one of these attached, so a value with no admissible\nsource cannot be encoded at all. Unknown values are ABSENT. They are never\nzero, never a placeholder, and never carried forward from a different\nobject.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "description": "Publisher of the value, named as the publisher names itself: \"ESA DISCOS\",\n\"CelesTrak SATCAT\", \"Gunter's Space Page\", \"NASA\", the operator's name.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "description": "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Deep link to the exact source record when the source publishes one.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of the\ninstant the value describes: the epoch at which the property held. A\ndesign or as-built value that does not change over time omits EPOCH.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthis record retrieved the value from SOURCE.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_VERSION": {
+          "type": "string",
+          "description": "The source's own revision, edition or publication marker, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/oppDeterminationMethod",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source published the value without stating how it was obtained."
+            },
+            "MEASURED": {
+              "value": 1,
+              "description": "Direct physical measurement: radar range measurement, laboratory weigh-in, photometric observation, tape measure on the flight article."
+            },
+            "OPERATOR_STATED": {
+              "value": 2,
+              "description": "Published by the operator, manufacturer or launch provider for this specific object."
+            },
+            "ESTIMATED": {
+              "value": 3,
+              "description": "The source's own estimate, stated as an estimate."
+            },
+            "DERIVED": {
+              "value": 4,
+              "description": "Computed by the record's publisher from other values that each carry their own provenance in this same record."
+            },
+            "MODEL_DERIVED": {
+              "value": 5,
+              "description": "Measured off 3D-asset geometry. A MODEL_DERIVED value describes the model, not the flight article, and is never presented as a physical measurement."
+            },
+            "INFERRED_FROM_FAMILY": {
+              "value": 6,
+              "description": "Taken from the bus design or from a sibling object in the same family because no per-object value exists. Always an approximation."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Terms under which SOURCE permits redistribution of the value, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution string the source requires be displayed with the value.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "64 lowercase hexadecimal characters encoding SHA-256 of the exact source\npayload bytes the value was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Free text qualifying the value, such as the source's own caveat.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "OPPQuantity": {
+      "type": "object",
+      "description": "One scalar physical quantity, its unit and its own provenance.\n\nPROVENANCE is required: an OPPQuantity that exists names where it came from.\nPresence of the table is the signal that a value exists, so VALUE zero is a\nreal zero (0 dBsm is 1 m2) and an unknown quantity omits the whole table.",
+      "properties": {
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Unit symbol verbatim, never silently converted: \"kg\", \"m\", \"m2\", \"m2/kg\",\n\"kg/m2\", \"dBsm\", \"W\", \"mag\". A converted value states the unit it was\nconverted to and records the conversion in PROVENANCE.NOTES with\nPROVENANCE.METHOD DERIVED.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SIGMA": {
+          "type": "number",
+          "description": "1-sigma uncertainty in UNITS. Zero means the source stated no uncertainty;\na genuine stated sigma is never exactly zero.",
+          "x-flatbuffer-type": "double"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/OPPProvenance",
+          "x-flatbuffer-type": "OPPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "UNITS",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "OPPRadarCrossSection": {
+      "type": "object",
+      "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+      "properties": {
+        "BAND": {
+          "type": "string",
+          "description": "Radar band designation verbatim from the source: \"UHF\", \"L\", \"S\", \"C\",\n\"X\", \"Ku\". Empty when the source states no band.",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY_MHZ": {
+          "type": "number",
+          "description": "Centre frequency [megahertz] when the source states one. Zero means\nunstated.",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARIZATION": {
+          "type": "string",
+          "description": "Polarization verbatim from the source: \"HH\", \"VV\", \"HV\", \"RCRC\". Empty\nwhen the source states none.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASPECT": {
+          "$ref": "#/definitions/oppRcsAspect",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+            },
+            "AVERAGE": {
+              "value": 1
+            },
+            "MINIMUM": {
+              "value": 2
+            },
+            "MAXIMUM": {
+              "value": 3
+            },
+            "MEDIAN": {
+              "value": 4
+            },
+            "HEAD_ON": {
+              "value": 5
+            },
+            "BROADSIDE": {
+              "value": 6
+            },
+            "NADIR": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CROSS_SECTION": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "The cross-section itself. UNITS is \"m2\" or \"dBsm\" as the source published\nit; the two are never mixed within one entry and never silently converted.",
+          "x-flatbuffer-type": "OPPQuantity",
+          "x-flatbuffer-required": true
+        },
+        "SIZE_CLASS": {
+          "type": "string",
+          "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number.",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR": {
+          "type": "string",
+          "description": "Sensor or facility that produced the measurement, when stated.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "CROSS_SECTION"
+      ],
+      "additionalProperties": false
+    },
+    "OPPMass": {
+      "type": "object",
+      "description": "Mass breakdown. Each component is independently sourced; a wet mass and a\ndry mass may legitimately come from different publishers and epochs.",
+      "properties": {
+        "DRY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Mass without propellant or consumables [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "WET": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Mass with propellant, at the stated epoch [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "LAUNCH": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Mass at separation from the launch vehicle [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "PROPELLANT": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Propellant mass at the stated epoch [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "PAYLOAD": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Payload mass carried by the bus [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "CURRENT": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Best current estimate of mass at the record's epoch [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OPPDimensions": {
+      "type": "object",
+      "description": "Physical envelope. Every extent is a sourced quantity. Extents measured off\n3D-asset geometry carry PROVENANCE.METHOD MODEL_DERIVED and describe the\nmodel, not the flight article.",
+      "properties": {
+        "BODY_X": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Extents along the object's own body axes [m].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "BODY_Y": {
+          "$ref": "#/definitions/OPPQuantity",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "BODY_Z": {
+          "$ref": "#/definitions/OPPQuantity",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "HEIGHT": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Envelope terms as ESA DISCOS publishes them [m].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "WIDTH": {
+          "$ref": "#/definitions/OPPQuantity",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "DEPTH": {
+          "$ref": "#/definitions/OPPQuantity",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "DIAMETER": {
+          "$ref": "#/definitions/OPPQuantity",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SPAN_STOWED": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Largest extent with appendages stowed [m].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SPAN_DEPLOYED": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Largest extent with appendages deployed [m].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SHAPE": {
+          "type": "string",
+          "description": "Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry.",
+          "x-flatbuffer-type": "string"
+        },
+        "SHAPE_PROVENANCE": {
+          "$ref": "#/definitions/OPPProvenance",
+          "description": "Provenance of SHAPE. Present whenever SHAPE is nonempty.",
+          "x-flatbuffer-type": "OPPProvenance"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OPPAreas": {
+      "type": "object",
+      "description": "Projected areas and the ratios derived from them.",
+      "properties": {
+        "CROSS_SECTIONAL_AVERAGE": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Average projected cross-sectional area over all aspects [m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "CROSS_SECTIONAL_MINIMUM": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Smallest projected cross-sectional area [m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "CROSS_SECTIONAL_MAXIMUM": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Largest projected cross-sectional area [m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SOLAR_ARRAY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Total solar-array area [m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "AREA_TO_MASS_RATIO": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Area-to-mass ratio [m2/kg], only when a source publishes one directly or\nthe publisher derives it with PROVENANCE.METHOD DERIVED.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "BALLISTIC_COEFFICIENT": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Ballistic coefficient [kg/m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OPPSurface": {
+      "type": "object",
+      "description": "One exterior surface of the object: what it is made of, how large it is and\nhow it interacts with light.\n\n$PNL carries the articulated panel model used for solar-radiation-pressure\npropagation; an $OPP surface is the sourced material inventory. When both\nexist, PANEL_ID joins this surface to its $PNL panel. GLTF_MATERIAL_NAME and\nGLTF_MATERIAL_INDEX join it to the exact glTF material in the asset variant\nnamed by OPP.ASSET.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier for this surface within the record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/oppSurfaceKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "BUS_BODY": {
+              "value": 1
+            },
+            "SOLAR_ARRAY": {
+              "value": 2
+            },
+            "ANTENNA_DISH": {
+              "value": 3
+            },
+            "ANTENNA_PANEL": {
+              "value": 4
+            },
+            "RADIATOR": {
+              "value": 5
+            },
+            "THERMAL_BLANKET": {
+              "value": 6
+            },
+            "OPTICAL_APERTURE": {
+              "value": 7
+            },
+            "BOOM": {
+              "value": 8
+            },
+            "TRUSS": {
+              "value": 9
+            },
+            "TANK": {
+              "value": 10
+            },
+            "NOZZLE": {
+              "value": 11
+            },
+            "SHIELD": {
+              "value": 12
+            },
+            "DOCKING_INTERFACE": {
+              "value": 13
+            },
+            "OTHER": {
+              "value": 14
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MATERIAL": {
+          "type": "string",
+          "description": "Material name verbatim from the source: \"Kapton MLI\", \"GaAs\ntriple-junction\", \"Al 6061-T6\". Empty when unstated.",
+          "x-flatbuffer-type": "string"
+        },
+        "MATERIAL_CLASS": {
+          "$ref": "#/definitions/oppMaterialClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ALUMINIUM": {
+              "value": 1
+            },
+            "TITANIUM": {
+              "value": 2
+            },
+            "STEEL": {
+              "value": 3
+            },
+            "CARBON_COMPOSITE": {
+              "value": 4
+            },
+            "MULTI_LAYER_INSULATION": {
+              "value": 5
+            },
+            "SOLAR_CELL": {
+              "value": 6
+            },
+            "COVER_GLASS": {
+              "value": 7
+            },
+            "PAINT_WHITE": {
+              "value": 8
+            },
+            "PAINT_BLACK": {
+              "value": 9
+            },
+            "OPTICAL_SOLAR_REFLECTOR": {
+              "value": 10
+            },
+            "POLYIMIDE_FILM": {
+              "value": 11
+            },
+            "MESH": {
+              "value": 12
+            },
+            "CERAMIC": {
+              "value": 13
+            },
+            "GOLD_FOIL": {
+              "value": 14
+            },
+            "OTHER": {
+              "value": 15
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "How many identical surfaces this entry represents, such as two solar-array\nwings.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "1"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/OPPProvenance",
+          "description": "Provenance of MATERIAL, MATERIAL_CLASS, KIND and COUNT. Every dimensioned\nfield below carries its own.",
+          "x-flatbuffer-type": "OPPProvenance"
+        },
+        "AREA": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Area of one surface, not of COUNT surfaces [m2].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "MASS": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Mass of one surface [kg].",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SPECULAR_REFLECTIVITY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Fraction of incident radiation reflected specularly, dimensionless.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "DIFFUSE_REFLECTIVITY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Fraction of incident radiation reflected diffusely, dimensionless.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "ABSORPTIVITY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Solar absorptivity, dimensionless.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "EMISSIVITY": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Infrared emissivity, dimensionless.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "PANEL_ID": {
+          "type": "string",
+          "description": "Join key to the $PNL panel representing this surface; holds that record's\nPNLPanel.PANEL_ID verbatim. Empty when no $PNL panel exists.",
+          "x-flatbuffer-type": "string"
+        },
+        "GLTF_MATERIAL_NAME": {
+          "type": "string",
+          "description": "Name of the glTF material that renders this surface, verbatim, in the\nvariant named by OPP.ASSET.VARIANT_ID. Empty when the surface is not\nrepresented in the asset.",
+          "x-flatbuffer-type": "string"
+        },
+        "GLTF_MATERIAL_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Zero-based index into the glTF materials array of that same variant.\nNegative one means no glTF material corresponds to this surface.",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
+      "additionalProperties": false
+    },
+    "OPPAssetRef": {
+      "type": "object",
+      "description": "Binding to the exact 3D asset bytes this record accompanies.\n\nEvery field is copied verbatim from the $VAM that governs the asset, so an\n$OPP is valid for exactly one reviewed variant. Different bytes are a\ndifferent asset: mint a new $OPP and set SUPERSEDES_OPP_CID rather than\nrepointing an existing one.",
+      "properties": {
+        "VAM_ID": {
+          "type": "string",
+          "description": "$VAM.ID verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VAM_VERSION": {
+          "type": "string",
+          "description": "$VAM.VERSION verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "VAM_CID": {
+          "type": "string",
+          "description": "CIDv1 containing a multihash of the exact $VAM bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "VARIANT_ID": {
+          "type": "string",
+          "description": "$VAMVariant.ID verbatim: the specific glTF or GLB this record describes.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ASSET_SHA256": {
+          "type": "string",
+          "description": "$VAMVariant.BYTE_SHA256 verbatim: 64 lowercase hexadecimal characters\nencoding SHA-256 of the exact asset file bytes.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ASSET_CID": {
+          "type": "string",
+          "description": "$VAMVariant.CID verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_FILE_NAME": {
+          "type": "string",
+          "description": "$VAMVariant.FILE_NAME verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_MEDIA_TYPE": {
+          "type": "string",
+          "description": "$VAMVariant.MEDIA_TYPE verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "GLTF_VERSION": {
+          "type": "string",
+          "description": "$VAMVariant.GLTF_VERSION verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "description": "$VAM.ENTITY_ID verbatim. MUST equal OPP.ENTITY_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "GEOMETRY_MATCHES_PHYSICAL": {
+          "type": "boolean",
+          "description": "True only when the asset geometry was authored or rescaled to the physical\ndimensions in this record. False, the default, means the asset is\nrepresentative and its geometry is not a source of physical dimensions.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "METERS_PER_ASSET_UNIT": {
+          "type": "number",
+          "description": "Metres per asset unit for the named variant. Restates\n$VAMTransform.METERS_PER_SOURCE_UNIT for consumers that read only $OPP.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        }
+      },
+      "required": [
+        "VAM_ID",
+        "VARIANT_ID",
+        "ASSET_SHA256"
+      ],
+      "additionalProperties": false
+    },
+    "OPP": {
+      "type": "object",
+      "description": "Object Physical Properties - the sourced physical description of one space\nobject and, when one exists, of the exact 3D asset that represents it.\n\nDivision of labour with the neighbouring standards. $CAT is catalogue\nidentity and orbit, and its RCS, SIZE and MASS scalars are unattributed\nconvenience fields carried from the catalogue publisher. $BUS is the bus\nDESIGN, shared by every object built on it. $VAM is the asset manifest: the\nbytes, the licence, the review and the geometry metrics. $PNL is the\narticulated panel model consumed by solar-radiation-pressure propagation.\n$OPP is the per-object physical truth in which EVERY value names its own\nsource, epoch and method. $OPP never restates orbital elements and never\nduplicates bus-design values; a per-object value that came from the bus\ndesign is stated here with METHOD INFERRED_FROM_FAMILY so a consumer can see\nthat it is an approximation.\n\nJoins. NORAD_CAT_ID and OBJECT_ID join to $CAT. BUS_ID joins to $BUS.\nASSET joins to the exact reviewed $VAM variant. ENTITY_ID is the stable\nnon-catalogue key shared with $VAM for objects that have no catalogue entry.\n\nNever-invent law, enforced by the shape rather than by prose: a physical\nquantity exists only as an OPPQuantity and OPPQuantity.PROVENANCE is\nrequired, so there is no encoding for a mass, dimension, area or\ncross-section that does not name where it came from. Unknown values are\nabsent. A consumer that finds a field missing has learned that no admissible\nsource published it.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier for this record.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "SemVer 2.0.0 record-format version, not a content revision.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "$CAT.NORAD_CAT_ID verbatim. Zero when the object has no catalogue number.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "$CAT.OBJECT_ID verbatim: the COSPAR international designator.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "$CAT.OBJECT_NAME verbatim, for display only. Never a join key.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENTITY_ID": {
+          "type": "string",
+          "description": "Stable non-catalogue entity key, such as an asset catalogue entity path.\nMUST equal ASSET.ENTITY_ID when ASSET is present.",
+          "x-flatbuffer-type": "string"
+        },
+        "BUS_ID": {
+          "type": "string",
+          "description": "Join key to the $BUS record describing this object's bus design; holds\nthat record's BUS.ID verbatim. Empty when the bus is unknown or has no\n$BUS record.",
+          "x-flatbuffer-type": "string"
+        },
+        "BUS_FAMILY": {
+          "type": "string",
+          "description": "Bus or platform family name verbatim from BUS_FAMILY_PROVENANCE.SOURCE,\nfor objects whose family is known but has no $BUS record.",
+          "x-flatbuffer-type": "string"
+        },
+        "BUS_FAMILY_PROVENANCE": {
+          "$ref": "#/definitions/OPPProvenance",
+          "description": "Provenance of BUS_FAMILY. Present whenever BUS_FAMILY is nonempty.",
+          "x-flatbuffer-type": "OPPProvenance"
+        },
+        "MANUFACTURER": {
+          "type": "string",
+          "description": "Manufacturer or prime contractor as stated by MANUFACTURER_PROVENANCE.",
+          "x-flatbuffer-type": "string"
+        },
+        "MANUFACTURER_PROVENANCE": {
+          "$ref": "#/definitions/OPPProvenance",
+          "description": "Provenance of MANUFACTURER. Present whenever MANUFACTURER is nonempty.",
+          "x-flatbuffer-type": "OPPProvenance"
+        },
+        "MASS": {
+          "$ref": "#/definitions/OPPMass",
+          "x-flatbuffer-type": "OPPMass"
+        },
+        "DIMENSIONS": {
+          "$ref": "#/definitions/OPPDimensions",
+          "x-flatbuffer-type": "OPPDimensions"
+        },
+        "AREAS": {
+          "$ref": "#/definitions/OPPAreas",
+          "x-flatbuffer-type": "OPPAreas"
+        },
+        "RADAR_CROSS_SECTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OPPRadarCrossSection"
+          },
+          "description": "One entry per band, polarization and aspect the sources publish. Empty\nmeans no source published a radar cross-section for this object.",
+          "x-flatbuffer-type": "[OPPRadarCrossSection]"
+        },
+        "VISUAL_MAGNITUDE": {
+          "$ref": "#/definitions/OPPQuantity",
+          "description": "Visual magnitude, UNITS \"mag\", with the observing conditions in\nPROVENANCE.NOTES.",
+          "x-flatbuffer-type": "OPPQuantity"
+        },
+        "SURFACES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OPPSurface"
+          },
+          "description": "Material and surface inventory.",
+          "x-flatbuffer-type": "[OPPSurface]"
+        },
+        "ASSET": {
+          "$ref": "#/definitions/OPPAssetRef",
+          "description": "Binding to the exact reviewed 3D asset this record accompanies. Absent for\nan object with no asset; the physical values remain valid without it.",
+          "x-flatbuffer-type": "OPPAssetRef"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OPPProvenance"
+          },
+          "description": "Every source consulted while building this record, including sources that\nyielded no value. Lets a consumer distinguish \"not looked for\" from\n\"looked for and not published\".",
+          "x-flatbuffer-type": "[OPPProvenance]"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was created.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) when\nthe record was last updated.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_OPP_CID": {
+          "type": "string",
+          "description": "CIDv1 containing a multihash of the exact superseded $OPP bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OPP",
+  "x-flatbuffer-root-type": "OPP",
+  "x-flatbuffer-file-identifier": "$OPP"
+}

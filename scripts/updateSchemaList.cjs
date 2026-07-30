@@ -52,6 +52,7 @@ const CATEGORY_MAP = {
   'SCM': 'Spacecraft', 'PRG': 'Spacecraft', 'MFE': 'Spacecraft',
   'BUS': 'Spacecraft', 'OOA': 'Spacecraft', 'OOB': 'Spacecraft',
   'OOS': 'Spacecraft', 'OOT': 'Spacecraft', 'VAM': 'Spacecraft',
+  'OPP': 'Spacecraft',
 
   // Communications
   'COM': 'Communications', 'CHN': 'Communications', 'SPP': 'Communications',

@@ -203,6 +203,7 @@ public enum RecordType : byte
   QEM = 196,
   SBM = 197,
   PMM = 198,
+  OPP = 199,
 };
 
 public class RecordTypeUnion {
@@ -611,6 +612,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromSBM(SBMT _sbm) { return new RecordTypeUnion{ Type = RecordType.SBM, Value = _sbm }; }
   public PMMT AsPMM() { return this.As<PMMT>(); }
   public static RecordTypeUnion FromPMM(PMMT _pmm) { return new RecordTypeUnion{ Type = RecordType.PMM, Value = _pmm }; }
+  public OPPT AsOPP() { return this.As<OPPT>(); }
+  public static RecordTypeUnion FromOPP(OPPT _opp) { return new RecordTypeUnion{ Type = RecordType.OPP, Value = _opp }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -813,6 +816,7 @@ public class RecordTypeUnion {
       case RecordType.QEM: return QEM.Pack(builder, _o.AsQEM()).Value;
       case RecordType.SBM: return SBM.Pack(builder, _o.AsSBM()).Value;
       case RecordType.PMM: return PMM.Pack(builder, _o.AsPMM()).Value;
+      case RecordType.OPP: return OPP.Pack(builder, _o.AsOPP()).Value;
     }
   }
 }
@@ -1419,6 +1423,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.PMM:
         result = PMMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.OPP:
+        result = OPPVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;
