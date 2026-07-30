@@ -198,6 +198,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -332,10 +333,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 197;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 198;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 198] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 199] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -534,6 +535,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 198] = [
   RecordType::CES,
   RecordType::QEM,
   RecordType::SBM,
+  RecordType::PMM,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -739,9 +741,10 @@ impl RecordType {
   pub const CES: Self = Self(195);
   pub const QEM: Self = Self(196);
   pub const SBM: Self = Self(197);
+  pub const PMM: Self = Self(198);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 197;
+  pub const ENUM_MAX: u8 = 198;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -941,6 +944,7 @@ impl RecordType {
     Self::CES,
     Self::QEM,
     Self::SBM,
+    Self::PMM,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1143,6 +1147,7 @@ impl RecordType {
       Self::CES => Some("CES"),
       Self::QEM => Some("QEM"),
       Self::SBM => Some("SBM"),
+      Self::PMM => Some("PMM"),
       _ => None,
     }
   }
@@ -1401,6 +1406,7 @@ pub enum RecordTypeT {
   CES(alloc::boxed::Box<CEST>),
   QEM(alloc::boxed::Box<QEMT>),
   SBM(alloc::boxed::Box<SBMT>),
+  PMM(alloc::boxed::Box<PMMT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1608,6 +1614,7 @@ impl RecordTypeT {
       Self::CES(_) => RecordType::CES,
       Self::QEM(_) => RecordType::QEM,
       Self::SBM(_) => RecordType::SBM,
+      Self::PMM(_) => RecordType::PMM,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1810,6 +1817,7 @@ impl RecordTypeT {
       Self::CES(v) => Some(v.pack(fbb).as_union_value()),
       Self::QEM(v) => Some(v.pack(fbb).as_union_value()),
       Self::SBM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::PMM(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -5949,6 +5957,27 @@ impl RecordTypeT {
   pub fn as_sbm_mut(&mut self) -> Option<&mut SBMT> {
     if let Self::SBM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned PMMT, setting the union to NONE.
+  pub fn take_pmm(&mut self) -> Option<alloc::boxed::Box<PMMT>> {
+    if let Self::PMM(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::PMM(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the PMMT.
+  pub fn as_pmm(&self) -> Option<&PMMT> {
+    if let Self::PMM(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the PMMT.
+  pub fn as_pmm_mut(&mut self) -> Option<&mut PMMT> {
+    if let Self::PMM(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -6973,6 +7002,11 @@ impl<'a> Record<'a> {
       RecordType::SBM => RecordTypeT::SBM(alloc::boxed::Box::new(
         self.value_as_sbm()
             .expect("Invalid union table, expected `RecordType::SBM`.")
+            .unpack()
+      )),
+      RecordType::PMM => RecordTypeT::PMM(alloc::boxed::Box::new(
+        self.value_as_pmm()
+            .expect("Invalid union table, expected `RecordType::PMM`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -9964,6 +9998,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_pmm(&self) -> Option<PMM<'a>> {
+    if self.value_type() == RecordType::PMM {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { PMM::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10171,6 +10220,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::CES => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CES>>("RecordType::CES", pos),
           RecordType::QEM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<QEM>>("RecordType::QEM", pos),
           RecordType::SBM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SBM>>("RecordType::SBM", pos),
+          RecordType::PMM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PMM>>("RecordType::PMM", pos),
           _ => Ok(()),
         }
      })?
@@ -11606,6 +11656,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::SBM => {
           if let Some(x) = self.value_as_sbm() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::PMM => {
+          if let Some(x) = self.value_as_pmm() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

@@ -1,5 +1,5 @@
-// Hash: 5fc46d4beaa57dd72aea80fe7b20fc72426b2a02eecebfeac6fe9abc2c6b6d76
-// Version: 1.44.44
+// Hash: 31fd3da2aad11ec967d9978432d556a70ceb8792613f55cc13c37f4287571686
+// Version: 1.44.45
 // -----------------------------------END_HEADER
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
@@ -128,6 +128,7 @@ include "../PKB/main.fbs";
 include "../PLD/main.fbs";
 include "../PLG/main.fbs";
 include "../PLK/main.fbs";
+include "../PMM/main.fbs";
 include "../PNL/main.fbs";
 include "../PNM/main.fbs";
 include "../PPE/main.fbs";
@@ -249,7 +250,7 @@ union RecordType {
   SUB, WKS, CPS, FSB,
   FSO, GST, MDP, MDS,
   PNL, SHC, CES, QEM,
-  SBM
+  SBM, PMM
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.170.0+1785354666757",
+  version: "1.171.0+1785408377428",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -4353,7 +4353,7 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 5fc46d4beaa57dd72aea80fe7b20fc72426b2a02eecebfeac6fe9abc2c6b6d76\n// Version: 1.44.44\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: '// Hash: 31fd3da2aad11ec967d9978432d556a70ceb8792613f55cc13c37f4287571686\n// Version: 1.44.45\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PMM/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM, PMM\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -9367,6 +9367,25 @@ file_identifier "$EOO";`,
         "./dist/TDM/TDM.cpp.tar.gz",
         "./dist/TDM/TDM.kt.tar.gz",
         "./dist/TDM/TDM.ts.tar.gz"
+      ]
+    },
+    PMM: {
+      IDL: '// Hash: 950e969865f1af0a44ab90ce79766d736bd3e7b1cdada53c6438b456ae7d263d\n// Version: 1.170.0\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
+      files: [
+        "./dist/PMM/PMM.sw.tar.gz",
+        "./dist/PMM/PMM.py.tar.gz",
+        "./dist/PMM/PMM.lob.tar.gz",
+        "./dist/PMM/PMM.go.tar.gz",
+        "./dist/PMM/PMM.js.tar.gz",
+        "./dist/PMM/PMM.dart.tar.gz",
+        "./dist/PMM/PMM.cs.tar.gz",
+        "./dist/PMM/PMM.java.tar.gz",
+        "./dist/PMM/PMM.rs.tar.gz",
+        "./dist/PMM/PMM.php.tar.gz",
+        "./dist/PMM/PMM.json.tar.gz",
+        "./dist/PMM/PMM.cpp.tar.gz",
+        "./dist/PMM/PMM.kt.tar.gz",
+        "./dist/PMM/PMM.ts.tar.gz"
       ]
     },
     OCM: {
@@ -49584,6 +49603,228 @@ var json_default = {
         }
       },
       $ref: "#/definitions/RFM"
+    },
+    PMM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        KeyType: {
+          type: "string",
+          enum: [
+            "Signing",
+            "Encryption"
+          ]
+        },
+        EntityType: {
+          type: "string",
+          enum: [
+            "User",
+            "Node"
+          ]
+        },
+        CryptoKey: {
+          type: "object",
+          description: "Represents cryptographic key information",
+          properties: {
+            PUBLIC_KEY: {
+              type: "string",
+              description: "Public part of the cryptographic key, in hexidecimal format"
+            },
+            XPUB: {
+              type: "string",
+              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+            },
+            PRIVATE_KEY: {
+              type: "string",
+              description: "Private part of the cryptographic key in hexidecimal format, should be kept secret"
+            },
+            XPRIV: {
+              type: "string",
+              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+            },
+            KEY_ADDRESS: {
+              type: "string",
+              description: "Address generated from the cryptographic key"
+            },
+            ADDRESS_TYPE: {
+              type: "string",
+              description: "Type of the address generated from the cryptographic key"
+            },
+            KEY_TYPE: {
+              $ref: "#/definitions/KeyType",
+              description: "Type of the cryptographic key (signing or encryption)"
+            }
+          },
+          additionalProperties: false
+        },
+        Address: {
+          type: "object",
+          description: "Represents a geographic address",
+          properties: {
+            COUNTRY: {
+              type: "string",
+              description: "Country of the address"
+            },
+            REGION: {
+              type: "string",
+              description: "Region of the address (e.g., state or province)"
+            },
+            LOCALITY: {
+              type: "string",
+              description: "Locality of the address (e.g., city or town)"
+            },
+            POSTAL_CODE: {
+              type: "string",
+              description: "Postal code of the address"
+            },
+            STREET: {
+              type: "string",
+              description: "Street address"
+            },
+            POST_OFFICE_BOX_NUMBER: {
+              type: "string",
+              description: "Post office box number"
+            }
+          },
+          additionalProperties: false
+        },
+        ChainProof: {
+          type: "object",
+          description: "Proves a blockchain key derives from the same HD wallet as the signing key",
+          properties: {
+            CHAIN: {
+              type: "string",
+              description: 'Chain identifier (e.g., "bitcoin", "ethereum", "solana")'
+            },
+            ADDRESS: {
+              type: "string",
+              description: "Derived blockchain address"
+            },
+            PUBLIC_KEY: {
+              type: "string",
+              description: "Public key for this chain (hex-encoded)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")`
+            },
+            SIGNATURE: {
+              type: "string",
+              description: "Signature over the attestation payload (hex-encoded)"
+            },
+            SIGNED_PAYLOAD: {
+              type: "string",
+              description: "The canonical payload that was signed (hex-encoded)"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+            }
+          },
+          additionalProperties: false
+        },
+        EPM: {
+          type: "object",
+          description: "Entity Profile Message",
+          properties: {
+            DN: {
+              type: "string",
+              description: "Distinguished Name of the entity"
+            },
+            LEGAL_NAME: {
+              type: "string",
+              description: "Common name of the entity (person or organization)"
+            },
+            FAMILY_NAME: {
+              type: "string",
+              description: "Family name or surname of the person"
+            },
+            GIVEN_NAME: {
+              type: "string",
+              description: "Given name or first name of the person"
+            },
+            ADDITIONAL_NAME: {
+              type: "string",
+              description: "Additional name or middle name of the person"
+            },
+            HONORIFIC_PREFIX: {
+              type: "string",
+              description: "Honorific prefix preceding the person's name (e.g., Mr., Dr.)"
+            },
+            HONORIFIC_SUFFIX: {
+              type: "string",
+              description: "Honorific suffix following the person's name (e.g., Jr., Sr.)"
+            },
+            JOB_TITLE: {
+              type: "string",
+              description: "Job title of the person"
+            },
+            OCCUPATION: {
+              type: "string",
+              description: "Occupation of the person"
+            },
+            ADDRESS: {
+              $ref: "#/definitions/Address",
+              description: "Physical Address"
+            },
+            ALTERNATE_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Alternate names for the entity"
+            },
+            EMAIL: {
+              type: "string",
+              description: "Email address of the entity"
+            },
+            TELEPHONE: {
+              type: "string",
+              description: "Telephone number of the entity"
+            },
+            KEYS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CryptoKey"
+              },
+              description: "Cryptographic keys associated with the entity"
+            },
+            MULTIFORMAT_ADDRESS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Multiformat addresses associated with the entity"
+            },
+            SIGNATURE: {
+              type: "string",
+              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+            },
+            SIGNATURE_TIMESTAMP: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Unix timestamp (seconds) when the EPM was signed"
+            },
+            CHAIN_PROOFS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ChainProof"
+              },
+              description: "Chain binding proofs linking blockchain keys to the same HD wallet"
+            },
+            ENTITY_TYPE: {
+              $ref: "#/definitions/EntityType",
+              description: "Type of entity represented by this profile"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/EPM"
     },
     OCM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -147483,6 +147724,91 @@ var fbjson_default = {
             }
           }
         },
+        pmmTrustTier: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Treated as OPTIONAL by verifiers."
+            },
+            CORE: {
+              value: 1,
+              description: "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+            },
+            RECOMMENDED: {
+              value: 2,
+              description: "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+            },
+            OPTIONAL: {
+              value: 3,
+              description: "Offered only."
+            }
+          }
+        },
+        pmmAccessPolicy: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            ANONYMOUS: {
+              value: 0,
+              description: "No session, no grant: an unauthenticated client may fetch and run it."
+            },
+            AUTHENTICATED: {
+              value: 1,
+              description: "An authenticated session is required."
+            },
+            ENTITLED: {
+              value: 2,
+              description: "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+            }
+          }
+        },
+        pmmEntryState: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            ACTIVE: {
+              value: 0,
+              description: "Served and loadable."
+            },
+            DEPRECATED: {
+              value: 1,
+              description: "Still served, superseded by another entry. Clients SHOULD migrate."
+            },
+            WITHDRAWN: {
+              value: 2,
+              description: "No longer served. Clients MUST NOT fetch it."
+            },
+            REVOKED: {
+              value: 3,
+              description: "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+            }
+          }
+        },
         pnlTrackingMode: {
           type: "integer",
           "x-flatbuffer-type": "enum",
@@ -184492,6 +184818,353 @@ var fbjson_default = {
             "LICENSE_ID",
             "PLUGIN_ID",
             "LICENSEE_ORG"
+          ]
+        },
+        PMMTrustAnchor: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PROVIDER_DOMAIN: {
+              type: "string",
+              description: "MUST equal the origin the manifest was fetched from.",
+              "x-flatbuffer-type": "string"
+            },
+            NODE_PEER_ID: {
+              type: "string",
+              description: "libp2p peer id of the provider node.",
+              "x-flatbuffer-type": "string"
+            },
+            NODE_XPUB: {
+              type: "string",
+              description: "node's `$EPM`.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNING_PUBLIC_KEY: {
+              type: "string",
+              description: "`PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNING_KEY_PATH: {
+              type: "string",
+              description: "HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: '"secp256k1-compact-ethereum". Empty means "ed25519".',
+              "x-flatbuffer-type": "string"
+            },
+            EPM_CID: {
+              type: "string",
+              description: "IPFS CID of the provider node's `$EPM`.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_RECORD_NAME: {
+              type: "string",
+              description: "below.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_TXT: {
+              type: "string",
+              description: "disagreement with what DNS returns. The resolved record always wins.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_STATEMENT: {
+              type: "string",
+              description: "format keeps it out of the TXT value.",
+              "x-flatbuffer-type": "string"
+            },
+            BOND_ADDRESSES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ChainProof"
+              },
+              description: "the address derives from the key that signed this manifest.",
+              "x-flatbuffer-type": "[ChainProof]"
+            },
+            BOND_ATTESTATION_URL: {
+              type: "string",
+              description: "duration unspent) for clients that price trust rather than gate on it.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "The single key identity every signature in this manifest resolves to, and the two external anchors that give that key its weight: the DNS proof that binds it to the domain, and the Adversarial-Security bond that prices trust in it."
+        },
+        PMMModuleEntry: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MODULE_ID: {
+              type: "string",
+              description: "across versions. Required and unique within the manifest.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PLUGIN_ID: {
+              type: "string",
+              description: "published.",
+              "x-flatbuffer-type": "string"
+            },
+            PLG_CID: {
+              type: "string",
+              description: "IPFS CID of that `$PLG` record.",
+              "x-flatbuffer-type": "string"
+            },
+            NAME: {
+              type: "string",
+              description: "Display name.",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Human-readable summary.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the offered artifact.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "integer",
+              description: "re-publication, including a rebuild at the same VERSION.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CONTENT_HASH: {
+              type: "string",
+              description: "capability and signature policies key on.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_SIZE_BYTES: {
+              type: "integer",
+              description: "Size of those portable WASM bytes.",
+              "x-flatbuffer-type": "uint64"
+            },
+            ARTIFACT_PATH: {
+              type: "string",
+              description: "whose domain the DNS proof binds.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_CID: {
+              type: "string",
+              description: "IPFS CID of the artifact, for content-addressed retrieval.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "trailer remains authoritative after download.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TRUST_TIER: {
+              $ref: "#/definitions/pmmTrustTier",
+              description: "Provider-declared standing. Gates anonymous loading.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Treated as OPTIONAL by verifiers."
+                },
+                CORE: {
+                  value: 1,
+                  description: "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+                },
+                RECOMMENDED: {
+                  value: 2,
+                  description: "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+                },
+                OPTIONAL: {
+                  value: 3,
+                  description: "Offered only."
+                }
+              }
+            },
+            DEFAULT_ENABLED: {
+              type: "boolean",
+              description: "user choice overrides it permanently.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ACCESS_POLICY: {
+              $ref: "#/definitions/pmmAccessPolicy",
+              description: "What the client must hold to fetch and run it.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "AUTHENTICATED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                ANONYMOUS: {
+                  value: 0,
+                  description: "No session, no grant: an unauthenticated client may fetch and run it."
+                },
+                AUTHENTICATED: {
+                  value: 1,
+                  description: "An authenticated session is required."
+                },
+                ENTITLED: {
+                  value: 2,
+                  description: "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+                }
+              }
+            },
+            ENTRY_STATE: {
+              $ref: "#/definitions/pmmEntryState",
+              description: "Entry lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "ACTIVE",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                ACTIVE: {
+                  value: 0,
+                  description: "Served and loadable."
+                },
+                DEPRECATED: {
+                  value: 1,
+                  description: "Still served, superseded by another entry. Clients SHOULD migrate."
+                },
+                WITHDRAWN: {
+                  value: 2,
+                  description: "No longer served. Clients MUST NOT fetch it."
+                },
+                REVOKED: {
+                  value: 3,
+                  description: "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+                }
+              }
+            },
+            RUNTIME_TARGETS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: '"wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.',
+              "x-flatbuffer-type": "[string]"
+            },
+            REQUIRED_SCHEMAS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: `SDS schema codes at this module's invoke surface, e.g. "OMM", "OEM".`,
+              "x-flatbuffer-type": "[string]"
+            },
+            MIN_PERMISSIONS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "anonymously-loaded CORE module is allowed to do.",
+              "x-flatbuffer-type": "[string]"
+            },
+            LICENSE: {
+              type: "string",
+              description: "SPDX license identifier of the module.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCUMENTATION_URL: {
+              type: "string",
+              description: "URL to the module's documentation.",
+              "x-flatbuffer-type": "string"
+            },
+            ICON_URL: {
+              type: "string",
+              description: "URL to the module's icon.",
+              "x-flatbuffer-type": "string"
+            },
+            SUPERSEDES_CONTENT_HASH: {
+              type: "string",
+              description: "`CONTENT_HASH` this entry replaces, when it supersedes an earlier build.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "the last change to this entry.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One module the provider offers.",
+          required: [
+            "MODULE_ID"
+          ]
+        },
+        PMM: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PROVIDER_DOMAIN: {
+              type: "string",
+              description: "the origin the manifest was served from.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PROVIDER_NAME: {
+              type: "string",
+              description: "Display name of the provider.",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Human-readable summary of what the provider serves.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "integer",
+              description: "highest it has already verified for `PROVIDER_DOMAIN`.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TRUST: {
+              $ref: "#/definitions/PMMTrustAnchor",
+              description: "The key identity and its external anchors.",
+              "x-flatbuffer-type": "PMMTrustAnchor"
+            },
+            MODULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PMMModuleEntry"
+              },
+              description: "The offered modules.",
+              "x-flatbuffer-type": "[PMMModuleEntry]"
+            },
+            CANONICAL_URL: {
+              type: "string",
+              description: "Canonical absolute URL this manifest is served from.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "when the manifest was created.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "when the manifest was last signed.",
+              "x-flatbuffer-type": "string"
+            },
+            EXPIRES_AT: {
+              type: "string",
+              description: "unexpiring signed manifest cannot be withdrawn.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "defined in this file's header.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            SIGNED_STATEMENT: {
+              type: "string",
+              description: "record and reject any difference.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Provider Module Manifest \u2014 what one provider node offers, signed by that node's key.",
+          required: [
+            "PROVIDER_DOMAIN"
           ]
         },
         PNLPanel: {
@@ -251418,6 +252091,741 @@ var fbjson_default = {
       $ref: "#/definitions/TDM",
       "x-flatbuffer-root-type": "TDM",
       "x-flatbuffer-file-identifier": "$TDM"
+    },
+    PMM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        KeyType: {
+          type: "string",
+          enum: [
+            "Signing",
+            "Encryption"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Signing: {
+              value: 0
+            },
+            Encryption: {
+              value: 1
+            }
+          }
+        },
+        EntityType: {
+          type: "string",
+          enum: [
+            "User",
+            "Node"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            User: {
+              value: 0
+            },
+            Node: {
+              value: 1
+            }
+          }
+        },
+        CryptoKey: {
+          type: "object",
+          description: "Represents cryptographic key information",
+          properties: {
+            PUBLIC_KEY: {
+              type: "string",
+              description: "Public part of the cryptographic key, in hexidecimal format",
+              "x-flatbuffer-type": "string"
+            },
+            XPUB: {
+              type: "string",
+              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              "x-flatbuffer-type": "string"
+            },
+            PRIVATE_KEY: {
+              type: "string",
+              description: "Private part of the cryptographic key in hexidecimal format, should be kept secret",
+              "x-flatbuffer-type": "string"
+            },
+            XPRIV: {
+              type: "string",
+              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              "x-flatbuffer-type": "string"
+            },
+            KEY_ADDRESS: {
+              type: "string",
+              description: "Address generated from the cryptographic key",
+              "x-flatbuffer-type": "string"
+            },
+            ADDRESS_TYPE: {
+              type: "string",
+              description: "Type of the address generated from the cryptographic key",
+              "x-flatbuffer-type": "string"
+            },
+            KEY_TYPE: {
+              $ref: "#/definitions/KeyType",
+              description: "Type of the cryptographic key (signing or encryption)",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Signing: {
+                  value: 0
+                },
+                Encryption: {
+                  value: 1
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        Address: {
+          type: "object",
+          description: "Represents a geographic address",
+          properties: {
+            COUNTRY: {
+              type: "string",
+              description: "Country of the address",
+              "x-flatbuffer-type": "string"
+            },
+            REGION: {
+              type: "string",
+              description: "Region of the address (e.g., state or province)",
+              "x-flatbuffer-type": "string"
+            },
+            LOCALITY: {
+              type: "string",
+              description: "Locality of the address (e.g., city or town)",
+              "x-flatbuffer-type": "string"
+            },
+            POSTAL_CODE: {
+              type: "string",
+              description: "Postal code of the address",
+              "x-flatbuffer-type": "string"
+            },
+            STREET: {
+              type: "string",
+              description: "Street address",
+              "x-flatbuffer-type": "string"
+            },
+            POST_OFFICE_BOX_NUMBER: {
+              type: "string",
+              description: "Post office box number",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        ChainProof: {
+          type: "object",
+          description: "Proves a blockchain key derives from the same HD wallet as the signing key",
+          properties: {
+            CHAIN: {
+              type: "string",
+              description: 'Chain identifier (e.g., "bitcoin", "ethereum", "solana")',
+              "x-flatbuffer-type": "string"
+            },
+            ADDRESS: {
+              type: "string",
+              description: "Derived blockchain address",
+              "x-flatbuffer-type": "string"
+            },
+            PUBLIC_KEY: {
+              type: "string",
+              description: "Public key for this chain (hex-encoded)",
+              "x-flatbuffer-type": "string"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")`,
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE: {
+              type: "string",
+              description: "Signature over the attestation payload (hex-encoded)",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNED_PAYLOAD: {
+              type: "string",
+              description: "The canonical payload that was signed (hex-encoded)",
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        EPM: {
+          type: "object",
+          description: "Entity Profile Message",
+          properties: {
+            DN: {
+              type: "string",
+              description: "Distinguished Name of the entity",
+              "x-flatbuffer-type": "string"
+            },
+            LEGAL_NAME: {
+              type: "string",
+              description: "Common name of the entity (person or organization)",
+              "x-flatbuffer-type": "string"
+            },
+            FAMILY_NAME: {
+              type: "string",
+              description: "Family name or surname of the person",
+              "x-flatbuffer-type": "string"
+            },
+            GIVEN_NAME: {
+              type: "string",
+              description: "Given name or first name of the person",
+              "x-flatbuffer-type": "string"
+            },
+            ADDITIONAL_NAME: {
+              type: "string",
+              description: "Additional name or middle name of the person",
+              "x-flatbuffer-type": "string"
+            },
+            HONORIFIC_PREFIX: {
+              type: "string",
+              description: "Honorific prefix preceding the person's name (e.g., Mr., Dr.)",
+              "x-flatbuffer-type": "string"
+            },
+            HONORIFIC_SUFFIX: {
+              type: "string",
+              description: "Honorific suffix following the person's name (e.g., Jr., Sr.)",
+              "x-flatbuffer-type": "string"
+            },
+            JOB_TITLE: {
+              type: "string",
+              description: "Job title of the person",
+              "x-flatbuffer-type": "string"
+            },
+            OCCUPATION: {
+              type: "string",
+              description: "Occupation of the person",
+              "x-flatbuffer-type": "string"
+            },
+            ADDRESS: {
+              $ref: "#/definitions/Address",
+              description: "Physical Address",
+              "x-flatbuffer-type": "Address"
+            },
+            ALTERNATE_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Alternate names for the entity",
+              "x-flatbuffer-type": "[string]"
+            },
+            EMAIL: {
+              type: "string",
+              description: "Email address of the entity",
+              "x-flatbuffer-type": "string"
+            },
+            TELEPHONE: {
+              type: "string",
+              description: "Telephone number of the entity",
+              "x-flatbuffer-type": "string"
+            },
+            KEYS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/CryptoKey"
+              },
+              description: "Cryptographic keys associated with the entity",
+              "x-flatbuffer-type": "[CryptoKey]"
+            },
+            MULTIFORMAT_ADDRESS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Multiformat addresses associated with the entity",
+              "x-flatbuffer-type": "[string]"
+            },
+            SIGNATURE: {
+              type: "string",
+              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE_TIMESTAMP: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Unix timestamp (seconds) when the EPM was signed",
+              "x-flatbuffer-type": "int64"
+            },
+            CHAIN_PROOFS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ChainProof"
+              },
+              description: "Chain binding proofs linking blockchain keys to the same HD wallet",
+              "x-flatbuffer-type": "[ChainProof]"
+            },
+            ENTITY_TYPE: {
+              $ref: "#/definitions/EntityType",
+              description: "Type of entity represented by this profile",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                User: {
+                  value: 0
+                },
+                Node: {
+                  value: 1
+                }
+              },
+              "x-flatbuffer-default": "User"
+            }
+          },
+          additionalProperties: false
+        },
+        pmmTrustTier: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "values only; never reorder or reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Treated as OPTIONAL by verifiers."
+            },
+            CORE: {
+              value: 1,
+              description: "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+            },
+            RECOMMENDED: {
+              value: 2,
+              description: "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+            },
+            OPTIONAL: {
+              value: 3,
+              description: "Offered only."
+            }
+          }
+        },
+        pmmAccessPolicy: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "values.",
+          enum: [
+            0,
+            1,
+            2
+          ],
+          "x-flatbuffer-enum-values": {
+            ANONYMOUS: {
+              value: 0,
+              description: "No session, no grant: an unauthenticated client may fetch and run it."
+            },
+            AUTHENTICATED: {
+              value: 1,
+              description: "An authenticated session is required."
+            },
+            ENTITLED: {
+              value: 2,
+              description: "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+            }
+          }
+        },
+        pmmEntryState: {
+          type: "integer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          description: "reuse existing values.",
+          enum: [
+            0,
+            1,
+            2,
+            3
+          ],
+          "x-flatbuffer-enum-values": {
+            ACTIVE: {
+              value: 0,
+              description: "Served and loadable."
+            },
+            DEPRECATED: {
+              value: 1,
+              description: "Still served, superseded by another entry. Clients SHOULD migrate."
+            },
+            WITHDRAWN: {
+              value: 2,
+              description: "No longer served. Clients MUST NOT fetch it."
+            },
+            REVOKED: {
+              value: 3,
+              description: "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+            }
+          }
+        },
+        PMMTrustAnchor: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PROVIDER_DOMAIN: {
+              type: "string",
+              description: "MUST equal the origin the manifest was fetched from.",
+              "x-flatbuffer-type": "string"
+            },
+            NODE_PEER_ID: {
+              type: "string",
+              description: "libp2p peer id of the provider node.",
+              "x-flatbuffer-type": "string"
+            },
+            NODE_XPUB: {
+              type: "string",
+              description: "node's `$EPM`.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNING_PUBLIC_KEY: {
+              type: "string",
+              description: "`PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNING_KEY_PATH: {
+              type: "string",
+              description: "HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: '"secp256k1-compact-ethereum". Empty means "ed25519".',
+              "x-flatbuffer-type": "string"
+            },
+            EPM_CID: {
+              type: "string",
+              description: "IPFS CID of the provider node's `$EPM`.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_RECORD_NAME: {
+              type: "string",
+              description: "below.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_TXT: {
+              type: "string",
+              description: "disagreement with what DNS returns. The resolved record always wins.",
+              "x-flatbuffer-type": "string"
+            },
+            DNS_PROOF_STATEMENT: {
+              type: "string",
+              description: "format keeps it out of the TXT value.",
+              "x-flatbuffer-type": "string"
+            },
+            BOND_ADDRESSES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/ChainProof"
+              },
+              description: "the address derives from the key that signed this manifest.",
+              "x-flatbuffer-type": "[ChainProof]"
+            },
+            BOND_ATTESTATION_URL: {
+              type: "string",
+              description: "duration unspent) for clients that price trust rather than gate on it.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "The single key identity every signature in this manifest resolves to, and the two external anchors that give that key its weight: the DNS proof that binds it to the domain, and the Adversarial-Security bond that prices trust in it."
+        },
+        PMMModuleEntry: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            MODULE_ID: {
+              type: "string",
+              description: "across versions. Required and unique within the manifest.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PLUGIN_ID: {
+              type: "string",
+              description: "published.",
+              "x-flatbuffer-type": "string"
+            },
+            PLG_CID: {
+              type: "string",
+              description: "IPFS CID of that `$PLG` record.",
+              "x-flatbuffer-type": "string"
+            },
+            NAME: {
+              type: "string",
+              description: "Display name.",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Human-readable summary.",
+              "x-flatbuffer-type": "string"
+            },
+            VERSION: {
+              type: "string",
+              description: "SemVer 2.0.0 version of the offered artifact.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "integer",
+              description: "re-publication, including a rebuild at the same VERSION.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CONTENT_HASH: {
+              type: "string",
+              description: "capability and signature policies key on.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_SIZE_BYTES: {
+              type: "integer",
+              description: "Size of those portable WASM bytes.",
+              "x-flatbuffer-type": "uint64"
+            },
+            ARTIFACT_PATH: {
+              type: "string",
+              description: "whose domain the DNS proof binds.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_CID: {
+              type: "string",
+              description: "IPFS CID of the artifact, for content-addressed retrieval.",
+              "x-flatbuffer-type": "string"
+            },
+            ARTIFACT_SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "trailer remains authoritative after download.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            TRUST_TIER: {
+              $ref: "#/definitions/pmmTrustTier",
+              description: "Provider-declared standing. Gates anonymous loading.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "UNSPECIFIED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Treated as OPTIONAL by verifiers."
+                },
+                CORE: {
+                  value: 1,
+                  description: "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+                },
+                RECOMMENDED: {
+                  value: 2,
+                  description: "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+                },
+                OPTIONAL: {
+                  value: 3,
+                  description: "Offered only."
+                }
+              }
+            },
+            DEFAULT_ENABLED: {
+              type: "boolean",
+              description: "user choice overrides it permanently.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ACCESS_POLICY: {
+              $ref: "#/definitions/pmmAccessPolicy",
+              description: "What the client must hold to fetch and run it.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "AUTHENTICATED",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                ANONYMOUS: {
+                  value: 0,
+                  description: "No session, no grant: an unauthenticated client may fetch and run it."
+                },
+                AUTHENTICATED: {
+                  value: 1,
+                  description: "An authenticated session is required."
+                },
+                ENTITLED: {
+                  value: 2,
+                  description: "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+                }
+              }
+            },
+            ENTRY_STATE: {
+              $ref: "#/definitions/pmmEntryState",
+              description: "Entry lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-default": "ACTIVE",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                ACTIVE: {
+                  value: 0,
+                  description: "Served and loadable."
+                },
+                DEPRECATED: {
+                  value: 1,
+                  description: "Still served, superseded by another entry. Clients SHOULD migrate."
+                },
+                WITHDRAWN: {
+                  value: 2,
+                  description: "No longer served. Clients MUST NOT fetch it."
+                },
+                REVOKED: {
+                  value: 3,
+                  description: "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+                }
+              }
+            },
+            RUNTIME_TARGETS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: '"wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.',
+              "x-flatbuffer-type": "[string]"
+            },
+            REQUIRED_SCHEMAS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: `SDS schema codes at this module's invoke surface, e.g. "OMM", "OEM".`,
+              "x-flatbuffer-type": "[string]"
+            },
+            MIN_PERMISSIONS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "anonymously-loaded CORE module is allowed to do.",
+              "x-flatbuffer-type": "[string]"
+            },
+            LICENSE: {
+              type: "string",
+              description: "SPDX license identifier of the module.",
+              "x-flatbuffer-type": "string"
+            },
+            DOCUMENTATION_URL: {
+              type: "string",
+              description: "URL to the module's documentation.",
+              "x-flatbuffer-type": "string"
+            },
+            ICON_URL: {
+              type: "string",
+              description: "URL to the module's icon.",
+              "x-flatbuffer-type": "string"
+            },
+            SUPERSEDES_CONTENT_HASH: {
+              type: "string",
+              description: "`CONTENT_HASH` this entry replaces, when it supersedes an earlier build.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "the last change to this entry.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "One module the provider offers.",
+          required: [
+            "MODULE_ID"
+          ]
+        },
+        PMM: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            PROVIDER_DOMAIN: {
+              type: "string",
+              description: "the origin the manifest was served from.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PROVIDER_NAME: {
+              type: "string",
+              description: "Display name of the provider.",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION: {
+              type: "string",
+              description: "Human-readable summary of what the provider serves.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "integer",
+              description: "highest it has already verified for `PROVIDER_DOMAIN`.",
+              "x-flatbuffer-type": "uint64"
+            },
+            TRUST: {
+              $ref: "#/definitions/PMMTrustAnchor",
+              description: "The key identity and its external anchors.",
+              "x-flatbuffer-type": "PMMTrustAnchor"
+            },
+            MODULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PMMModuleEntry"
+              },
+              description: "The offered modules.",
+              "x-flatbuffer-type": "[PMMModuleEntry]"
+            },
+            CANONICAL_URL: {
+              type: "string",
+              description: "Canonical absolute URL this manifest is served from.",
+              "x-flatbuffer-type": "string"
+            },
+            CREATED_AT: {
+              type: "string",
+              description: "when the manifest was created.",
+              "x-flatbuffer-type": "string"
+            },
+            UPDATED_AT: {
+              type: "string",
+              description: "when the manifest was last signed.",
+              "x-flatbuffer-type": "string"
+            },
+            EXPIRES_AT: {
+              type: "string",
+              description: "unexpiring signed manifest cannot be withdrawn.",
+              "x-flatbuffer-type": "string"
+            },
+            SIGNATURE: {
+              type: "array",
+              items: {
+                type: "integer"
+              },
+              description: "defined in this file's header.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            SIGNED_STATEMENT: {
+              type: "string",
+              description: "record and reject any difference.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          description: "Provider Module Manifest \u2014 what one provider node offers, signed by that node's key.",
+          required: [
+            "PROVIDER_DOMAIN"
+          ]
+        }
+      },
+      $ref: "#/definitions/PMM",
+      "x-flatbuffer-root-type": "PMM",
+      "x-flatbuffer-file-identifier": "$PMM"
     },
     OCM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",

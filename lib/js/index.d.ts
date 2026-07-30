@@ -125,6 +125,7 @@ export * as PKB from './PKB/main.js';
 export * as PLD from './PLD/main.js';
 export * as PLG from './PLG/main.js';
 export * as PLK from './PLK/main.js';
+export * as PMM from './PMM/main.js';
 export * as PNL from './PNL/main.js';
 export * as PNM from './PNM/main.js';
 export * as PPE from './PPE/main.js';

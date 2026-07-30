@@ -1,0 +1,24 @@
+/**
+ * Lifecycle of one manifest entry. Append new values only; never reorder or
+ * reuse existing values.
+ */
+export declare enum pmmEntryState {
+    /**
+     * Served and loadable.
+     */
+    ACTIVE = 0,
+    /**
+     * Still served, superseded by another entry. Clients SHOULD migrate.
+     */
+    DEPRECATED = 1,
+    /**
+     * No longer served. Clients MUST NOT fetch it.
+     */
+    WITHDRAWN = 2,
+    /**
+     * Actively distrusted by the provider (compromise, bad build). Clients
+     * MUST refuse this CONTENT_HASH even if they already hold the bytes.
+     */
+    REVOKED = 3
+}
+//# sourceMappingURL=pmmEntryState.d.ts.map

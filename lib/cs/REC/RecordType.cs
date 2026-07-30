@@ -202,6 +202,7 @@ public enum RecordType : byte
   CES = 195,
   QEM = 196,
   SBM = 197,
+  PMM = 198,
 };
 
 public class RecordTypeUnion {
@@ -608,6 +609,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromQEM(QEMT _qem) { return new RecordTypeUnion{ Type = RecordType.QEM, Value = _qem }; }
   public SBMT AsSBM() { return this.As<SBMT>(); }
   public static RecordTypeUnion FromSBM(SBMT _sbm) { return new RecordTypeUnion{ Type = RecordType.SBM, Value = _sbm }; }
+  public PMMT AsPMM() { return this.As<PMMT>(); }
+  public static RecordTypeUnion FromPMM(PMMT _pmm) { return new RecordTypeUnion{ Type = RecordType.PMM, Value = _pmm }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -809,6 +812,7 @@ public class RecordTypeUnion {
       case RecordType.CES: return CES.Pack(builder, _o.AsCES()).Value;
       case RecordType.QEM: return QEM.Pack(builder, _o.AsQEM()).Value;
       case RecordType.SBM: return SBM.Pack(builder, _o.AsSBM()).Value;
+      case RecordType.PMM: return PMM.Pack(builder, _o.AsPMM()).Value;
     }
   }
 }
@@ -1412,6 +1416,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.SBM:
         result = SBMVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.PMM:
+        result = PMMVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

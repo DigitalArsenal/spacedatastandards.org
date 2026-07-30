@@ -178,3 +178,29 @@ ENCRYPTED_WASM_HASH), capability declarations, and — as of 1.90.0 — the full
 invoke-surface detail (INVOKE_SURFACES, METHODS with PLGPortManifest +
 PLGAcceptedTypeSet, HOST_CAPABILITIES, TIMERS, PROTOCOLS, BUILD_ARTIFACTS,
 RUNTIME_TARGETS). The SDK should not author a parallel PluginManifest schema.
+
+### Provider module manifest lives in SDS ($PMM, 1.171.0)
+
+What a provider node OFFERS is `$PMM`, never a bespoke JSON endpoint. One
+`$PMM` per provider domain, signed by that provider's node key, listing each
+offered module as a `PMMModuleEntry` (MODULE_ID reverse-DNS, PLUGIN_ID/PLG_CID
+back-reference, CONTENT_HASH of the portable pre-AOT WASM, ARTIFACT_SIGNATURE,
+TRUST_TIER, DEFAULT_ENABLED, ACCESS_POLICY, ENTRY_STATE, EPOCH).
+
+Client loading convention (anonymous, no session):
+
+    GET https://<provider-domain>/.well-known/sdn/modules.pmm
+        Content-Type: application/vnd.sds.pmm            (size-prefixed $PMM)
+    GET https://<provider-domain>/.well-known/sdn/modules.pmm.json
+        Content-Type: application/json                   (IDL-exact key mirror)
+
+Both MUST answer unauthenticated cross-origin GETs with
+`Access-Control-Allow-Origin: *` and no credentials. `PMM.SIGNATURE` covers the
+canonical `SDN-MODULE-MANIFEST-V1` statement documented in
+`schema/PMM/main.fbs`; the key it verifies against is bound to the domain by
+the DNS TXT proof named in `PMMTrustAnchor.DNS_PROOF_RECORD_NAME` and priced by
+the Adversarial-Security bond in `PMMTrustAnchor.BOND_ADDRESSES`.
+
+Division of labour: `$PMM` = which modules a provider serves and what an
+anonymous client may load; `$PLG` = the full per-module listing; `$STO`/`$STF` =
+commerce; `$APP` = which modules one application composes.

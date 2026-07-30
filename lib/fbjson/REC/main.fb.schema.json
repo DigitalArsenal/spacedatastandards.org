@@ -13942,6 +13942,91 @@
         }
       }
     },
+    "pmmTrustTier": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "values only; never reorder or reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Treated as OPTIONAL by verifiers."
+        },
+        "CORE": {
+          "value": 1,
+          "description": "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+        },
+        "RECOMMENDED": {
+          "value": 2,
+          "description": "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+        },
+        "OPTIONAL": {
+          "value": 3,
+          "description": "Offered only."
+        }
+      }
+    },
+    "pmmAccessPolicy": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "values.",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "x-flatbuffer-enum-values": {
+        "ANONYMOUS": {
+          "value": 0,
+          "description": "No session, no grant: an unauthenticated client may fetch and run it."
+        },
+        "AUTHENTICATED": {
+          "value": 1,
+          "description": "An authenticated session is required."
+        },
+        "ENTITLED": {
+          "value": 2,
+          "description": "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+        }
+      }
+    },
+    "pmmEntryState": {
+      "type": "integer",
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "description": "reuse existing values.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "x-flatbuffer-enum-values": {
+        "ACTIVE": {
+          "value": 0,
+          "description": "Served and loadable."
+        },
+        "DEPRECATED": {
+          "value": 1,
+          "description": "Still served, superseded by another entry. Clients SHOULD migrate."
+        },
+        "WITHDRAWN": {
+          "value": 2,
+          "description": "No longer served. Clients MUST NOT fetch it."
+        },
+        "REVOKED": {
+          "value": 3,
+          "description": "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+        }
+      }
+    },
     "pnlTrackingMode": {
       "type": "integer",
       "x-flatbuffer-type": "enum",
@@ -50951,6 +51036,353 @@
         "LICENSE_ID",
         "PLUGIN_ID",
         "LICENSEE_ORG"
+      ]
+    },
+    "PMMTrustAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PROVIDER_DOMAIN": {
+          "type": "string",
+          "description": "MUST equal the origin the manifest was fetched from.",
+          "x-flatbuffer-type": "string"
+        },
+        "NODE_PEER_ID": {
+          "type": "string",
+          "description": "libp2p peer id of the provider node.",
+          "x-flatbuffer-type": "string"
+        },
+        "NODE_XPUB": {
+          "type": "string",
+          "description": "node's `$EPM`.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "type": "string",
+          "description": "`PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNING_KEY_PATH": {
+          "type": "string",
+          "description": "HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE_ALGORITHM": {
+          "type": "string",
+          "description": "\"secp256k1-compact-ethereum\". Empty means \"ed25519\".",
+          "x-flatbuffer-type": "string"
+        },
+        "EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of the provider node's `$EPM`.",
+          "x-flatbuffer-type": "string"
+        },
+        "DNS_PROOF_RECORD_NAME": {
+          "type": "string",
+          "description": "below.",
+          "x-flatbuffer-type": "string"
+        },
+        "DNS_PROOF_TXT": {
+          "type": "string",
+          "description": "disagreement with what DNS returns. The resolved record always wins.",
+          "x-flatbuffer-type": "string"
+        },
+        "DNS_PROOF_STATEMENT": {
+          "type": "string",
+          "description": "format keeps it out of the TXT value.",
+          "x-flatbuffer-type": "string"
+        },
+        "BOND_ADDRESSES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChainProof"
+          },
+          "description": "the address derives from the key that signed this manifest.",
+          "x-flatbuffer-type": "[ChainProof]"
+        },
+        "BOND_ATTESTATION_URL": {
+          "type": "string",
+          "description": "duration unspent) for clients that price trust rather than gate on it.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "The single key identity every signature in this manifest resolves to, and the two external anchors that give that key its weight: the DNS proof that binds it to the domain, and the Adversarial-Security bond that prices trust in it."
+    },
+    "PMMModuleEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "MODULE_ID": {
+          "type": "string",
+          "description": "across versions. Required and unique within the manifest.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PLUGIN_ID": {
+          "type": "string",
+          "description": "published.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLG_CID": {
+          "type": "string",
+          "description": "IPFS CID of that `$PLG` record.",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "SemVer 2.0.0 version of the offered artifact.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "integer",
+          "description": "re-publication, including a rebuild at the same VERSION.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CONTENT_HASH": {
+          "type": "string",
+          "description": "capability and signature policies key on.",
+          "x-flatbuffer-type": "string"
+        },
+        "ARTIFACT_SIZE_BYTES": {
+          "type": "integer",
+          "description": "Size of those portable WASM bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ARTIFACT_PATH": {
+          "type": "string",
+          "description": "whose domain the DNS proof binds.",
+          "x-flatbuffer-type": "string"
+        },
+        "ARTIFACT_CID": {
+          "type": "string",
+          "description": "IPFS CID of the artifact, for content-addressed retrieval.",
+          "x-flatbuffer-type": "string"
+        },
+        "ARTIFACT_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "trailer remains authoritative after download.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "TRUST_TIER": {
+          "$ref": "#/definitions/pmmTrustTier",
+          "description": "Provider-declared standing. Gates anonymous loading.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "UNSPECIFIED",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Treated as OPTIONAL by verifiers."
+            },
+            "CORE": {
+              "value": 1,
+              "description": "The provider declares this module part of its baseline service. Only a CORE entry may ever be loaded before a user session exists, and only a CORE entry is presented pre-selected at first sign-in."
+            },
+            "RECOMMENDED": {
+              "value": 2,
+              "description": "Offered and endorsed by the provider, but never loaded without an explicit user selection."
+            },
+            "OPTIONAL": {
+              "value": 3,
+              "description": "Offered only."
+            }
+          }
+        },
+        "DEFAULT_ENABLED": {
+          "type": "boolean",
+          "description": "user choice overrides it permanently.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ACCESS_POLICY": {
+          "$ref": "#/definitions/pmmAccessPolicy",
+          "description": "What the client must hold to fetch and run it.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "AUTHENTICATED",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ANONYMOUS": {
+              "value": 0,
+              "description": "No session, no grant: an unauthenticated client may fetch and run it."
+            },
+            "AUTHENTICATED": {
+              "value": 1,
+              "description": "An authenticated session is required."
+            },
+            "ENTITLED": {
+              "value": 2,
+              "description": "An entitlement or license grant is required (see `$ENT`, `$PLK`)."
+            }
+          }
+        },
+        "ENTRY_STATE": {
+          "$ref": "#/definitions/pmmEntryState",
+          "description": "Entry lifecycle.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-default": "ACTIVE",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0,
+              "description": "Served and loadable."
+            },
+            "DEPRECATED": {
+              "value": 1,
+              "description": "Still served, superseded by another entry. Clients SHOULD migrate."
+            },
+            "WITHDRAWN": {
+              "value": 2,
+              "description": "No longer served. Clients MUST NOT fetch it."
+            },
+            "REVOKED": {
+              "value": 3,
+              "description": "Actively distrusted by the provider (compromise, bad build). Clients MUST refuse this CONTENT_HASH even if they already hold the bytes."
+            }
+          }
+        },
+        "RUNTIME_TARGETS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "\"wasmedge\". Same vocabulary as `$PLG.RUNTIME_TARGETS`.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "REQUIRED_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SDS schema codes at this module's invoke surface, e.g. \"OMM\", \"OEM\".",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MIN_PERMISSIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "anonymously-loaded CORE module is allowed to do.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "SPDX license identifier of the module.",
+          "x-flatbuffer-type": "string"
+        },
+        "DOCUMENTATION_URL": {
+          "type": "string",
+          "description": "URL to the module's documentation.",
+          "x-flatbuffer-type": "string"
+        },
+        "ICON_URL": {
+          "type": "string",
+          "description": "URL to the module's icon.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_CONTENT_HASH": {
+          "type": "string",
+          "description": "`CONTENT_HASH` this entry replaces, when it supersedes an earlier build.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "the last change to this entry.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "One module the provider offers.",
+      "required": [
+        "MODULE_ID"
+      ]
+    },
+    "PMM": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PROVIDER_DOMAIN": {
+          "type": "string",
+          "description": "the origin the manifest was served from.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_NAME": {
+          "type": "string",
+          "description": "Display name of the provider.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable summary of what the provider serves.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "integer",
+          "description": "highest it has already verified for `PROVIDER_DOMAIN`.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "TRUST": {
+          "$ref": "#/definitions/PMMTrustAnchor",
+          "description": "The key identity and its external anchors.",
+          "x-flatbuffer-type": "PMMTrustAnchor"
+        },
+        "MODULES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PMMModuleEntry"
+          },
+          "description": "The offered modules.",
+          "x-flatbuffer-type": "[PMMModuleEntry]"
+        },
+        "CANONICAL_URL": {
+          "type": "string",
+          "description": "Canonical absolute URL this manifest is served from.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "when the manifest was created.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "when the manifest was last signed.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXPIRES_AT": {
+          "type": "string",
+          "description": "unexpiring signed manifest cannot be withdrawn.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "defined in this file's header.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SIGNED_STATEMENT": {
+          "type": "string",
+          "description": "record and reject any difference.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "description": "Provider Module Manifest \u2014 what one provider node offers, signed by that node's key.",
+      "required": [
+        "PROVIDER_DOMAIN"
       ]
     },
     "PNLPanel": {

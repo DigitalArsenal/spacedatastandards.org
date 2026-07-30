@@ -201,6 +201,7 @@ class RecordType
     const CES = 195;
     const QEM = 196;
     const SBM = 197;
+    const PMM = 198;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -401,6 +402,7 @@ class RecordType
         RecordType::CES=>"CES",
         RecordType::QEM=>"QEM",
         RecordType::SBM=>"SBM",
+        RecordType::PMM=>"PMM",
     );
 
     public static function Name($e)

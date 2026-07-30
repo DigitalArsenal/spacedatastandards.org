@@ -210,6 +210,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -416,11 +417,12 @@ enum RecordType : uint8_t {
   RecordType_CES = 195,
   RecordType_QEM = 196,
   RecordType_SBM = 197,
+  RecordType_PMM = 198,
   RecordType_MIN = RecordType_NONE,
-  RecordType_MAX = RecordType_SBM
+  RecordType_MAX = RecordType_PMM
 };
 
-inline const RecordType (&EnumValuesRecordType())[198] {
+inline const RecordType (&EnumValuesRecordType())[199] {
   static const RecordType values[] = {
     RecordType_NONE,
     RecordType_ACL,
@@ -619,13 +621,14 @@ inline const RecordType (&EnumValuesRecordType())[198] {
     RecordType_SHC,
     RecordType_CES,
     RecordType_QEM,
-    RecordType_SBM
+    RecordType_SBM,
+    RecordType_PMM
   };
   return values;
 }
 
 inline const char * const *EnumNamesRecordType() {
-  static const char * const names[199] = {
+  static const char * const names[200] = {
     "NONE",
     "ACL",
     "ACM",
@@ -824,13 +827,14 @@ inline const char * const *EnumNamesRecordType() {
     "CES",
     "QEM",
     "SBM",
+    "PMM",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameRecordType(RecordType e) {
-  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_SBM)) return "";
+  if (::flatbuffers::IsOutRange(e, RecordType_NONE, RecordType_PMM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesRecordType()[index];
 }
@@ -1627,6 +1631,10 @@ template<> struct RecordTypeTraits<SBM> {
   static const RecordType enum_value = RecordType_SBM;
 };
 
+template<> struct RecordTypeTraits<PMM> {
+  static const RecordType enum_value = RecordType_PMM;
+};
+
 template <bool B = false>
 bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const void *obj, RecordType type);
 template <bool B = false>
@@ -2238,6 +2246,9 @@ struct Record FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   }
   const SBM *value_as_SBM() const {
     return value_type() == RecordType_SBM ? static_cast<const SBM *>(value()) : nullptr;
+  }
+  const PMM *value_as_PMM() const {
+    return value_type() == RecordType_PMM ? static_cast<const PMM *>(value()) : nullptr;
   }
   /// Standard identifier (e.g., "OMM", "CDM", "CAT")
   const ::flatbuffers::String *standard() const {
@@ -3041,6 +3052,10 @@ template<> inline const QEM *Record::value_as<QEM>() const {
 
 template<> inline const SBM *Record::value_as<SBM>() const {
   return value_as_SBM();
+}
+
+template<> inline const PMM *Record::value_as<PMM>() const {
+  return value_as_PMM();
 }
 
 struct RecordBuilder {
@@ -3954,6 +3969,10 @@ inline bool VerifyRecordType(::flatbuffers::VerifierTemplate<B> &verifier, const
     }
     case RecordType_SBM: {
       auto ptr = reinterpret_cast<const SBM *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case RecordType_PMM: {
+      auto ptr = reinterpret_cast<const PMM *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return true;
