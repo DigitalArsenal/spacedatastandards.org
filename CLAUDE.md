@@ -126,6 +126,23 @@ Division of labour: `$PMM` = which modules a provider serves and what an
 anonymous client may load; `$PLG` = the full per-module listing; `$STO`/`$STF` =
 commerce; `$APP` = which modules one application composes.
 
+Grouping a catalogue by family (1.173.0): read
+`PMMModuleEntry.PLUGIN_TYPE: pluginCategory` — the same enum as
+`$PLG.PLUGIN_TYPE`, carried on the entry so a storefront can section the
+offering at anonymous boot without fetching one `$PLG` per module.
+
+**`MODULE_ID` is not a family carrier.** It is a stable reverse-DNS identity
+and nothing more; the minted ids are deliberately inconsistent
+(`com.orbpro.sgp4`, `org.sdn.flows.od-supplemental-omm`, bare
+`orbit-determination`). Parsing family out of it is unsupported and any such
+parser is inventing a convention SDS does not define. A provider that wants
+its modules grouped SETS THE FIELD.
+
+`PLUGIN_TYPE` defaults to `Unspecified`, which exists because `Sensor` holds
+ordinal 0 and an unset enum would otherwise decode as a Sensor. A consumer
+MUST render `Unspecified` as ungrouped — never as a member of any family, and
+never by guessing.
+
 ### Physical properties live in SDS ($OPP, 1.172.0)
 
 A mass, dimension, area or radar cross-section is published as `$OPP`, never as
