@@ -13,6 +13,10 @@
       "type" : "string",
       "enum": ["DataStream", "WasmModule"]
     },
+    "grantLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["Active", "Revoked", "Expired", "Suspended", "Pending"]
+    },
     "GrantFieldStreamPolicy" : {
       "type" : "object",
       "description" : "Field-level stream policy bound into protected delivery and grants.",
@@ -342,7 +346,139 @@
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
       "additionalProperties" : false
+    },
+    "ACL" : {
+      "type" : "object",
+      "description" : "Access Control Grant - Permission to access purchased data",
+      "properties" : {
+        "GRANT_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this grant"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing this grant applies to"
+              },
+        "BUYER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the buyer/grantee"
+              },
+        "BUYER_ENCRYPTION_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's encryption public key for encrypted delivery"
+              },
+        "ACCESS_TYPE" : {
+                "$ref" : "#/definitions/accessCategory",
+                "description" : "Type of access granted"
+              },
+        "TIER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the pricing tier purchased"
+              },
+        "GRANTED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access was granted"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when access expires (0 = never expires)"
+              },
+        "PAYMENT_TX_HASH" : {
+                "type" : "string",
+                "description" : "Transaction hash or reference proving payment"
+              },
+        "PAYMENT_METHOD" : {
+                "$ref" : "#/definitions/paymentMethod",
+                "description" : "Payment method used"
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              },
+        "KEY_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Key algorithm for buyer encryption public key"
+              },
+        "RATE_LIMIT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Request rate limit"
+              },
+        "MAX_RECORDS_PER_REQUEST" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum records returned per request"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/grantLifecycleStatus",
+                "description" : "Provider-side grant status"
+              },
+        "PAYMENT_AMOUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Payment amount in smallest unit"
+              },
+        "PAYMENT_CURRENCY" : {
+                "type" : "string",
+                "description" : "Payment currency"
+              },
+        "PAYMENT_CHAIN" : {
+                "type" : "string",
+                "description" : "Payment chain or processor"
+              },
+        "NEXT_RENEWAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp of next renewal"
+              },
+        "AUTO_RENEW" : {
+                "type" : "boolean",
+                "description" : "Whether renewal is automatic"
+              },
+        "RENEWAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Renewal count"
+              },
+        "TOTAL_REQUESTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total requests made under this grant"
+              },
+        "TOTAL_RECORDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total records delivered under this grant"
+              },
+        "LAST_ACCESS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp of last access"
+              },
+        "DELIVERY_TOPIC" : {
+                "type" : "string",
+                "description" : "PubSub or direct delivery topic"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the grant record was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the grant record was updated"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Provider notes"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Provider peer ID"
+              },
+        "GRANT_RESPONSE_BASE64" : {
+                "type" : "string",
+                "description" : "Base64-encoded signed grant response bytes"
+              },
+        "FIELD_STREAM_POLICY" : {
+                "$ref" : "#/definitions/GrantFieldStreamPolicy",
+                "description" : "Field-level stream policy bound to this grant"
+              }
+      },
+      "required" : ["GRANT_ID", "LISTING_ID", "BUYER_PEER_ID"],
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/STF"
+  "$ref" : "#/definitions/ACL"
 }

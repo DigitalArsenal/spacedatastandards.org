@@ -36,6 +36,37 @@ function assertFieldDescriptions(schema, definitionNames) {
   }
 }
 
+/// Names of the tables/enums/structs a standard declares in its OWN .fbs.
+function ownDeclaredTypeNames(fbsSource) {
+  return new Set(
+    Array.from(
+      fbsSource.matchAll(/^\s*(?:table|struct|enum|union)\s+(\w+)/gm),
+      (match) => match[1],
+    ),
+  );
+}
+
+/// A generated JSON Schema legitimately embeds the definitions of every
+/// standard the entry .fbs includes, so scanning the whole document would
+/// police OTHER standards' vocabulary — e.g. $OMM's `EPHEMERIS_TYPE` carries
+/// the CCSDS-verbatim phrase "TLE Related Parameters", which is correct there
+/// and not ours to rewrite. Narrow the surface to the definitions this
+/// standard declares itself. (Before the flatc --jsonschema collision fix,
+/// lib/json/SCN held $VST's schema outright, so this assertion was passing
+/// against the wrong record entirely.)
+function ownDefinitionSurface(jsonSource, fbsSource) {
+  const owned = ownDeclaredTypeNames(fbsSource);
+  const schema = JSON.parse(jsonSource);
+  const definitions = schema.definitions ?? {};
+  return JSON.stringify({
+    $ref: schema.$ref,
+    "x-flatbuffer-root-type": schema["x-flatbuffer-root-type"],
+    definitions: Object.fromEntries(
+      Object.entries(definitions).filter(([name]) => owned.has(name)),
+    ),
+  });
+}
+
 function assertNoLineElementSetSurface(label, source) {
   const prohibitedPatterns = [
     new RegExp(["S", "C", "N", "T", "l", "e", "L", "i", "n", "e", "s"].join(""), "i"),
@@ -362,17 +393,30 @@ describe("scenario controls schema consolidation", () => {
   });
 
   it("uses OMM instead of line-element set records for scenario orbital elements", async () => {
-    const sources = await Promise.all([
-      readUtf8("schema/SCN/main.fbs"),
-      readUtf8("lib/fbjson/SCN/main.fb.schema.json"),
-      readUtf8("lib/json/SCN/main.schema.json"),
-      readUtf8("lib/ts/SCN/main.ts"),
-      readUtf8("lib/js/SCN/main.js"),
-      readUtf8("lib/go/SCN/SCNReference.go"),
-    ]);
+    const scnFbs = await readUtf8("schema/SCN/main.fbs");
+    const sources = [
+      scnFbs,
+      ownDefinitionSurface(
+        await readUtf8("lib/fbjson/SCN/main.fb.schema.json"),
+        scnFbs,
+      ),
+      ownDefinitionSurface(
+        await readUtf8("lib/json/SCN/main.schema.json"),
+        scnFbs,
+      ),
+      await readUtf8("lib/ts/SCN/main.ts"),
+      await readUtf8("lib/js/SCN/main.js"),
+      await readUtf8("lib/go/SCN/SCNReference.go"),
+    ];
 
     assert.match(sources[0], escapedTokenRegex("MEAN_ELEMENTS:[OMM]"));
     assert.doesNotMatch(sources[0], escapedTokenRegex("ELSETS:[OMM]"));
+
+    // The generated JSON Schemas must still be $SCN's own record, not an
+    // included standard's — the defect this scoping change accompanies.
+    for (const jsonSource of sources.slice(1, 3)) {
+      assert.match(jsonSource, escapedTokenRegex('"#/definitions/SCN"'));
+    }
 
     for (const [index, source] of sources.entries()) {
       assertNoLineElementSetSurface(`scenario schema artifact ${index}`, source);

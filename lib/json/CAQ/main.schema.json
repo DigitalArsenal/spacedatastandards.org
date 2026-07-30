@@ -5,6 +5,10 @@
       "type" : "string",
       "enum": ["ENTITY", "SPACE", "GROUND", "AIRCRAFT", "MISSILE", "SHIP", "VEHICLE", "SENSOR", "OTHER"]
     },
+    "catalogQueryKind" : {
+      "type" : "string",
+      "enum": ["ROWS", "ENTITY_INDICES", "VISIBILITY_MASK", "CATALOG_ROW"]
+    },
     "ETM" : {
       "type" : "object",
       "description" : "Entity Metadata — generic queryable metadata for a host-local entity.\nParticipates in shared FlatSQL/WASM runtimes where multiple plugins\ncross-query the same entity collection.",
@@ -119,7 +123,80 @@
               }
       },
       "additionalProperties" : false
+    },
+    "CAQRequest" : {
+      "type" : "object",
+      "description" : "Catalog query request payload.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/catalogQueryKind"
+              },
+        "QUERY" : {
+                "type" : "string",
+                "description" : "Host-specific query string (for example a FlatSQL or DSL expression)."
+              },
+        "ENTITY_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Entity index for single-row queries."
+              },
+        "MAX_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Upper bound on the number of rows / indices to return (0 = unbounded)."
+              },
+        "ENTITY_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Expected number of entities in the catalog at the time the request was\nissued, used to size visibility masks."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CAQResult" : {
+      "type" : "object",
+      "description" : "Catalog query result payload.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/catalogQueryKind"
+              },
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ETM"},
+                "description" : "Populated when KIND == ROWS."
+              },
+        "ENTITY_INDICES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Populated when KIND == ENTITY_INDICES."
+              },
+        "MASK" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Populated when KIND == VISIBILITY_MASK (one byte per entity)."
+              },
+        "VISIBLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of visible (masked-in) entities in MASK."
+              },
+        "ENTITY_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Populated when KIND == CATALOG_ROW."
+              },
+        "ROW" : {
+                "$ref" : "#/definitions/ETM",
+                "description" : "Single matched row when KIND == CATALOG_ROW."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CAQ" : {
+      "type" : "object",
+      "description" : "Catalog query envelope — carries either a request or a result payload.",
+      "properties" : {
+        "REQUEST" : {
+                "$ref" : "#/definitions/CAQRequest"
+              },
+        "RESULT" : {
+                "$ref" : "#/definitions/CAQResult"
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/ETM"
+  "$ref" : "#/definitions/CAQ"
 }

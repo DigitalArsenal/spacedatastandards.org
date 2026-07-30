@@ -1,9 +1,319 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper"]
+    },
+    "timingStandard" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS"]
+    },
+    "timEpochRepresentation" : {
+      "type" : "string",
+      "enum": ["JULIAN_DATE", "MODIFIED_JULIAN_DATE", "UNIX_SECONDS", "ISO8601", "GPS_SECONDS", "GNSS_WEEK_SECONDS", "CCSDS_TIME_CODE", "MISSION_ELAPSED_SECONDS"]
+    },
+    "timCcsdsTimeCodeKind" : {
+      "type" : "string",
+      "enum": ["NONE", "UNSEGMENTED", "DAY_SEGMENTED", "CALENDAR_SEGMENTED"]
+    },
+    "timConversionStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_TIME_SYSTEM", "LEAP_SECOND_DATA_REQUIRED", "EOP_DATA_REQUIRED", "OUT_OF_RANGE"]
+    },
     "meanElementSource" : {
       "type" : "string",
       "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "elementType" : {
+      "type" : "string",
+      "enum": ["OSCULATING", "MEAN"]
+    },
+    "anomalyConvention" : {
+      "type" : "string",
+      "enum": ["TRUE_ANOMALY", "MEAN_ANOMALY"]
+    },
+    "atmosphericSource" : {
+      "type" : "string",
+      "enum": ["NONE", "JACCHIA_70", "JB2008", "NRLMSISE_00", "DTM_2000", "HWM14", "HASDM"]
+    },
+    "geopotentialSource" : {
+      "type" : "string",
+      "enum": ["NONE", "EGM96", "WGS84", "JGM2", "GEMT3", "EGM96_J5"]
+    },
+    "zonalHarmonic" : {
+      "type" : "string",
+      "enum": ["NONE", "J2", "J3", "J4", "J5", "J6", "J7", "J8", "J9", "J10", "J11", "J12"]
+    },
+    "solarRadiationPressureModel" : {
+      "type" : "string",
+      "enum": ["NONE", "SPHERICAL_MODEL", "FLAT_PLATE_MODEL"]
+    },
+    "lunarPerturbationSource" : {
+      "type" : "string",
+      "enum": ["NONE", "DE430", "DE431", "LP150Q"]
+    },
+    "solarPerturbationSource" : {
+      "type" : "string",
+      "enum": ["NONE", "DE430", "DE431"]
+    },
+    "resonanceSource" : {
+      "type" : "string",
+      "enum": ["NONE", "HIGH_ALTITUDE_RESONANCE", "LOW_ALTITUDE_RESONANCE", "LUNAR_RESONANCE", "SOLAR_RESONANCE"]
+    },
+    "perturbationStatus" : {
+      "type" : "string",
+      "enum": ["OFF", "ON"]
+    },
+    "propagatorFamily" : {
+      "type" : "string",
+      "enum": ["NONE", "SEMI_ANALYTICAL", "VINTI", "SGP4", "COWELL", "RK4", "NYX", "GMAT", "SPICE", "SGP", "SDP4", "SGP8", "SDP8"]
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCcsdsTimeCode" : {
+      "type" : "object",
+      "description" : "CCSDS time-code payload and preamble metadata.",
+      "properties" : {
+        "CODE_KIND" : {
+                "$ref" : "#/definitions/timCcsdsTimeCodeKind",
+                "description" : "CCSDS time-code family."
+              },
+        "PREAMBLE_FIELD1" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "First CCSDS preamble field octet."
+              },
+        "PREAMBLE_FIELD2" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+              },
+        "TIME_FIELD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Raw CCSDS time field octets."
+              },
+        "AGENCY_DEFINED_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional agency-defined epoch timestamp for agency epoch time codes."
+              },
+        "CCSDS_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMInstant" : {
+      "type" : "object",
+      "description" : "Numeric or textual instant tagged with its time system and representation.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system for this instant."
+              },
+        "EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+              },
+        "SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+              },
+        "ISO8601" : {
+                "type" : "string",
+                "description" : "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+              },
+        "SUBSECOND_NANOS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Additional nanoseconds beyond the fractional scalar/text value."
+              },
+        "EPOCH_LABEL" : {
+                "type" : "string",
+                "description" : "Optional application-defined epoch label for MET, MRT, or SCLK values."
+              },
+        "GNSS_WEEK" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+              },
+        "HAS_GNSS_ROLLOVER_REFERENCE" : {
+                "type" : "boolean",
+                "description" : "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+              },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional Orekit-style GNSS week rollover reference timestamp."
+              },
+        "CCSDS_TIME_CODE" : {
+                "$ref" : "#/definitions/TIMCcsdsTimeCode",
+                "description" : "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionRequest" : {
+      "type" : "object",
+      "description" : "Request to convert one instant into another time system/representation.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Source instant to convert."
+              },
+        "TARGET_TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Target time system."
+              },
+        "TARGET_EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Preferred target representation."
+              },
+        "TAI_MINUS_UTC_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional TAI-UTC override in seconds for the source instant."
+              },
+        "HAS_TAI_MINUS_UTC" : {
+                "type" : "boolean",
+                "description" : "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+              },
+        "DUT1_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional UT1-UTC override in seconds for UT1 conversions."
+              },
+        "HAS_DUT1" : {
+                "type" : "boolean",
+                "description" : "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional caller trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionResult" : {
+      "type" : "object",
+      "description" : "Result of a time conversion request.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Original source instant."
+              },
+        "TARGET" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Converted target instant."
+              },
+        "DELTA_SECONDS" : {
+                "type" : "number",
+                "description" : "Target minus source offset in SI seconds for the requested conversion."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/timConversionStatus",
+                "description" : "Conversion status."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error detail when STATUS is not OK."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System and time-conversion envelope.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Legacy time-system selector retained for existing TIM consumers."
+              },
+        "INSTANT" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "A single tagged instant."
+              },
+        "CONVERSION_REQUEST" : {
+                "$ref" : "#/definitions/TIMConversionRequest",
+                "description" : "Time conversion request."
+              },
+        "CONVERSION_RESULT" : {
+                "$ref" : "#/definitions/TIMConversionResult",
+                "description" : "Time conversion result."
+              }
+      },
+      "additionalProperties" : false
     },
     "MET" : {
       "type" : "object",
@@ -14,7 +324,285 @@
               }
       },
       "additionalProperties" : false
+    },
+    "propagatorConfig" : {
+      "type" : "object",
+      "description" : "Propagator configuration structure to describe propagation settings",
+      "properties" : {
+        "PROPAGATOR_NAME" : {
+                "type" : "string"
+              },
+        "PROPAGATOR_TYPE" : {
+                "$ref" : "#/definitions/propagatorFamily"
+              },
+        "FORCE_MODELS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "TIME_STEP" : {
+                "type" : "number"
+              },
+        "ZONAL_HARMONIC_TERMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/zonalHarmonic"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VCMStateVector" : {
+      "type" : "object",
+      "description" : "VCM State Vector (position and velocity)",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string"
+              },
+        "X" : {
+                "type" : "number"
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "X_DOT" : {
+                "type" : "number"
+              },
+        "Y_DOT" : {
+                "type" : "number"
+              },
+        "Z_DOT" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "keplerianElements" : {
+      "type" : "object",
+      "description" : "Keplerian Elements",
+      "properties" : {
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number"
+              },
+        "INCLINATION" : {
+                "type" : "number"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number"
+              },
+        "ANOMALY_TYPE" : {
+                "$ref" : "#/definitions/anomalyConvention"
+              },
+        "ANOMALY" : {
+                "type" : "number"
+              },
+        "PERIAPSIS_RADIUS" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "equinoctialElements" : {
+      "type" : "object",
+      "description" : "Equinoctial Elements",
+      "properties" : {
+        "AF" : {
+                "type" : "number"
+              },
+        "AG" : {
+                "type" : "number"
+              },
+        "L" : {
+                "type" : "number"
+              },
+        "N" : {
+                "type" : "number"
+              },
+        "CHI" : {
+                "type" : "number"
+              },
+        "PSI" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "uvwSigmas" : {
+      "type" : "object",
+      "description" : "UVW Sigmas (Covariance matrix in UVW frame)",
+      "properties" : {
+        "U_SIGMA" : {
+                "type" : "number"
+              },
+        "V_SIGMA" : {
+                "type" : "number"
+              },
+        "W_SIGMA" : {
+                "type" : "number"
+              },
+        "UD_SIGMA" : {
+                "type" : "number"
+              },
+        "VD_SIGMA" : {
+                "type" : "number"
+              },
+        "WD_SIGMA" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VCMAtmosphericModelData" : {
+      "type" : "object",
+      "description" : "VCM Atmospheric and Perturbation Model Data",
+      "properties" : {
+        "ATMOSPHERIC_MODEL" : {
+                "$ref" : "#/definitions/atmosphericSource"
+              },
+        "GEOPOTENTIAL_MODEL" : {
+                "$ref" : "#/definitions/geopotentialSource"
+              },
+        "LUNAR_SOLAR_PERTURBATION" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "LUNAR_PERTURBATION_MODEL" : {
+                "$ref" : "#/definitions/lunarPerturbationSource"
+              },
+        "SOLAR_PERTURBATION_MODEL" : {
+                "$ref" : "#/definitions/solarPerturbationSource"
+              },
+        "SOLAR_RADIATION_PRESSURE" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "SRP_MODEL" : {
+                "$ref" : "#/definitions/solarRadiationPressureModel"
+              },
+        "RESONANCE_MODEL" : {
+                "$ref" : "#/definitions/resonanceSource"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "VCM" : {
+      "type" : "object",
+      "description" : "Vector Covariance Message",
+      "properties" : {
+        "CCSDS_OMM_VERS" : {
+                "type" : "number"
+              },
+        "CREATION_DATE" : {
+                "type" : "string"
+              },
+        "ORIGINATOR" : {
+                "type" : "string"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string"
+              },
+        "OBJECT_ID" : {
+                "type" : "string"
+              },
+        "CENTER_NAME" : {
+                "type" : "string"
+              },
+        "REF_FRAME" : {
+                "type" : "string"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string"
+              },
+        "STATE_VECTOR" : {
+                "$ref" : "#/definitions/VCMStateVector"
+              },
+        "KEPLERIAN_ELEMENTS" : {
+                "$ref" : "#/definitions/keplerianElements"
+              },
+        "EQUINOCTIAL_ELEMENTS" : {
+                "$ref" : "#/definitions/equinoctialElements"
+              },
+        "GM" : {
+                "type" : "number"
+              },
+        "ATMOSPHERIC_MODEL_DATA" : {
+                "$ref" : "#/definitions/VCMAtmosphericModelData"
+              },
+        "PROPAGATOR_SETTINGS" : {
+                "$ref" : "#/definitions/propagatorConfig"
+              },
+        "UVW_SIGMAS" : {
+                "$ref" : "#/definitions/uvwSigmas"
+              },
+        "MASS" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number"
+              },
+        "DRAG_AREA" : {
+                "type" : "number"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number"
+              },
+        "SRP" : {
+                "$ref" : "#/definitions/perturbationStatus"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ELEMENT_SET_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REV_AT_EPOCH" : {
+                "type" : "number"
+              },
+        "BSTAR" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "type" : "string"
+              },
+        "COVARIANCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
+              },
+        "USER_DEFINED_BIP_0044_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "USER_DEFINED_OBJECT_DESIGNATOR" : {
+                "type" : "string"
+              },
+        "USER_DEFINED_EARTH_MODEL" : {
+                "type" : "string"
+              },
+        "USER_DEFINED_EPOCH_TIMESTAMP" : {
+                "type" : "number"
+              },
+        "USER_DEFINED_MICROSECONDS" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/MET"
+  "$ref" : "#/definitions/VCM"
 }

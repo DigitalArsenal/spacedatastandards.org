@@ -73,13 +73,16 @@ function runCodeGeneration(flatc, schemaInput, datatype) {
     args.push("-I", includeDir);
   }
   // Generators that emit a single filename per input (Rust: main_generated.rs,
-  // C++: main_generated.h) collide when multiple main.fbs files share one
-  // output dir — each compilation unit overwrites the previous. Pass only the
+  // C++: main_generated.h, JSON Schema: main.schema.json) collide when multiple
+  // main.fbs files share one output dir — each compilation unit overwrites the
+  // previous, so the LAST include wins and the entry schema's own root type and
+  // definitions are lost entirely (this silently published $PMM as $EPM, $OMM
+  // as $MET and $OCM as $LCC across every including standard). Pass only the
   // entry schema to those; -I flags above resolve imports for type checking.
   // Per-type-output generators (TS, Python, Java, Go, etc.) still need every
   // transitive include as a compilation unit so sibling-type files (e.g.
   // RecordType.ts's `./STF.js` import) exist in the same output dir.
-  const flatOutputExts = new Set(["rs", "cpp"]);
+  const flatOutputExts = new Set(["rs", "cpp", "json"]);
   const compilationUnits = flatOutputExts.has(datatype.ext)
     ? [schemaInput.entry]
     : (schemaInput.compilationUnits ?? [schemaInput.entry]);

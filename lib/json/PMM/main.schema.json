@@ -9,6 +9,58 @@
       "type" : "string",
       "enum": ["User", "Node"]
     },
+    "payloadWireFormat" : {
+      "type" : "string",
+      "enum": ["FLATBUFFER", "ALIGNED_BINARY"]
+    },
+    "bufferMutability" : {
+      "type" : "string",
+      "enum": ["IMMUTABLE", "SINGLE_WRITER_MUTABLE", "APPEND_ONLY"]
+    },
+    "bufferOwnership" : {
+      "type" : "string",
+      "enum": ["HOST_OWNED", "PLUGIN_OWNED", "TRANSFERRED"]
+    },
+    "pluginCategory" : {
+      "type" : "string",
+      "enum": ["Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", "Parser", "Validator", "Interpolator", "Exporter", "Foundation", "Infrastructure", "Licensing", "Storefront", "Publisher", "Basilisk", "Maneuver", "Flow", "Unspecified"]
+    },
+    "purchaseTier" : {
+      "type" : "string",
+      "enum": ["Free", "OneTime", "Subscription"]
+    },
+    "publicationState" : {
+      "type" : "string",
+      "enum": ["Public", "Unlisted", "Retired"]
+    },
+    "invokeSurfaceKind" : {
+      "type" : "string",
+      "enum": ["DIRECT", "COMMAND"]
+    },
+    "drainBehavior" : {
+      "type" : "string",
+      "enum": ["SINGLE_SHOT", "DRAIN_UNTIL_YIELD", "DRAIN_TO_EMPTY"]
+    },
+    "hostCapabilityKind" : {
+      "type" : "string",
+      "enum": ["CLOCK", "RANDOM", "LOGGING", "TIMERS", "PUBSUB", "PROTOCOL_DIAL", "PROTOCOL_HANDLE", "STORAGE_QUERY", "SCENE_ACCESS", "ENTITY_ACCESS", "RENDER_HOOKS", "HTTP", "FILESYSTEM", "PIPE", "NETWORK", "DATABASE", "STORAGE_ADAPTER", "STORAGE_WRITE", "WALLET_SIGN", "IPFS", "TLS", "MQTT", "WEBSOCKET", "TCP", "UDP", "PROCESS_EXEC", "CONTEXT_READ", "CONTEXT_WRITE", "CRYPTO_HASH", "CRYPTO_SIGN", "CRYPTO_VERIFY", "CRYPTO_ENCRYPT", "CRYPTO_DECRYPT", "CRYPTO_KEY_AGREEMENT", "CRYPTO_KDF", "SCHEDULE_CRON", "STORAGE_INGEST"]
+    },
+    "flowEdgeRoutePolicy" : {
+      "type" : "string",
+      "enum": ["CANONICAL_ONLY", "ALIGNED_SHARED_ARENA_OR_CANONICAL"]
+    },
+    "pmmTrustTier" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CORE", "RECOMMENDED", "OPTIONAL"]
+    },
+    "pmmAccessPolicy" : {
+      "type" : "string",
+      "enum": ["ANONYMOUS", "AUTHENTICATED", "ENTITLED"]
+    },
+    "pmmEntryState" : {
+      "type" : "string",
+      "enum": ["ACTIVE", "DEPRECATED", "WITHDRAWN", "REVOKED"]
+    },
     "CryptoKey" : {
       "type" : "object",
       "description" : "Represents cryptographic key information",
@@ -196,7 +248,961 @@
               }
       },
       "additionalProperties" : false
+    },
+    "FlatBufferTypeRef" : {
+      "type" : "object",
+      "description" : "Payload-schema identity for a stream frame or an accepted port type.",
+      "properties" : {
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Logical schema name (for example `OMM.fbs` or `OCM.fbs`)."
+              },
+        "FILE_IDENTIFIER" : {
+                "type" : "string",
+                "description" : "Optional 4-byte FlatBuffer file identifier."
+              },
+        "SCHEMA_VERSION" : {
+                "type" : "string",
+                "description" : "Optional semver or schema revision string."
+              },
+        "ROOT_TYPE" : {
+                "type" : "string",
+                "description" : "Optional root type name within the schema."
+              },
+        "SCHEMA_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional schema hash bytes for stronger compatibility checks."
+              },
+        "ACCEPTS_ANY_FLATBUFFER" : {
+                "type" : "boolean",
+                "description" : "True when this port/type set accepts any FlatBuffer frame."
+              },
+        "WIRE_FORMAT" : {
+                "$ref" : "#/definitions/payloadWireFormat",
+                "description" : "Logical wire format for this accepted type."
+              },
+        "FIXED_STRING_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Fixed string length for aligned-binary string fields, when applicable."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length for fixed-size aligned-binary records, when applicable."
+              },
+        "REQUIRED_ALIGNMENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Required start alignment for aligned-binary records, when applicable."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TAB" : {
+      "type" : "object",
+      "description" : "Typed Arena Buffer — one descriptor for a payload slot in a shared arena.",
+      "properties" : {
+        "OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte offset of the payload body within the arena."
+              },
+        "SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Byte length of the payload body."
+              },
+        "ALIGNMENT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Required start alignment of the payload body (in bytes)."
+              },
+        "WIRE_FORMAT" : {
+                "$ref" : "#/definitions/payloadWireFormat",
+                "description" : "Wire format for the body."
+              },
+        "TYPE_REF" : {
+                "$ref" : "#/definitions/FlatBufferTypeRef",
+                "description" : "Optional payload schema identity."
+              },
+        "MUTABILITY" : {
+                "$ref" : "#/definitions/bufferMutability",
+                "description" : "Mutability contract for the slot."
+              },
+        "OWNERSHIP" : {
+                "$ref" : "#/definitions/bufferOwnership",
+                "description" : "Ownership contract for the slot."
+              },
+        "FRAME_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Optional opaque frame identifier for stream bookkeeping."
+              },
+        "PORT_ID" : {
+                "type" : "string",
+                "description" : "Optional port identifier for frames that route to/from a named\ninput or output port on a method (maps to\n`PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry\nno port routing hint."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PluginCapability" : {
+      "type" : "object",
+      "description" : "Plugin capability declaration",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Capability name, e.g., \"gpu_compute\", \"wasm_simd\""
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Capability version"
+              },
+        "REQUIRED" : {
+                "type" : "boolean",
+                "description" : "Whether this capability is required"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLGAcceptedTypeSet" : {
+      "type" : "object",
+      "description" : "Accepted schema family for a port. When a port accepts multiple wire\nformats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\nentry carries its own TAB.FlatBufferTypeRef with the schema identity,\nand the enclosing PLGPortManifest advertises both wire formats via\nALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\naligned-binary MUST also advertise the canonical flatbuffer fallback\nfor the same schema and file identifier in the same set.",
+      "properties" : {
+        "SET_ID" : {
+                "type" : "string",
+                "description" : "Stable type-set identifier within the port."
+              },
+        "ALLOWED_TYPES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FlatBufferTypeRef"},
+                "description" : "Specific FlatBuffer types accepted by the set."
+              },
+        "ALLOWED_WIRE_FORMATS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/payloadWireFormat"},
+                "description" : "Wire formats this set accepts. If ALIGNED_BINARY is present,\nFLATBUFFER MUST also be present for the same schemas."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable explanation of the accepted schema family."
+              }
+      },
+      "required" : ["SET_ID"],
+      "additionalProperties" : false
+    },
+    "PLGPortManifest" : {
+      "type" : "object",
+      "description" : "One input or output port on a method.",
+      "properties" : {
+        "PORT_ID" : {
+                "type" : "string",
+                "description" : "Stable port identifier within the method."
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable name for UIs."
+              },
+        "ACCEPTED_TYPE_SETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGAcceptedTypeSet"},
+                "description" : "Type sets accepted on this port."
+              },
+        "MIN_STREAMS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Minimum number of streams that must be connected."
+              },
+        "MAX_STREAMS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Maximum number of streams that may be connected."
+              },
+        "REQUIRED" : {
+                "type" : "boolean",
+                "description" : "Whether the port must be connected for invocation."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Optional human-readable description."
+              }
+      },
+      "required" : ["PORT_ID"],
+      "additionalProperties" : false
+    },
+    "PLGHostCapability" : {
+      "type" : "object",
+      "description" : "One host capability dependency (richer form of PluginCapability).",
+      "properties" : {
+        "CAPABILITY" : {
+                "$ref" : "#/definitions/hostCapabilityKind"
+              },
+        "SCOPE" : {
+                "type" : "string"
+              },
+        "REQUIRED" : {
+                "type" : "boolean"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLGTimerSpec" : {
+      "type" : "object",
+      "description" : "Timer entry declared by a plugin.",
+      "properties" : {
+        "TIMER_ID" : {
+                "type" : "string"
+              },
+        "METHOD_ID" : {
+                "type" : "string"
+              },
+        "INPUT_PORT_ID" : {
+                "type" : "string"
+              },
+        "DEFAULT_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["TIMER_ID", "METHOD_ID"],
+      "additionalProperties" : false
+    },
+    "PLGProtocolSpec" : {
+      "type" : "object",
+      "description" : "Protocol handler declared by a plugin.",
+      "properties" : {
+        "PROTOCOL_ID" : {
+                "type" : "string"
+              },
+        "METHOD_ID" : {
+                "type" : "string"
+              },
+        "INPUT_PORT_ID" : {
+                "type" : "string"
+              },
+        "OUTPUT_PORT_ID" : {
+                "type" : "string"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              },
+        "WIRE_ID" : {
+                "type" : "string"
+              },
+        "TRANSPORT_KIND" : {
+                "type" : "string"
+              },
+        "ROLE" : {
+                "type" : "string"
+              },
+        "SPEC_URI" : {
+                "type" : "string"
+              },
+        "AUTO_INSTALL" : {
+                "type" : "boolean"
+              },
+        "ADVERTISE" : {
+                "type" : "boolean"
+              },
+        "DISCOVERY_KEY" : {
+                "type" : "string"
+              },
+        "DEFAULT_PORT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535
+              },
+        "REQUIRE_SECURE_TRANSPORT" : {
+                "type" : "boolean"
+              }
+      },
+      "required" : ["PROTOCOL_ID", "METHOD_ID"],
+      "additionalProperties" : false
+    },
+    "PLGBuildArtifact" : {
+      "type" : "object",
+      "description" : "Build artifact emitted by the plugin toolchain.",
+      "properties" : {
+        "ARTIFACT_ID" : {
+                "type" : "string"
+              },
+        "KIND" : {
+                "type" : "string"
+              },
+        "PATH" : {
+                "type" : "string"
+              },
+        "TARGET" : {
+                "type" : "string"
+              },
+        "ENTRY_SYMBOL" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["ARTIFACT_ID", "PATH"],
+      "additionalProperties" : false
+    },
+    "PLGMethodManifest" : {
+      "type" : "object",
+      "description" : "Canonical method declaration.",
+      "properties" : {
+        "METHOD_ID" : {
+                "type" : "string"
+              },
+        "DISPLAY_NAME" : {
+                "type" : "string"
+              },
+        "INPUT_PORTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGPortManifest"}
+              },
+        "OUTPUT_PORTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGPortManifest"}
+              },
+        "MAX_BATCH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DRAIN_POLICY" : {
+                "$ref" : "#/definitions/drainBehavior"
+              },
+        "DESCRIPTION" : {
+                "type" : "string"
+              }
+      },
+      "required" : ["METHOD_ID"],
+      "additionalProperties" : false
+    },
+    "PluginDependency" : {
+      "type" : "object",
+      "description" : "Plugin dependency on another plugin",
+      "properties" : {
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Plugin ID of the dependency"
+              },
+        "MIN_VERSION" : {
+                "type" : "string",
+                "description" : "Minimum version required (semver)"
+              },
+        "MAX_VERSION" : {
+                "type" : "string",
+                "description" : "Maximum version allowed (optional)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EntryFunction" : {
+      "type" : "object",
+      "description" : "Plugin entry point function definition",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Function name as exported from WASM"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable description"
+              },
+        "INPUT_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Input parameter types (FlatBuffer schema names)"
+              },
+        "OUTPUT_SCHEMA" : {
+                "type" : "string",
+                "description" : "Output type (FlatBuffer schema name)"
+              }
+      },
+      "required" : ["NAME"],
+      "additionalProperties" : false
+    },
+    "PLGFlowNode" : {
+      "type" : "object",
+      "description" : "One node in a composed flow graph. A degenerate flow IS a module: a leaf\nmodule leaves the flow-graph fields on PLG empty; a composed flow populates\nthem. This is how flows reuse the module schema rather than a separate one.",
+      "properties" : {
+        "NODE_ID" : {
+                "type" : "string",
+                "description" : "Stable node identifier within this flow"
+              },
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Plugin id of the module this node invokes"
+              },
+        "METHOD_ID" : {
+                "type" : "string",
+                "description" : "Method id invoked on the module"
+              },
+        "KIND" : {
+                "type" : "string",
+                "description" : "Node kind, e.g. \"transform\", \"trigger\", \"capability\""
+              },
+        "DISPATCH_MODEL" : {
+                "type" : "string",
+                "description" : "Dispatch model: empty = linked-direct (in-wasm), \"isomorphic\" = an\nindependently instantiated signed WASM node, and \"host-capability\" = a\ngeneric host adapter."
+              },
+        "CONFIG" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)"
+              },
+        "UI_X" : {
+                "type" : "number",
+                "description" : "Editor layout X position"
+              },
+        "UI_Y" : {
+                "type" : "number",
+                "description" : "Editor layout Y position"
+              }
+      },
+      "required" : ["NODE_ID", "PLUGIN_ID"],
+      "additionalProperties" : false
+    },
+    "PLGFlowEdgeContract" : {
+      "type" : "object",
+      "description" : "Exact validated SDS and representation contract bound into a signed flow\nedge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;\nALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.",
+      "properties" : {
+        "CANONICAL_TYPE" : {
+                "$ref" : "#/definitions/FlatBufferTypeRef",
+                "description" : "Canonical SDS identity carried by the edge. NOT `required`: an edge may\nbe opaque by design (see OPAQUE), and a signer must never be forced to\ninvent an identity to satisfy the schema. A contract MUST carry exactly\none of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with\nboth, is invalid and MUST be rejected by the compiler that signs the flow."
+              },
+        "ALIGNED_TYPE" : {
+                "$ref" : "#/definitions/FlatBufferTypeRef"
+              },
+        "CANONICAL_FALLBACK_AVAILABLE" : {
+                "type" : "boolean"
+              },
+        "ALIGNED_ELIGIBLE" : {
+                "type" : "boolean"
+              },
+        "ROUTE_POLICY" : {
+                "$ref" : "#/definitions/flowEdgeRoutePolicy"
+              },
+        "OPAQUE" : {
+                "type" : "boolean",
+                "description" : "The edge carries bytes with no SDS identity BY DESIGN — an\napplication-blind host-capability adapter (an HTTP body, a raw file\nchunk) or a timer TICK frame with no payload at all. This is a deliberate\nsigned assertion of opacity, which is why it is an explicit flag rather\nthan an absent CANONICAL_TYPE: a missing type must stay distinguishable\nfrom a declared-opaque one. An opaque edge is ineligible for the aligned\nroute, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLGFlowEdge" : {
+      "type" : "object",
+      "description" : "One directed edge wiring a producer output port to a consumer input port.",
+      "properties" : {
+        "EDGE_ID" : {
+                "type" : "string",
+                "description" : "Stable edge identifier"
+              },
+        "FROM_NODE_ID" : {
+                "type" : "string",
+                "description" : "Source node id"
+              },
+        "FROM_PORT_ID" : {
+                "type" : "string",
+                "description" : "Source output port id"
+              },
+        "TO_NODE_ID" : {
+                "type" : "string",
+                "description" : "Destination node id"
+              },
+        "TO_PORT_ID" : {
+                "type" : "string",
+                "description" : "Destination input port id"
+              },
+        "CONTRACT" : {
+                "$ref" : "#/definitions/PLGFlowEdgeContract",
+                "description" : "Exact identity/layout and compile-time representation policy. NOT\n`required`: marking a NEW field of an EXISTING table required makes the\nFlatBuffers verifier reject every $PLG buffer written before 1.0.13,\nwhich is a breaking change to a ratified standard. Presence is enforced\nwhere it belongs — the flow compiler MUST refuse to SIGN a flow whose\nedges lack a CONTRACT, and a verifier MUST reject a signed flow edge\nwithout one. Buffers predating 1.0.13 stay readable and stay unsigned."
+              }
+      },
+      "required" : ["FROM_NODE_ID", "FROM_PORT_ID", "TO_NODE_ID", "TO_PORT_ID"],
+      "additionalProperties" : false
+    },
+    "PLGFlowTrigger" : {
+      "type" : "object",
+      "description" : "One flow trigger (e.g. a host timer or HTTP route) that starts a drain.",
+      "properties" : {
+        "TRIGGER_ID" : {
+                "type" : "string",
+                "description" : "Stable trigger identifier"
+              },
+        "KIND" : {
+                "type" : "string",
+                "description" : "Trigger kind, e.g. \"timer\", \"http\""
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Trigger source, e.g. \"host-cron\""
+              },
+        "DEFAULT_INTERVAL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Default firing interval in milliseconds (timer triggers)"
+              },
+        "HTTP_PATH" : {
+                "type" : "string",
+                "description" : "Mounted HTTP path (http triggers)"
+              }
+      },
+      "required" : ["TRIGGER_ID"],
+      "additionalProperties" : false
+    },
+    "PLGFlowTriggerBinding" : {
+      "type" : "object",
+      "description" : "Binds a trigger to the node + input port it delivers its frame to.",
+      "properties" : {
+        "TRIGGER_ID" : {
+                "type" : "string",
+                "description" : "Trigger identifier"
+              },
+        "TARGET_NODE_ID" : {
+                "type" : "string",
+                "description" : "Target node id"
+              },
+        "TARGET_PORT_ID" : {
+                "type" : "string",
+                "description" : "Target input port id"
+              }
+      },
+      "required" : ["TRIGGER_ID", "TARGET_NODE_ID", "TARGET_PORT_ID"],
+      "additionalProperties" : false
+    },
+    "PLG" : {
+      "type" : "object",
+      "description" : "Plugin Manifest - canonical signed storefront and WASM distribution record",
+      "properties" : {
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the plugin"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable plugin name"
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Plugin version (semver format)"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Detailed description of plugin functionality"
+              },
+        "TAGLINE" : {
+                "type" : "string",
+                "description" : "Short marketing summary shown in storefront listings"
+              },
+        "PLUGIN_TYPE" : {
+                "$ref" : "#/definitions/pluginCategory",
+                "description" : "Type/category of the plugin"
+              },
+        "PUBLISHER_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable publisher or organization name"
+              },
+        "PUBLISHER_HANDLE" : {
+                "type" : "string",
+                "description" : "Publisher handle or username"
+              },
+        "PUBLISHER_URL" : {
+                "type" : "string",
+                "description" : "Canonical publisher website"
+              },
+        "SUPPORT_URL" : {
+                "type" : "string",
+                "description" : "Support or helpdesk URL for this plugin"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Search and categorization tags for discovery"
+              },
+        "FEATURES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Short feature bullets highlighted in storefront listings"
+              },
+        "SCREENSHOT_URLS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Screenshot URLs showing the plugin in use"
+              },
+        "BANNER_URL" : {
+                "type" : "string",
+                "description" : "Optional hero/banner image URL for the listing"
+              },
+        "ABI_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ABI version for compatibility checking"
+              },
+        "WASM_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA256 hash of the decrypted WASM binary"
+              },
+        "WASM_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of decrypted WASM binary in bytes"
+              },
+        "WASM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the encrypted WASM binary"
+              },
+        "ENCRYPTED_WASM_HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "SHA256 hash of the encrypted delivery artifact bytes"
+              },
+        "ENCRYPTED_WASM_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of the encrypted delivery artifact in bytes"
+              },
+        "ENTRY_FUNCTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/EntryFunction"},
+                "description" : "Entry point functions exported by the plugin"
+              },
+        "REQUIRED_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "FlatBuffer schemas required by this plugin"
+              },
+        "DEPENDENCIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PluginDependency"},
+                "description" : "Other plugins this depends on"
+              },
+        "CAPABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PluginCapability"},
+                "description" : "Capabilities provided by this plugin"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the plugin provider"
+              },
+        "PROVIDER_EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of provider's EPM (Entity Profile Message)"
+              },
+        "ENCRYPTED" : {
+                "type" : "boolean",
+                "description" : "Whether the WASM binary is encrypted"
+              },
+        "REQUIRED_SCOPE" : {
+                "type" : "string",
+                "description" : "Canonical required scope for grant issuance"
+              },
+        "KEY_ID" : {
+                "type" : "string",
+                "description" : "Provider-local identifier for the module content key"
+              },
+        "MAX_GRANT_TIMEOUT_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Maximum grant timeout allowed for this module publication"
+              },
+        "MIN_PERMISSIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Minimum permissions required to run"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when plugin was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when plugin was last updated"
+              },
+        "DOCUMENTATION_URL" : {
+                "type" : "string",
+                "description" : "URL to plugin documentation"
+              },
+        "CHANGELOG_URL" : {
+                "type" : "string",
+                "description" : "URL to plugin changelog or release notes"
+              },
+        "ICON_URL" : {
+                "type" : "string",
+                "description" : "URL to plugin icon/logo"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "License identifier (SPDX format)"
+              },
+        "PAYMENT_MODEL" : {
+                "$ref" : "#/definitions/purchaseTier",
+                "description" : "Commercial model used for storefront purchase flows"
+              },
+        "PRICE_USD_CENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Price in USD cents for one-time purchase or subscription period"
+              },
+        "SUBSCRIPTION_PERIOD_DAYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Subscription billing period length in days"
+              },
+        "ACCEPTED_PAYMENT_METHODS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Accepted payment methods, e.g. \"stripe\", \"sol\", \"usdc\""
+              },
+        "LISTING_STATUS" : {
+                "$ref" : "#/definitions/publicationState",
+                "description" : "Storefront publication state for this manifest version"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider over manifest"
+              },
+        "INVOKE_SURFACES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/invokeSurfaceKind"},
+                "description" : "Canonical invoke surfaces this artifact exposes. A single plugin\nMAY list both DIRECT and COMMAND when it supports both."
+              },
+        "METHODS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGMethodManifest"},
+                "description" : "Rich per-method invoke manifests (port shape, drain semantics,\naccepted wire formats). ENTRY_FUNCTIONS retains the slim\nname+input_schemas+output_schema summary; METHODS carries the full\ninvoke-surface detail including aligned-binary advertisement."
+              },
+        "HOST_CAPABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGHostCapability"},
+                "description" : "Enum-typed host capability dependencies (richer than CAPABILITIES,\nwhich is string-tagged metadata)."
+              },
+        "TIMERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGTimerSpec"},
+                "description" : "Timer declarations for scheduled invocations."
+              },
+        "PROTOCOLS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGProtocolSpec"},
+                "description" : "Protocol handler declarations."
+              },
+        "SCHEMAS_USED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FlatBufferTypeRef"},
+                "description" : "FlatBuffer schemas this plugin depends on at the invoke surface."
+              },
+        "BUILD_ARTIFACTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGBuildArtifact"},
+                "description" : "Build artifacts emitted by the toolchain (WASM, bindings, etc.)."
+              },
+        "RUNTIME_TARGETS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Opaque runtime-target tags (e.g. \"wasmtime\", \"wasmedge\", \"browser\")."
+              },
+        "ALLOWED_XPUBS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Allowed requester xpub identities (BIP-32 account xpubs) for module grants:\na requester whose verified EPM binds an xpub in this list is granted (PKI\nidentity authorization). Empty list = no xpub allowlist gate."
+              },
+        "FLOW_NODES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGFlowNode"},
+                "description" : "Composition graph (a degenerate flow is a module): the nodes this flow\ninvokes. Empty for a leaf module; populated for a composed flow. The flow\ndefinition is this PLG FlatBuffer, not a bespoke JSON graph."
+              },
+        "FLOW_EDGES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGFlowEdge"},
+                "description" : "Composition-graph edges wiring node output ports to input ports."
+              },
+        "FLOW_TRIGGERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGFlowTrigger"},
+                "description" : "Flow triggers (timer/http) that start a drain."
+              },
+        "FLOW_TRIGGER_BINDINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLGFlowTriggerBinding"},
+                "description" : "Bindings from triggers to the node + input port they deliver to."
+              }
+      },
+      "required" : ["PLUGIN_ID", "NAME", "VERSION"],
+      "additionalProperties" : false
+    },
+    "PMMTrustAnchor" : {
+      "type" : "object",
+      "description" : "The single key identity every signature in this manifest resolves to, and\nthe two external anchors that give that key its weight: the DNS proof that\nbinds it to the domain, and the Adversarial-Security bond that prices\ntrust in it.",
+      "properties" : {
+        "PROVIDER_DOMAIN" : {
+                "type" : "string",
+                "description" : "Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\nMUST equal the origin the manifest was fetched from."
+              },
+        "NODE_PEER_ID" : {
+                "type" : "string",
+                "description" : "libp2p peer id of the provider node."
+              },
+        "NODE_XPUB" : {
+                "type" : "string",
+                "description" : "BIP-32 account xpub of the node identity, verbatim as advertised in the\nnode's `$EPM`."
+              },
+        "SIGNING_PUBLIC_KEY" : {
+                "type" : "string",
+                "description" : "Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n`PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key."
+              },
+        "SIGNING_KEY_PATH" : {
+                "type" : "string",
+                "description" : "HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`."
+              },
+        "SIGNATURE_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Signature algorithm identifier, e.g. \"ed25519\",\n\"secp256k1-compact-ethereum\". Empty means \"ed25519\"."
+              },
+        "EPM_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the provider node's `$EPM`."
+              },
+        "DNS_PROOF_RECORD_NAME" : {
+                "type" : "string",
+                "description" : "Fully-qualified DNS name of the TXT record carrying the signed\ndomain-to-nodekey proof, e.g. \"_sdnkey.example.org\". A verifying client\nresolves this itself (DNS-over-HTTPS) rather than trusting the copy\nbelow."
+              },
+        "DNS_PROOF_TXT" : {
+                "type" : "string",
+                "description" : "Verbatim TXT value of that proof, carried only so a client can detect\ndisagreement with what DNS returns. The resolved record always wins."
+              },
+        "DNS_PROOF_STATEMENT" : {
+                "type" : "string",
+                "description" : "The canonical statement the DNS proof signs, verbatim, when the proof\nformat keeps it out of the TXT value."
+              },
+        "BOND_ADDRESSES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ChainProof"},
+                "description" : "Chain addresses derived from this same node key that hold the provider's\nAdversarial-Security bond. Each entry proves, through `ChainProof`, that\nthe address derives from the key that signed this manifest."
+              },
+        "BOND_ATTESTATION_URL" : {
+                "type" : "string",
+                "description" : "Optional URL of a machine-readable bond attestation (bonded value,\nduration unspent) for clients that price trust rather than gate on it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PMMModuleEntry" : {
+      "type" : "object",
+      "description" : "One module the provider offers.",
+      "properties" : {
+        "MODULE_ID" : {
+                "type" : "string",
+                "description" : "Reverse-DNS module identity, e.g. \"com.orbpro.sgp4-propagator\". Stable\nacross versions. Required and unique within the manifest."
+              },
+        "PLUGIN_ID" : {
+                "type" : "string",
+                "description" : "`$PLG.PLUGIN_ID` of the full listing for this module, when one is\npublished."
+              },
+        "PLG_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of that `$PLG` record."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable summary."
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "SemVer 2.0.0 version of the offered artifact."
+              },
+        "EPOCH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Monotonic publication counter for this MODULE_ID. Increases on every\nre-publication, including a rebuild at the same VERSION."
+              },
+        "CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "64 lowercase hexadecimal characters encoding SHA-256 of the module's\nportable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\nin meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\ncapability and signature policies key on."
+              },
+        "ARTIFACT_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of those portable WASM bytes."
+              },
+        "ARTIFACT_PATH" : {
+                "type" : "string",
+                "description" : "Path, relative to the provider origin, from which the artifact is\nfetched. Relative on purpose: the bytes must come from the same origin\nwhose domain the DNS proof binds."
+              },
+        "ARTIFACT_CID" : {
+                "type" : "string",
+                "description" : "IPFS CID of the artifact, for content-addressed retrieval."
+              },
+        "ARTIFACT_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\nover the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\nbefore spending a byte of bandwidth. The artifact's own publication\ntrailer remains authoritative after download."
+              },
+        "TRUST_TIER" : {
+                "$ref" : "#/definitions/pmmTrustTier",
+                "description" : "Provider-declared standing. Gates anonymous loading."
+              },
+        "DEFAULT_ENABLED" : {
+                "type" : "boolean",
+                "description" : "True when the provider ships this module enabled by default. A recorded\nuser choice overrides it permanently."
+              },
+        "ACCESS_POLICY" : {
+                "$ref" : "#/definitions/pmmAccessPolicy",
+                "description" : "What the client must hold to fetch and run it."
+              },
+        "ENTRY_STATE" : {
+                "$ref" : "#/definitions/pmmEntryState",
+                "description" : "Entry lifecycle."
+              },
+        "RUNTIME_TARGETS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Opaque runtime-target tags this artifact is built for, e.g. \"browser\",\n\"wasmedge\". Same vocabulary as `$PLG.RUNTIME_TARGETS`."
+              },
+        "REQUIRED_SCHEMAS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "SDS schema codes at this module's invoke surface, e.g. \"OMM\", \"OEM\"."
+              },
+        "MIN_PERMISSIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Minimum host permissions the module needs, same vocabulary as\n`$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\nanonymously-loaded CORE module is allowed to do."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "SPDX license identifier of the module."
+              },
+        "DOCUMENTATION_URL" : {
+                "type" : "string",
+                "description" : "URL to the module's documentation."
+              },
+        "ICON_URL" : {
+                "type" : "string",
+                "description" : "URL to the module's icon."
+              },
+        "SUPERSEDES_CONTENT_HASH" : {
+                "type" : "string",
+                "description" : "`CONTENT_HASH` this entry replaces, when it supersedes an earlier build."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\nthe last change to this entry."
+              },
+        "PLUGIN_TYPE" : {
+                "$ref" : "#/definitions/pluginCategory",
+                "description" : "Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\nis the ONLY sanctioned way to group an offering: a client grouping a\ncatalogue MUST read this field and MUST NOT infer family from the shape\nof `MODULE_ID`, which carries no normative structure. Defaults to\n`Unspecified`, which a client MUST render as ungrouped — never silently\nas `Sensor`. Present here, rather than only on\nthe linked `$PLG`, so an anonymous client can section the catalogue at\nboot without fetching one `$PLG` per module."
+              }
+      },
+      "required" : ["MODULE_ID"],
+      "additionalProperties" : false
+    },
+    "PMM" : {
+      "type" : "object",
+      "description" : "Provider Module Manifest — what one provider node offers, signed by that\nnode's key.",
+      "properties" : {
+        "PROVIDER_DOMAIN" : {
+                "type" : "string",
+                "description" : "Domain of the provider, e.g. \"sdn.spaceaware.io\". Required. MUST equal\nthe origin the manifest was served from."
+              },
+        "PROVIDER_NAME" : {
+                "type" : "string",
+                "description" : "Display name of the provider."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Human-readable summary of what the provider serves."
+              },
+        "EPOCH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Monotonic manifest epoch. A client MUST reject an epoch lower than the\nhighest it has already verified for `PROVIDER_DOMAIN`."
+              },
+        "TRUST" : {
+                "$ref" : "#/definitions/PMMTrustAnchor",
+                "description" : "The key identity and its external anchors."
+              },
+        "MODULES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PMMModuleEntry"},
+                "description" : "The offered modules."
+              },
+        "CANONICAL_URL" : {
+                "type" : "string",
+                "description" : "Canonical absolute URL this manifest is served from."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nwhen the manifest was created."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nwhen the manifest was last signed."
+              },
+        "EXPIRES_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\nafter which a verifier MUST refuse anonymous CORE loading from this\nmanifest and re-fetch. Required in practice for anonymous trust: an\nunexpiring signed manifest cannot be withdrawn."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\ndefined in this file's header."
+              },
+        "SIGNED_STATEMENT" : {
+                "type" : "string",
+                "description" : "The canonical statement, verbatim. A verifier MUST rebuild it from this\nrecord and reject any difference."
+              }
+      },
+      "required" : ["PROVIDER_DOMAIN"],
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/EPM"
+  "$ref" : "#/definitions/PMM"
 }

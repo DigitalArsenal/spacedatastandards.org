@@ -319,6 +319,87 @@
         }
       }
     },
+    "SiteType": {
+      "type": "string",
+      "enum": [
+        "LAUNCH_SITE",
+        "OBSERVATION_STATION",
+        "HOBBYIST_OBSERVER",
+        "RESEARCH_FACILITY",
+        "SATELLITE_GROUND_STATION",
+        "SPACEPORT",
+        "MILITARY_BASE",
+        "WEATHER_STATION",
+        "ASTRONOMICAL_OBSERVATORY",
+        "EDUCATIONAL_INSTITUTE",
+        "COMMUNICATION_HUB",
+        "POWER_PLANT",
+        "INDUSTRIAL_COMPLEX",
+        "TRANSPORTATION_HUB",
+        "URBAN_AREA",
+        "NATIONAL_PARK",
+        "HISTORICAL_SITE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LAUNCH_SITE": {
+          "value": 0
+        },
+        "OBSERVATION_STATION": {
+          "value": 1
+        },
+        "HOBBYIST_OBSERVER": {
+          "value": 2
+        },
+        "RESEARCH_FACILITY": {
+          "value": 3
+        },
+        "SATELLITE_GROUND_STATION": {
+          "value": 4
+        },
+        "SPACEPORT": {
+          "value": 5
+        },
+        "MILITARY_BASE": {
+          "value": 6
+        },
+        "WEATHER_STATION": {
+          "value": 7
+        },
+        "ASTRONOMICAL_OBSERVATORY": {
+          "value": 8
+        },
+        "EDUCATIONAL_INSTITUTE": {
+          "value": 9
+        },
+        "COMMUNICATION_HUB": {
+          "value": 10
+        },
+        "POWER_PLANT": {
+          "value": 11
+        },
+        "INDUSTRIAL_COMPLEX": {
+          "value": 12
+        },
+        "TRANSPORTATION_HUB": {
+          "value": 13
+        },
+        "URBAN_AREA": {
+          "value": 14
+        },
+        "NATIONAL_PARK": {
+          "value": 15
+        },
+        "HISTORICAL_SITE": {
+          "value": 16
+        },
+        "OTHER": {
+          "value": 17
+        }
+      }
+    },
     "FrequencyRange": {
       "type": "object",
       "description": "Frequency range with lower and upper limits",
@@ -771,91 +852,9 @@
       },
       "additionalProperties": false
     },
-    "SiteType": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "Enum for the type of site",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17
-      ],
-      "x-flatbuffer-enum-values": {
-        "LAUNCH_SITE": {
-          "value": 0
-        },
-        "OBSERVATION_STATION": {
-          "value": 1
-        },
-        "HOBBYIST_OBSERVER": {
-          "value": 2
-        },
-        "RESEARCH_FACILITY": {
-          "value": 3
-        },
-        "SATELLITE_GROUND_STATION": {
-          "value": 4
-        },
-        "SPACEPORT": {
-          "value": 5
-        },
-        "MILITARY_BASE": {
-          "value": 6
-        },
-        "WEATHER_STATION": {
-          "value": 7
-        },
-        "ASTRONOMICAL_OBSERVATORY": {
-          "value": 8
-        },
-        "EDUCATIONAL_INSTITUTE": {
-          "value": 9
-        },
-        "COMMUNICATION_HUB": {
-          "value": 10
-        },
-        "POWER_PLANT": {
-          "value": 11
-        },
-        "INDUSTRIAL_COMPLEX": {
-          "value": 12
-        },
-        "TRANSPORTATION_HUB": {
-          "value": 13
-        },
-        "URBAN_AREA": {
-          "value": 14
-        },
-        "NATIONAL_PARK": {
-          "value": 15
-        },
-        "HISTORICAL_SITE": {
-          "value": 16
-        },
-        "OTHER": {
-          "value": 17
-        }
-      }
-    },
     "Geometry": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Geometry table with information about geometric properties",
       "properties": {
         "GEOMETRY_TYPE": {
           "type": "string",
@@ -871,11 +870,11 @@
           "x-flatbuffer-type": "[float]"
         }
       },
-      "description": "Geometry table with information about geometric properties"
+      "additionalProperties": false
     },
     "SIT": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Site Information Message",
       "properties": {
         "ID": {
           "type": "string",
@@ -1061,7 +1060,7 @@
           "x-flatbuffer-type": "[IDM]"
         }
       },
-      "description": "Site Information Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/SIT",

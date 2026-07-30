@@ -6,156 +6,223 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-enum KeyType {
-  Signing(0),
-  Encryption(1);
+///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
+///  through an arena-backed plugin stream. Carries enough identity for a
+///  receiver to dispatch on schema without inspecting the payload bytes.
+///  Logical payload wire format for a stream frame or an accepted port type.
+enum payloadWireFormat {
+  FLATBUFFER(0),
+  ALIGNED_BINARY(1);
 
   final int value;
-  const KeyType(this.value);
+  const payloadWireFormat(this.value);
 
-  factory KeyType.fromValue(int value) {
+  factory payloadWireFormat.fromValue(int value) {
     switch (value) {
-      case 0: return KeyType.Signing;
-      case 1: return KeyType.Encryption;
+      case 0: return payloadWireFormat.FLATBUFFER;
+      case 1: return payloadWireFormat.ALIGNED_BINARY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static KeyType? _createOrNull(int? value) =>
-      value == null ? null : KeyType.fromValue(value);
+  static payloadWireFormat? _createOrNull(int? value) =>
+      value == null ? null : payloadWireFormat.fromValue(value);
 
   static const int minValue = 0;
   static const int maxValue = 1;
-  static const fb.Reader<KeyType> reader = _KeyTypeReader();
+  static const fb.Reader<payloadWireFormat> reader = _payloadWireFormatReader();
 }
 
-class _KeyTypeReader extends fb.Reader<KeyType> {
-  const _KeyTypeReader();
+class _payloadWireFormatReader extends fb.Reader<payloadWireFormat> {
+  const _payloadWireFormatReader();
 
   @override
   int get size => 1;
 
   @override
-  KeyType read(fb.BufferContext bc, int offset) =>
-      KeyType.fromValue(const fb.Int8Reader().read(bc, offset));
+  payloadWireFormat read(fb.BufferContext bc, int offset) =>
+      payloadWireFormat.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-enum EntityType {
-  User(0),
-  Node(1);
+///  Buffer mutability contract advertised by a stream port.
+enum bufferMutability {
+  IMMUTABLE(0),
+  SINGLE_WRITER_MUTABLE(1),
+  APPEND_ONLY(2);
 
   final int value;
-  const EntityType(this.value);
+  const bufferMutability(this.value);
 
-  factory EntityType.fromValue(int value) {
+  factory bufferMutability.fromValue(int value) {
     switch (value) {
-      case 0: return EntityType.User;
-      case 1: return EntityType.Node;
+      case 0: return bufferMutability.IMMUTABLE;
+      case 1: return bufferMutability.SINGLE_WRITER_MUTABLE;
+      case 2: return bufferMutability.APPEND_ONLY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static EntityType? _createOrNull(int? value) =>
-      value == null ? null : EntityType.fromValue(value);
+  static bufferMutability? _createOrNull(int? value) =>
+      value == null ? null : bufferMutability.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 1;
-  static const fb.Reader<EntityType> reader = _EntityTypeReader();
+  static const int maxValue = 2;
+  static const fb.Reader<bufferMutability> reader = _bufferMutabilityReader();
 }
 
-class _EntityTypeReader extends fb.Reader<EntityType> {
-  const _EntityTypeReader();
+class _bufferMutabilityReader extends fb.Reader<bufferMutability> {
+  const _bufferMutabilityReader();
 
   @override
   int get size => 1;
 
   @override
-  EntityType read(fb.BufferContext bc, int offset) =>
-      EntityType.fromValue(const fb.Int8Reader().read(bc, offset));
+  bufferMutability read(fb.BufferContext bc, int offset) =>
+      bufferMutability.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Represents cryptographic key information
-class CryptoKey {
-  CryptoKey._(this._bc, this._bcOffset);
-  factory CryptoKey(List<int> bytes) {
+///  Buffer ownership contract advertised by a stream port.
+enum bufferOwnership {
+  HOST_OWNED(0),
+  PLUGIN_OWNED(1),
+  TRANSFERRED(2);
+
+  final int value;
+  const bufferOwnership(this.value);
+
+  factory bufferOwnership.fromValue(int value) {
+    switch (value) {
+      case 0: return bufferOwnership.HOST_OWNED;
+      case 1: return bufferOwnership.PLUGIN_OWNED;
+      case 2: return bufferOwnership.TRANSFERRED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static bufferOwnership? _createOrNull(int? value) =>
+      value == null ? null : bufferOwnership.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<bufferOwnership> reader = _bufferOwnershipReader();
+}
+
+class _bufferOwnershipReader extends fb.Reader<bufferOwnership> {
+  const _bufferOwnershipReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  bufferOwnership read(fb.BufferContext bc, int offset) =>
+      bufferOwnership.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Payload-schema identity for a stream frame or an accepted port type.
+class FlatBufferTypeRef {
+  FlatBufferTypeRef._(this._bc, this._bcOffset);
+  factory FlatBufferTypeRef(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<CryptoKey> reader = _CryptoKeyReader();
+  static const fb.Reader<FlatBufferTypeRef> reader = _FlatBufferTypeRefReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Public part of the cryptographic key, in hexidecimal format
-  String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get publicKey => PUBLIC_KEY;
-  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-  String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
-  String? get PRIVATE_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get privateKey => PRIVATE_KEY;
-  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-  String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Address generated from the cryptographic key
-  String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get keyAddress => KEY_ADDRESS;
-  ///  Type of the address generated from the cryptographic key
-  String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get addressType => ADDRESS_TYPE;
-  ///  Type of the cryptographic key (signing or encryption)
-  KeyType get KEY_TYPE => KeyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
-  KeyType get keyType => KEY_TYPE;
+  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
+  String? get SCHEMA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get schemaName => SCHEMA_NAME;
+  ///  Optional 4-byte FlatBuffer file identifier.
+  String? get FILE_IDENTIFIER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get fileIdentifier => FILE_IDENTIFIER;
+  ///  Optional semver or schema revision string.
+  String? get SCHEMA_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get schemaVersion => SCHEMA_VERSION;
+  ///  Optional root type name within the schema.
+  String? get ROOT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get rootType => ROOT_TYPE;
+  ///  Optional schema hash bytes for stronger compatibility checks.
+  List<int>? get SCHEMA_HASH => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 12);
+  List<int>? get schemaHash => SCHEMA_HASH;
+  ///  True when this port/type set accepts any FlatBuffer frame.
+  bool get ACCEPTS_ANY_FLATBUFFER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get acceptsAnyFlatbuffer => ACCEPTS_ANY_FLATBUFFER;
+  ///  Logical wire format for this accepted type.
+  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  payloadWireFormat get wireFormat => WIRE_FORMAT;
+  ///  Fixed string length for aligned-binary string fields, when applicable.
+  int get FIXED_STRING_LENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get fixedStringLength => FIXED_STRING_LENGTH;
+  ///  Byte length for fixed-size aligned-binary records, when applicable.
+  int get BYTE_LENGTH => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  int get byteLength => BYTE_LENGTH;
+  ///  Required start alignment for aligned-binary records, when applicable.
+  int get REQUIRED_ALIGNMENT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get requiredAlignment => REQUIRED_ALIGNMENT;
 
   @override
   String toString() {
-    return 'CryptoKey{publicKey: ${publicKey}, XPUB: ${XPUB}, privateKey: ${privateKey}, XPRIV: ${XPRIV}, keyAddress: ${keyAddress}, addressType: ${addressType}, keyType: ${keyType}}';
+    return 'FlatBufferTypeRef{schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, schemaVersion: ${schemaVersion}, rootType: ${rootType}, schemaHash: ${schemaHash}, acceptsAnyFlatbuffer: ${acceptsAnyFlatbuffer}, wireFormat: ${wireFormat}, fixedStringLength: ${fixedStringLength}, byteLength: ${byteLength}, requiredAlignment: ${requiredAlignment}}';
   }
 }
 
-class _CryptoKeyReader extends fb.TableReader<CryptoKey> {
-  const _CryptoKeyReader();
+class _FlatBufferTypeRefReader extends fb.TableReader<FlatBufferTypeRef> {
+  const _FlatBufferTypeRefReader();
 
   @override
-  CryptoKey createObject(fb.BufferContext bc, int offset) =>
-    CryptoKey._(bc, offset);
+  FlatBufferTypeRef createObject(fb.BufferContext bc, int offset) =>
+    FlatBufferTypeRef._(bc, offset);
 }
 
-class CryptoKeyBuilder {
-  CryptoKeyBuilder(this.fbBuilder);
+class FlatBufferTypeRefBuilder {
+  FlatBufferTypeRefBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(10);
   }
 
-  int addPublicKeyOffset(int? offset) {
+  int addSchemaNameOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addXpubOffset(int? offset) {
+  int addFileIdentifierOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addPrivateKeyOffset(int? offset) {
+  int addSchemaVersionOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addXprivOffset(int? offset) {
+  int addRootTypeOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addKeyAddressOffset(int? offset) {
+  int addSchemaHashOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addAddressTypeOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addAcceptsAnyFlatbuffer(bool? ACCEPTS_ANY_FLATBUFFER) {
+    fbBuilder.addBool(5, ACCEPTS_ANY_FLATBUFFER);
     return fbBuilder.offset;
   }
-  int addKeyType(KeyType? KEY_TYPE) {
-    fbBuilder.addInt8(6, KEY_TYPE?.value);
+  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
+    fbBuilder.addUint8(6, WIRE_FORMAT?.value);
+    return fbBuilder.offset;
+  }
+  int addFixedStringLength(int? FIXED_STRING_LENGTH) {
+    fbBuilder.addUint16(7, FIXED_STRING_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addByteLength(int? BYTE_LENGTH) {
+    fbBuilder.addUint32(8, BYTE_LENGTH);
+    return fbBuilder.offset;
+  }
+  int addRequiredAlignment(int? REQUIRED_ALIGNMENT) {
+    fbBuilder.addUint16(9, REQUIRED_ALIGNMENT);
     return fbBuilder.offset;
   }
 
@@ -164,60 +231,75 @@ class CryptoKeyBuilder {
   }
 }
 
-class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
-  final String? _PUBLIC_KEY;
-  final String? _XPUB;
-  final String? _PRIVATE_KEY;
-  final String? _XPRIV;
-  final String? _KEY_ADDRESS;
-  final String? _ADDRESS_TYPE;
-  final KeyType? _KEY_TYPE;
+class FlatBufferTypeRefObjectBuilder extends fb.ObjectBuilder {
+  final String? _SCHEMA_NAME;
+  final String? _FILE_IDENTIFIER;
+  final String? _SCHEMA_VERSION;
+  final String? _ROOT_TYPE;
+  final List<int>? _SCHEMA_HASH;
+  final bool? _ACCEPTS_ANY_FLATBUFFER;
+  final payloadWireFormat? _WIRE_FORMAT;
+  final int? _FIXED_STRING_LENGTH;
+  final int? _BYTE_LENGTH;
+  final int? _REQUIRED_ALIGNMENT;
 
-  CryptoKeyObjectBuilder({
-    String? PUBLIC_KEY,
-    String? publicKey,
-    String? XPUB,
-    String? PRIVATE_KEY,
-    String? privateKey,
-    String? XPRIV,
-    String? KEY_ADDRESS,
-    String? keyAddress,
-    String? ADDRESS_TYPE,
-    String? addressType,
-    KeyType? KEY_TYPE,
-    KeyType? keyType,
+  FlatBufferTypeRefObjectBuilder({
+    String? SCHEMA_NAME,
+    String? schemaName,
+    String? FILE_IDENTIFIER,
+    String? fileIdentifier,
+    String? SCHEMA_VERSION,
+    String? schemaVersion,
+    String? ROOT_TYPE,
+    String? rootType,
+    List<int>? SCHEMA_HASH,
+    List<int>? schemaHash,
+    bool? ACCEPTS_ANY_FLATBUFFER,
+    bool? acceptsAnyFlatbuffer,
+    payloadWireFormat? WIRE_FORMAT,
+    payloadWireFormat? wireFormat,
+    int? FIXED_STRING_LENGTH,
+    int? fixedStringLength,
+    int? BYTE_LENGTH,
+    int? byteLength,
+    int? REQUIRED_ALIGNMENT,
+    int? requiredAlignment,
   })
-      : _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
-        _XPUB = XPUB,
-        _PRIVATE_KEY = privateKey ?? PRIVATE_KEY,
-        _XPRIV = XPRIV,
-        _KEY_ADDRESS = keyAddress ?? KEY_ADDRESS,
-        _ADDRESS_TYPE = addressType ?? ADDRESS_TYPE,
-        _KEY_TYPE = keyType ?? KEY_TYPE;
+      : _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
+        _FILE_IDENTIFIER = fileIdentifier ?? FILE_IDENTIFIER,
+        _SCHEMA_VERSION = schemaVersion ?? SCHEMA_VERSION,
+        _ROOT_TYPE = rootType ?? ROOT_TYPE,
+        _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
+        _ACCEPTS_ANY_FLATBUFFER = acceptsAnyFlatbuffer ?? ACCEPTS_ANY_FLATBUFFER,
+        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
+        _FIXED_STRING_LENGTH = fixedStringLength ?? FIXED_STRING_LENGTH,
+        _BYTE_LENGTH = byteLength ?? BYTE_LENGTH,
+        _REQUIRED_ALIGNMENT = requiredAlignment ?? REQUIRED_ALIGNMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
-        : fbBuilder.writeString(_PUBLIC_KEY!);
-    final int? XPUBOffset = _XPUB == null ? null
-        : fbBuilder.writeString(_XPUB!);
-    final int? PRIVATE_KEYOffset = _PRIVATE_KEY == null ? null
-        : fbBuilder.writeString(_PRIVATE_KEY!);
-    final int? XPRIVOffset = _XPRIV == null ? null
-        : fbBuilder.writeString(_XPRIV!);
-    final int? KEY_ADDRESSOffset = _KEY_ADDRESS == null ? null
-        : fbBuilder.writeString(_KEY_ADDRESS!);
-    final int? ADDRESS_TYPEOffset = _ADDRESS_TYPE == null ? null
-        : fbBuilder.writeString(_ADDRESS_TYPE!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, PUBLIC_KEYOffset);
-    fbBuilder.addOffset(1, XPUBOffset);
-    fbBuilder.addOffset(2, PRIVATE_KEYOffset);
-    fbBuilder.addOffset(3, XPRIVOffset);
-    fbBuilder.addOffset(4, KEY_ADDRESSOffset);
-    fbBuilder.addOffset(5, ADDRESS_TYPEOffset);
-    fbBuilder.addInt8(6, _KEY_TYPE?.value);
+    final int? SCHEMA_NAMEOffset = _SCHEMA_NAME == null ? null
+        : fbBuilder.writeString(_SCHEMA_NAME!);
+    final int? FILE_IDENTIFIEROffset = _FILE_IDENTIFIER == null ? null
+        : fbBuilder.writeString(_FILE_IDENTIFIER!);
+    final int? SCHEMA_VERSIONOffset = _SCHEMA_VERSION == null ? null
+        : fbBuilder.writeString(_SCHEMA_VERSION!);
+    final int? ROOT_TYPEOffset = _ROOT_TYPE == null ? null
+        : fbBuilder.writeString(_ROOT_TYPE!);
+    final int? SCHEMA_HASHOffset = _SCHEMA_HASH == null ? null
+        : fbBuilder.writeListUint8(_SCHEMA_HASH!);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, SCHEMA_NAMEOffset);
+    fbBuilder.addOffset(1, FILE_IDENTIFIEROffset);
+    fbBuilder.addOffset(2, SCHEMA_VERSIONOffset);
+    fbBuilder.addOffset(3, ROOT_TYPEOffset);
+    fbBuilder.addOffset(4, SCHEMA_HASHOffset);
+    fbBuilder.addBool(5, _ACCEPTS_ANY_FLATBUFFER);
+    fbBuilder.addUint8(6, _WIRE_FORMAT?.value);
+    fbBuilder.addUint16(7, _FIXED_STRING_LENGTH);
+    fbBuilder.addUint32(8, _BYTE_LENGTH);
+    fbBuilder.addUint16(9, _REQUIRED_ALIGNMENT);
     return fbBuilder.endTable();
   }
 
@@ -229,609 +311,162 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Represents a geographic address
-class Address {
-  Address._(this._bc, this._bcOffset);
-  factory Address(List<int> bytes) {
+///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
+class TAB {
+  TAB._(this._bc, this._bcOffset);
+  factory TAB(List<int> bytes) {
     final rootRef = fb.BufferContext.fromBytes(bytes);
     return reader.read(rootRef, 0);
   }
 
-  static const fb.Reader<Address> reader = _AddressReader();
+  static const fb.Reader<TAB> reader = _TABReader();
 
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Country of the address
-  String? get COUNTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Region of the address (e.g., state or province)
-  String? get REGION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Locality of the address (e.g., city or town)
-  String? get LOCALITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Postal code of the address
-  String? get POSTAL_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get postalCode => POSTAL_CODE;
-  ///  Street address
-  String? get STREET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  Post office box number
-  String? get POST_OFFICE_BOX_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get postOfficeBoxNumber => POST_OFFICE_BOX_NUMBER;
+  ///  Byte offset of the payload body within the arena.
+  int get OFFSET => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  Byte length of the payload body.
+  int get SIZE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Required start alignment of the payload body (in bytes).
+  int get ALIGNMENT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Wire format for the body.
+  payloadWireFormat get WIRE_FORMAT => payloadWireFormat.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  payloadWireFormat get wireFormat => WIRE_FORMAT;
+  ///  Optional payload schema identity.
+  FlatBufferTypeRef? get TYPE_REF => FlatBufferTypeRef.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  FlatBufferTypeRef? get typeRef => TYPE_REF;
+  ///  Mutability contract for the slot.
+  bufferMutability get MUTABILITY => bufferMutability.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Ownership contract for the slot.
+  bufferOwnership get OWNERSHIP => bufferOwnership.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  Optional opaque frame identifier for stream bookkeeping.
+  int get FRAME_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get frameId => FRAME_ID;
+  ///  Optional port identifier for frames that route to/from a named
+  ///  input or output port on a method (maps to
+  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  ///  no port routing hint.
+  String? get PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  String? get portId => PORT_ID;
 
   @override
   String toString() {
-    return 'Address{COUNTRY: ${COUNTRY}, REGION: ${REGION}, LOCALITY: ${LOCALITY}, postalCode: ${postalCode}, STREET: ${STREET}, postOfficeBoxNumber: ${postOfficeBoxNumber}}';
+    return 'TAB{OFFSET: ${OFFSET}, SIZE: ${SIZE}, ALIGNMENT: ${ALIGNMENT}, wireFormat: ${wireFormat}, typeRef: ${typeRef}, MUTABILITY: ${MUTABILITY}, OWNERSHIP: ${OWNERSHIP}, frameId: ${frameId}, portId: ${portId}}';
   }
 }
 
-class _AddressReader extends fb.TableReader<Address> {
-  const _AddressReader();
+class _TABReader extends fb.TableReader<TAB> {
+  const _TABReader();
 
   @override
-  Address createObject(fb.BufferContext bc, int offset) =>
-    Address._(bc, offset);
+  TAB createObject(fb.BufferContext bc, int offset) =>
+    TAB._(bc, offset);
 }
 
-class AddressBuilder {
-  AddressBuilder(this.fbBuilder);
+class TABBuilder {
+  TABBuilder(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(9);
   }
 
-  int addCountryOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addOffset(int? OFFSET) {
+    fbBuilder.addUint32(0, OFFSET);
     return fbBuilder.offset;
   }
-  int addRegionOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addSize(int? SIZE) {
+    fbBuilder.addUint32(1, SIZE);
     return fbBuilder.offset;
   }
-  int addLocalityOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addAlignment(int? ALIGNMENT) {
+    fbBuilder.addUint32(2, ALIGNMENT);
     return fbBuilder.offset;
   }
-  int addPostalCodeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addWireFormat(payloadWireFormat? WIRE_FORMAT) {
+    fbBuilder.addUint8(3, WIRE_FORMAT?.value);
     return fbBuilder.offset;
   }
-  int addStreetOffset(int? offset) {
+  int addTypeRefOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addPostOfficeBoxNumberOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addMutability(bufferMutability? MUTABILITY) {
+    fbBuilder.addUint8(5, MUTABILITY?.value);
     return fbBuilder.offset;
   }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class AddressObjectBuilder extends fb.ObjectBuilder {
-  final String? _COUNTRY;
-  final String? _REGION;
-  final String? _LOCALITY;
-  final String? _POSTAL_CODE;
-  final String? _STREET;
-  final String? _POST_OFFICE_BOX_NUMBER;
-
-  AddressObjectBuilder({
-    String? COUNTRY,
-    String? REGION,
-    String? LOCALITY,
-    String? POSTAL_CODE,
-    String? postalCode,
-    String? STREET,
-    String? POST_OFFICE_BOX_NUMBER,
-    String? postOfficeBoxNumber,
-  })
-      : _COUNTRY = COUNTRY,
-        _REGION = REGION,
-        _LOCALITY = LOCALITY,
-        _POSTAL_CODE = postalCode ?? POSTAL_CODE,
-        _STREET = STREET,
-        _POST_OFFICE_BOX_NUMBER = postOfficeBoxNumber ?? POST_OFFICE_BOX_NUMBER;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? COUNTRYOffset = _COUNTRY == null ? null
-        : fbBuilder.writeString(_COUNTRY!);
-    final int? REGIONOffset = _REGION == null ? null
-        : fbBuilder.writeString(_REGION!);
-    final int? LOCALITYOffset = _LOCALITY == null ? null
-        : fbBuilder.writeString(_LOCALITY!);
-    final int? POSTAL_CODEOffset = _POSTAL_CODE == null ? null
-        : fbBuilder.writeString(_POSTAL_CODE!);
-    final int? STREETOffset = _STREET == null ? null
-        : fbBuilder.writeString(_STREET!);
-    final int? POST_OFFICE_BOX_NUMBEROffset = _POST_OFFICE_BOX_NUMBER == null ? null
-        : fbBuilder.writeString(_POST_OFFICE_BOX_NUMBER!);
-    fbBuilder.startTable(6);
-    fbBuilder.addOffset(0, COUNTRYOffset);
-    fbBuilder.addOffset(1, REGIONOffset);
-    fbBuilder.addOffset(2, LOCALITYOffset);
-    fbBuilder.addOffset(3, POSTAL_CODEOffset);
-    fbBuilder.addOffset(4, STREETOffset);
-    fbBuilder.addOffset(5, POST_OFFICE_BOX_NUMBEROffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Proves a blockchain key derives from the same HD wallet as the signing key
-class ChainProof {
-  ChainProof._(this._bc, this._bcOffset);
-  factory ChainProof(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<ChainProof> reader = _ChainProofReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Chain identifier (e.g., "bitcoin", "ethereum", "solana")
-  String? get CHAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Derived blockchain address
-  String? get ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Public key for this chain (hex-encoded)
-  String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get publicKey => PUBLIC_KEY;
-  ///  BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
-  String? get KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get keyPath => KEY_PATH;
-  ///  Signature over the attestation payload (hex-encoded)
-  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  ///  The canonical payload that was signed (hex-encoded)
-  String? get SIGNED_PAYLOAD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get signedPayload => SIGNED_PAYLOAD;
-  ///  Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
-  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  ///  Signature encoding format (e.g., "compact", "raw-ed25519")
-  String? get ENCODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-
-  @override
-  String toString() {
-    return 'ChainProof{CHAIN: ${CHAIN}, ADDRESS: ${ADDRESS}, publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
-  }
-}
-
-class _ChainProofReader extends fb.TableReader<ChainProof> {
-  const _ChainProofReader();
-
-  @override
-  ChainProof createObject(fb.BufferContext bc, int offset) =>
-    ChainProof._(bc, offset);
-}
-
-class ChainProofBuilder {
-  ChainProofBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(8);
-  }
-
-  int addChainOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addOwnership(bufferOwnership? OWNERSHIP) {
+    fbBuilder.addUint8(6, OWNERSHIP?.value);
     return fbBuilder.offset;
   }
-  int addAddressOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addFrameId(int? FRAME_ID) {
+    fbBuilder.addUint64(7, FRAME_ID);
     return fbBuilder.offset;
   }
-  int addPublicKeyOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addKeyPathOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addSignedPayloadOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addEncodingOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-
-  int finish() {
-    return fbBuilder.endTable();
-  }
-}
-
-class ChainProofObjectBuilder extends fb.ObjectBuilder {
-  final String? _CHAIN;
-  final String? _ADDRESS;
-  final String? _PUBLIC_KEY;
-  final String? _KEY_PATH;
-  final String? _SIGNATURE;
-  final String? _SIGNED_PAYLOAD;
-  final String? _ALGORITHM;
-  final String? _ENCODING;
-
-  ChainProofObjectBuilder({
-    String? CHAIN,
-    String? ADDRESS,
-    String? PUBLIC_KEY,
-    String? publicKey,
-    String? KEY_PATH,
-    String? keyPath,
-    String? SIGNATURE,
-    String? SIGNED_PAYLOAD,
-    String? signedPayload,
-    String? ALGORITHM,
-    String? ENCODING,
-  })
-      : _CHAIN = CHAIN,
-        _ADDRESS = ADDRESS,
-        _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
-        _KEY_PATH = keyPath ?? KEY_PATH,
-        _SIGNATURE = SIGNATURE,
-        _SIGNED_PAYLOAD = signedPayload ?? SIGNED_PAYLOAD,
-        _ALGORITHM = ALGORITHM,
-        _ENCODING = ENCODING;
-
-  /// Finish building, and store into the [fbBuilder].
-  @override
-  int finish(fb.Builder fbBuilder) {
-    final int? CHAINOffset = _CHAIN == null ? null
-        : fbBuilder.writeString(_CHAIN!);
-    final int? ADDRESSOffset = _ADDRESS == null ? null
-        : fbBuilder.writeString(_ADDRESS!);
-    final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
-        : fbBuilder.writeString(_PUBLIC_KEY!);
-    final int? KEY_PATHOffset = _KEY_PATH == null ? null
-        : fbBuilder.writeString(_KEY_PATH!);
-    final int? SIGNATUREOffset = _SIGNATURE == null ? null
-        : fbBuilder.writeString(_SIGNATURE!);
-    final int? SIGNED_PAYLOADOffset = _SIGNED_PAYLOAD == null ? null
-        : fbBuilder.writeString(_SIGNED_PAYLOAD!);
-    final int? ALGORITHMOffset = _ALGORITHM == null ? null
-        : fbBuilder.writeString(_ALGORITHM!);
-    final int? ENCODINGOffset = _ENCODING == null ? null
-        : fbBuilder.writeString(_ENCODING!);
-    fbBuilder.startTable(8);
-    fbBuilder.addOffset(0, CHAINOffset);
-    fbBuilder.addOffset(1, ADDRESSOffset);
-    fbBuilder.addOffset(2, PUBLIC_KEYOffset);
-    fbBuilder.addOffset(3, KEY_PATHOffset);
-    fbBuilder.addOffset(4, SIGNATUREOffset);
-    fbBuilder.addOffset(5, SIGNED_PAYLOADOffset);
-    fbBuilder.addOffset(6, ALGORITHMOffset);
-    fbBuilder.addOffset(7, ENCODINGOffset);
-    return fbBuilder.endTable();
-  }
-
-  /// Convenience method to serialize to byte list.
-  @override
-  Uint8List toBytes([String? fileIdentifier]) {
-    final fbBuilder = fb.Builder(deduplicateTables: false);
-    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
-    return fbBuilder.buffer;
-  }
-}
-///  Entity Profile Message
-class EPM {
-  EPM._(this._bc, this._bcOffset);
-  factory EPM(List<int> bytes) {
-    final rootRef = fb.BufferContext.fromBytes(bytes);
-    return reader.read(rootRef, 0);
-  }
-
-  static const fb.Reader<EPM> reader = _EPMReader();
-
-  final fb.BufferContext _bc;
-  final int _bcOffset;
-
-  ///  Distinguished Name of the entity
-  String? get DN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Common name of the entity (person or organization)
-  String? get LEGAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get legalName => LEGAL_NAME;
-  ///  Family name or surname of the person
-  String? get FAMILY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get familyName => FAMILY_NAME;
-  ///  Given name or first name of the person
-  String? get GIVEN_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get givenName => GIVEN_NAME;
-  ///  Additional name or middle name of the person
-  String? get ADDITIONAL_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get additionalName => ADDITIONAL_NAME;
-  ///  Honorific prefix preceding the person's name (e.g., Mr., Dr.)
-  String? get HONORIFIC_PREFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get honorificPrefix => HONORIFIC_PREFIX;
-  ///  Honorific suffix following the person's name (e.g., Jr., Sr.)
-  String? get HONORIFIC_SUFFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get honorificSuffix => HONORIFIC_SUFFIX;
-  ///  Job title of the person
-  String? get JOB_TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get jobTitle => JOB_TITLE;
-  ///  Occupation of the person
-  String? get OCCUPATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  ///  Physical Address
-  Address? get ADDRESS => Address.reader.vTableGetNullable(_bc, _bcOffset, 22);
-  ///  Alternate names for the entity
-  List<String>? get ALTERNATE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
-  List<String>? get alternateNames => ALTERNATE_NAMES;
-  ///  Email address of the entity
-  String? get EMAIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  ///  Telephone number of the entity
-  String? get TELEPHONE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  ///  Cryptographic keys associated with the entity
-  List<CryptoKey>? get KEYS => const fb.ListReader<CryptoKey>(CryptoKey.reader).vTableGetNullable(_bc, _bcOffset, 30);
-  ///  Multiformat addresses associated with the entity
-  List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
-  List<String>? get multiformatAddress => MULTIFORMAT_ADDRESS;
-  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
-  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  ///  Unix timestamp (seconds) when the EPM was signed
-  int get SIGNATURE_TIMESTAMP => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 36, 0);
-  int get signatureTimestamp => SIGNATURE_TIMESTAMP;
-  ///  Chain binding proofs linking blockchain keys to the same HD wallet
-  List<ChainProof>? get CHAIN_PROOFS => const fb.ListReader<ChainProof>(ChainProof.reader).vTableGetNullable(_bc, _bcOffset, 38);
-  List<ChainProof>? get chainProofs => CHAIN_PROOFS;
-  ///  Type of entity represented by this profile
-  EntityType get ENTITY_TYPE => EntityType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
-  EntityType get entityType => ENTITY_TYPE;
-
-  @override
-  String toString() {
-    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}}';
-  }
-}
-
-class _EPMReader extends fb.TableReader<EPM> {
-  const _EPMReader();
-
-  @override
-  EPM createObject(fb.BufferContext bc, int offset) =>
-    EPM._(bc, offset);
-}
-
-class EPMBuilder {
-  EPMBuilder(this.fbBuilder);
-
-  final fb.Builder fbBuilder;
-
-  void begin() {
-    fbBuilder.startTable(19);
-  }
-
-  int addDnOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
-  int addLegalNameOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addFamilyNameOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addGivenNameOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addAdditionalNameOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addHonorificPrefixOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addHonorificSuffixOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addJobTitleOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addOccupationOffset(int? offset) {
+  int addPortIdOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addAddressOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addAlternateNamesOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addEmailOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addTelephoneOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addKeysOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addMultiformatAddressOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addSignatureOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addSignatureTimestamp(int? SIGNATURE_TIMESTAMP) {
-    fbBuilder.addInt64(16, SIGNATURE_TIMESTAMP);
-    return fbBuilder.offset;
-  }
-  int addChainProofsOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addEntityType(EntityType? ENTITY_TYPE) {
-    fbBuilder.addInt8(18, ENTITY_TYPE?.value);
-    return fbBuilder.offset;
-  }
 
   int finish() {
     return fbBuilder.endTable();
   }
 }
 
-class EPMObjectBuilder extends fb.ObjectBuilder {
-  final String? _DN;
-  final String? _LEGAL_NAME;
-  final String? _FAMILY_NAME;
-  final String? _GIVEN_NAME;
-  final String? _ADDITIONAL_NAME;
-  final String? _HONORIFIC_PREFIX;
-  final String? _HONORIFIC_SUFFIX;
-  final String? _JOB_TITLE;
-  final String? _OCCUPATION;
-  final AddressObjectBuilder? _ADDRESS;
-  final List<String>? _ALTERNATE_NAMES;
-  final String? _EMAIL;
-  final String? _TELEPHONE;
-  final List<CryptoKeyObjectBuilder>? _KEYS;
-  final List<String>? _MULTIFORMAT_ADDRESS;
-  final String? _SIGNATURE;
-  final int? _SIGNATURE_TIMESTAMP;
-  final List<ChainProofObjectBuilder>? _CHAIN_PROOFS;
-  final EntityType? _ENTITY_TYPE;
+class TABObjectBuilder extends fb.ObjectBuilder {
+  final int? _OFFSET;
+  final int? _SIZE;
+  final int? _ALIGNMENT;
+  final payloadWireFormat? _WIRE_FORMAT;
+  final FlatBufferTypeRefObjectBuilder? _TYPE_REF;
+  final bufferMutability? _MUTABILITY;
+  final bufferOwnership? _OWNERSHIP;
+  final int? _FRAME_ID;
+  final String? _PORT_ID;
 
-  EPMObjectBuilder({
-    String? DN,
-    String? LEGAL_NAME,
-    String? legalName,
-    String? FAMILY_NAME,
-    String? familyName,
-    String? GIVEN_NAME,
-    String? givenName,
-    String? ADDITIONAL_NAME,
-    String? additionalName,
-    String? HONORIFIC_PREFIX,
-    String? honorificPrefix,
-    String? HONORIFIC_SUFFIX,
-    String? honorificSuffix,
-    String? JOB_TITLE,
-    String? jobTitle,
-    String? OCCUPATION,
-    AddressObjectBuilder? ADDRESS,
-    List<String>? ALTERNATE_NAMES,
-    List<String>? alternateNames,
-    String? EMAIL,
-    String? TELEPHONE,
-    List<CryptoKeyObjectBuilder>? KEYS,
-    List<String>? MULTIFORMAT_ADDRESS,
-    List<String>? multiformatAddress,
-    String? SIGNATURE,
-    int? SIGNATURE_TIMESTAMP,
-    int? signatureTimestamp,
-    List<ChainProofObjectBuilder>? CHAIN_PROOFS,
-    List<ChainProofObjectBuilder>? chainProofs,
-    EntityType? ENTITY_TYPE,
-    EntityType? entityType,
+  TABObjectBuilder({
+    int? OFFSET,
+    int? SIZE,
+    int? ALIGNMENT,
+    payloadWireFormat? WIRE_FORMAT,
+    payloadWireFormat? wireFormat,
+    FlatBufferTypeRefObjectBuilder? TYPE_REF,
+    FlatBufferTypeRefObjectBuilder? typeRef,
+    bufferMutability? MUTABILITY,
+    bufferOwnership? OWNERSHIP,
+    int? FRAME_ID,
+    int? frameId,
+    String? PORT_ID,
+    String? portId,
   })
-      : _DN = DN,
-        _LEGAL_NAME = legalName ?? LEGAL_NAME,
-        _FAMILY_NAME = familyName ?? FAMILY_NAME,
-        _GIVEN_NAME = givenName ?? GIVEN_NAME,
-        _ADDITIONAL_NAME = additionalName ?? ADDITIONAL_NAME,
-        _HONORIFIC_PREFIX = honorificPrefix ?? HONORIFIC_PREFIX,
-        _HONORIFIC_SUFFIX = honorificSuffix ?? HONORIFIC_SUFFIX,
-        _JOB_TITLE = jobTitle ?? JOB_TITLE,
-        _OCCUPATION = OCCUPATION,
-        _ADDRESS = ADDRESS,
-        _ALTERNATE_NAMES = alternateNames ?? ALTERNATE_NAMES,
-        _EMAIL = EMAIL,
-        _TELEPHONE = TELEPHONE,
-        _KEYS = KEYS,
-        _MULTIFORMAT_ADDRESS = multiformatAddress ?? MULTIFORMAT_ADDRESS,
-        _SIGNATURE = SIGNATURE,
-        _SIGNATURE_TIMESTAMP = signatureTimestamp ?? SIGNATURE_TIMESTAMP,
-        _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS,
-        _ENTITY_TYPE = entityType ?? ENTITY_TYPE;
+      : _OFFSET = OFFSET,
+        _SIZE = SIZE,
+        _ALIGNMENT = ALIGNMENT,
+        _WIRE_FORMAT = wireFormat ?? WIRE_FORMAT,
+        _TYPE_REF = typeRef ?? TYPE_REF,
+        _MUTABILITY = MUTABILITY,
+        _OWNERSHIP = OWNERSHIP,
+        _FRAME_ID = frameId ?? FRAME_ID,
+        _PORT_ID = portId ?? PORT_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DNOffset = _DN == null ? null
-        : fbBuilder.writeString(_DN!);
-    final int? LEGAL_NAMEOffset = _LEGAL_NAME == null ? null
-        : fbBuilder.writeString(_LEGAL_NAME!);
-    final int? FAMILY_NAMEOffset = _FAMILY_NAME == null ? null
-        : fbBuilder.writeString(_FAMILY_NAME!);
-    final int? GIVEN_NAMEOffset = _GIVEN_NAME == null ? null
-        : fbBuilder.writeString(_GIVEN_NAME!);
-    final int? ADDITIONAL_NAMEOffset = _ADDITIONAL_NAME == null ? null
-        : fbBuilder.writeString(_ADDITIONAL_NAME!);
-    final int? HONORIFIC_PREFIXOffset = _HONORIFIC_PREFIX == null ? null
-        : fbBuilder.writeString(_HONORIFIC_PREFIX!);
-    final int? HONORIFIC_SUFFIXOffset = _HONORIFIC_SUFFIX == null ? null
-        : fbBuilder.writeString(_HONORIFIC_SUFFIX!);
-    final int? JOB_TITLEOffset = _JOB_TITLE == null ? null
-        : fbBuilder.writeString(_JOB_TITLE!);
-    final int? OCCUPATIONOffset = _OCCUPATION == null ? null
-        : fbBuilder.writeString(_OCCUPATION!);
-    final int? ADDRESSOffset = _ADDRESS?.getOrCreateOffset(fbBuilder);
-    final int? ALTERNATE_NAMESOffset = _ALTERNATE_NAMES == null ? null
-        : fbBuilder.writeList(_ALTERNATE_NAMES!.map(fbBuilder.writeString).toList());
-    final int? EMAILOffset = _EMAIL == null ? null
-        : fbBuilder.writeString(_EMAIL!);
-    final int? TELEPHONEOffset = _TELEPHONE == null ? null
-        : fbBuilder.writeString(_TELEPHONE!);
-    final int? KEYSOffset = _KEYS == null ? null
-        : fbBuilder.writeList(_KEYS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    final int? MULTIFORMAT_ADDRESSOffset = _MULTIFORMAT_ADDRESS == null ? null
-        : fbBuilder.writeList(_MULTIFORMAT_ADDRESS!.map(fbBuilder.writeString).toList());
-    final int? SIGNATUREOffset = _SIGNATURE == null ? null
-        : fbBuilder.writeString(_SIGNATURE!);
-    final int? CHAIN_PROOFSOffset = _CHAIN_PROOFS == null ? null
-        : fbBuilder.writeList(_CHAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(19);
-    fbBuilder.addOffset(0, DNOffset);
-    fbBuilder.addOffset(1, LEGAL_NAMEOffset);
-    fbBuilder.addOffset(2, FAMILY_NAMEOffset);
-    fbBuilder.addOffset(3, GIVEN_NAMEOffset);
-    fbBuilder.addOffset(4, ADDITIONAL_NAMEOffset);
-    fbBuilder.addOffset(5, HONORIFIC_PREFIXOffset);
-    fbBuilder.addOffset(6, HONORIFIC_SUFFIXOffset);
-    fbBuilder.addOffset(7, JOB_TITLEOffset);
-    fbBuilder.addOffset(8, OCCUPATIONOffset);
-    fbBuilder.addOffset(9, ADDRESSOffset);
-    fbBuilder.addOffset(10, ALTERNATE_NAMESOffset);
-    fbBuilder.addOffset(11, EMAILOffset);
-    fbBuilder.addOffset(12, TELEPHONEOffset);
-    fbBuilder.addOffset(13, KEYSOffset);
-    fbBuilder.addOffset(14, MULTIFORMAT_ADDRESSOffset);
-    fbBuilder.addOffset(15, SIGNATUREOffset);
-    fbBuilder.addInt64(16, _SIGNATURE_TIMESTAMP);
-    fbBuilder.addOffset(17, CHAIN_PROOFSOffset);
-    fbBuilder.addInt8(18, _ENTITY_TYPE?.value);
+    final int? TYPE_REFOffset = _TYPE_REF?.getOrCreateOffset(fbBuilder);
+    final int? PORT_IDOffset = _PORT_ID == null ? null
+        : fbBuilder.writeString(_PORT_ID!);
+    fbBuilder.startTable(9);
+    fbBuilder.addUint32(0, _OFFSET);
+    fbBuilder.addUint32(1, _SIZE);
+    fbBuilder.addUint32(2, _ALIGNMENT);
+    fbBuilder.addUint8(3, _WIRE_FORMAT?.value);
+    fbBuilder.addOffset(4, TYPE_REFOffset);
+    fbBuilder.addUint8(5, _MUTABILITY?.value);
+    fbBuilder.addUint8(6, _OWNERSHIP?.value);
+    fbBuilder.addUint64(7, _FRAME_ID);
+    fbBuilder.addOffset(8, PORT_IDOffset);
     return fbBuilder.endTable();
   }
 

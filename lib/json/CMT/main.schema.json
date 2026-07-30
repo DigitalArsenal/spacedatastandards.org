@@ -9,6 +9,18 @@
       "type" : "string",
       "enum": ["NoMemo", "TxData", "SolMemo", "OpReturn"]
     },
+    "commissionScope" : {
+      "type" : "string",
+      "enum": ["Listing", "Store", "Publisher"]
+    },
+    "commissionEnforcement" : {
+      "type" : "string",
+      "enum": ["SplitterContract", "ProviderAttested"]
+    },
+    "splitRole" : {
+      "type" : "string",
+      "enum": ["Publisher", "Platform", "Referrer", "Charity"]
+    },
     "SplitRecipient" : {
       "type" : "object",
       "description" : "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
@@ -87,7 +99,78 @@
       },
       "required" : ["CHAIN"],
       "additionalProperties" : false
+    },
+    "RevenueSplit" : {
+      "type" : "object",
+      "description" : "One recipient's share of a sale, expressed in basis points.",
+      "properties" : {
+        "RECIPIENT" : {
+                "$ref" : "#/definitions/SplitRecipient",
+                "description" : "The payout recipient"
+              },
+        "BPS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Share in basis points (1/100 of a percent); all splits plus the platform\ncommission sum to 10000"
+              },
+        "ROLE" : {
+                "$ref" : "#/definitions/splitRole",
+                "description" : "The role this recipient plays"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CMT" : {
+      "type" : "object",
+      "description" : "Commission Terms / Revenue Split. Binds a listing, store, or publisher to a\nplatform commission and the on-chain split that enforces it. This record\nmakes \"the platform earns on every transaction\" auditable and portable\nacross store deployments. Commission is realized purely by the buyer's\npayment routing through the on-chain splitter contract described in\nCONTRACTS — never by a manual or off-chain settlement step.",
+      "properties" : {
+        "TERMS_ID" : {
+                "type" : "string",
+                "description" : "Stable terms identifier, referenced by `$PUR`/`$ACL`/listings"
+              },
+        "SCOPE" : {
+                "$ref" : "#/definitions/commissionScope",
+                "description" : "What these terms cover"
+              },
+        "TARGET_ID" : {
+                "type" : "string",
+                "description" : "The `$PLG.PLUGIN_ID` / store id / publisher xpub the terms apply to"
+              },
+        "COMMISSION_BPS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Platform commission in basis points (e.g. 500 = 5%)"
+              },
+        "SPLITS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/RevenueSplit"},
+                "description" : "Recipient splits; each in basis points, summing with the commission to 10000"
+              },
+        "PLATFORM_RECIPIENT" : {
+                "$ref" : "#/definitions/SplitRecipient",
+                "description" : "The platform's per-chain payout identity (the commission recipient)"
+              },
+        "ENFORCEMENT" : {
+                "$ref" : "#/definitions/commissionEnforcement",
+                "description" : "How the split is enforced (on-chain splitter vs provider-attested)"
+              },
+        "CONTRACTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SCX"},
+                "description" : "The established splitter contract(s)/program(s) that perform the split,\none per accepted chain/asset"
+              },
+        "EFFECTIVE_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms when these terms take effect"
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms when these terms expire, or 0 for no expiry"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature by the store operator `$EPM`"
+              }
+      },
+      "required" : ["TERMS_ID"],
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/SCX"
+  "$ref" : "#/definitions/CMT"
 }

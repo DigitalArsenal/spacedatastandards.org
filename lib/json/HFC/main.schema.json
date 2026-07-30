@@ -101,6 +101,14 @@
       "type" : "string",
       "enum": ["Unknown", "BatchLeastSquares", "ExtendedKalman", "UnscentedKalman", "Smoother"]
     },
+    "hfcFlowRegime" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "SUPERSONIC", "HYPERSONIC", "RAREFIED", "TRANSITIONAL", "CONTINUUM"]
+    },
+    "hfcAtmosphereCouplingMode" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "STATIC_PROFILE", "BATCH_QUERY", "STEP_QUERY", "EXTERNAL_PROVIDER"]
+    },
     "ATM" : {
       "type" : "object",
       "description" : "Atmospheric Model Message",
@@ -846,6 +854,258 @@
       },
       "additionalProperties" : false
     },
+    "ephemerisDataLine" : {
+      "type" : "object",
+      "description" : "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch time, in ISO 8601 UTC format (required for non-uniform steps)"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "Position vector X-component km"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Position vector Y-component km"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Position vector Z-component km"
+              },
+        "X_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector X-component km/s"
+              },
+        "Y_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector Y-component km/s"
+              },
+        "Z_DOT" : {
+                "type" : "number",
+                "description" : "Velocity vector Z-component km/s"
+              },
+        "X_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector X-component km/s²"
+              },
+        "Y_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector Y-component km/s²"
+              },
+        "Z_DDOT" : {
+                "type" : "number",
+                "description" : "Optional: Acceleration vector Z-component km/s²"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "covarianceMatrixLine" : {
+      "type" : "object",
+      "description" : "Position/Velocity Covariance Matrix Line",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch"
+              },
+        "CX_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [1,1] km**2"
+              },
+        "CY_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [2,1] km**2"
+              },
+        "CY_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [2,2] km**2"
+              },
+        "CZ_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,1] km**2"
+              },
+        "CZ_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,2] km**2"
+              },
+        "CZ_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [3,3] km**2"
+              },
+        "CX_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,1] km**2/s"
+              },
+        "CX_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,2] km**2/s"
+              },
+        "CX_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,3] km**2/s"
+              },
+        "CX_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [4,4] km**2/s**2"
+              },
+        "CY_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,1] km**2/s"
+              },
+        "CY_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,2] km**2/s"
+              },
+        "CY_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,3] km**2/s"
+              },
+        "CY_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,4] km**2/s**2"
+              },
+        "CY_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [5,5] km**2/s**2"
+              },
+        "CZ_DOT_X" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,1] km**2/s"
+              },
+        "CZ_DOT_Y" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,2] km**2/s"
+              },
+        "CZ_DOT_Z" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,3] km**2/s"
+              },
+        "CZ_DOT_X_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,4] km**2/s**2"
+              },
+        "CZ_DOT_Y_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,5] km**2/s**2"
+              },
+        "CZ_DOT_Z_DOT" : {
+                "type" : "number",
+                "description" : "Covariance matrix [6,6] km**2/s**2"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ephemerisDataBlock" : {
+      "type" : "object",
+      "description" : "OEM Ephemeris Data Block",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Plain-Text Comment"
+              },
+        "OBJECT" : {
+                "$ref" : "#/definitions/CAT",
+                "description" : "Satellite name for the first object"
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of reference frame (EARTH, MARS, MOON, etc.)"
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Name of the reference frame (TEME, EME2000, etc.)"
+              },
+        "REFERENCE_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of reference frame, if not intrinsic to the definition of the reference frame"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame for the covariance matrix"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system used for the orbit state and covariance matrix. (UTC)"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Start of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "Optional start USEABLE time span covered by ephemeris data (ISO 8601)"
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Optional end of USEABLE time span covered by ephemeris data (ISO 8601)"
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "End of TOTAL time span covered by ephemeris data and covariance data (ISO 8601)"
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "Recommended interpolation method for ephemeris data.\nSupported methods: Hermite, Linear, Lagrange, Chebyshev.\nWhen set to \"Chebyshev\", parsers should use POLYNOMIAL_POSITION_RECORDS\nfor high-fidelity polynomial interpolation instead of interpolating across\ndiscrete state vectors."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Recommended interpolation degree for ephemeris data"
+              },
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs."
+              },
+        "STATE_VECTOR_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6."
+              },
+        "EPHEMERIS_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s²\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE"
+              },
+        "EPHEMERIS_DATA_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataLine"},
+                "description" : "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp."
+              },
+        "COVARIANCE_MATRIX_LINES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/covarianceMatrixLine"},
+                "description" : "Array of covariance matrix lines (optional)"
+              },
+        "POLYNOMIAL_POSITION_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
+                "description" : "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OEM" : {
+      "type" : "object",
+      "description" : "Orbit Ephemeris Message",
+      "properties" : {
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format."
+              },
+        "CCSDS_OEM_VERS" : {
+                "type" : "number",
+                "description" : "OEM Version"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation Date"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator"
+              },
+        "EPHEMERIS_DATA_BLOCK" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ephemerisDataBlock"},
+                "description" : "Array of ephemeris data blocks"
+              }
+      },
+      "additionalProperties" : false
+    },
     "Header" : {
       "type" : "object",
       "properties" : {
@@ -1528,7 +1788,202 @@
               }
       },
       "additionalProperties" : false
+    },
+    "HFC" : {
+      "type" : "object",
+      "description" : "Hypersonic Flight Conditions",
+      "properties" : {
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Producer-defined message identifier."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Message creation date in ISO 8601 UTC format."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Creating agency, application, or service."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Object, vehicle, or trajectory name."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system used by all epochs."
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for state vectors."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Start epoch for compact trajectory and condition arrays."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Stop epoch for compact trajectory and condition arrays."
+              },
+        "STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Uniform step size in seconds. Use zero when samples are epoch-tagged elsewhere."
+              },
+        "SOURCE_OEM" : {
+                "$ref" : "#/definitions/OEM",
+                "description" : "Source OEM ephemeris when conditions were evaluated from orbit ephemeris data."
+              },
+        "SOURCE_OCM" : {
+                "$ref" : "#/definitions/OCM",
+                "description" : "Source OCM trajectory when conditions were evaluated from comprehensive orbit data."
+              },
+        "ATMOSPHERE" : {
+                "$ref" : "#/definitions/ATM",
+                "description" : "Atmosphere model request used by the propagator."
+              },
+        "ATMOSPHERE_PROVIDER" : {
+                "type" : "string",
+                "description" : "Atmosphere provider or module identifier."
+              },
+        "ATMOSPHERE_MODEL_REVISION" : {
+                "type" : "string",
+                "description" : "Atmosphere model revision, data release, or configuration hash."
+              },
+        "ATMOSPHERE_COUPLING" : {
+                "$ref" : "#/definitions/hfcAtmosphereCouplingMode",
+                "description" : "Coupling mode used between the propagator and atmosphere provider."
+              },
+        "AEROTHERMAL_MODEL" : {
+                "type" : "string",
+                "description" : "Aerothermal model name."
+              },
+        "GAS_MODEL" : {
+                "type" : "string",
+                "description" : "Gas model name."
+              },
+        "FLOW_REGIME" : {
+                "$ref" : "#/definitions/hfcFlowRegime",
+                "description" : "Flow regime classification for the sampled trajectory."
+              },
+        "STATE_VECTOR_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of position/velocity components per state sample."
+              },
+        "STATE_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Flat state array [x, y, z, vx, vy, vz, ...] in km and km/s."
+              },
+        "SAMPLE_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Epochs for irregularly sampled condition arrays."
+              },
+        "LATITUDE_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Geodetic latitude samples in degrees."
+              },
+        "LONGITUDE_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Geodetic longitude samples in degrees."
+              },
+        "ALTITUDE_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Altitude samples in meters."
+              },
+        "SPEED_M_PER_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Inertial or relative speed samples in meters per second."
+              },
+        "MACH" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Mach number samples."
+              },
+        "DYNAMIC_PRESSURE_PA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Dynamic pressure samples in pascals."
+              },
+        "DENSITY_KG_PER_M3" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Atmospheric density samples in kilograms per cubic meter."
+              },
+        "TEMPERATURE_K" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Atmospheric temperature samples in kelvin."
+              },
+        "PRESSURE_PA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Static pressure samples in pascals."
+              },
+        "SPEED_OF_SOUND_M_PER_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Speed of sound samples in meters per second."
+              },
+        "KNUDSEN_NUMBER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Knudsen number samples."
+              },
+        "REYNOLDS_NUMBER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Reynolds number samples."
+              },
+        "CONVECTIVE_HEAT_FLUX_W_PER_M2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Convective heat flux samples in watts per square meter."
+              },
+        "RADIATIVE_HEAT_FLUX_W_PER_M2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Radiative heat flux samples in watts per square meter."
+              },
+        "STAGNATION_HEAT_FLUX_W_PER_M2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Stagnation heat flux samples in watts per square meter."
+              },
+        "LOAD_FACTOR_G" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Normal load factor samples in g."
+              },
+        "ANGLE_OF_ATTACK_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Angle of attack samples in degrees."
+              },
+        "SIDESLIP_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sideslip angle samples in degrees."
+              },
+        "BANK_ANGLE_DEG" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Bank angle samples in degrees."
+              },
+        "REFERENCE_AREA_M2" : {
+                "type" : "number",
+                "description" : "Vehicle reference area in square meters."
+              },
+        "REFERENCE_LENGTH_M" : {
+                "type" : "number",
+                "description" : "Vehicle reference length in meters."
+              },
+        "NOSE_RADIUS_M" : {
+                "type" : "number",
+                "description" : "Nose radius in meters."
+              },
+        "MASS_KG" : {
+                "type" : "number",
+                "description" : "Vehicle mass in kilograms."
+              },
+        "SURFACE_TEMPERATURE_K" : {
+                "type" : "number",
+                "description" : "Wall or surface temperature in kelvin."
+              },
+        "ASSUMPTIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Free-form model assumptions or limitations."
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Additional comments."
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/OCM"
+  "$ref" : "#/definitions/HFC"
 }

@@ -773,7 +773,7 @@
     },
     "PLD": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Payload Information",
       "properties": {
         "PAYLOAD_DURATION": {
           "type": "string",
@@ -807,7 +807,7 @@
           "x-flatbuffer-type": "[IDM]"
         }
       },
-      "description": "Payload Information"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/PLD",

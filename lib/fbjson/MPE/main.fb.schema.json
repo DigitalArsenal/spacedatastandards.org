@@ -62,7 +62,7 @@
     },
     "MPETargeterConstraint": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "One constraint in a maneuver-targeting problem and how well the converged\nsolution satisfies it.",
       "properties": {
         "NAME": {
           "type": "string",
@@ -76,7 +76,7 @@
         },
         "EPOCH": {
           "type": "number",
-          "description": "1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT",
+          "description": "Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT",
           "x-flatbuffer-type": "double"
         },
         "EVENT": {
@@ -105,11 +105,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "One constraint in a maneuver-targeting problem and how well the converged solution satisfies it."
+      "additionalProperties": false
     },
     "MPETargeterSolution": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Maneuver-targeter solution and convergence metadata carried with an\nextended MPE: the solver that produced the targeted element set, its\niteration/residual history, and the constraint set it satisfied.",
       "properties": {
         "SOLVER": {
           "type": "string",
@@ -128,6 +128,8 @@
         },
         "ITERATIONS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of corrector iterations executed",
           "x-flatbuffer-type": "uint32"
         },
@@ -159,15 +161,17 @@
         },
         "SOLVED_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix ms the solution was produced",
           "x-flatbuffer-type": "uint64"
         }
       },
-      "description": "Maneuver-targeter solution and convergence metadata carried with an extended MPE: the solver that produced the targeted element set, its iteration/residual history, and the constraint set it satisfied."
+      "additionalProperties": false
     },
     "MPE": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Minimum Propagatable Element Set",
       "properties": {
         "ENTITY_ID": {
           "type": "string",
@@ -218,7 +222,6 @@
           "$ref": "#/definitions/meanElementSource",
           "description": "Description of the Mean Element Theory (SGP4, DSST, USM)",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "SGP4",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "SGP4": {
@@ -237,15 +240,16 @@
               "value": 3,
               "description": "Universal Semianalytical Method"
             }
-          }
+          },
+          "x-flatbuffer-default": "SGP4"
         },
         "TARGETER": {
           "$ref": "#/definitions/MPETargeterSolution",
-          "description": "product of maneuver targeting (absent for ordinary element sets)",
+          "description": "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)",
           "x-flatbuffer-type": "MPETargeterSolution"
         }
       },
-      "description": "Minimum Propagatable Element Set"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/MPE",

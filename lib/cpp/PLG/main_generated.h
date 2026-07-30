@@ -103,11 +103,22 @@ enum pluginCategory : int8_t {
   pluginCategory_Publisher = 17,
   /// Basilisk astrodynamics simulation module
   pluginCategory_Basilisk = 18,
+  /// Maneuver planning, targeting and trajectory optimization
+  pluginCategory_Maneuver = 19,
+  /// A composed flow published as a single loadable module. The unit is a
+  /// graph of other modules, not a leaf algorithm.
+  pluginCategory_Flow = 20,
+  /// No family stated. Sits at the end of the enum rather than at 0 because
+  /// this enum is append-only and `Sensor` already holds 0; it exists so a
+  /// record can distinguish "the provider did not say" from "Sensor". A
+  /// consumer MUST render an `Unspecified` module as ungrouped, never as a
+  /// member of any family.
+  pluginCategory_Unspecified = 21,
   pluginCategory_MIN = pluginCategory_Sensor,
-  pluginCategory_MAX = pluginCategory_Basilisk
+  pluginCategory_MAX = pluginCategory_Unspecified
 };
 
-inline const pluginCategory (&EnumValuespluginCategory())[19] {
+inline const pluginCategory (&EnumValuespluginCategory())[22] {
   static const pluginCategory values[] = {
     pluginCategory_Sensor,
     pluginCategory_Propagator,
@@ -127,13 +138,16 @@ inline const pluginCategory (&EnumValuespluginCategory())[19] {
     pluginCategory_Licensing,
     pluginCategory_Storefront,
     pluginCategory_Publisher,
-    pluginCategory_Basilisk
+    pluginCategory_Basilisk,
+    pluginCategory_Maneuver,
+    pluginCategory_Flow,
+    pluginCategory_Unspecified
   };
   return values;
 }
 
 inline const char * const *EnumNamespluginCategory() {
-  static const char * const names[20] = {
+  static const char * const names[23] = {
     "Sensor",
     "Propagator",
     "Renderer",
@@ -153,13 +167,16 @@ inline const char * const *EnumNamespluginCategory() {
     "Storefront",
     "Publisher",
     "Basilisk",
+    "Maneuver",
+    "Flow",
+    "Unspecified",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepluginCategory(pluginCategory e) {
-  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Basilisk)) return "";
+  if (::flatbuffers::IsOutRange(e, pluginCategory_Sensor, pluginCategory_Unspecified)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespluginCategory()[index];
 }

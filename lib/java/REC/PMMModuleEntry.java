@@ -181,6 +181,17 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
   public String UPDATED_AT() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer UPDATED_ATAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
   public ByteBuffer UPDATED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+   * is the ONLY sanctioned way to group an offering: a client grouping a
+   * catalogue MUST read this field and MUST NOT infer family from the shape
+   * of `MODULE_ID`, which carries no normative structure. Defaults to
+   * `Unspecified`, which a client MUST render as ungrouped — never silently
+   * as `Sensor`. Present here, rather than only on
+   * the linked `$PLG`, so an anonymous client can section the catalogue at
+   * boot without fetching one `$PLG` per module.
+   */
+  public byte PLUGIN_TYPE() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) : 21; }
 
   public static int createPMMModuleEntry(FlatBufferBuilder builder,
       int MODULE_IDOffset,
@@ -206,8 +217,9 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
       int DOCUMENTATION_URLOffset,
       int ICON_URLOffset,
       int SUPERSEDES_CONTENT_HASHOffset,
-      int UPDATED_ATOffset) {
-    builder.startTable(24);
+      int UPDATED_ATOffset,
+      byte PLUGIN_TYPE) {
+    builder.startTable(25);
     PMMModuleEntry.addArtifactSizeBytes(builder, ARTIFACT_SIZE_BYTES);
     PMMModuleEntry.addEpoch(builder, EPOCH);
     PMMModuleEntry.addUpdatedAt(builder, UPDATED_ATOffset);
@@ -228,6 +240,7 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
     PMMModuleEntry.addPlgCid(builder, PLG_CIDOffset);
     PMMModuleEntry.addPluginId(builder, PLUGIN_IDOffset);
     PMMModuleEntry.addModuleId(builder, MODULE_IDOffset);
+    PMMModuleEntry.addPluginType(builder, PLUGIN_TYPE);
     PMMModuleEntry.addEntryState(builder, ENTRY_STATE);
     PMMModuleEntry.addAccessPolicy(builder, ACCESS_POLICY);
     PMMModuleEntry.addDefaultEnabled(builder, DEFAULT_ENABLED);
@@ -235,7 +248,7 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
     return PMMModuleEntry.endPMMModuleEntry(builder);
   }
 
-  public static void startPMMModuleEntry(FlatBufferBuilder builder) { builder.startTable(24); }
+  public static void startPMMModuleEntry(FlatBufferBuilder builder) { builder.startTable(25); }
   public static void addModuleId(FlatBufferBuilder builder, int MODULE_IDOffset) { builder.addOffset(MODULE_IDOffset); builder.slot(0); }
   public static void addPluginId(FlatBufferBuilder builder, int PLUGIN_IDOffset) { builder.addOffset(1, PLUGIN_IDOffset, 0); }
   public static void addPlgCid(FlatBufferBuilder builder, int PLG_CIDOffset) { builder.addOffset(2, PLG_CIDOffset, 0); }
@@ -269,6 +282,7 @@ public final class PMMModuleEntry extends com.google.flatbuffers.Table {
   public static void addIconUrl(FlatBufferBuilder builder, int ICON_URLOffset) { builder.addOffset(21, ICON_URLOffset, 0); }
   public static void addSupersedesContentHash(FlatBufferBuilder builder, int SUPERSEDES_CONTENT_HASHOffset) { builder.addOffset(22, SUPERSEDES_CONTENT_HASHOffset, 0); }
   public static void addUpdatedAt(FlatBufferBuilder builder, int UPDATED_ATOffset) { builder.addOffset(23, UPDATED_ATOffset, 0); }
+  public static void addPluginType(FlatBufferBuilder builder, byte PLUGIN_TYPE) { builder.addByte(24, PLUGIN_TYPE, 21); }
   public static int endPMMModuleEntry(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // MODULE_ID

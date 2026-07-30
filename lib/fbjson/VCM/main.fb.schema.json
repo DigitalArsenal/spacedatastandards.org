@@ -1,100 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "meanElementSource": {
+    "CelestialFrame": {
       "type": "string",
       "enum": [
-        "SGP4",
-        "SGP4XP",
-        "DSST",
-        "USM"
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "SGP4": {
-          "value": 0,
-          "description": "Simplified General Perturbation Model 4"
-        },
-        "SGP4XP": {
-          "value": 1,
-          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
-        },
-        "DSST": {
-          "value": 2,
-          "description": "Draper Semi-analytical Satellite Theory"
-        },
-        "USM": {
-          "value": 3,
-          "description": "Universal Semianalytical Method"
-        }
-      }
-    },
-    "MET": {
-      "type": "object",
-      "description": "Mean Element Theory",
-      "properties": {
-        "MEAN_ELEMENT_THEORY": {
-          "$ref": "#/definitions/meanElementSource",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "SGP4": {
-              "value": 0,
-              "description": "Simplified General Perturbation Model 4"
-            },
-            "SGP4XP": {
-              "value": 1,
-              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
-            },
-            "DSST": {
-              "value": 2,
-              "description": "Draper Semi-analytical Satellite Theory"
-            },
-            "USM": {
-              "value": 3,
-              "description": "Universal Semianalytical Method"
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "CelestialFrame": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "Celestial Reference Frames (SANA registry 1.3.112.4.57.2)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27
-      ],
       "x-flatbuffer-enum-values": {
         "GCRF": {
           "value": 0,
@@ -211,28 +151,27 @@
       }
     },
     "SpacecraftFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ],
       "x-flatbuffer-enum-values": {
         "ACC_i": {
           "value": 0,
@@ -301,28 +240,27 @@
       }
     },
     "OrbitFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ],
       "x-flatbuffer-enum-values": {
         "EQW_INERTIAL": {
           "value": 0,
@@ -391,30 +329,29 @@
       }
     },
     "CustomFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Non-registered or local use frames",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17
-      ],
       "x-flatbuffer-enum-values": {
         "ECEF": {
           "value": 0,
@@ -490,30 +427,40 @@
         }
       }
     },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper"
+      ]
+    },
     "timingStandard": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "GMST",
+        "GPS",
+        "MET",
+        "MRT",
+        "SCLK",
+        "TAI",
+        "TCB",
+        "TDB",
+        "TCG",
+        "TT",
+        "UT1",
+        "UTC",
+        "GLONASS",
+        "GST",
+        "QZSS",
+        "BDT",
+        "NAVIC",
+        "SBAS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17
-      ],
       "x-flatbuffer-enum-values": {
         "GMST": {
           "value": 0,
@@ -590,19 +537,19 @@
       }
     },
     "timEpochRepresentation": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE",
+        "UNIX_SECONDS",
+        "ISO8601",
+        "GPS_SECONDS",
+        "GNSS_WEEK_SECONDS",
+        "CCSDS_TIME_CODE",
+        "MISSION_ELAPSED_SECONDS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
       "x-flatbuffer-enum-values": {
         "JULIAN_DATE": {
           "value": 0,
@@ -639,15 +586,15 @@
       }
     },
     "timCcsdsTimeCodeKind": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNSEGMENTED",
+        "DAY_SEGMENTED",
+        "CALENDAR_SEGMENTED"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0,
@@ -668,17 +615,17 @@
       }
     },
     "timConversionStatus": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_TIME_SYSTEM",
+        "LEAP_SECOND_DATA_REQUIRED",
+        "EOP_DATA_REQUIRED",
+        "OUT_OF_RANGE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "OK": {
           "value": 0,
@@ -706,14 +653,43 @@
         }
       }
     },
-    "elementType": {
-      "type": "integer",
+    "meanElementSource": {
+      "type": "string",
+      "enum": [
+        "SGP4",
+        "SGP4XP",
+        "DSST",
+        "USM"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SGP4": {
+          "value": 0,
+          "description": "Simplified General Perturbation Model 4"
+        },
+        "SGP4XP": {
+          "value": 1,
+          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+        },
+        "DSST": {
+          "value": 2,
+          "description": "Draper Semi-analytical Satellite Theory"
+        },
+        "USM": {
+          "value": 3,
+          "description": "Universal Semianalytical Method"
+        }
+      }
+    },
+    "elementType": {
+      "type": "string",
       "enum": [
-        0,
-        1
+        "OSCULATING",
+        "MEAN"
       ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
       "x-flatbuffer-enum-values": {
         "OSCULATING": {
           "value": 0
@@ -724,13 +700,13 @@
       }
     },
     "anomalyConvention": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "TRUE_ANOMALY",
+        "MEAN_ANOMALY"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "TRUE_ANOMALY": {
           "value": 0
@@ -741,19 +717,18 @@
       }
     },
     "atmosphericSource": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "JACCHIA_70",
+        "JB2008",
+        "NRLMSISE_00",
+        "DTM_2000",
+        "HWM14",
+        "HASDM"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent common atmospheric models",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -779,18 +754,17 @@
       }
     },
     "geopotentialSource": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "EGM96",
+        "WGS84",
+        "JGM2",
+        "GEMT3",
+        "EGM96_J5"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent common geopotential models",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -813,24 +787,23 @@
       }
     },
     "zonalHarmonic": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "J2",
+        "J3",
+        "J4",
+        "J5",
+        "J6",
+        "J7",
+        "J8",
+        "J9",
+        "J10",
+        "J11",
+        "J12"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent zonal harmonics",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -871,15 +844,14 @@
       }
     },
     "solarRadiationPressureModel": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "SPHERICAL_MODEL",
+        "FLAT_PLATE_MODEL"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent solar radiation pressure models",
-      "enum": [
-        0,
-        1,
-        2
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -893,16 +865,15 @@
       }
     },
     "lunarPerturbationSource": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "DE430",
+        "DE431",
+        "LP150Q"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent common lunar perturbation models",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -919,15 +890,14 @@
       }
     },
     "solarPerturbationSource": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "DE430",
+        "DE431"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent various solar perturbation models",
-      "enum": [
-        0,
-        1,
-        2
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -941,17 +911,16 @@
       }
     },
     "resonanceSource": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "HIGH_ALTITUDE_RESONANCE",
+        "LOW_ALTITUDE_RESONANCE",
+        "LUNAR_RESONANCE",
+        "SOLAR_RESONANCE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent resonance models",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -971,14 +940,13 @@
       }
     },
     "perturbationStatus": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "OFF",
+        "ON"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent the status of various perturbations (ON/OFF)",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "OFF": {
           "value": 0
@@ -989,25 +957,24 @@
       }
     },
     "propagatorFamily": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "SEMI_ANALYTICAL",
+        "VINTI",
+        "SGP4",
+        "COWELL",
+        "RK4",
+        "NYX",
+        "GMAT",
+        "SPICE",
+        "SGP",
+        "SDP4",
+        "SGP8",
+        "SDP8"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum to represent propagator types",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0
@@ -1052,7 +1019,6 @@
     },
     "CelestialFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/CelestialFrame",
@@ -1173,11 +1139,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "SpacecraftFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/SpacecraftFrame",
@@ -1250,11 +1216,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "OrbitFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/OrbitFrame",
@@ -1327,11 +1293,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "CustomFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/CustomFrame",
@@ -1412,18 +1378,37 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "RFM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Reference Frame Message",
       "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
         "REFERENCE_FRAME": {
-          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            }
+          ],
           "x-flatbuffer-type": "RFMUnion"
         },
         "INDEX": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "x-flatbuffer-type": "int"
         },
         "NAME": {
@@ -1431,11 +1416,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Reference Frame Message"
+      "additionalProperties": false
     },
     "TIMCcsdsTimeCode": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "CCSDS time-code payload and preamble metadata.",
       "properties": {
         "CODE_KIND": {
           "$ref": "#/definitions/timCcsdsTimeCodeKind",
@@ -1463,18 +1448,24 @@
         },
         "PREAMBLE_FIELD1": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
           "description": "First CCSDS preamble field octet.",
           "x-flatbuffer-type": "ubyte"
         },
         "PREAMBLE_FIELD2": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
           "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1.",
           "x-flatbuffer-type": "ubyte"
         },
         "TIME_FIELD": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Raw CCSDS time field octets.",
           "x-flatbuffer-type": "[ubyte]"
@@ -1490,11 +1481,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "CCSDS time-code payload and preamble metadata."
+      "additionalProperties": false
     },
     "TIMInstant": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Numeric or textual instant tagged with its time system and representation.",
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
@@ -1633,6 +1624,8 @@
         },
         "SUBSECOND_NANOS": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Additional nanoseconds beyond the fractional scalar/text value.",
           "x-flatbuffer-type": "int"
         },
@@ -1643,6 +1636,8 @@
         },
         "GNSS_WEEK": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.",
           "x-flatbuffer-type": "int"
         },
@@ -1662,11 +1657,11 @@
           "x-flatbuffer-type": "TIMCcsdsTimeCode"
         }
       },
-      "description": "Numeric or textual instant tagged with its time system and representation."
+      "additionalProperties": false
     },
     "TIMConversionRequest": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Request to convert one instant into another time system/representation.",
       "properties": {
         "SOURCE": {
           "$ref": "#/definitions/TIMInstant",
@@ -1819,11 +1814,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Request to convert one instant into another time system/representation."
+      "additionalProperties": false
     },
     "TIMConversionResult": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Result of a time conversion request.",
       "properties": {
         "SOURCE": {
           "$ref": "#/definitions/TIMInstant",
@@ -1883,11 +1878,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Result of a time conversion request."
+      "additionalProperties": false
     },
     "TIM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Time System and time-conversion envelope.",
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
@@ -1985,11 +1980,41 @@
           "x-flatbuffer-type": "TIMConversionResult"
         }
       },
-      "description": "Time System and time-conversion envelope."
+      "additionalProperties": false
+    },
+    "MET": {
+      "type": "object",
+      "description": "Mean Element Theory",
+      "properties": {
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementSource",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "propagatorConfig": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Propagator configuration structure to describe propagation settings",
       "properties": {
         "PROPAGATOR_NAME": {
           "type": "string",
@@ -2064,11 +2089,11 @@
           "x-flatbuffer-type": "[zonalHarmonic]"
         }
       },
-      "description": "Propagator configuration structure to describe propagation settings"
+      "additionalProperties": false
     },
     "VCMStateVector": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "VCM State Vector (position and velocity)",
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -2099,11 +2124,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "VCM State Vector (position and velocity)"
+      "additionalProperties": false
     },
     "keplerianElements": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Keplerian Elements",
       "properties": {
         "SEMI_MAJOR_AXIS": {
           "type": "number",
@@ -2147,11 +2172,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Keplerian Elements"
+      "additionalProperties": false
     },
     "equinoctialElements": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Equinoctial Elements",
       "properties": {
         "AF": {
           "type": "number",
@@ -2178,11 +2203,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Equinoctial Elements"
+      "additionalProperties": false
     },
     "uvwSigmas": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "UVW Sigmas (Covariance matrix in UVW frame)",
       "properties": {
         "U_SIGMA": {
           "type": "number",
@@ -2209,11 +2234,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "UVW Sigmas (Covariance matrix in UVW frame)"
+      "additionalProperties": false
     },
     "VCMAtmosphericModelData": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "VCM Atmospheric and Perturbation Model Data",
       "properties": {
         "ATMOSPHERIC_MODEL": {
           "$ref": "#/definitions/atmosphericSource",
@@ -2368,11 +2393,11 @@
           }
         }
       },
-      "description": "VCM Atmospheric and Perturbation Model Data"
+      "additionalProperties": false
     },
     "VCM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Vector Covariance Message",
       "properties": {
         "CCSDS_OMM_VERS": {
           "type": "number",
@@ -2473,10 +2498,14 @@
         },
         "NORAD_CAT_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "x-flatbuffer-type": "uint32"
         },
         "ELEMENT_SET_NO": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "x-flatbuffer-type": "uint32"
         },
         "REV_AT_EPOCH": {
@@ -2504,11 +2533,13 @@
           "items": {
             "type": "number"
           },
-          "description": "Units: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+          "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
           "x-flatbuffer-type": "[double]"
         },
         "USER_DEFINED_BIP_0044_TYPE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "x-flatbuffer-type": "uint"
         },
         "USER_DEFINED_OBJECT_DESIGNATOR": {
@@ -2528,7 +2559,7 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Vector Covariance Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/VCM",

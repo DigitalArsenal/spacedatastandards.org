@@ -82,5 +82,22 @@ class pluginCategory private constructor() {
          * Basilisk astrodynamics simulation module
          */
         const val Basilisk: Byte = 18
+        /**
+         * Maneuver planning, targeting and trajectory optimization
+         */
+        const val Maneuver: Byte = 19
+        /**
+         * A composed flow published as a single loadable module. The unit is a
+         * graph of other modules, not a leaf algorithm.
+         */
+        const val Flow: Byte = 20
+        /**
+         * No family stated. Sits at the end of the enum rather than at 0 because
+         * this enum is append-only and `Sensor` already holds 0; it exists so a
+         * record can distinguish "the provider did not say" from "Sensor". A
+         * consumer MUST render an `Unspecified` module as ungrouped, never as a
+         * member of any family.
+         */
+        const val Unspecified: Byte = 21
     }
 }

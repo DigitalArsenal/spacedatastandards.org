@@ -7,10 +7,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PLUGIN_CATEGORY: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 18;
+pub const ENUM_MAX_PLUGIN_CATEGORY: i8 = 21;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 19] = [
+pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 22] = [
   pluginCategory::Sensor,
   pluginCategory::Propagator,
   pluginCategory::Renderer,
@@ -30,6 +30,9 @@ pub const ENUM_VALUES_PLUGIN_CATEGORY: [pluginCategory; 19] = [
   pluginCategory::Storefront,
   pluginCategory::Publisher,
   pluginCategory::Basilisk,
+  pluginCategory::Maneuver,
+  pluginCategory::Flow,
+  pluginCategory::Unspecified,
 ];
 
 /// Plugin type category
@@ -76,9 +79,20 @@ impl pluginCategory {
   pub const Publisher: Self = Self(17);
   /// Basilisk astrodynamics simulation module
   pub const Basilisk: Self = Self(18);
+  /// Maneuver planning, targeting and trajectory optimization
+  pub const Maneuver: Self = Self(19);
+  /// A composed flow published as a single loadable module. The unit is a
+  /// graph of other modules, not a leaf algorithm.
+  pub const Flow: Self = Self(20);
+  /// No family stated. Sits at the end of the enum rather than at 0 because
+  /// this enum is append-only and `Sensor` already holds 0; it exists so a
+  /// record can distinguish "the provider did not say" from "Sensor". A
+  /// consumer MUST render an `Unspecified` module as ungrouped, never as a
+  /// member of any family.
+  pub const Unspecified: Self = Self(21);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 18;
+  pub const ENUM_MAX: i8 = 21;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::Sensor,
     Self::Propagator,
@@ -99,6 +113,9 @@ impl pluginCategory {
     Self::Storefront,
     Self::Publisher,
     Self::Basilisk,
+    Self::Maneuver,
+    Self::Flow,
+    Self::Unspecified,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -122,6 +139,9 @@ impl pluginCategory {
       Self::Storefront => Some("Storefront"),
       Self::Publisher => Some("Publisher"),
       Self::Basilisk => Some("Basilisk"),
+      Self::Maneuver => Some("Maneuver"),
+      Self::Flow => Some("Flow"),
+      Self::Unspecified => Some("Unspecified"),
       _ => None,
     }
   }

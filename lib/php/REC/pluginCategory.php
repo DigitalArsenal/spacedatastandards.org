@@ -42,6 +42,17 @@ class pluginCategory
     const Publisher = 17;
     /// Basilisk astrodynamics simulation module
     const Basilisk = 18;
+    /// Maneuver planning, targeting and trajectory optimization
+    const Maneuver = 19;
+    /// A composed flow published as a single loadable module. The unit is a
+    /// graph of other modules, not a leaf algorithm.
+    const Flow = 20;
+    /// No family stated. Sits at the end of the enum rather than at 0 because
+    /// this enum is append-only and `Sensor` already holds 0; it exists so a
+    /// record can distinguish "the provider did not say" from "Sensor". A
+    /// consumer MUST render an `Unspecified` module as ungrouped, never as a
+    /// member of any family.
+    const Unspecified = 21;
 
     private static $names = array(
         pluginCategory::Sensor=>"Sensor",
@@ -63,6 +74,9 @@ class pluginCategory
         pluginCategory::Storefront=>"Storefront",
         pluginCategory::Publisher=>"Publisher",
         pluginCategory::Basilisk=>"Basilisk",
+        pluginCategory::Maneuver=>"Maneuver",
+        pluginCategory::Flow=>"Flow",
+        pluginCategory::Unspecified=>"Unspecified",
     );
 
     public static function Name($e)

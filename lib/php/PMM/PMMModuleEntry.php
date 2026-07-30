@@ -303,22 +303,39 @@ class PMMModuleEntry extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+    /// is the ONLY sanctioned way to group an offering: a client grouping a
+    /// catalogue MUST read this field and MUST NOT infer family from the shape
+    /// of `MODULE_ID`, which carries no normative structure. Defaults to
+    /// `Unspecified`, which a client MUST render as ungrouped — never silently
+    /// as `Sensor`. Present here, rather than only on
+    /// the linked `$PLG`, so an anonymous client can section the catalogue at
+    /// boot without fetching one `$PLG` per module.
+    /**
+     * @return sbyte
+     */
+    public function getPLUGIN_TYPE()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \pluginCategory::Unspecified;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPMMModuleEntry(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(24);
+        $builder->StartObject(25);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PMMModuleEntry
      */
-    public static function createPMMModuleEntry(FlatBufferBuilder $builder, $MODULE_ID, $PLUGIN_ID, $PLG_CID, $NAME, $DESCRIPTION, $VERSION, $EPOCH, $CONTENT_HASH, $ARTIFACT_SIZE_BYTES, $ARTIFACT_PATH, $ARTIFACT_CID, $ARTIFACT_SIGNATURE, $TRUST_TIER, $DEFAULT_ENABLED, $ACCESS_POLICY, $ENTRY_STATE, $RUNTIME_TARGETS, $REQUIRED_SCHEMAS, $MIN_PERMISSIONS, $LICENSE, $DOCUMENTATION_URL, $ICON_URL, $SUPERSEDES_CONTENT_HASH, $UPDATED_AT)
+    public static function createPMMModuleEntry(FlatBufferBuilder $builder, $MODULE_ID, $PLUGIN_ID, $PLG_CID, $NAME, $DESCRIPTION, $VERSION, $EPOCH, $CONTENT_HASH, $ARTIFACT_SIZE_BYTES, $ARTIFACT_PATH, $ARTIFACT_CID, $ARTIFACT_SIGNATURE, $TRUST_TIER, $DEFAULT_ENABLED, $ACCESS_POLICY, $ENTRY_STATE, $RUNTIME_TARGETS, $REQUIRED_SCHEMAS, $MIN_PERMISSIONS, $LICENSE, $DOCUMENTATION_URL, $ICON_URL, $SUPERSEDES_CONTENT_HASH, $UPDATED_AT, $PLUGIN_TYPE)
     {
-        $builder->startObject(24);
+        $builder->startObject(25);
         self::addMODULE_ID($builder, $MODULE_ID);
         self::addPLUGIN_ID($builder, $PLUGIN_ID);
         self::addPLG_CID($builder, $PLG_CID);
@@ -343,6 +360,7 @@ class PMMModuleEntry extends Table
         self::addICON_URL($builder, $ICON_URL);
         self::addSUPERSEDES_CONTENT_HASH($builder, $SUPERSEDES_CONTENT_HASH);
         self::addUPDATED_AT($builder, $UPDATED_AT);
+        self::addPLUGIN_TYPE($builder, $PLUGIN_TYPE);
         $o = $builder->endObject();
         $builder->required($o, 4);  // MODULE_ID
         return $o;
@@ -682,6 +700,16 @@ class PMMModuleEntry extends Table
     public static function addUPDATED_AT(FlatBufferBuilder $builder, $UPDATED_AT)
     {
         $builder->addOffsetX(23, $UPDATED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addPLUGIN_TYPE(FlatBufferBuilder $builder, $PLUGIN_TYPE)
+    {
+        $builder->addSbyteX(24, $PLUGIN_TYPE, 21);
     }
 
     /**

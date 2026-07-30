@@ -68,6 +68,35 @@
         }
       }
     },
+    "pivStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "NOT_FOUND",
+        "YIELDED",
+        "FAILED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "int",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Invocation completed; STATUS_CODE carries the method-specific value."
+        },
+        "NOT_FOUND": {
+          "value": 1,
+          "description": "Method id not registered on the target plugin."
+        },
+        "YIELDED": {
+          "value": 2,
+          "description": "Invocation succeeded but yielded before draining queued work. Caller should inspect BACKLOG_REMAINING and re-invoke to continue."
+        },
+        "FAILED": {
+          "value": 3,
+          "description": "Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure."
+        }
+      }
+    },
     "FlatBufferTypeRef": {
       "type": "object",
       "description": "Payload-schema identity for a stream frame or an accepted port type.",
@@ -250,39 +279,9 @@
       },
       "additionalProperties": false
     },
-    "pivStatus": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "int",
-      "description": "host having to decode method-specific numbers.",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "x-flatbuffer-enum-values": {
-        "OK": {
-          "value": 0,
-          "description": "Invocation completed; STATUS_CODE carries the method-specific value."
-        },
-        "NOT_FOUND": {
-          "value": 1,
-          "description": "Method id not registered on the target plugin."
-        },
-        "YIELDED": {
-          "value": 2,
-          "description": "Invocation succeeded but yielded before draining queued work. Caller should inspect BACKLOG_REMAINING and re-invoke to continue."
-        },
-        "FAILED": {
-          "value": 3,
-          "description": "Invocation failed; ERROR_CODE + ERROR_MESSAGE describe the failure."
-        }
-      }
-    },
     "PIVRequest": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Request envelope carried by `plugin_invoke_stream`.",
       "properties": {
         "METHOD_ID": {
           "type": "string",
@@ -295,39 +294,47 @@
           "items": {
             "$ref": "#/definitions/TAB"
           },
-          "description": "PAYLOAD_ARENA is empty).",
+          "description": "Input frames. Each TAB.TYPE_REF names the payload schema and each\nTAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET\nis arena-relative into PAYLOAD_ARENA (or an absolute pointer when\nPAYLOAD_ARENA is empty).",
           "x-flatbuffer-type": "[TAB]"
         },
         "PAYLOAD_ARENA": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
-          "description": "caller manages arena state out-of-band.",
+          "description": "Optional arena backing the INPUTS payload bodies. Empty means the\ncaller manages arena state out-of-band.",
           "x-flatbuffer-type": "[uint8]"
         },
         "TRACE_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Optional trace identifier for request correlation.",
           "x-flatbuffer-type": "uint64"
         },
         "OUTPUT_STREAM_CAP": {
           "type": "integer",
-          "description": "to resume. 0 = no hint.",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Optional yield-budget hint. Plugins MAY pause queued work after\ndraining this many output frames and return YIELDED for the caller\nto resume. 0 = no hint.",
           "x-flatbuffer-type": "uint32"
         }
       },
-      "description": "Request envelope carried by `plugin_invoke_stream`.",
       "required": [
         "METHOD_ID"
-      ]
+      ],
+      "additionalProperties": false
     },
     "PIVResponse": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Response envelope emitted by `plugin_invoke_stream`.",
       "properties": {
         "STATUS_CODE": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Method-specific status code. Zero conventionally indicates success.",
           "x-flatbuffer-type": "int"
         },
@@ -362,7 +369,9 @@
         },
         "BACKLOG_REMAINING": {
           "type": "integer",
-          "description": "only when STATUS == YIELDED.",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Outstanding frame count remaining after this response. Non-zero\nonly when STATUS == YIELDED.",
           "x-flatbuffer-type": "uint32"
         },
         "OUTPUTS": {
@@ -376,7 +385,9 @@
         "PAYLOAD_ARENA": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Optional arena backing OUTPUTS payload bodies.",
           "x-flatbuffer-type": "[uint8]"
@@ -393,15 +404,17 @@
         },
         "TRACE_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Echo of the request's TRACE_ID for correlation.",
           "x-flatbuffer-type": "uint64"
         }
       },
-      "description": "Response envelope emitted by `plugin_invoke_stream`."
+      "additionalProperties": false
     },
     "PIV": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or\nRESPONSE is populated per message; both populated is undefined.",
       "properties": {
         "REQUEST": {
           "$ref": "#/definitions/PIVRequest",
@@ -412,7 +425,7 @@
           "x-flatbuffer-type": "PIVResponse"
         }
       },
-      "description": "Envelope \u2014 carries either a request or a response. Either REQUEST or RESPONSE is populated per message; both populated is undefined."
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/PIV",

@@ -64,6 +64,78 @@
         }
       }
     },
+    "commissionScope": {
+      "type": "string",
+      "enum": [
+        "Listing",
+        "Store",
+        "Publisher"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Listing": {
+          "value": 0,
+          "description": "A single listing"
+        },
+        "Store": {
+          "value": 1,
+          "description": "A whole store's default terms"
+        },
+        "Publisher": {
+          "value": 2,
+          "description": "A publisher's default terms"
+        }
+      }
+    },
+    "commissionEnforcement": {
+      "type": "string",
+      "enum": [
+        "SplitterContract",
+        "ProviderAttested"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SplitterContract": {
+          "value": 0,
+          "description": "Enforced on-chain by an established splitter contract/program: the split executes when the buyer pays the splitter. No off-chain or manual settlement \u2014 the platform collects commission purely by the buyer's payment routing through the splitter contract."
+        },
+        "ProviderAttested": {
+          "value": 1,
+          "description": "Provider-attested off-contract split, used only where no splitter exists (e.g. BTC / DirectAddress)"
+        }
+      }
+    },
+    "splitRole": {
+      "type": "string",
+      "enum": [
+        "Publisher",
+        "Platform",
+        "Referrer",
+        "Charity"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Publisher": {
+          "value": 0,
+          "description": "The module/flow publisher (vendor)"
+        },
+        "Platform": {
+          "value": 1,
+          "description": "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+        },
+        "Referrer": {
+          "value": 2,
+          "description": "A referrer who drove the sale"
+        },
+        "Charity": {
+          "value": 3,
+          "description": "A charitable recipient"
+        }
+      }
+    },
     "SplitRecipient": {
       "type": "object",
       "description": "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
@@ -213,84 +285,9 @@
       ],
       "additionalProperties": false
     },
-    "commissionScope": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "What a set of commission terms applies to.",
-      "enum": [
-        0,
-        1,
-        2
-      ],
-      "x-flatbuffer-enum-values": {
-        "Listing": {
-          "value": 0,
-          "description": "A single listing"
-        },
-        "Store": {
-          "value": 1,
-          "description": "A whole store's default terms"
-        },
-        "Publisher": {
-          "value": 2,
-          "description": "A publisher's default terms"
-        }
-      }
-    },
-    "commissionEnforcement": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "How the commission split is enforced.",
-      "enum": [
-        0,
-        1
-      ],
-      "x-flatbuffer-enum-values": {
-        "SplitterContract": {
-          "value": 0,
-          "description": "Enforced on-chain by an established splitter contract/program: the split executes when the buyer pays the splitter. No off-chain or manual settlement \u2014 the platform collects commission purely by the buyer's payment routing through the splitter contract."
-        },
-        "ProviderAttested": {
-          "value": 1,
-          "description": "Provider-attested off-contract split, used only where no splitter exists (e.g. BTC / DirectAddress)"
-        }
-      }
-    },
-    "splitRole": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "Role a split recipient plays in the revenue division.",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "x-flatbuffer-enum-values": {
-        "Publisher": {
-          "value": 0,
-          "description": "The module/flow publisher (vendor)"
-        },
-        "Platform": {
-          "value": 1,
-          "description": "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
-        },
-        "Referrer": {
-          "value": 2,
-          "description": "A referrer who drove the sale"
-        },
-        "Charity": {
-          "value": 3,
-          "description": "A charitable recipient"
-        }
-      }
-    },
     "RevenueSplit": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "One recipient's share of a sale, expressed in basis points.",
       "properties": {
         "RECIPIENT": {
           "$ref": "#/definitions/SplitRecipient",
@@ -299,7 +296,9 @@
         },
         "BPS": {
           "type": "integer",
-          "description": "commission sum to 10000",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Share in basis points (1/100 of a percent); all splits plus the platform\ncommission sum to 10000",
           "x-flatbuffer-type": "uint16"
         },
         "ROLE": {
@@ -327,11 +326,11 @@
           }
         }
       },
-      "description": "One recipient's share of a sale, expressed in basis points."
+      "additionalProperties": false
     },
     "CMT": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Commission Terms / Revenue Split. Binds a listing, store, or publisher to a\nplatform commission and the on-chain split that enforces it. This record\nmakes \"the platform earns on every transaction\" auditable and portable\nacross store deployments. Commission is realized purely by the buyer's\npayment routing through the on-chain splitter contract described in\nCONTRACTS \u2014 never by a manual or off-chain settlement step.",
       "properties": {
         "TERMS_ID": {
           "type": "string",
@@ -366,6 +365,8 @@
         },
         "COMMISSION_BPS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
           "description": "Platform commission in basis points (e.g. 500 = 5%)",
           "x-flatbuffer-type": "uint16"
         },
@@ -403,36 +404,42 @@
           "items": {
             "$ref": "#/definitions/SCX"
           },
-          "description": "one per accepted chain/asset",
+          "description": "The established splitter contract(s)/program(s) that perform the split,\none per accepted chain/asset",
           "x-flatbuffer-type": "[SCX]"
         },
         "EFFECTIVE_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix ms when these terms take effect",
           "x-flatbuffer-type": "uint64"
         },
         "EXPIRES_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix ms when these terms expire, or 0 for no expiry",
           "x-flatbuffer-type": "uint64"
         },
         "SIGNATURE": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Ed25519 signature by the store operator `$EPM`",
           "x-flatbuffer-type": "[ubyte]"
         }
       },
-      "description": "Commission Terms / Revenue Split. Binds a listing, store, or publisher to a platform commission and the on-chain split that enforces it. This record makes \"the platform earns on every transaction\" auditable and portable across store deployments. Commission is realized purely by the buyer's payment routing through the on-chain splitter contract described in CONTRACTS \u2014 never by a manual or off-chain settlement step.",
       "required": [
         "TERMS_ID"
-      ]
+      ],
+      "additionalProperties": false
     },
     "STOModuleRef": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Reference to the store module that runs a store.",
       "properties": {
         "PLUGIN_ID": {
           "type": "string",
@@ -450,11 +457,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Reference to the store module that runs a store."
+      "additionalProperties": false
     },
     "STO": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Store Descriptor \u2014 storefront identity",
       "properties": {
         "STORE_ID": {
           "type": "string",
@@ -489,7 +496,7 @@
         },
         "IS_OFFICIAL": {
           "type": "boolean",
-          "description": "platform's well-known signing key",
+          "description": "True only for the platform-signed official store, verifiable against the\nplatform's well-known signing key",
           "x-flatbuffer-type": "bool"
         },
         "COMMISSION_TERMS": {
@@ -528,16 +535,18 @@
         "SIGNATURE": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Ed25519 signature by the operator `$EPM`",
           "x-flatbuffer-type": "[ubyte]"
         }
       },
-      "description": "Store Descriptor \u2014 storefront identity",
       "required": [
         "STORE_ID"
-      ]
+      ],
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/STO",

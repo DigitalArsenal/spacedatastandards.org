@@ -840,7 +840,7 @@
     },
     "TDMTransmitRamp": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "One uplink transmitter frequency ramp applying over a closed time interval.\n\nSDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single\nTRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space\nradiometric archives carry an explicit ramp table and the Doppler observables\nare NOT reconstructible without it. Ramps are optional; a record that omits\nTRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.\n\nFrequency over the interval is the linear polynomial\nf(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME)\nwhich is the common form of the two archive representations: DSN ODF\n(TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp\nstart/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a\nramp reference time with constant and linear transmission-frequency terms,\nso REFERENCE_TIME is that reference time and may precede START_TIME.\nProducers MUST set REFERENCE_TIME explicitly rather than letting a consumer\nassume which convention was used.",
       "properties": {
         "START_TIME": {
           "type": "string",
@@ -869,20 +869,20 @@
         },
         "TRANSMITTING_STATION_ID": {
           "type": "string",
-          "description": "the PARTICIPANT_n naming used by the segment when both are present.",
+          "description": "Identifier of the transmitting station the ramp applies to. Must match\nthe PARTICIPANT_n naming used by the segment when both are present.",
           "x-flatbuffer-type": "string"
         },
         "TRANSMIT_BAND": {
           "type": "string",
-          "description": "TRANSMIT_BAND (e.g. \"S\", \"X\", \"Ka\", \"Ku\").",
+          "description": "Uplink band the ramp applies to, using the same vocabulary as\nTRANSMIT_BAND (e.g. \"S\", \"X\", \"Ka\", \"Ku\").",
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "One uplink transmitter frequency ramp applying over a closed time interval.  SDS EXTENSION beyond CCSDS 503.0-B-1: the base standard carries a single TRANSMIT_FREQ_1 per segment, which cannot express a ramped uplink. Deep-space radiometric archives carry an explicit ramp table and the Doppler observables are NOT reconstructible without it. Ramps are optional; a record that omits TRANSMIT_RAMPS is exactly a CCSDS-conformant TDM.  Frequency over the interval is the linear polynomial f(t) = FREQUENCY_HZ + FREQUENCY_RATE_HZ_PER_S * (t - REFERENCE_TIME) which is the common form of the two archive representations: DSN ODF (TRK-2-18, table 3-5) supplies ramp start frequency, ramp rate, and ramp start/end time, so REFERENCE_TIME equals START_TIME; ESA IFMS supplies a ramp reference time with constant and linear transmission-frequency terms, so REFERENCE_TIME is that reference time and may precede START_TIME. Producers MUST set REFERENCE_TIME explicitly rather than letting a consumer assume which convention was used."
+      "additionalProperties": false
     },
     "TDM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Tracking Data Message",
       "properties": {
         "OBSERVER_ID": {
           "type": "string",
@@ -936,7 +936,7 @@
         },
         "OBSERVATION_STEP_SIZE": {
           "type": "number",
-          "description": "Time reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)",
+          "description": "Time interval between observations in seconds (required).\nTime reconstruction: time[i] = OBSERVATION_START_TIME + (i * OBSERVATION_STEP_SIZE)",
           "x-flatbuffer-type": "double"
         },
         "OBSERVATION_START_TIME": {
@@ -1019,11 +1019,15 @@
         },
         "PATH_1": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
           "description": "First path in TDM -  CCSDS 503.0-B-1, Page D-9",
           "x-flatbuffer-type": "ushort"
         },
         "PATH_2": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
           "description": "Second path in TDM (if applicable) -  CCSDS 503.0-B-1, Page D-9",
           "x-flatbuffer-type": "ushort"
         },
@@ -1092,12 +1096,12 @@
         },
         "TIMETAG_REF": {
           "type": "string",
-          "description": "Reference for time tagging -  CCSDS 503.0-B-1, Page D-10",
+          "description": "Additional properties as required by the specific application of the TDM...\nReference for time tagging -  CCSDS 503.0-B-1, Page D-10",
           "x-flatbuffer-type": "string"
         },
         "ANGLE_TYPE": {
           "type": "string",
-          "description": "Can be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD",
+          "description": "Type of angle data -  CCSDS 503.0-B-1, Page D-12\nCan be AZEL, RADEC, XEYN, XSYE, or another value with provided ICD",
           "x-flatbuffer-type": "string"
         },
         "ANGLE_1": {
@@ -1230,7 +1234,7 @@
           "items": {
             "type": "number"
           },
-          "description": "/// Signal-to-noise ratio of the detection.",
+          "description": "SDS EXTENSION beyond CCSDS 503.0-B-1. Open-loop (non-coherent) Doppler\nquality metrics, one entry per observation, parallel to the other\nobservation arrays and reconstructed on the same OBSERVATION_START_TIME +\ni * OBSERVATION_STEP_SIZE grid.\n\nSignal-to-noise ratio of the detection.",
           "x-flatbuffer-type": "[double]"
         },
         "SPECTRAL_MAX": {
@@ -1246,7 +1250,7 @@
           "items": {
             "type": "number"
           },
-          "description": "uncertainty, which CCSDS 503.0-B-1 has no field for.",
+          "description": "SDS EXTENSION. 1-sigma noise on the measured Doppler frequency, Hz. The\nmeasured sky frequency itself is carried by RECEIVE_FREQ; this is its\nuncertainty, which CCSDS 503.0-B-1 has no field for.",
           "x-flatbuffer-type": "[double]"
         },
         "TRANSMIT_RAMPS": {
@@ -1254,11 +1258,11 @@
           "items": {
             "$ref": "#/definitions/TDMTransmitRamp"
           },
-          "description": "leaves the record exactly CCSDS-conformant.",
+          "description": "SDS EXTENSION beyond CCSDS 503.0-B-1. Uplink transmitter frequency ramp\ntable covering this segment, ordered by START_TIME and non-overlapping.\nRequired in practice for ramped uplinks, where TRANSMIT_FREQ_1 alone\ncannot reconstruct the observables. Absent for unramped tracking, which\nleaves the record exactly CCSDS-conformant.",
           "x-flatbuffer-type": "[TDMTransmitRamp]"
         }
       },
-      "description": "Tracking Data Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/TDM",

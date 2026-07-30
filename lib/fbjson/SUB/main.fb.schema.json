@@ -64,6 +64,64 @@
         }
       }
     },
+    "recurringChargeMethod": {
+      "type": "string",
+      "enum": [
+        "Erc20Allowance",
+        "EvmDelegate",
+        "SolDelegate",
+        "ReAuthorizePerPeriod"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Erc20Allowance": {
+          "value": 0,
+          "description": "ERC-20 allowance the settlement contract draws per period"
+        },
+        "EvmDelegate": {
+          "value": 1,
+          "description": "EVM delegated / session-key authorization"
+        },
+        "SolDelegate": {
+          "value": 2,
+          "description": "Solana delegated token authority"
+        },
+        "ReAuthorizePerPeriod": {
+          "value": 3,
+          "description": "No standing authorization; the buyer re-authorizes each period"
+        }
+      }
+    },
+    "subscriptionLifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Paused",
+        "Cancelled",
+        "Lapsed"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0,
+          "description": "Charging on schedule"
+        },
+        "Paused": {
+          "value": 1,
+          "description": "Temporarily paused by the buyer or store"
+        },
+        "Cancelled": {
+          "value": 2,
+          "description": "Cancelled by the buyer; no further charges"
+        },
+        "Lapsed": {
+          "value": 3,
+          "description": "A scheduled charge failed / authorization expired"
+        }
+      }
+    },
     "SplitRecipient": {
       "type": "object",
       "description": "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
@@ -213,69 +271,9 @@
       ],
       "additionalProperties": false
     },
-    "recurringChargeMethod": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "On-chain recurring charge mechanism.",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "x-flatbuffer-enum-values": {
-        "Erc20Allowance": {
-          "value": 0,
-          "description": "ERC-20 allowance the settlement contract draws per period"
-        },
-        "EvmDelegate": {
-          "value": 1,
-          "description": "EVM delegated / session-key authorization"
-        },
-        "SolDelegate": {
-          "value": 2,
-          "description": "Solana delegated token authority"
-        },
-        "ReAuthorizePerPeriod": {
-          "value": 3,
-          "description": "No standing authorization; the buyer re-authorizes each period"
-        }
-      }
-    },
-    "subscriptionLifecycleStatus": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "Lifecycle of a crypto-native subscription authorization.",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "x-flatbuffer-enum-values": {
-        "Active": {
-          "value": 0,
-          "description": "Charging on schedule"
-        },
-        "Paused": {
-          "value": 1,
-          "description": "Temporarily paused by the buyer or store"
-        },
-        "Cancelled": {
-          "value": 2,
-          "description": "Cancelled by the buyer; no further charges"
-        },
-        "Lapsed": {
-          "value": 3,
-          "description": "A scheduled charge failed / authorization expired"
-        }
-      }
-    },
     "SUB": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Crypto-native Subscription Authorization",
       "properties": {
         "SUBSCRIPTION_ID": {
           "type": "string",
@@ -324,11 +322,15 @@
         },
         "PERIOD_DAYS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)",
           "x-flatbuffer-type": "uint32"
         },
         "AMOUNT_PER_PERIOD": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Charge per period in the smallest unit of CURRENCY",
           "x-flatbuffer-type": "uint64"
         },
@@ -339,11 +341,15 @@
         },
         "NEXT_CHARGE_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix ms of the next scheduled charge",
           "x-flatbuffer-type": "uint64"
         },
         "MAX_PERIODS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Maximum number of periods; 0 = until cancelled",
           "x-flatbuffer-type": "uint32"
         },
@@ -374,16 +380,18 @@
         "SIGNATURE": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Buyer's Ed25519 authorization signature over the terms",
           "x-flatbuffer-type": "[ubyte]"
         }
       },
-      "description": "Crypto-native Subscription Authorization",
       "required": [
         "SUBSCRIPTION_ID"
-      ]
+      ],
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/SUB",

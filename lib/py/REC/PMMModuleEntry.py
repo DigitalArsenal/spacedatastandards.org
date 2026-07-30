@@ -296,8 +296,23 @@ class PMMModuleEntry(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+    # is the ONLY sanctioned way to group an offering: a client grouping a
+    # catalogue MUST read this field and MUST NOT infer family from the shape
+    # of `MODULE_ID`, which carries no normative structure. Defaults to
+    # `Unspecified`, which a client MUST render as ungrouped — never silently
+    # as `Sensor`. Present here, rather than only on
+    # the linked `$PLG`, so an anonymous client can section the catalogue at
+    # boot without fetching one `$PLG` per module.
+    # PMMModuleEntry
+    def PLUGIN_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 21
+
 def PMMModuleEntryStart(builder):
-    builder.StartObject(24)
+    builder.StartObject(25)
 
 def Start(builder):
     PMMModuleEntryStart(builder)
@@ -498,6 +513,12 @@ def PMMModuleEntryAddUPDATED_AT(builder, UPDATED_AT):
 def AddUPDATED_AT(builder, UPDATED_AT):
     PMMModuleEntryAddUPDATED_AT(builder, UPDATED_AT)
 
+def PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE):
+    builder.PrependInt8Slot(24, PLUGIN_TYPE, 21)
+
+def AddPLUGIN_TYPE(builder, PLUGIN_TYPE):
+    PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE)
+
 def PMMModuleEntryEnd(builder):
     return builder.EndObject()
 
@@ -538,6 +559,7 @@ class PMMModuleEntryT(object):
         ICON_URL = None,
         SUPERSEDES_CONTENT_HASH = None,
         UPDATED_AT = None,
+        PLUGIN_TYPE = 21,
     ):
         self.MODULE_ID = MODULE_ID  # type: Optional[str]
         self.PLUGIN_ID = PLUGIN_ID  # type: Optional[str]
@@ -563,6 +585,7 @@ class PMMModuleEntryT(object):
         self.ICON_URL = ICON_URL  # type: Optional[str]
         self.SUPERSEDES_CONTENT_HASH = SUPERSEDES_CONTENT_HASH  # type: Optional[str]
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
+        self.PLUGIN_TYPE = PLUGIN_TYPE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -624,6 +647,7 @@ class PMMModuleEntryT(object):
         self.ICON_URL = PMMModuleEntry.ICON_URL()
         self.SUPERSEDES_CONTENT_HASH = PMMModuleEntry.SUPERSEDES_CONTENT_HASH()
         self.UPDATED_AT = PMMModuleEntry.UPDATED_AT()
+        self.PLUGIN_TYPE = PMMModuleEntry.PLUGIN_TYPE()
 
     # PMMModuleEntryT
     def Pack(self, builder):
@@ -730,5 +754,6 @@ class PMMModuleEntryT(object):
             PMMModuleEntryAddSUPERSEDES_CONTENT_HASH(builder, SUPERSEDES_CONTENT_HASH)
         if self.UPDATED_AT is not None:
             PMMModuleEntryAddUPDATED_AT(builder, UPDATED_AT)
+        PMMModuleEntryAddPLUGIN_TYPE(builder, self.PLUGIN_TYPE)
         PMMModuleEntry = PMMModuleEntryEnd(builder)
         return PMMModuleEntry

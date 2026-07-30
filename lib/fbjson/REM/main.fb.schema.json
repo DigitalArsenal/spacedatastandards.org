@@ -1,390 +1,29 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "reentryDisposition": {
-      "type": "string",
-      "enum": [
-        "CONTROLLED",
-        "UNCONTROLLED",
-        "SEMI_CONTROLLED"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "CONTROLLED": {
-          "value": 0
-        },
-        "UNCONTROLLED": {
-          "value": 1
-        },
-        "SEMI_CONTROLLED": {
-          "value": 2
-        }
-      }
-    },
-    "reentryReason": {
-      "type": "string",
-      "enum": [
-        "NATURAL_DECAY",
-        "COMMANDED_DEORBIT",
-        "PROPULSION_FAILURE",
-        "COLLISION",
-        "FRAGMENTATION",
-        "UNKNOWN"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "NATURAL_DECAY": {
-          "value": 0
-        },
-        "COMMANDED_DEORBIT": {
-          "value": 1
-        },
-        "PROPULSION_FAILURE": {
-          "value": 2
-        },
-        "COLLISION": {
-          "value": 3
-        },
-        "FRAGMENTATION": {
-          "value": 4
-        },
-        "UNKNOWN": {
-          "value": 5
-        }
-      }
-    },
-    "reentryStateVector": {
-      "type": "object",
-      "description": "Reentry State Vector",
-      "properties": {
-        "EPOCH": {
-          "type": "string",
-          "description": "Epoch (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "REF_FRAME": {
-          "type": "string",
-          "description": "Reference frame",
-          "x-flatbuffer-type": "string"
-        },
-        "X": {
-          "type": "number",
-          "description": "Position X in km",
-          "x-flatbuffer-type": "double"
-        },
-        "Y": {
-          "type": "number",
-          "description": "Position Y in km",
-          "x-flatbuffer-type": "double"
-        },
-        "Z": {
-          "type": "number",
-          "description": "Position Z in km",
-          "x-flatbuffer-type": "double"
-        },
-        "X_DOT": {
-          "type": "number",
-          "description": "Velocity X in km/s",
-          "x-flatbuffer-type": "double"
-        },
-        "Y_DOT": {
-          "type": "number",
-          "description": "Velocity Y in km/s",
-          "x-flatbuffer-type": "double"
-        },
-        "Z_DOT": {
-          "type": "number",
-          "description": "Velocity Z in km/s",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "reentryImpact": {
-      "type": "object",
-      "description": "Reentry Ground Impact Prediction",
-      "properties": {
-        "IMPACT_EPOCH": {
-          "type": "string",
-          "description": "Predicted impact epoch (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "EPOCH_UNCERTAINTY": {
-          "type": "number",
-          "description": "Epoch uncertainty window in seconds",
-          "x-flatbuffer-type": "double"
-        },
-        "LATITUDE": {
-          "type": "number",
-          "description": "Impact latitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE": {
-          "type": "number",
-          "description": "Impact longitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "ALONG_TRACK_UNC": {
-          "type": "number",
-          "description": "Along-track uncertainty in km",
-          "x-flatbuffer-type": "double"
-        },
-        "CROSS_TRACK_UNC": {
-          "type": "number",
-          "description": "Cross-track uncertainty in km",
-          "x-flatbuffer-type": "double"
-        },
-        "IMPACT_PROBABILITY": {
-          "type": "number",
-          "description": "Impact probability (0.0-1.0)",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "survivingDebris": {
-      "type": "object",
-      "description": "Surviving Debris Prediction",
-      "properties": {
-        "FRAGMENT_ID": {
-          "type": "string",
-          "description": "Fragment identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "MATERIAL": {
-          "type": "string",
-          "description": "Material type",
-          "x-flatbuffer-type": "string"
-        },
-        "MASS": {
-          "type": "number",
-          "description": "Fragment mass in kg",
-          "x-flatbuffer-type": "double"
-        },
-        "CASUALTY_AREA": {
-          "type": "number",
-          "description": "Casualty area in m^2",
-          "x-flatbuffer-type": "double"
-        },
-        "SURVIVAL_PROBABILITY": {
-          "type": "number",
-          "description": "Survival probability (0.0-1.0)",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
-    "RDM": {
-      "type": "object",
-      "description": "Reentry Data Message",
-      "properties": {
-        "CCSDS_RDM_VERS": {
-          "type": "string",
-          "description": "CCSDS RDM version",
-          "x-flatbuffer-type": "string"
-        },
-        "CREATION_DATE": {
-          "type": "string",
-          "description": "Message creation date (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIGINATOR": {
-          "type": "string",
-          "description": "Creating organization",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJECT_NAME": {
-          "type": "string",
-          "description": "Object name",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJECT_ID": {
-          "type": "string",
-          "description": "International designator",
-          "x-flatbuffer-type": "string"
-        },
-        "NORAD_CAT_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "description": "NORAD catalog number",
-          "x-flatbuffer-type": "uint32"
-        },
-        "OBJECT_TYPE": {
-          "type": "string",
-          "description": "Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)",
-          "x-flatbuffer-type": "string"
-        },
-        "DISPOSITION": {
-          "$ref": "#/definitions/reentryDisposition",
-          "description": "Reentry disposition",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "CONTROLLED": {
-              "value": 0
-            },
-            "UNCONTROLLED": {
-              "value": 1
-            },
-            "SEMI_CONTROLLED": {
-              "value": 2
-            }
-          }
-        },
-        "REASON": {
-          "$ref": "#/definitions/reentryReason",
-          "description": "Reentry reason",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "NATURAL_DECAY": {
-              "value": 0
-            },
-            "COMMANDED_DEORBIT": {
-              "value": 1
-            },
-            "PROPULSION_FAILURE": {
-              "value": 2
-            },
-            "COLLISION": {
-              "value": 3
-            },
-            "FRAGMENTATION": {
-              "value": 4
-            },
-            "UNKNOWN": {
-              "value": 5
-            }
-          }
-        },
-        "REENTRY_EPOCH": {
-          "type": "string",
-          "description": "Predicted reentry epoch (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "REENTRY_EPOCH_UNC": {
-          "type": "number",
-          "description": "Reentry epoch uncertainty window in hours",
-          "x-flatbuffer-type": "double"
-        },
-        "REENTRY_LATITUDE": {
-          "type": "number",
-          "description": "Reentry latitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "REENTRY_LONGITUDE": {
-          "type": "number",
-          "description": "Reentry longitude in degrees",
-          "x-flatbuffer-type": "double"
-        },
-        "REENTRY_ALTITUDE": {
-          "type": "number",
-          "description": "Reentry altitude in km",
-          "x-flatbuffer-type": "double"
-        },
-        "TIME_SYSTEM": {
-          "type": "string",
-          "description": "Time system",
-          "x-flatbuffer-type": "string"
-        },
-        "PREV_PREDICTION_EPOCH": {
-          "type": "string",
-          "description": "Previous predicted reentry epoch for comparison (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "BALLISTIC_COEFF": {
-          "type": "number",
-          "description": "Ballistic coefficient in kg/m^2",
-          "x-flatbuffer-type": "double"
-        },
-        "MASS": {
-          "type": "number",
-          "description": "Object mass in kg",
-          "x-flatbuffer-type": "double"
-        },
-        "SOLAR_RAD_AREA": {
-          "type": "number",
-          "description": "Solar radiation pressure area in m^2",
-          "x-flatbuffer-type": "double"
-        },
-        "DRAG_AREA": {
-          "type": "number",
-          "description": "Drag area in m^2",
-          "x-flatbuffer-type": "double"
-        },
-        "INITIAL_STATE": {
-          "$ref": "#/definitions/reentryStateVector",
-          "description": "Initial state vector",
-          "x-flatbuffer-type": "reentryStateVector"
-        },
-        "IMPACT_PREDICTIONS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/reentryImpact"
-          },
-          "description": "Ground impact predictions",
-          "x-flatbuffer-type": "[reentryImpact]"
-        },
-        "SURVIVING_DEBRIS": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/survivingDebris"
-          },
-          "description": "Predicted surviving debris",
-          "x-flatbuffer-type": "[survivingDebris]"
-        },
-        "CASUALTY_EXPECTATION": {
-          "type": "number",
-          "description": "Casualty expectation",
-          "x-flatbuffer-type": "double"
-        },
-        "NUM_FRAGMENTS": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "description": "Number of breakup fragments predicted",
-          "x-flatbuffer-type": "uint"
-        },
-        "SURVIVING_MASS": {
-          "type": "number",
-          "description": "Total surviving mass in kg",
-          "x-flatbuffer-type": "double"
-        },
-        "COMMENT": {
-          "type": "string",
-          "description": "Additional comments",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
     "AtmosphericModelFamily": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "CIRA_XX",
+        "DTM_XX",
+        "GITM",
+        "GOST",
+        "GRAM_XX",
+        "HP",
+        "JAC_HASDM",
+        "JAC_GILL",
+        "JB08",
+        "JR71",
+        "JXX",
+        "MET_XX",
+        "MSIS_86",
+        "MSISE_90",
+        "NRLMSIS00E",
+        "TIECGM",
+        "USSA_XX"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Use the `YEAR` field in the ATM message to specify the variant implementation.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16
-      ],
       "x-flatbuffer-enum-values": {
         "CIRA_XX": {
           "value": 0,
@@ -457,40 +96,39 @@
       }
     },
     "CelestialFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Celestial Reference Frames (SANA registry 1.3.112.4.57.2)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27
-      ],
       "x-flatbuffer-enum-values": {
         "GCRF": {
           "value": 0,
@@ -607,28 +245,27 @@
       }
     },
     "SpacecraftFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Spacecraft Body Reference Frames (SANA registry 1.3.112.4.57.8)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ],
       "x-flatbuffer-enum-values": {
         "ACC_i": {
           "value": 0,
@@ -697,28 +334,27 @@
       }
     },
     "OrbitFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Orbit-Relative Reference Frames (SANA registry 1.3.112.4.57.3)",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-      ],
       "x-flatbuffer-enum-values": {
         "EQW_INERTIAL": {
           "value": 0,
@@ -787,30 +423,29 @@
       }
     },
     "CustomFrame": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Non-registered or local use frames",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17
-      ],
       "x-flatbuffer-enum-values": {
         "ECEF": {
           "value": 0,
@@ -886,30 +521,40 @@
         }
       }
     },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper"
+      ]
+    },
     "timingStandard": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "GMST",
+        "GPS",
+        "MET",
+        "MRT",
+        "SCLK",
+        "TAI",
+        "TCB",
+        "TDB",
+        "TCG",
+        "TT",
+        "UT1",
+        "UTC",
+        "GLONASS",
+        "GST",
+        "QZSS",
+        "BDT",
+        "NAVIC",
+        "SBAS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17
-      ],
       "x-flatbuffer-enum-values": {
         "GMST": {
           "value": 0,
@@ -986,19 +631,19 @@
       }
     },
     "timEpochRepresentation": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE",
+        "UNIX_SECONDS",
+        "ISO8601",
+        "GPS_SECONDS",
+        "GNSS_WEEK_SECONDS",
+        "CCSDS_TIME_CODE",
+        "MISSION_ELAPSED_SECONDS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
       "x-flatbuffer-enum-values": {
         "JULIAN_DATE": {
           "value": 0,
@@ -1035,15 +680,15 @@
       }
     },
     "timCcsdsTimeCodeKind": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNSEGMENTED",
+        "DAY_SEGMENTED",
+        "CALENDAR_SEGMENTED"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "NONE": {
           "value": 0,
@@ -1064,17 +709,17 @@
       }
     },
     "timConversionStatus": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_TIME_SYSTEM",
+        "LEAP_SECOND_DATA_REQUIRED",
+        "EOP_DATA_REQUIRED",
+        "OUT_OF_RANGE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "OK": {
           "value": 0,
@@ -1103,16 +748,15 @@
       }
     },
     "PolarizationType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "linear",
+        "circular",
+        "elliptical",
+        "unpolarized"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Different types of polarization in EMT",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "linear": {
           "value": 0
@@ -1129,16 +773,15 @@
       }
     },
     "SimplePolarization": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal",
+        "leftHandCircular",
+        "rightHandCircular"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Simple polarization types",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "vertical": {
           "value": 0
@@ -1155,16 +798,15 @@
       }
     },
     "DataMode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "EXERCISE",
+        "REAL",
+        "SIMULATED",
+        "TEST"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum for the mode of data (real, simulated, synthetic)",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "EXERCISE": {
           "value": 0,
@@ -1185,57 +827,57 @@
       }
     },
     "DeviceType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPTICAL",
+        "INFRARED_SENSOR",
+        "ULTRAVIOLET_SENSOR",
+        "X_RAY_SENSOR",
+        "GAMMA_RAY_SENSOR",
+        "RADAR",
+        "PHASED_ARRAY_RADAR",
+        "SYNTHETIC_APERTURE_RADAR",
+        "BISTATIC_RADIO_TELESCOPE",
+        "RADIO_TELESCOPE",
+        "ATMOSPHERIC_SENSOR",
+        "SPACE_WEATHER_SENSOR",
+        "ENVIRONMENTAL_SENSOR",
+        "SEISMIC_SENSOR",
+        "GRAVIMETRIC_SENSOR",
+        "MAGNETIC_SENSOR",
+        "ELECTROMAGNETIC_SENSOR",
+        "THERMAL_SENSOR",
+        "CHEMICAL_SENSOR",
+        "BIOLOGICAL_SENSOR",
+        "RADIATION_SENSOR",
+        "PARTICLE_DETECTOR",
+        "LIDAR",
+        "SONAR",
+        "TELESCOPE",
+        "SPECTROSCOPIC_SENSOR",
+        "PHOTOMETRIC_SENSOR",
+        "POLARIMETRIC_SENSOR",
+        "INTERFEROMETRIC_SENSOR",
+        "MULTISPECTRAL_SENSOR",
+        "HYPERSPECTRAL_SENSOR",
+        "GPS_RECEIVER",
+        "RADIO_COMMUNICATIONS",
+        "LASER_COMMUNICATIONS",
+        "SATELLITE_COMMUNICATIONS",
+        "LASER_INSTRUMENT",
+        "RF_ANALYZER",
+        "IONOSPHERIC_SENSOR",
+        "LASER_IMAGING",
+        "OPTICAL_TELESCOPE",
+        "HIGH_RESOLUTION_OPTICAL",
+        "RADIO",
+        "MICROWAVE_TRANSMITTER",
+        "RF_MONITOR",
+        "HF_RADIO_COMMUNICATIONS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45
-      ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0,
@@ -1424,137 +1066,137 @@
       }
     },
     "legacyCountryCode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63,
-        64,
-        65,
-        66,
-        67,
-        68,
-        69,
-        70,
-        71,
-        72,
-        73,
-        74,
-        75,
-        76,
-        77,
-        78,
-        79,
-        80,
-        81,
-        82,
-        83,
-        84,
-        85,
-        86,
-        87,
-        88,
-        89,
-        90,
-        91,
-        92,
-        93,
-        94,
-        95,
-        96,
-        97,
-        98,
-        99,
-        100,
-        101,
-        102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        108,
-        109,
-        110,
-        111,
-        112,
-        113,
-        114,
-        115,
-        116,
-        117,
-        118,
-        119,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125
-      ],
       "x-flatbuffer-enum-values": {
         "AB": {
           "value": 0,
@@ -2063,15 +1705,15 @@
       }
     },
     "spaceObjectClass": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "PAYLOAD",
+        "ROCKET_BODY",
+        "DEBRIS",
+        "UNKNOWN"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "PAYLOAD": {
           "value": 0,
@@ -2092,19 +1734,19 @@
       }
     },
     "operationalState": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "NONOPERATIONAL",
+        "PARTIALLY_OPERATIONAL",
+        "BACKUP_STANDBY",
+        "SPARE",
+        "EXTENDED_MISSION",
+        "DECAYED",
+        "UNKNOWN"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
       "x-flatbuffer-enum-values": {
         "OPERATIONAL": {
           "value": 0,
@@ -2141,15 +1783,15 @@
       }
     },
     "dataAvailability": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NO_CURRENT_ELEMENTS",
+        "NO_INITIAL_ELEMENTS",
+        "NO_ELEMENTS_AVAILABLE",
+        "OK"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "NO_CURRENT_ELEMENTS": {
           "value": 0,
@@ -2170,16 +1812,16 @@
       }
     },
     "orbitRegime": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ORBIT",
+        "LANDING",
+        "IMPACT",
+        "DOCKED",
+        "ROUNDTRIP"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "ORBIT": {
           "value": 0,
@@ -2204,13 +1846,13 @@
       }
     },
     "massCategory": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "DRY",
+        "WET"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "DRY": {
           "value": 0
@@ -2221,17 +1863,16 @@
       }
     },
     "polynomialBasisType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "CHEBYSHEV",
+        "LEGENDRE",
+        "HERMITE",
+        "LAGRANGE",
+        "POWER_SERIES"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Determines how the coefficient arrays are evaluated.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "CHEBYSHEV": {
           "value": 0,
@@ -2256,15 +1897,14 @@
       }
     },
     "ppeAnomalyType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "TRUE_ANOMALY",
+        "MEAN_ANOMALY",
+        "ECCENTRIC_ANOMALY"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Anomaly type flag for orbital element records.",
-      "enum": [
-        0,
-        1,
-        2
-      ],
       "x-flatbuffer-enum-values": {
         "TRUE_ANOMALY": {
           "value": 0,
@@ -2281,14 +1921,13 @@
       }
     },
     "sizeShapeProfile": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "SMA",
+        "R_PERIAPSIS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Orbital element parameterization for the first element (size/shape).",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "SMA": {
           "value": 0,
@@ -2301,18 +1940,17 @@
       }
     },
     "trajectoryType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "CARTESIAN_PV",
+        "CARTESIAN_PVA",
+        "POLYNOMIAL_POS",
+        "POLYNOMIAL_OE",
+        "HERMITE",
+        "LAGRANGE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "CCSDS 502.0-B-3 Section 7 specifies multiple trajectory state types.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "CARTESIAN_PV": {
           "value": 0,
@@ -2341,17 +1979,16 @@
       }
     },
     "estimatorCategory": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "BatchLeastSquares",
+        "ExtendedKalman",
+        "UnscentedKalman",
+        "Smoother"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "(batch-vs-filter provenance).",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "Unknown": {
           "value": 0,
@@ -2376,18 +2013,17 @@
       }
     },
     "hfcFlowRegime": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "SUPERSONIC",
+        "HYPERSONIC",
+        "RAREFIED",
+        "TRANSITIONAL",
+        "CONTINUUM"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Hypersonic flight regime classification.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0
@@ -2410,17 +2046,16 @@
       }
     },
     "hfcAtmosphereCouplingMode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "STATIC_PROFILE",
+        "BATCH_QUERY",
+        "STEP_QUERY",
+        "EXTERNAL_PROVIDER"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "How the hypersonic propagator is coupled to atmosphere providers.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0
@@ -2439,19 +2074,72 @@
         }
       }
     },
-    "remEvaluationOutcome": {
-      "type": "integer",
+    "reentryDisposition": {
+      "type": "string",
+      "enum": [
+        "CONTROLLED",
+        "UNCONTROLLED",
+        "SEMI_CONTROLLED"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Reentry evaluation outcome.",
+      "x-flatbuffer-enum-values": {
+        "CONTROLLED": {
+          "value": 0
+        },
+        "UNCONTROLLED": {
+          "value": 1
+        },
+        "SEMI_CONTROLLED": {
+          "value": 2
+        }
+      }
+    },
+    "reentryReason": {
+      "type": "string",
       "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
+        "NATURAL_DECAY",
+        "COMMANDED_DEORBIT",
+        "PROPULSION_FAILURE",
+        "COLLISION",
+        "FRAGMENTATION",
+        "UNKNOWN"
       ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NATURAL_DECAY": {
+          "value": 0
+        },
+        "COMMANDED_DEORBIT": {
+          "value": 1
+        },
+        "PROPULSION_FAILURE": {
+          "value": 2
+        },
+        "COLLISION": {
+          "value": 3
+        },
+        "FRAGMENTATION": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "remEvaluationOutcome": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "PROPAGATED",
+        "IMPACT_CONFIRMED",
+        "DEMISE_EXPECTED",
+        "SURVIVAL_EXPECTED",
+        "BLOCKED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0
@@ -2474,18 +2162,17 @@
       }
     },
     "remBreakupMode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "AEROTHERMAL",
+        "STRUCTURAL",
+        "AERODYNAMIC_LOAD",
+        "COMMAND_DESTRUCT",
+        "NONE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Dominant breakup or demise mechanism.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5
-      ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0
@@ -2509,7 +2196,7 @@
     },
     "ATM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Atmospheric Model Message",
       "properties": {
         "MODEL": {
           "$ref": "#/definitions/AtmosphericModelFamily",
@@ -2589,15 +2276,16 @@
         },
         "YEAR": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)",
           "x-flatbuffer-type": "int"
         }
       },
-      "description": "Atmospheric Model Message"
+      "additionalProperties": false
     },
     "CelestialFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/CelestialFrame",
@@ -2718,11 +2406,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "SpacecraftFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/SpacecraftFrame",
@@ -2795,11 +2483,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "OrbitFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/OrbitFrame",
@@ -2872,11 +2560,11 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "CustomFrameWrapper": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "frame": {
           "$ref": "#/definitions/CustomFrame",
@@ -2957,18 +2645,37 @@
             }
           }
         }
-      }
+      },
+      "additionalProperties": false
     },
     "RFM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Reference Frame Message",
       "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
         "REFERENCE_FRAME": {
-          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            }
+          ],
           "x-flatbuffer-type": "RFMUnion"
         },
         "INDEX": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "x-flatbuffer-type": "int"
         },
         "NAME": {
@@ -2976,11 +2683,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Reference Frame Message"
+      "additionalProperties": false
     },
     "TIMCcsdsTimeCode": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "CCSDS time-code payload and preamble metadata.",
       "properties": {
         "CODE_KIND": {
           "$ref": "#/definitions/timCcsdsTimeCodeKind",
@@ -3008,18 +2715,24 @@
         },
         "PREAMBLE_FIELD1": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
           "description": "First CCSDS preamble field octet.",
           "x-flatbuffer-type": "ubyte"
         },
         "PREAMBLE_FIELD2": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
           "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1.",
           "x-flatbuffer-type": "ubyte"
         },
         "TIME_FIELD": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Raw CCSDS time field octets.",
           "x-flatbuffer-type": "[ubyte]"
@@ -3035,11 +2748,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "CCSDS time-code payload and preamble metadata."
+      "additionalProperties": false
     },
     "TIMInstant": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Numeric or textual instant tagged with its time system and representation.",
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
@@ -3178,6 +2891,8 @@
         },
         "SUBSECOND_NANOS": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Additional nanoseconds beyond the fractional scalar/text value.",
           "x-flatbuffer-type": "int"
         },
@@ -3188,6 +2903,8 @@
         },
         "GNSS_WEEK": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.",
           "x-flatbuffer-type": "int"
         },
@@ -3207,11 +2924,11 @@
           "x-flatbuffer-type": "TIMCcsdsTimeCode"
         }
       },
-      "description": "Numeric or textual instant tagged with its time system and representation."
+      "additionalProperties": false
     },
     "TIMConversionRequest": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Request to convert one instant into another time system/representation.",
       "properties": {
         "SOURCE": {
           "$ref": "#/definitions/TIMInstant",
@@ -3364,11 +3081,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Request to convert one instant into another time system/representation."
+      "additionalProperties": false
     },
     "TIMConversionResult": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Result of a time conversion request.",
       "properties": {
         "SOURCE": {
           "$ref": "#/definitions/TIMInstant",
@@ -3428,11 +3145,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Result of a time conversion request."
+      "additionalProperties": false
     },
     "TIM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Time System and time-conversion envelope.",
       "properties": {
         "TIME_SYSTEM": {
           "$ref": "#/definitions/timingStandard",
@@ -3530,11 +3247,11 @@
           "x-flatbuffer-type": "TIMConversionResult"
         }
       },
-      "description": "Time System and time-conversion envelope."
+      "additionalProperties": false
     },
     "FrequencyRange": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Frequency range with lower and upper limits",
       "properties": {
         "LOWER": {
           "type": "number",
@@ -3547,11 +3264,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Frequency range with lower and upper limits"
+      "additionalProperties": false
     },
     "StokesParameters": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Stokes parameters, representing different aspects of polarization",
       "properties": {
         "I": {
           "type": "number",
@@ -3574,11 +3291,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Stokes parameters, representing different aspects of polarization"
+      "additionalProperties": false
     },
     "Band": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Table representing a frequency band with a name and frequency range",
       "properties": {
         "NAME": {
           "type": "string",
@@ -3591,11 +3308,11 @@
           "x-flatbuffer-type": "FrequencyRange"
         }
       },
-      "description": "Table representing a frequency band with a name and frequency range"
+      "additionalProperties": false
     },
     "IDM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Integrated Device Message",
       "properties": {
         "ID": {
           "type": "string",
@@ -3982,11 +3699,11 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Integrated Device Message"
+      "additionalProperties": false
     },
     "PLD": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Payload Information",
       "properties": {
         "PAYLOAD_DURATION": {
           "type": "string",
@@ -4020,11 +3737,11 @@
           "x-flatbuffer-type": "[IDM]"
         }
       },
-      "description": "Payload Information"
+      "additionalProperties": false
     },
     "LCC": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Legacy Country Code",
       "properties": {
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -4538,11 +4255,11 @@
           }
         }
       },
-      "description": "Legacy Country Code"
+      "additionalProperties": false
     },
     "CAT": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Catalog Entity Message",
       "properties": {
         "OBJECT_NAME": {
           "type": "string",
@@ -4556,6 +4273,8 @@
         },
         "NORAD_CAT_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "NORAD Catalog Number",
           "x-flatbuffer-type": "uint"
         },
@@ -4563,7 +4282,6 @@
           "$ref": "#/definitions/spaceObjectClass",
           "description": "Object type (Payload, Rocket body, Debris, Unknown)",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "UNKNOWN",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "PAYLOAD": {
@@ -4582,13 +4300,13 @@
               "value": 3,
               "description": "3"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OPS_STATUS_CODE": {
           "$ref": "#/definitions/operationalState",
           "description": "Operational Status Code",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "UNKNOWN",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "OPERATIONAL": {
@@ -4623,7 +4341,8 @@
               "value": 7,
               "description": "?"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -5258,7 +4977,6 @@
           "$ref": "#/definitions/massCategory",
           "description": "Mass type (Dry, Wet)",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "DRY",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "DRY": {
@@ -5267,7 +4985,8 @@
             "WET": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "DRY"
         },
         "PAYLOADS": {
           "type": "array",
@@ -5279,37 +4998,38 @@
         },
         "BUS_ID": {
           "type": "string",
-          "description": "NOT duplicated here. Empty when the bus is unknown.",
+          "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Catalog Entity Message"
+      "additionalProperties": false
     },
     "PPEPositionRecord": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
       "properties": {
         "EPOCH_MID": {
           "type": "string",
-          "description": "[EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]",
+          "description": "Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).\nTogether with EPOCH_HALF_SPAN, defines the time interval:\n[EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },
         "EPOCH_HALF_SPAN": {
           "type": "number",
-          "description": "The full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.",
+          "description": "Half-span of the validity window in seconds.\nThe full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID.",
           "x-flatbuffer-type": "double"
         },
         "NUM_COEFFICIENTS": {
           "type": "integer",
-          "description": "Typical values: 8-32 for high-fidelity ephemeris fits.",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of polynomial coefficients per axis.\nThe polynomial degree is (NUM_COEFFICIENTS - 1).\nTypical values: 8-32 for high-fidelity ephemeris fits.",
           "x-flatbuffer-type": "uint16"
         },
         "BASIS_TYPE": {
           "$ref": "#/definitions/polynomialBasisType",
           "description": "Polynomial basis type for interpreting the coefficient arrays.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "CHEBYSHEV",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "CHEBYSHEV": {
@@ -5332,17 +5052,75 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
+        },
+        "POS_COEFF_X": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position coefficients for X-axis (km).\nLength must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}."
+        },
+        "POS_COEFF_Y": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position coefficients for Y-axis (km).\nLength must equal NUM_COEFFICIENTS."
+        },
+        "POS_COEFF_Z": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position coefficients for Z-axis (km).\nLength must equal NUM_COEFFICIENTS."
+        },
+        "HAS_VELOCITY_COEFFICIENTS": {
+          "type": "boolean",
+          "description": "Whether explicit velocity coefficients are provided.\nIf false, velocity should be derived by differentiating the position polynomial."
+        },
+        "VEL_COEFF_X": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Velocity coefficients for X-axis (km/s). Optional.\nLength must equal NUM_COEFFICIENTS if present."
+        },
+        "VEL_COEFF_Y": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Velocity coefficients for Y-axis (km/s). Optional."
+        },
+        "VEL_COEFF_Z": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Velocity coefficients for Z-axis (km/s). Optional."
+        },
+        "MAX_POSITION_RESIDUAL": {
+          "type": "number",
+          "description": "Maximum position fit residual over this segment (km). Optional quality metric."
+        },
+        "RMS_POSITION_RESIDUAL": {
+          "type": "number",
+          "description": "RMS position fit residual over this segment (km). Optional quality metric."
         }
       },
-      "description": "A single time-segment record of polynomial coefficients for Cartesian position (and optionally velocity). Coefficients are stored per axis.  To evaluate position at time t within this record's validity window: 1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN where tau is in [-1, +1]. 2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using the coefficients for each axis.  Velocity coefficients, if present, follow the same evaluation procedure. If HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by analytically differentiating the position polynomial.",
       "required": [
-        "EPOCH_MID"
-      ]
+        "EPOCH_MID",
+        "POS_COEFF_X",
+        "POS_COEFF_Y",
+        "POS_COEFF_Z"
+      ],
+      "additionalProperties": false
     },
     "PPEOrbitalElementRecord": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "A single time-segment record of polynomial coefficients for classical orbital elements.\n\nThe six classical elements are:\n1. SMA or R_PERIAPSIS (size/shape) \u2014 see SIZE_SHAPE_TYPE\n2. Eccentricity (dimensionless)\n3. Inclination (degrees)\n4. Right Ascension of Ascending Node / RAAN (degrees)\n5. Argument of Periapsis (degrees)\n6. Anomaly (degrees) \u2014 see ANOMALY_TYPE\n\nEvaluation follows the same normalized-time procedure as PPEPositionRecord.",
       "properties": {
         "EPOCH_MID": {
           "type": "string",
@@ -5357,6 +5135,8 @@
         },
         "NUM_COEFFICIENTS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
           "description": "Number of polynomial coefficients per element.",
           "x-flatbuffer-type": "uint16"
         },
@@ -5364,7 +5144,6 @@
           "$ref": "#/definitions/polynomialBasisType",
           "description": "Polynomial basis type for interpreting the coefficient arrays.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "CHEBYSHEV",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "CHEBYSHEV": {
@@ -5387,13 +5166,13 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "SIZE_SHAPE_TYPE": {
           "$ref": "#/definitions/sizeShapeProfile",
           "description": "Parameterization of the first orbital element (SMA vs R_PERIAPSIS).",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "SMA",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "SMA": {
@@ -5404,13 +5183,13 @@
               "value": 1,
               "description": "Radius of periapsis (km). Preferred for hyperbolic orbits."
             }
-          }
+          },
+          "x-flatbuffer-default": "SMA"
         },
         "ANOMALY_TYPE": {
           "$ref": "#/definitions/ppeAnomalyType",
           "description": "Anomaly type for the sixth orbital element.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "TRUE_ANOMALY",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "TRUE_ANOMALY": {
@@ -5425,14 +5204,15 @@
               "value": 2,
               "description": "Eccentric anomaly (auxiliary angle in the Kepler equation)."
             }
-          }
+          },
+          "x-flatbuffer-default": "TRUE_ANOMALY"
         },
         "COEFF_SIZE_SHAPE": {
           "type": "array",
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for SMA or radius of periapsis (km).\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
@@ -5441,7 +5221,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for eccentricity (dimensionless).\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
@@ -5450,7 +5230,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for inclination (degrees).\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
@@ -5459,7 +5239,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for RAAN (degrees).\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
@@ -5468,7 +5248,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for argument of periapsis (degrees).\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
@@ -5477,13 +5257,13 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must equal NUM_COEFFICIENTS.",
+          "description": "Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.\nLength must equal NUM_COEFFICIENTS.",
           "x-flatbuffer-type": "[double]",
           "x-flatbuffer-required": true
         },
         "MAX_ELEMENT_RESIDUAL": {
           "type": "number",
-          "description": "Units depend on the element (km for SMA, degrees for angles, dimensionless for ecc).",
+          "description": "Maximum element fit residual over this segment. Optional quality metric.\nUnits depend on the element (km for SMA, degrees for angles, dimensionless for ecc).",
           "x-flatbuffer-type": "double"
         },
         "RMS_ELEMENT_RESIDUAL": {
@@ -5492,7 +5272,6 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single time-segment record of polynomial coefficients for classical orbital elements.  The six classical elements are: 1. SMA or R_PERIAPSIS (size/shape) \u2014 see SIZE_SHAPE_TYPE 2. Eccentricity (dimensionless) 3. Inclination (degrees) 4. Right Ascension of Ascending Node / RAAN (degrees) 5. Argument of Periapsis (degrees) 6. Anomaly (degrees) \u2014 see ANOMALY_TYPE  Evaluation follows the same normalized-time procedure as PPEPositionRecord.",
       "required": [
         "EPOCH_MID",
         "COEFF_SIZE_SHAPE",
@@ -5501,11 +5280,12 @@
         "COEFF_RAAN",
         "COEFF_ARG_PERIAPSIS",
         "COEFF_ANOMALY"
-      ]
+      ],
+      "additionalProperties": false
     },
     "PPE": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Polynomial Ephemeris \u2014 top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
       "properties": {
         "COMMENT": {
           "type": "array",
@@ -5622,9 +5402,8 @@
         },
         "DEFAULT_BASIS_TYPE": {
           "$ref": "#/definitions/polynomialBasisType",
-          "description": "Individual records may override this with their own BASIS_TYPE field.",
+          "description": "Default polynomial basis type for all records in this message.\nIndividual records may override this with their own BASIS_TYPE field.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "CHEBYSHEV",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "CHEBYSHEV": {
@@ -5647,14 +5426,15 @@
               "value": 4,
               "description": "Standard power series (monomial basis): c0 + c1*x + c2*x^2 + ..."
             }
-          }
+          },
+          "x-flatbuffer-default": "CHEBYSHEV"
         },
         "POSITION_RECORDS": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/PPEPositionRecord"
           },
-          "description": "Each record covers a time segment; together they span [START_TIME, STOP_TIME].",
+          "description": "Array of position polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME].",
           "x-flatbuffer-type": "[PPEPositionRecord]"
         },
         "ORBITAL_ELEMENT_RECORDS": {
@@ -5662,7 +5442,7 @@
           "items": {
             "$ref": "#/definitions/PPEOrbitalElementRecord"
           },
-          "description": "Each record covers a time segment; together they span [START_TIME, STOP_TIME].",
+          "description": "Array of orbital element polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME].",
           "x-flatbuffer-type": "[PPEOrbitalElementRecord]"
         },
         "EPHEMERIS_SOURCE": {
@@ -5672,20 +5452,22 @@
         },
         "NOMINAL_SEGMENT_SPAN": {
           "type": "number",
-          "description": "Informational; actual spans are in individual records.",
+          "description": "Fit span in seconds used to generate each polynomial segment.\nInformational; actual spans are in individual records.",
           "x-flatbuffer-type": "double"
         },
         "NOMINAL_NUM_COEFFICIENTS": {
           "type": "integer",
-          "description": "Informational; actual counts are in individual records.",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records.",
           "x-flatbuffer-type": "uint16"
         }
       },
-      "description": "Polynomial Ephemeris \u2014 top-level message containing metadata and one or more polynomial coefficient records for a single space object.  A PPE message may contain position records, orbital element records, or both. Records should be ordered chronologically by EPOCH_MID and should collectively cover the time span [START_TIME, STOP_TIME] without gaps."
+      "additionalProperties": false
     },
     "ephemerisDataLine": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -5738,11 +5520,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single ephemeris data line (for non-uniform time steps only) Use this format when time intervals between states are irregular. For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+      "additionalProperties": false
     },
     "covarianceMatrixLine": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Position/Velocity Covariance Matrix Line",
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -5855,11 +5637,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Position/Velocity Covariance Matrix Line"
+      "additionalProperties": false
     },
     "ephemerisDataBlock": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "OEM Ephemeris Data Block",
       "properties": {
         "COMMENT": {
           "type": "string",
@@ -5993,22 +5775,26 @@
         },
         "INTERPOLATION": {
           "type": "string",
-          "description": "discrete state vectors.",
+          "description": "Recommended interpolation method for ephemeris data.\nSupported methods: Hermite, Linear, Lagrange, Chebyshev.\nWhen set to \"Chebyshev\", parsers should use POLYNOMIAL_POSITION_RECORDS\nfor high-fidelity polynomial interpolation instead of interpolating across\ndiscrete state vectors.",
           "x-flatbuffer-type": "string"
         },
         "INTERPOLATION_DEGREE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Recommended interpolation degree for ephemeris data",
           "x-flatbuffer-type": "uint"
         },
         "STEP_SIZE": {
           "type": "number",
-          "description": "If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
+          "description": "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
           "x-flatbuffer-type": "double"
         },
         "STATE_VECTOR_SIZE": {
           "type": "integer",
-          "description": "Only used when STEP_SIZE > 0. Default is 6.",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6.",
           "x-flatbuffer-type": "uint8",
           "x-flatbuffer-default": "6"
         },
@@ -6017,7 +5803,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
+          "description": "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s\u00b2\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
           "x-flatbuffer-type": "[double]"
         },
         "EPHEMERIS_DATA_LINES": {
@@ -6025,7 +5811,7 @@
           "items": {
             "$ref": "#/definitions/ephemerisDataLine"
           },
-          "description": "Each line contains its own EPOCH timestamp.",
+          "description": "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp.",
           "x-flatbuffer-type": "[ephemerisDataLine]"
         },
         "COVARIANCE_MATRIX_LINES": {
@@ -6041,19 +5827,19 @@
           "items": {
             "$ref": "#/definitions/PPEPositionRecord"
           },
-          "description": "See PPE schema for record structure and evaluation procedure.",
+          "description": "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure.",
           "x-flatbuffer-type": "[PPEPositionRecord]"
         }
       },
-      "description": "OEM Ephemeris Data Block"
+      "additionalProperties": false
     },
     "OEM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Orbit Ephemeris Message",
       "properties": {
         "CLASSIFICATION": {
           "type": "string",
-          "description": "Classification marking of the data in IC/CAPCO Portion-marked format.",
+          "description": "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format.",
           "x-flatbuffer-type": "string"
         },
         "CCSDS_OEM_VERS": {
@@ -6080,11 +5866,10 @@
           "x-flatbuffer-type": "[ephemerisDataBlock]"
         }
       },
-      "description": "Orbit Ephemeris Message"
+      "additionalProperties": false
     },
     "Header": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "CCSDS_OCM_VERS": {
           "type": "string",
@@ -6119,11 +5904,11 @@
           "description": "Free-text field containing an ID that uniquely identifies a message from this originator.",
           "x-flatbuffer-type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "Metadata": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "COMMENT": {
           "type": "array",
@@ -6377,11 +6162,11 @@
           "description": "Source and version of celestial body ephemeris data used.",
           "x-flatbuffer-type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "StateVector": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -6433,11 +6218,11 @@
           "description": "Z component of acceleration.",
           "x-flatbuffer-type": "double"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "PhysicalProperties": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "COMMENT": {
           "type": "array",
@@ -6547,11 +6332,11 @@
           "description": "Uncertainty in the solar radiation pressure coefficient.",
           "x-flatbuffer-type": "double"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "Perturbations": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "COMMENT": {
           "type": "array",
@@ -6573,11 +6358,15 @@
         },
         "GRAVITY_DEGREE": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Degree of the gravity model.",
           "x-flatbuffer-type": "int"
         },
         "GRAVITY_ORDER": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Order of the gravity model.",
           "x-flatbuffer-type": "int"
         },
@@ -6654,11 +6443,11 @@
           "description": "Fixed mean F10.7 solar flux value used.",
           "x-flatbuffer-type": "double"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "Maneuver": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "MAN_ID": {
           "type": "string",
@@ -6734,11 +6523,11 @@
           "description": "Comments related to the maneuver.",
           "x-flatbuffer-type": "[string]"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "OrbitDetermination": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "OD_ID": {
           "type": "string",
@@ -6795,11 +6584,15 @@
         },
         "OD_OBSERVATIONS_USED": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Number of observations used.",
           "x-flatbuffer-type": "int"
         },
         "OD_TRACKS_USED": {
           "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
           "description": "Number of tracks used.",
           "x-flatbuffer-type": "int"
         },
@@ -6877,24 +6670,24 @@
           "items": {
             "type": "number"
           },
-          "description": "since 1970-01-01T00:00:00 UTC].",
+          "description": "Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds\nsince 1970-01-01T00:00:00 UTC].",
           "x-flatbuffer-type": "[double]"
         },
         "OD_BATCH_BASELINE_ID": {
           "type": "string",
-          "description": "is compared against (empty for batch solutions).",
+          "description": "OD_ID of the batch baseline solution a filtered solution derives from and\nis compared against (empty for batch solutions).",
           "x-flatbuffer-type": "string"
         },
         "OD_BATCH_BASELINE_RMS": {
           "type": "number",
-          "description": "comparison.",
+          "description": "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison.",
           "x-flatbuffer-type": "double"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "UserDefinedParameters": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "PARAM_NAME": {
           "type": "string",
@@ -6906,11 +6699,12 @@
           "description": "Value of the user-defined parameter.",
           "x-flatbuffer-type": "string"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "OCM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Orbit Comprehensive Message",
       "properties": {
         "HEADER": {
           "$ref": "#/definitions/Header",
@@ -6924,9 +6718,8 @@
         },
         "TRAJ_TYPE": {
           "$ref": "#/definitions/trajectoryType",
-          "description": "For POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.",
+          "description": "Trajectory state representation type.\nDetermines how orbit state data is parameterized in this message.\nFor CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.\nFor POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "CARTESIAN_PV",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "CARTESIAN_PV": {
@@ -6953,11 +6746,12 @@
               "value": 5,
               "description": "Lagrange interpolating polynomial representation."
             }
-          }
+          },
+          "x-flatbuffer-default": "CARTESIAN_PV"
         },
         "TRAJ_TYPE_DESCRIPTION": {
           "type": "string",
-          "description": "(e.g., \"PROPAGATED\", \"ESTIMATED\", \"FILTERED\").",
+          "description": "Legacy trajectory type string for backward compatibility and extended types\n(e.g., \"PROPAGATED\", \"ESTIMATED\", \"FILTERED\").",
           "x-flatbuffer-type": "string"
         },
         "STATE_STEP_SIZE": {
@@ -6967,7 +6761,9 @@
         },
         "STATE_VECTOR_SIZE": {
           "type": "integer",
-          "description": "9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)",
           "x-flatbuffer-type": "uint8",
           "x-flatbuffer-default": "6"
         },
@@ -6976,7 +6772,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Length must be divisible by STATE_VECTOR_SIZE.",
+          "description": "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction: epoch[i] = METADATA.START_TIME + (i * STATE_STEP_SIZE)\nLength must be divisible by STATE_VECTOR_SIZE.",
           "x-flatbuffer-type": "[double]"
         },
         "COVARIANCE_DATA": {
@@ -6984,7 +6780,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Time alignment matches STATE_DATA epochs.",
+          "description": "Covariance data as flat array (21 elements per epoch for 6x6 lower triangular).\nTime alignment matches STATE_DATA epochs.",
           "x-flatbuffer-type": "[double]"
         },
         "POLYNOMIAL_POSITION_RECORDS": {
@@ -6992,7 +6788,7 @@
           "items": {
             "$ref": "#/definitions/PPEPositionRecord"
           },
-          "description": "See PPE schema for record structure and evaluation procedure.",
+          "description": "Polynomial position records.\nUsed when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment\nwith polynomial coefficients for X, Y, Z position (and optionally velocity).\nSee PPE schema for record structure and evaluation procedure.",
           "x-flatbuffer-type": "[PPEPositionRecord]"
         },
         "POLYNOMIAL_OE_RECORDS": {
@@ -7000,7 +6796,7 @@
           "items": {
             "$ref": "#/definitions/PPEOrbitalElementRecord"
           },
-          "description": "See PPE schema for record structure and evaluation procedure.",
+          "description": "Polynomial orbital element records.\nUsed when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment\nwith polynomial coefficients for classical orbital elements.\nSee PPE schema for record structure and evaluation procedure.",
           "x-flatbuffer-type": "[PPEOrbitalElementRecord]"
         },
         "PHYSICAL_PROPERTIES": {
@@ -7035,11 +6831,11 @@
           "x-flatbuffer-type": "[UserDefinedParameters]"
         }
       },
-      "description": "Orbit Comprehensive Message"
+      "additionalProperties": false
     },
     "HFC": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Hypersonic Flight Conditions",
       "properties": {
         "MESSAGE_ID": {
           "type": "string",
@@ -7172,6 +6968,8 @@
         },
         "STATE_VECTOR_SIZE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of position/velocity components per state sample.",
           "x-flatbuffer-type": "uint",
           "x-flatbuffer-default": "6"
@@ -7383,11 +7181,317 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Hypersonic Flight Conditions"
+      "additionalProperties": false
+    },
+    "reentryStateVector": {
+      "type": "object",
+      "description": "Reentry State Vector",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "description": "Position X in km",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Position Y in km",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Position Z in km",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DOT": {
+          "type": "number",
+          "description": "Velocity X in km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DOT": {
+          "type": "number",
+          "description": "Velocity Y in km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DOT": {
+          "type": "number",
+          "description": "Velocity Z in km/s",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reentryImpact": {
+      "type": "object",
+      "description": "Reentry Ground Impact Prediction",
+      "properties": {
+        "IMPACT_EPOCH": {
+          "type": "string",
+          "description": "Predicted impact epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_UNCERTAINTY": {
+          "type": "number",
+          "description": "Epoch uncertainty window in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Impact latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Impact longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALONG_TRACK_UNC": {
+          "type": "number",
+          "description": "Along-track uncertainty in km",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_UNC": {
+          "type": "number",
+          "description": "Cross-track uncertainty in km",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACT_PROBABILITY": {
+          "type": "number",
+          "description": "Impact probability (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "survivingDebris": {
+      "type": "object",
+      "description": "Surviving Debris Prediction",
+      "properties": {
+        "FRAGMENT_ID": {
+          "type": "string",
+          "description": "Fragment identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "MATERIAL": {
+          "type": "string",
+          "description": "Material type",
+          "x-flatbuffer-type": "string"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Fragment mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "CASUALTY_AREA": {
+          "type": "number",
+          "description": "Casualty area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "SURVIVAL_PROBABILITY": {
+          "type": "number",
+          "description": "Survival probability (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RDM": {
+      "type": "object",
+      "description": "Reentry Data Message",
+      "properties": {
+        "CCSDS_RDM_VERS": {
+          "type": "string",
+          "description": "CCSDS RDM version",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Message creation date (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Creating organization",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Object name",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_TYPE": {
+          "type": "string",
+          "description": "Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)",
+          "x-flatbuffer-type": "string"
+        },
+        "DISPOSITION": {
+          "$ref": "#/definitions/reentryDisposition",
+          "description": "Reentry disposition",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CONTROLLED": {
+              "value": 0
+            },
+            "UNCONTROLLED": {
+              "value": 1
+            },
+            "SEMI_CONTROLLED": {
+              "value": 2
+            }
+          }
+        },
+        "REASON": {
+          "$ref": "#/definitions/reentryReason",
+          "description": "Reentry reason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NATURAL_DECAY": {
+              "value": 0
+            },
+            "COMMANDED_DEORBIT": {
+              "value": 1
+            },
+            "PROPULSION_FAILURE": {
+              "value": 2
+            },
+            "COLLISION": {
+              "value": 3
+            },
+            "FRAGMENTATION": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "REENTRY_EPOCH": {
+          "type": "string",
+          "description": "Predicted reentry epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "REENTRY_EPOCH_UNC": {
+          "type": "number",
+          "description": "Reentry epoch uncertainty window in hours",
+          "x-flatbuffer-type": "double"
+        },
+        "REENTRY_LATITUDE": {
+          "type": "number",
+          "description": "Reentry latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "REENTRY_LONGITUDE": {
+          "type": "number",
+          "description": "Reentry longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "REENTRY_ALTITUDE": {
+          "type": "number",
+          "description": "Reentry altitude in km",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system",
+          "x-flatbuffer-type": "string"
+        },
+        "PREV_PREDICTION_EPOCH": {
+          "type": "string",
+          "description": "Previous predicted reentry epoch for comparison (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "BALLISTIC_COEFF": {
+          "type": "number",
+          "description": "Ballistic coefficient in kg/m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Object mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_AREA": {
+          "type": "number",
+          "description": "Solar radiation pressure area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_AREA": {
+          "type": "number",
+          "description": "Drag area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "INITIAL_STATE": {
+          "$ref": "#/definitions/reentryStateVector",
+          "description": "Initial state vector",
+          "x-flatbuffer-type": "reentryStateVector"
+        },
+        "IMPACT_PREDICTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reentryImpact"
+          },
+          "description": "Ground impact predictions",
+          "x-flatbuffer-type": "[reentryImpact]"
+        },
+        "SURVIVING_DEBRIS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/survivingDebris"
+          },
+          "description": "Predicted surviving debris",
+          "x-flatbuffer-type": "[survivingDebris]"
+        },
+        "CASUALTY_EXPECTATION": {
+          "type": "number",
+          "description": "Casualty expectation",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_FRAGMENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of breakup fragments predicted",
+          "x-flatbuffer-type": "uint"
+        },
+        "SURVIVING_MASS": {
+          "type": "number",
+          "description": "Total surviving mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Additional comments",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
     },
     "remFragmentEvaluation": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Reentry fragment evaluation.",
       "properties": {
         "FRAGMENT_ID": {
           "type": "string",
@@ -7455,11 +7559,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Reentry fragment evaluation."
+      "additionalProperties": false
     },
     "REM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Reentry Evaluation Message",
       "properties": {
         "MESSAGE_ID": {
           "type": "string",
@@ -7488,6 +7592,8 @@
         },
         "NORAD_CAT_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Satellite catalog number.",
           "x-flatbuffer-type": "uint"
         },
@@ -7695,6 +7801,8 @@
         },
         "SURVIVING_FRAGMENT_COUNT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of predicted surviving fragments.",
           "x-flatbuffer-type": "uint"
         },
@@ -7745,7 +7853,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Reentry Evaluation Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/REM",

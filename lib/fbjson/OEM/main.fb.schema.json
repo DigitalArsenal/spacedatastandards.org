@@ -5028,7 +5028,7 @@
     },
     "ephemerisDataLine": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "A single ephemeris data line (for non-uniform time steps only)\nUse this format when time intervals between states are irregular.\nFor uniform time steps, use the compact EPHEMERIS_DATA array instead.",
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -5081,11 +5081,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "A single ephemeris data line (for non-uniform time steps only) Use this format when time intervals between states are irregular. For uniform time steps, use the compact EPHEMERIS_DATA array instead."
+      "additionalProperties": false
     },
     "covarianceMatrixLine": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Position/Velocity Covariance Matrix Line",
       "properties": {
         "EPOCH": {
           "type": "string",
@@ -5198,11 +5198,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Position/Velocity Covariance Matrix Line"
+      "additionalProperties": false
     },
     "ephemerisDataBlock": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "OEM Ephemeris Data Block",
       "properties": {
         "COMMENT": {
           "type": "string",
@@ -5336,22 +5336,26 @@
         },
         "INTERPOLATION": {
           "type": "string",
-          "description": "discrete state vectors.",
+          "description": "Recommended interpolation method for ephemeris data.\nSupported methods: Hermite, Linear, Lagrange, Chebyshev.\nWhen set to \"Chebyshev\", parsers should use POLYNOMIAL_POSITION_RECORDS\nfor high-fidelity polynomial interpolation instead of interpolating across\ndiscrete state vectors.",
           "x-flatbuffer-type": "string"
         },
         "INTERPOLATION_DEGREE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Recommended interpolation degree for ephemeris data",
           "x-flatbuffer-type": "uint"
         },
         "STEP_SIZE": {
           "type": "number",
-          "description": "If 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
+          "description": "Time interval between ephemeris states in seconds.\nIf > 0: Use compact EPHEMERIS_DATA array (times are implicit).\nIf 0 or omitted: Use EPHEMERIS_DATA_LINES with explicit epochs.",
           "x-flatbuffer-type": "double"
         },
         "STATE_VECTOR_SIZE": {
           "type": "integer",
-          "description": "Only used when STEP_SIZE > 0. Default is 6.",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of components per state vector in EPHEMERIS_DATA array.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\nOnly used when STEP_SIZE > 0. Default is 6.",
           "x-flatbuffer-type": "uint8",
           "x-flatbuffer-default": "6"
         },
@@ -5360,7 +5364,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Number of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
+          "description": "Compact ephemeris data as row-major array of doubles.\nOnly used when STEP_SIZE > 0.\nLayout: [x0,y0,z0,xdot0,ydot0,zdot0, x1,y1,z1,xdot1,ydot1,zdot1, ...]\nUnits: position in km, velocity in km/s, acceleration in km/s\u00b2\nLength must be divisible by STATE_VECTOR_SIZE.\nNumber of states = length(EPHEMERIS_DATA) / STATE_VECTOR_SIZE",
           "x-flatbuffer-type": "[double]"
         },
         "EPHEMERIS_DATA_LINES": {
@@ -5368,7 +5372,7 @@
           "items": {
             "$ref": "#/definitions/ephemerisDataLine"
           },
-          "description": "Each line contains its own EPOCH timestamp.",
+          "description": "Array of ephemeris data lines with explicit epochs.\nOnly used when STEP_SIZE == 0 or omitted (non-uniform time steps).\nEach line contains its own EPOCH timestamp.",
           "x-flatbuffer-type": "[ephemerisDataLine]"
         },
         "COVARIANCE_MATRIX_LINES": {
@@ -5384,19 +5388,19 @@
           "items": {
             "$ref": "#/definitions/PPEPositionRecord"
           },
-          "description": "See PPE schema for record structure and evaluation procedure.",
+          "description": "Optional polynomial position records for high-fidelity interpolation.\nUsed when INTERPOLATION is \"Chebyshev\". Each record covers a time segment with\npolynomial coefficients for continuous position (and optionally velocity) evaluation.\nSee PPE schema for record structure and evaluation procedure.",
           "x-flatbuffer-type": "[PPEPositionRecord]"
         }
       },
-      "description": "OEM Ephemeris Data Block"
+      "additionalProperties": false
     },
     "OEM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Orbit Ephemeris Message",
       "properties": {
         "CLASSIFICATION": {
           "type": "string",
-          "description": "Classification marking of the data in IC/CAPCO Portion-marked format.",
+          "description": "OEM Header\nClassification marking of the data in IC/CAPCO Portion-marked format.",
           "x-flatbuffer-type": "string"
         },
         "CCSDS_OEM_VERS": {
@@ -5423,7 +5427,7 @@
           "x-flatbuffer-type": "[ephemerisDataBlock]"
         }
       },
-      "description": "Orbit Ephemeris Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/OEM",

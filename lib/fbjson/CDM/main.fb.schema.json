@@ -1,854 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "CelestialFrame": {
-      "type": "string",
-      "enum": [
-        "GCRF",
-        "ICRF",
-        "J2000",
-        "J2000A",
-        "EME2000",
-        "TEMEOFDATE",
-        "GTOD",
-        "CIRS",
-        "MOD_EARTH",
-        "MOD_CB",
-        "MOD_MOON",
-        "TOD_EARTH",
-        "TOD_CB",
-        "TOD_MOON",
-        "TOE_EARTH",
-        "TOE_CB",
-        "TOE_MOON",
-        "ITRF2000",
-        "ITRF93",
-        "ITRF97",
-        "EFG",
-        "FIXED_CB",
-        "FIXED_EARTH",
-        "WGS84",
-        "DTRFYYYY",
-        "ALIGN_EARTH",
-        "ALIGN_CB",
-        "B1950"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "GCRF": {
-          "value": 0,
-          "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
-        },
-        "ICRF": {
-          "value": 1,
-          "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
-        },
-        "J2000": {
-          "value": 2,
-          "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
-        },
-        "J2000A": {
-          "value": 3,
-          "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
-        },
-        "EME2000": {
-          "value": 4,
-          "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
-        },
-        "TEMEOFDATE": {
-          "value": 5,
-          "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
-        },
-        "GTOD": {
-          "value": 6,
-          "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
-        },
-        "CIRS": {
-          "value": 7,
-          "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
-        },
-        "MOD_EARTH": {
-          "value": 8,
-          "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
-        },
-        "MOD_CB": {
-          "value": 9,
-          "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
-        },
-        "MOD_MOON": {
-          "value": 10,
-          "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
-        },
-        "TOD_EARTH": {
-          "value": 11,
-          "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
-        },
-        "TOD_CB": {
-          "value": 12,
-          "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
-        },
-        "TOD_MOON": {
-          "value": 13,
-          "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
-        },
-        "TOE_EARTH": {
-          "value": 14,
-          "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
-        },
-        "TOE_CB": {
-          "value": 15,
-          "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
-        },
-        "TOE_MOON": {
-          "value": 16,
-          "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
-        },
-        "ITRF2000": {
-          "value": 17,
-          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
-        },
-        "ITRF93": {
-          "value": 18,
-          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
-        },
-        "ITRF97": {
-          "value": 19,
-          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
-        },
-        "EFG": {
-          "value": 20,
-          "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
-        },
-        "FIXED_CB": {
-          "value": 21,
-          "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
-        },
-        "FIXED_EARTH": {
-          "value": 22,
-          "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
-        },
-        "WGS84": {
-          "value": 23,
-          "description": "WGS84 Earth-fixed terrestrial system."
-        },
-        "DTRFYYYY": {
-          "value": 24,
-          "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
-        },
-        "ALIGN_EARTH": {
-          "value": 25,
-          "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
-        },
-        "ALIGN_CB": {
-          "value": 26,
-          "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
-        },
-        "B1950": {
-          "value": 27,
-          "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
-        }
-      }
-    },
-    "SpacecraftFrame": {
-      "type": "string",
-      "enum": [
-        "ACC_i",
-        "ACTUATOR_i",
-        "AST_i",
-        "CSS_i",
-        "DSS_i",
-        "ESA_i",
-        "GYRO_FRAME_i",
-        "IMU_FRAME_i",
-        "INSTRUMENT_i",
-        "MTA_i",
-        "RW_i",
-        "SA_i",
-        "SC_BODY_i",
-        "SENSOR_i",
-        "STARTRACKER_i",
-        "TAM_i"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "ACC_i": {
-          "value": 0,
-          "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
-        },
-        "ACTUATOR_i": {
-          "value": 1,
-          "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
-        },
-        "AST_i": {
-          "value": 2,
-          "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
-        },
-        "CSS_i": {
-          "value": 3,
-          "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
-        },
-        "DSS_i": {
-          "value": 4,
-          "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
-        },
-        "ESA_i": {
-          "value": 5,
-          "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
-        },
-        "GYRO_FRAME_i": {
-          "value": 6,
-          "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
-        },
-        "IMU_FRAME_i": {
-          "value": 7,
-          "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
-        },
-        "INSTRUMENT_i": {
-          "value": 8,
-          "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
-        },
-        "MTA_i": {
-          "value": 9,
-          "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
-        },
-        "RW_i": {
-          "value": 10,
-          "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
-        },
-        "SA_i": {
-          "value": 11,
-          "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
-        },
-        "SC_BODY_i": {
-          "value": 12,
-          "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
-        },
-        "SENSOR_i": {
-          "value": 13,
-          "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
-        },
-        "STARTRACKER_i": {
-          "value": 14,
-          "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
-        },
-        "TAM_i": {
-          "value": 15,
-          "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
-        }
-      }
-    },
-    "OrbitFrame": {
-      "type": "string",
-      "enum": [
-        "EQW_INERTIAL",
-        "LVLH_INERTIAL",
-        "LVLH_ROTATING",
-        "NSW_INERTIAL",
-        "NSW_ROTATING",
-        "NTW_INERTIAL",
-        "NTW_ROTATING",
-        "PQW_INERTIAL",
-        "RSW_INERTIAL",
-        "RSW_ROTATING",
-        "SEZ_INERTIAL",
-        "SEZ_ROTATING",
-        "TNW_INERTIAL",
-        "TNW_ROTATING",
-        "VNC_INERTIAL",
-        "VNC_ROTATING"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "EQW_INERTIAL": {
-          "value": 0,
-          "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
-        },
-        "LVLH_INERTIAL": {
-          "value": 1,
-          "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
-        },
-        "LVLH_ROTATING": {
-          "value": 2,
-          "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
-        },
-        "NSW_INERTIAL": {
-          "value": 3,
-          "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
-        },
-        "NSW_ROTATING": {
-          "value": 4,
-          "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
-        },
-        "NTW_INERTIAL": {
-          "value": 5,
-          "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
-        },
-        "NTW_ROTATING": {
-          "value": 6,
-          "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
-        },
-        "PQW_INERTIAL": {
-          "value": 7,
-          "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
-        },
-        "RSW_INERTIAL": {
-          "value": 8,
-          "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
-        },
-        "RSW_ROTATING": {
-          "value": 9,
-          "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
-        },
-        "SEZ_INERTIAL": {
-          "value": 10,
-          "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
-        },
-        "SEZ_ROTATING": {
-          "value": 11,
-          "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
-        },
-        "TNW_INERTIAL": {
-          "value": 12,
-          "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
-        },
-        "TNW_ROTATING": {
-          "value": 13,
-          "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
-        },
-        "VNC_INERTIAL": {
-          "value": 14,
-          "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
-        },
-        "VNC_ROTATING": {
-          "value": 15,
-          "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
-        }
-      }
-    },
-    "CustomFrame": {
-      "type": "string",
-      "enum": [
-        "ECEF",
-        "TEME",
-        "TEMEOFEPOCH",
-        "ENU",
-        "NED",
-        "NEU",
-        "RIC",
-        "RTN",
-        "TVN",
-        "VVLH",
-        "QSW",
-        "LTP",
-        "LVLH",
-        "PNE",
-        "BRF",
-        "RSW",
-        "TNW",
-        "UVW"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "ECEF": {
-          "value": 0,
-          "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
-        },
-        "TEME": {
-          "value": 1,
-          "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
-        },
-        "TEMEOFEPOCH": {
-          "value": 2,
-          "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
-        },
-        "ENU": {
-          "value": 3,
-          "description": "East-North-Up: Local tangent plane for surface points."
-        },
-        "NED": {
-          "value": 4,
-          "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
-        },
-        "NEU": {
-          "value": 5,
-          "description": "North-East-Up: Local tangent plane variant with Up positive."
-        },
-        "RIC": {
-          "value": 6,
-          "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
-        },
-        "RTN": {
-          "value": 7,
-          "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
-        },
-        "TVN": {
-          "value": 8,
-          "description": "Transverse-Velocity-Normal: Alternative orbit frame."
-        },
-        "VVLH": {
-          "value": 9,
-          "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
-        },
-        "QSW": {
-          "value": 10,
-          "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
-        },
-        "LTP": {
-          "value": 11,
-          "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
-        },
-        "LVLH": {
-          "value": 12,
-          "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
-        },
-        "PNE": {
-          "value": 13,
-          "description": "Polar-North-East: Surface coordinate frame."
-        },
-        "BRF": {
-          "value": 14,
-          "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
-        },
-        "RSW": {
-          "value": 15,
-          "description": "Radial-Along-track-Cross-track: Same as RSW."
-        },
-        "TNW": {
-          "value": 16,
-          "description": "Tangential-Normal-Cross-track: Same as TNW."
-        },
-        "UVW": {
-          "value": 17,
-          "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
-        }
-      }
-    },
-    "RFMUnion": {
-      "type": "string",
-      "enum": [
-        "NONE",
-        "CelestialFrameWrapper",
-        "SpacecraftFrameWrapper",
-        "OrbitFrameWrapper",
-        "CustomFrameWrapper"
-      ]
-    },
-    "CelestialFrameWrapper": {
-      "type": "object",
-      "properties": {
-        "frame": {
-          "$ref": "#/definitions/CelestialFrame",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "GCRF": {
-              "value": 0,
-              "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
-            },
-            "ICRF": {
-              "value": 1,
-              "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
-            },
-            "J2000": {
-              "value": 2,
-              "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
-            },
-            "J2000A": {
-              "value": 3,
-              "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
-            },
-            "EME2000": {
-              "value": 4,
-              "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
-            },
-            "TEMEOFDATE": {
-              "value": 5,
-              "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
-            },
-            "GTOD": {
-              "value": 6,
-              "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
-            },
-            "CIRS": {
-              "value": 7,
-              "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
-            },
-            "MOD_EARTH": {
-              "value": 8,
-              "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
-            },
-            "MOD_CB": {
-              "value": 9,
-              "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
-            },
-            "MOD_MOON": {
-              "value": 10,
-              "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
-            },
-            "TOD_EARTH": {
-              "value": 11,
-              "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
-            },
-            "TOD_CB": {
-              "value": 12,
-              "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
-            },
-            "TOD_MOON": {
-              "value": 13,
-              "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
-            },
-            "TOE_EARTH": {
-              "value": 14,
-              "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
-            },
-            "TOE_CB": {
-              "value": 15,
-              "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
-            },
-            "TOE_MOON": {
-              "value": 16,
-              "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
-            },
-            "ITRF2000": {
-              "value": 17,
-              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
-            },
-            "ITRF93": {
-              "value": 18,
-              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
-            },
-            "ITRF97": {
-              "value": 19,
-              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
-            },
-            "EFG": {
-              "value": 20,
-              "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
-            },
-            "FIXED_CB": {
-              "value": 21,
-              "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
-            },
-            "FIXED_EARTH": {
-              "value": 22,
-              "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
-            },
-            "WGS84": {
-              "value": 23,
-              "description": "WGS84 Earth-fixed terrestrial system."
-            },
-            "DTRFYYYY": {
-              "value": 24,
-              "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
-            },
-            "ALIGN_EARTH": {
-              "value": 25,
-              "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
-            },
-            "ALIGN_CB": {
-              "value": 26,
-              "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
-            },
-            "B1950": {
-              "value": 27,
-              "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "SpacecraftFrameWrapper": {
-      "type": "object",
-      "properties": {
-        "frame": {
-          "$ref": "#/definitions/SpacecraftFrame",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "ACC_i": {
-              "value": 0,
-              "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
-            },
-            "ACTUATOR_i": {
-              "value": 1,
-              "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
-            },
-            "AST_i": {
-              "value": 2,
-              "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
-            },
-            "CSS_i": {
-              "value": 3,
-              "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
-            },
-            "DSS_i": {
-              "value": 4,
-              "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
-            },
-            "ESA_i": {
-              "value": 5,
-              "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
-            },
-            "GYRO_FRAME_i": {
-              "value": 6,
-              "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
-            },
-            "IMU_FRAME_i": {
-              "value": 7,
-              "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
-            },
-            "INSTRUMENT_i": {
-              "value": 8,
-              "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
-            },
-            "MTA_i": {
-              "value": 9,
-              "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
-            },
-            "RW_i": {
-              "value": 10,
-              "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
-            },
-            "SA_i": {
-              "value": 11,
-              "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
-            },
-            "SC_BODY_i": {
-              "value": 12,
-              "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
-            },
-            "SENSOR_i": {
-              "value": 13,
-              "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
-            },
-            "STARTRACKER_i": {
-              "value": 14,
-              "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
-            },
-            "TAM_i": {
-              "value": 15,
-              "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "OrbitFrameWrapper": {
-      "type": "object",
-      "properties": {
-        "frame": {
-          "$ref": "#/definitions/OrbitFrame",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "EQW_INERTIAL": {
-              "value": 0,
-              "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
-            },
-            "LVLH_INERTIAL": {
-              "value": 1,
-              "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
-            },
-            "LVLH_ROTATING": {
-              "value": 2,
-              "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
-            },
-            "NSW_INERTIAL": {
-              "value": 3,
-              "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
-            },
-            "NSW_ROTATING": {
-              "value": 4,
-              "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
-            },
-            "NTW_INERTIAL": {
-              "value": 5,
-              "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
-            },
-            "NTW_ROTATING": {
-              "value": 6,
-              "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
-            },
-            "PQW_INERTIAL": {
-              "value": 7,
-              "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
-            },
-            "RSW_INERTIAL": {
-              "value": 8,
-              "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
-            },
-            "RSW_ROTATING": {
-              "value": 9,
-              "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
-            },
-            "SEZ_INERTIAL": {
-              "value": 10,
-              "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
-            },
-            "SEZ_ROTATING": {
-              "value": 11,
-              "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
-            },
-            "TNW_INERTIAL": {
-              "value": 12,
-              "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
-            },
-            "TNW_ROTATING": {
-              "value": 13,
-              "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
-            },
-            "VNC_INERTIAL": {
-              "value": 14,
-              "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
-            },
-            "VNC_ROTATING": {
-              "value": 15,
-              "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "CustomFrameWrapper": {
-      "type": "object",
-      "properties": {
-        "frame": {
-          "$ref": "#/definitions/CustomFrame",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "ECEF": {
-              "value": 0,
-              "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
-            },
-            "TEME": {
-              "value": 1,
-              "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
-            },
-            "TEMEOFEPOCH": {
-              "value": 2,
-              "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
-            },
-            "ENU": {
-              "value": 3,
-              "description": "East-North-Up: Local tangent plane for surface points."
-            },
-            "NED": {
-              "value": 4,
-              "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
-            },
-            "NEU": {
-              "value": 5,
-              "description": "North-East-Up: Local tangent plane variant with Up positive."
-            },
-            "RIC": {
-              "value": 6,
-              "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
-            },
-            "RTN": {
-              "value": 7,
-              "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
-            },
-            "TVN": {
-              "value": 8,
-              "description": "Transverse-Velocity-Normal: Alternative orbit frame."
-            },
-            "VVLH": {
-              "value": 9,
-              "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
-            },
-            "QSW": {
-              "value": 10,
-              "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
-            },
-            "LTP": {
-              "value": 11,
-              "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
-            },
-            "LVLH": {
-              "value": 12,
-              "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
-            },
-            "PNE": {
-              "value": 13,
-              "description": "Polar-North-East: Surface coordinate frame."
-            },
-            "BRF": {
-              "value": 14,
-              "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
-            },
-            "RSW": {
-              "value": 15,
-              "description": "Radial-Along-track-Cross-track: Same as RSW."
-            },
-            "TNW": {
-              "value": 16,
-              "description": "Tangential-Normal-Cross-track: Same as TNW."
-            },
-            "UVW": {
-              "value": 17,
-              "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "RFM": {
-      "type": "object",
-      "description": "Reference Frame Message",
-      "properties": {
-        "REFERENCE_FRAME_type": {
-          "$ref": "#/definitions/RFMUnion"
-        },
-        "REFERENCE_FRAME": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CelestialFrameWrapper"
-            },
-            {
-              "$ref": "#/definitions/SpacecraftFrameWrapper"
-            },
-            {
-              "$ref": "#/definitions/OrbitFrameWrapper"
-            },
-            {
-              "$ref": "#/definitions/CustomFrameWrapper"
-            }
-          ],
-          "x-flatbuffer-type": "RFMUnion"
-        },
-        "INDEX": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        }
-      },
-      "additionalProperties": false
-    },
     "PolarizationType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "linear",
+        "circular",
+        "elliptical",
+        "unpolarized"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Different types of polarization in EMT",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "linear": {
           "value": 0
@@ -865,16 +27,15 @@
       }
     },
     "SimplePolarization": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal",
+        "leftHandCircular",
+        "rightHandCircular"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Simple polarization types",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "vertical": {
           "value": 0
@@ -891,16 +52,15 @@
       }
     },
     "DataMode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "EXERCISE",
+        "REAL",
+        "SIMULATED",
+        "TEST"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "description": "Enum for the mode of data (real, simulated, synthetic)",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "EXERCISE": {
           "value": 0,
@@ -921,57 +81,57 @@
       }
     },
     "DeviceType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "OPTICAL",
+        "INFRARED_SENSOR",
+        "ULTRAVIOLET_SENSOR",
+        "X_RAY_SENSOR",
+        "GAMMA_RAY_SENSOR",
+        "RADAR",
+        "PHASED_ARRAY_RADAR",
+        "SYNTHETIC_APERTURE_RADAR",
+        "BISTATIC_RADIO_TELESCOPE",
+        "RADIO_TELESCOPE",
+        "ATMOSPHERIC_SENSOR",
+        "SPACE_WEATHER_SENSOR",
+        "ENVIRONMENTAL_SENSOR",
+        "SEISMIC_SENSOR",
+        "GRAVIMETRIC_SENSOR",
+        "MAGNETIC_SENSOR",
+        "ELECTROMAGNETIC_SENSOR",
+        "THERMAL_SENSOR",
+        "CHEMICAL_SENSOR",
+        "BIOLOGICAL_SENSOR",
+        "RADIATION_SENSOR",
+        "PARTICLE_DETECTOR",
+        "LIDAR",
+        "SONAR",
+        "TELESCOPE",
+        "SPECTROSCOPIC_SENSOR",
+        "PHOTOMETRIC_SENSOR",
+        "POLARIMETRIC_SENSOR",
+        "INTERFEROMETRIC_SENSOR",
+        "MULTISPECTRAL_SENSOR",
+        "HYPERSPECTRAL_SENSOR",
+        "GPS_RECEIVER",
+        "RADIO_COMMUNICATIONS",
+        "LASER_COMMUNICATIONS",
+        "SATELLITE_COMMUNICATIONS",
+        "LASER_INSTRUMENT",
+        "RF_ANALYZER",
+        "IONOSPHERIC_SENSOR",
+        "LASER_IMAGING",
+        "OPTICAL_TELESCOPE",
+        "HIGH_RESOLUTION_OPTICAL",
+        "RADIO",
+        "MICROWAVE_TRANSMITTER",
+        "RF_MONITOR",
+        "HF_RADIO_COMMUNICATIONS"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45
-      ],
       "x-flatbuffer-enum-values": {
         "UNKNOWN": {
           "value": 0,
@@ -1160,137 +320,137 @@
       }
     },
     "legacyCountryCode": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "AB",
+        "ABS",
+        "AC",
+        "ALG",
+        "ANG",
+        "ARGN",
+        "ARM",
+        "ASRA",
+        "AUS",
+        "AZER",
+        "BEL",
+        "BELA",
+        "BERM",
+        "BGD",
+        "BHUT",
+        "BOL",
+        "BRAZ",
+        "BUL",
+        "CA",
+        "CHBZ",
+        "CHTU",
+        "CHLE",
+        "CIS",
+        "COL",
+        "CRI",
+        "CZCH",
+        "DEN",
+        "DJI",
+        "ECU",
+        "EGYP",
+        "ESA",
+        "ESRO",
+        "EST",
+        "ETH",
+        "EUME",
+        "EUTE",
+        "FGER",
+        "FIN",
+        "FR",
+        "FRIT",
+        "GER",
+        "GHA",
+        "GLOB",
+        "GREC",
+        "GRSA",
+        "GUAT",
+        "HUN",
+        "IM",
+        "IND",
+        "INDO",
+        "IRAN",
+        "IRAQ",
+        "IRID",
+        "IRL",
+        "ISRA",
+        "ISRO",
+        "ISS",
+        "IT",
+        "ITSO",
+        "JPN",
+        "KAZ",
+        "KEN",
+        "LAOS",
+        "LKA",
+        "LTU",
+        "LUXE",
+        "MA",
+        "MALA",
+        "MCO",
+        "MDA",
+        "MEX",
+        "MMR",
+        "MNG",
+        "MUS",
+        "NATO",
+        "NETH",
+        "NICO",
+        "NIG",
+        "NKOR",
+        "NOR",
+        "NPL",
+        "NZ",
+        "O3B",
+        "ORB",
+        "PAKI",
+        "PERU",
+        "POL",
+        "POR",
+        "PRC",
+        "PRY",
+        "PRES",
+        "QAT",
+        "RASC",
+        "ROC",
+        "ROM",
+        "RP",
+        "RWA",
+        "SAFR",
+        "SAUD",
+        "SDN",
+        "SEAL",
+        "SES",
+        "SGJP",
+        "SING",
+        "SKOR",
+        "SPN",
+        "STCT",
+        "SVN",
+        "SWED",
+        "SWTZ",
+        "TBD",
+        "THAI",
+        "TMMC",
+        "TUN",
+        "TURK",
+        "UAE",
+        "UK",
+        "UKR",
+        "UNK",
+        "URY",
+        "US",
+        "USBZ",
+        "VAT",
+        "VENZ",
+        "VTNM",
+        "ZWE"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41,
-        42,
-        43,
-        44,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63,
-        64,
-        65,
-        66,
-        67,
-        68,
-        69,
-        70,
-        71,
-        72,
-        73,
-        74,
-        75,
-        76,
-        77,
-        78,
-        79,
-        80,
-        81,
-        82,
-        83,
-        84,
-        85,
-        86,
-        87,
-        88,
-        89,
-        90,
-        91,
-        92,
-        93,
-        94,
-        95,
-        96,
-        97,
-        98,
-        99,
-        100,
-        101,
-        102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        108,
-        109,
-        110,
-        111,
-        112,
-        113,
-        114,
-        115,
-        116,
-        117,
-        118,
-        119,
-        120,
-        121,
-        122,
-        123,
-        124,
-        125
-      ],
       "x-flatbuffer-enum-values": {
         "AB": {
           "value": 0,
@@ -1799,15 +959,15 @@
       }
     },
     "spaceObjectClass": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "PAYLOAD",
+        "ROCKET_BODY",
+        "DEBRIS",
+        "UNKNOWN"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "PAYLOAD": {
           "value": 0,
@@ -1828,19 +988,19 @@
       }
     },
     "operationalState": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "NONOPERATIONAL",
+        "PARTIALLY_OPERATIONAL",
+        "BACKUP_STANDBY",
+        "SPARE",
+        "EXTENDED_MISSION",
+        "DECAYED",
+        "UNKNOWN"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
-      ],
       "x-flatbuffer-enum-values": {
         "OPERATIONAL": {
           "value": 0,
@@ -1877,15 +1037,15 @@
       }
     },
     "dataAvailability": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "NO_CURRENT_ELEMENTS",
+        "NO_INITIAL_ELEMENTS",
+        "NO_ELEMENTS_AVAILABLE",
+        "OK"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3
-      ],
       "x-flatbuffer-enum-values": {
         "NO_CURRENT_ELEMENTS": {
           "value": 0,
@@ -1906,16 +1066,16 @@
       }
     },
     "orbitRegime": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "ORBIT",
+        "LANDING",
+        "IMPACT",
+        "DOCKED",
+        "ROUNDTRIP"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
       "x-flatbuffer-enum-values": {
         "ORBIT": {
           "value": 0,
@@ -1940,13 +1100,13 @@
       }
     },
     "massCategory": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "DRY",
+        "WET"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "DRY": {
           "value": 0
@@ -1957,13 +1117,13 @@
       }
     },
     "KeyType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "Signing",
+        "Encryption"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "Signing": {
           "value": 0
@@ -1974,13 +1134,13 @@
       }
     },
     "EntityType": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "User",
+        "Node"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "User": {
           "value": 0
@@ -1990,14 +1150,450 @@
         }
       }
     },
-    "screeningVolumeShape": {
-      "type": "integer",
+    "CelestialFrame": {
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+        },
+        "ICRF": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+        },
+        "J2000": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+        },
+        "J2000A": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+        },
+        "EME2000": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+        },
+        "TEMEOFDATE": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+        },
+        "GTOD": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+        },
+        "CIRS": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+        },
+        "MOD_EARTH": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+        },
+        "MOD_CB": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+        },
+        "MOD_MOON": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+        },
+        "TOD_EARTH": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+        },
+        "TOD_CB": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+        },
+        "TOD_MOON": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+        },
+        "TOE_EARTH": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+        },
+        "TOE_CB": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+        },
+        "TOE_MOON": {
+          "value": 16,
+          "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+        },
+        "ITRF2000": {
+          "value": 17,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+        },
+        "ITRF93": {
+          "value": 18,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+        },
+        "ITRF97": {
+          "value": 19,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+        },
+        "EFG": {
+          "value": 20,
+          "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+        },
+        "FIXED_CB": {
+          "value": 21,
+          "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+        },
+        "FIXED_EARTH": {
+          "value": 22,
+          "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+        },
+        "WGS84": {
+          "value": 23,
+          "description": "WGS84 Earth-fixed terrestrial system."
+        },
+        "DTRFYYYY": {
+          "value": 24,
+          "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+        },
+        "ALIGN_EARTH": {
+          "value": 25,
+          "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+        },
+        "ALIGN_CB": {
+          "value": 26,
+          "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+        },
+        "B1950": {
+          "value": 27,
+          "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+        }
+      }
+    },
+    "SpacecraftFrame": {
+      "type": "string",
       "enum": [
-        0,
-        1
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
       ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACC_i": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+        },
+        "ACTUATOR_i": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+        },
+        "AST_i": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+        },
+        "CSS_i": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+        },
+        "DSS_i": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+        },
+        "ESA_i": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+        },
+        "GYRO_FRAME_i": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+        },
+        "IMU_FRAME_i": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+        },
+        "INSTRUMENT_i": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+        },
+        "MTA_i": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+        },
+        "RW_i": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+        },
+        "SA_i": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+        },
+        "SC_BODY_i": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+        },
+        "SENSOR_i": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+        },
+        "STARTRACKER_i": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+        },
+        "TAM_i": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+        }
+      }
+    },
+    "OrbitFrame": {
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EQW_INERTIAL": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+        },
+        "LVLH_INERTIAL": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+        },
+        "LVLH_ROTATING": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+        },
+        "NSW_INERTIAL": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+        },
+        "NSW_ROTATING": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+        },
+        "NTW_INERTIAL": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+        },
+        "NTW_ROTATING": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+        },
+        "PQW_INERTIAL": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+        },
+        "RSW_INERTIAL": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+        },
+        "RSW_ROTATING": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+        },
+        "SEZ_INERTIAL": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+        },
+        "SEZ_ROTATING": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+        },
+        "TNW_INERTIAL": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+        },
+        "TNW_ROTATING": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+        },
+        "VNC_INERTIAL": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+        },
+        "VNC_ROTATING": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+        }
+      }
+    },
+    "CustomFrame": {
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECEF": {
+          "value": 0,
+          "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+        },
+        "TEME": {
+          "value": 1,
+          "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+        },
+        "TEMEOFEPOCH": {
+          "value": 2,
+          "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+        },
+        "ENU": {
+          "value": 3,
+          "description": "East-North-Up: Local tangent plane for surface points."
+        },
+        "NED": {
+          "value": 4,
+          "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+        },
+        "NEU": {
+          "value": 5,
+          "description": "North-East-Up: Local tangent plane variant with Up positive."
+        },
+        "RIC": {
+          "value": 6,
+          "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+        },
+        "RTN": {
+          "value": 7,
+          "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+        },
+        "TVN": {
+          "value": 8,
+          "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+        },
+        "VVLH": {
+          "value": 9,
+          "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+        },
+        "QSW": {
+          "value": 10,
+          "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+        },
+        "LTP": {
+          "value": 11,
+          "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+        },
+        "LVLH": {
+          "value": 12,
+          "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+        },
+        "PNE": {
+          "value": 13,
+          "description": "Polar-North-East: Surface coordinate frame."
+        },
+        "BRF": {
+          "value": 14,
+          "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+        },
+        "RSW": {
+          "value": 15,
+          "description": "Radial-Along-track-Cross-track: Same as RSW."
+        },
+        "TNW": {
+          "value": 16,
+          "description": "Tangential-Normal-Cross-track: Same as TNW."
+        },
+        "UVW": {
+          "value": 17,
+          "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+        }
+      }
+    },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper"
+      ]
+    },
+    "screeningVolumeShape": {
+      "type": "string",
+      "enum": [
+        "ELLIPSOID",
+        "BOX"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
       "x-flatbuffer-enum-values": {
         "ELLIPSOID": {
           "value": 0
@@ -2008,13 +1604,13 @@
       }
     },
     "covarianceAlgorithm": {
-      "type": "integer",
+      "type": "string",
+      "enum": [
+        "CALCULATED",
+        "DEFAULT"
+      ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
       "x-flatbuffer-enum-values": {
         "CALCULATED": {
           "value": 0
@@ -2026,11 +1622,11 @@
     },
     "PNM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Publish Notification Message.\n\nPNM is the compact network announcement for a published record, manifest, or\ndataset update. For dataset updates, FILE_ID is the complete canonical\nidentity for the published update and CID usually points to a small DPM\nmanifest or digest. The DPM carries the full verification contract:\nprovider identity, retrieval protocol, canonical query, result hash, Merkle\nroots, completeness-capable indexes, file_id partition key, and signature.\nLarge or paid dataset updates do not need to be published as globally\ndiscoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\nquery protocol. In that mode the PNM is only the announcement. The DPM is\nthe signed commitment, and each provider response carries records plus\nMerkle proof material that the subscriber verifies against the DPM roots and\nthe announced FILE_ID before import.",
       "properties": {
         "MULTIFORMAT_ADDRESS": {
           "type": "string",
-          "description": "- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
+          "description": "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
           "x-flatbuffer-type": "string"
         },
         "PUBLISH_TIMESTAMP": {
@@ -2040,45 +1636,45 @@
         },
         "CID": {
           "type": "string",
-          "description": "full dataset bytes.",
+          "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
           "x-flatbuffer-type": "string"
         },
         "FILE_NAME": {
           "type": "string",
-          "description": "This field is the Name",
+          "description": "File ID\nThis field is the Name",
           "x-flatbuffer-type": "string"
         },
         "FILE_ID": {
           "type": "string",
-          "description": "Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
+          "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
           "x-flatbuffer-type": "string"
         },
         "SIGNATURE": {
           "type": "string",
-          "description": "This is the digital signature of the CID, signed using the specified cryptographic method.",
+          "description": "Digital Signature of the CID\nThis is the digital signature of the CID, signed using the specified cryptographic method.",
           "x-flatbuffer-type": "string"
         },
         "TIMESTAMP_SIGNATURE": {
           "type": "string",
-          "description": "Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.",
+          "description": "Timestamp Signature\nDigital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.",
           "x-flatbuffer-type": "string"
         },
         "SIGNATURE_TYPE": {
           "type": "string",
-          "description": "Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.",
+          "description": "Type of Cryptographic Signature Used\nSpecifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.",
           "x-flatbuffer-type": "string"
         },
         "TIMESTAMP_SIGNATURE_TYPE": {
           "type": "string",
-          "description": "Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.",
+          "description": "Type of Cryptographic Signature Used for Timestamp\nSpecifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.",
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Publish Notification Message.  PNM is the compact network announcement for a published record, manifest, or dataset update. For dataset updates, FILE_ID is the complete canonical identity for the published update and CID usually points to a small DPM manifest or digest. The DPM carries the full verification contract: provider identity, retrieval protocol, canonical query, result hash, Merkle roots, completeness-capable indexes, file_id partition key, and signature. Large or paid dataset updates do not need to be published as globally discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN query protocol. In that mode the PNM is only the announcement. The DPM is the signed commitment, and each provider response carries records plus Merkle proof material that the subscriber verifies against the DPM roots and the announced FILE_ID before import."
+      "additionalProperties": false
     },
     "FrequencyRange": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Frequency range with lower and upper limits",
       "properties": {
         "LOWER": {
           "type": "number",
@@ -2091,11 +1687,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Frequency range with lower and upper limits"
+      "additionalProperties": false
     },
     "StokesParameters": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Stokes parameters, representing different aspects of polarization",
       "properties": {
         "I": {
           "type": "number",
@@ -2118,11 +1714,11 @@
           "x-flatbuffer-type": "double"
         }
       },
-      "description": "Stokes parameters, representing different aspects of polarization"
+      "additionalProperties": false
     },
     "Band": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Table representing a frequency band with a name and frequency range",
       "properties": {
         "NAME": {
           "type": "string",
@@ -2135,11 +1731,11 @@
           "x-flatbuffer-type": "FrequencyRange"
         }
       },
-      "description": "Table representing a frequency band with a name and frequency range"
+      "additionalProperties": false
     },
     "IDM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Integrated Device Message",
       "properties": {
         "ID": {
           "type": "string",
@@ -2526,11 +2122,11 @@
           "x-flatbuffer-type": "bool"
         }
       },
-      "description": "Integrated Device Message"
+      "additionalProperties": false
     },
     "PLD": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Payload Information",
       "properties": {
         "PAYLOAD_DURATION": {
           "type": "string",
@@ -2564,11 +2160,11 @@
           "x-flatbuffer-type": "[IDM]"
         }
       },
-      "description": "Payload Information"
+      "additionalProperties": false
     },
     "LCC": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Legacy Country Code",
       "properties": {
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -3082,11 +2678,11 @@
           }
         }
       },
-      "description": "Legacy Country Code"
+      "additionalProperties": false
     },
     "CAT": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Catalog Entity Message",
       "properties": {
         "OBJECT_NAME": {
           "type": "string",
@@ -3100,6 +2696,8 @@
         },
         "NORAD_CAT_ID": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "NORAD Catalog Number",
           "x-flatbuffer-type": "uint"
         },
@@ -3107,7 +2705,6 @@
           "$ref": "#/definitions/spaceObjectClass",
           "description": "Object type (Payload, Rocket body, Debris, Unknown)",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "UNKNOWN",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "PAYLOAD": {
@@ -3126,13 +2723,13 @@
               "value": 3,
               "description": "3"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OPS_STATUS_CODE": {
           "$ref": "#/definitions/operationalState",
           "description": "Operational Status Code",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "UNKNOWN",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "OPERATIONAL": {
@@ -3167,7 +2764,8 @@
               "value": 7,
               "description": "?"
             }
-          }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
         },
         "OWNER": {
           "$ref": "#/definitions/legacyCountryCode",
@@ -3802,7 +3400,6 @@
           "$ref": "#/definitions/massCategory",
           "description": "Mass type (Dry, Wet)",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "DRY",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "DRY": {
@@ -3811,7 +3408,8 @@
             "WET": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "DRY"
         },
         "PAYLOADS": {
           "type": "array",
@@ -3823,15 +3421,15 @@
         },
         "BUS_ID": {
           "type": "string",
-          "description": "NOT duplicated here. Empty when the bus is unknown.",
+          "description": "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS \u2014 they are\nNOT duplicated here. Empty when the bus is unknown.",
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Catalog Entity Message"
+      "additionalProperties": false
     },
     "CryptoKey": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Represents cryptographic key information",
       "properties": {
         "PUBLIC_KEY": {
           "type": "string",
@@ -3878,11 +3476,11 @@
           }
         }
       },
-      "description": "Represents cryptographic key information"
+      "additionalProperties": false
     },
     "Address": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Represents a geographic address",
       "properties": {
         "COUNTRY": {
           "type": "string",
@@ -3915,11 +3513,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Represents a geographic address"
+      "additionalProperties": false
     },
     "ChainProof": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Proves a blockchain key derives from the same HD wallet as the signing key",
       "properties": {
         "CHAIN": {
           "type": "string",
@@ -3962,11 +3560,11 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Proves a blockchain key derives from the same HD wallet as the signing key"
+      "additionalProperties": false
     },
     "EPM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Entity Profile Message",
       "properties": {
         "DN": {
           "type": "string",
@@ -4059,6 +3657,8 @@
         },
         "SIGNATURE_TIMESTAMP": {
           "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
           "description": "Unix timestamp (seconds) when the EPM was signed",
           "x-flatbuffer-type": "int64"
         },
@@ -4074,7 +3674,6 @@
           "$ref": "#/definitions/EntityType",
           "description": "Type of entity represented by this profile",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "User",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "User": {
@@ -4083,14 +3682,415 @@
             "Node": {
               "value": 1
             }
+          },
+          "x-flatbuffer-default": "User"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CelestialFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CelestialFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GCRF": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            "ICRF": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            "J2000": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            "J2000A": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            "EME2000": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            "TEMEOFDATE": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            "GTOD": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            "CIRS": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            "MOD_EARTH": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            "MOD_CB": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            "MOD_MOON": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            "TOD_EARTH": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            "TOD_CB": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            "TOD_MOON": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            "TOE_EARTH": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            "TOE_CB": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            "TOE_MOON": {
+              "value": 16,
+              "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            "ITRF2000": {
+              "value": 17,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            "ITRF93": {
+              "value": 18,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            "ITRF97": {
+              "value": 19,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            "EFG": {
+              "value": 20,
+              "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            "FIXED_CB": {
+              "value": 21,
+              "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            "FIXED_EARTH": {
+              "value": 22,
+              "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            "WGS84": {
+              "value": 23,
+              "description": "WGS84 Earth-fixed terrestrial system."
+            },
+            "DTRFYYYY": {
+              "value": 24,
+              "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            "ALIGN_EARTH": {
+              "value": 25,
+              "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            "ALIGN_CB": {
+              "value": 26,
+              "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            "B1950": {
+              "value": 27,
+              "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
           }
         }
       },
-      "description": "Entity Profile Message"
+      "additionalProperties": false
+    },
+    "SpacecraftFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/SpacecraftFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACC_i": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            "ACTUATOR_i": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            "AST_i": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            "CSS_i": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            "DSS_i": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            "ESA_i": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            "GYRO_FRAME_i": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            "IMU_FRAME_i": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            "INSTRUMENT_i": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            "MTA_i": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            "RW_i": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            "SA_i": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            "SC_BODY_i": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            "SENSOR_i": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            "STARTRACKER_i": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            "TAM_i": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OrbitFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/OrbitFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQW_INERTIAL": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            "LVLH_INERTIAL": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            "LVLH_ROTATING": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            "NSW_INERTIAL": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            "NSW_ROTATING": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            "NTW_INERTIAL": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            "NTW_ROTATING": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            "PQW_INERTIAL": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            "RSW_INERTIAL": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            "RSW_ROTATING": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            "SEZ_INERTIAL": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            "SEZ_ROTATING": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            "TNW_INERTIAL": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            "TNW_ROTATING": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            "VNC_INERTIAL": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            "VNC_ROTATING": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CustomFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ECEF": {
+              "value": 0,
+              "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            "TEME": {
+              "value": 1,
+              "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            "TEMEOFEPOCH": {
+              "value": 2,
+              "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            "ENU": {
+              "value": 3,
+              "description": "East-North-Up: Local tangent plane for surface points."
+            },
+            "NED": {
+              "value": 4,
+              "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            "NEU": {
+              "value": 5,
+              "description": "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            "RIC": {
+              "value": 6,
+              "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            "RTN": {
+              "value": 7,
+              "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            "TVN": {
+              "value": 8,
+              "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            "VVLH": {
+              "value": 9,
+              "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            "QSW": {
+              "value": 10,
+              "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            "LTP": {
+              "value": 11,
+              "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            "LVLH": {
+              "value": 12,
+              "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            "PNE": {
+              "value": 13,
+              "description": "Polar-North-East: Surface coordinate frame."
+            },
+            "BRF": {
+              "value": 14,
+              "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            "RSW": {
+              "value": 15,
+              "description": "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            "TNW": {
+              "value": 16,
+              "description": "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            "UVW": {
+              "value": 17,
+              "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFM": {
+      "type": "object",
+      "description": "Reference Frame Message",
+      "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
+        "REFERENCE_FRAME": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            }
+          ],
+          "x-flatbuffer-type": "RFMUnion"
+        },
+        "INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
     },
     "CDMObject": {
       "type": "object",
-      "additionalProperties": false,
       "properties": {
         "COMMENT": {
           "type": "string",
@@ -4192,21 +4192,29 @@
         },
         "OBS_AVAILABLE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of observations available",
           "x-flatbuffer-type": "uint"
         },
         "OBS_USED": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of observations used",
           "x-flatbuffer-type": "uint"
         },
         "TRACKS_AVAILABLE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of tracks available",
           "x-flatbuffer-type": "uint"
         },
         "TRACKS_USED": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of tracks used",
           "x-flatbuffer-type": "uint"
         },
@@ -4285,14 +4293,15 @@
           "items": {
             "type": "number"
           },
-          "description": "CTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
+          "description": "Covariance matrix as flat array (9x9 lower triangular = 45 elements).\nOrder: [CR_R, CT_R, CT_T, CN_R, CN_T, CN_N, CRDOT_R, CRDOT_T, CRDOT_N, CRDOT_RDOT,\nCTDOT_R, CTDOT_T, CTDOT_N, CTDOT_RDOT, CTDOT_TDOT,\nCNDOT_R, CNDOT_T, CNDOT_N, CNDOT_RDOT, CNDOT_TDOT, CNDOT_NDOT,\nCDRG_R, CDRG_T, CDRG_N, CDRG_RDOT, CDRG_TDOT, CDRG_NDOT, CDRG_DRG,\nCSRP_R, CSRP_T, CSRP_N, CSRP_RDOT, CSRP_TDOT, CSRP_NDOT, CSRP_DRG, CSRP_SRP,\nCTHR_R, CTHR_T, CTHR_N, CTHR_RDOT, CTHR_TDOT, CTHR_NDOT, CTHR_DRG, CTHR_SRP, CTHR_THR]",
           "x-flatbuffer-type": "[double]"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "CDM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Conjunction Data Message",
       "properties": {
         "CCSDS_CDM_VERS": {
           "type": "number",
@@ -4449,7 +4458,7 @@
           "x-flatbuffer-type": "PNM"
         }
       },
-      "description": "Conjunction Data Message"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/CDM",

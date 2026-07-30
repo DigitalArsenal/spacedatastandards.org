@@ -96,6 +96,35 @@
         }
       }
     },
+    "grantLifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Revoked",
+        "Expired",
+        "Suspended",
+        "Pending"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Active": {
+          "value": 0
+        },
+        "Revoked": {
+          "value": 1
+        },
+        "Expired": {
+          "value": 2
+        },
+        "Suspended": {
+          "value": 3
+        },
+        "Pending": {
+          "value": 4
+        }
+      }
+    },
     "GrantFieldStreamPolicy": {
       "type": "object",
       "description": "Field-level stream policy bound into protected delivery and grants.",
@@ -618,39 +647,9 @@
       ],
       "additionalProperties": false
     },
-    "grantLifecycleStatus": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "description": "Grant lifecycle status tracked by the provider.",
-      "enum": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "x-flatbuffer-enum-values": {
-        "Active": {
-          "value": 0
-        },
-        "Revoked": {
-          "value": 1
-        },
-        "Expired": {
-          "value": 2
-        },
-        "Suspended": {
-          "value": 3
-        },
-        "Pending": {
-          "value": 4
-        }
-      }
-    },
     "ACL": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Access Control Grant - Permission to access purchased data",
       "properties": {
         "GRANT_ID": {
           "type": "string",
@@ -673,7 +672,9 @@
         "BUYER_ENCRYPTION_PUBKEY": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Buyer's encryption public key for encrypted delivery",
           "x-flatbuffer-type": "[ubyte]"
@@ -709,11 +710,15 @@
         },
         "GRANTED_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp when access was granted",
           "x-flatbuffer-type": "uint64"
         },
         "EXPIRES_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp when access expires (0 = never expires)",
           "x-flatbuffer-type": "uint64"
         },
@@ -765,7 +770,9 @@
         "PROVIDER_SIGNATURE": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Ed25519 signature from provider",
           "x-flatbuffer-type": "[ubyte]"
@@ -777,11 +784,15 @@
         },
         "RATE_LIMIT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Request rate limit",
           "x-flatbuffer-type": "uint32"
         },
         "MAX_RECORDS_PER_REQUEST": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Maximum records returned per request",
           "x-flatbuffer-type": "uint32"
         },
@@ -810,6 +821,8 @@
         },
         "PAYMENT_AMOUNT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Payment amount in smallest unit",
           "x-flatbuffer-type": "uint64"
         },
@@ -825,6 +838,8 @@
         },
         "NEXT_RENEWAL": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp of next renewal",
           "x-flatbuffer-type": "uint64"
         },
@@ -835,21 +850,29 @@
         },
         "RENEWAL_COUNT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Renewal count",
           "x-flatbuffer-type": "uint32"
         },
         "TOTAL_REQUESTS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Total requests made under this grant",
           "x-flatbuffer-type": "uint64"
         },
         "TOTAL_RECORDS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Total records delivered under this grant",
           "x-flatbuffer-type": "uint64"
         },
         "LAST_ACCESS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp of last access",
           "x-flatbuffer-type": "uint64"
         },
@@ -860,11 +883,15 @@
         },
         "CREATED_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp when the grant record was created",
           "x-flatbuffer-type": "uint64"
         },
         "UPDATED_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Unix timestamp when the grant record was updated",
           "x-flatbuffer-type": "uint64"
         },
@@ -889,12 +916,12 @@
           "x-flatbuffer-type": "GrantFieldStreamPolicy"
         }
       },
-      "description": "Access Control Grant - Permission to access purchased data",
       "required": [
         "GRANT_ID",
         "LISTING_ID",
         "BUYER_PEER_ID"
-      ]
+      ],
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/ACL",

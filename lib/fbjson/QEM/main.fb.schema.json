@@ -246,7 +246,7 @@
     },
     "QEMTokenVector": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "One pruned-vocabulary token's static embedding row.",
       "properties": {
         "TOKEN": {
           "type": "string",
@@ -255,20 +255,24 @@
         },
         "TOKEN_ID": {
           "type": "integer",
-          "description": "across MODEL_VERSION; look up by TOKEN_ID, not array position.",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Vocabulary row index. Row order in TOKENS is not guaranteed stable\nacross MODEL_VERSION; look up by TOKEN_ID, not array position.",
           "x-flatbuffer-type": "uint32"
         },
         "VECTOR_INT8": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": -128,
+            "maximum": 127
           },
-          "description": "QEM.DIMENSIONS.",
+          "description": "Row values when the parent QEM.ENCODING is INT8. Length equals\nQEM.DIMENSIONS.",
           "x-flatbuffer-type": "[int8]"
         },
         "SCALE": {
           "type": "number",
-          "description": "Unused when ENCODING is FLOAT32.",
+          "description": "Per-row dequantization scale: original value ~= VECTOR_INT8[i] * SCALE.\nUnused when ENCODING is FLOAT32.",
           "x-flatbuffer-type": "float32"
         },
         "VECTOR_FLOAT32": {
@@ -276,7 +280,7 @@
           "items": {
             "type": "number"
           },
-          "description": "QEM.DIMENSIONS.",
+          "description": "Row values when the parent QEM.ENCODING is FLOAT32. Length equals\nQEM.DIMENSIONS.",
           "x-flatbuffer-type": "[float32]"
         },
         "IDF": {
@@ -285,11 +289,11 @@
           "x-flatbuffer-type": "float32"
         }
       },
-      "description": "One pruned-vocabulary token's static embedding row."
+      "additionalProperties": false
     },
     "QEM": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Query Encoder Model.\n\nOne QEM publishes the pruned static token-embedding table a lightweight\nclient (e.g. a browser) loads to encode a search query into the same\nvector space a paired $CES shard's rows live in, without shipping a full\ntransformer. A consumer pools the rows of the query's tokens (per\nPOOLING_METHOD) into a query vector, then dot-products it against\nCES.ROWS.\n\nA QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION,\nMODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a\nmismatch on any one means the two vector spaces are not comparable.",
       "properties": {
         "MODEL_ID": {
           "type": "string",
@@ -303,14 +307,13 @@
         },
         "MODEL_WEIGHTS_SHA256": {
           "type": "string",
-          "description": "DPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.",
+          "description": "SHA-256 of the encoder weights, lowercase hex. Same convention as\nDPMAsset.BYTE_SHA256. Compared verbatim against CES.MODEL_WEIGHTS_SHA256.",
           "x-flatbuffer-type": "string"
         },
         "POOLING_METHOD": {
           "$ref": "#/definitions/cesPoolingKind",
-          "description": "against CES.POOLING_METHOD.",
+          "description": "Sentence/document pooling method the encoder uses. Compared verbatim\nagainst CES.POOLING_METHOD.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "MEAN",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "MEAN": {
@@ -325,15 +328,18 @@
             "UNKNOWN": {
               "value": 3
             }
-          }
+          },
+          "x-flatbuffer-default": "MEAN"
         },
         "TEMPLATE_VERSION": {
           "type": "string",
-          "description": "encoding. Compared verbatim against CES.TEMPLATE_VERSION.",
+          "description": "Version of the text template documents were rendered from before\nencoding. Compared verbatim against CES.TEMPLATE_VERSION.",
           "x-flatbuffer-type": "string"
         },
         "DIMENSIONS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Fixed embedding dimensionality; must equal the paired CES.DIMENSIONS.",
           "x-flatbuffer-type": "uint32"
         },
@@ -341,7 +347,6 @@
           "$ref": "#/definitions/cesVectorEncoding",
           "description": "Row element encoding used across TOKENS.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "INT8",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "INT8": {
@@ -350,13 +355,13 @@
             "FLOAT32": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "INT8"
         },
         "NORMALIZATION": {
           "$ref": "#/definitions/cesNormalizationKind",
           "description": "Row-vector normalization applied before quantization.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "L2",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "NONE": {
@@ -365,10 +370,13 @@
             "L2": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "L2"
         },
         "VOCAB_SIZE": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Number of tokens in the pruned vocabulary.",
           "x-flatbuffer-type": "uint32"
         },
@@ -381,7 +389,7 @@
           "x-flatbuffer-type": "[QEMTokenVector]"
         }
       },
-      "description": "Query Encoder Model.  One QEM publishes the pruned static token-embedding table a lightweight client (e.g. a browser) loads to encode a search query into the same vector space a paired $CES shard's rows live in, without shipping a full transformer. A consumer pools the rows of the query's tokens (per POOLING_METHOD) into a query vector, then dot-products it against CES.ROWS.  A QEM is compatible with a CES only when MODEL_ID, MODEL_VERSION, MODEL_WEIGHTS_SHA256, POOLING_METHOD and TEMPLATE_VERSION all match; a mismatch on any one means the two vector spaces are not comparable."
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/QEM",

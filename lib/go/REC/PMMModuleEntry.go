@@ -568,8 +568,44 @@ func (rcv *PMMModuleEntry) UpdatedAt() []byte {
 
 /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of
 /// the last change to this entry.
+/// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+/// is the ONLY sanctioned way to group an offering: a client grouping a
+/// catalogue MUST read this field and MUST NOT infer family from the shape
+/// of `MODULE_ID`, which carries no normative structure. Defaults to
+/// `Unspecified`, which a client MUST render as ungrouped — never silently
+/// as `Sensor`. Present here, rather than only on
+/// the linked `$PLG`, so an anonymous client can section the catalogue at
+/// boot without fetching one `$PLG` per module.
+func (rcv *PMMModuleEntry) PLUGIN_TYPE() pluginCategory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return pluginCategory(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 21
+}
+
+func (rcv *PMMModuleEntry) PluginType() pluginCategory {
+	return rcv.PLUGIN_TYPE()
+}
+
+/// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+/// is the ONLY sanctioned way to group an offering: a client grouping a
+/// catalogue MUST read this field and MUST NOT infer family from the shape
+/// of `MODULE_ID`, which carries no normative structure. Defaults to
+/// `Unspecified`, which a client MUST render as ungrouped — never silently
+/// as `Sensor`. Present here, rather than only on
+/// the linked `$PLG`, so an anonymous client can section the catalogue at
+/// boot without fetching one `$PLG` per module.
+func (rcv *PMMModuleEntry) MutatePLUGIN_TYPE(n pluginCategory) bool {
+	return rcv._tab.MutateInt8Slot(52, int8(n))
+}
+
+func (rcv *PMMModuleEntry) MutatePluginType(n pluginCategory) bool {
+	return rcv.MutatePLUGIN_TYPE(n)
+}
+
 func PMMModuleEntryStart(builder *flatbuffers.Builder) {
-	builder.StartObject(24)
+	builder.StartObject(25)
 }
 func PMMModuleEntryAddMODULE_ID(builder *flatbuffers.Builder, MODULE_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(MODULE_ID), 0)
@@ -738,6 +774,12 @@ func PMMModuleEntryAddUPDATED_AT(builder *flatbuffers.Builder, UPDATED_AT flatbu
 }
 func PMMModuleEntryAddUpdatedAt(builder *flatbuffers.Builder, UPDATED_AT flatbuffers.UOffsetT) {
 	PMMModuleEntryAddUPDATED_AT(builder, UPDATED_AT)
+}
+func PMMModuleEntryAddPLUGIN_TYPE(builder *flatbuffers.Builder, PLUGIN_TYPE pluginCategory) {
+	builder.PrependInt8Slot(24, int8(PLUGIN_TYPE), 21)
+}
+func PMMModuleEntryAddPluginType(builder *flatbuffers.Builder, PLUGIN_TYPE pluginCategory) {
+	PMMModuleEntryAddPLUGIN_TYPE(builder, PLUGIN_TYPE)
 }
 func PMMModuleEntryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

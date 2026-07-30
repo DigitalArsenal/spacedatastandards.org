@@ -175,6 +175,15 @@ public struct PMMModuleEntry : IFlatbufferObject
   public ArraySegment<byte>? GetUPDATED_ATBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
   public byte[] GetUPDATED_ATArray() { return __p.__vector_as_array<byte>(50); }
+  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  /// is the ONLY sanctioned way to group an offering: a client grouping a
+  /// catalogue MUST read this field and MUST NOT infer family from the shape
+  /// of `MODULE_ID`, which carries no normative structure. Defaults to
+  /// `Unspecified`, which a client MUST render as ungrouped — never silently
+  /// as `Sensor`. Present here, rather than only on
+  /// the linked `$PLG`, so an anonymous client can section the catalogue at
+  /// boot without fetching one `$PLG` per module.
+  public pluginCategory PLUGIN_TYPE { get { int o = __p.__offset(52); return o != 0 ? (pluginCategory)__p.bb.GetSbyte(o + __p.bb_pos) : pluginCategory.Unspecified; } }
 
   public static Offset<PMMModuleEntry> CreatePMMModuleEntry(FlatBufferBuilder builder,
       StringOffset MODULE_IDOffset = default(StringOffset),
@@ -200,8 +209,9 @@ public struct PMMModuleEntry : IFlatbufferObject
       StringOffset DOCUMENTATION_URLOffset = default(StringOffset),
       StringOffset ICON_URLOffset = default(StringOffset),
       StringOffset SUPERSEDES_CONTENT_HASHOffset = default(StringOffset),
-      StringOffset UPDATED_ATOffset = default(StringOffset)) {
-    builder.StartTable(24);
+      StringOffset UPDATED_ATOffset = default(StringOffset),
+      pluginCategory PLUGIN_TYPE = pluginCategory.Unspecified) {
+    builder.StartTable(25);
     PMMModuleEntry.AddARTIFACT_SIZE_BYTES(builder, ARTIFACT_SIZE_BYTES);
     PMMModuleEntry.AddEPOCH(builder, EPOCH);
     PMMModuleEntry.AddUPDATED_AT(builder, UPDATED_ATOffset);
@@ -222,6 +232,7 @@ public struct PMMModuleEntry : IFlatbufferObject
     PMMModuleEntry.AddPLG_CID(builder, PLG_CIDOffset);
     PMMModuleEntry.AddPLUGIN_ID(builder, PLUGIN_IDOffset);
     PMMModuleEntry.AddMODULE_ID(builder, MODULE_IDOffset);
+    PMMModuleEntry.AddPLUGIN_TYPE(builder, PLUGIN_TYPE);
     PMMModuleEntry.AddENTRY_STATE(builder, ENTRY_STATE);
     PMMModuleEntry.AddACCESS_POLICY(builder, ACCESS_POLICY);
     PMMModuleEntry.AddDEFAULT_ENABLED(builder, DEFAULT_ENABLED);
@@ -229,7 +240,7 @@ public struct PMMModuleEntry : IFlatbufferObject
     return PMMModuleEntry.EndPMMModuleEntry(builder);
   }
 
-  public static void StartPMMModuleEntry(FlatBufferBuilder builder) { builder.StartTable(24); }
+  public static void StartPMMModuleEntry(FlatBufferBuilder builder) { builder.StartTable(25); }
   public static void AddMODULE_ID(FlatBufferBuilder builder, StringOffset MODULE_IDOffset) { builder.AddOffset(0, MODULE_IDOffset.Value, 0); }
   public static void AddPLUGIN_ID(FlatBufferBuilder builder, StringOffset PLUGIN_IDOffset) { builder.AddOffset(1, PLUGIN_IDOffset.Value, 0); }
   public static void AddPLG_CID(FlatBufferBuilder builder, StringOffset PLG_CIDOffset) { builder.AddOffset(2, PLG_CIDOffset.Value, 0); }
@@ -274,6 +285,7 @@ public struct PMMModuleEntry : IFlatbufferObject
   public static void AddICON_URL(FlatBufferBuilder builder, StringOffset ICON_URLOffset) { builder.AddOffset(21, ICON_URLOffset.Value, 0); }
   public static void AddSUPERSEDES_CONTENT_HASH(FlatBufferBuilder builder, StringOffset SUPERSEDES_CONTENT_HASHOffset) { builder.AddOffset(22, SUPERSEDES_CONTENT_HASHOffset.Value, 0); }
   public static void AddUPDATED_AT(FlatBufferBuilder builder, StringOffset UPDATED_ATOffset) { builder.AddOffset(23, UPDATED_ATOffset.Value, 0); }
+  public static void AddPLUGIN_TYPE(FlatBufferBuilder builder, pluginCategory PLUGIN_TYPE) { builder.AddSbyte(24, (sbyte)PLUGIN_TYPE, 21); }
   public static Offset<PMMModuleEntry> EndPMMModuleEntry(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // MODULE_ID
@@ -342,6 +354,7 @@ public struct PMMModuleEntry : IFlatbufferObject
     _o.ICON_URL = this.ICON_URL;
     _o.SUPERSEDES_CONTENT_HASH = this.SUPERSEDES_CONTENT_HASH;
     _o.UPDATED_AT = this.UPDATED_AT;
+    _o.PLUGIN_TYPE = this.PLUGIN_TYPE;
   }
   public static Offset<PMMModuleEntry> Pack(FlatBufferBuilder builder, PMMModuleEntryT _o) {
     if (_o == null) return default(Offset<PMMModuleEntry>);
@@ -407,7 +420,8 @@ public struct PMMModuleEntry : IFlatbufferObject
       _DOCUMENTATION_URL,
       _ICON_URL,
       _SUPERSEDES_CONTENT_HASH,
-      _UPDATED_AT);
+      _UPDATED_AT,
+      _o.PLUGIN_TYPE);
   }
 }
 
@@ -437,6 +451,7 @@ public class PMMModuleEntryT
   public string ICON_URL { get; set; }
   public string SUPERSEDES_CONTENT_HASH { get; set; }
   public string UPDATED_AT { get; set; }
+  public pluginCategory PLUGIN_TYPE { get; set; }
 
   public PMMModuleEntryT() {
     this.MODULE_ID = null;
@@ -463,6 +478,7 @@ public class PMMModuleEntryT
     this.ICON_URL = null;
     this.SUPERSEDES_CONTENT_HASH = null;
     this.UPDATED_AT = null;
+    this.PLUGIN_TYPE = pluginCategory.Unspecified;
   }
 }
 
@@ -496,6 +512,7 @@ static public class PMMModuleEntryVerify
       && verifier.VerifyString(tablePos, 46 /*ICON_URL*/, false)
       && verifier.VerifyString(tablePos, 48 /*SUPERSEDES_CONTENT_HASH*/, false)
       && verifier.VerifyString(tablePos, 50 /*UPDATED_AT*/, false)
+      && verifier.VerifyField(tablePos, 52 /*PLUGIN_TYPE*/, 1 /*pluginCategory*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

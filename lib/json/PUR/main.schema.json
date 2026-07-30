@@ -13,6 +13,10 @@
       "type" : "string",
       "enum": ["DataStream", "WasmModule"]
     },
+    "purchaseLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["Pending", "PaymentDetected", "PaymentConfirmed", "Completed", "Failed", "Cancelled", "RefundRequested", "Refunded", "Expired"]
+    },
     "GrantFieldStreamPolicy" : {
       "type" : "object",
       "description" : "Field-level stream policy bound into protected delivery and grants.",
@@ -342,7 +346,143 @@
       },
       "required" : ["LISTING_ID", "PROVIDER_PEER_ID", "TITLE"],
       "additionalProperties" : false
+    },
+    "PUR" : {
+      "type" : "object",
+      "description" : "Purchase Request - Request to purchase data from a storefront listing",
+      "properties" : {
+        "REQUEST_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for this purchase request"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "ID of the listing being purchased"
+              },
+        "TIER_NAME" : {
+                "type" : "string",
+                "description" : "Name of the pricing tier selected"
+              },
+        "BUYER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID of the buyer"
+              },
+        "BUYER_ENCRYPTION_PUBKEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's encryption public key for encrypted delivery"
+              },
+        "PAYMENT_METHOD" : {
+                "$ref" : "#/definitions/paymentMethod",
+                "description" : "Payment method used"
+              },
+        "PAYMENT_AMOUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Payment amount in smallest unit"
+              },
+        "PAYMENT_CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency of payment"
+              },
+        "PAYMENT_TX_HASH" : {
+                "type" : "string",
+                "description" : "Transaction hash for cryptocurrency payments"
+              },
+        "PAYMENT_CHAIN" : {
+                "type" : "string",
+                "description" : "Blockchain network: \"ethereum\", \"solana\", \"bitcoin\""
+              },
+        "PAYMENT_REFERENCE" : {
+                "type" : "string",
+                "description" : "Reference ID for credit/fiat payments"
+              },
+        "BUYER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from buyer"
+              },
+        "TIMESTAMP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp of the request"
+              },
+        "KEY_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Key algorithm for buyer encryption public key"
+              },
+        "BUYER_EMAIL" : {
+                "type" : "string",
+                "description" : "Buyer contact email"
+              },
+        "SENDER_ADDRESS" : {
+                "type" : "string",
+                "description" : "On-chain sender address or fiat payment source reference"
+              },
+        "CONFIRMATION_BLOCK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Confirmation block for on-chain payments"
+              },
+        "PAYMENT_INTENT_ID" : {
+                "type" : "string",
+                "description" : "Fiat processor payment intent identifier"
+              },
+        "CREDITS_TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "SDN credits transaction identifier"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/purchaseLifecycleStatus",
+                "description" : "Provider-side purchase status"
+              },
+        "STATUS_MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable status message"
+              },
+        "CREATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the purchase record was created"
+              },
+        "UPDATED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the purchase record was updated"
+              },
+        "PAYMENT_DEADLINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when payment must be received"
+              },
+        "PAYMENT_CONFIRMED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when payment was confirmed"
+              },
+        "GRANT_ISSUED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when the grant was issued"
+              },
+        "GRANT_ID" : {
+                "type" : "string",
+                "description" : "Issued grant identifier"
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Provider peer ID"
+              },
+        "PROVIDER_ACKNOWLEDGED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix timestamp when provider acknowledged the request"
+              },
+        "PREFERRED_DELIVERY_METHOD" : {
+                "type" : "string",
+                "description" : "Preferred delivery method"
+              },
+        "WEBHOOK_URL" : {
+                "type" : "string",
+                "description" : "Buyer webhook URL for delivery callbacks"
+              },
+        "PROVIDER_SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Ed25519 signature from provider"
+              }
+      },
+      "required" : ["REQUEST_ID", "LISTING_ID", "TIER_NAME", "BUYER_PEER_ID"],
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/STF"
+  "$ref" : "#/definitions/PUR"
 }

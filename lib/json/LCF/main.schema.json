@@ -9,6 +9,14 @@
       "type" : "string",
       "enum": ["Unknown", "Ed25519Seed", "Ed25519Public", "X25519Private", "X25519Public", "Aes256Gcm", "Opaque"]
     },
+    "licensingConfigMessageType" : {
+      "type" : "string",
+      "enum": ["Configure", "Status"]
+    },
+    "licensingConfigRole" : {
+      "type" : "string",
+      "enum": ["Provider", "Requester"]
+    },
     "KRF" : {
       "type" : "object",
       "description" : "Key Reference Frame",
@@ -47,7 +55,74 @@
               }
       },
       "additionalProperties" : false
+    },
+    "LCF" : {
+      "type" : "object",
+      "description" : "Licensing Configuration Frame",
+      "properties" : {
+        "MESSAGE_TYPE" : {
+                "$ref" : "#/definitions/licensingConfigMessageType",
+                "description" : "Distinguishes configuration inputs from runtime status outputs."
+              },
+        "ROLE" : {
+                "$ref" : "#/definitions/licensingConfigRole",
+                "description" : "Indicates whether the configuration/status applies to server/provider or requester/client behavior."
+              },
+        "PROVIDER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer ID advertised by the licensing provider."
+              },
+        "PROVIDER_SIGNING_KEY" : {
+                "$ref" : "#/definitions/KRF",
+                "description" : "Host-managed long-lived signing key used for grant signatures."
+              },
+        "PROVIDER_WRAPPING_KEY" : {
+                "$ref" : "#/definitions/KRF",
+                "description" : "Host-managed wrapping key used to protect per-publication content keys for requesters."
+              },
+        "REQUESTER_SIGNING_KEY" : {
+                "$ref" : "#/definitions/KRF",
+                "description" : "Optional requester signing key reference for requester-hosted flows."
+              },
+        "ACTIVE_KEY_VERSION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Logical active publication/grant key version."
+              },
+        "EXPIRES_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Runtime expiry in unix milliseconds, or 0 if unbounded."
+              },
+        "MAX_CLOCK_SKEW_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Maximum accepted requester/provider clock skew in milliseconds."
+              },
+        "CHALLENGE_TTL_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Challenge time-to-live in milliseconds."
+              },
+        "CAPABILITY_TOKEN" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional capability token bytes returned with successful grants."
+              },
+        "INITIALIZED" : {
+                "type" : "boolean",
+                "description" : "Whether the runtime has been initialized successfully."
+              },
+        "NEEDS_ROTATION" : {
+                "type" : "boolean",
+                "description" : "Whether the runtime needs issuer key rotation or refreshed configuration."
+              },
+        "STATUS_CODE" : {
+                "type" : "string",
+                "description" : "Optional machine-readable status code for status/error responses."
+              },
+        "STATUS_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional human-readable status or error message."
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/KRF"
+  "$ref" : "#/definitions/LCF"
 }

@@ -9,6 +9,14 @@
       "type" : "string",
       "enum": ["NoMemo", "TxData", "SolMemo", "OpReturn"]
     },
+    "recurringChargeMethod" : {
+      "type" : "string",
+      "enum": ["Erc20Allowance", "EvmDelegate", "SolDelegate", "ReAuthorizePerPeriod"]
+    },
+    "subscriptionLifecycleStatus" : {
+      "type" : "string",
+      "enum": ["Active", "Paused", "Cancelled", "Lapsed"]
+    },
     "SplitRecipient" : {
       "type" : "object",
       "description" : "Recipient of an on-chain revenue split. The identity binds to an `$EPM`\nvia CHAIN_PROOFS so a payout address is provably the recipient's.",
@@ -87,7 +95,63 @@
       },
       "required" : ["CHAIN"],
       "additionalProperties" : false
+    },
+    "SUB" : {
+      "type" : "object",
+      "description" : "Crypto-native Subscription Authorization",
+      "properties" : {
+        "SUBSCRIPTION_ID" : {
+                "type" : "string",
+                "description" : "Stable subscription identifier"
+              },
+        "ENTITLEMENT_ID" : {
+                "type" : "string",
+                "description" : "Reference to the durable entitlement (`$ENT.ENTITLEMENT_ID`)"
+              },
+        "LISTING_ID" : {
+                "type" : "string",
+                "description" : "Listing this subscription pays for (`$PLG.PLUGIN_ID` / `$STF.LISTING_ID`)"
+              },
+        "AUTH_KIND" : {
+                "$ref" : "#/definitions/recurringChargeMethod",
+                "description" : "On-chain recurring mechanism"
+              },
+        "CHAIN_SETTLEMENT" : {
+                "$ref" : "#/definitions/SCX",
+                "description" : "Settlement descriptor (chain, splitter, token) that charges each period"
+              },
+        "PERIOD_DAYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Billing period length in days (mirrors `$PLG.SUBSCRIPTION_PERIOD_DAYS`)"
+              },
+        "AMOUNT_PER_PERIOD" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Charge per period in the smallest unit of CURRENCY"
+              },
+        "CURRENCY" : {
+                "type" : "string",
+                "description" : "Currency / token symbol, e.g. \"USDC\""
+              },
+        "NEXT_CHARGE_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms of the next scheduled charge"
+              },
+        "MAX_PERIODS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Maximum number of periods; 0 = until cancelled"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/subscriptionLifecycleStatus",
+                "description" : "Subscription lifecycle status"
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Buyer's Ed25519 authorization signature over the terms"
+              }
+      },
+      "required" : ["SUBSCRIPTION_ID"],
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/SCX"
+  "$ref" : "#/definitions/SUB"
 }

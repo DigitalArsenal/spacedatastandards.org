@@ -82,8 +82,25 @@ public final class pluginCategory {
    * Basilisk astrodynamics simulation module
    */
   public static final byte Basilisk = 18;
+  /**
+   * Maneuver planning, targeting and trajectory optimization
+   */
+  public static final byte Maneuver = 19;
+  /**
+   * A composed flow published as a single loadable module. The unit is a
+   * graph of other modules, not a leaf algorithm.
+   */
+  public static final byte Flow = 20;
+  /**
+   * No family stated. Sits at the end of the enum rather than at 0 because
+   * this enum is append-only and `Sensor` already holds 0; it exists so a
+   * record can distinguish "the provider did not say" from "Sensor". A
+   * consumer MUST render an `Unspecified` module as ungrouped, never as a
+   * member of any family.
+   */
+  public static final byte Unspecified = 21;
 
-  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", "Parser", "Validator", "Interpolator", "Exporter", "Foundation", "Infrastructure", "Licensing", "Storefront", "Publisher", "Basilisk", };
+  public static final String[] names = { "Sensor", "Propagator", "Renderer", "Analysis", "DataSource", "EW", "Comms", "Physics", "Shader", "Parser", "Validator", "Interpolator", "Exporter", "Foundation", "Infrastructure", "Licensing", "Storefront", "Publisher", "Basilisk", "Maneuver", "Flow", "Unspecified", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -1,5 +1,5 @@
-// Hash: 68745cf6d995c0f32e3f91bd037cfaaa936168a1c8fb169a41682a25a9104aca
-// Version: 1.0.13
+// Hash: 251c86bc34bebb44a958191e245279f57d7c0ad7145fe5db7d0236f863b5a7a3
+// Version: 1.0.14
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -42,7 +42,18 @@ enum pluginCategory : byte {
   /// Publication: PNM signing + pub/sub announcement
   Publisher,
   /// Basilisk astrodynamics simulation module
-  Basilisk
+  Basilisk,
+  /// Maneuver planning, targeting and trajectory optimization
+  Maneuver,
+  /// A composed flow published as a single loadable module. The unit is a
+  /// graph of other modules, not a leaf algorithm.
+  Flow,
+  /// No family stated. Sits at the end of the enum rather than at 0 because
+  /// this enum is append-only and `Sensor` already holds 0; it exists so a
+  /// record can distinguish "the provider did not say" from "Sensor". A
+  /// consumer MUST render an `Unspecified` module as ungrouped, never as a
+  /// member of any family.
+  Unspecified
 }
 
 /// Storefront payment model for the plugin listing

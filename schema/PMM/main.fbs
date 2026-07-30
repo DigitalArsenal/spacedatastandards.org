@@ -1,5 +1,5 @@
-// Hash: 950e969865f1af0a44ab90ce79766d736bd3e7b1cdada53c6438b456ae7d263d
-// Version: 1.170.0
+// Hash: e6d2299aa3197576e363815f6e6847a19a8983fdfcccb6050986e4ae4dfa15a9
+// Version: 1.170.1
 // -----------------------------------END_HEADER
 // Provider Module Manifest (PMM)
 // Description
@@ -64,6 +64,7 @@
 // `PROVIDER_DOMAIN` (rollback protection).
 
 include "../EPM/main.fbs";
+include "../PLG/main.fbs";
 
 /// Provider-declared standing of a module in its own offering. Append new
 /// values only; never reorder or reuse existing values.
@@ -216,6 +217,15 @@ table PMMModuleEntry {
   /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of
   /// the last change to this entry.
   UPDATED_AT: string;
+  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  /// is the ONLY sanctioned way to group an offering: a client grouping a
+  /// catalogue MUST read this field and MUST NOT infer family from the shape
+  /// of `MODULE_ID`, which carries no normative structure. Defaults to
+  /// `Unspecified`, which a client MUST render as ungrouped — never silently
+  /// as `Sensor`. Present here, rather than only on
+  /// the linked `$PLG`, so an anonymous client can section the catalogue at
+  /// boot without fetching one `$PLG` per module.
+  PLUGIN_TYPE: pluginCategory = Unspecified;
 }
 
 /// Provider Module Manifest — what one provider node offers, signed by that

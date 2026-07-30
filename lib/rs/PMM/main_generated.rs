@@ -2,6 +2,8 @@
 // @generated
 
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -793,6 +795,7 @@ impl<'a> PMMModuleEntry<'a> {
   pub const VT_ICON_URL: ::flatbuffers::VOffsetT = 46;
   pub const VT_SUPERSEDES_CONTENT_HASH: ::flatbuffers::VOffsetT = 48;
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 50;
+  pub const VT_PLUGIN_TYPE: ::flatbuffers::VOffsetT = 52;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -824,6 +827,7 @@ impl<'a> PMMModuleEntry<'a> {
     if let Some(x) = args.PLG_CID { builder.add_PLG_CID(x); }
     if let Some(x) = args.PLUGIN_ID { builder.add_PLUGIN_ID(x); }
     if let Some(x) = args.MODULE_ID { builder.add_MODULE_ID(x); }
+    builder.add_PLUGIN_TYPE(args.PLUGIN_TYPE);
     builder.add_ENTRY_STATE(args.ENTRY_STATE);
     builder.add_ACCESS_POLICY(args.ACCESS_POLICY);
     builder.add_DEFAULT_ENABLED(args.DEFAULT_ENABLED);
@@ -893,6 +897,7 @@ impl<'a> PMMModuleEntry<'a> {
     let UPDATED_AT = self.UPDATED_AT().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let PLUGIN_TYPE = self.PLUGIN_TYPE();
     PMMModuleEntryT {
       MODULE_ID,
       PLUGIN_ID,
@@ -918,6 +923,7 @@ impl<'a> PMMModuleEntry<'a> {
       ICON_URL,
       SUPERSEDES_CONTENT_HASH,
       UPDATED_AT,
+      PLUGIN_TYPE,
     }
   }
 
@@ -1139,6 +1145,21 @@ impl<'a> PMMModuleEntry<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PMMModuleEntry::VT_UPDATED_AT, None)}
   }
+  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  /// is the ONLY sanctioned way to group an offering: a client grouping a
+  /// catalogue MUST read this field and MUST NOT infer family from the shape
+  /// of `MODULE_ID`, which carries no normative structure. Defaults to
+  /// `Unspecified`, which a client MUST render as ungrouped — never silently
+  /// as `Sensor`. Present here, rather than only on
+  /// the linked `$PLG`, so an anonymous client can section the catalogue at
+  /// boot without fetching one `$PLG` per module.
+  #[inline]
+  pub fn PLUGIN_TYPE(&self) -> pluginCategory {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<pluginCategory>(PMMModuleEntry::VT_PLUGIN_TYPE, Some(pluginCategory::Unspecified)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for PMMModuleEntry<'_> {
@@ -1171,6 +1192,7 @@ impl ::flatbuffers::Verifiable for PMMModuleEntry<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ICON_URL", Self::VT_ICON_URL, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SUPERSEDES_CONTENT_HASH", Self::VT_SUPERSEDES_CONTENT_HASH, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
+     .visit_field::<pluginCategory>("PLUGIN_TYPE", Self::VT_PLUGIN_TYPE, false)?
      .finish();
     Ok(())
   }
@@ -1200,6 +1222,7 @@ pub struct PMMModuleEntryArgs<'a> {
     pub ICON_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SUPERSEDES_CONTENT_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PLUGIN_TYPE: pluginCategory,
 }
 impl<'a> Default for PMMModuleEntryArgs<'a> {
   #[inline]
@@ -1229,6 +1252,7 @@ impl<'a> Default for PMMModuleEntryArgs<'a> {
       ICON_URL: None,
       SUPERSEDES_CONTENT_HASH: None,
       UPDATED_AT: None,
+      PLUGIN_TYPE: pluginCategory::Unspecified,
     }
   }
 }
@@ -1335,6 +1359,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PMMModuleEntryBuilder<'a, 'b,
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PMMModuleEntry::VT_UPDATED_AT, UPDATED_AT);
   }
   #[inline]
+  pub fn add_PLUGIN_TYPE(&mut self, PLUGIN_TYPE: pluginCategory) {
+    self.fbb_.push_slot::<pluginCategory>(PMMModuleEntry::VT_PLUGIN_TYPE, PLUGIN_TYPE, pluginCategory::Unspecified);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PMMModuleEntryBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     PMMModuleEntryBuilder {
@@ -1377,6 +1405,7 @@ impl ::core::fmt::Debug for PMMModuleEntry<'_> {
       ds.field("ICON_URL", &self.ICON_URL());
       ds.field("SUPERSEDES_CONTENT_HASH", &self.SUPERSEDES_CONTENT_HASH());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
+      ds.field("PLUGIN_TYPE", &self.PLUGIN_TYPE());
       ds.finish()
   }
 }
@@ -1407,6 +1436,7 @@ pub struct PMMModuleEntryT {
   pub ICON_URL: Option<alloc::string::String>,
   pub SUPERSEDES_CONTENT_HASH: Option<alloc::string::String>,
   pub UPDATED_AT: Option<alloc::string::String>,
+  pub PLUGIN_TYPE: pluginCategory,
 }
 impl Default for PMMModuleEntryT {
   fn default() -> Self {
@@ -1435,6 +1465,7 @@ impl Default for PMMModuleEntryT {
       ICON_URL: None,
       SUPERSEDES_CONTENT_HASH: None,
       UPDATED_AT: None,
+      PLUGIN_TYPE: pluginCategory::Unspecified,
     }
   }
 }
@@ -1504,6 +1535,7 @@ impl PMMModuleEntryT {
     let UPDATED_AT = self.UPDATED_AT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let PLUGIN_TYPE = self.PLUGIN_TYPE;
     PMMModuleEntry::create(_fbb, &PMMModuleEntryArgs{
       MODULE_ID,
       PLUGIN_ID,
@@ -1529,6 +1561,7 @@ impl PMMModuleEntryT {
       ICON_URL,
       SUPERSEDES_CONTENT_HASH,
       UPDATED_AT,
+      PLUGIN_TYPE,
     })
   }
 }

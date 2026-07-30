@@ -13,6 +13,10 @@
       "type" : "string",
       "enum": ["HOST_OWNED", "PLUGIN_OWNED", "TRANSFERRED"]
     },
+    "pivStatus" : {
+      "type" : "string",
+      "enum": ["OK", "NOT_FOUND", "YIELDED", "FAILED"]
+    },
     "FlatBufferTypeRef" : {
       "type" : "object",
       "description" : "Payload-schema identity for a stream frame or an accepted port type.",
@@ -102,7 +106,91 @@
               }
       },
       "additionalProperties" : false
+    },
+    "PIVRequest" : {
+      "type" : "object",
+      "description" : "Request envelope carried by `plugin_invoke_stream`.",
+      "properties" : {
+        "METHOD_ID" : {
+                "type" : "string",
+                "description" : "Stable method identifier from PLG.METHODS[].METHOD_ID."
+              },
+        "INPUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TAB"},
+                "description" : "Input frames. Each TAB.TYPE_REF names the payload schema and each\nTAB.WIRE_FORMAT selects FLATBUFFER or ALIGNED_BINARY. TAB.OFFSET\nis arena-relative into PAYLOAD_ARENA (or an absolute pointer when\nPAYLOAD_ARENA is empty)."
+              },
+        "PAYLOAD_ARENA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional arena backing the INPUTS payload bodies. Empty means the\ncaller manages arena state out-of-band."
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Optional trace identifier for request correlation."
+              },
+        "OUTPUT_STREAM_CAP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Optional yield-budget hint. Plugins MAY pause queued work after\ndraining this many output frames and return YIELDED for the caller\nto resume. 0 = no hint."
+              }
+      },
+      "required" : ["METHOD_ID"],
+      "additionalProperties" : false
+    },
+    "PIVResponse" : {
+      "type" : "object",
+      "description" : "Response envelope emitted by `plugin_invoke_stream`.",
+      "properties" : {
+        "STATUS_CODE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Method-specific status code. Zero conventionally indicates success."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/pivStatus",
+                "description" : "Coarse envelope status."
+              },
+        "YIELDED" : {
+                "type" : "boolean",
+                "description" : "True when the method yielded before fully draining queued work."
+              },
+        "BACKLOG_REMAINING" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Outstanding frame count remaining after this response. Non-zero\nonly when STATUS == YIELDED."
+              },
+        "OUTPUTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/TAB"},
+                "description" : "Output frames. Each TAB carries schema identity and wire format."
+              },
+        "PAYLOAD_ARENA" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Optional arena backing OUTPUTS payload bodies."
+              },
+        "ERROR_CODE" : {
+                "type" : "string",
+                "description" : "Stable machine-readable error code when STATUS == FAILED."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Human-readable diagnostic when STATUS == FAILED."
+              },
+        "TRACE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Echo of the request's TRACE_ID for correlation."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PIV" : {
+      "type" : "object",
+      "description" : "Envelope — carries either a request or a response. Either REQUEST or\nRESPONSE is populated per message; both populated is undefined.",
+      "properties" : {
+        "REQUEST" : {
+                "$ref" : "#/definitions/PIVRequest"
+              },
+        "RESPONSE" : {
+                "$ref" : "#/definitions/PIVResponse"
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/TAB"
+  "$ref" : "#/definitions/PIV"
 }

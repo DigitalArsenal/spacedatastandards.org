@@ -351,6 +351,21 @@ class PMMModuleEntry : Table() {
         }
     val updatedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
     fun updatedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+     * is the ONLY sanctioned way to group an offering: a client grouping a
+     * catalogue MUST read this field and MUST NOT infer family from the shape
+     * of `MODULE_ID`, which carries no normative structure. Defaults to
+     * `Unspecified`, which a client MUST render as ungrouped — never silently
+     * as `Sensor`. Present here, rather than only on
+     * the linked `$PLG`, so an anonymous client can section the catalogue at
+     * boot without fetching one `$PLG` per module.
+     */
+    val pluginType : Byte
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.get(o + bb_pos) else 21
+        }
     override fun keysCompare(o1: Int, o2: Int, _bb: ByteBuffer) : Int {
          return compareStrings(__offset(4, o1, _bb), __offset(4, o2, _bb), _bb)
     }
@@ -361,8 +376,8 @@ class PMMModuleEntry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPMMModuleEntry(builder: FlatBufferBuilder, moduleIdOffset: Int, pluginIdOffset: Int, plgCidOffset: Int, nameOffset: Int, descriptionOffset: Int, versionOffset: Int, epoch: ULong, contentHashOffset: Int, artifactSizeBytes: ULong, artifactPathOffset: Int, artifactCidOffset: Int, artifactSignatureOffset: Int, trustTier: UByte, defaultEnabled: Boolean, accessPolicy: UByte, entryState: UByte, runtimeTargetsOffset: Int, requiredSchemasOffset: Int, minPermissionsOffset: Int, licenseOffset: Int, documentationUrlOffset: Int, iconUrlOffset: Int, supersedesContentHashOffset: Int, updatedAtOffset: Int) : Int {
-            builder.startTable(24)
+        fun createPMMModuleEntry(builder: FlatBufferBuilder, moduleIdOffset: Int, pluginIdOffset: Int, plgCidOffset: Int, nameOffset: Int, descriptionOffset: Int, versionOffset: Int, epoch: ULong, contentHashOffset: Int, artifactSizeBytes: ULong, artifactPathOffset: Int, artifactCidOffset: Int, artifactSignatureOffset: Int, trustTier: UByte, defaultEnabled: Boolean, accessPolicy: UByte, entryState: UByte, runtimeTargetsOffset: Int, requiredSchemasOffset: Int, minPermissionsOffset: Int, licenseOffset: Int, documentationUrlOffset: Int, iconUrlOffset: Int, supersedesContentHashOffset: Int, updatedAtOffset: Int, pluginType: Byte) : Int {
+            builder.startTable(25)
             addARTIFACTSIZEBYTES(builder, artifactSizeBytes)
             addEPOCH(builder, epoch)
             addUPDATEDAT(builder, updatedAtOffset)
@@ -383,13 +398,14 @@ class PMMModuleEntry : Table() {
             addPLGCID(builder, plgCidOffset)
             addPLUGINID(builder, pluginIdOffset)
             addMODULEID(builder, moduleIdOffset)
+            addPLUGINTYPE(builder, pluginType)
             addENTRYSTATE(builder, entryState)
             addACCESSPOLICY(builder, accessPolicy)
             addDEFAULTENABLED(builder, defaultEnabled)
             addTRUSTTIER(builder, trustTier)
             return endPMMModuleEntry(builder)
         }
-        fun startPMMModuleEntry(builder: FlatBufferBuilder) = builder.startTable(24)
+        fun startPMMModuleEntry(builder: FlatBufferBuilder) = builder.startTable(25)
         fun addMODULEID(builder: FlatBufferBuilder, moduleId: Int)  {
             builder.addOffset(moduleId)
             builder.slot(0)
@@ -450,6 +466,7 @@ class PMMModuleEntry : Table() {
         fun addICONURL(builder: FlatBufferBuilder, iconUrl: Int) = builder.addOffset(21, iconUrl, 0)
         fun addSUPERSEDESCONTENTHASH(builder: FlatBufferBuilder, supersedesContentHash: Int) = builder.addOffset(22, supersedesContentHash, 0)
         fun addUPDATEDAT(builder: FlatBufferBuilder, updatedAt: Int) = builder.addOffset(23, updatedAt, 0)
+        fun addPLUGINTYPE(builder: FlatBufferBuilder, pluginType: Byte) = builder.addByte(24, pluginType, 21)
         fun endPMMModuleEntry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

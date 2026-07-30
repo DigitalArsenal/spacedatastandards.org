@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { pluginCategory } from './pluginCategory.js';
 import { pmmAccessPolicy } from './pmmAccessPolicy.js';
 import { pmmEntryState } from './pmmEntryState.js';
 import { pmmTrustTier } from './pmmTrustTier.js';
@@ -145,6 +146,17 @@ export declare class PMMModuleEntry implements flatbuffers.IUnpackableObject<PMM
      */
     UPDATED_AT(): string | null;
     UPDATED_AT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+     * is the ONLY sanctioned way to group an offering: a client grouping a
+     * catalogue MUST read this field and MUST NOT infer family from the shape
+     * of `MODULE_ID`, which carries no normative structure. Defaults to
+     * `Unspecified`, which a client MUST render as ungrouped — never silently
+     * as `Sensor`. Present here, rather than only on
+     * the linked `$PLG`, so an anonymous client can section the catalogue at
+     * boot without fetching one `$PLG` per module.
+     */
+    PLUGIN_TYPE(): pluginCategory;
     static startPMMModuleEntry(builder: flatbuffers.Builder): void;
     static addModuleId(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset): void;
     static addPluginId(builder: flatbuffers.Builder, PLUGIN_IDOffset: flatbuffers.Offset): void;
@@ -178,8 +190,9 @@ export declare class PMMModuleEntry implements flatbuffers.IUnpackableObject<PMM
     static addIconUrl(builder: flatbuffers.Builder, ICON_URLOffset: flatbuffers.Offset): void;
     static addSupersedesContentHash(builder: flatbuffers.Builder, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset): void;
     static addUpdatedAt(builder: flatbuffers.Builder, UPDATED_ATOffset: flatbuffers.Offset): void;
+    static addPluginType(builder: flatbuffers.Builder, PLUGIN_TYPE: pluginCategory): void;
     static endPMMModuleEntry(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createPMMModuleEntry(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLG_CIDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, EPOCH: bigint, CONTENT_HASHOffset: flatbuffers.Offset, ARTIFACT_SIZE_BYTES: bigint, ARTIFACT_PATHOffset: flatbuffers.Offset, ARTIFACT_CIDOffset: flatbuffers.Offset, ARTIFACT_SIGNATUREOffset: flatbuffers.Offset, TRUST_TIER: pmmTrustTier, DEFAULT_ENABLED: boolean, ACCESS_POLICY: pmmAccessPolicy, ENTRY_STATE: pmmEntryState, RUNTIME_TARGETSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, MIN_PERMISSIONSOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createPMMModuleEntry(builder: flatbuffers.Builder, MODULE_IDOffset: flatbuffers.Offset, PLUGIN_IDOffset: flatbuffers.Offset, PLG_CIDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, EPOCH: bigint, CONTENT_HASHOffset: flatbuffers.Offset, ARTIFACT_SIZE_BYTES: bigint, ARTIFACT_PATHOffset: flatbuffers.Offset, ARTIFACT_CIDOffset: flatbuffers.Offset, ARTIFACT_SIGNATUREOffset: flatbuffers.Offset, TRUST_TIER: pmmTrustTier, DEFAULT_ENABLED: boolean, ACCESS_POLICY: pmmAccessPolicy, ENTRY_STATE: pmmEntryState, RUNTIME_TARGETSOffset: flatbuffers.Offset, REQUIRED_SCHEMASOffset: flatbuffers.Offset, MIN_PERMISSIONSOffset: flatbuffers.Offset, LICENSEOffset: flatbuffers.Offset, DOCUMENTATION_URLOffset: flatbuffers.Offset, ICON_URLOffset: flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, PLUGIN_TYPE: pluginCategory): flatbuffers.Offset;
     unpack(): PMMModuleEntryT;
     unpackTo(_o: PMMModuleEntryT): void;
 }
@@ -208,7 +221,8 @@ export declare class PMMModuleEntryT implements flatbuffers.IGeneratedObject {
     ICON_URL: string | Uint8Array | null;
     SUPERSEDES_CONTENT_HASH: string | Uint8Array | null;
     UPDATED_AT: string | Uint8Array | null;
-    constructor(MODULE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLG_CID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, EPOCH?: bigint, CONTENT_HASH?: string | Uint8Array | null, ARTIFACT_SIZE_BYTES?: bigint, ARTIFACT_PATH?: string | Uint8Array | null, ARTIFACT_CID?: string | Uint8Array | null, ARTIFACT_SIGNATURE?: (number)[], TRUST_TIER?: pmmTrustTier, DEFAULT_ENABLED?: boolean, ACCESS_POLICY?: pmmAccessPolicy, ENTRY_STATE?: pmmEntryState, RUNTIME_TARGETS?: (string)[], REQUIRED_SCHEMAS?: (string)[], MIN_PERMISSIONS?: (string)[], LICENSE?: string | Uint8Array | null, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, SUPERSEDES_CONTENT_HASH?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null);
+    PLUGIN_TYPE: pluginCategory;
+    constructor(MODULE_ID?: string | Uint8Array | null, PLUGIN_ID?: string | Uint8Array | null, PLG_CID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, EPOCH?: bigint, CONTENT_HASH?: string | Uint8Array | null, ARTIFACT_SIZE_BYTES?: bigint, ARTIFACT_PATH?: string | Uint8Array | null, ARTIFACT_CID?: string | Uint8Array | null, ARTIFACT_SIGNATURE?: (number)[], TRUST_TIER?: pmmTrustTier, DEFAULT_ENABLED?: boolean, ACCESS_POLICY?: pmmAccessPolicy, ENTRY_STATE?: pmmEntryState, RUNTIME_TARGETS?: (string)[], REQUIRED_SCHEMAS?: (string)[], MIN_PERMISSIONS?: (string)[], LICENSE?: string | Uint8Array | null, DOCUMENTATION_URL?: string | Uint8Array | null, ICON_URL?: string | Uint8Array | null, SUPERSEDES_CONTENT_HASH?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, PLUGIN_TYPE?: pluginCategory);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PMMModuleEntry.d.ts.map

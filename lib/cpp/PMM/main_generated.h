@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct PMMTrustAnchor;
 struct PMMTrustAnchorBuilder;
@@ -413,7 +414,8 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DOCUMENTATION_URL = 44,
     VT_ICON_URL = 46,
     VT_SUPERSEDES_CONTENT_HASH = 48,
-    VT_UPDATED_AT = 50
+    VT_UPDATED_AT = 50,
+    VT_PLUGIN_TYPE = 52
   };
   /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable
   /// across versions. Required and unique within the manifest.
@@ -539,6 +541,17 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *UPDATED_AT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_UPDATED_AT);
   }
+  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+  /// is the ONLY sanctioned way to group an offering: a client grouping a
+  /// catalogue MUST read this field and MUST NOT infer family from the shape
+  /// of `MODULE_ID`, which carries no normative structure. Defaults to
+  /// `Unspecified`, which a client MUST render as ungrouped — never silently
+  /// as `Sensor`. Present here, rather than only on
+  /// the linked `$PLG`, so an anonymous client can section the catalogue at
+  /// boot without fetching one `$PLG` per module.
+  pluginCategory PLUGIN_TYPE() const {
+    return static_cast<pluginCategory>(GetField<int8_t>(VT_PLUGIN_TYPE, 21));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -587,6 +600,7 @@ struct PMMModuleEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SUPERSEDES_CONTENT_HASH()) &&
            VerifyOffset(verifier, VT_UPDATED_AT) &&
            verifier.VerifyString(UPDATED_AT()) &&
+           VerifyField<int8_t>(verifier, VT_PLUGIN_TYPE, 1) &&
            verifier.EndTable();
   }
 };
@@ -667,6 +681,9 @@ struct PMMModuleEntryBuilder {
   void add_UPDATED_AT(::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT) {
     fbb_.AddOffset(PMMModuleEntry::VT_UPDATED_AT, UPDATED_AT);
   }
+  void add_PLUGIN_TYPE(pluginCategory PLUGIN_TYPE) {
+    fbb_.AddElement<int8_t>(PMMModuleEntry::VT_PLUGIN_TYPE, static_cast<int8_t>(PLUGIN_TYPE), 21);
+  }
   explicit PMMModuleEntryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -704,7 +721,8 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntry(
     ::flatbuffers::Offset<::flatbuffers::String> DOCUMENTATION_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ICON_URL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SUPERSEDES_CONTENT_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified) {
   PMMModuleEntryBuilder builder_(_fbb);
   builder_.add_ARTIFACT_SIZE_BYTES(ARTIFACT_SIZE_BYTES);
   builder_.add_EPOCH(EPOCH);
@@ -726,6 +744,7 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntry(
   builder_.add_PLG_CID(PLG_CID);
   builder_.add_PLUGIN_ID(PLUGIN_ID);
   builder_.add_MODULE_ID(MODULE_ID);
+  builder_.add_PLUGIN_TYPE(PLUGIN_TYPE);
   builder_.add_ENTRY_STATE(ENTRY_STATE);
   builder_.add_ACCESS_POLICY(ACCESS_POLICY);
   builder_.add_DEFAULT_ENABLED(DEFAULT_ENABLED);
@@ -758,7 +777,8 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntryDirect(
     const char *DOCUMENTATION_URL = nullptr,
     const char *ICON_URL = nullptr,
     const char *SUPERSEDES_CONTENT_HASH = nullptr,
-    const char *UPDATED_AT = nullptr) {
+    const char *UPDATED_AT = nullptr,
+    pluginCategory PLUGIN_TYPE = pluginCategory_Unspecified) {
   auto MODULE_ID__ = MODULE_ID ? _fbb.CreateString(MODULE_ID) : 0;
   auto PLUGIN_ID__ = PLUGIN_ID ? _fbb.CreateString(PLUGIN_ID) : 0;
   auto PLG_CID__ = PLG_CID ? _fbb.CreateString(PLG_CID) : 0;
@@ -802,7 +822,8 @@ inline ::flatbuffers::Offset<PMMModuleEntry> CreatePMMModuleEntryDirect(
       DOCUMENTATION_URL__,
       ICON_URL__,
       SUPERSEDES_CONTENT_HASH__,
-      UPDATED_AT__);
+      UPDATED_AT__,
+      PLUGIN_TYPE);
 }
 
 /// Provider Module Manifest — what one provider node offers, signed by that

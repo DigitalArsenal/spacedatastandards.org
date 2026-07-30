@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { pluginCategory } from './pluginCategory.js';
 import { pmmAccessPolicy } from './pmmAccessPolicy.js';
 import { pmmEntryState } from './pmmEntryState.js';
 import { pmmTrustTier } from './pmmTrustTier.js';
@@ -297,8 +298,23 @@ UPDATED_AT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and
+ * is the ONLY sanctioned way to group an offering: a client grouping a
+ * catalogue MUST read this field and MUST NOT infer family from the shape
+ * of `MODULE_ID`, which carries no normative structure. Defaults to
+ * `Unspecified`, which a client MUST render as ungrouped — never silently
+ * as `Sensor`. Present here, rather than only on
+ * the linked `$PLG`, so an anonymous client can section the catalogue at
+ * boot without fetching one `$PLG` per module.
+ */
+PLUGIN_TYPE():pluginCategory {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : pluginCategory.Unspecified;
+}
+
 static startPMMModuleEntry(builder:flatbuffers.Builder) {
-  builder.startObject(24);
+  builder.startObject(25);
 }
 
 static addModuleId(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset) {
@@ -445,13 +461,17 @@ static addUpdatedAt(builder:flatbuffers.Builder, UPDATED_ATOffset:flatbuffers.Of
   builder.addFieldOffset(23, UPDATED_ATOffset, 0);
 }
 
+static addPluginType(builder:flatbuffers.Builder, PLUGIN_TYPE:pluginCategory) {
+  builder.addFieldInt8(24, PLUGIN_TYPE, pluginCategory.Unspecified);
+}
+
 static endPMMModuleEntry(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // MODULE_ID
   return offset;
 }
 
-static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLG_CIDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, EPOCH:bigint, CONTENT_HASHOffset:flatbuffers.Offset, ARTIFACT_SIZE_BYTES:bigint, ARTIFACT_PATHOffset:flatbuffers.Offset, ARTIFACT_CIDOffset:flatbuffers.Offset, ARTIFACT_SIGNATUREOffset:flatbuffers.Offset, TRUST_TIER:pmmTrustTier, DEFAULT_ENABLED:boolean, ACCESS_POLICY:pmmAccessPolicy, ENTRY_STATE:pmmEntryState, RUNTIME_TARGETSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, MIN_PERMISSIONSOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, DOCUMENTATION_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuffers.Offset, PLUGIN_IDOffset:flatbuffers.Offset, PLG_CIDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, EPOCH:bigint, CONTENT_HASHOffset:flatbuffers.Offset, ARTIFACT_SIZE_BYTES:bigint, ARTIFACT_PATHOffset:flatbuffers.Offset, ARTIFACT_CIDOffset:flatbuffers.Offset, ARTIFACT_SIGNATUREOffset:flatbuffers.Offset, TRUST_TIER:pmmTrustTier, DEFAULT_ENABLED:boolean, ACCESS_POLICY:pmmAccessPolicy, ENTRY_STATE:pmmEntryState, RUNTIME_TARGETSOffset:flatbuffers.Offset, REQUIRED_SCHEMASOffset:flatbuffers.Offset, MIN_PERMISSIONSOffset:flatbuffers.Offset, LICENSEOffset:flatbuffers.Offset, DOCUMENTATION_URLOffset:flatbuffers.Offset, ICON_URLOffset:flatbuffers.Offset, SUPERSEDES_CONTENT_HASHOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, PLUGIN_TYPE:pluginCategory):flatbuffers.Offset {
   PMMModuleEntry.startPMMModuleEntry(builder);
   PMMModuleEntry.addModuleId(builder, MODULE_IDOffset);
   PMMModuleEntry.addPluginId(builder, PLUGIN_IDOffset);
@@ -477,6 +497,7 @@ static createPMMModuleEntry(builder:flatbuffers.Builder, MODULE_IDOffset:flatbuf
   PMMModuleEntry.addIconUrl(builder, ICON_URLOffset);
   PMMModuleEntry.addSupersedesContentHash(builder, SUPERSEDES_CONTENT_HASHOffset);
   PMMModuleEntry.addUpdatedAt(builder, UPDATED_ATOffset);
+  PMMModuleEntry.addPluginType(builder, PLUGIN_TYPE);
   return PMMModuleEntry.endPMMModuleEntry(builder);
 }
 
@@ -505,7 +526,8 @@ unpack(): PMMModuleEntryT {
     this.DOCUMENTATION_URL(),
     this.ICON_URL(),
     this.SUPERSEDES_CONTENT_HASH(),
-    this.UPDATED_AT()
+    this.UPDATED_AT(),
+    this.PLUGIN_TYPE()
   );
 }
 
@@ -535,6 +557,7 @@ unpackTo(_o: PMMModuleEntryT): void {
   _o.ICON_URL = this.ICON_URL();
   _o.SUPERSEDES_CONTENT_HASH = this.SUPERSEDES_CONTENT_HASH();
   _o.UPDATED_AT = this.UPDATED_AT();
+  _o.PLUGIN_TYPE = this.PLUGIN_TYPE();
 }
 }
 
@@ -563,7 +586,8 @@ constructor(
   public DOCUMENTATION_URL: string|Uint8Array|null = null,
   public ICON_URL: string|Uint8Array|null = null,
   public SUPERSEDES_CONTENT_HASH: string|Uint8Array|null = null,
-  public UPDATED_AT: string|Uint8Array|null = null
+  public UPDATED_AT: string|Uint8Array|null = null,
+  public PLUGIN_TYPE: pluginCategory = pluginCategory.Unspecified
 ){}
 
 
@@ -611,7 +635,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DOCUMENTATION_URL,
     ICON_URL,
     SUPERSEDES_CONTENT_HASH,
-    UPDATED_AT
+    UPDATED_AT,
+    this.PLUGIN_TYPE
   );
 }
 }

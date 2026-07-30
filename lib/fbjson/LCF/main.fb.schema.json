@@ -75,6 +75,40 @@
         }
       }
     },
+    "licensingConfigMessageType": {
+      "type": "string",
+      "enum": [
+        "Configure",
+        "Status"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Configure": {
+          "value": 0
+        },
+        "Status": {
+          "value": 1
+        }
+      }
+    },
+    "licensingConfigRole": {
+      "type": "string",
+      "enum": [
+        "Provider",
+        "Requester"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Provider": {
+          "value": 0
+        },
+        "Requester": {
+          "value": 1
+        }
+      }
+    },
     "KRF": {
       "type": "object",
       "description": "Key Reference Frame",
@@ -182,49 +216,14 @@
       },
       "additionalProperties": false
     },
-    "licensingConfigMessageType": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
-      "x-flatbuffer-enum-values": {
-        "Configure": {
-          "value": 0
-        },
-        "Status": {
-          "value": 1
-        }
-      }
-    },
-    "licensingConfigRole": {
-      "type": "integer",
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "enum": [
-        0,
-        1
-      ],
-      "x-flatbuffer-enum-values": {
-        "Provider": {
-          "value": 0
-        },
-        "Requester": {
-          "value": 1
-        }
-      }
-    },
     "LCF": {
       "type": "object",
-      "additionalProperties": false,
+      "description": "Licensing Configuration Frame",
       "properties": {
         "MESSAGE_TYPE": {
           "$ref": "#/definitions/licensingConfigMessageType",
           "description": "Distinguishes configuration inputs from runtime status outputs.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "Configure",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "Configure": {
@@ -233,13 +232,13 @@
             "Status": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "Configure"
         },
         "ROLE": {
           "$ref": "#/definitions/licensingConfigRole",
           "description": "Indicates whether the configuration/status applies to server/provider or requester/client behavior.",
           "x-flatbuffer-type": "enum",
-          "x-flatbuffer-default": "Provider",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
             "Provider": {
@@ -248,7 +247,8 @@
             "Requester": {
               "value": 1
             }
-          }
+          },
+          "x-flatbuffer-default": "Provider"
         },
         "PROVIDER_PEER_ID": {
           "type": "string",
@@ -272,28 +272,38 @@
         },
         "ACTIVE_KEY_VERSION": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
           "description": "Logical active publication/grant key version.",
           "x-flatbuffer-type": "uint32"
         },
         "EXPIRES_AT": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Runtime expiry in unix milliseconds, or 0 if unbounded.",
           "x-flatbuffer-type": "uint64"
         },
         "MAX_CLOCK_SKEW_MS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Maximum accepted requester/provider clock skew in milliseconds.",
           "x-flatbuffer-type": "uint64"
         },
         "CHALLENGE_TTL_MS": {
           "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
           "description": "Challenge time-to-live in milliseconds.",
           "x-flatbuffer-type": "uint64"
         },
         "CAPABILITY_TOKEN": {
           "type": "array",
           "items": {
-            "type": "integer"
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
           },
           "description": "Optional capability token bytes returned with successful grants.",
           "x-flatbuffer-type": "[ubyte]"
@@ -321,7 +331,7 @@
           "x-flatbuffer-type": "string"
         }
       },
-      "description": "Licensing Configuration Frame"
+      "additionalProperties": false
     }
   },
   "$ref": "#/definitions/LCF",

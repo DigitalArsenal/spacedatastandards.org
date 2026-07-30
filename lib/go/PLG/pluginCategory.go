@@ -46,6 +46,17 @@ const (
 	pluginCategoryPublisher      pluginCategory = 17
 	/// Basilisk astrodynamics simulation module
 	pluginCategoryBasilisk       pluginCategory = 18
+	/// Maneuver planning, targeting and trajectory optimization
+	pluginCategoryManeuver       pluginCategory = 19
+	/// A composed flow published as a single loadable module. The unit is a
+	/// graph of other modules, not a leaf algorithm.
+	pluginCategoryFlow           pluginCategory = 20
+	/// No family stated. Sits at the end of the enum rather than at 0 because
+	/// this enum is append-only and `Sensor` already holds 0; it exists so a
+	/// record can distinguish "the provider did not say" from "Sensor". A
+	/// consumer MUST render an `Unspecified` module as ungrouped, never as a
+	/// member of any family.
+	pluginCategoryUnspecified    pluginCategory = 21
 )
 
 var EnumNamespluginCategory = map[pluginCategory]string{
@@ -68,6 +79,9 @@ var EnumNamespluginCategory = map[pluginCategory]string{
 	pluginCategoryStorefront:     "Storefront",
 	pluginCategoryPublisher:      "Publisher",
 	pluginCategoryBasilisk:       "Basilisk",
+	pluginCategoryManeuver:       "Maneuver",
+	pluginCategoryFlow:           "Flow",
+	pluginCategoryUnspecified:    "Unspecified",
 }
 
 var EnumValuespluginCategory = map[string]pluginCategory{
@@ -90,6 +104,9 @@ var EnumValuespluginCategory = map[string]pluginCategory{
 	"Storefront":     pluginCategoryStorefront,
 	"Publisher":      pluginCategoryPublisher,
 	"Basilisk":       pluginCategoryBasilisk,
+	"Maneuver":       pluginCategoryManeuver,
+	"Flow":           pluginCategoryFlow,
+	"Unspecified":    pluginCategoryUnspecified,
 }
 
 func (v pluginCategory) String() string {

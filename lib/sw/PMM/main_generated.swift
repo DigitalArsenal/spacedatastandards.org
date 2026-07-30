@@ -8,458 +8,257 @@ import Common
 
 import FlatBuffers
 
-public enum KeyType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case signing = 0
-  case encryption = 1
+///  Typed Arena Buffer — descriptor for a schema-tagged payload frame moving
+///  through an arena-backed plugin stream. Carries enough identity for a
+///  receiver to dispatch on schema without inspecting the payload bytes.
+///  Logical payload wire format for a stream frame or an accepted port type.
+public enum payloadWireFormat: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Body is a FlatBuffer with the root + file identifier stated in FLATBUFFER_TYPE_REF.
+  case flatbuffer = 0
+  ///  Body is a raw aligned binary chunk (for example zero-copy structs).
+  case alignedBinary = 1
 
-  public static var max: KeyType { return .encryption }
-  public static var min: KeyType { return .signing }
+  public static var max: payloadWireFormat { return .alignedBinary }
+  public static var min: payloadWireFormat { return .flatbuffer }
 }
 
 
-public enum EntityType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
-  public typealias T = Int8
-  public static var byteSize: Int { return MemoryLayout<Int8>.size }
-  public var value: Int8 { return self.rawValue }
-  case user = 0
-  case node = 1
+///  Buffer mutability contract advertised by a stream port.
+public enum bufferMutability: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Buffer is immutable after produce.
+  case immutable = 0
+  ///  Buffer may be written in place by the owner (single writer).
+  case singleWriterMutable = 1
+  ///  Buffer is append-only (rings / logs).
+  case appendOnly = 2
 
-  public static var max: EntityType { return .node }
-  public static var min: EntityType { return .user }
+  public static var max: bufferMutability { return .appendOnly }
+  public static var min: bufferMutability { return .immutable }
 }
 
 
-///  Represents cryptographic key information
-public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Buffer ownership contract advertised by a stream port.
+public enum bufferOwnership: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Arena / host owns the backing bytes; receiver must not free.
+  case hostOwned = 0
+  ///  Plugin owns the backing bytes; host must not free.
+  case pluginOwned = 1
+  ///  Ownership transfers with the frame (hand-off semantics).
+  case transferred = 2
+
+  public static var max: bufferOwnership { return .transferred }
+  public static var min: bufferOwnership { return .hostOwned }
+}
+
+
+///  Payload-schema identity for a stream frame or an accepted port type.
+public struct FlatBufferTypeRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$EPM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: CryptoKey.id, addPrefix: prefix) }
+  public static var id: String { "$TAB" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: FlatBufferTypeRef.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let PUBLIC_KEY: VOffset = 4
-    static let XPUB: VOffset = 6
-    static let PRIVATE_KEY: VOffset = 8
-    static let XPRIV: VOffset = 10
-    static let KEY_ADDRESS: VOffset = 12
-    static let ADDRESS_TYPE: VOffset = 14
-    static let KEY_TYPE: VOffset = 16
+    static let SCHEMA_NAME: VOffset = 4
+    static let FILE_IDENTIFIER: VOffset = 6
+    static let SCHEMA_VERSION: VOffset = 8
+    static let ROOT_TYPE: VOffset = 10
+    static let SCHEMA_HASH: VOffset = 12
+    static let ACCEPTS_ANY_FLATBUFFER: VOffset = 14
+    static let WIRE_FORMAT: VOffset = 16
+    static let FIXED_STRING_LENGTH: VOffset = 18
+    static let BYTE_LENGTH: VOffset = 20
+    static let REQUIRED_ALIGNMENT: VOffset = 22
   }
 
-  ///  Public part of the cryptographic key, in hexidecimal format
-  public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
-  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-  public var XPUB: String? { let o = _accessor.offset(VT.XPUB); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPUB) }
-  ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
-  public var PRIVATE_KEY: String? { let o = _accessor.offset(VT.PRIVATE_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PRIVATE_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRIVATE_KEY) }
-  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-  public var XPRIV: String? { let o = _accessor.offset(VT.XPRIV); return o == 0 ? nil : _accessor.string(at: o) }
-  public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPRIV) }
-  ///  Address generated from the cryptographic key
-  public var KEY_ADDRESS: String? { let o = _accessor.offset(VT.KEY_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ADDRESS) }
-  ///  Type of the address generated from the cryptographic key
-  public var ADDRESS_TYPE: String? { let o = _accessor.offset(VT.ADDRESS_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS_TYPE) }
-  ///  Type of the cryptographic key (signing or encryption)
-  public var KEY_TYPE: KeyType { let o = _accessor.offset(VT.KEY_TYPE); return o == 0 ? .signing : KeyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .signing }
-  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
-  public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VT.XPUB) }
-  public static func add(PRIVATE_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIVATE_KEY, at: VT.PRIVATE_KEY) }
-  public static func add(XPRIV: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPRIV, at: VT.XPRIV) }
-  public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VT.KEY_ADDRESS) }
-  public static func add(ADDRESS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_TYPE, at: VT.ADDRESS_TYPE) }
-  public static func add(KEY_TYPE: KeyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_TYPE.rawValue, def: 0, at: VT.KEY_TYPE) }
-  public static func endCryptoKey(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createCryptoKey(
+  ///  Logical schema name (for example `OMM.fbs` or `OCM.fbs`).
+  public var SCHEMA_NAME: String? { let o = _accessor.offset(VT.SCHEMA_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_NAME) }
+  ///  Optional 4-byte FlatBuffer file identifier.
+  public var FILE_IDENTIFIER: String? { let o = _accessor.offset(VT.FILE_IDENTIFIER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILE_IDENTIFIERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_IDENTIFIER) }
+  ///  Optional semver or schema revision string.
+  public var SCHEMA_VERSION: String? { let o = _accessor.offset(VT.SCHEMA_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SCHEMA_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SCHEMA_VERSION) }
+  ///  Optional root type name within the schema.
+  public var ROOT_TYPE: String? { let o = _accessor.offset(VT.ROOT_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ROOT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ROOT_TYPE) }
+  ///  Optional schema hash bytes for stronger compatibility checks.
+  public var SCHEMA_HASH: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.SCHEMA_HASH, byteSize: 1) }
+  public func withUnsafePointerToSchemaHash<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.SCHEMA_HASH, body: body) }
+  ///  True when this port/type set accepts any FlatBuffer frame.
+  public var ACCEPTS_ANY_FLATBUFFER: Bool { let o = _accessor.offset(VT.ACCEPTS_ANY_FLATBUFFER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Logical wire format for this accepted type.
+  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
+  ///  Fixed string length for aligned-binary string fields, when applicable.
+  public var FIXED_STRING_LENGTH: UInt16 { let o = _accessor.offset(VT.FIXED_STRING_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Byte length for fixed-size aligned-binary records, when applicable.
+  public var BYTE_LENGTH: UInt32 { let o = _accessor.offset(VT.BYTE_LENGTH); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Required start alignment for aligned-binary records, when applicable.
+  public var REQUIRED_ALIGNMENT: UInt16 { let o = _accessor.offset(VT.REQUIRED_ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
+  public static func add(FILE_IDENTIFIER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILE_IDENTIFIER, at: VT.FILE_IDENTIFIER) }
+  public static func add(SCHEMA_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_VERSION, at: VT.SCHEMA_VERSION) }
+  public static func add(ROOT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROOT_TYPE, at: VT.ROOT_TYPE) }
+  public static func addVectorOf(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
+  public static func add(ACCEPTS_ANY_FLATBUFFER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACCEPTS_ANY_FLATBUFFER, def: false,
+   at: VT.ACCEPTS_ANY_FLATBUFFER) }
+  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
+  public static func add(FIXED_STRING_LENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIXED_STRING_LENGTH, def: 0, at: VT.FIXED_STRING_LENGTH) }
+  public static func add(BYTE_LENGTH: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BYTE_LENGTH, def: 0, at: VT.BYTE_LENGTH) }
+  public static func add(REQUIRED_ALIGNMENT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REQUIRED_ALIGNMENT, def: 0, at: VT.REQUIRED_ALIGNMENT) }
+  public static func endFlatBufferTypeRef(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createFlatBufferTypeRef(
     _ fbb: inout FlatBufferBuilder,
-    PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
-    XPUBOffset XPUB: Offset = Offset(),
-    PRIVATE_KEYOffset PRIVATE_KEY: Offset = Offset(),
-    XPRIVOffset XPRIV: Offset = Offset(),
-    KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset(),
-    ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset(),
-    KEY_TYPE: KeyType = .signing
+    SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
+    FILE_IDENTIFIEROffset FILE_IDENTIFIER: Offset = Offset(),
+    SCHEMA_VERSIONOffset SCHEMA_VERSION: Offset = Offset(),
+    ROOT_TYPEOffset ROOT_TYPE: Offset = Offset(),
+    SCHEMA_HASHVectorOffset SCHEMA_HASH: Offset = Offset(),
+    ACCEPTS_ANY_FLATBUFFER: Bool = false,
+    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
+    FIXED_STRING_LENGTH: UInt16 = 0,
+    BYTE_LENGTH: UInt32 = 0,
+    REQUIRED_ALIGNMENT: UInt16 = 0
   ) -> Offset {
-    let __start = CryptoKey.startCryptoKey(&fbb)
-    CryptoKey.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
-    CryptoKey.add(XPUB: XPUB, &fbb)
-    CryptoKey.add(PRIVATE_KEY: PRIVATE_KEY, &fbb)
-    CryptoKey.add(XPRIV: XPRIV, &fbb)
-    CryptoKey.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
-    CryptoKey.add(ADDRESS_TYPE: ADDRESS_TYPE, &fbb)
-    CryptoKey.add(KEY_TYPE: KEY_TYPE, &fbb)
-    return CryptoKey.endCryptoKey(&fbb, start: __start)
+    let __start = FlatBufferTypeRef.startFlatBufferTypeRef(&fbb)
+    FlatBufferTypeRef.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
+    FlatBufferTypeRef.add(FILE_IDENTIFIER: FILE_IDENTIFIER, &fbb)
+    FlatBufferTypeRef.add(SCHEMA_VERSION: SCHEMA_VERSION, &fbb)
+    FlatBufferTypeRef.add(ROOT_TYPE: ROOT_TYPE, &fbb)
+    FlatBufferTypeRef.addVectorOf(SCHEMA_HASH: SCHEMA_HASH, &fbb)
+    FlatBufferTypeRef.add(ACCEPTS_ANY_FLATBUFFER: ACCEPTS_ANY_FLATBUFFER, &fbb)
+    FlatBufferTypeRef.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
+    FlatBufferTypeRef.add(FIXED_STRING_LENGTH: FIXED_STRING_LENGTH, &fbb)
+    FlatBufferTypeRef.add(BYTE_LENGTH: BYTE_LENGTH, &fbb)
+    FlatBufferTypeRef.add(REQUIRED_ALIGNMENT: REQUIRED_ALIGNMENT, &fbb)
+    return FlatBufferTypeRef.endFlatBufferTypeRef(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.XPUB, fieldName: "XPUB", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PRIVATE_KEY, fieldName: "PRIVATE_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.XPRIV, fieldName: "XPRIV", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KEY_ADDRESS, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDRESS_TYPE, fieldName: "ADDRESS_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KEY_TYPE, fieldName: "KEY_TYPE", required: false, type: KeyType.self)
+    try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.FILE_IDENTIFIER, fieldName: "FILE_IDENTIFIER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_VERSION, fieldName: "SCHEMA_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ROOT_TYPE, fieldName: "ROOT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.ACCEPTS_ANY_FLATBUFFER, fieldName: "ACCEPTS_ANY_FLATBUFFER", required: false, type: Bool.self)
+    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
+    try _v.visit(field: VT.FIXED_STRING_LENGTH, fieldName: "FIXED_STRING_LENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BYTE_LENGTH, fieldName: "BYTE_LENGTH", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REQUIRED_ALIGNMENT, fieldName: "REQUIRED_ALIGNMENT", required: false, type: UInt16.self)
     _v.finish()
   }
 }
 
-///  Represents a geographic address
-public struct Address: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+///  Typed Arena Buffer — one descriptor for a payload slot in a shared arena.
+public struct TAB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
   private var _accessor: Table
 
-  public static var id: String { "$EPM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: Address.id, addPrefix: prefix) }
+  public static var id: String { "$TAB" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: TAB.id, addPrefix: prefix) }
   private init(_ t: Table) { _accessor = t }
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let COUNTRY: VOffset = 4
-    static let REGION: VOffset = 6
-    static let LOCALITY: VOffset = 8
-    static let POSTAL_CODE: VOffset = 10
-    static let STREET: VOffset = 12
-    static let POST_OFFICE_BOX_NUMBER: VOffset = 14
+    static let OFFSET: VOffset = 4
+    static let SIZE: VOffset = 6
+    static let ALIGNMENT: VOffset = 8
+    static let WIRE_FORMAT: VOffset = 10
+    static let TYPE_REF: VOffset = 12
+    static let MUTABILITY: VOffset = 14
+    static let OWNERSHIP: VOffset = 16
+    static let FRAME_ID: VOffset = 18
+    static let PORT_ID: VOffset = 20
   }
 
-  ///  Country of the address
-  public var COUNTRY: String? { let o = _accessor.offset(VT.COUNTRY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COUNTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COUNTRY) }
-  ///  Region of the address (e.g., state or province)
-  public var REGION: String? { let o = _accessor.offset(VT.REGION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REGION) }
-  ///  Locality of the address (e.g., city or town)
-  public var LOCALITY: String? { let o = _accessor.offset(VT.LOCALITY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LOCALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LOCALITY) }
-  ///  Postal code of the address
-  public var POSTAL_CODE: String? { let o = _accessor.offset(VT.POSTAL_CODE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSTAL_CODESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POSTAL_CODE) }
-  ///  Street address
-  public var STREET: String? { let o = _accessor.offset(VT.STREET); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STREETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STREET) }
-  ///  Post office box number
-  public var POST_OFFICE_BOX_NUMBER: String? { let o = _accessor.offset(VT.POST_OFFICE_BOX_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POST_OFFICE_BOX_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.POST_OFFICE_BOX_NUMBER) }
-  public static func startAddress(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
-  public static func add(COUNTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COUNTRY, at: VT.COUNTRY) }
-  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VT.REGION) }
-  public static func add(LOCALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LOCALITY, at: VT.LOCALITY) }
-  public static func add(POSTAL_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSTAL_CODE, at: VT.POSTAL_CODE) }
-  public static func add(STREET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STREET, at: VT.STREET) }
-  public static func add(POST_OFFICE_BOX_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POST_OFFICE_BOX_NUMBER, at: VT.POST_OFFICE_BOX_NUMBER) }
-  public static func endAddress(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createAddress(
+  ///  Byte offset of the payload body within the arena.
+  public var OFFSET: UInt32 { let o = _accessor.offset(VT.OFFSET); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Byte length of the payload body.
+  public var SIZE: UInt32 { let o = _accessor.offset(VT.SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Required start alignment of the payload body (in bytes).
+  public var ALIGNMENT: UInt32 { let o = _accessor.offset(VT.ALIGNMENT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Wire format for the body.
+  public var WIRE_FORMAT: payloadWireFormat { let o = _accessor.offset(VT.WIRE_FORMAT); return o == 0 ? .flatbuffer : payloadWireFormat(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .flatbuffer }
+  ///  Optional payload schema identity.
+  public var TYPE_REF: FlatBufferTypeRef? { let o = _accessor.offset(VT.TYPE_REF); return o == 0 ? nil : FlatBufferTypeRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Mutability contract for the slot.
+  public var MUTABILITY: bufferMutability { let o = _accessor.offset(VT.MUTABILITY); return o == 0 ? .immutable : bufferMutability(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .immutable }
+  ///  Ownership contract for the slot.
+  public var OWNERSHIP: bufferOwnership { let o = _accessor.offset(VT.OWNERSHIP); return o == 0 ? .hostOwned : bufferOwnership(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .hostOwned }
+  ///  Optional opaque frame identifier for stream bookkeeping.
+  public var FRAME_ID: UInt64 { let o = _accessor.offset(VT.FRAME_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Optional port identifier for frames that route to/from a named
+  ///  input or output port on a method (maps to
+  ///  `PLG.PLGPortManifest.PORT_ID`). Empty for arena frames that carry
+  ///  no port routing hint.
+  public var PORT_ID: String? { let o = _accessor.offset(VT.PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PORT_ID) }
+  public static func startTAB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(OFFSET: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OFFSET, def: 0, at: VT.OFFSET) }
+  public static func add(SIZE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIZE, def: 0, at: VT.SIZE) }
+  public static func add(ALIGNMENT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALIGNMENT, def: 0, at: VT.ALIGNMENT) }
+  public static func add(WIRE_FORMAT: payloadWireFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WIRE_FORMAT.rawValue, def: 0, at: VT.WIRE_FORMAT) }
+  public static func add(TYPE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE_REF, at: VT.TYPE_REF) }
+  public static func add(MUTABILITY: bufferMutability, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MUTABILITY.rawValue, def: 0, at: VT.MUTABILITY) }
+  public static func add(OWNERSHIP: bufferOwnership, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OWNERSHIP.rawValue, def: 0, at: VT.OWNERSHIP) }
+  public static func add(FRAME_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME_ID, def: 0, at: VT.FRAME_ID) }
+  public static func add(PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PORT_ID, at: VT.PORT_ID) }
+  public static func endTAB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createTAB(
     _ fbb: inout FlatBufferBuilder,
-    COUNTRYOffset COUNTRY: Offset = Offset(),
-    REGIONOffset REGION: Offset = Offset(),
-    LOCALITYOffset LOCALITY: Offset = Offset(),
-    POSTAL_CODEOffset POSTAL_CODE: Offset = Offset(),
-    STREETOffset STREET: Offset = Offset(),
-    POST_OFFICE_BOX_NUMBEROffset POST_OFFICE_BOX_NUMBER: Offset = Offset()
+    OFFSET: UInt32 = 0,
+    SIZE: UInt32 = 0,
+    ALIGNMENT: UInt32 = 0,
+    WIRE_FORMAT: payloadWireFormat = .flatbuffer,
+    TYPE_REFOffset TYPE_REF: Offset = Offset(),
+    MUTABILITY: bufferMutability = .immutable,
+    OWNERSHIP: bufferOwnership = .hostOwned,
+    FRAME_ID: UInt64 = 0,
+    PORT_IDOffset PORT_ID: Offset = Offset()
   ) -> Offset {
-    let __start = Address.startAddress(&fbb)
-    Address.add(COUNTRY: COUNTRY, &fbb)
-    Address.add(REGION: REGION, &fbb)
-    Address.add(LOCALITY: LOCALITY, &fbb)
-    Address.add(POSTAL_CODE: POSTAL_CODE, &fbb)
-    Address.add(STREET: STREET, &fbb)
-    Address.add(POST_OFFICE_BOX_NUMBER: POST_OFFICE_BOX_NUMBER, &fbb)
-    return Address.endAddress(&fbb, start: __start)
+    let __start = TAB.startTAB(&fbb)
+    TAB.add(OFFSET: OFFSET, &fbb)
+    TAB.add(SIZE: SIZE, &fbb)
+    TAB.add(ALIGNMENT: ALIGNMENT, &fbb)
+    TAB.add(WIRE_FORMAT: WIRE_FORMAT, &fbb)
+    TAB.add(TYPE_REF: TYPE_REF, &fbb)
+    TAB.add(MUTABILITY: MUTABILITY, &fbb)
+    TAB.add(OWNERSHIP: OWNERSHIP, &fbb)
+    TAB.add(FRAME_ID: FRAME_ID, &fbb)
+    TAB.add(PORT_ID: PORT_ID, &fbb)
+    return TAB.endTAB(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.COUNTRY, fieldName: "COUNTRY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.REGION, fieldName: "REGION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LOCALITY, fieldName: "LOCALITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.POSTAL_CODE, fieldName: "POSTAL_CODE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.STREET, fieldName: "STREET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.POST_OFFICE_BOX_NUMBER, fieldName: "POST_OFFICE_BOX_NUMBER", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Proves a blockchain key derives from the same HD wallet as the signing key
-public struct ChainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: ChainProof.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let CHAIN: VOffset = 4
-    static let ADDRESS: VOffset = 6
-    static let PUBLIC_KEY: VOffset = 8
-    static let KEY_PATH: VOffset = 10
-    static let SIGNATURE: VOffset = 12
-    static let SIGNED_PAYLOAD: VOffset = 14
-    static let ALGORITHM: VOffset = 16
-    static let ENCODING: VOffset = 18
-  }
-
-  ///  Chain identifier (e.g., "bitcoin", "ethereum", "solana")
-  public var CHAIN: String? { let o = _accessor.offset(VT.CHAIN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CHAIN) }
-  ///  Derived blockchain address
-  public var ADDRESS: String? { let o = _accessor.offset(VT.ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS) }
-  ///  Public key for this chain (hex-encoded)
-  public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
-  ///  BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
-  public var KEY_PATH: String? { let o = _accessor.offset(VT.KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
-  public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_PATH) }
-  ///  Signature over the attestation payload (hex-encoded)
-  public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
-  ///  The canonical payload that was signed (hex-encoded)
-  public var SIGNED_PAYLOAD: String? { let o = _accessor.offset(VT.SIGNED_PAYLOAD); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNED_PAYLOADSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_PAYLOAD) }
-  ///  Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
-  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
-  ///  Signature encoding format (e.g., "compact", "raw-ed25519")
-  public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
-  public static func startChainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
-  public static func add(CHAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN, at: VT.CHAIN) }
-  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VT.ADDRESS) }
-  public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
-  public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VT.KEY_PATH) }
-  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func add(SIGNED_PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_PAYLOAD, at: VT.SIGNED_PAYLOAD) }
-  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
-  public static func add(ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCODING, at: VT.ENCODING) }
-  public static func endChainProof(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createChainProof(
-    _ fbb: inout FlatBufferBuilder,
-    CHAINOffset CHAIN: Offset = Offset(),
-    ADDRESSOffset ADDRESS: Offset = Offset(),
-    PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
-    KEY_PATHOffset KEY_PATH: Offset = Offset(),
-    SIGNATUREOffset SIGNATURE: Offset = Offset(),
-    SIGNED_PAYLOADOffset SIGNED_PAYLOAD: Offset = Offset(),
-    ALGORITHMOffset ALGORITHM: Offset = Offset(),
-    ENCODINGOffset ENCODING: Offset = Offset()
-  ) -> Offset {
-    let __start = ChainProof.startChainProof(&fbb)
-    ChainProof.add(CHAIN: CHAIN, &fbb)
-    ChainProof.add(ADDRESS: ADDRESS, &fbb)
-    ChainProof.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
-    ChainProof.add(KEY_PATH: KEY_PATH, &fbb)
-    ChainProof.add(SIGNATURE: SIGNATURE, &fbb)
-    ChainProof.add(SIGNED_PAYLOAD: SIGNED_PAYLOAD, &fbb)
-    ChainProof.add(ALGORITHM: ALGORITHM, &fbb)
-    ChainProof.add(ENCODING: ENCODING, &fbb)
-    return ChainProof.endChainProof(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.CHAIN, fieldName: "CHAIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDRESS, fieldName: "ADDRESS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KEY_PATH, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SIGNED_PAYLOAD, fieldName: "SIGNED_PAYLOAD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: ForwardOffset<String>.self)
-    _v.finish()
-  }
-}
-
-///  Entity Profile Message
-public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
-
-  static func validateVersion() { FlatBuffersVersion_25_12_19() }
-  public var __buffer: ByteBuffer! { return _accessor.bb }
-  private var _accessor: Table
-
-  public static var id: String { "$EPM" }
-  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EPM.id, addPrefix: prefix) }
-  private init(_ t: Table) { _accessor = t }
-  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
-
-  private struct VT {
-    static let DN: VOffset = 4
-    static let LEGAL_NAME: VOffset = 6
-    static let FAMILY_NAME: VOffset = 8
-    static let GIVEN_NAME: VOffset = 10
-    static let ADDITIONAL_NAME: VOffset = 12
-    static let HONORIFIC_PREFIX: VOffset = 14
-    static let HONORIFIC_SUFFIX: VOffset = 16
-    static let JOB_TITLE: VOffset = 18
-    static let OCCUPATION: VOffset = 20
-    static let ADDRESS: VOffset = 22
-    static let ALTERNATE_NAMES: VOffset = 24
-    static let EMAIL: VOffset = 26
-    static let TELEPHONE: VOffset = 28
-    static let KEYS: VOffset = 30
-    static let MULTIFORMAT_ADDRESS: VOffset = 32
-    static let SIGNATURE: VOffset = 34
-    static let SIGNATURE_TIMESTAMP: VOffset = 36
-    static let CHAIN_PROOFS: VOffset = 38
-    static let ENTITY_TYPE: VOffset = 40
-  }
-
-  ///  Distinguished Name of the entity
-  public var DN: String? { let o = _accessor.offset(VT.DN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DNSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DN) }
-  ///  Common name of the entity (person or organization)
-  public var LEGAL_NAME: String? { let o = _accessor.offset(VT.LEGAL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LEGAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LEGAL_NAME) }
-  ///  Family name or surname of the person
-  public var FAMILY_NAME: String? { let o = _accessor.offset(VT.FAMILY_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FAMILY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FAMILY_NAME) }
-  ///  Given name or first name of the person
-  public var GIVEN_NAME: String? { let o = _accessor.offset(VT.GIVEN_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var GIVEN_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.GIVEN_NAME) }
-  ///  Additional name or middle name of the person
-  public var ADDITIONAL_NAME: String? { let o = _accessor.offset(VT.ADDITIONAL_NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ADDITIONAL_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDITIONAL_NAME) }
-  ///  Honorific prefix preceding the person's name (e.g., Mr., Dr.)
-  public var HONORIFIC_PREFIX: String? { let o = _accessor.offset(VT.HONORIFIC_PREFIX); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HONORIFIC_PREFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HONORIFIC_PREFIX) }
-  ///  Honorific suffix following the person's name (e.g., Jr., Sr.)
-  public var HONORIFIC_SUFFIX: String? { let o = _accessor.offset(VT.HONORIFIC_SUFFIX); return o == 0 ? nil : _accessor.string(at: o) }
-  public var HONORIFIC_SUFFIXSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HONORIFIC_SUFFIX) }
-  ///  Job title of the person
-  public var JOB_TITLE: String? { let o = _accessor.offset(VT.JOB_TITLE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var JOB_TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.JOB_TITLE) }
-  ///  Occupation of the person
-  public var OCCUPATION: String? { let o = _accessor.offset(VT.OCCUPATION); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OCCUPATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OCCUPATION) }
-  ///  Physical Address
-  public var ADDRESS: Address? { let o = _accessor.offset(VT.ADDRESS); return o == 0 ? nil : Address(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Alternate names for the entity
-  public var ALTERNATE_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.ALTERNATE_NAMES, byteSize: 4) }
-  ///  Email address of the entity
-  public var EMAIL: String? { let o = _accessor.offset(VT.EMAIL); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EMAILSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EMAIL) }
-  ///  Telephone number of the entity
-  public var TELEPHONE: String? { let o = _accessor.offset(VT.TELEPHONE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TELEPHONESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TELEPHONE) }
-  ///  Cryptographic keys associated with the entity
-  public var KEYS: FlatbufferVector<CryptoKey> { return _accessor.vector(at: VT.KEYS, byteSize: 4) }
-  ///  Multiformat addresses associated with the entity
-  public var MULTIFORMAT_ADDRESS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MULTIFORMAT_ADDRESS, byteSize: 4) }
-  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
-  public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
-  ///  Unix timestamp (seconds) when the EPM was signed
-  public var SIGNATURE_TIMESTAMP: Int64 { let o = _accessor.offset(VT.SIGNATURE_TIMESTAMP); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  ///  Chain binding proofs linking blockchain keys to the same HD wallet
-  public var CHAIN_PROOFS: FlatbufferVector<ChainProof> { return _accessor.vector(at: VT.CHAIN_PROOFS, byteSize: 4) }
-  ///  Type of entity represented by this profile
-  public var ENTITY_TYPE: EntityType { let o = _accessor.offset(VT.ENTITY_TYPE); return o == 0 ? .user : EntityType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .user }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
-  public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VT.DN) }
-  public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VT.LEGAL_NAME) }
-  public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VT.FAMILY_NAME) }
-  public static func add(GIVEN_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GIVEN_NAME, at: VT.GIVEN_NAME) }
-  public static func add(ADDITIONAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDITIONAL_NAME, at: VT.ADDITIONAL_NAME) }
-  public static func add(HONORIFIC_PREFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_PREFIX, at: VT.HONORIFIC_PREFIX) }
-  public static func add(HONORIFIC_SUFFIX: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HONORIFIC_SUFFIX, at: VT.HONORIFIC_SUFFIX) }
-  public static func add(JOB_TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JOB_TITLE, at: VT.JOB_TITLE) }
-  public static func add(OCCUPATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCUPATION, at: VT.OCCUPATION) }
-  public static func add(ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS, at: VT.ADDRESS) }
-  public static func addVectorOf(ALTERNATE_NAMES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALTERNATE_NAMES, at: VT.ALTERNATE_NAMES) }
-  public static func add(EMAIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMAIL, at: VT.EMAIL) }
-  public static func add(TELEPHONE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TELEPHONE, at: VT.TELEPHONE) }
-  public static func addVectorOf(KEYS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYS, at: VT.KEYS) }
-  public static func addVectorOf(MULTIFORMAT_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MULTIFORMAT_ADDRESS, at: VT.MULTIFORMAT_ADDRESS) }
-  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
-  public static func add(SIGNATURE_TIMESTAMP: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNATURE_TIMESTAMP, def: 0, at: VT.SIGNATURE_TIMESTAMP) }
-  public static func addVectorOf(CHAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_PROOFS, at: VT.CHAIN_PROOFS) }
-  public static func add(ENTITY_TYPE: EntityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_TYPE.rawValue, def: 0, at: VT.ENTITY_TYPE) }
-  public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
-  public static func createEPM(
-    _ fbb: inout FlatBufferBuilder,
-    DNOffset DN: Offset = Offset(),
-    LEGAL_NAMEOffset LEGAL_NAME: Offset = Offset(),
-    FAMILY_NAMEOffset FAMILY_NAME: Offset = Offset(),
-    GIVEN_NAMEOffset GIVEN_NAME: Offset = Offset(),
-    ADDITIONAL_NAMEOffset ADDITIONAL_NAME: Offset = Offset(),
-    HONORIFIC_PREFIXOffset HONORIFIC_PREFIX: Offset = Offset(),
-    HONORIFIC_SUFFIXOffset HONORIFIC_SUFFIX: Offset = Offset(),
-    JOB_TITLEOffset JOB_TITLE: Offset = Offset(),
-    OCCUPATIONOffset OCCUPATION: Offset = Offset(),
-    ADDRESSOffset ADDRESS: Offset = Offset(),
-    ALTERNATE_NAMESVectorOffset ALTERNATE_NAMES: Offset = Offset(),
-    EMAILOffset EMAIL: Offset = Offset(),
-    TELEPHONEOffset TELEPHONE: Offset = Offset(),
-    KEYSVectorOffset KEYS: Offset = Offset(),
-    MULTIFORMAT_ADDRESSVectorOffset MULTIFORMAT_ADDRESS: Offset = Offset(),
-    SIGNATUREOffset SIGNATURE: Offset = Offset(),
-    SIGNATURE_TIMESTAMP: Int64 = 0,
-    CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset(),
-    ENTITY_TYPE: EntityType = .user
-  ) -> Offset {
-    let __start = EPM.startEPM(&fbb)
-    EPM.add(DN: DN, &fbb)
-    EPM.add(LEGAL_NAME: LEGAL_NAME, &fbb)
-    EPM.add(FAMILY_NAME: FAMILY_NAME, &fbb)
-    EPM.add(GIVEN_NAME: GIVEN_NAME, &fbb)
-    EPM.add(ADDITIONAL_NAME: ADDITIONAL_NAME, &fbb)
-    EPM.add(HONORIFIC_PREFIX: HONORIFIC_PREFIX, &fbb)
-    EPM.add(HONORIFIC_SUFFIX: HONORIFIC_SUFFIX, &fbb)
-    EPM.add(JOB_TITLE: JOB_TITLE, &fbb)
-    EPM.add(OCCUPATION: OCCUPATION, &fbb)
-    EPM.add(ADDRESS: ADDRESS, &fbb)
-    EPM.addVectorOf(ALTERNATE_NAMES: ALTERNATE_NAMES, &fbb)
-    EPM.add(EMAIL: EMAIL, &fbb)
-    EPM.add(TELEPHONE: TELEPHONE, &fbb)
-    EPM.addVectorOf(KEYS: KEYS, &fbb)
-    EPM.addVectorOf(MULTIFORMAT_ADDRESS: MULTIFORMAT_ADDRESS, &fbb)
-    EPM.add(SIGNATURE: SIGNATURE, &fbb)
-    EPM.add(SIGNATURE_TIMESTAMP: SIGNATURE_TIMESTAMP, &fbb)
-    EPM.addVectorOf(CHAIN_PROOFS: CHAIN_PROOFS, &fbb)
-    EPM.add(ENTITY_TYPE: ENTITY_TYPE, &fbb)
-    return EPM.endEPM(&fbb, start: __start)
-  }
-
-  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
-    var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.DN, fieldName: "DN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LEGAL_NAME, fieldName: "LEGAL_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FAMILY_NAME, fieldName: "FAMILY_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.GIVEN_NAME, fieldName: "GIVEN_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDITIONAL_NAME, fieldName: "ADDITIONAL_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.HONORIFIC_PREFIX, fieldName: "HONORIFIC_PREFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.HONORIFIC_SUFFIX, fieldName: "HONORIFIC_SUFFIX", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.JOB_TITLE, fieldName: "JOB_TITLE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.OCCUPATION, fieldName: "OCCUPATION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.ADDRESS, fieldName: "ADDRESS", required: false, type: ForwardOffset<Address>.self)
-    try _v.visit(field: VT.ALTERNATE_NAMES, fieldName: "ALTERNATE_NAMES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.EMAIL, fieldName: "EMAIL", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.TELEPHONE, fieldName: "TELEPHONE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.KEYS, fieldName: "KEYS", required: false, type: ForwardOffset<Vector<ForwardOffset<CryptoKey>, CryptoKey>>.self)
-    try _v.visit(field: VT.MULTIFORMAT_ADDRESS, fieldName: "MULTIFORMAT_ADDRESS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.SIGNATURE_TIMESTAMP, fieldName: "SIGNATURE_TIMESTAMP", required: false, type: Int64.self)
-    try _v.visit(field: VT.CHAIN_PROOFS, fieldName: "CHAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
-    try _v.visit(field: VT.ENTITY_TYPE, fieldName: "ENTITY_TYPE", required: false, type: EntityType.self)
+    try _v.visit(field: VT.OFFSET, fieldName: "OFFSET", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SIZE, fieldName: "SIZE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ALIGNMENT, fieldName: "ALIGNMENT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.WIRE_FORMAT, fieldName: "WIRE_FORMAT", required: false, type: payloadWireFormat.self)
+    try _v.visit(field: VT.TYPE_REF, fieldName: "TYPE_REF", required: false, type: ForwardOffset<FlatBufferTypeRef>.self)
+    try _v.visit(field: VT.MUTABILITY, fieldName: "MUTABILITY", required: false, type: bufferMutability.self)
+    try _v.visit(field: VT.OWNERSHIP, fieldName: "OWNERSHIP", required: false, type: bufferOwnership.self)
+    try _v.visit(field: VT.FRAME_ID, fieldName: "FRAME_ID", required: false, type: UInt64.self)
+    try _v.visit(field: VT.PORT_ID, fieldName: "PORT_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

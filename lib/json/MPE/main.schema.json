@@ -14,7 +14,140 @@
               }
       },
       "additionalProperties" : false
+    },
+    "MPETargeterConstraint" : {
+      "type" : "object",
+      "description" : "One constraint in a maneuver-targeting problem and how well the converged\nsolution satisfies it.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Constraint identifier, e.g. \"SMA\", \"INC\", \"RIC_R\""
+              },
+        "FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame the constraint is expressed in"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch the constraint applies at (UNIX timestamp) [numeric seconds since\n1970-01-01T00:00:00 UTC]; 0 when the constraint anchors to EVENT"
+              },
+        "EVENT" : {
+                "type" : "string",
+                "description" : "Event the constraint anchors to when EPOCH is 0, e.g. \"APOAPSIS\""
+              },
+        "TARGET_VALUE" : {
+                "type" : "number",
+                "description" : "Target value of the constrained quantity"
+              },
+        "ACHIEVED_VALUE" : {
+                "type" : "number",
+                "description" : "Value achieved by the converged solution"
+              },
+        "TOLERANCE" : {
+                "type" : "number",
+                "description" : "Acceptable tolerance on the constrained quantity"
+              },
+        "WEIGHT" : {
+                "type" : "number",
+                "description" : "Relative weight of this constraint in the corrector"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPETargeterSolution" : {
+      "type" : "object",
+      "description" : "Maneuver-targeter solution and convergence metadata carried with an\nextended MPE: the solver that produced the targeted element set, its\niteration/residual history, and the constraint set it satisfied.",
+      "properties" : {
+        "SOLVER" : {
+                "type" : "string",
+                "description" : "Solver used, e.g. \"differential-corrector\""
+              },
+        "DYNAMICS" : {
+                "type" : "string",
+                "description" : "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP"
+              },
+        "CONVERGED" : {
+                "type" : "boolean",
+                "description" : "Whether the corrector converged within tolerance"
+              },
+        "ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of corrector iterations executed"
+              },
+        "RESIDUAL_RMS" : {
+                "type" : "number",
+                "description" : "RMS of the final-iteration constraint residuals"
+              },
+        "RESIDUALS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Final-iteration residual per constraint, aligned with CONSTRAINTS"
+              },
+        "CONSTRAINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MPETargeterConstraint"},
+                "description" : "The constraint set the solution was targeted against"
+              },
+        "TOTAL_DELTA_V" : {
+                "type" : "number",
+                "description" : "Total delta-v of the solved maneuver sequence in m/s"
+              },
+        "SOLVED_AT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Unix ms the solution was produced"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MPE" : {
+      "type" : "object",
+      "description" : "Minimum Propagatable Element Set",
+      "properties" : {
+        "ENTITY_ID" : {
+                "type" : "string",
+                "description" : "Unique ID as a String [no units]"
+              },
+        "EPOCH" : {
+                "type" : "number",
+                "description" : "Epoch of Mean Keplerian elements (UNIX timestamp) [numeric seconds since 1970-01-01T00:00:00 UTC]"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion in rev/day [M if chosen to represent orbit size for SGP/SGP4 elements]"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity (unitless)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly in degrees"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "SGP/SGP4 drag-like coefficient (BSTAR) in units of 1/[Earth radii]"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource",
+                "description" : "Description of the Mean Element Theory (SGP4, DSST, USM)"
+              },
+        "TARGETER" : {
+                "$ref" : "#/definitions/MPETargeterSolution",
+                "description" : "Targeter solution + convergence metadata when this element set is the\nproduct of maneuver targeting (absent for ordinary element sets)"
+              }
+      },
+      "additionalProperties" : false
     }
   },
-  "$ref" : "#/definitions/MET"
+  "$ref" : "#/definitions/MPE"
 }
