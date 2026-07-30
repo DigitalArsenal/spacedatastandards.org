@@ -82,7 +82,7 @@ const CATEGORY_MAP = {
   'STR': 'Military', 'SWR': 'Military', 'TCF': 'Military', 'WPN': 'Military',
 
   // Plugins
-  'PLK': 'Plugins', 'PLG': 'Plugins'
+  'PLK': 'Plugins', 'PLG': 'Plugins', 'PMM': 'Plugins'
 };
 
 /**
