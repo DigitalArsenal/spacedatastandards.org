@@ -197,7 +197,9 @@ multiformatAddressLength():number {
 }
 
 /**
- * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+ * Signature over canonical EPM content (hex), produced by the entity's
+ * signing key under the algorithm declared in SIGNATURE_ALGORITHM
+ * (absent declaration = Ed25519)
  */
 SIGNATURE():string|null
 SIGNATURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -235,8 +237,23 @@ ENTITY_TYPE():EntityType {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : EntityType.User;
 }
 
+/**
+ * Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+ * "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+ * every EPM signed before this field existed verifying unchanged, so the
+ * field MUST NOT be made required. The signing key is the first CryptoKey
+ * in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+ * (an absent CryptoKey.ALGORITHM likewise means ed25519)
+ */
+SIGNATURE_ALGORITHM():string|null
+SIGNATURE_ALGORITHM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SIGNATURE_ALGORITHM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startEPM(builder:flatbuffers.Builder) {
-  builder.startObject(19);
+  builder.startObject(20);
 }
 
 static addDn(builder:flatbuffers.Builder, DNOffset:flatbuffers.Offset) {
@@ -363,6 +380,10 @@ static addEntityType(builder:flatbuffers.Builder, ENTITY_TYPE:EntityType) {
   builder.addFieldInt8(18, ENTITY_TYPE, EntityType.User);
 }
 
+static addSignatureAlgorithm(builder:flatbuffers.Builder, SIGNATURE_ALGORITHMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, SIGNATURE_ALGORITHMOffset, 0);
+}
+
 static endEPM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -397,7 +418,8 @@ unpack(): EPMT {
     this.SIGNATURE(),
     this.SIGNATURE_TIMESTAMP(),
     this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength()),
-    this.ENTITY_TYPE()
+    this.ENTITY_TYPE(),
+    this.SIGNATURE_ALGORITHM()
   );
 }
 
@@ -422,6 +444,7 @@ unpackTo(_o: EPMT): void {
   _o.SIGNATURE_TIMESTAMP = this.SIGNATURE_TIMESTAMP();
   _o.CHAIN_PROOFS = this.bb!.createObjList<ChainProof, ChainProofT>(this.CHAIN_PROOFS.bind(this), this.chainProofsLength());
   _o.ENTITY_TYPE = this.ENTITY_TYPE();
+  _o.SIGNATURE_ALGORITHM = this.SIGNATURE_ALGORITHM();
 }
 }
 
@@ -445,7 +468,8 @@ constructor(
   public SIGNATURE: string|Uint8Array|null = null,
   public SIGNATURE_TIMESTAMP: bigint = BigInt('0'),
   public CHAIN_PROOFS: (ChainProofT)[] = [],
-  public ENTITY_TYPE: EntityType = EntityType.User
+  public ENTITY_TYPE: EntityType = EntityType.User,
+  public SIGNATURE_ALGORITHM: string|Uint8Array|null = null
 ){}
 
 
@@ -467,6 +491,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MULTIFORMAT_ADDRESS = EPM.createMultiformatAddressVector(builder, builder.createObjectOffsetList(this.MULTIFORMAT_ADDRESS));
   const SIGNATURE = (this.SIGNATURE !== null ? builder.createString(this.SIGNATURE!) : 0);
   const CHAIN_PROOFS = EPM.createChainProofsVector(builder, builder.createObjectOffsetList(this.CHAIN_PROOFS));
+  const SIGNATURE_ALGORITHM = (this.SIGNATURE_ALGORITHM !== null ? builder.createString(this.SIGNATURE_ALGORITHM!) : 0);
 
   EPM.startEPM(builder);
   EPM.addDn(builder, DN);
@@ -488,6 +513,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EPM.addSignatureTimestamp(builder, this.SIGNATURE_TIMESTAMP);
   EPM.addChainProofs(builder, CHAIN_PROOFS);
   EPM.addEntityType(builder, this.ENTITY_TYPE);
+  EPM.addSignatureAlgorithm(builder, SIGNATURE_ALGORITHM);
 
   return EPM.endEPM(builder);
 }

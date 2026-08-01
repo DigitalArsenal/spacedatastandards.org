@@ -6,7 +6,23 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 class CryptoKey extends Table
 {
     /**
@@ -41,7 +57,9 @@ class CryptoKey extends Table
         return $this;
     }
 
-    /// Public part of the cryptographic key, in hexidecimal format
+    /// Public part of the cryptographic key, in hexidecimal format. Optional for
+    /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+    /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
     public function getPUBLIC_KEY()
     {
         $o = $this->__offset(4);
@@ -69,14 +87,17 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Address generated from the cryptographic key
+    /// Address generated from the cryptographic key. An address only — NOT a
+    /// derivation path; the derivation path lives in KEY_PATH
     public function getKEY_ADDRESS()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Type of the address generated from the cryptographic key
+    /// Type of the address generated from the cryptographic key. An address
+    /// format tag only — NOT a curve or algorithm designator; the algorithm
+    /// lives in ALGORITHM
     public function getADDRESS_TYPE()
     {
         $o = $this->__offset(14);
@@ -93,22 +114,49 @@ class CryptoKey extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \KeyType::Signing;
     }
 
+    /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+    /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+    /// ed25519 hardened)
+    public function getKEY_PATH()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+    /// ed25519: every record published before this field existed verifies
+    /// unchanged under that default
+    public function getALGORITHM()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+    /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+    /// (raw-ed25519 for ed25519, compact for secp256k1)
+    public function getENCODING()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCryptoKey(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CryptoKey
      */
-    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV, $KEY_ADDRESS, $ADDRESS_TYPE, $KEY_TYPE)
+    public static function createCryptoKey(FlatBufferBuilder $builder, $PUBLIC_KEY, $XPUB, $PRIVATE_KEY, $XPRIV, $KEY_ADDRESS, $ADDRESS_TYPE, $KEY_TYPE, $KEY_PATH, $ALGORITHM, $ENCODING)
     {
-        $builder->startObject(7);
+        $builder->startObject(10);
         self::addPUBLIC_KEY($builder, $PUBLIC_KEY);
         self::addXPUB($builder, $XPUB);
         self::addPRIVATE_KEY($builder, $PRIVATE_KEY);
@@ -116,6 +164,9 @@ class CryptoKey extends Table
         self::addKEY_ADDRESS($builder, $KEY_ADDRESS);
         self::addADDRESS_TYPE($builder, $ADDRESS_TYPE);
         self::addKEY_TYPE($builder, $KEY_TYPE);
+        self::addKEY_PATH($builder, $KEY_PATH);
+        self::addALGORITHM($builder, $ALGORITHM);
+        self::addENCODING($builder, $ENCODING);
         $o = $builder->endObject();
         return $o;
     }
@@ -188,6 +239,36 @@ class CryptoKey extends Table
     public static function addKEY_TYPE(FlatBufferBuilder $builder, $KEY_TYPE)
     {
         $builder->addSbyteX(6, $KEY_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addKEY_PATH(FlatBufferBuilder $builder, $KEY_PATH)
+    {
+        $builder->addOffsetX(7, $KEY_PATH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addALGORITHM(FlatBufferBuilder $builder, $ALGORITHM)
+    {
+        $builder->addOffsetX(8, $ALGORITHM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addENCODING(FlatBufferBuilder $builder, $ENCODING)
+    {
+        $builder->addOffsetX(9, $ENCODING, 0);
     }
 
     /**

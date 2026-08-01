@@ -74,7 +74,23 @@ class _EntityTypeReader extends fb.Reader<EntityType> {
       EntityType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  Represents cryptographic key information
+///  Represents cryptographic key information.
+///
+///  The publication paradigm is "xpub + derivation paths, not key material":
+///  a verifier derives child public keys from XPUB and KEY_PATH wherever the
+///  curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+///  - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///    from XPUB via BIP-32 public derivation, so such an entry may omit
+///    PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+///  - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///    child is hardened — so NO xpub can yield an ed25519 child public key,
+///    for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///    authoritative and MUST remain present.
+///
+///  A future revision that removes the published ed25519 PUBLIC_KEY would make
+///  every ed25519-signed EPM unverifiable; the retained key is deliberate,
+///  not a transitional leftover.
 class CryptoKey {
   CryptoKey._(this._bc, this._bcOffset);
   factory CryptoKey(List<int> bytes) {
@@ -87,7 +103,9 @@ class CryptoKey {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Public part of the cryptographic key, in hexidecimal format
+  ///  Public part of the cryptographic key, in hexidecimal format. Optional for
+  ///  secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  ///  REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get publicKey => PUBLIC_KEY;
   ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -97,19 +115,35 @@ class CryptoKey {
   String? get privateKey => PRIVATE_KEY;
   ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  ///  Address generated from the cryptographic key
+  ///  Address generated from the cryptographic key. An address only — NOT a
+  ///  derivation path; the derivation path lives in KEY_PATH
   String? get KEY_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get keyAddress => KEY_ADDRESS;
-  ///  Type of the address generated from the cryptographic key
+  ///  Type of the address generated from the cryptographic key. An address
+  ///  format tag only — NOT a curve or algorithm designator; the algorithm
+  ///  lives in ALGORITHM
   String? get ADDRESS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get addressType => ADDRESS_TYPE;
   ///  Type of the cryptographic key (signing or encryption)
   KeyType get KEY_TYPE => KeyType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
   KeyType get keyType => KEY_TYPE;
+  ///  BIP-32 / SLIP-10 derivation path of this key from the entity root
+  ///  (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  ///  ed25519 hardened)
+  String? get KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get keyPath => KEY_PATH;
+  ///  Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  ///  ed25519: every record published before this field existed verifies
+  ///  unchanged under that default
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Signature encoding format produced by this key (e.g., "raw-ed25519",
+  ///  "compact"). ABSENT means the canonical encoding of ALGORITHM
+  ///  (raw-ed25519 for ed25519, compact for secp256k1)
+  String? get ENCODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
 
   @override
   String toString() {
-    return 'CryptoKey{publicKey: ${publicKey}, XPUB: ${XPUB}, privateKey: ${privateKey}, XPRIV: ${XPRIV}, keyAddress: ${keyAddress}, addressType: ${addressType}, keyType: ${keyType}}';
+    return 'CryptoKey{publicKey: ${publicKey}, XPUB: ${XPUB}, privateKey: ${privateKey}, XPRIV: ${XPRIV}, keyAddress: ${keyAddress}, addressType: ${addressType}, keyType: ${keyType}, keyPath: ${keyPath}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
   }
 }
 
@@ -127,7 +161,7 @@ class CryptoKeyBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(10);
   }
 
   int addPublicKeyOffset(int? offset) {
@@ -158,6 +192,18 @@ class CryptoKeyBuilder {
     fbBuilder.addInt8(6, KEY_TYPE?.value);
     return fbBuilder.offset;
   }
+  int addKeyPathOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEncodingOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -172,6 +218,9 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
   final String? _KEY_ADDRESS;
   final String? _ADDRESS_TYPE;
   final KeyType? _KEY_TYPE;
+  final String? _KEY_PATH;
+  final String? _ALGORITHM;
+  final String? _ENCODING;
 
   CryptoKeyObjectBuilder({
     String? PUBLIC_KEY,
@@ -186,6 +235,10 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
     String? addressType,
     KeyType? KEY_TYPE,
     KeyType? keyType,
+    String? KEY_PATH,
+    String? keyPath,
+    String? ALGORITHM,
+    String? ENCODING,
   })
       : _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
         _XPUB = XPUB,
@@ -193,7 +246,10 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
         _XPRIV = XPRIV,
         _KEY_ADDRESS = keyAddress ?? KEY_ADDRESS,
         _ADDRESS_TYPE = addressType ?? ADDRESS_TYPE,
-        _KEY_TYPE = keyType ?? KEY_TYPE;
+        _KEY_TYPE = keyType ?? KEY_TYPE,
+        _KEY_PATH = keyPath ?? KEY_PATH,
+        _ALGORITHM = ALGORITHM,
+        _ENCODING = ENCODING;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -210,7 +266,13 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_KEY_ADDRESS!);
     final int? ADDRESS_TYPEOffset = _ADDRESS_TYPE == null ? null
         : fbBuilder.writeString(_ADDRESS_TYPE!);
-    fbBuilder.startTable(7);
+    final int? KEY_PATHOffset = _KEY_PATH == null ? null
+        : fbBuilder.writeString(_KEY_PATH!);
+    final int? ALGORITHMOffset = _ALGORITHM == null ? null
+        : fbBuilder.writeString(_ALGORITHM!);
+    final int? ENCODINGOffset = _ENCODING == null ? null
+        : fbBuilder.writeString(_ENCODING!);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, PUBLIC_KEYOffset);
     fbBuilder.addOffset(1, XPUBOffset);
     fbBuilder.addOffset(2, PRIVATE_KEYOffset);
@@ -218,6 +280,9 @@ class CryptoKeyObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, KEY_ADDRESSOffset);
     fbBuilder.addOffset(5, ADDRESS_TYPEOffset);
     fbBuilder.addInt8(6, _KEY_TYPE?.value);
+    fbBuilder.addOffset(7, KEY_PATHOffset);
+    fbBuilder.addOffset(8, ALGORITHMOffset);
+    fbBuilder.addOffset(9, ENCODINGOffset);
     return fbBuilder.endTable();
   }
 
@@ -585,7 +650,9 @@ class EPM {
   ///  Multiformat addresses associated with the entity
   List<String>? get MULTIFORMAT_ADDRESS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
   List<String>? get multiformatAddress => MULTIFORMAT_ADDRESS;
-  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  ///  Signature over canonical EPM content (hex), produced by the entity's
+  ///  signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  ///  (absent declaration = Ed25519)
   String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
   ///  Unix timestamp (seconds) when the EPM was signed
   int get SIGNATURE_TIMESTAMP => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 36, 0);
@@ -596,10 +663,18 @@ class EPM {
   ///  Type of entity represented by this profile
   EntityType get ENTITY_TYPE => EntityType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 40, 0));
   EntityType get entityType => ENTITY_TYPE;
+  ///  Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  ///  "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+  ///  every EPM signed before this field existed verifying unchanged, so the
+  ///  field MUST NOT be made required. The signing key is the first CryptoKey
+  ///  in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  ///  (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  String? get SIGNATURE_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  String? get signatureAlgorithm => SIGNATURE_ALGORITHM;
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}}';
+    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}, signatureAlgorithm: ${signatureAlgorithm}}';
   }
 }
 
@@ -617,7 +692,7 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(19);
+    fbBuilder.startTable(20);
   }
 
   int addDnOffset(int? offset) {
@@ -696,6 +771,10 @@ class EPMBuilder {
     fbBuilder.addInt8(18, ENTITY_TYPE?.value);
     return fbBuilder.offset;
   }
+  int addSignatureAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -722,6 +801,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final int? _SIGNATURE_TIMESTAMP;
   final List<ChainProofObjectBuilder>? _CHAIN_PROOFS;
   final EntityType? _ENTITY_TYPE;
+  final String? _SIGNATURE_ALGORITHM;
 
   EPMObjectBuilder({
     String? DN,
@@ -755,6 +835,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     List<ChainProofObjectBuilder>? chainProofs,
     EntityType? ENTITY_TYPE,
     EntityType? entityType,
+    String? SIGNATURE_ALGORITHM,
+    String? signatureAlgorithm,
   })
       : _DN = DN,
         _LEGAL_NAME = legalName ?? LEGAL_NAME,
@@ -774,7 +856,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         _SIGNATURE = SIGNATURE,
         _SIGNATURE_TIMESTAMP = signatureTimestamp ?? SIGNATURE_TIMESTAMP,
         _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS,
-        _ENTITY_TYPE = entityType ?? ENTITY_TYPE;
+        _ENTITY_TYPE = entityType ?? ENTITY_TYPE,
+        _SIGNATURE_ALGORITHM = signatureAlgorithm ?? SIGNATURE_ALGORITHM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -812,7 +895,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SIGNATURE!);
     final int? CHAIN_PROOFSOffset = _CHAIN_PROOFS == null ? null
         : fbBuilder.writeList(_CHAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(19);
+    final int? SIGNATURE_ALGORITHMOffset = _SIGNATURE_ALGORITHM == null ? null
+        : fbBuilder.writeString(_SIGNATURE_ALGORITHM!);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, DNOffset);
     fbBuilder.addOffset(1, LEGAL_NAMEOffset);
     fbBuilder.addOffset(2, FAMILY_NAMEOffset);
@@ -832,6 +917,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt64(16, _SIGNATURE_TIMESTAMP);
     fbBuilder.addOffset(17, CHAIN_PROOFSOffset);
     fbBuilder.addInt8(18, _ENTITY_TYPE?.value);
+    fbBuilder.addOffset(19, SIGNATURE_ALGORITHMOffset);
     return fbBuilder.endTable();
   }
 

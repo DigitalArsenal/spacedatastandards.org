@@ -6,7 +6,23 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 type CryptoKey struct {
 	_tab flatbuffers.Table
 }
@@ -42,7 +58,9 @@ func (rcv *CryptoKey) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Public part of the cryptographic key, in hexidecimal format
+/// Public part of the cryptographic key, in hexidecimal format. Optional for
+/// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+/// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
 func (rcv *CryptoKey) PUBLIC_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -55,7 +73,9 @@ func (rcv *CryptoKey) PublicKey() []byte {
 	return rcv.PUBLIC_KEY()
 }
 
-/// Public part of the cryptographic key, in hexidecimal format
+/// Public part of the cryptographic key, in hexidecimal format. Optional for
+/// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+/// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
 /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
 func (rcv *CryptoKey) XPUB() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -98,7 +118,8 @@ func (rcv *CryptoKey) Xpriv() []byte {
 }
 
 /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
-/// Address generated from the cryptographic key
+/// Address generated from the cryptographic key. An address only — NOT a
+/// derivation path; the derivation path lives in KEY_PATH
 func (rcv *CryptoKey) KEY_ADDRESS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -111,8 +132,11 @@ func (rcv *CryptoKey) KeyAddress() []byte {
 	return rcv.KEY_ADDRESS()
 }
 
-/// Address generated from the cryptographic key
-/// Type of the address generated from the cryptographic key
+/// Address generated from the cryptographic key. An address only — NOT a
+/// derivation path; the derivation path lives in KEY_PATH
+/// Type of the address generated from the cryptographic key. An address
+/// format tag only — NOT a curve or algorithm designator; the algorithm
+/// lives in ALGORITHM
 func (rcv *CryptoKey) ADDRESS_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -125,7 +149,9 @@ func (rcv *CryptoKey) AddressType() []byte {
 	return rcv.ADDRESS_TYPE()
 }
 
-/// Type of the address generated from the cryptographic key
+/// Type of the address generated from the cryptographic key. An address
+/// format tag only — NOT a curve or algorithm designator; the algorithm
+/// lives in ALGORITHM
 /// Type of the cryptographic key (signing or encryption)
 func (rcv *CryptoKey) KEY_TYPE() KeyType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
@@ -148,8 +174,62 @@ func (rcv *CryptoKey) MutateKeyType(n KeyType) bool {
 	return rcv.MutateKEY_TYPE(n)
 }
 
+/// BIP-32 / SLIP-10 derivation path of this key from the entity root
+/// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+/// ed25519 hardened)
+func (rcv *CryptoKey) KEY_PATH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CryptoKey) KeyPath() []byte {
+	return rcv.KEY_PATH()
+}
+
+/// BIP-32 / SLIP-10 derivation path of this key from the entity root
+/// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+/// ed25519 hardened)
+/// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+/// ed25519: every record published before this field existed verifies
+/// unchanged under that default
+func (rcv *CryptoKey) ALGORITHM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CryptoKey) Algorithm() []byte {
+	return rcv.ALGORITHM()
+}
+
+/// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+/// ed25519: every record published before this field existed verifies
+/// unchanged under that default
+/// Signature encoding format produced by this key (e.g., "raw-ed25519",
+/// "compact"). ABSENT means the canonical encoding of ALGORITHM
+/// (raw-ed25519 for ed25519, compact for secp256k1)
+func (rcv *CryptoKey) ENCODING() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CryptoKey) Encoding() []byte {
+	return rcv.ENCODING()
+}
+
+/// Signature encoding format produced by this key (e.g., "raw-ed25519",
+/// "compact"). ABSENT means the canonical encoding of ALGORITHM
+/// (raw-ed25519 for ed25519, compact for secp256k1)
 func CryptoKeyStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(10)
 }
 func CryptoKeyAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PUBLIC_KEY), 0)
@@ -192,6 +272,24 @@ func CryptoKeyAddKEY_TYPE(builder *flatbuffers.Builder, KEY_TYPE KeyType) {
 }
 func CryptoKeyAddKeyType(builder *flatbuffers.Builder, KEY_TYPE KeyType) {
 	CryptoKeyAddKEY_TYPE(builder, KEY_TYPE)
+}
+func CryptoKeyAddKEY_PATH(builder *flatbuffers.Builder, KEY_PATH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(KEY_PATH), 0)
+}
+func CryptoKeyAddKeyPath(builder *flatbuffers.Builder, KEY_PATH flatbuffers.UOffsetT) {
+	CryptoKeyAddKEY_PATH(builder, KEY_PATH)
+}
+func CryptoKeyAddALGORITHM(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ALGORITHM), 0)
+}
+func CryptoKeyAddAlgorithm(builder *flatbuffers.Builder, ALGORITHM flatbuffers.UOffsetT) {
+	CryptoKeyAddALGORITHM(builder, ALGORITHM)
+}
+func CryptoKeyAddENCODING(builder *flatbuffers.Builder, ENCODING flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ENCODING), 0)
+}
+func CryptoKeyAddEncoding(builder *flatbuffers.Builder, ENCODING flatbuffers.UOffsetT) {
+	CryptoKeyAddENCODING(builder, ENCODING)
 }
 func CryptoKeyEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

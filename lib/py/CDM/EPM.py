@@ -197,7 +197,9 @@ class EPM(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
-    # Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    # Signature over canonical EPM content (hex), produced by the entity's
+    # signing key under the algorithm declared in SIGNATURE_ALGORITHM
+    # (absent declaration = Ed25519)
     # EPM
     def SIGNATURE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -247,8 +249,21 @@ class EPM(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+    # "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+    # every EPM signed before this field existed verifying unchanged, so the
+    # field MUST NOT be made required. The signing key is the first CryptoKey
+    # in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+    # (an absent CryptoKey.ALGORITHM likewise means ed25519)
+    # EPM
+    def SIGNATURE_ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def EPMStart(builder):
-    builder.StartObject(19)
+    builder.StartObject(20)
 
 def Start(builder):
     EPMStart(builder)
@@ -415,6 +430,12 @@ def EPMAddENTITY_TYPE(builder, ENTITY_TYPE):
 def AddENTITY_TYPE(builder, ENTITY_TYPE):
     EPMAddENTITY_TYPE(builder, ENTITY_TYPE)
 
+def EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_ALGORITHM), 0)
+
+def AddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM):
+    EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -453,6 +474,7 @@ class EPMT(object):
         SIGNATURE_TIMESTAMP = 0,
         CHAIN_PROOFS = None,
         ENTITY_TYPE = 0,
+        SIGNATURE_ALGORITHM = None,
     ):
         self.DN = DN  # type: Optional[str]
         self.LEGAL_NAME = LEGAL_NAME  # type: Optional[str]
@@ -473,6 +495,7 @@ class EPMT(object):
         self.SIGNATURE_TIMESTAMP = SIGNATURE_TIMESTAMP  # type: int
         self.CHAIN_PROOFS = CHAIN_PROOFS  # type: Optional[List[ChainProof.ChainProofT]]
         self.ENTITY_TYPE = ENTITY_TYPE  # type: int
+        self.SIGNATURE_ALGORITHM = SIGNATURE_ALGORITHM  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -535,6 +558,7 @@ class EPMT(object):
                     chainProof_ = ChainProof.ChainProofT.InitFromObj(EPM.CHAIN_PROOFS(i))
                     self.CHAIN_PROOFS.append(chainProof_)
         self.ENTITY_TYPE = EPM.ENTITY_TYPE()
+        self.SIGNATURE_ALGORITHM = EPM.SIGNATURE_ALGORITHM()
 
     # EPMT
     def Pack(self, builder):
@@ -596,6 +620,8 @@ class EPMT(object):
             for i in reversed(range(len(self.CHAIN_PROOFS))):
                 builder.PrependUOffsetTRelative(CHAIN_PROOFSlist[i])
             CHAIN_PROOFS = builder.EndVector()
+        if self.SIGNATURE_ALGORITHM is not None:
+            SIGNATURE_ALGORITHM = builder.CreateString(self.SIGNATURE_ALGORITHM)
         EPMStart(builder)
         if self.DN is not None:
             EPMAddDN(builder, DN)
@@ -633,5 +659,7 @@ class EPMT(object):
         if self.CHAIN_PROOFS is not None:
             EPMAddCHAIN_PROOFS(builder, CHAIN_PROOFS)
         EPMAddENTITY_TYPE(builder, self.ENTITY_TYPE)
+        if self.SIGNATURE_ALGORITHM is not None:
+            EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
         EPM = EPMEnd(builder)
         return EPM

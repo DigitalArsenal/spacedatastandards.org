@@ -174,7 +174,23 @@ impl ::flatbuffers::SimpleToVerifyInSlice for EntityType {}
 pub enum CryptoKeyOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 pub struct CryptoKey<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -195,6 +211,9 @@ impl<'a> CryptoKey<'a> {
   pub const VT_KEY_ADDRESS: ::flatbuffers::VOffsetT = 12;
   pub const VT_ADDRESS_TYPE: ::flatbuffers::VOffsetT = 14;
   pub const VT_KEY_TYPE: ::flatbuffers::VOffsetT = 16;
+  pub const VT_KEY_PATH: ::flatbuffers::VOffsetT = 18;
+  pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 20;
+  pub const VT_ENCODING: ::flatbuffers::VOffsetT = 22;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -206,6 +225,9 @@ impl<'a> CryptoKey<'a> {
     args: &'args CryptoKeyArgs<'args>
   ) -> ::flatbuffers::WIPOffset<CryptoKey<'bldr>> {
     let mut builder = CryptoKeyBuilder::new(_fbb);
+    if let Some(x) = args.ENCODING { builder.add_ENCODING(x); }
+    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
+    if let Some(x) = args.KEY_PATH { builder.add_KEY_PATH(x); }
     if let Some(x) = args.ADDRESS_TYPE { builder.add_ADDRESS_TYPE(x); }
     if let Some(x) = args.KEY_ADDRESS { builder.add_KEY_ADDRESS(x); }
     if let Some(x) = args.XPRIV { builder.add_XPRIV(x); }
@@ -236,6 +258,15 @@ impl<'a> CryptoKey<'a> {
       alloc::string::ToString::to_string(x)
     });
     let KEY_TYPE = self.KEY_TYPE();
+    let KEY_PATH = self.KEY_PATH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALGORITHM = self.ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENCODING = self.ENCODING().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     CryptoKeyT {
       PUBLIC_KEY,
       XPUB,
@@ -244,10 +275,15 @@ impl<'a> CryptoKey<'a> {
       KEY_ADDRESS,
       ADDRESS_TYPE,
       KEY_TYPE,
+      KEY_PATH,
+      ALGORITHM,
+      ENCODING,
     }
   }
 
-  /// Public part of the cryptographic key, in hexidecimal format
+  /// Public part of the cryptographic key, in hexidecimal format. Optional for
+  /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   #[inline]
   pub fn PUBLIC_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -279,7 +315,8 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_XPRIV, None)}
   }
-  /// Address generated from the cryptographic key
+  /// Address generated from the cryptographic key. An address only — NOT a
+  /// derivation path; the derivation path lives in KEY_PATH
   #[inline]
   pub fn KEY_ADDRESS(&self) -> Option<&'a str> {
     // Safety:
@@ -287,7 +324,9 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_KEY_ADDRESS, None)}
   }
-  /// Type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key. An address
+  /// format tag only — NOT a curve or algorithm designator; the algorithm
+  /// lives in ALGORITHM
   #[inline]
   pub fn ADDRESS_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -302,6 +341,36 @@ impl<'a> CryptoKey<'a> {
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<KeyType>(CryptoKey::VT_KEY_TYPE, Some(KeyType::Signing)).unwrap()}
+  }
+  /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+  /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  /// ed25519 hardened)
+  #[inline]
+  pub fn KEY_PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_KEY_PATH, None)}
+  }
+  /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  /// ed25519: every record published before this field existed verifies
+  /// unchanged under that default
+  #[inline]
+  pub fn ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_ALGORITHM, None)}
+  }
+  /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+  /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+  /// (raw-ed25519 for ed25519, compact for secp256k1)
+  #[inline]
+  pub fn ENCODING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_ENCODING, None)}
   }
 }
 
@@ -318,6 +387,9 @@ impl ::flatbuffers::Verifiable for CryptoKey<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_ADDRESS", Self::VT_KEY_ADDRESS, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ADDRESS_TYPE", Self::VT_ADDRESS_TYPE, false)?
      .visit_field::<KeyType>("KEY_TYPE", Self::VT_KEY_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_PATH", Self::VT_KEY_PATH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENCODING", Self::VT_ENCODING, false)?
      .finish();
     Ok(())
   }
@@ -330,6 +402,9 @@ pub struct CryptoKeyArgs<'a> {
     pub KEY_ADDRESS: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ADDRESS_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub KEY_TYPE: KeyType,
+    pub KEY_PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCODING: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for CryptoKeyArgs<'a> {
   #[inline]
@@ -342,6 +417,9 @@ impl<'a> Default for CryptoKeyArgs<'a> {
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
       KEY_TYPE: KeyType::Signing,
+      KEY_PATH: None,
+      ALGORITHM: None,
+      ENCODING: None,
     }
   }
 }
@@ -380,6 +458,18 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CryptoKeyBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<KeyType>(CryptoKey::VT_KEY_TYPE, KEY_TYPE, KeyType::Signing);
   }
   #[inline]
+  pub fn add_KEY_PATH(&mut self, KEY_PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CryptoKey::VT_KEY_PATH, KEY_PATH);
+  }
+  #[inline]
+  pub fn add_ALGORITHM(&mut self, ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CryptoKey::VT_ALGORITHM, ALGORITHM);
+  }
+  #[inline]
+  pub fn add_ENCODING(&mut self, ENCODING: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CryptoKey::VT_ENCODING, ENCODING);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CryptoKeyBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     CryptoKeyBuilder {
@@ -404,6 +494,9 @@ impl ::core::fmt::Debug for CryptoKey<'_> {
       ds.field("KEY_ADDRESS", &self.KEY_ADDRESS());
       ds.field("ADDRESS_TYPE", &self.ADDRESS_TYPE());
       ds.field("KEY_TYPE", &self.KEY_TYPE());
+      ds.field("KEY_PATH", &self.KEY_PATH());
+      ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.field("ENCODING", &self.ENCODING());
       ds.finish()
   }
 }
@@ -417,6 +510,9 @@ pub struct CryptoKeyT {
   pub KEY_ADDRESS: Option<alloc::string::String>,
   pub ADDRESS_TYPE: Option<alloc::string::String>,
   pub KEY_TYPE: KeyType,
+  pub KEY_PATH: Option<alloc::string::String>,
+  pub ALGORITHM: Option<alloc::string::String>,
+  pub ENCODING: Option<alloc::string::String>,
 }
 impl Default for CryptoKeyT {
   fn default() -> Self {
@@ -428,6 +524,9 @@ impl Default for CryptoKeyT {
       KEY_ADDRESS: None,
       ADDRESS_TYPE: None,
       KEY_TYPE: KeyType::Signing,
+      KEY_PATH: None,
+      ALGORITHM: None,
+      ENCODING: None,
     }
   }
 }
@@ -455,6 +554,15 @@ impl CryptoKeyT {
       _fbb.create_string(x)
     });
     let KEY_TYPE = self.KEY_TYPE;
+    let KEY_PATH = self.KEY_PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALGORITHM = self.ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCODING = self.ENCODING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     CryptoKey::create(_fbb, &CryptoKeyArgs{
       PUBLIC_KEY,
       XPUB,
@@ -463,6 +571,9 @@ impl CryptoKeyT {
       KEY_ADDRESS,
       ADDRESS_TYPE,
       KEY_TYPE,
+      KEY_PATH,
+      ALGORITHM,
+      ENCODING,
     })
   }
 }
@@ -1100,6 +1211,7 @@ impl<'a> EPM<'a> {
   pub const VT_SIGNATURE_TIMESTAMP: ::flatbuffers::VOffsetT = 36;
   pub const VT_CHAIN_PROOFS: ::flatbuffers::VOffsetT = 38;
   pub const VT_ENTITY_TYPE: ::flatbuffers::VOffsetT = 40;
+  pub const VT_SIGNATURE_ALGORITHM: ::flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1112,6 +1224,7 @@ impl<'a> EPM<'a> {
   ) -> ::flatbuffers::WIPOffset<EPM<'bldr>> {
     let mut builder = EPMBuilder::new(_fbb);
     builder.add_SIGNATURE_TIMESTAMP(args.SIGNATURE_TIMESTAMP);
+    if let Some(x) = args.SIGNATURE_ALGORITHM { builder.add_SIGNATURE_ALGORITHM(x); }
     if let Some(x) = args.CHAIN_PROOFS { builder.add_CHAIN_PROOFS(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
     if let Some(x) = args.MULTIFORMAT_ADDRESS { builder.add_MULTIFORMAT_ADDRESS(x); }
@@ -1187,6 +1300,9 @@ impl<'a> EPM<'a> {
       x.iter().map(|t| t.unpack()).collect()
     });
     let ENTITY_TYPE = self.ENTITY_TYPE();
+    let SIGNATURE_ALGORITHM = self.SIGNATURE_ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
     EPMT {
       DN,
       LEGAL_NAME,
@@ -1207,6 +1323,7 @@ impl<'a> EPM<'a> {
       SIGNATURE_TIMESTAMP,
       CHAIN_PROOFS,
       ENTITY_TYPE,
+      SIGNATURE_ALGORITHM,
     }
   }
 
@@ -1330,7 +1447,9 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(EPM::VT_MULTIFORMAT_ADDRESS, None)}
   }
-  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  /// Signature over canonical EPM content (hex), produced by the entity's
+  /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  /// (absent declaration = Ed25519)
   #[inline]
   pub fn SIGNATURE(&self) -> Option<&'a str> {
     // Safety:
@@ -1362,6 +1481,19 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<EntityType>(EPM::VT_ENTITY_TYPE, Some(EntityType::User)).unwrap()}
   }
+  /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  /// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+  /// every EPM signed before this field existed verifying unchanged, so the
+  /// field MUST NOT be made required. The signing key is the first CryptoKey
+  /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  #[inline]
+  pub fn SIGNATURE_ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EPM::VT_SIGNATURE_ALGORITHM, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EPM<'_> {
@@ -1389,6 +1521,7 @@ impl ::flatbuffers::Verifiable for EPM<'_> {
      .visit_field::<i64>("SIGNATURE_TIMESTAMP", Self::VT_SIGNATURE_TIMESTAMP, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ChainProof>>>>("CHAIN_PROOFS", Self::VT_CHAIN_PROOFS, false)?
      .visit_field::<EntityType>("ENTITY_TYPE", Self::VT_ENTITY_TYPE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_ALGORITHM", Self::VT_SIGNATURE_ALGORITHM, false)?
      .finish();
     Ok(())
   }
@@ -1413,6 +1546,7 @@ pub struct EPMArgs<'a> {
     pub SIGNATURE_TIMESTAMP: i64,
     pub CHAIN_PROOFS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ChainProof<'a>>>>>,
     pub ENTITY_TYPE: EntityType,
+    pub SIGNATURE_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for EPMArgs<'a> {
   #[inline]
@@ -1437,6 +1571,7 @@ impl<'a> Default for EPMArgs<'a> {
       SIGNATURE_TIMESTAMP: 0,
       CHAIN_PROOFS: None,
       ENTITY_TYPE: EntityType::User,
+      SIGNATURE_ALGORITHM: None,
     }
   }
 }
@@ -1523,6 +1658,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<EntityType>(EPM::VT_ENTITY_TYPE, ENTITY_TYPE, EntityType::User);
   }
   #[inline]
+  pub fn add_SIGNATURE_ALGORITHM(&mut self, SIGNATURE_ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EPM::VT_SIGNATURE_ALGORITHM, SIGNATURE_ALGORITHM);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMBuilder {
@@ -1559,6 +1698,7 @@ impl ::core::fmt::Debug for EPM<'_> {
       ds.field("SIGNATURE_TIMESTAMP", &self.SIGNATURE_TIMESTAMP());
       ds.field("CHAIN_PROOFS", &self.CHAIN_PROOFS());
       ds.field("ENTITY_TYPE", &self.ENTITY_TYPE());
+      ds.field("SIGNATURE_ALGORITHM", &self.SIGNATURE_ALGORITHM());
       ds.finish()
   }
 }
@@ -1584,6 +1724,7 @@ pub struct EPMT {
   pub SIGNATURE_TIMESTAMP: i64,
   pub CHAIN_PROOFS: Option<alloc::vec::Vec<ChainProofT>>,
   pub ENTITY_TYPE: EntityType,
+  pub SIGNATURE_ALGORITHM: Option<alloc::string::String>,
 }
 impl Default for EPMT {
   fn default() -> Self {
@@ -1607,6 +1748,7 @@ impl Default for EPMT {
       SIGNATURE_TIMESTAMP: 0,
       CHAIN_PROOFS: None,
       ENTITY_TYPE: EntityType::User,
+      SIGNATURE_ALGORITHM: None,
     }
   }
 }
@@ -1668,6 +1810,9 @@ impl EPMT {
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
     let ENTITY_TYPE = self.ENTITY_TYPE;
+    let SIGNATURE_ALGORITHM = self.SIGNATURE_ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     EPM::create(_fbb, &EPMArgs{
       DN,
       LEGAL_NAME,
@@ -1688,6 +1833,7 @@ impl EPMT {
       SIGNATURE_TIMESTAMP,
       CHAIN_PROOFS,
       ENTITY_TYPE,
+      SIGNATURE_ALGORITHM,
     })
   }
 }

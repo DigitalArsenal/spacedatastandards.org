@@ -32,7 +32,23 @@ public enum EntityType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
-///  Represents cryptographic key information
+///  Represents cryptographic key information.
+///
+///  The publication paradigm is "xpub + derivation paths, not key material":
+///  a verifier derives child public keys from XPUB and KEY_PATH wherever the
+///  curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+///  - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///    from XPUB via BIP-32 public derivation, so such an entry may omit
+///    PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+///  - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///    child is hardened — so NO xpub can yield an ed25519 child public key,
+///    for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///    authoritative and MUST remain present.
+///
+///  A future revision that removes the published ed25519 PUBLIC_KEY would make
+///  every ed25519-signed EPM unverifiable; the retained key is deliberate,
+///  not a transitional leftover.
 public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -52,9 +68,14 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     static let KEY_ADDRESS: VOffset = 12
     static let ADDRESS_TYPE: VOffset = 14
     static let KEY_TYPE: VOffset = 16
+    static let KEY_PATH: VOffset = 18
+    static let ALGORITHM: VOffset = 20
+    static let ENCODING: VOffset = 22
   }
 
-  ///  Public part of the cryptographic key, in hexidecimal format
+  ///  Public part of the cryptographic key, in hexidecimal format. Optional for
+  ///  secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  ///  REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
   ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -66,15 +87,33 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   public var XPRIV: String? { let o = _accessor.offset(VT.XPRIV); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPRIV) }
-  ///  Address generated from the cryptographic key
+  ///  Address generated from the cryptographic key. An address only — NOT a
+  ///  derivation path; the derivation path lives in KEY_PATH
   public var KEY_ADDRESS: String? { let o = _accessor.offset(VT.KEY_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
   public var KEY_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_ADDRESS) }
-  ///  Type of the address generated from the cryptographic key
+  ///  Type of the address generated from the cryptographic key. An address
+  ///  format tag only — NOT a curve or algorithm designator; the algorithm
+  ///  lives in ALGORITHM
   public var ADDRESS_TYPE: String? { let o = _accessor.offset(VT.ADDRESS_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var ADDRESS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ADDRESS_TYPE) }
   ///  Type of the cryptographic key (signing or encryption)
   public var KEY_TYPE: KeyType { let o = _accessor.offset(VT.KEY_TYPE); return o == 0 ? .signing : KeyType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .signing }
-  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  BIP-32 / SLIP-10 derivation path of this key from the entity root
+  ///  (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  ///  ed25519 hardened)
+  public var KEY_PATH: String? { let o = _accessor.offset(VT.KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_PATH) }
+  ///  Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  ///  ed25519: every record published before this field existed verifies
+  ///  unchanged under that default
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
+  ///  Signature encoding format produced by this key (e.g., "raw-ed25519",
+  ///  "compact"). ABSENT means the canonical encoding of ALGORITHM
+  ///  (raw-ed25519 for ed25519, compact for secp256k1)
+  public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
+  public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
   public static func add(XPUB: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: XPUB, at: VT.XPUB) }
   public static func add(PRIVATE_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRIVATE_KEY, at: VT.PRIVATE_KEY) }
@@ -82,6 +121,9 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   public static func add(KEY_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_ADDRESS, at: VT.KEY_ADDRESS) }
   public static func add(ADDRESS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ADDRESS_TYPE, at: VT.ADDRESS_TYPE) }
   public static func add(KEY_TYPE: KeyType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KEY_TYPE.rawValue, def: 0, at: VT.KEY_TYPE) }
+  public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VT.KEY_PATH) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func add(ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCODING, at: VT.ENCODING) }
   public static func endCryptoKey(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCryptoKey(
     _ fbb: inout FlatBufferBuilder,
@@ -91,7 +133,10 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     XPRIVOffset XPRIV: Offset = Offset(),
     KEY_ADDRESSOffset KEY_ADDRESS: Offset = Offset(),
     ADDRESS_TYPEOffset ADDRESS_TYPE: Offset = Offset(),
-    KEY_TYPE: KeyType = .signing
+    KEY_TYPE: KeyType = .signing,
+    KEY_PATHOffset KEY_PATH: Offset = Offset(),
+    ALGORITHMOffset ALGORITHM: Offset = Offset(),
+    ENCODINGOffset ENCODING: Offset = Offset()
   ) -> Offset {
     let __start = CryptoKey.startCryptoKey(&fbb)
     CryptoKey.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
@@ -101,6 +146,9 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     CryptoKey.add(KEY_ADDRESS: KEY_ADDRESS, &fbb)
     CryptoKey.add(ADDRESS_TYPE: ADDRESS_TYPE, &fbb)
     CryptoKey.add(KEY_TYPE: KEY_TYPE, &fbb)
+    CryptoKey.add(KEY_PATH: KEY_PATH, &fbb)
+    CryptoKey.add(ALGORITHM: ALGORITHM, &fbb)
+    CryptoKey.add(ENCODING: ENCODING, &fbb)
     return CryptoKey.endCryptoKey(&fbb, start: __start)
   }
 
@@ -113,6 +161,9 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
     try _v.visit(field: VT.KEY_ADDRESS, fieldName: "KEY_ADDRESS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ADDRESS_TYPE, fieldName: "ADDRESS_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.KEY_TYPE, fieldName: "KEY_TYPE", required: false, type: KeyType.self)
+    try _v.visit(field: VT.KEY_PATH, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }
@@ -321,6 +372,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let SIGNATURE_TIMESTAMP: VOffset = 36
     static let CHAIN_PROOFS: VOffset = 38
     static let ENTITY_TYPE: VOffset = 40
+    static let SIGNATURE_ALGORITHM: VOffset = 42
   }
 
   ///  Distinguished Name of the entity
@@ -364,7 +416,9 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var KEYS: FlatbufferVector<CryptoKey> { return _accessor.vector(at: VT.KEYS, byteSize: 4) }
   ///  Multiformat addresses associated with the entity
   public var MULTIFORMAT_ADDRESS: FlatbufferVector<String?> { return _accessor.vector(at: VT.MULTIFORMAT_ADDRESS, byteSize: 4) }
-  ///  Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  ///  Signature over canonical EPM content (hex), produced by the entity's
+  ///  signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  ///  (absent declaration = Ed25519)
   public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
   ///  Unix timestamp (seconds) when the EPM was signed
@@ -373,7 +427,15 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var CHAIN_PROOFS: FlatbufferVector<ChainProof> { return _accessor.vector(at: VT.CHAIN_PROOFS, byteSize: 4) }
   ///  Type of entity represented by this profile
   public var ENTITY_TYPE: EntityType { let o = _accessor.offset(VT.ENTITY_TYPE); return o == 0 ? .user : EntityType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .user }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
+  ///  Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  ///  "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+  ///  every EPM signed before this field existed verifying unchanged, so the
+  ///  field MUST NOT be made required. The signing key is the first CryptoKey
+  ///  in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  ///  (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  public var SIGNATURE_ALGORITHM: String? { let o = _accessor.offset(VT.SIGNATURE_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURE_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_ALGORITHM) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VT.DN) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VT.LEGAL_NAME) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VT.FAMILY_NAME) }
@@ -393,6 +455,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(SIGNATURE_TIMESTAMP: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGNATURE_TIMESTAMP, def: 0, at: VT.SIGNATURE_TIMESTAMP) }
   public static func addVectorOf(CHAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_PROOFS, at: VT.CHAIN_PROOFS) }
   public static func add(ENTITY_TYPE: EntityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_TYPE.rawValue, def: 0, at: VT.ENTITY_TYPE) }
+  public static func add(SIGNATURE_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_ALGORITHM, at: VT.SIGNATURE_ALGORITHM) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
@@ -414,7 +477,8 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SIGNATUREOffset SIGNATURE: Offset = Offset(),
     SIGNATURE_TIMESTAMP: Int64 = 0,
     CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset(),
-    ENTITY_TYPE: EntityType = .user
+    ENTITY_TYPE: EntityType = .user,
+    SIGNATURE_ALGORITHMOffset SIGNATURE_ALGORITHM: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
@@ -436,6 +500,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EPM.add(SIGNATURE_TIMESTAMP: SIGNATURE_TIMESTAMP, &fbb)
     EPM.addVectorOf(CHAIN_PROOFS: CHAIN_PROOFS, &fbb)
     EPM.add(ENTITY_TYPE: ENTITY_TYPE, &fbb)
+    EPM.add(SIGNATURE_ALGORITHM: SIGNATURE_ALGORITHM, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
@@ -460,6 +525,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.SIGNATURE_TIMESTAMP, fieldName: "SIGNATURE_TIMESTAMP", required: false, type: Int64.self)
     try _v.visit(field: VT.CHAIN_PROOFS, fieldName: "CHAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
     try _v.visit(field: VT.ENTITY_TYPE, fieldName: "ENTITY_TYPE", required: false, type: EntityType.self)
+    try _v.visit(field: VT.SIGNATURE_ALGORITHM, fieldName: "SIGNATURE_ALGORITHM", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

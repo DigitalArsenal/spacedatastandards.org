@@ -85,7 +85,23 @@ inline const char *EnumNameEntityType(EntityType e) {
   return EnumNamesEntityType()[index];
 }
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CryptoKeyBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -95,9 +111,14 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_XPRIV = 10,
     VT_KEY_ADDRESS = 12,
     VT_ADDRESS_TYPE = 14,
-    VT_KEY_TYPE = 16
+    VT_KEY_TYPE = 16,
+    VT_KEY_PATH = 18,
+    VT_ALGORITHM = 20,
+    VT_ENCODING = 22
   };
-  /// Public part of the cryptographic key, in hexidecimal format
+  /// Public part of the cryptographic key, in hexidecimal format. Optional for
+  /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   const ::flatbuffers::String *PUBLIC_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PUBLIC_KEY);
   }
@@ -113,17 +134,38 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }
-  /// Address generated from the cryptographic key
+  /// Address generated from the cryptographic key. An address only — NOT a
+  /// derivation path; the derivation path lives in KEY_PATH
   const ::flatbuffers::String *KEY_ADDRESS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_KEY_ADDRESS);
   }
-  /// Type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key. An address
+  /// format tag only — NOT a curve or algorithm designator; the algorithm
+  /// lives in ALGORITHM
   const ::flatbuffers::String *ADDRESS_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ADDRESS_TYPE);
   }
   /// Type of the cryptographic key (signing or encryption)
   KeyType KEY_TYPE() const {
     return static_cast<KeyType>(GetField<int8_t>(VT_KEY_TYPE, 0));
+  }
+  /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+  /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  /// ed25519 hardened)
+  const ::flatbuffers::String *KEY_PATH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_KEY_PATH);
+  }
+  /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  /// ed25519: every record published before this field existed verifies
+  /// unchanged under that default
+  const ::flatbuffers::String *ALGORITHM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
+  }
+  /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+  /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+  /// (raw-ed25519 for ed25519, compact for secp256k1)
+  const ::flatbuffers::String *ENCODING() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ENCODING);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -141,6 +183,12 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_ADDRESS_TYPE) &&
            verifier.VerifyString(ADDRESS_TYPE()) &&
            VerifyField<int8_t>(verifier, VT_KEY_TYPE, 1) &&
+           VerifyOffset(verifier, VT_KEY_PATH) &&
+           verifier.VerifyString(KEY_PATH()) &&
+           VerifyOffset(verifier, VT_ALGORITHM) &&
+           verifier.VerifyString(ALGORITHM()) &&
+           VerifyOffset(verifier, VT_ENCODING) &&
+           verifier.VerifyString(ENCODING()) &&
            verifier.EndTable();
   }
 };
@@ -170,6 +218,15 @@ struct CryptoKeyBuilder {
   void add_KEY_TYPE(KeyType KEY_TYPE) {
     fbb_.AddElement<int8_t>(CryptoKey::VT_KEY_TYPE, static_cast<int8_t>(KEY_TYPE), 0);
   }
+  void add_KEY_PATH(::flatbuffers::Offset<::flatbuffers::String> KEY_PATH) {
+    fbb_.AddOffset(CryptoKey::VT_KEY_PATH, KEY_PATH);
+  }
+  void add_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> ALGORITHM) {
+    fbb_.AddOffset(CryptoKey::VT_ALGORITHM, ALGORITHM);
+  }
+  void add_ENCODING(::flatbuffers::Offset<::flatbuffers::String> ENCODING) {
+    fbb_.AddOffset(CryptoKey::VT_ENCODING, ENCODING);
+  }
   explicit CryptoKeyBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -189,8 +246,14 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKey(
     ::flatbuffers::Offset<::flatbuffers::String> XPRIV = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_ADDRESS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ADDRESS_TYPE = 0,
-    KeyType KEY_TYPE = KeyType_Signing) {
+    KeyType KEY_TYPE = KeyType_Signing,
+    ::flatbuffers::Offset<::flatbuffers::String> KEY_PATH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ENCODING = 0) {
   CryptoKeyBuilder builder_(_fbb);
+  builder_.add_ENCODING(ENCODING);
+  builder_.add_ALGORITHM(ALGORITHM);
+  builder_.add_KEY_PATH(KEY_PATH);
   builder_.add_ADDRESS_TYPE(ADDRESS_TYPE);
   builder_.add_KEY_ADDRESS(KEY_ADDRESS);
   builder_.add_XPRIV(XPRIV);
@@ -209,13 +272,19 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
     const char *XPRIV = nullptr,
     const char *KEY_ADDRESS = nullptr,
     const char *ADDRESS_TYPE = nullptr,
-    KeyType KEY_TYPE = KeyType_Signing) {
+    KeyType KEY_TYPE = KeyType_Signing,
+    const char *KEY_PATH = nullptr,
+    const char *ALGORITHM = nullptr,
+    const char *ENCODING = nullptr) {
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto XPUB__ = XPUB ? _fbb.CreateString(XPUB) : 0;
   auto PRIVATE_KEY__ = PRIVATE_KEY ? _fbb.CreateString(PRIVATE_KEY) : 0;
   auto XPRIV__ = XPRIV ? _fbb.CreateString(XPRIV) : 0;
   auto KEY_ADDRESS__ = KEY_ADDRESS ? _fbb.CreateString(KEY_ADDRESS) : 0;
   auto ADDRESS_TYPE__ = ADDRESS_TYPE ? _fbb.CreateString(ADDRESS_TYPE) : 0;
+  auto KEY_PATH__ = KEY_PATH ? _fbb.CreateString(KEY_PATH) : 0;
+  auto ALGORITHM__ = ALGORITHM ? _fbb.CreateString(ALGORITHM) : 0;
+  auto ENCODING__ = ENCODING ? _fbb.CreateString(ENCODING) : 0;
   return CreateCryptoKey(
       _fbb,
       PUBLIC_KEY__,
@@ -224,7 +293,10 @@ inline ::flatbuffers::Offset<CryptoKey> CreateCryptoKeyDirect(
       XPRIV__,
       KEY_ADDRESS__,
       ADDRESS_TYPE__,
-      KEY_TYPE);
+      KEY_TYPE,
+      KEY_PATH__,
+      ALGORITHM__,
+      ENCODING__);
 }
 
 /// Represents a geographic address
@@ -537,7 +609,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SIGNATURE = 34,
     VT_SIGNATURE_TIMESTAMP = 36,
     VT_CHAIN_PROOFS = 38,
-    VT_ENTITY_TYPE = 40
+    VT_ENTITY_TYPE = 40,
+    VT_SIGNATURE_ALGORITHM = 42
   };
   /// Distinguished Name of the entity
   const ::flatbuffers::String *DN() const {
@@ -599,7 +672,9 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MULTIFORMAT_ADDRESS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MULTIFORMAT_ADDRESS);
   }
-  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  /// Signature over canonical EPM content (hex), produced by the entity's
+  /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  /// (absent declaration = Ed25519)
   const ::flatbuffers::String *SIGNATURE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE);
   }
@@ -614,6 +689,15 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Type of entity represented by this profile
   EntityType ENTITY_TYPE() const {
     return static_cast<EntityType>(GetField<int8_t>(VT_ENTITY_TYPE, 0));
+  }
+  /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  /// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+  /// every EPM signed before this field existed verifying unchanged, so the
+  /// field MUST NOT be made required. The signing key is the first CryptoKey
+  /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  const ::flatbuffers::String *SIGNATURE_ALGORITHM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE_ALGORITHM);
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
@@ -658,6 +742,8 @@ struct EPM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(CHAIN_PROOFS()) &&
            verifier.VerifyVectorOfTables(CHAIN_PROOFS()) &&
            VerifyField<int8_t>(verifier, VT_ENTITY_TYPE, 1) &&
+           VerifyOffset(verifier, VT_SIGNATURE_ALGORITHM) &&
+           verifier.VerifyString(SIGNATURE_ALGORITHM()) &&
            verifier.EndTable();
   }
 };
@@ -723,6 +809,9 @@ struct EPMBuilder {
   void add_ENTITY_TYPE(EntityType ENTITY_TYPE) {
     fbb_.AddElement<int8_t>(EPM::VT_ENTITY_TYPE, static_cast<int8_t>(ENTITY_TYPE), 0);
   }
+  void add_SIGNATURE_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_ALGORITHM) {
+    fbb_.AddOffset(EPM::VT_SIGNATURE_ALGORITHM, SIGNATURE_ALGORITHM);
+  }
   explicit EPMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -754,9 +843,11 @@ inline ::flatbuffers::Offset<EPM> CreateEPM(
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
     int64_t SIGNATURE_TIMESTAMP = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<ChainProof>>> CHAIN_PROOFS = 0,
-    EntityType ENTITY_TYPE = EntityType_User) {
+    EntityType ENTITY_TYPE = EntityType_User,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE_ALGORITHM = 0) {
   EPMBuilder builder_(_fbb);
   builder_.add_SIGNATURE_TIMESTAMP(SIGNATURE_TIMESTAMP);
+  builder_.add_SIGNATURE_ALGORITHM(SIGNATURE_ALGORITHM);
   builder_.add_CHAIN_PROOFS(CHAIN_PROOFS);
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_MULTIFORMAT_ADDRESS(MULTIFORMAT_ADDRESS);
@@ -798,7 +889,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
     const char *SIGNATURE = nullptr,
     int64_t SIGNATURE_TIMESTAMP = 0,
     const std::vector<::flatbuffers::Offset<ChainProof>> *CHAIN_PROOFS = nullptr,
-    EntityType ENTITY_TYPE = EntityType_User) {
+    EntityType ENTITY_TYPE = EntityType_User,
+    const char *SIGNATURE_ALGORITHM = nullptr) {
   auto DN__ = DN ? _fbb.CreateString(DN) : 0;
   auto LEGAL_NAME__ = LEGAL_NAME ? _fbb.CreateString(LEGAL_NAME) : 0;
   auto FAMILY_NAME__ = FAMILY_NAME ? _fbb.CreateString(FAMILY_NAME) : 0;
@@ -815,6 +907,7 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MULTIFORMAT_ADDRESS) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
   auto CHAIN_PROOFS__ = CHAIN_PROOFS ? _fbb.CreateVector<::flatbuffers::Offset<ChainProof>>(*CHAIN_PROOFS) : 0;
+  auto SIGNATURE_ALGORITHM__ = SIGNATURE_ALGORITHM ? _fbb.CreateString(SIGNATURE_ALGORITHM) : 0;
   return CreateEPM(
       _fbb,
       DN__,
@@ -835,7 +928,8 @@ inline ::flatbuffers::Offset<EPM> CreateEPMDirect(
       SIGNATURE__,
       SIGNATURE_TIMESTAMP,
       CHAIN_PROOFS__,
-      ENTITY_TYPE);
+      ENTITY_TYPE,
+      SIGNATURE_ALGORITHM__);
 }
 
 inline const EPM *GetEPM(const void *buf) {

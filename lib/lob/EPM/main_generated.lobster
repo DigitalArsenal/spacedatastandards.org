@@ -17,9 +17,27 @@ class ChainProof
 
 class EPM
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 class CryptoKey : flatbuffers.handle
-    /// Public part of the cryptographic key, in hexidecimal format
+    /// Public part of the cryptographic key, in hexidecimal format. Optional for
+    /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+    /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
     def PUBLIC_KEY() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
@@ -31,22 +49,40 @@ class CryptoKey : flatbuffers.handle
     /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
     def XPRIV() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
-    /// Address generated from the cryptographic key
+    /// Address generated from the cryptographic key. An address only — NOT a
+    /// derivation path; the derivation path lives in KEY_PATH
     def KEY_ADDRESS() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
-    /// Type of the address generated from the cryptographic key
+    /// Type of the address generated from the cryptographic key. An address
+    /// format tag only — NOT a curve or algorithm designator; the algorithm
+    /// lives in ALGORITHM
     def ADDRESS_TYPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
     /// Type of the cryptographic key (signing or encryption)
     def KEY_TYPE() -> KeyType:
         return KeyType(flatbuffers.field_int8(buf_, pos_, 16, 0))
+    /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+    /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+    /// ed25519 hardened)
+    def KEY_PATH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+    /// ed25519: every record published before this field existed verifies
+    /// unchanged under that default
+    def ALGORITHM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+    /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+    /// (raw-ed25519 for ed25519, compact for secp256k1)
+    def ENCODING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
 
 def GetRootAsCryptoKey(buf:string): return CryptoKey { buf, flatbuffers.indirect(buf, 0) }
 
 struct CryptoKeyBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(10)
         return this
     def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PUBLIC_KEY)
@@ -68,6 +104,15 @@ struct CryptoKeyBuilder:
         return this
     def add_KEY_TYPE(KEY_TYPE:KeyType):
         b_.PrependInt8Slot(6, KEY_TYPE, 0)
+        return this
+    def add_KEY_PATH(KEY_PATH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, KEY_PATH)
+        return this
+    def add_ALGORITHM(ALGORITHM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, ALGORITHM)
+        return this
+    def add_ENCODING(ENCODING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, ENCODING)
         return this
     def end():
         return b_.EndObject()
@@ -236,7 +281,9 @@ class EPM : flatbuffers.handle
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 4)
     def MULTIFORMAT_ADDRESS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
-    /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    /// Signature over canonical EPM content (hex), produced by the entity's
+    /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+    /// (absent declaration = Ed25519)
     def SIGNATURE() -> string:
         return flatbuffers.field_string(buf_, pos_, 34)
     /// Unix timestamp (seconds) when the EPM was signed
@@ -250,13 +297,21 @@ class EPM : flatbuffers.handle
     /// Type of entity represented by this profile
     def ENTITY_TYPE() -> EntityType:
         return EntityType(flatbuffers.field_int8(buf_, pos_, 40, 0))
+    /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+    /// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+    /// every EPM signed before this field existed verifying unchanged, so the
+    /// field MUST NOT be made required. The signing key is the first CryptoKey
+    /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+    /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+    def SIGNATURE_ALGORITHM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 42)
 
 def GetRootAsEPM(buf:string): return EPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct EPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(19)
+        b_.StartObject(20)
         return this
     def add_DN(DN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
@@ -314,6 +369,9 @@ struct EPMBuilder:
         return this
     def add_ENTITY_TYPE(ENTITY_TYPE:EntityType):
         b_.PrependInt8Slot(18, ENTITY_TYPE, 0)
+        return this
+    def add_SIGNATURE_ALGORITHM(SIGNATURE_ALGORITHM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(19, SIGNATURE_ALGORITHM)
         return this
     def end():
         return b_.EndObject()

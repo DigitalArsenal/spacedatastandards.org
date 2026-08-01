@@ -122,7 +122,9 @@ public final class EPM extends com.google.flatbuffers.Table {
   public StringVector multiformatAddressVector() { return multiformatAddressVector(new StringVector()); }
   public StringVector multiformatAddressVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+   * Signature over canonical EPM content (hex), produced by the entity's
+   * signing key under the algorithm declared in SIGNATURE_ALGORITHM
+   * (absent declaration = Ed25519)
    */
   public String SIGNATURE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SIGNATUREAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
@@ -143,6 +145,17 @@ public final class EPM extends com.google.flatbuffers.Table {
    * Type of entity represented by this profile
    */
   public byte ENTITY_TYPE() { int o = __offset(40); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+   * "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+   * every EPM signed before this field existed verifying unchanged, so the
+   * field MUST NOT be made required. The signing key is the first CryptoKey
+   * in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+   * (an absent CryptoKey.ALGORITHM likewise means ed25519)
+   */
+  public String SIGNATURE_ALGORITHM() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNATURE_ALGORITHMAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer SIGNATURE_ALGORITHMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createEPM(FlatBufferBuilder builder,
       int DNOffset,
@@ -163,9 +176,11 @@ public final class EPM extends com.google.flatbuffers.Table {
       int SIGNATUREOffset,
       long SIGNATURE_TIMESTAMP,
       int CHAIN_PROOFSOffset,
-      byte ENTITY_TYPE) {
-    builder.startTable(19);
+      byte ENTITY_TYPE,
+      int SIGNATURE_ALGORITHMOffset) {
+    builder.startTable(20);
     EPM.addSignatureTimestamp(builder, SIGNATURE_TIMESTAMP);
+    EPM.addSignatureAlgorithm(builder, SIGNATURE_ALGORITHMOffset);
     EPM.addChainProofs(builder, CHAIN_PROOFSOffset);
     EPM.addSignature(builder, SIGNATUREOffset);
     EPM.addMultiformatAddress(builder, MULTIFORMAT_ADDRESSOffset);
@@ -187,7 +202,7 @@ public final class EPM extends com.google.flatbuffers.Table {
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(19); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
   public static void addLegalName(FlatBufferBuilder builder, int LEGAL_NAMEOffset) { builder.addOffset(1, LEGAL_NAMEOffset, 0); }
   public static void addFamilyName(FlatBufferBuilder builder, int FAMILY_NAMEOffset) { builder.addOffset(2, FAMILY_NAMEOffset, 0); }
@@ -215,6 +230,7 @@ public final class EPM extends com.google.flatbuffers.Table {
   public static int createChainProofsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startChainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addEntityType(FlatBufferBuilder builder, byte ENTITY_TYPE) { builder.addByte(18, ENTITY_TYPE, 0); }
+  public static void addSignatureAlgorithm(FlatBufferBuilder builder, int SIGNATURE_ALGORITHMOffset) { builder.addOffset(19, SIGNATURE_ALGORITHMOffset, 0); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

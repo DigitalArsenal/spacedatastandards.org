@@ -8,7 +8,23 @@ import { KeyType } from './KeyType.js';
 
 
 /**
- * Represents cryptographic key information
+ * Represents cryptographic key information.
+ *
+ * The publication paradigm is "xpub + derivation paths, not key material":
+ * a verifier derives child public keys from XPUB and KEY_PATH wherever the
+ * curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+ *
+ * - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+ *   from XPUB via BIP-32 public derivation, so such an entry may omit
+ *   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+ * - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+ *   child is hardened — so NO xpub can yield an ed25519 child public key,
+ *   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+ *   authoritative and MUST remain present.
+ *
+ * A future revision that removes the published ed25519 PUBLIC_KEY would make
+ * every ed25519-signed EPM unverifiable; the retained key is deliberate,
+ * not a transitional leftover.
  */
 export class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKeyT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -29,7 +45,9 @@ static getSizePrefixedRootAsCryptoKey(bb:flatbuffers.ByteBuffer, obj?:CryptoKey)
 }
 
 /**
- * Public part of the cryptographic key, in hexidecimal format
+ * Public part of the cryptographic key, in hexidecimal format. Optional for
+ * secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+ * REQUIRED in practice for ed25519 keys, which are never xpub-derivable
  */
 PUBLIC_KEY():string|null
 PUBLIC_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -69,7 +87,8 @@ XPRIV(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Address generated from the cryptographic key
+ * Address generated from the cryptographic key. An address only — NOT a
+ * derivation path; the derivation path lives in KEY_PATH
  */
 KEY_ADDRESS():string|null
 KEY_ADDRESS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -79,7 +98,9 @@ KEY_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Type of the address generated from the cryptographic key
+ * Type of the address generated from the cryptographic key. An address
+ * format tag only — NOT a curve or algorithm designator; the algorithm
+ * lives in ALGORITHM
  */
 ADDRESS_TYPE():string|null
 ADDRESS_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -96,8 +117,44 @@ KEY_TYPE():KeyType {
   return offset ? this.bb!.readInt8(this.bb_pos + offset) : KeyType.Signing;
 }
 
+/**
+ * BIP-32 / SLIP-10 derivation path of this key from the entity root
+ * (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ * ed25519 hardened)
+ */
+KEY_PATH():string|null
+KEY_PATH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+KEY_PATH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+ * ed25519: every record published before this field existed verifies
+ * unchanged under that default
+ */
+ALGORITHM():string|null
+ALGORITHM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ALGORITHM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Signature encoding format produced by this key (e.g., "raw-ed25519",
+ * "compact"). ABSENT means the canonical encoding of ALGORITHM
+ * (raw-ed25519 for ed25519, compact for secp256k1)
+ */
+ENCODING():string|null
+ENCODING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ENCODING(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCryptoKey(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(10);
 }
 
 static addPublicKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset) {
@@ -128,12 +185,24 @@ static addKeyType(builder:flatbuffers.Builder, KEY_TYPE:KeyType) {
   builder.addFieldInt8(6, KEY_TYPE, KeyType.Signing);
 }
 
+static addKeyPath(builder:flatbuffers.Builder, KEY_PATHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, KEY_PATHOffset, 0);
+}
+
+static addAlgorithm(builder:flatbuffers.Builder, ALGORITHMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, ALGORITHMOffset, 0);
+}
+
+static addEncoding(builder:flatbuffers.Builder, ENCODINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, ENCODINGOffset, 0);
+}
+
 static endCryptoKey(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ADDRESS_TYPEOffset:flatbuffers.Offset, KEY_TYPE:KeyType):flatbuffers.Offset {
+static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, XPUBOffset:flatbuffers.Offset, PRIVATE_KEYOffset:flatbuffers.Offset, XPRIVOffset:flatbuffers.Offset, KEY_ADDRESSOffset:flatbuffers.Offset, ADDRESS_TYPEOffset:flatbuffers.Offset, KEY_TYPE:KeyType, KEY_PATHOffset:flatbuffers.Offset, ALGORITHMOffset:flatbuffers.Offset, ENCODINGOffset:flatbuffers.Offset):flatbuffers.Offset {
   CryptoKey.startCryptoKey(builder);
   CryptoKey.addPublicKey(builder, PUBLIC_KEYOffset);
   CryptoKey.addXpub(builder, XPUBOffset);
@@ -142,6 +211,9 @@ static createCryptoKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers
   CryptoKey.addKeyAddress(builder, KEY_ADDRESSOffset);
   CryptoKey.addAddressType(builder, ADDRESS_TYPEOffset);
   CryptoKey.addKeyType(builder, KEY_TYPE);
+  CryptoKey.addKeyPath(builder, KEY_PATHOffset);
+  CryptoKey.addAlgorithm(builder, ALGORITHMOffset);
+  CryptoKey.addEncoding(builder, ENCODINGOffset);
   return CryptoKey.endCryptoKey(builder);
 }
 
@@ -153,7 +225,10 @@ unpack(): CryptoKeyT {
     this.XPRIV(),
     this.KEY_ADDRESS(),
     this.ADDRESS_TYPE(),
-    this.KEY_TYPE()
+    this.KEY_TYPE(),
+    this.KEY_PATH(),
+    this.ALGORITHM(),
+    this.ENCODING()
   );
 }
 
@@ -166,6 +241,9 @@ unpackTo(_o: CryptoKeyT): void {
   _o.KEY_ADDRESS = this.KEY_ADDRESS();
   _o.ADDRESS_TYPE = this.ADDRESS_TYPE();
   _o.KEY_TYPE = this.KEY_TYPE();
+  _o.KEY_PATH = this.KEY_PATH();
+  _o.ALGORITHM = this.ALGORITHM();
+  _o.ENCODING = this.ENCODING();
 }
 }
 
@@ -177,7 +255,10 @@ constructor(
   public XPRIV: string|Uint8Array|null = null,
   public KEY_ADDRESS: string|Uint8Array|null = null,
   public ADDRESS_TYPE: string|Uint8Array|null = null,
-  public KEY_TYPE: KeyType = KeyType.Signing
+  public KEY_TYPE: KeyType = KeyType.Signing,
+  public KEY_PATH: string|Uint8Array|null = null,
+  public ALGORITHM: string|Uint8Array|null = null,
+  public ENCODING: string|Uint8Array|null = null
 ){}
 
 
@@ -188,6 +269,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const XPRIV = (this.XPRIV !== null ? builder.createString(this.XPRIV!) : 0);
   const KEY_ADDRESS = (this.KEY_ADDRESS !== null ? builder.createString(this.KEY_ADDRESS!) : 0);
   const ADDRESS_TYPE = (this.ADDRESS_TYPE !== null ? builder.createString(this.ADDRESS_TYPE!) : 0);
+  const KEY_PATH = (this.KEY_PATH !== null ? builder.createString(this.KEY_PATH!) : 0);
+  const ALGORITHM = (this.ALGORITHM !== null ? builder.createString(this.ALGORITHM!) : 0);
+  const ENCODING = (this.ENCODING !== null ? builder.createString(this.ENCODING!) : 0);
 
   return CryptoKey.createCryptoKey(builder,
     PUBLIC_KEY,
@@ -196,7 +280,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     XPRIV,
     KEY_ADDRESS,
     ADDRESS_TYPE,
-    this.KEY_TYPE
+    this.KEY_TYPE,
+    KEY_PATH,
+    ALGORITHM,
+    ENCODING
   );
 }
 }

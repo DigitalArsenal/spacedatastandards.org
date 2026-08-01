@@ -6,7 +6,23 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Represents cryptographic key information
+# Represents cryptographic key information.
+#
+# The publication paradigm is "xpub + derivation paths, not key material":
+# a verifier derives child public keys from XPUB and KEY_PATH wherever the
+# curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+#
+# - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+#   from XPUB via BIP-32 public derivation, so such an entry may omit
+#   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+# - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+#   child is hardened — so NO xpub can yield an ed25519 child public key,
+#   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+#   authoritative and MUST remain present.
+#
+# A future revision that removes the published ed25519 PUBLIC_KEY would make
+# every ed25519-signed EPM unverifiable; the retained key is deliberate,
+# not a transitional leftover.
 class CryptoKey(object):
     __slots__ = ['_tab']
 
@@ -29,7 +45,9 @@ class CryptoKey(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Public part of the cryptographic key, in hexidecimal format
+    # Public part of the cryptographic key, in hexidecimal format. Optional for
+    # secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+    # REQUIRED in practice for ed25519 keys, which are never xpub-derivable
     # CryptoKey
     def PUBLIC_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -61,7 +79,8 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Address generated from the cryptographic key
+    # Address generated from the cryptographic key. An address only — NOT a
+    # derivation path; the derivation path lives in KEY_PATH
     # CryptoKey
     def KEY_ADDRESS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -69,7 +88,9 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Type of the address generated from the cryptographic key
+    # Type of the address generated from the cryptographic key. An address
+    # format tag only — NOT a curve or algorithm designator; the algorithm
+    # lives in ALGORITHM
     # CryptoKey
     def ADDRESS_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -85,8 +106,38 @@ class CryptoKey(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # BIP-32 / SLIP-10 derivation path of this key from the entity root
+    # (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+    # ed25519 hardened)
+    # CryptoKey
+    def KEY_PATH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+    # ed25519: every record published before this field existed verifies
+    # unchanged under that default
+    # CryptoKey
+    def ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Signature encoding format produced by this key (e.g., "raw-ed25519",
+    # "compact"). ABSENT means the canonical encoding of ALGORITHM
+    # (raw-ed25519 for ed25519, compact for secp256k1)
+    # CryptoKey
+    def ENCODING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CryptoKeyStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(10)
 
 def Start(builder):
     CryptoKeyStart(builder)
@@ -133,6 +184,24 @@ def CryptoKeyAddKEY_TYPE(builder, KEY_TYPE):
 def AddKEY_TYPE(builder, KEY_TYPE):
     CryptoKeyAddKEY_TYPE(builder, KEY_TYPE)
 
+def CryptoKeyAddKEY_PATH(builder, KEY_PATH):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_PATH), 0)
+
+def AddKEY_PATH(builder, KEY_PATH):
+    CryptoKeyAddKEY_PATH(builder, KEY_PATH)
+
+def CryptoKeyAddALGORITHM(builder, ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM), 0)
+
+def AddALGORITHM(builder, ALGORITHM):
+    CryptoKeyAddALGORITHM(builder, ALGORITHM)
+
+def CryptoKeyAddENCODING(builder, ENCODING):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ENCODING), 0)
+
+def AddENCODING(builder, ENCODING):
+    CryptoKeyAddENCODING(builder, ENCODING)
+
 def CryptoKeyEnd(builder):
     return builder.EndObject()
 
@@ -152,6 +221,9 @@ class CryptoKeyT(object):
         KEY_ADDRESS = None,
         ADDRESS_TYPE = None,
         KEY_TYPE = 0,
+        KEY_PATH = None,
+        ALGORITHM = None,
+        ENCODING = None,
     ):
         self.PUBLIC_KEY = PUBLIC_KEY  # type: Optional[str]
         self.XPUB = XPUB  # type: Optional[str]
@@ -160,6 +232,9 @@ class CryptoKeyT(object):
         self.KEY_ADDRESS = KEY_ADDRESS  # type: Optional[str]
         self.ADDRESS_TYPE = ADDRESS_TYPE  # type: Optional[str]
         self.KEY_TYPE = KEY_TYPE  # type: int
+        self.KEY_PATH = KEY_PATH  # type: Optional[str]
+        self.ALGORITHM = ALGORITHM  # type: Optional[str]
+        self.ENCODING = ENCODING  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -189,6 +264,9 @@ class CryptoKeyT(object):
         self.KEY_ADDRESS = CryptoKey.KEY_ADDRESS()
         self.ADDRESS_TYPE = CryptoKey.ADDRESS_TYPE()
         self.KEY_TYPE = CryptoKey.KEY_TYPE()
+        self.KEY_PATH = CryptoKey.KEY_PATH()
+        self.ALGORITHM = CryptoKey.ALGORITHM()
+        self.ENCODING = CryptoKey.ENCODING()
 
     # CryptoKeyT
     def Pack(self, builder):
@@ -204,6 +282,12 @@ class CryptoKeyT(object):
             KEY_ADDRESS = builder.CreateString(self.KEY_ADDRESS)
         if self.ADDRESS_TYPE is not None:
             ADDRESS_TYPE = builder.CreateString(self.ADDRESS_TYPE)
+        if self.KEY_PATH is not None:
+            KEY_PATH = builder.CreateString(self.KEY_PATH)
+        if self.ALGORITHM is not None:
+            ALGORITHM = builder.CreateString(self.ALGORITHM)
+        if self.ENCODING is not None:
+            ENCODING = builder.CreateString(self.ENCODING)
         CryptoKeyStart(builder)
         if self.PUBLIC_KEY is not None:
             CryptoKeyAddPUBLIC_KEY(builder, PUBLIC_KEY)
@@ -218,5 +302,11 @@ class CryptoKeyT(object):
         if self.ADDRESS_TYPE is not None:
             CryptoKeyAddADDRESS_TYPE(builder, ADDRESS_TYPE)
         CryptoKeyAddKEY_TYPE(builder, self.KEY_TYPE)
+        if self.KEY_PATH is not None:
+            CryptoKeyAddKEY_PATH(builder, KEY_PATH)
+        if self.ALGORITHM is not None:
+            CryptoKeyAddALGORITHM(builder, ALGORITHM)
+        if self.ENCODING is not None:
+            CryptoKeyAddENCODING(builder, ENCODING)
         CryptoKey = CryptoKeyEnd(builder)
         return CryptoKey

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.173.0+1785437379402",
+  version: "1.174.0+1785625478467",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -1579,8 +1579,8 @@ file_identifier "$SHC";`,
       ]
     },
     EPM: {
-      IDL: `// Hash: 34f31ad6a0518aeead9054b221dd5b1f20cc500a108552dda4914e6486833b6c
-// Version: 1.0.3
+      IDL: `// Hash: f3f5a3f924cc232edea60a3af8bc639e6f6770d1001d3d8970869fc49e94a4cc
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -1592,9 +1592,27 @@ enum EntityType : byte {
   Node
 }
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+///   child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 table CryptoKey {
-  /// Public part of the cryptographic key, in hexidecimal format
+  /// Public part of the cryptographic key, in hexidecimal format. Optional for
+  /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   PUBLIC_KEY: string;
   /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPUB: string;
@@ -1602,12 +1620,27 @@ table CryptoKey {
   PRIVATE_KEY: string;
   /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
   XPRIV: string;
-  /// Address generated from the cryptographic key
+  /// Address generated from the cryptographic key. An address only \u2014 NOT a
+  /// derivation path; the derivation path lives in KEY_PATH
   KEY_ADDRESS: string;
-  /// Type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key. An address
+  /// format tag only \u2014 NOT a curve or algorithm designator; the algorithm
+  /// lives in ALGORITHM
   ADDRESS_TYPE: string;
   /// Type of the cryptographic key (signing or encryption)
   KEY_TYPE: KeyType;
+  /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+  /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  /// ed25519 hardened)
+  KEY_PATH: string;
+  /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  /// ed25519: every record published before this field existed verifies
+  /// unchanged under that default
+  ALGORITHM: string;
+  /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+  /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+  /// (raw-ed25519 for ed25519, compact for secp256k1)
+  ENCODING: string;
 }
 
 /// Represents a geographic address
@@ -1678,7 +1711,9 @@ table EPM {
   KEYS: [CryptoKey];
   /// Multiformat addresses associated with the entity
   MULTIFORMAT_ADDRESS: [string];
-  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  /// Signature over canonical EPM content (hex), produced by the entity's
+  /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  /// (absent declaration = Ed25519)
   SIGNATURE: string;
   /// Unix timestamp (seconds) when the EPM was signed
   SIGNATURE_TIMESTAMP: int64;
@@ -1686,6 +1721,13 @@ table EPM {
   CHAIN_PROOFS: [ChainProof];
   /// Type of entity represented by this profile
   ENTITY_TYPE: EntityType = User;
+  /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  /// "secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps
+  /// every EPM signed before this field existed verifying unchanged, so the
+  /// field MUST NOT be made required. The signing key is the first CryptoKey
+  /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  SIGNATURE_ALGORITHM: string;
 }
 
 root_type EPM;
@@ -15312,11 +15354,27 @@ var json_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -15332,15 +15390,29 @@ var json_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -15490,7 +15562,7 @@ var json_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -15508,6 +15580,10 @@ var json_default = {
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -18824,11 +18900,27 @@ var json_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -18844,15 +18936,29 @@ var json_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -19002,7 +19108,7 @@ var json_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -19020,6 +19126,10 @@ var json_default = {
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -29889,11 +29999,27 @@ var json_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -29909,15 +30035,29 @@ var json_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -30067,7 +30207,7 @@ var json_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -30085,6 +30225,10 @@ var json_default = {
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -55455,11 +55599,27 @@ var json_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -55475,15 +55635,29 @@ var json_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -55633,7 +55807,7 @@ var json_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -55651,6 +55825,10 @@ var json_default = {
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -107855,11 +108033,27 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -107875,15 +108069,29 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -108033,7 +108241,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -108051,6 +108259,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -116195,11 +116407,27 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format"
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable"
             },
             XPUB: {
               type: "string",
@@ -116215,15 +116443,29 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key"
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key"
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM"
             },
             KEY_TYPE: {
               $ref: "#/definitions/KeyType",
               description: "Type of the cryptographic key (signing or encryption)"
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default'
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
             }
           },
           additionalProperties: false
@@ -116373,7 +116615,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS"
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)"
             },
             SIGNATURE_TIMESTAMP: {
               type: "integer",
@@ -116391,6 +116633,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             ENTITY_TYPE: {
               $ref: "#/definitions/EntityType",
               description: "Type of entity represented by this profile"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)'
             }
           },
           additionalProperties: false
@@ -136492,11 +136738,27 @@ var fbjson_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -136516,12 +136778,12 @@ var fbjson_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -136537,6 +136799,23 @@ var fbjson_default = {
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -136715,7 +136994,7 @@ var fbjson_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -136747,6 +137026,11 @@ var fbjson_default = {
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -143063,11 +143347,27 @@ var fbjson_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -143087,12 +143387,12 @@ var fbjson_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -143108,6 +143408,23 @@ var fbjson_default = {
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -143286,7 +143603,7 @@ var fbjson_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -143318,6 +143635,11 @@ var fbjson_default = {
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -170443,11 +170765,27 @@ var fbjson_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -170467,12 +170805,12 @@ var fbjson_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -170488,6 +170826,23 @@ var fbjson_default = {
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -170666,7 +171021,7 @@ var fbjson_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -170698,6 +171053,11 @@ var fbjson_default = {
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -227004,11 +227364,27 @@ var fbjson_default = {
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -227028,12 +227404,12 @@ var fbjson_default = {
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -227049,6 +227425,23 @@ var fbjson_default = {
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -227227,7 +227620,7 @@ var fbjson_default = {
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -227259,6 +227652,11 @@ var fbjson_default = {
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -310628,11 +311026,27 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -310652,12 +311066,12 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -310673,6 +311087,23 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -310851,7 +311282,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -310883,6 +311314,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -328530,11 +328966,27 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CryptoKey: {
           type: "object",
-          description: "Represents cryptographic key information",
+          description: `Represents cryptographic key information.
+
+The publication paradigm is "xpub + derivation paths, not key material":
+a verifier derives child public keys from XPUB and KEY_PATH wherever the
+curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+
+- secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+from XPUB via BIP-32 public derivation, so such an entry may omit
+PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+- ed25519 under SLIP-10 has NO public derivation at all \u2014 every ed25519
+child is hardened \u2014 so NO xpub can yield an ed25519 child public key,
+for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+authoritative and MUST remain present.
+
+A future revision that removes the published ed25519 PUBLIC_KEY would make
+every ed25519-signed EPM unverifiable; the retained key is deliberate,
+not a transitional leftover.`,
           properties: {
             PUBLIC_KEY: {
               type: "string",
-              description: "Public part of the cryptographic key, in hexidecimal format",
+              description: "Public part of the cryptographic key, in hexidecimal format. Optional for\nsecp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);\nREQUIRED in practice for ed25519 keys, which are never xpub-derivable",
               "x-flatbuffer-type": "string"
             },
             XPUB: {
@@ -328554,12 +329006,12 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             KEY_ADDRESS: {
               type: "string",
-              description: "Address generated from the cryptographic key",
+              description: "Address generated from the cryptographic key. An address only \u2014 NOT a\nderivation path; the derivation path lives in KEY_PATH",
               "x-flatbuffer-type": "string"
             },
             ADDRESS_TYPE: {
               type: "string",
-              description: "Type of the address generated from the cryptographic key",
+              description: "Type of the address generated from the cryptographic key. An address\nformat tag only \u2014 NOT a curve or algorithm designator; the algorithm\nlives in ALGORITHM",
               "x-flatbuffer-type": "string"
             },
             KEY_TYPE: {
@@ -328575,6 +329027,23 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                   value: 1
                 }
               }
+            },
+            KEY_PATH: {
+              type: "string",
+              description: `BIP-32 / SLIP-10 derivation path of this key from the entity root
+(e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+ed25519 hardened)`,
+              "x-flatbuffer-type": "string"
+            },
+            ALGORITHM: {
+              type: "string",
+              description: 'Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means\ned25519: every record published before this field existed verifies\nunchanged under that default',
+              "x-flatbuffer-type": "string"
+            },
+            ENCODING: {
+              type: "string",
+              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -328753,7 +329222,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS",
+              description: "Signature over canonical EPM content (hex), produced by the entity's\nsigning key under the algorithm declared in SIGNATURE_ALGORITHM\n(absent declaration = Ed25519)",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE_TIMESTAMP: {
@@ -328785,6 +329254,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 }
               },
               "x-flatbuffer-default": "User"
+            },
+            SIGNATURE_ALGORITHM: {
+              type: "string",
+              description: 'Signature algorithm that produced SIGNATURE (e.g., "ed25519",\n"secp256k1"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -346714,7 +347188,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
   }
 };
 
-// ../../../../../../../../../Users/tj/software/spacedatanetwork-stack/repos/main-packages/spacedatastandards.org/node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

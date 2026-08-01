@@ -314,7 +314,9 @@ func (rcv *EPM) MultiformatAddressLength() int {
 }
 
 /// Multiformat addresses associated with the entity
-/// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+/// Signature over canonical EPM content (hex), produced by the entity's
+/// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+/// (absent declaration = Ed25519)
 func (rcv *EPM) SIGNATURE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -327,7 +329,9 @@ func (rcv *EPM) Signature() []byte {
 	return rcv.SIGNATURE()
 }
 
-/// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+/// Signature over canonical EPM content (hex), produced by the entity's
+/// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+/// (absent declaration = Ed25519)
 /// Unix timestamp (seconds) when the EPM was signed
 func (rcv *EPM) SIGNATURE_TIMESTAMP() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
@@ -405,8 +409,32 @@ func (rcv *EPM) MutateEntityType(n EntityType) bool {
 	return rcv.MutateENTITY_TYPE(n)
 }
 
+/// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+/// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+/// every EPM signed before this field existed verifying unchanged, so the
+/// field MUST NOT be made required. The signing key is the first CryptoKey
+/// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+/// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+func (rcv *EPM) SIGNATURE_ALGORITHM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *EPM) SignatureAlgorithm() []byte {
+	return rcv.SIGNATURE_ALGORITHM()
+}
+
+/// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+/// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+/// every EPM signed before this field existed verifying unchanged, so the
+/// field MUST NOT be made required. The signing key is the first CryptoKey
+/// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+/// (an absent CryptoKey.ALGORITHM likewise means ed25519)
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(19)
+	builder.StartObject(20)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
@@ -545,6 +573,12 @@ func EPMAddENTITY_TYPE(builder *flatbuffers.Builder, ENTITY_TYPE EntityType) {
 }
 func EPMAddEntityType(builder *flatbuffers.Builder, ENTITY_TYPE EntityType) {
 	EPMAddENTITY_TYPE(builder, ENTITY_TYPE)
+}
+func EPMAddSIGNATURE_ALGORITHM(builder *flatbuffers.Builder, SIGNATURE_ALGORITHM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(SIGNATURE_ALGORITHM), 0)
+}
+func EPMAddSignatureAlgorithm(builder *flatbuffers.Builder, SIGNATURE_ALGORITHM flatbuffers.UOffsetT) {
+	EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

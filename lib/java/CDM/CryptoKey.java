@@ -17,7 +17,23 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Represents cryptographic key information
+ * Represents cryptographic key information.
+ *
+ * The publication paradigm is "xpub + derivation paths, not key material":
+ * a verifier derives child public keys from XPUB and KEY_PATH wherever the
+ * curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+ *
+ * - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+ *   from XPUB via BIP-32 public derivation, so such an entry may omit
+ *   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+ * - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+ *   child is hardened — so NO xpub can yield an ed25519 child public key,
+ *   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+ *   authoritative and MUST remain present.
+ *
+ * A future revision that removes the published ed25519 PUBLIC_KEY would make
+ * every ed25519-signed EPM unverifiable; the retained key is deliberate,
+ * not a transitional leftover.
  */
 @SuppressWarnings("unused")
 public final class CryptoKey extends com.google.flatbuffers.Table {
@@ -28,7 +44,9 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
   public CryptoKey __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Public part of the cryptographic key, in hexidecimal format
+   * Public part of the cryptographic key, in hexidecimal format. Optional for
+   * secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+   * REQUIRED in practice for ed25519 keys, which are never xpub-derivable
    */
   public String PUBLIC_KEY() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PUBLIC_KEYAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -52,13 +70,16 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
   public ByteBuffer XPRIVAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer XPRIVInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
   /**
-   * Address generated from the cryptographic key
+   * Address generated from the cryptographic key. An address only — NOT a
+   * derivation path; the derivation path lives in KEY_PATH
    */
   public String KEY_ADDRESS() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer KEY_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer KEY_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Type of the address generated from the cryptographic key
+   * Type of the address generated from the cryptographic key. An address
+   * format tag only — NOT a curve or algorithm designator; the algorithm
+   * lives in ALGORITHM
    */
   public String ADDRESS_TYPE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ADDRESS_TYPEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
@@ -67,6 +88,30 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
    * Type of the cryptographic key (signing or encryption)
    */
   public byte KEY_TYPE() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * BIP-32 / SLIP-10 derivation path of this key from the entity root
+   * (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+   * ed25519 hardened)
+   */
+  public String KEY_PATH() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer KEY_PATHAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer KEY_PATHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+   * ed25519: every record published before this field existed verifies
+   * unchanged under that default
+   */
+  public String ALGORITHM() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ALGORITHMAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer ALGORITHMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Signature encoding format produced by this key (e.g., "raw-ed25519",
+   * "compact"). ABSENT means the canonical encoding of ALGORITHM
+   * (raw-ed25519 for ed25519, compact for secp256k1)
+   */
+  public String ENCODING() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ENCODINGAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer ENCODINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
 
   public static int createCryptoKey(FlatBufferBuilder builder,
       int PUBLIC_KEYOffset,
@@ -75,8 +120,14 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
       int XPRIVOffset,
       int KEY_ADDRESSOffset,
       int ADDRESS_TYPEOffset,
-      byte KEY_TYPE) {
-    builder.startTable(7);
+      byte KEY_TYPE,
+      int KEY_PATHOffset,
+      int ALGORITHMOffset,
+      int ENCODINGOffset) {
+    builder.startTable(10);
+    CryptoKey.addEncoding(builder, ENCODINGOffset);
+    CryptoKey.addAlgorithm(builder, ALGORITHMOffset);
+    CryptoKey.addKeyPath(builder, KEY_PATHOffset);
     CryptoKey.addAddressType(builder, ADDRESS_TYPEOffset);
     CryptoKey.addKeyAddress(builder, KEY_ADDRESSOffset);
     CryptoKey.addXpriv(builder, XPRIVOffset);
@@ -87,7 +138,7 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
     return CryptoKey.endCryptoKey(builder);
   }
 
-  public static void startCryptoKey(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startCryptoKey(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addPublicKey(FlatBufferBuilder builder, int PUBLIC_KEYOffset) { builder.addOffset(0, PUBLIC_KEYOffset, 0); }
   public static void addXpub(FlatBufferBuilder builder, int XPUBOffset) { builder.addOffset(1, XPUBOffset, 0); }
   public static void addPrivateKey(FlatBufferBuilder builder, int PRIVATE_KEYOffset) { builder.addOffset(2, PRIVATE_KEYOffset, 0); }
@@ -95,6 +146,9 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
   public static void addKeyAddress(FlatBufferBuilder builder, int KEY_ADDRESSOffset) { builder.addOffset(4, KEY_ADDRESSOffset, 0); }
   public static void addAddressType(FlatBufferBuilder builder, int ADDRESS_TYPEOffset) { builder.addOffset(5, ADDRESS_TYPEOffset, 0); }
   public static void addKeyType(FlatBufferBuilder builder, byte KEY_TYPE) { builder.addByte(6, KEY_TYPE, 0); }
+  public static void addKeyPath(FlatBufferBuilder builder, int KEY_PATHOffset) { builder.addOffset(7, KEY_PATHOffset, 0); }
+  public static void addAlgorithm(FlatBufferBuilder builder, int ALGORITHMOffset) { builder.addOffset(8, ALGORITHMOffset, 0); }
+  public static void addEncoding(FlatBufferBuilder builder, int ENCODINGOffset) { builder.addOffset(9, ENCODINGOffset, 0); }
   public static int endCryptoKey(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

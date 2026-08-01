@@ -242,7 +242,9 @@ class EPM : Table() {
             val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+     * Signature over canonical EPM content (hex), produced by the entity's
+     * signing key under the algorithm declared in SIGNATURE_ALGORITHM
+     * (absent declaration = Ed25519)
      */
     val signature : String?
         get() {
@@ -287,6 +289,25 @@ class EPM : Table() {
             val o = __offset(40)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+     * "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+     * every EPM signed before this field existed verifying unchanged, so the
+     * field MUST NOT be made required. The signing key is the first CryptoKey
+     * in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+     * (an absent CryptoKey.ALGORITHM likewise means ed25519)
+     */
+    val signatureAlgorithm : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val signatureAlgorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
+    fun signatureAlgorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEPM(_bb: ByteBuffer): EPM = getRootAsEPM(_bb, EPM())
@@ -295,9 +316,10 @@ class EPM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPM")
-        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int, entityType: Byte) : Int {
-            builder.startTable(19)
+        fun createEPM(builder: FlatBufferBuilder, dnOffset: Int, legalNameOffset: Int, familyNameOffset: Int, givenNameOffset: Int, additionalNameOffset: Int, honorificPrefixOffset: Int, honorificSuffixOffset: Int, jobTitleOffset: Int, occupationOffset: Int, addressOffset: Int, alternateNamesOffset: Int, emailOffset: Int, telephoneOffset: Int, keysOffset: Int, multiformatAddressOffset: Int, signatureOffset: Int, signatureTimestamp: Long, chainProofsOffset: Int, entityType: Byte, signatureAlgorithmOffset: Int) : Int {
+            builder.startTable(20)
             addSIGNATURETIMESTAMP(builder, signatureTimestamp)
+            addSIGNATUREALGORITHM(builder, signatureAlgorithmOffset)
             addCHAINPROOFS(builder, chainProofsOffset)
             addSIGNATURE(builder, signatureOffset)
             addMULTIFORMATADDRESS(builder, multiformatAddressOffset)
@@ -318,7 +340,7 @@ class EPM : Table() {
             addENTITYTYPE(builder, entityType)
             return endEPM(builder)
         }
-        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(19)
+        fun startEPM(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addDN(builder: FlatBufferBuilder, dn: Int) = builder.addOffset(0, dn, 0)
         fun addLEGALNAME(builder: FlatBufferBuilder, legalName: Int) = builder.addOffset(1, legalName, 0)
         fun addFAMILYNAME(builder: FlatBufferBuilder, familyName: Int) = builder.addOffset(2, familyName, 0)
@@ -370,6 +392,7 @@ class EPM : Table() {
         }
         fun startChainProofsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addENTITYTYPE(builder: FlatBufferBuilder, entityType: Byte) = builder.addByte(18, entityType, 0)
+        fun addSIGNATUREALGORITHM(builder: FlatBufferBuilder, signatureAlgorithm: Int) = builder.addOffset(19, signatureAlgorithm, 0)
         fun endEPM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

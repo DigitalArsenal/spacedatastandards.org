@@ -6,7 +6,23 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Represents cryptographic key information
+/// Represents cryptographic key information.
+///
+/// The publication paradigm is "xpub + derivation paths, not key material":
+/// a verifier derives child public keys from XPUB and KEY_PATH wherever the
+/// curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+///
+/// - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+///   from XPUB via BIP-32 public derivation, so such an entry may omit
+///   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+/// - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+///   child is hardened — so NO xpub can yield an ed25519 child public key,
+///   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+///   authoritative and MUST remain present.
+///
+/// A future revision that removes the published ed25519 PUBLIC_KEY would make
+/// every ed25519-signed EPM unverifiable; the retained key is deliberate,
+/// not a transitional leftover.
 public struct CryptoKey : IFlatbufferObject
 {
   private Table __p;
@@ -17,7 +33,9 @@ public struct CryptoKey : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CryptoKey __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Public part of the cryptographic key, in hexidecimal format
+  /// Public part of the cryptographic key, in hexidecimal format. Optional for
+  /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+  /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   public string PUBLIC_KEY { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPUBLIC_KEYBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -49,7 +67,8 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetXPRIVBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetXPRIVArray() { return __p.__vector_as_array<byte>(10); }
-  /// Address generated from the cryptographic key
+  /// Address generated from the cryptographic key. An address only — NOT a
+  /// derivation path; the derivation path lives in KEY_PATH
   public string KEY_ADDRESS { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetKEY_ADDRESSBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -57,7 +76,9 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetKEY_ADDRESSBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetKEY_ADDRESSArray() { return __p.__vector_as_array<byte>(12); }
-  /// Type of the address generated from the cryptographic key
+  /// Type of the address generated from the cryptographic key. An address
+  /// format tag only — NOT a curve or algorithm designator; the algorithm
+  /// lives in ALGORITHM
   public string ADDRESS_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetADDRESS_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -67,6 +88,36 @@ public struct CryptoKey : IFlatbufferObject
   public byte[] GetADDRESS_TYPEArray() { return __p.__vector_as_array<byte>(14); }
   /// Type of the cryptographic key (signing or encryption)
   public KeyType KEY_TYPE { get { int o = __p.__offset(16); return o != 0 ? (KeyType)__p.bb.GetSbyte(o + __p.bb_pos) : KeyType.Signing; } }
+  /// BIP-32 / SLIP-10 derivation path of this key from the entity root
+  /// (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+  /// ed25519 hardened)
+  public string KEY_PATH { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetKEY_PATHBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetKEY_PATHBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetKEY_PATHArray() { return __p.__vector_as_array<byte>(18); }
+  /// Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+  /// ed25519: every record published before this field existed verifies
+  /// unchanged under that default
+  public string ALGORITHM { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetALGORITHMBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetALGORITHMBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetALGORITHMArray() { return __p.__vector_as_array<byte>(20); }
+  /// Signature encoding format produced by this key (e.g., "raw-ed25519",
+  /// "compact"). ABSENT means the canonical encoding of ALGORITHM
+  /// (raw-ed25519 for ed25519, compact for secp256k1)
+  public string ENCODING { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetENCODINGBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetENCODINGBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetENCODINGArray() { return __p.__vector_as_array<byte>(22); }
 
   public static Offset<CryptoKey> CreateCryptoKey(FlatBufferBuilder builder,
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
@@ -75,8 +126,14 @@ public struct CryptoKey : IFlatbufferObject
       StringOffset XPRIVOffset = default(StringOffset),
       StringOffset KEY_ADDRESSOffset = default(StringOffset),
       StringOffset ADDRESS_TYPEOffset = default(StringOffset),
-      KeyType KEY_TYPE = KeyType.Signing) {
-    builder.StartTable(7);
+      KeyType KEY_TYPE = KeyType.Signing,
+      StringOffset KEY_PATHOffset = default(StringOffset),
+      StringOffset ALGORITHMOffset = default(StringOffset),
+      StringOffset ENCODINGOffset = default(StringOffset)) {
+    builder.StartTable(10);
+    CryptoKey.AddENCODING(builder, ENCODINGOffset);
+    CryptoKey.AddALGORITHM(builder, ALGORITHMOffset);
+    CryptoKey.AddKEY_PATH(builder, KEY_PATHOffset);
     CryptoKey.AddADDRESS_TYPE(builder, ADDRESS_TYPEOffset);
     CryptoKey.AddKEY_ADDRESS(builder, KEY_ADDRESSOffset);
     CryptoKey.AddXPRIV(builder, XPRIVOffset);
@@ -87,7 +144,7 @@ public struct CryptoKey : IFlatbufferObject
     return CryptoKey.EndCryptoKey(builder);
   }
 
-  public static void StartCryptoKey(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartCryptoKey(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddPUBLIC_KEY(FlatBufferBuilder builder, StringOffset PUBLIC_KEYOffset) { builder.AddOffset(0, PUBLIC_KEYOffset.Value, 0); }
   public static void AddXPUB(FlatBufferBuilder builder, StringOffset XPUBOffset) { builder.AddOffset(1, XPUBOffset.Value, 0); }
   public static void AddPRIVATE_KEY(FlatBufferBuilder builder, StringOffset PRIVATE_KEYOffset) { builder.AddOffset(2, PRIVATE_KEYOffset.Value, 0); }
@@ -95,6 +152,9 @@ public struct CryptoKey : IFlatbufferObject
   public static void AddKEY_ADDRESS(FlatBufferBuilder builder, StringOffset KEY_ADDRESSOffset) { builder.AddOffset(4, KEY_ADDRESSOffset.Value, 0); }
   public static void AddADDRESS_TYPE(FlatBufferBuilder builder, StringOffset ADDRESS_TYPEOffset) { builder.AddOffset(5, ADDRESS_TYPEOffset.Value, 0); }
   public static void AddKEY_TYPE(FlatBufferBuilder builder, KeyType KEY_TYPE) { builder.AddSbyte(6, (sbyte)KEY_TYPE, 0); }
+  public static void AddKEY_PATH(FlatBufferBuilder builder, StringOffset KEY_PATHOffset) { builder.AddOffset(7, KEY_PATHOffset.Value, 0); }
+  public static void AddALGORITHM(FlatBufferBuilder builder, StringOffset ALGORITHMOffset) { builder.AddOffset(8, ALGORITHMOffset.Value, 0); }
+  public static void AddENCODING(FlatBufferBuilder builder, StringOffset ENCODINGOffset) { builder.AddOffset(9, ENCODINGOffset.Value, 0); }
   public static Offset<CryptoKey> EndCryptoKey(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CryptoKey>(o);
@@ -112,6 +172,9 @@ public struct CryptoKey : IFlatbufferObject
     _o.KEY_ADDRESS = this.KEY_ADDRESS;
     _o.ADDRESS_TYPE = this.ADDRESS_TYPE;
     _o.KEY_TYPE = this.KEY_TYPE;
+    _o.KEY_PATH = this.KEY_PATH;
+    _o.ALGORITHM = this.ALGORITHM;
+    _o.ENCODING = this.ENCODING;
   }
   public static Offset<CryptoKey> Pack(FlatBufferBuilder builder, CryptoKeyT _o) {
     if (_o == null) return default(Offset<CryptoKey>);
@@ -121,6 +184,9 @@ public struct CryptoKey : IFlatbufferObject
     var _XPRIV = _o.XPRIV == null ? default(StringOffset) : builder.CreateString(_o.XPRIV);
     var _KEY_ADDRESS = _o.KEY_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.KEY_ADDRESS);
     var _ADDRESS_TYPE = _o.ADDRESS_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ADDRESS_TYPE);
+    var _KEY_PATH = _o.KEY_PATH == null ? default(StringOffset) : builder.CreateString(_o.KEY_PATH);
+    var _ALGORITHM = _o.ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.ALGORITHM);
+    var _ENCODING = _o.ENCODING == null ? default(StringOffset) : builder.CreateString(_o.ENCODING);
     return CreateCryptoKey(
       builder,
       _PUBLIC_KEY,
@@ -129,7 +195,10 @@ public struct CryptoKey : IFlatbufferObject
       _XPRIV,
       _KEY_ADDRESS,
       _ADDRESS_TYPE,
-      _o.KEY_TYPE);
+      _o.KEY_TYPE,
+      _KEY_PATH,
+      _ALGORITHM,
+      _ENCODING);
   }
 }
 
@@ -142,6 +211,9 @@ public class CryptoKeyT
   public string KEY_ADDRESS { get; set; }
   public string ADDRESS_TYPE { get; set; }
   public KeyType KEY_TYPE { get; set; }
+  public string KEY_PATH { get; set; }
+  public string ALGORITHM { get; set; }
+  public string ENCODING { get; set; }
 
   public CryptoKeyT() {
     this.PUBLIC_KEY = null;
@@ -151,6 +223,9 @@ public class CryptoKeyT
     this.KEY_ADDRESS = null;
     this.ADDRESS_TYPE = null;
     this.KEY_TYPE = KeyType.Signing;
+    this.KEY_PATH = null;
+    this.ALGORITHM = null;
+    this.ENCODING = null;
   }
 }
 
@@ -167,6 +242,9 @@ static public class CryptoKeyVerify
       && verifier.VerifyString(tablePos, 12 /*KEY_ADDRESS*/, false)
       && verifier.VerifyString(tablePos, 14 /*ADDRESS_TYPE*/, false)
       && verifier.VerifyField(tablePos, 16 /*KEY_TYPE*/, 1 /*KeyType*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*KEY_PATH*/, false)
+      && verifier.VerifyString(tablePos, 20 /*ALGORITHM*/, false)
+      && verifier.VerifyString(tablePos, 22 /*ENCODING*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

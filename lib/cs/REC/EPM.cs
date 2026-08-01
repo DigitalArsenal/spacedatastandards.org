@@ -118,7 +118,9 @@ public struct EPM : IFlatbufferObject
   /// Multiformat addresses associated with the entity
   public string MULTIFORMAT_ADDRESS(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int MULTIFORMAT_ADDRESSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+  /// Signature over canonical EPM content (hex), produced by the entity's
+  /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+  /// (absent declaration = Ed25519)
   public string SIGNATURE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSIGNATUREBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -133,6 +135,19 @@ public struct EPM : IFlatbufferObject
   public int CHAIN_PROOFSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Type of entity represented by this profile
   public EntityType ENTITY_TYPE { get { int o = __p.__offset(40); return o != 0 ? (EntityType)__p.bb.GetSbyte(o + __p.bb_pos) : EntityType.User; } }
+  /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+  /// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+  /// every EPM signed before this field existed verifying unchanged, so the
+  /// field MUST NOT be made required. The signing key is the first CryptoKey
+  /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+  /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+  public string SIGNATURE_ALGORITHM { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSIGNATURE_ALGORITHMBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetSIGNATURE_ALGORITHMBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetSIGNATURE_ALGORITHMArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
       StringOffset DNOffset = default(StringOffset),
@@ -153,9 +168,11 @@ public struct EPM : IFlatbufferObject
       StringOffset SIGNATUREOffset = default(StringOffset),
       long SIGNATURE_TIMESTAMP = 0,
       VectorOffset CHAIN_PROOFSOffset = default(VectorOffset),
-      EntityType ENTITY_TYPE = EntityType.User) {
-    builder.StartTable(19);
+      EntityType ENTITY_TYPE = EntityType.User,
+      StringOffset SIGNATURE_ALGORITHMOffset = default(StringOffset)) {
+    builder.StartTable(20);
     EPM.AddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP);
+    EPM.AddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHMOffset);
     EPM.AddCHAIN_PROOFS(builder, CHAIN_PROOFSOffset);
     EPM.AddSIGNATURE(builder, SIGNATUREOffset);
     EPM.AddMULTIFORMAT_ADDRESS(builder, MULTIFORMAT_ADDRESSOffset);
@@ -177,7 +194,7 @@ public struct EPM : IFlatbufferObject
     return EPM.EndEPM(builder);
   }
 
-  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(19); }
+  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
@@ -217,6 +234,7 @@ public struct EPM : IFlatbufferObject
   public static VectorOffset CreateCHAIN_PROOFSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<ChainProof>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCHAIN_PROOFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddENTITY_TYPE(FlatBufferBuilder builder, EntityType ENTITY_TYPE) { builder.AddSbyte(18, (sbyte)ENTITY_TYPE, 0); }
+  public static void AddSIGNATURE_ALGORITHM(FlatBufferBuilder builder, StringOffset SIGNATURE_ALGORITHMOffset) { builder.AddOffset(19, SIGNATURE_ALGORITHMOffset.Value, 0); }
   public static Offset<EPM> EndEPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EPM>(o);
@@ -252,6 +270,7 @@ public struct EPM : IFlatbufferObject
     _o.CHAIN_PROOFS = new List<ChainProofT>();
     for (var _j = 0; _j < this.CHAIN_PROOFSLength; ++_j) {_o.CHAIN_PROOFS.Add(this.CHAIN_PROOFS(_j).HasValue ? this.CHAIN_PROOFS(_j).Value.UnPack() : null);}
     _o.ENTITY_TYPE = this.ENTITY_TYPE;
+    _o.SIGNATURE_ALGORITHM = this.SIGNATURE_ALGORITHM;
   }
   public static Offset<EPM> Pack(FlatBufferBuilder builder, EPMT _o) {
     if (_o == null) return default(Offset<EPM>);
@@ -292,6 +311,7 @@ public struct EPM : IFlatbufferObject
       for (var _j = 0; _j < __CHAIN_PROOFS.Length; ++_j) { __CHAIN_PROOFS[_j] = ChainProof.Pack(builder, _o.CHAIN_PROOFS[_j]); }
       _CHAIN_PROOFS = CreateCHAIN_PROOFSVector(builder, __CHAIN_PROOFS);
     }
+    var _SIGNATURE_ALGORITHM = _o.SIGNATURE_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE_ALGORITHM);
     return CreateEPM(
       builder,
       _DN,
@@ -312,7 +332,8 @@ public struct EPM : IFlatbufferObject
       _SIGNATURE,
       _o.SIGNATURE_TIMESTAMP,
       _CHAIN_PROOFS,
-      _o.ENTITY_TYPE);
+      _o.ENTITY_TYPE,
+      _SIGNATURE_ALGORITHM);
   }
 }
 
@@ -337,6 +358,7 @@ public class EPMT
   public long SIGNATURE_TIMESTAMP { get; set; }
   public List<ChainProofT> CHAIN_PROOFS { get; set; }
   public EntityType ENTITY_TYPE { get; set; }
+  public string SIGNATURE_ALGORITHM { get; set; }
 
   public EPMT() {
     this.DN = null;
@@ -358,6 +380,7 @@ public class EPMT
     this.SIGNATURE_TIMESTAMP = 0;
     this.CHAIN_PROOFS = null;
     this.ENTITY_TYPE = EntityType.User;
+    this.SIGNATURE_ALGORITHM = null;
   }
   public static EPMT DeserializeFromBinary(byte[] fbBuffer) {
     return EPM.GetRootAsEPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -394,6 +417,7 @@ static public class EPMVerify
       && verifier.VerifyField(tablePos, 36 /*SIGNATURE_TIMESTAMP*/, 8 /*long*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 38 /*CHAIN_PROOFS*/, ChainProofVerify.Verify, false)
       && verifier.VerifyField(tablePos, 40 /*ENTITY_TYPE*/, 1 /*EntityType*/, 1, false)
+      && verifier.VerifyString(tablePos, 42 /*SIGNATURE_ALGORITHM*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

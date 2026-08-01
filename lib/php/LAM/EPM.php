@@ -186,7 +186,9 @@ class EPM extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+    /// Signature over canonical EPM content (hex), produced by the entity's
+    /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
+    /// (absent declaration = Ed25519)
     public function getSIGNATURE()
     {
         $o = $this->__offset(34);
@@ -233,22 +235,34 @@ class EPM extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \EntityType::User;
     }
 
+    /// Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+    /// "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+    /// every EPM signed before this field existed verifying unchanged, so the
+    /// field MUST NOT be made required. The signing key is the first CryptoKey
+    /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+    /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+    public function getSIGNATURE_ALGORITHM()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(19);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE, $SIGNATURE_ALGORITHM)
     {
-        $builder->startObject(19);
+        $builder->startObject(20);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -268,6 +282,7 @@ class EPM extends Table
         self::addSIGNATURE_TIMESTAMP($builder, $SIGNATURE_TIMESTAMP);
         self::addCHAIN_PROOFS($builder, $CHAIN_PROOFS);
         self::addENTITY_TYPE($builder, $ENTITY_TYPE);
+        self::addSIGNATURE_ALGORITHM($builder, $SIGNATURE_ALGORITHM);
         $o = $builder->endObject();
         return $o;
     }
@@ -556,6 +571,16 @@ class EPM extends Table
     public static function addENTITY_TYPE(FlatBufferBuilder $builder, $ENTITY_TYPE)
     {
         $builder->addSbyteX(18, $ENTITY_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSIGNATURE_ALGORITHM(FlatBufferBuilder $builder, $SIGNATURE_ALGORITHM)
+    {
+        $builder->addOffsetX(19, $SIGNATURE_ALGORITHM, 0);
     }
 
     /**

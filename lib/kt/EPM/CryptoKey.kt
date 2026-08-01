@@ -17,7 +17,23 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Represents cryptographic key information
+ * Represents cryptographic key information.
+ *
+ * The publication paradigm is "xpub + derivation paths, not key material":
+ * a verifier derives child public keys from XPUB and KEY_PATH wherever the
+ * curve permits. That permission is asymmetric, PERMANENTLY AND BY DESIGN:
+ *
+ * - secp256k1 at a NON-hardened path (e.g., "m/44'/0'/0'/0/0") IS derivable
+ *   from XPUB via BIP-32 public derivation, so such an entry may omit
+ *   PUBLIC_KEY entirely and carry only {XPUB, KEY_PATH, KEY_TYPE, ALGORITHM}.
+ * - ed25519 under SLIP-10 has NO public derivation at all — every ed25519
+ *   child is hardened — so NO xpub can yield an ed25519 child public key,
+ *   for anyone, ever. For ed25519 entries the published PUBLIC_KEY is
+ *   authoritative and MUST remain present.
+ *
+ * A future revision that removes the published ed25519 PUBLIC_KEY would make
+ * every ed25519-signed EPM unverifiable; the retained key is deliberate,
+ * not a transitional leftover.
  */
 @Suppress("unused")
 class CryptoKey : Table() {
@@ -30,7 +46,9 @@ class CryptoKey : Table() {
         return this
     }
     /**
-     * Public part of the cryptographic key, in hexidecimal format
+     * Public part of the cryptographic key, in hexidecimal format. Optional for
+     * secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
+     * REQUIRED in practice for ed25519 keys, which are never xpub-derivable
      */
     val publicKey : String?
         get() {
@@ -86,7 +104,8 @@ class CryptoKey : Table() {
     val xprivAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
     fun xprivInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     /**
-     * Address generated from the cryptographic key
+     * Address generated from the cryptographic key. An address only — NOT a
+     * derivation path; the derivation path lives in KEY_PATH
      */
     val keyAddress : String?
         get() {
@@ -100,7 +119,9 @@ class CryptoKey : Table() {
     val keyAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun keyAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Type of the address generated from the cryptographic key
+     * Type of the address generated from the cryptographic key. An address
+     * format tag only — NOT a curve or algorithm designator; the algorithm
+     * lives in ALGORITHM
      */
     val addressType : String?
         get() {
@@ -121,6 +142,54 @@ class CryptoKey : Table() {
             val o = __offset(16)
             return if(o != 0) bb.get(o + bb_pos) else 0
         }
+    /**
+     * BIP-32 / SLIP-10 derivation path of this key from the entity root
+     * (e.g., "m/44'/0'/0'/0/0" secp256k1 non-hardened, "m/44'/0'/0'/0'/0'"
+     * ed25519 hardened)
+     */
+    val keyPath : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val keyPathAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun keyPathInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Key algorithm/curve (e.g., "ed25519", "secp256k1"). ABSENT means
+     * ed25519: every record published before this field existed verifies
+     * unchanged under that default
+     */
+    val algorithm : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val algorithmAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 1)
+    fun algorithmInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Signature encoding format produced by this key (e.g., "raw-ed25519",
+     * "compact"). ABSENT means the canonical encoding of ALGORITHM
+     * (raw-ed25519 for ed25519, compact for secp256k1)
+     */
+    val encoding : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val encodingAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
+    fun encodingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCryptoKey(_bb: ByteBuffer): CryptoKey = getRootAsCryptoKey(_bb, CryptoKey())
@@ -128,8 +197,11 @@ class CryptoKey : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createCryptoKey(builder: FlatBufferBuilder, publicKeyOffset: Int, xpubOffset: Int, privateKeyOffset: Int, xprivOffset: Int, keyAddressOffset: Int, addressTypeOffset: Int, keyType: Byte) : Int {
-            builder.startTable(7)
+        fun createCryptoKey(builder: FlatBufferBuilder, publicKeyOffset: Int, xpubOffset: Int, privateKeyOffset: Int, xprivOffset: Int, keyAddressOffset: Int, addressTypeOffset: Int, keyType: Byte, keyPathOffset: Int, algorithmOffset: Int, encodingOffset: Int) : Int {
+            builder.startTable(10)
+            addENCODING(builder, encodingOffset)
+            addALGORITHM(builder, algorithmOffset)
+            addKEYPATH(builder, keyPathOffset)
             addADDRESSTYPE(builder, addressTypeOffset)
             addKEYADDRESS(builder, keyAddressOffset)
             addXPRIV(builder, xprivOffset)
@@ -139,7 +211,7 @@ class CryptoKey : Table() {
             addKEYTYPE(builder, keyType)
             return endCryptoKey(builder)
         }
-        fun startCryptoKey(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startCryptoKey(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addPUBLICKEY(builder: FlatBufferBuilder, publicKey: Int) = builder.addOffset(0, publicKey, 0)
         fun addXPUB(builder: FlatBufferBuilder, xpub: Int) = builder.addOffset(1, xpub, 0)
         fun addPRIVATEKEY(builder: FlatBufferBuilder, privateKey: Int) = builder.addOffset(2, privateKey, 0)
@@ -147,6 +219,9 @@ class CryptoKey : Table() {
         fun addKEYADDRESS(builder: FlatBufferBuilder, keyAddress: Int) = builder.addOffset(4, keyAddress, 0)
         fun addADDRESSTYPE(builder: FlatBufferBuilder, addressType: Int) = builder.addOffset(5, addressType, 0)
         fun addKEYTYPE(builder: FlatBufferBuilder, keyType: Byte) = builder.addByte(6, keyType, 0)
+        fun addKEYPATH(builder: FlatBufferBuilder, keyPath: Int) = builder.addOffset(7, keyPath, 0)
+        fun addALGORITHM(builder: FlatBufferBuilder, algorithm: Int) = builder.addOffset(8, algorithm, 0)
+        fun addENCODING(builder: FlatBufferBuilder, encoding: Int) = builder.addOffset(9, encoding, 0)
         fun endCryptoKey(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

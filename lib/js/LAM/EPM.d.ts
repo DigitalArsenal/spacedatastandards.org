@@ -90,7 +90,9 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     MULTIFORMAT_ADDRESS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     multiformatAddressLength(): number;
     /**
-     * Ed25519 signature over canonical EPM content (hex), signed by the first signing key in KEYS
+     * Signature over canonical EPM content (hex), produced by the entity's
+     * signing key under the algorithm declared in SIGNATURE_ALGORITHM
+     * (absent declaration = Ed25519)
      */
     SIGNATURE(): string | null;
     SIGNATURE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -107,6 +109,16 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
      * Type of entity represented by this profile
      */
     ENTITY_TYPE(): EntityType;
+    /**
+     * Signature algorithm that produced SIGNATURE (e.g., "ed25519",
+     * "secp256k1"). ABSENT means ed25519 — this single default is what keeps
+     * every EPM signed before this field existed verifying unchanged, so the
+     * field MUST NOT be made required. The signing key is the first CryptoKey
+     * in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
+     * (an absent CryptoKey.ALGORITHM likewise means ed25519)
+     */
+    SIGNATURE_ALGORITHM(): string | null;
+    SIGNATURE_ALGORITHM(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startEPM(builder: flatbuffers.Builder): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addLegalName(builder: flatbuffers.Builder, LEGAL_NAMEOffset: flatbuffers.Offset): void;
@@ -135,6 +147,7 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static createChainProofsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startChainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEntityType(builder: flatbuffers.Builder, ENTITY_TYPE: EntityType): void;
+    static addSignatureAlgorithm(builder: flatbuffers.Builder, SIGNATURE_ALGORITHMOffset: flatbuffers.Offset): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -161,7 +174,8 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     SIGNATURE_TIMESTAMP: bigint;
     CHAIN_PROOFS: (ChainProofT)[];
     ENTITY_TYPE: EntityType;
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType);
+    SIGNATURE_ALGORITHM: string | Uint8Array | null;
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType, SIGNATURE_ALGORITHM?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map
