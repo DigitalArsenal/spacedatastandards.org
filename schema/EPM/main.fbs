@@ -132,9 +132,7 @@ table EPM {
   MULTIFORMAT_ADDRESS: [string];
   /// Signature over canonical EPM content (hex), produced by the entity's
   /// signing key under the algorithm declared in SIGNATURE_ALGORITHM
-  /// (absent declaration = Ed25519). "Canonical EPM content" is NORMATIVELY
-  /// defined by schema/EPM/CANONICAL_SERIALIZATION.md (RFC 8785 JCS
-  /// projection; vector total order; both-curve verification procedure).
+  /// (absent declaration = Ed25519)
   SIGNATURE: string;
   /// Unix timestamp (seconds) when the EPM was signed
   SIGNATURE_TIMESTAMP: int64;
