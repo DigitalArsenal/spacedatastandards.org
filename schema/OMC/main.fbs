@@ -1,0 +1,46 @@
+// Hash: 09d0784a183a41b5b58bfc695966e162c31d6c7da8632d3a11e960b97bbe53d9
+// Version: 0.1.0
+// -----------------------------------END_HEADER
+include "../OMM/main.fbs";
+include "../CTC/main.fbs";
+
+/// Orbit Mean-Elements Collection Message
+///
+/// A paginated collection of OMM (Orbit Mean-Elements Message) records.
+/// Supports bulk TLE/orbital element retrieval from sources like
+/// Space-Track GP data API, CelesTrak bulk downloads, SpaceMapper
+/// catalog scraping, or any system that produces batched OMM data.
+table OMC {
+  /// OMM records in this page/batch
+  RECORDS: [OMM];
+
+  /// Total number of OMM records in the full query result
+  TOTAL: uint32;
+
+  /// Current page index (1-based)
+  PAGE_INDEX: uint32;
+
+  /// Records per page
+  PAGE_SIZE: uint32;
+
+  /// Source system (reuses catalogSource from CTC)
+  SOURCE: catalogSource = UNKNOWN;
+
+  /// ISO 8601 timestamp when this collection was fetched/generated
+  CREATED: string;
+
+  /// Epoch range start (ISO 8601) — earliest OMM epoch in batch
+  EPOCH_START: string;
+
+  /// Epoch range end (ISO 8601) — latest OMM epoch in batch
+  EPOCH_END: string;
+
+  /// Query filter applied (e.g., "NORAD_CAT_ID=25544")
+  QUERY_FILTER: string;
+
+  /// Comment or notes about this collection
+  COMMENT: string;
+}
+
+root_type OMC;
+file_identifier "$OMC";
