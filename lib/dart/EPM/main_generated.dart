@@ -598,6 +598,166 @@ class ChainProofObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  Proves control of a DNS domain by the same HD wallet as the signing key —
+///  the EPM-record mirror of the DNS TXT wire form (which is deliberately
+///  NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
+///  canonical statement is 6 fixed LF-terminated lines prefixed
+///  "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
+///  SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+class DomainProof {
+  DomainProof._(this._bc, this._bcOffset);
+  factory DomainProof(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DomainProof> reader = _DomainProofReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  String? get DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Public key for this proof (hex-encoded)
+  String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get publicKey => PUBLIC_KEY;
+  ///  BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
+  ///  Ed25519 EPM/publication key at m/44'/0'/0'/0'/0'
+  String? get KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get keyPath => KEY_PATH;
+  ///  Signature over the attestation payload (hex-encoded)
+  String? get SIGNATURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  The canonical payload that was signed, verbatim (hex-encoded)
+  String? get SIGNED_PAYLOAD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get signedPayload => SIGNED_PAYLOAD;
+  ///  Signature algorithm. ABSENT means ed25519
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Signature encoding format. ABSENT means the canonical encoding of
+  ///  ALGORITHM (raw-ed25519 for ed25519)
+  String? get ENCODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'DomainProof{DOMAIN: ${DOMAIN}, publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
+  }
+}
+
+class _DomainProofReader extends fb.TableReader<DomainProof> {
+  const _DomainProofReader();
+
+  @override
+  DomainProof createObject(fb.BufferContext bc, int offset) =>
+    DomainProof._(bc, offset);
+}
+
+class DomainProofBuilder {
+  DomainProofBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addDomainOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPublicKeyOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addKeyPathOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSignatureOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSignedPayloadOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEncodingOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DomainProofObjectBuilder extends fb.ObjectBuilder {
+  final String? _DOMAIN;
+  final String? _PUBLIC_KEY;
+  final String? _KEY_PATH;
+  final String? _SIGNATURE;
+  final String? _SIGNED_PAYLOAD;
+  final String? _ALGORITHM;
+  final String? _ENCODING;
+
+  DomainProofObjectBuilder({
+    String? DOMAIN,
+    String? PUBLIC_KEY,
+    String? publicKey,
+    String? KEY_PATH,
+    String? keyPath,
+    String? SIGNATURE,
+    String? SIGNED_PAYLOAD,
+    String? signedPayload,
+    String? ALGORITHM,
+    String? ENCODING,
+  })
+      : _DOMAIN = DOMAIN,
+        _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
+        _KEY_PATH = keyPath ?? KEY_PATH,
+        _SIGNATURE = SIGNATURE,
+        _SIGNED_PAYLOAD = signedPayload ?? SIGNED_PAYLOAD,
+        _ALGORITHM = ALGORITHM,
+        _ENCODING = ENCODING;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? DOMAINOffset = _DOMAIN == null ? null
+        : fbBuilder.writeString(_DOMAIN!);
+    final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
+        : fbBuilder.writeString(_PUBLIC_KEY!);
+    final int? KEY_PATHOffset = _KEY_PATH == null ? null
+        : fbBuilder.writeString(_KEY_PATH!);
+    final int? SIGNATUREOffset = _SIGNATURE == null ? null
+        : fbBuilder.writeString(_SIGNATURE!);
+    final int? SIGNED_PAYLOADOffset = _SIGNED_PAYLOAD == null ? null
+        : fbBuilder.writeString(_SIGNED_PAYLOAD!);
+    final int? ALGORITHMOffset = _ALGORITHM == null ? null
+        : fbBuilder.writeString(_ALGORITHM!);
+    final int? ENCODINGOffset = _ENCODING == null ? null
+        : fbBuilder.writeString(_ENCODING!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, DOMAINOffset);
+    fbBuilder.addOffset(1, PUBLIC_KEYOffset);
+    fbBuilder.addOffset(2, KEY_PATHOffset);
+    fbBuilder.addOffset(3, SIGNATUREOffset);
+    fbBuilder.addOffset(4, SIGNED_PAYLOADOffset);
+    fbBuilder.addOffset(5, ALGORITHMOffset);
+    fbBuilder.addOffset(6, ENCODINGOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Entity Profile Message
 class EPM {
   EPM._(this._bc, this._bcOffset);
@@ -671,10 +831,14 @@ class EPM {
   ///  (an absent CryptoKey.ALGORITHM likewise means ed25519)
   String? get SIGNATURE_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
   String? get signatureAlgorithm => SIGNATURE_ALGORITHM;
+  ///  DNS domain binding proofs linking domains to the same HD wallet —
+  ///  symmetric with CHAIN_PROOFS
+  List<DomainProof>? get DOMAIN_PROOFS => const fb.ListReader<DomainProof>(DomainProof.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  List<DomainProof>? get domainProofs => DOMAIN_PROOFS;
 
   @override
   String toString() {
-    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}, signatureAlgorithm: ${signatureAlgorithm}}';
+    return 'EPM{DN: ${DN}, legalName: ${legalName}, familyName: ${familyName}, givenName: ${givenName}, additionalName: ${additionalName}, honorificPrefix: ${honorificPrefix}, honorificSuffix: ${honorificSuffix}, jobTitle: ${jobTitle}, OCCUPATION: ${OCCUPATION}, ADDRESS: ${ADDRESS}, alternateNames: ${alternateNames}, EMAIL: ${EMAIL}, TELEPHONE: ${TELEPHONE}, KEYS: ${KEYS}, multiformatAddress: ${multiformatAddress}, SIGNATURE: ${SIGNATURE}, signatureTimestamp: ${signatureTimestamp}, chainProofs: ${chainProofs}, entityType: ${entityType}, signatureAlgorithm: ${signatureAlgorithm}, domainProofs: ${domainProofs}}';
   }
 }
 
@@ -692,7 +856,7 @@ class EPMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(21);
   }
 
   int addDnOffset(int? offset) {
@@ -775,6 +939,10 @@ class EPMBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addDomainProofsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -802,6 +970,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
   final List<ChainProofObjectBuilder>? _CHAIN_PROOFS;
   final EntityType? _ENTITY_TYPE;
   final String? _SIGNATURE_ALGORITHM;
+  final List<DomainProofObjectBuilder>? _DOMAIN_PROOFS;
 
   EPMObjectBuilder({
     String? DN,
@@ -837,6 +1006,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     EntityType? entityType,
     String? SIGNATURE_ALGORITHM,
     String? signatureAlgorithm,
+    List<DomainProofObjectBuilder>? DOMAIN_PROOFS,
+    List<DomainProofObjectBuilder>? domainProofs,
   })
       : _DN = DN,
         _LEGAL_NAME = legalName ?? LEGAL_NAME,
@@ -857,7 +1028,8 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         _SIGNATURE_TIMESTAMP = signatureTimestamp ?? SIGNATURE_TIMESTAMP,
         _CHAIN_PROOFS = chainProofs ?? CHAIN_PROOFS,
         _ENTITY_TYPE = entityType ?? ENTITY_TYPE,
-        _SIGNATURE_ALGORITHM = signatureAlgorithm ?? SIGNATURE_ALGORITHM;
+        _SIGNATURE_ALGORITHM = signatureAlgorithm ?? SIGNATURE_ALGORITHM,
+        _DOMAIN_PROOFS = domainProofs ?? DOMAIN_PROOFS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -897,7 +1069,9 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_CHAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? SIGNATURE_ALGORITHMOffset = _SIGNATURE_ALGORITHM == null ? null
         : fbBuilder.writeString(_SIGNATURE_ALGORITHM!);
-    fbBuilder.startTable(20);
+    final int? DOMAIN_PROOFSOffset = _DOMAIN_PROOFS == null ? null
+        : fbBuilder.writeList(_DOMAIN_PROOFS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, DNOffset);
     fbBuilder.addOffset(1, LEGAL_NAMEOffset);
     fbBuilder.addOffset(2, FAMILY_NAMEOffset);
@@ -918,6 +1092,7 @@ class EPMObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(17, CHAIN_PROOFSOffset);
     fbBuilder.addInt8(18, _ENTITY_TYPE?.value);
     fbBuilder.addOffset(19, SIGNATURE_ALGORITHMOffset);
+    fbBuilder.addOffset(20, DOMAIN_PROOFSOffset);
     return fbBuilder.endTable();
   }
 

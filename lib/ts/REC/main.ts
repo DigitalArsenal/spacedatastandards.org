@@ -254,6 +254,7 @@ export * from './DFH.js';
 export * from './DMG.js';
 export * from './DOA.js';
 export * from './doaCollectionMode.js';
+export * from './DomainProof.js';
 export * from './DPM.js';
 export * from './DPMAsset.js';
 export * from './DPMCompletenessIndex.js';

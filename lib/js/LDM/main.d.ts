@@ -7,6 +7,7 @@ export * from './CryptoKey.js';
 export * from './dataAvailability.js';
 export * from './DataMode.js';
 export * from './DeviceType.js';
+export * from './DomainProof.js';
 export * from './ENGINE_TYPE.js';
 export * from './ENGINE.js';
 export * from './EntityType.js';

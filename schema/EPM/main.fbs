@@ -1,5 +1,5 @@
-// Hash: f3f5a3f924cc232edea60a3af8bc639e6f6770d1001d3d8970869fc49e94a4cc
-// Version: 1.0.4
+// Hash: 5b66c5bfde9e7f3160ba2910d085700c080674ac96b25d04752abaeeda60bd9e
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -98,6 +98,31 @@ table ChainProof {
   ENCODING: string;
 }
 
+/// Proves control of a DNS domain by the same HD wallet as the signing key —
+/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
+/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
+/// canonical statement is 6 fixed LF-terminated lines prefixed
+/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
+/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+table DomainProof {
+  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  DOMAIN: string;
+  /// Public key for this proof (hex-encoded)
+  PUBLIC_KEY: string;
+  /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
+  /// Ed25519 EPM/publication key at m/44'/0'/0'/0'/0'
+  KEY_PATH: string;
+  /// Signature over the attestation payload (hex-encoded)
+  SIGNATURE: string;
+  /// The canonical payload that was signed, verbatim (hex-encoded)
+  SIGNED_PAYLOAD: string;
+  /// Signature algorithm. ABSENT means ed25519
+  ALGORITHM: string;
+  /// Signature encoding format. ABSENT means the canonical encoding of
+  /// ALGORITHM (raw-ed25519 for ed25519)
+  ENCODING: string;
+}
+
 /// Entity Profile Message
 table EPM {
   /// Distinguished Name of the entity
@@ -147,6 +172,9 @@ table EPM {
   /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
   /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
   SIGNATURE_ALGORITHM: string;
+  /// DNS domain binding proofs linking domains to the same HD wallet —
+  /// symmetric with CHAIN_PROOFS
+  DOMAIN_PROOFS: [DomainProof];
 }
 
 root_type EPM;

@@ -433,8 +433,43 @@ func (rcv *EPM) SignatureAlgorithm() []byte {
 /// field MUST NOT be made required. The signing key is the first CryptoKey
 /// in KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration
 /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
+/// DNS domain binding proofs linking domains to the same HD wallet —
+/// symmetric with CHAIN_PROOFS
+func (rcv *EPM) DOMAIN_PROOFS(obj *DomainProof, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(DomainProof)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *EPM) DomainProofs(obj *DomainProof, j int) bool {
+	return rcv.DOMAIN_PROOFS(obj, j)
+}
+
+func (rcv *EPM) DOMAIN_PROOFSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *EPM) DomainProofsLength() int {
+	return rcv.DOMAIN_PROOFSLength()
+}
+
+/// DNS domain binding proofs linking domains to the same HD wallet —
+/// symmetric with CHAIN_PROOFS
 func EPMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(21)
 }
 func EPMAddDN(builder *flatbuffers.Builder, DN flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DN), 0)
@@ -579,6 +614,18 @@ func EPMAddSIGNATURE_ALGORITHM(builder *flatbuffers.Builder, SIGNATURE_ALGORITHM
 }
 func EPMAddSignatureAlgorithm(builder *flatbuffers.Builder, SIGNATURE_ALGORITHM flatbuffers.UOffsetT) {
 	EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
+}
+func EPMAddDOMAIN_PROOFS(builder *flatbuffers.Builder, DOMAIN_PROOFS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(DOMAIN_PROOFS), 0)
+}
+func EPMAddDomainProofs(builder *flatbuffers.Builder, DOMAIN_PROOFS flatbuffers.UOffsetT) {
+	EPMAddDOMAIN_PROOFS(builder, DOMAIN_PROOFS)
+}
+func EPMStartDOMAIN_PROOFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func EPMStartDomainProofsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return EPMStartDOMAIN_PROOFSVector(builder, numElems)
 }
 func EPMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

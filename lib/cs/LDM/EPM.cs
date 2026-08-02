@@ -148,6 +148,10 @@ public struct EPM : IFlatbufferObject
   public ArraySegment<byte>? GetSIGNATURE_ALGORITHMBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetSIGNATURE_ALGORITHMArray() { return __p.__vector_as_array<byte>(42); }
+  /// DNS domain binding proofs linking domains to the same HD wallet —
+  /// symmetric with CHAIN_PROOFS
+  public DomainProof? DOMAIN_PROOFS(int j) { int o = __p.__offset(44); return o != 0 ? (DomainProof?)(new DomainProof()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int DOMAIN_PROOFSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<EPM> CreateEPM(FlatBufferBuilder builder,
       StringOffset DNOffset = default(StringOffset),
@@ -169,9 +173,11 @@ public struct EPM : IFlatbufferObject
       long SIGNATURE_TIMESTAMP = 0,
       VectorOffset CHAIN_PROOFSOffset = default(VectorOffset),
       EntityType ENTITY_TYPE = EntityType.User,
-      StringOffset SIGNATURE_ALGORITHMOffset = default(StringOffset)) {
-    builder.StartTable(20);
+      StringOffset SIGNATURE_ALGORITHMOffset = default(StringOffset),
+      VectorOffset DOMAIN_PROOFSOffset = default(VectorOffset)) {
+    builder.StartTable(21);
     EPM.AddSIGNATURE_TIMESTAMP(builder, SIGNATURE_TIMESTAMP);
+    EPM.AddDOMAIN_PROOFS(builder, DOMAIN_PROOFSOffset);
     EPM.AddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHMOffset);
     EPM.AddCHAIN_PROOFS(builder, CHAIN_PROOFSOffset);
     EPM.AddSIGNATURE(builder, SIGNATUREOffset);
@@ -194,7 +200,7 @@ public struct EPM : IFlatbufferObject
     return EPM.EndEPM(builder);
   }
 
-  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartEPM(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(0, DNOffset.Value, 0); }
   public static void AddLEGAL_NAME(FlatBufferBuilder builder, StringOffset LEGAL_NAMEOffset) { builder.AddOffset(1, LEGAL_NAMEOffset.Value, 0); }
   public static void AddFAMILY_NAME(FlatBufferBuilder builder, StringOffset FAMILY_NAMEOffset) { builder.AddOffset(2, FAMILY_NAMEOffset.Value, 0); }
@@ -235,6 +241,12 @@ public struct EPM : IFlatbufferObject
   public static void StartCHAIN_PROOFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddENTITY_TYPE(FlatBufferBuilder builder, EntityType ENTITY_TYPE) { builder.AddSbyte(18, (sbyte)ENTITY_TYPE, 0); }
   public static void AddSIGNATURE_ALGORITHM(FlatBufferBuilder builder, StringOffset SIGNATURE_ALGORITHMOffset) { builder.AddOffset(19, SIGNATURE_ALGORITHMOffset.Value, 0); }
+  public static void AddDOMAIN_PROOFS(FlatBufferBuilder builder, VectorOffset DOMAIN_PROOFSOffset) { builder.AddOffset(20, DOMAIN_PROOFSOffset.Value, 0); }
+  public static VectorOffset CreateDOMAIN_PROOFSVector(FlatBufferBuilder builder, Offset<DomainProof>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAIN_PROOFSVectorBlock(FlatBufferBuilder builder, Offset<DomainProof>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAIN_PROOFSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<DomainProof>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAIN_PROOFSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<DomainProof>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDOMAIN_PROOFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<EPM> EndEPM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EPM>(o);
@@ -271,6 +283,8 @@ public struct EPM : IFlatbufferObject
     for (var _j = 0; _j < this.CHAIN_PROOFSLength; ++_j) {_o.CHAIN_PROOFS.Add(this.CHAIN_PROOFS(_j).HasValue ? this.CHAIN_PROOFS(_j).Value.UnPack() : null);}
     _o.ENTITY_TYPE = this.ENTITY_TYPE;
     _o.SIGNATURE_ALGORITHM = this.SIGNATURE_ALGORITHM;
+    _o.DOMAIN_PROOFS = new List<DomainProofT>();
+    for (var _j = 0; _j < this.DOMAIN_PROOFSLength; ++_j) {_o.DOMAIN_PROOFS.Add(this.DOMAIN_PROOFS(_j).HasValue ? this.DOMAIN_PROOFS(_j).Value.UnPack() : null);}
   }
   public static Offset<EPM> Pack(FlatBufferBuilder builder, EPMT _o) {
     if (_o == null) return default(Offset<EPM>);
@@ -312,6 +326,12 @@ public struct EPM : IFlatbufferObject
       _CHAIN_PROOFS = CreateCHAIN_PROOFSVector(builder, __CHAIN_PROOFS);
     }
     var _SIGNATURE_ALGORITHM = _o.SIGNATURE_ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE_ALGORITHM);
+    var _DOMAIN_PROOFS = default(VectorOffset);
+    if (_o.DOMAIN_PROOFS != null) {
+      var __DOMAIN_PROOFS = new Offset<DomainProof>[_o.DOMAIN_PROOFS.Count];
+      for (var _j = 0; _j < __DOMAIN_PROOFS.Length; ++_j) { __DOMAIN_PROOFS[_j] = DomainProof.Pack(builder, _o.DOMAIN_PROOFS[_j]); }
+      _DOMAIN_PROOFS = CreateDOMAIN_PROOFSVector(builder, __DOMAIN_PROOFS);
+    }
     return CreateEPM(
       builder,
       _DN,
@@ -333,7 +353,8 @@ public struct EPM : IFlatbufferObject
       _o.SIGNATURE_TIMESTAMP,
       _CHAIN_PROOFS,
       _o.ENTITY_TYPE,
-      _SIGNATURE_ALGORITHM);
+      _SIGNATURE_ALGORITHM,
+      _DOMAIN_PROOFS);
   }
 }
 
@@ -359,6 +380,7 @@ public class EPMT
   public List<ChainProofT> CHAIN_PROOFS { get; set; }
   public EntityType ENTITY_TYPE { get; set; }
   public string SIGNATURE_ALGORITHM { get; set; }
+  public List<DomainProofT> DOMAIN_PROOFS { get; set; }
 
   public EPMT() {
     this.DN = null;
@@ -381,6 +403,7 @@ public class EPMT
     this.CHAIN_PROOFS = null;
     this.ENTITY_TYPE = EntityType.User;
     this.SIGNATURE_ALGORITHM = null;
+    this.DOMAIN_PROOFS = null;
   }
   public static EPMT DeserializeFromBinary(byte[] fbBuffer) {
     return EPM.GetRootAsEPM(new ByteBuffer(fbBuffer)).UnPack();
@@ -418,6 +441,7 @@ static public class EPMVerify
       && verifier.VerifyVectorOfTables(tablePos, 38 /*CHAIN_PROOFS*/, ChainProofVerify.Verify, false)
       && verifier.VerifyField(tablePos, 40 /*ENTITY_TYPE*/, 1 /*EntityType*/, 1, false)
       && verifier.VerifyString(tablePos, 42 /*SIGNATURE_ALGORITHM*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*DOMAIN_PROOFS*/, DomainProofVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -262,8 +262,35 @@ class EPM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # DNS domain binding proofs linking domains to the same HD wallet —
+    # symmetric with CHAIN_PROOFS
+    # EPM
+    def DOMAIN_PROOFS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from DomainProof import DomainProof
+            obj = DomainProof()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # EPM
+    def DOMAIN_PROOFSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EPM
+    def DOMAIN_PROOFSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
 def EPMStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(21)
 
 def Start(builder):
     EPMStart(builder)
@@ -436,6 +463,24 @@ def EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM):
 def AddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM):
     EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
 
+def EPMAddDOMAIN_PROOFS(builder, DOMAIN_PROOFS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(DOMAIN_PROOFS), 0)
+
+def AddDOMAIN_PROOFS(builder, DOMAIN_PROOFS):
+    EPMAddDOMAIN_PROOFS(builder, DOMAIN_PROOFS)
+
+def EPMStartDOMAIN_PROOFSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDOMAIN_PROOFSVector(builder, numElems):
+    return EPMStartDOMAIN_PROOFSVector(builder, numElems)
+
+def EPMCreateDOMAIN_PROOFSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDOMAIN_PROOFSVector(builder, data):
+    EPMCreateDOMAIN_PROOFSVector(builder, data)
+
 def EPMEnd(builder):
     return builder.EndObject()
 
@@ -445,6 +490,7 @@ def End(builder):
 import Address
 import ChainProof
 import CryptoKey
+import DomainProof
 try:
     from typing import List, Optional
 except:
@@ -475,6 +521,7 @@ class EPMT(object):
         CHAIN_PROOFS = None,
         ENTITY_TYPE = 0,
         SIGNATURE_ALGORITHM = None,
+        DOMAIN_PROOFS = None,
     ):
         self.DN = DN  # type: Optional[str]
         self.LEGAL_NAME = LEGAL_NAME  # type: Optional[str]
@@ -496,6 +543,7 @@ class EPMT(object):
         self.CHAIN_PROOFS = CHAIN_PROOFS  # type: Optional[List[ChainProof.ChainProofT]]
         self.ENTITY_TYPE = ENTITY_TYPE  # type: int
         self.SIGNATURE_ALGORITHM = SIGNATURE_ALGORITHM  # type: Optional[str]
+        self.DOMAIN_PROOFS = DOMAIN_PROOFS  # type: Optional[List[DomainProof.DomainProofT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -559,6 +607,14 @@ class EPMT(object):
                     self.CHAIN_PROOFS.append(chainProof_)
         self.ENTITY_TYPE = EPM.ENTITY_TYPE()
         self.SIGNATURE_ALGORITHM = EPM.SIGNATURE_ALGORITHM()
+        if not EPM.DOMAIN_PROOFSIsNone():
+            self.DOMAIN_PROOFS = []
+            for i in range(EPM.DOMAIN_PROOFSLength()):
+                if EPM.DOMAIN_PROOFS(i) is None:
+                    self.DOMAIN_PROOFS.append(None)
+                else:
+                    domainProof_ = DomainProof.DomainProofT.InitFromObj(EPM.DOMAIN_PROOFS(i))
+                    self.DOMAIN_PROOFS.append(domainProof_)
 
     # EPMT
     def Pack(self, builder):
@@ -622,6 +678,14 @@ class EPMT(object):
             CHAIN_PROOFS = builder.EndVector()
         if self.SIGNATURE_ALGORITHM is not None:
             SIGNATURE_ALGORITHM = builder.CreateString(self.SIGNATURE_ALGORITHM)
+        if self.DOMAIN_PROOFS is not None:
+            DOMAIN_PROOFSlist = []
+            for i in range(len(self.DOMAIN_PROOFS)):
+                DOMAIN_PROOFSlist.append(self.DOMAIN_PROOFS[i].Pack(builder))
+            EPMStartDOMAIN_PROOFSVector(builder, len(self.DOMAIN_PROOFS))
+            for i in reversed(range(len(self.DOMAIN_PROOFS))):
+                builder.PrependUOffsetTRelative(DOMAIN_PROOFSlist[i])
+            DOMAIN_PROOFS = builder.EndVector()
         EPMStart(builder)
         if self.DN is not None:
             EPMAddDN(builder, DN)
@@ -661,5 +725,7 @@ class EPMT(object):
         EPMAddENTITY_TYPE(builder, self.ENTITY_TYPE)
         if self.SIGNATURE_ALGORITHM is not None:
             EPMAddSIGNATURE_ALGORITHM(builder, SIGNATURE_ALGORITHM)
+        if self.DOMAIN_PROOFS is not None:
+            EPMAddDOMAIN_PROOFS(builder, DOMAIN_PROOFS)
         EPM = EPMEnd(builder)
         return EPM

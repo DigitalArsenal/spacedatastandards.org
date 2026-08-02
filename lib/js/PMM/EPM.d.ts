@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { Address, AddressT } from './Address.js';
 import { ChainProof, ChainProofT } from './ChainProof.js';
 import { CryptoKey, CryptoKeyT } from './CryptoKey.js';
+import { DomainProof, DomainProofT } from './DomainProof.js';
 import { EntityType } from './EntityType.js';
 /**
  * Entity Profile Message
@@ -119,6 +120,12 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
      */
     SIGNATURE_ALGORITHM(): string | null;
     SIGNATURE_ALGORITHM(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * DNS domain binding proofs linking domains to the same HD wallet —
+     * symmetric with CHAIN_PROOFS
+     */
+    DOMAIN_PROOFS(index: number, obj?: DomainProof): DomainProof | null;
+    domainProofsLength(): number;
     static startEPM(builder: flatbuffers.Builder): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
     static addLegalName(builder: flatbuffers.Builder, LEGAL_NAMEOffset: flatbuffers.Offset): void;
@@ -148,6 +155,9 @@ export declare class EPM implements flatbuffers.IUnpackableObject<EPMT> {
     static startChainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
     static addEntityType(builder: flatbuffers.Builder, ENTITY_TYPE: EntityType): void;
     static addSignatureAlgorithm(builder: flatbuffers.Builder, SIGNATURE_ALGORITHMOffset: flatbuffers.Offset): void;
+    static addDomainProofs(builder: flatbuffers.Builder, DOMAIN_PROOFSOffset: flatbuffers.Offset): void;
+    static createDomainProofsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startDomainProofsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endEPM(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEPMBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -175,7 +185,8 @@ export declare class EPMT implements flatbuffers.IGeneratedObject {
     CHAIN_PROOFS: (ChainProofT)[];
     ENTITY_TYPE: EntityType;
     SIGNATURE_ALGORITHM: string | Uint8Array | null;
-    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType, SIGNATURE_ALGORITHM?: string | Uint8Array | null);
+    DOMAIN_PROOFS: (DomainProofT)[];
+    constructor(DN?: string | Uint8Array | null, LEGAL_NAME?: string | Uint8Array | null, FAMILY_NAME?: string | Uint8Array | null, GIVEN_NAME?: string | Uint8Array | null, ADDITIONAL_NAME?: string | Uint8Array | null, HONORIFIC_PREFIX?: string | Uint8Array | null, HONORIFIC_SUFFIX?: string | Uint8Array | null, JOB_TITLE?: string | Uint8Array | null, OCCUPATION?: string | Uint8Array | null, ADDRESS?: AddressT | null, ALTERNATE_NAMES?: (string)[], EMAIL?: string | Uint8Array | null, TELEPHONE?: string | Uint8Array | null, KEYS?: (CryptoKeyT)[], MULTIFORMAT_ADDRESS?: (string)[], SIGNATURE?: string | Uint8Array | null, SIGNATURE_TIMESTAMP?: bigint, CHAIN_PROOFS?: (ChainProofT)[], ENTITY_TYPE?: EntityType, SIGNATURE_ALGORITHM?: string | Uint8Array | null, DOMAIN_PROOFS?: (DomainProofT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EPM.d.ts.map

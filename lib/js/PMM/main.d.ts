@@ -3,6 +3,7 @@ export * from './bufferMutability.js';
 export * from './bufferOwnership.js';
 export * from './ChainProof.js';
 export * from './CryptoKey.js';
+export * from './DomainProof.js';
 export * from './drainBehavior.js';
 export * from './EntityType.js';
 export * from './EntryFunction.js';

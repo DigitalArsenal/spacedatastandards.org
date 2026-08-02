@@ -15,6 +15,8 @@ class Address
 
 class ChainProof
 
+class DomainProof
+
 class EPM
 
 /// Represents cryptographic key information.
@@ -227,6 +229,68 @@ struct ChainProofBuilder:
     def end():
         return b_.EndObject()
 
+/// Proves control of a DNS domain by the same HD wallet as the signing key —
+/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
+/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
+/// canonical statement is 6 fixed LF-terminated lines prefixed
+/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
+/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+class DomainProof : flatbuffers.handle
+    /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+    def DOMAIN() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// Public key for this proof (hex-encoded)
+    def PUBLIC_KEY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
+    /// Ed25519 EPM/publication key at m/44'/0'/0'/0'/0'
+    def KEY_PATH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Signature over the attestation payload (hex-encoded)
+    def SIGNATURE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// The canonical payload that was signed, verbatim (hex-encoded)
+    def SIGNED_PAYLOAD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Signature algorithm. ABSENT means ed25519
+    def ALGORITHM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Signature encoding format. ABSENT means the canonical encoding of
+    /// ALGORITHM (raw-ed25519 for ed25519)
+    def ENCODING() -> string:
+        return flatbuffers.field_string(buf_, pos_, 16)
+
+def GetRootAsDomainProof(buf:string): return DomainProof { buf, flatbuffers.indirect(buf, 0) }
+
+struct DomainProofBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(7)
+        return this
+    def add_DOMAIN(DOMAIN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, DOMAIN)
+        return this
+    def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PUBLIC_KEY)
+        return this
+    def add_KEY_PATH(KEY_PATH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, KEY_PATH)
+        return this
+    def add_SIGNATURE(SIGNATURE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, SIGNATURE)
+        return this
+    def add_SIGNED_PAYLOAD(SIGNED_PAYLOAD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SIGNED_PAYLOAD)
+        return this
+    def add_ALGORITHM(ALGORITHM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, ALGORITHM)
+        return this
+    def add_ENCODING(ENCODING:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, ENCODING)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Entity Profile Message
 class EPM : flatbuffers.handle
     /// Distinguished Name of the entity
@@ -305,13 +369,19 @@ class EPM : flatbuffers.handle
     /// (an absent CryptoKey.ALGORITHM likewise means ed25519)
     def SIGNATURE_ALGORITHM() -> string:
         return flatbuffers.field_string(buf_, pos_, 42)
+    /// DNS domain binding proofs linking domains to the same HD wallet —
+    /// symmetric with CHAIN_PROOFS
+    def DOMAIN_PROOFS(i:int) -> DomainProof:
+        return DomainProof { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 44) + i * 4) }
+    def DOMAIN_PROOFS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 44)
 
 def GetRootAsEPM(buf:string): return EPM { buf, flatbuffers.indirect(buf, 0) }
 
 struct EPMBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(21)
         return this
     def add_DN(DN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DN)
@@ -373,6 +443,9 @@ struct EPMBuilder:
     def add_SIGNATURE_ALGORITHM(SIGNATURE_ALGORITHM:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, SIGNATURE_ALGORITHM)
         return this
+    def add_DOMAIN_PROOFS(DOMAIN_PROOFS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, DOMAIN_PROOFS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -400,6 +473,13 @@ def EPMCreateMULTIFORMATADDRESSVector(b_:flatbuffers.builder, v_:[flatbuffers.of
 def EPMStartCHAINPROOFSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def EPMCreateCHAINPROOFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def EPMStartDOMAINPROOFSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def EPMCreateDOMAINPROOFSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

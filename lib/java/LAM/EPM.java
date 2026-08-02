@@ -156,6 +156,15 @@ public final class EPM extends com.google.flatbuffers.Table {
   public String SIGNATURE_ALGORITHM() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SIGNATURE_ALGORITHMAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer SIGNATURE_ALGORITHMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * DNS domain binding proofs linking domains to the same HD wallet —
+   * symmetric with CHAIN_PROOFS
+   */
+  public DomainProof DOMAIN_PROOFS(int j) { return DOMAIN_PROOFS(new DomainProof(), j); }
+  public DomainProof DOMAIN_PROOFS(DomainProof obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int DOMAIN_PROOFSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public DomainProof.Vector domainProofsVector() { return domainProofsVector(new DomainProof.Vector()); }
+  public DomainProof.Vector domainProofsVector(DomainProof.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createEPM(FlatBufferBuilder builder,
       int DNOffset,
@@ -177,9 +186,11 @@ public final class EPM extends com.google.flatbuffers.Table {
       long SIGNATURE_TIMESTAMP,
       int CHAIN_PROOFSOffset,
       byte ENTITY_TYPE,
-      int SIGNATURE_ALGORITHMOffset) {
-    builder.startTable(20);
+      int SIGNATURE_ALGORITHMOffset,
+      int DOMAIN_PROOFSOffset) {
+    builder.startTable(21);
     EPM.addSignatureTimestamp(builder, SIGNATURE_TIMESTAMP);
+    EPM.addDomainProofs(builder, DOMAIN_PROOFSOffset);
     EPM.addSignatureAlgorithm(builder, SIGNATURE_ALGORITHMOffset);
     EPM.addChainProofs(builder, CHAIN_PROOFSOffset);
     EPM.addSignature(builder, SIGNATUREOffset);
@@ -202,7 +213,7 @@ public final class EPM extends com.google.flatbuffers.Table {
     return EPM.endEPM(builder);
   }
 
-  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startEPM(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(0, DNOffset, 0); }
   public static void addLegalName(FlatBufferBuilder builder, int LEGAL_NAMEOffset) { builder.addOffset(1, LEGAL_NAMEOffset, 0); }
   public static void addFamilyName(FlatBufferBuilder builder, int FAMILY_NAMEOffset) { builder.addOffset(2, FAMILY_NAMEOffset, 0); }
@@ -231,6 +242,9 @@ public final class EPM extends com.google.flatbuffers.Table {
   public static void startChainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addEntityType(FlatBufferBuilder builder, byte ENTITY_TYPE) { builder.addByte(18, ENTITY_TYPE, 0); }
   public static void addSignatureAlgorithm(FlatBufferBuilder builder, int SIGNATURE_ALGORITHMOffset) { builder.addOffset(19, SIGNATURE_ALGORITHMOffset, 0); }
+  public static void addDomainProofs(FlatBufferBuilder builder, int DOMAIN_PROOFSOffset) { builder.addOffset(20, DOMAIN_PROOFSOffset, 0); }
+  public static int createDomainProofsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDomainProofsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endEPM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

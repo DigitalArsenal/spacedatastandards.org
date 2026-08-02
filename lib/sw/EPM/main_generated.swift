@@ -340,6 +340,99 @@ public struct ChainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   }
 }
 
+///  Proves control of a DNS domain by the same HD wallet as the signing key —
+///  the EPM-record mirror of the DNS TXT wire form (which is deliberately
+///  NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
+///  canonical statement is 6 fixed LF-terminated lines prefixed
+///  "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
+///  SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+public struct DomainProof: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EPM" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: DomainProof.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DOMAIN: VOffset = 4
+    static let PUBLIC_KEY: VOffset = 6
+    static let KEY_PATH: VOffset = 8
+    static let SIGNATURE: VOffset = 10
+    static let SIGNED_PAYLOAD: VOffset = 12
+    static let ALGORITHM: VOffset = 14
+    static let ENCODING: VOffset = 16
+  }
+
+  ///  Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  public var DOMAIN: String? { let o = _accessor.offset(VT.DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOMAIN) }
+  ///  Public key for this proof (hex-encoded)
+  public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
+  ///  BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
+  ///  Ed25519 EPM/publication key at m/44'/0'/0'/0'/0'
+  public var KEY_PATH: String? { let o = _accessor.offset(VT.KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_PATH) }
+  ///  Signature over the attestation payload (hex-encoded)
+  public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
+  ///  The canonical payload that was signed, verbatim (hex-encoded)
+  public var SIGNED_PAYLOAD: String? { let o = _accessor.offset(VT.SIGNED_PAYLOAD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNED_PAYLOADSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_PAYLOAD) }
+  ///  Signature algorithm. ABSENT means ed25519
+  public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
+  ///  Signature encoding format. ABSENT means the canonical encoding of
+  ///  ALGORITHM (raw-ed25519 for ed25519)
+  public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
+  public static func startDomainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOMAIN, at: VT.DOMAIN) }
+  public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
+  public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VT.KEY_PATH) }
+  public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
+  public static func add(SIGNED_PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_PAYLOAD, at: VT.SIGNED_PAYLOAD) }
+  public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
+  public static func add(ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCODING, at: VT.ENCODING) }
+  public static func endDomainProof(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createDomainProof(
+    _ fbb: inout FlatBufferBuilder,
+    DOMAINOffset DOMAIN: Offset = Offset(),
+    PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
+    KEY_PATHOffset KEY_PATH: Offset = Offset(),
+    SIGNATUREOffset SIGNATURE: Offset = Offset(),
+    SIGNED_PAYLOADOffset SIGNED_PAYLOAD: Offset = Offset(),
+    ALGORITHMOffset ALGORITHM: Offset = Offset(),
+    ENCODINGOffset ENCODING: Offset = Offset()
+  ) -> Offset {
+    let __start = DomainProof.startDomainProof(&fbb)
+    DomainProof.add(DOMAIN: DOMAIN, &fbb)
+    DomainProof.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
+    DomainProof.add(KEY_PATH: KEY_PATH, &fbb)
+    DomainProof.add(SIGNATURE: SIGNATURE, &fbb)
+    DomainProof.add(SIGNED_PAYLOAD: SIGNED_PAYLOAD, &fbb)
+    DomainProof.add(ALGORITHM: ALGORITHM, &fbb)
+    DomainProof.add(ENCODING: ENCODING, &fbb)
+    return DomainProof.endDomainProof(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DOMAIN, fieldName: "DOMAIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KEY_PATH, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SIGNED_PAYLOAD, fieldName: "SIGNED_PAYLOAD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Entity Profile Message
 public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
@@ -373,6 +466,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let CHAIN_PROOFS: VOffset = 38
     static let ENTITY_TYPE: VOffset = 40
     static let SIGNATURE_ALGORITHM: VOffset = 42
+    static let DOMAIN_PROOFS: VOffset = 44
   }
 
   ///  Distinguished Name of the entity
@@ -435,7 +529,10 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  (an absent CryptoKey.ALGORITHM likewise means ed25519)
   public var SIGNATURE_ALGORITHM: String? { let o = _accessor.offset(VT.SIGNATURE_ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURE_ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_ALGORITHM) }
-  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  DNS domain binding proofs linking domains to the same HD wallet —
+  ///  symmetric with CHAIN_PROOFS
+  public var DOMAIN_PROOFS: FlatbufferVector<DomainProof> { return _accessor.vector(at: VT.DOMAIN_PROOFS, byteSize: 4) }
+  public static func startEPM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VT.DN) }
   public static func add(LEGAL_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LEGAL_NAME, at: VT.LEGAL_NAME) }
   public static func add(FAMILY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FAMILY_NAME, at: VT.FAMILY_NAME) }
@@ -456,6 +553,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func addVectorOf(CHAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHAIN_PROOFS, at: VT.CHAIN_PROOFS) }
   public static func add(ENTITY_TYPE: EntityType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_TYPE.rawValue, def: 0, at: VT.ENTITY_TYPE) }
   public static func add(SIGNATURE_ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE_ALGORITHM, at: VT.SIGNATURE_ALGORITHM) }
+  public static func addVectorOf(DOMAIN_PROOFS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOMAIN_PROOFS, at: VT.DOMAIN_PROOFS) }
   public static func endEPM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEPM(
     _ fbb: inout FlatBufferBuilder,
@@ -478,7 +576,8 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     SIGNATURE_TIMESTAMP: Int64 = 0,
     CHAIN_PROOFSVectorOffset CHAIN_PROOFS: Offset = Offset(),
     ENTITY_TYPE: EntityType = .user,
-    SIGNATURE_ALGORITHMOffset SIGNATURE_ALGORITHM: Offset = Offset()
+    SIGNATURE_ALGORITHMOffset SIGNATURE_ALGORITHM: Offset = Offset(),
+    DOMAIN_PROOFSVectorOffset DOMAIN_PROOFS: Offset = Offset()
   ) -> Offset {
     let __start = EPM.startEPM(&fbb)
     EPM.add(DN: DN, &fbb)
@@ -501,6 +600,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     EPM.addVectorOf(CHAIN_PROOFS: CHAIN_PROOFS, &fbb)
     EPM.add(ENTITY_TYPE: ENTITY_TYPE, &fbb)
     EPM.add(SIGNATURE_ALGORITHM: SIGNATURE_ALGORITHM, &fbb)
+    EPM.addVectorOf(DOMAIN_PROOFS: DOMAIN_PROOFS, &fbb)
     return EPM.endEPM(&fbb, start: __start)
   }
 
@@ -526,6 +626,7 @@ public struct EPM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.CHAIN_PROOFS, fieldName: "CHAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<ChainProof>, ChainProof>>.self)
     try _v.visit(field: VT.ENTITY_TYPE, fieldName: "ENTITY_TYPE", required: false, type: EntityType.self)
     try _v.visit(field: VT.SIGNATURE_ALGORITHM, fieldName: "SIGNATURE_ALGORITHM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DOMAIN_PROOFS, fieldName: "DOMAIN_PROOFS", required: false, type: ForwardOffset<Vector<ForwardOffset<DomainProof>, DomainProof>>.self)
     _v.finish()
   }
 }

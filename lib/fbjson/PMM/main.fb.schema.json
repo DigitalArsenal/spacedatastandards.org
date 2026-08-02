@@ -719,6 +719,48 @@
       },
       "additionalProperties": false
     },
+    "DomainProof": {
+      "type": "object",
+      "description": "Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n\"sdn-domain-proof/1\", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.",
+      "properties": {
+        "DOMAIN": {
+          "type": "string",
+          "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLIC_KEY": {
+          "type": "string",
+          "description": "Public key for this proof (hex-encoded)",
+          "x-flatbuffer-type": "string"
+        },
+        "KEY_PATH": {
+          "type": "string",
+          "description": "BIP-32 / SLIP-10 derivation path of the proving key. The signer is the\nEd25519 EPM/publication key at m/44'/0'/0'/0'/0'",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "string",
+          "description": "Signature over the attestation payload (hex-encoded)",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNED_PAYLOAD": {
+          "type": "string",
+          "description": "The canonical payload that was signed, verbatim (hex-encoded)",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Signature algorithm. ABSENT means ed25519",
+          "x-flatbuffer-type": "string"
+        },
+        "ENCODING": {
+          "type": "string",
+          "description": "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "EPM": {
       "type": "object",
       "description": "Entity Profile Message",
@@ -846,6 +888,14 @@
           "type": "string",
           "description": "Signature algorithm that produced SIGNATURE (e.g., \"ed25519\",\n\"secp256k1\"). ABSENT means ed25519 \u2014 this single default is what keeps\nevery EPM signed before this field existed verifying unchanged, so the\nfield MUST NOT be made required. The signing key is the first CryptoKey\nin KEYS with KEY_TYPE Signing whose ALGORITHM matches this declaration\n(an absent CryptoKey.ALGORITHM likewise means ed25519)",
           "x-flatbuffer-type": "string"
+        },
+        "DOMAIN_PROOFS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DomainProof"
+          },
+          "description": "DNS domain binding proofs linking domains to the same HD wallet \u2014\nsymmetric with CHAIN_PROOFS",
+          "x-flatbuffer-type": "[DomainProof]"
         }
       },
       "additionalProperties": false

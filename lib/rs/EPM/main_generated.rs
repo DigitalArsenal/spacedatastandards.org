@@ -1175,6 +1175,312 @@ impl ChainProofT {
     })
   }
 }
+pub enum DomainProofOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Proves control of a DNS domain by the same HD wallet as the signing key —
+/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
+/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
+/// canonical statement is 6 fixed LF-terminated lines prefixed
+/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
+/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+pub struct DomainProof<'a> {
+  pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for DomainProof<'a> {
+  type Inner = DomainProof<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+  }
+}
+
+impl<'a> DomainProof<'a> {
+  pub const VT_DOMAIN: ::flatbuffers::VOffsetT = 4;
+  pub const VT_PUBLIC_KEY: ::flatbuffers::VOffsetT = 6;
+  pub const VT_KEY_PATH: ::flatbuffers::VOffsetT = 8;
+  pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 10;
+  pub const VT_SIGNED_PAYLOAD: ::flatbuffers::VOffsetT = 12;
+  pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 14;
+  pub const VT_ENCODING: ::flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+    DomainProof { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args DomainProofArgs<'args>
+  ) -> ::flatbuffers::WIPOffset<DomainProof<'bldr>> {
+    let mut builder = DomainProofBuilder::new(_fbb);
+    if let Some(x) = args.ENCODING { builder.add_ENCODING(x); }
+    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
+    if let Some(x) = args.SIGNED_PAYLOAD { builder.add_SIGNED_PAYLOAD(x); }
+    if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
+    if let Some(x) = args.KEY_PATH { builder.add_KEY_PATH(x); }
+    if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
+    if let Some(x) = args.DOMAIN { builder.add_DOMAIN(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> DomainProofT {
+    let DOMAIN = self.DOMAIN().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let PUBLIC_KEY = self.PUBLIC_KEY().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let KEY_PATH = self.KEY_PATH().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let SIGNED_PAYLOAD = self.SIGNED_PAYLOAD().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ALGORITHM = self.ALGORITHM().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    let ENCODING = self.ENCODING().map(|x| {
+      alloc::string::ToString::to_string(x)
+    });
+    DomainProofT {
+      DOMAIN,
+      PUBLIC_KEY,
+      KEY_PATH,
+      SIGNATURE,
+      SIGNED_PAYLOAD,
+      ALGORITHM,
+      ENCODING,
+    }
+  }
+
+  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  #[inline]
+  pub fn DOMAIN(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_DOMAIN, None)}
+  }
+  /// Public key for this proof (hex-encoded)
+  #[inline]
+  pub fn PUBLIC_KEY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_PUBLIC_KEY, None)}
+  }
+  /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
+  /// Ed25519 EPM/publication key at m/44'/0'/0'/0'/0'
+  #[inline]
+  pub fn KEY_PATH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_KEY_PATH, None)}
+  }
+  /// Signature over the attestation payload (hex-encoded)
+  #[inline]
+  pub fn SIGNATURE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_SIGNATURE, None)}
+  }
+  /// The canonical payload that was signed, verbatim (hex-encoded)
+  #[inline]
+  pub fn SIGNED_PAYLOAD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_SIGNED_PAYLOAD, None)}
+  }
+  /// Signature algorithm. ABSENT means ed25519
+  #[inline]
+  pub fn ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_ALGORITHM, None)}
+  }
+  /// Signature encoding format. ABSENT means the canonical encoding of
+  /// ALGORITHM (raw-ed25519 for ed25519)
+  #[inline]
+  pub fn ENCODING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_ENCODING, None)}
+  }
+}
+
+impl ::flatbuffers::Verifiable for DomainProof<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut ::flatbuffers::Verifier, pos: usize
+  ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+    v.visit_table(pos)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOMAIN", Self::VT_DOMAIN, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLIC_KEY", Self::VT_PUBLIC_KEY, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_PATH", Self::VT_KEY_PATH, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNED_PAYLOAD", Self::VT_SIGNED_PAYLOAD, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENCODING", Self::VT_ENCODING, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct DomainProofArgs<'a> {
+    pub DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PUBLIC_KEY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub KEY_PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNATURE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SIGNED_PAYLOAD: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ENCODING: Option<::flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for DomainProofArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    DomainProofArgs {
+      DOMAIN: None,
+      PUBLIC_KEY: None,
+      KEY_PATH: None,
+      SIGNATURE: None,
+      SIGNED_PAYLOAD: None,
+      ALGORITHM: None,
+      ENCODING: None,
+    }
+  }
+}
+
+pub struct DomainProofBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_DOMAIN(&mut self, DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_DOMAIN, DOMAIN);
+  }
+  #[inline]
+  pub fn add_PUBLIC_KEY(&mut self, PUBLIC_KEY: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_PUBLIC_KEY, PUBLIC_KEY);
+  }
+  #[inline]
+  pub fn add_KEY_PATH(&mut self, KEY_PATH: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_KEY_PATH, KEY_PATH);
+  }
+  #[inline]
+  pub fn add_SIGNATURE(&mut self, SIGNATURE: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_SIGNATURE, SIGNATURE);
+  }
+  #[inline]
+  pub fn add_SIGNED_PAYLOAD(&mut self, SIGNED_PAYLOAD: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_SIGNED_PAYLOAD, SIGNED_PAYLOAD);
+  }
+  #[inline]
+  pub fn add_ALGORITHM(&mut self, ALGORITHM: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_ALGORITHM, ALGORITHM);
+  }
+  #[inline]
+  pub fn add_ENCODING(&mut self, ENCODING: ::flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_ENCODING, ENCODING);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DomainProofBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    DomainProofBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> ::flatbuffers::WIPOffset<DomainProof<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    ::flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl ::core::fmt::Debug for DomainProof<'_> {
+  fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+    let mut ds = f.debug_struct("DomainProof");
+      ds.field("DOMAIN", &self.DOMAIN());
+      ds.field("PUBLIC_KEY", &self.PUBLIC_KEY());
+      ds.field("KEY_PATH", &self.KEY_PATH());
+      ds.field("SIGNATURE", &self.SIGNATURE());
+      ds.field("SIGNED_PAYLOAD", &self.SIGNED_PAYLOAD());
+      ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.field("ENCODING", &self.ENCODING());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct DomainProofT {
+  pub DOMAIN: Option<alloc::string::String>,
+  pub PUBLIC_KEY: Option<alloc::string::String>,
+  pub KEY_PATH: Option<alloc::string::String>,
+  pub SIGNATURE: Option<alloc::string::String>,
+  pub SIGNED_PAYLOAD: Option<alloc::string::String>,
+  pub ALGORITHM: Option<alloc::string::String>,
+  pub ENCODING: Option<alloc::string::String>,
+}
+impl Default for DomainProofT {
+  fn default() -> Self {
+    Self {
+      DOMAIN: None,
+      PUBLIC_KEY: None,
+      KEY_PATH: None,
+      SIGNATURE: None,
+      SIGNED_PAYLOAD: None,
+      ALGORITHM: None,
+      ENCODING: None,
+    }
+  }
+}
+impl DomainProofT {
+  pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> ::flatbuffers::WIPOffset<DomainProof<'b>> {
+    let DOMAIN = self.DOMAIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let KEY_PATH = self.KEY_PATH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNATURE = self.SIGNATURE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SIGNED_PAYLOAD = self.SIGNED_PAYLOAD.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ALGORITHM = self.ALGORITHM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ENCODING = self.ENCODING.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    DomainProof::create(_fbb, &DomainProofArgs{
+      DOMAIN,
+      PUBLIC_KEY,
+      KEY_PATH,
+      SIGNATURE,
+      SIGNED_PAYLOAD,
+      ALGORITHM,
+      ENCODING,
+    })
+  }
+}
 pub enum EPMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -1212,6 +1518,7 @@ impl<'a> EPM<'a> {
   pub const VT_CHAIN_PROOFS: ::flatbuffers::VOffsetT = 38;
   pub const VT_ENTITY_TYPE: ::flatbuffers::VOffsetT = 40;
   pub const VT_SIGNATURE_ALGORITHM: ::flatbuffers::VOffsetT = 42;
+  pub const VT_DOMAIN_PROOFS: ::flatbuffers::VOffsetT = 44;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1224,6 +1531,7 @@ impl<'a> EPM<'a> {
   ) -> ::flatbuffers::WIPOffset<EPM<'bldr>> {
     let mut builder = EPMBuilder::new(_fbb);
     builder.add_SIGNATURE_TIMESTAMP(args.SIGNATURE_TIMESTAMP);
+    if let Some(x) = args.DOMAIN_PROOFS { builder.add_DOMAIN_PROOFS(x); }
     if let Some(x) = args.SIGNATURE_ALGORITHM { builder.add_SIGNATURE_ALGORITHM(x); }
     if let Some(x) = args.CHAIN_PROOFS { builder.add_CHAIN_PROOFS(x); }
     if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
@@ -1303,6 +1611,9 @@ impl<'a> EPM<'a> {
     let SIGNATURE_ALGORITHM = self.SIGNATURE_ALGORITHM().map(|x| {
       alloc::string::ToString::to_string(x)
     });
+    let DOMAIN_PROOFS = self.DOMAIN_PROOFS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     EPMT {
       DN,
       LEGAL_NAME,
@@ -1324,6 +1635,7 @@ impl<'a> EPM<'a> {
       CHAIN_PROOFS,
       ENTITY_TYPE,
       SIGNATURE_ALGORITHM,
+      DOMAIN_PROOFS,
     }
   }
 
@@ -1494,6 +1806,15 @@ impl<'a> EPM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EPM::VT_SIGNATURE_ALGORITHM, None)}
   }
+  /// DNS domain binding proofs linking domains to the same HD wallet —
+  /// symmetric with CHAIN_PROOFS
+  #[inline]
+  pub fn DOMAIN_PROOFS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DomainProof<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DomainProof>>>>(EPM::VT_DOMAIN_PROOFS, None)}
+  }
 }
 
 impl ::flatbuffers::Verifiable for EPM<'_> {
@@ -1522,6 +1843,7 @@ impl ::flatbuffers::Verifiable for EPM<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<ChainProof>>>>("CHAIN_PROOFS", Self::VT_CHAIN_PROOFS, false)?
      .visit_field::<EntityType>("ENTITY_TYPE", Self::VT_ENTITY_TYPE, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE_ALGORITHM", Self::VT_SIGNATURE_ALGORITHM, false)?
+     .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<DomainProof>>>>("DOMAIN_PROOFS", Self::VT_DOMAIN_PROOFS, false)?
      .finish();
     Ok(())
   }
@@ -1547,6 +1869,7 @@ pub struct EPMArgs<'a> {
     pub CHAIN_PROOFS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<ChainProof<'a>>>>>,
     pub ENTITY_TYPE: EntityType,
     pub SIGNATURE_ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DOMAIN_PROOFS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<DomainProof<'a>>>>>,
 }
 impl<'a> Default for EPMArgs<'a> {
   #[inline]
@@ -1572,6 +1895,7 @@ impl<'a> Default for EPMArgs<'a> {
       CHAIN_PROOFS: None,
       ENTITY_TYPE: EntityType::User,
       SIGNATURE_ALGORITHM: None,
+      DOMAIN_PROOFS: None,
     }
   }
 }
@@ -1662,6 +1986,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EPMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EPM::VT_SIGNATURE_ALGORITHM, SIGNATURE_ALGORITHM);
   }
   #[inline]
+  pub fn add_DOMAIN_PROOFS(&mut self, DOMAIN_PROOFS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<DomainProof<'b >>>>) {
+    self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(EPM::VT_DOMAIN_PROOFS, DOMAIN_PROOFS);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EPMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     EPMBuilder {
@@ -1699,6 +2027,7 @@ impl ::core::fmt::Debug for EPM<'_> {
       ds.field("CHAIN_PROOFS", &self.CHAIN_PROOFS());
       ds.field("ENTITY_TYPE", &self.ENTITY_TYPE());
       ds.field("SIGNATURE_ALGORITHM", &self.SIGNATURE_ALGORITHM());
+      ds.field("DOMAIN_PROOFS", &self.DOMAIN_PROOFS());
       ds.finish()
   }
 }
@@ -1725,6 +2054,7 @@ pub struct EPMT {
   pub CHAIN_PROOFS: Option<alloc::vec::Vec<ChainProofT>>,
   pub ENTITY_TYPE: EntityType,
   pub SIGNATURE_ALGORITHM: Option<alloc::string::String>,
+  pub DOMAIN_PROOFS: Option<alloc::vec::Vec<DomainProofT>>,
 }
 impl Default for EPMT {
   fn default() -> Self {
@@ -1749,6 +2079,7 @@ impl Default for EPMT {
       CHAIN_PROOFS: None,
       ENTITY_TYPE: EntityType::User,
       SIGNATURE_ALGORITHM: None,
+      DOMAIN_PROOFS: None,
     }
   }
 }
@@ -1813,6 +2144,9 @@ impl EPMT {
     let SIGNATURE_ALGORITHM = self.SIGNATURE_ALGORITHM.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DOMAIN_PROOFS = self.DOMAIN_PROOFS.as_ref().map(|x|{
+      let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     EPM::create(_fbb, &EPMArgs{
       DN,
       LEGAL_NAME,
@@ -1834,6 +2168,7 @@ impl EPMT {
       CHAIN_PROOFS,
       ENTITY_TYPE,
       SIGNATURE_ALGORITHM,
+      DOMAIN_PROOFS,
     })
   }
 }

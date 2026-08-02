@@ -247,22 +247,43 @@ class EPM extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// DNS domain binding proofs linking domains to the same HD wallet —
+    /// symmetric with CHAIN_PROOFS
+    /**
+     * @returnVectorOffset
+     */
+    public function getDOMAIN_PROOFS($j)
+    {
+        $o = $this->__offset(44);
+        $obj = new DomainProof();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDOMAIN_PROOFSLength()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEPM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EPM
      */
-    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE, $SIGNATURE_ALGORITHM)
+    public static function createEPM(FlatBufferBuilder $builder, $DN, $LEGAL_NAME, $FAMILY_NAME, $GIVEN_NAME, $ADDITIONAL_NAME, $HONORIFIC_PREFIX, $HONORIFIC_SUFFIX, $JOB_TITLE, $OCCUPATION, $ADDRESS, $ALTERNATE_NAMES, $EMAIL, $TELEPHONE, $KEYS, $MULTIFORMAT_ADDRESS, $SIGNATURE, $SIGNATURE_TIMESTAMP, $CHAIN_PROOFS, $ENTITY_TYPE, $SIGNATURE_ALGORITHM, $DOMAIN_PROOFS)
     {
-        $builder->startObject(20);
+        $builder->startObject(21);
         self::addDN($builder, $DN);
         self::addLEGAL_NAME($builder, $LEGAL_NAME);
         self::addFAMILY_NAME($builder, $FAMILY_NAME);
@@ -283,6 +304,7 @@ class EPM extends Table
         self::addCHAIN_PROOFS($builder, $CHAIN_PROOFS);
         self::addENTITY_TYPE($builder, $ENTITY_TYPE);
         self::addSIGNATURE_ALGORITHM($builder, $SIGNATURE_ALGORITHM);
+        self::addDOMAIN_PROOFS($builder, $DOMAIN_PROOFS);
         $o = $builder->endObject();
         return $o;
     }
@@ -581,6 +603,40 @@ class EPM extends Table
     public static function addSIGNATURE_ALGORITHM(FlatBufferBuilder $builder, $SIGNATURE_ALGORITHM)
     {
         $builder->addOffsetX(19, $SIGNATURE_ALGORITHM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDOMAIN_PROOFS(FlatBufferBuilder $builder, $DOMAIN_PROOFS)
+    {
+        $builder->addOffsetX(20, $DOMAIN_PROOFS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDOMAIN_PROOFSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDOMAIN_PROOFSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**
