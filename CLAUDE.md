@@ -182,3 +182,59 @@ metrics; `$PNL` = the articulated panel model consumed by SRP propagation;
 `OPPSurface.PANEL_ID` joins a surface to its `$PNL` panel and
 `OPPSurface.GLTF_MATERIAL_NAME`/`GLTF_MATERIAL_INDEX` join it to the exact glTF
 material of the variant named in `ASSET`.
+
+### RF captures and network aggregates live in SDS ($IQC / $CNP, 1.177.0)
+
+A raw-IQ recording held in a public archive is `$IQC`; an aggregated
+connectivity statistic for a constellation's user network is `$CNP`. Neither
+is a sidecar JSON and neither is `$RFO`.
+
+`$IQC` is a POINTER RECORD, normalized onto the SigMF v1 core namespace. It
+carries where the samples are (`PAYLOADS[].URL`), how large they are
+(`BYTE_LENGTH`), and what they hash to (`BYTE_SHA256` / `BYTE_SHA512` — SigMF
+publishes SHA-512, so it is carried in its own field rather than converted
+away). It NEVER carries samples. `IQCPayloadRef.CUSTODY` defaults to
+`UPSTREAM_ONLY`; `PINNED` is a deliberate per-capture decision for small
+high-value recordings, never a bulk mirror.
+
+Units are named in the field. SigMF publishes hertz, so `SAMPLE_RATE_HZ`,
+`CENTER_FREQ_HZ` and both `FREQ_*_EDGE_HZ` carry Hz unconverted. `$IQC`
+deliberately does NOT adopt `$RFB`'s MHz convention — a consumer joining the
+two divides by 1e6 at the join, explicitly. `DATATYPE` is the SigMF token
+verbatim (`cf32_le`); a consumer that cannot parse it refuses the samples
+rather than assuming a layout. `GEOLOCATION` is a nested table because 0,0 is
+a real place: absent means "no position published", which a zero-defaulted
+scalar pair could never say. An empty `LICENSE` means UNKNOWN TERMS — never
+public domain, never a grant to redistribute; licence is per RECORDING, never
+per site.
+
+`$CNP` follows `$OPP`'s never-invent-data shape. A quantity exists only as a
+`CNPMetric`, and
+
+    UNITS:string (required);
+    PROVENANCE:CNPProvenance (required);
+
+so there is no encoding for a number that does not state its unit and name its
+`SOURCE`, `SOURCE_DATASET`, replayable `SOURCE_QUERY`, `RETRIEVED_AT`,
+`METHOD`, `MEASUREMENT_SERVER` and `LICENSE`. `CNPMetric` has no scalar
+`VALUE`: a metric is a DISTRIBUTION of `CNPStatistic` entries, so a source
+publishing only a median can never be read as a mean. Absent means
+unpublished, never zero. `SOURCES` lists every provider consulted including
+those that returned nothing. `cnpMethod.MODELED` exists so a modelled number
+can be refused as a measurement, and `CNPProvenance.NON_COMMERCIAL_ONLY` rides
+PER SOURCE because one record may carry a CC0 M-Lab lane beside a CC BY-NC
+cross-check.
+
+`rfBandDesignation` (in `$RFB`, shared by `$IQC.BAND`) mixes ITU-R V.431
+decade bands with IEEE 521 letter bands and they OVERLAP by construction. A
+publisher encodes the designation ITS SOURCE STATES, never a re-derivation
+from `CENTER_FREQ`, and never both. ORDINALS ARE WIRE VALUES: members are
+APPENDED ONLY, which is why VHF/HF/MF/LF/VLF/SHF sit after `OTHER` and out of
+frequency order. Reordering the enum silently re-labels every published $RFB.
+
+Division of labour: `$RFO` = a sensor's astrometric RF observation of a
+tracked object; `$RFE` = the parametric emitter description; `$RFB` = that
+emitter's band specification in MHz; `$IQC` = the archived baseband recording;
+`$LKS` = the instantaneous state and data rate of ONE named link; `$CNP` = the
+windowed statistical aggregate across a whole user network; `$DPM` = the
+manifest under which THIS network publishes a shard of any of them.
