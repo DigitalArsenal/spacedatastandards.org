@@ -82,7 +82,13 @@
         "W",
         "Q",
         "EHF",
-        "OTHER"
+        "OTHER",
+        "VHF",
+        "HF",
+        "MF",
+        "LF",
+        "VLF",
+        "SHF"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -124,7 +130,32 @@
           "value": 11
         },
         "OTHER": {
-          "value": 12
+          "value": 12,
+          "description": "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+        },
+        "VHF": {
+          "value": 13,
+          "description": "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+        },
+        "HF": {
+          "value": 14,
+          "description": "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+        },
+        "MF": {
+          "value": 15,
+          "description": "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+        },
+        "LF": {
+          "value": 16,
+          "description": "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+        },
+        "VLF": {
+          "value": 17,
+          "description": "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+        },
+        "SHF": {
+          "value": 18,
+          "description": "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
         }
       }
     },
@@ -425,7 +456,32 @@
               "value": 11
             },
             "OTHER": {
-              "value": 12
+              "value": 12,
+              "description": "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+            },
+            "VHF": {
+              "value": 13,
+              "description": "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+            },
+            "HF": {
+              "value": 14,
+              "description": "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+            },
+            "MF": {
+              "value": 15,
+              "description": "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+            },
+            "LF": {
+              "value": 16,
+              "description": "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+            },
+            "VLF": {
+              "value": 17,
+              "description": "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+            },
+            "SHF": {
+              "value": 18,
+              "description": "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
             }
           }
         },

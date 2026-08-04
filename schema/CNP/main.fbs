@@ -1,0 +1,270 @@
+// Hash: 6130bc4bb85b7a40bdb86d864e10ef059659eb69b6deeddd9188756595f23564
+// Version: 1.176.0
+// -----------------------------------END_HEADER
+/// Granularity of the geography a measurement window is keyed to.
+enum cnpRegionKind : byte {
+  /// No geographic restriction — the aggregate covers everywhere the operator
+  /// serves.
+  GLOBAL,
+  /// A country. CODE is ISO 3166-1 alpha-2.
+  COUNTRY,
+  /// A first-level subdivision. CODE is ISO 3166-2.
+  SUBDIVISION,
+  /// A metropolitan area or city. CODE is the source's own key.
+  METRO,
+  /// A ground-segment cell or beam footprint. CODE is the operator's own key.
+  CELL,
+  /// A point of presence / ground gateway. CODE is the source's own key.
+  POINT_OF_PRESENCE,
+  /// The source keys by something none of the above describes. CODE and NAME
+  /// carry the source's key verbatim.
+  OTHER
+}
+
+/// Calendar span an aggregate covers.
+enum cnpPeriod : byte {
+  /// WINDOW_START/WINDOW_STOP are authoritative and match none of the named
+  /// periods.
+  CUSTOM,
+  HOUR,
+  DAY,
+  WEEK,
+  MONTH,
+  QUARTER,
+  YEAR
+}
+
+/// Quantity being aggregated.
+enum cnpMetricKind : byte {
+  /// Achieved application-layer download rate.
+  DOWNLOAD_THROUGHPUT,
+  /// Achieved application-layer upload rate.
+  UPLOAD_THROUGHPUT,
+  /// Round-trip time on an otherwise unloaded path.
+  LATENCY_IDLE,
+  /// Round-trip time measured while the download test saturates the path.
+  LATENCY_LOADED_DOWNLOAD,
+  /// Round-trip time measured while the upload test saturates the path.
+  LATENCY_LOADED_UPLOAD,
+  /// Variation in inter-packet arrival time.
+  JITTER,
+  /// Fraction of packets lost.
+  PACKET_LOSS,
+  /// Fraction of the window in which the service was usable.
+  AVAILABILITY,
+  /// Fraction of the terminal's sky view blocked by terrain or structures.
+  OBSTRUCTION,
+  /// Round-trip time where the source does not distinguish loaded from idle.
+  RTT,
+  /// The source publishes a quantity none of the above names.
+  /// SOURCE_METRIC_NAME is then required to be non-empty.
+  OTHER
+}
+
+/// Statistical reduction a single number expresses.
+///
+/// Named `cnpReduction`, not `cnpStatistic`, so it can never differ from the
+/// `CNPStatistic` table by case alone in any generated language tree.
+enum cnpReduction : byte {
+  MEAN,
+  MEDIAN,
+  /// PERCENTILE_RANK carries which one.
+  PERCENTILE,
+  MINIMUM,
+  MAXIMUM,
+  STANDARD_DEVIATION,
+  /// Number of observations, not a value of the metric.
+  COUNT
+}
+
+/// How the underlying observations were produced.
+enum cnpMethod : byte {
+  /// M-Lab NDT7 measurement.
+  NDT7,
+  /// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+  SPEED_TEST,
+  /// ICMP or UDP echo.
+  PING,
+  /// Path trace.
+  TRACEROUTE,
+  /// Telemetry read from the user terminal itself.
+  TERMINAL_TELEMETRY,
+  /// Bulk HTTP transfer.
+  HTTP_DOWNLOAD,
+  /// Passive observation of production traffic.
+  PASSIVE,
+  /// Modelled or simulated rather than measured. A modelled value is not a
+  /// measurement and this member is how a consumer refuses to treat it as one.
+  MODELED,
+  /// The source states a method none of the above names.
+  OTHER
+}
+
+/// Geography an aggregate is keyed to.
+///
+/// A separate table so an absent REGION means "the source did not key by
+/// geography", which is different from GLOBAL ("the source aggregated across
+/// all geographies") and different again from an empty CODE.
+table CNPRegion {
+  /// Granularity of CODE.
+  KIND: cnpRegionKind = OTHER;
+  /// The region key, verbatim from the source in the coding scheme KIND
+  /// names. Never re-coded between schemes on ingest.
+  CODE: string;
+  /// Human-readable region name as the source publishes it. Joins to
+  /// $CTR for country identity when KIND is COUNTRY.
+  NAME: string;
+}
+
+/// Where one metric came from and under what terms it may be republished.
+table CNPProvenance {
+  /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
+  /// Radar", "RIPE Atlas", "LENS".
+  SOURCE: string (required);
+  /// URL of the dataset, endpoint or landing page.
+  SOURCE_URL: string;
+  /// Dataset, table or API path queried, e.g.
+  /// "measurement-lab.ndt.unified_downloads".
+  SOURCE_DATASET: string;
+  /// The exact query or request that produced these numbers, so the
+  /// aggregate can be replayed rather than trusted.
+  SOURCE_QUERY: string;
+  /// Source's own identifier for the returned batch, when it issues one.
+  SOURCE_RECORD_ID: string;
+  /// SHA-256 of the raw source bytes this aggregate was computed from,
+  /// lowercase hex.
+  SOURCE_SHA256: string;
+  /// ISO 8601 UTC time the source was queried.
+  RETRIEVED_AT: string;
+  /// How the underlying observations were produced.
+  METHOD: cnpMethod = OTHER;
+  /// Measurement server, vantage point or probe set, when the source names
+  /// one. A throughput number without a vantage is not comparable to one
+  /// with a different vantage.
+  MEASUREMENT_SERVER: string;
+  /// SPDX identifier when the source states one, otherwise the licence name
+  /// verbatim. EMPTY MEANS UNKNOWN TERMS — never public domain, and never a
+  /// grant to republish.
+  LICENSE: string;
+  /// URL of the licence text.
+  LICENSE_URL: string;
+  /// Attribution string the licence requires this record and every derived
+  /// product to carry downstream.
+  ATTRIBUTION: string;
+  /// True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A
+  /// consumer building a paid surface MUST honour this flag; it is carried
+  /// per-source because one $CNP may mix a CC0 lane with a CC BY-NC
+  /// cross-check.
+  NON_COMMERCIAL_ONLY: bool;
+}
+
+/// One number drawn from a metric's distribution.
+table CNPStatistic {
+  /// Which reduction this number is.
+  STATISTIC: cnpReduction = MEAN;
+  /// Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless
+  /// otherwise and MUST NOT be set.
+  PERCENTILE_RANK: double;
+  /// The number, expressed in the parent metric's UNITS.
+  VALUE: double;
+}
+
+/// One aggregated quantity for the parent record's key.
+///
+/// A metric is a DISTRIBUTION, not a scalar. There is deliberately no
+/// `VALUE: double` on this table: a source that publishes only a median
+/// encodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can
+/// then never mistake it for a mean.
+table CNPMetric {
+  /// Quantity aggregated.
+  KIND: cnpMetricKind = OTHER;
+  /// The source's own name for this metric, verbatim. REQUIRED to be
+  /// non-empty when KIND is OTHER; recommended always, because it is what
+  /// makes the mapping auditable.
+  SOURCE_METRIC_NAME: string;
+  /// Units of every VALUE under STATISTICS. NORMATIVE and required: "Mbps",
+  /// "kbps", "ms", "percent", "fraction", "count". Units are never silently
+  /// converted on ingest; a source publishing kbps encodes kbps.
+  UNITS: string (required);
+  /// The distribution. At least one entry; a metric with none is malformed.
+  STATISTICS: [CNPStatistic];
+  /// Number of individual measurements aggregated. 0 means the source did
+  /// not publish a sample count — it never means zero measurements.
+  SAMPLE_COUNT: uint64;
+  /// Number of distinct clients, terminals or probes contributing. 0 means
+  /// unpublished.
+  CLIENT_COUNT: uint64;
+  /// Where this metric came from and under what terms.
+  PROVENANCE: CNPProvenance (required);
+}
+
+/// Constellation Network Performance.
+///
+/// Aggregated throughput, latency and availability for one satellite
+/// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
+/// closed time window. Built for the Starlink connectivity lane (AS14593 via
+/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
+/// provider — or a terrestrial ASN used as a baseline fits the same record.
+///
+/// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
+/// speed test, not a single client's result, and not a per-satellite link
+/// state: $LKS carries the instantaneous state and data rate of ONE named
+/// link between two endpoints, and no $LKS can express "the p50 download rate
+/// observed by 41,000 terminals in Germany during July".
+///
+/// NEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a
+/// CNPMetric, and CNPMetric carries `UNITS: string (required)` and
+/// `PROVENANCE: CNPProvenance (required)`, so there is no encoding for a
+/// number that does not state its unit and name its source, query,
+/// retrieval time, method and licence. A metric the source did not publish is
+/// ABSENT — never zero. `SOURCES` lists every provider consulted for this key,
+/// including ones that returned nothing, so a consumer can distinguish "not
+/// looked for" from "looked for and empty".
+///
+/// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
+/// because a single record may legitimately carry a CC0 M-Lab lane beside a
+/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
+/// metric that inherited it, never to the record as a whole.
+table CNP {
+  /// Stable identifier for this record.
+  ID: string;
+  /// Constellation or network name, verbatim ("Starlink", "OneWeb",
+  /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+  /// $LKS.CONSTELLATION and to $CAT by the same name.
+  CONSTELLATION: string;
+  /// Operating company, when it differs usefully from CONSTELLATION.
+  OPERATOR: string;
+  /// Autonomous system number of the measured client network — Starlink is
+  /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
+  /// is never a real measurement key.
+  ASN: uint32;
+  /// Autonomous system name as the routing registry publishes it.
+  AS_NAME: string;
+  /// Service tier the source distinguishes, verbatim ("Residential",
+  /// "Roam", "Business", "Maritime"). Empty when the source does not
+  /// separate tiers — never guessed from the throughput.
+  SERVICE_TIER: string;
+  /// Geography this aggregate is keyed to. Absent when the source published
+  /// no geographic key at all.
+  REGION: CNPRegion;
+  /// ISO 8601 UTC inclusive start of the aggregation window.
+  WINDOW_START: string;
+  /// ISO 8601 UTC exclusive end of the aggregation window.
+  WINDOW_STOP: string;
+  /// Calendar span the window represents.
+  AGGREGATION_PERIOD: cnpPeriod = CUSTOM;
+  /// The aggregated quantities.
+  METRICS: [CNPMetric];
+  /// Every source consulted for this key, including those that returned no
+  /// metric.
+  SOURCES: [CNPProvenance];
+  /// ISO 8601 UTC creation time of this record.
+  CREATED_AT: string;
+  /// ISO 8601 UTC last-update time of this record.
+  UPDATED_AT: string;
+  /// CID of the $CNP this record replaces when a source restates a window.
+  SUPERSEDES_CNP_CID: string;
+}
+
+root_type CNP;
+file_identifier "$CNP";

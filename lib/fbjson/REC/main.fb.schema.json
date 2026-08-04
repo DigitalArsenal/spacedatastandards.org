@@ -3686,6 +3686,245 @@
         }
       }
     },
+    "cnpRegionKind": {
+      "type": "string",
+      "enum": [
+        "GLOBAL",
+        "COUNTRY",
+        "SUBDIVISION",
+        "METRO",
+        "CELL",
+        "POINT_OF_PRESENCE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GLOBAL": {
+          "value": 0,
+          "description": "No geographic restriction \u2014 the aggregate covers everywhere the operator serves."
+        },
+        "COUNTRY": {
+          "value": 1,
+          "description": "A country. CODE is ISO 3166-1 alpha-2."
+        },
+        "SUBDIVISION": {
+          "value": 2,
+          "description": "A first-level subdivision. CODE is ISO 3166-2."
+        },
+        "METRO": {
+          "value": 3,
+          "description": "A metropolitan area or city. CODE is the source's own key."
+        },
+        "CELL": {
+          "value": 4,
+          "description": "A ground-segment cell or beam footprint. CODE is the operator's own key."
+        },
+        "POINT_OF_PRESENCE": {
+          "value": 5,
+          "description": "A point of presence / ground gateway. CODE is the source's own key."
+        },
+        "OTHER": {
+          "value": 6,
+          "description": "The source keys by something none of the above describes. CODE and NAME carry the source's key verbatim."
+        }
+      }
+    },
+    "cnpPeriod": {
+      "type": "string",
+      "enum": [
+        "CUSTOM",
+        "HOUR",
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "QUARTER",
+        "YEAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CUSTOM": {
+          "value": 0,
+          "description": "WINDOW_START/WINDOW_STOP are authoritative and match none of the named periods."
+        },
+        "HOUR": {
+          "value": 1
+        },
+        "DAY": {
+          "value": 2
+        },
+        "WEEK": {
+          "value": 3
+        },
+        "MONTH": {
+          "value": 4
+        },
+        "QUARTER": {
+          "value": 5
+        },
+        "YEAR": {
+          "value": 6
+        }
+      }
+    },
+    "cnpMetricKind": {
+      "type": "string",
+      "enum": [
+        "DOWNLOAD_THROUGHPUT",
+        "UPLOAD_THROUGHPUT",
+        "LATENCY_IDLE",
+        "LATENCY_LOADED_DOWNLOAD",
+        "LATENCY_LOADED_UPLOAD",
+        "JITTER",
+        "PACKET_LOSS",
+        "AVAILABILITY",
+        "OBSTRUCTION",
+        "RTT",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DOWNLOAD_THROUGHPUT": {
+          "value": 0,
+          "description": "Achieved application-layer download rate."
+        },
+        "UPLOAD_THROUGHPUT": {
+          "value": 1,
+          "description": "Achieved application-layer upload rate."
+        },
+        "LATENCY_IDLE": {
+          "value": 2,
+          "description": "Round-trip time on an otherwise unloaded path."
+        },
+        "LATENCY_LOADED_DOWNLOAD": {
+          "value": 3,
+          "description": "Round-trip time measured while the download test saturates the path."
+        },
+        "LATENCY_LOADED_UPLOAD": {
+          "value": 4,
+          "description": "Round-trip time measured while the upload test saturates the path."
+        },
+        "JITTER": {
+          "value": 5,
+          "description": "Variation in inter-packet arrival time."
+        },
+        "PACKET_LOSS": {
+          "value": 6,
+          "description": "Fraction of packets lost."
+        },
+        "AVAILABILITY": {
+          "value": 7,
+          "description": "Fraction of the window in which the service was usable."
+        },
+        "OBSTRUCTION": {
+          "value": 8,
+          "description": "Fraction of the terminal's sky view blocked by terrain or structures."
+        },
+        "RTT": {
+          "value": 9,
+          "description": "Round-trip time where the source does not distinguish loaded from idle."
+        },
+        "OTHER": {
+          "value": 10,
+          "description": "The source publishes a quantity none of the above names. SOURCE_METRIC_NAME is then required to be non-empty."
+        }
+      }
+    },
+    "cnpReduction": {
+      "type": "string",
+      "enum": [
+        "MEAN",
+        "MEDIAN",
+        "PERCENTILE",
+        "MINIMUM",
+        "MAXIMUM",
+        "STANDARD_DEVIATION",
+        "COUNT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MEAN": {
+          "value": 0
+        },
+        "MEDIAN": {
+          "value": 1
+        },
+        "PERCENTILE": {
+          "value": 2,
+          "description": "PERCENTILE_RANK carries which one."
+        },
+        "MINIMUM": {
+          "value": 3
+        },
+        "MAXIMUM": {
+          "value": 4
+        },
+        "STANDARD_DEVIATION": {
+          "value": 5
+        },
+        "COUNT": {
+          "value": 6,
+          "description": "Number of observations, not a value of the metric."
+        }
+      }
+    },
+    "cnpMethod": {
+      "type": "string",
+      "enum": [
+        "NDT7",
+        "SPEED_TEST",
+        "PING",
+        "TRACEROUTE",
+        "TERMINAL_TELEMETRY",
+        "HTTP_DOWNLOAD",
+        "PASSIVE",
+        "MODELED",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NDT7": {
+          "value": 0,
+          "description": "M-Lab NDT7 measurement."
+        },
+        "SPEED_TEST": {
+          "value": 1,
+          "description": "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+        },
+        "PING": {
+          "value": 2,
+          "description": "ICMP or UDP echo."
+        },
+        "TRACEROUTE": {
+          "value": 3,
+          "description": "Path trace."
+        },
+        "TERMINAL_TELEMETRY": {
+          "value": 4,
+          "description": "Telemetry read from the user terminal itself."
+        },
+        "HTTP_DOWNLOAD": {
+          "value": 5,
+          "description": "Bulk HTTP transfer."
+        },
+        "PASSIVE": {
+          "value": 6,
+          "description": "Passive observation of production traffic."
+        },
+        "MODELED": {
+          "value": 7,
+          "description": "Modelled or simulated rather than measured. A modelled value is not a measurement and this member is how a consumer refuses to treat it as one."
+        },
+        "OTHER": {
+          "value": 8,
+          "description": "The source states a method none of the above names."
+        }
+      }
+    },
     "ComModulationType": {
       "type": "string",
       "enum": [
@@ -7200,6 +7439,284 @@
         }
       }
     },
+    "linkCategory": {
+      "type": "string",
+      "enum": [
+        "UPLINK",
+        "DOWNLINK",
+        "CROSSLINK",
+        "INTER_SATELLITE",
+        "GROUND_TO_GROUND",
+        "RELAY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UPLINK": {
+          "value": 0
+        },
+        "DOWNLINK": {
+          "value": 1
+        },
+        "CROSSLINK": {
+          "value": 2
+        },
+        "INTER_SATELLITE": {
+          "value": 3
+        },
+        "GROUND_TO_GROUND": {
+          "value": 4
+        },
+        "RELAY": {
+          "value": 5
+        }
+      }
+    },
+    "linkCondition": {
+      "type": "string",
+      "enum": [
+        "ESTABLISHED",
+        "DEGRADED",
+        "INTERRUPTED",
+        "PLANNED",
+        "TERMINATED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ESTABLISHED": {
+          "value": 0
+        },
+        "DEGRADED": {
+          "value": 1
+        },
+        "INTERRUPTED": {
+          "value": 2
+        },
+        "PLANNED": {
+          "value": 3
+        },
+        "TERMINATED": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "rfBandDesignation": {
+      "type": "string",
+      "enum": [
+        "UHF",
+        "L",
+        "S",
+        "C",
+        "X",
+        "KU",
+        "K",
+        "KA",
+        "V",
+        "W",
+        "Q",
+        "EHF",
+        "OTHER",
+        "VHF",
+        "HF",
+        "MF",
+        "LF",
+        "VLF",
+        "SHF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UHF": {
+          "value": 0
+        },
+        "L": {
+          "value": 1
+        },
+        "S": {
+          "value": 2
+        },
+        "C": {
+          "value": 3
+        },
+        "X": {
+          "value": 4
+        },
+        "KU": {
+          "value": 5
+        },
+        "K": {
+          "value": 6
+        },
+        "KA": {
+          "value": 7
+        },
+        "V": {
+          "value": 8
+        },
+        "W": {
+          "value": 9
+        },
+        "Q": {
+          "value": 10
+        },
+        "EHF": {
+          "value": 11
+        },
+        "OTHER": {
+          "value": 12,
+          "description": "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+        },
+        "VHF": {
+          "value": 13,
+          "description": "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+        },
+        "HF": {
+          "value": 14,
+          "description": "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+        },
+        "MF": {
+          "value": 15,
+          "description": "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+        },
+        "LF": {
+          "value": 16,
+          "description": "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+        },
+        "VLF": {
+          "value": 17,
+          "description": "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+        },
+        "SHF": {
+          "value": 18,
+          "description": "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
+        }
+      }
+    },
+    "rfPolarization": {
+      "type": "string",
+      "enum": [
+        "LHCP",
+        "RHCP",
+        "LINEAR_H",
+        "LINEAR_V",
+        "DUAL",
+        "CROSS",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LHCP": {
+          "value": 0
+        },
+        "RHCP": {
+          "value": 1
+        },
+        "LINEAR_H": {
+          "value": 2
+        },
+        "LINEAR_V": {
+          "value": 3
+        },
+        "DUAL": {
+          "value": 4
+        },
+        "CROSS": {
+          "value": 5
+        },
+        "UNKNOWN": {
+          "value": 6
+        }
+      }
+    },
+    "rfTransmitterState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "ACTIVE",
+        "INACTIVE",
+        "INVALID"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        },
+        "ACTIVE": {
+          "value": 1
+        },
+        "INACTIVE": {
+          "value": 2
+        },
+        "INVALID": {
+          "value": 3
+        }
+      }
+    },
+    "iqcPayloadRole": {
+      "type": "string",
+      "enum": [
+        "DATA",
+        "METADATA",
+        "ARCHIVE",
+        "PREVIEW",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DATA": {
+          "value": 0,
+          "description": "The raw baseband sample stream itself (SigMF `.sigmf-data`)."
+        },
+        "METADATA": {
+          "value": 1,
+          "description": "The upstream metadata document the record was normalized FROM (SigMF `.sigmf-meta`)."
+        },
+        "ARCHIVE": {
+          "value": 2,
+          "description": "A container holding both (SigMF `.sigmf` tar archive, zip, tarball)."
+        },
+        "PREVIEW": {
+          "value": 3,
+          "description": "A rendered spectrogram, waterfall, audio demod or thumbnail."
+        },
+        "OTHER": {
+          "value": 4,
+          "description": "A companion file the source publishes that is none of the above."
+        }
+      }
+    },
+    "iqcCustody": {
+      "type": "string",
+      "enum": [
+        "UPSTREAM_ONLY",
+        "PINNED",
+        "UNPINNED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UPSTREAM_ONLY": {
+          "value": 0,
+          "description": "Bytes stay upstream. This record is a pointer and nothing more. This is the DEFAULT and the correct value for every multi-gigabyte archive."
+        },
+        "PINNED": {
+          "value": 1,
+          "description": "This SDN deliberately pinned the bytes; CID is populated and resolvable."
+        },
+        "UNPINNED": {
+          "value": 2,
+          "description": "The bytes were pinned and have since been unpinned. CID is retained for audit; it may no longer resolve."
+        }
+      }
+    },
     "irBand": {
       "type": "string",
       "enum": [
@@ -8546,72 +9063,6 @@
         },
         "Denied": {
           "value": 2
-        }
-      }
-    },
-    "linkCategory": {
-      "type": "string",
-      "enum": [
-        "UPLINK",
-        "DOWNLINK",
-        "CROSSLINK",
-        "INTER_SATELLITE",
-        "GROUND_TO_GROUND",
-        "RELAY"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "UPLINK": {
-          "value": 0
-        },
-        "DOWNLINK": {
-          "value": 1
-        },
-        "CROSSLINK": {
-          "value": 2
-        },
-        "INTER_SATELLITE": {
-          "value": 3
-        },
-        "GROUND_TO_GROUND": {
-          "value": 4
-        },
-        "RELAY": {
-          "value": 5
-        }
-      }
-    },
-    "linkCondition": {
-      "type": "string",
-      "enum": [
-        "ESTABLISHED",
-        "DEGRADED",
-        "INTERRUPTED",
-        "PLANNED",
-        "TERMINATED",
-        "UNKNOWN"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "ESTABLISHED": {
-          "value": 0
-        },
-        "DEGRADED": {
-          "value": 1
-        },
-        "INTERRUPTED": {
-          "value": 2
-        },
-        "PLANNED": {
-          "value": 3
-        },
-        "TERMINATED": {
-          "value": 4
-        },
-        "UNKNOWN": {
-          "value": 5
         }
       }
     },
@@ -11443,129 +11894,6 @@
         },
         "Removed": {
           "value": 4
-        }
-      }
-    },
-    "rfBandDesignation": {
-      "type": "string",
-      "enum": [
-        "UHF",
-        "L",
-        "S",
-        "C",
-        "X",
-        "KU",
-        "K",
-        "KA",
-        "V",
-        "W",
-        "Q",
-        "EHF",
-        "OTHER"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "UHF": {
-          "value": 0
-        },
-        "L": {
-          "value": 1
-        },
-        "S": {
-          "value": 2
-        },
-        "C": {
-          "value": 3
-        },
-        "X": {
-          "value": 4
-        },
-        "KU": {
-          "value": 5
-        },
-        "K": {
-          "value": 6
-        },
-        "KA": {
-          "value": 7
-        },
-        "V": {
-          "value": 8
-        },
-        "W": {
-          "value": 9
-        },
-        "Q": {
-          "value": 10
-        },
-        "EHF": {
-          "value": 11
-        },
-        "OTHER": {
-          "value": 12
-        }
-      }
-    },
-    "rfPolarization": {
-      "type": "string",
-      "enum": [
-        "LHCP",
-        "RHCP",
-        "LINEAR_H",
-        "LINEAR_V",
-        "DUAL",
-        "CROSS",
-        "UNKNOWN"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "LHCP": {
-          "value": 0
-        },
-        "RHCP": {
-          "value": 1
-        },
-        "LINEAR_H": {
-          "value": 2
-        },
-        "LINEAR_V": {
-          "value": 3
-        },
-        "DUAL": {
-          "value": 4
-        },
-        "CROSS": {
-          "value": 5
-        },
-        "UNKNOWN": {
-          "value": 6
-        }
-      }
-    },
-    "rfTransmitterState": {
-      "type": "string",
-      "enum": [
-        "UNKNOWN",
-        "ACTIVE",
-        "INACTIVE",
-        "INVALID"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "byte",
-      "x-flatbuffer-enum-values": {
-        "UNKNOWN": {
-          "value": 0
-        },
-        "ACTIVE": {
-          "value": 1
-        },
-        "INACTIVE": {
-          "value": 2
-        },
-        "INVALID": {
-          "value": 3
         }
       }
     },
@@ -15807,7 +16135,9 @@
         "QEM",
         "SBM",
         "PMM",
-        "OPP"
+        "OPP",
+        "IQC",
+        "CNP"
       ]
     },
     "GrantFieldStreamPolicy": {
@@ -23731,6 +24061,444 @@
       "required": [
         "TERMS_ID"
       ],
+      "additionalProperties": false
+    },
+    "CNPRegion": {
+      "type": "object",
+      "description": "Geography an aggregate is keyed to.\n\nA separate table so an absent REGION means \"the source did not key by\ngeography\", which is different from GLOBAL (\"the source aggregated across\nall geographies\") and different again from an empty CODE.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/cnpRegionKind",
+          "description": "Granularity of CODE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GLOBAL": {
+              "value": 0,
+              "description": "No geographic restriction \u2014 the aggregate covers everywhere the operator serves."
+            },
+            "COUNTRY": {
+              "value": 1,
+              "description": "A country. CODE is ISO 3166-1 alpha-2."
+            },
+            "SUBDIVISION": {
+              "value": 2,
+              "description": "A first-level subdivision. CODE is ISO 3166-2."
+            },
+            "METRO": {
+              "value": 3,
+              "description": "A metropolitan area or city. CODE is the source's own key."
+            },
+            "CELL": {
+              "value": 4,
+              "description": "A ground-segment cell or beam footprint. CODE is the operator's own key."
+            },
+            "POINT_OF_PRESENCE": {
+              "value": 5,
+              "description": "A point of presence / ground gateway. CODE is the source's own key."
+            },
+            "OTHER": {
+              "value": 6,
+              "description": "The source keys by something none of the above describes. CODE and NAME carry the source's key verbatim."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "CODE": {
+          "type": "string",
+          "description": "The region key, verbatim from the source in the coding scheme KIND\nnames. Never re-coded between schemes on ingest.",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable region name as the source publishes it. Joins to\n$CTR for country identity when KIND is COUNTRY.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CNPProvenance": {
+      "type": "object",
+      "description": "Where one metric came from and under what terms it may be republished.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "description": "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\".",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "URL of the dataset, endpoint or landing page.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DATASET": {
+          "type": "string",
+          "description": "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query or request that produced these numbers, so the\naggregate can be replayed rather than trusted.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "description": "Source's own identifier for the returned batch, when it issues one.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the raw source bytes this aggregate was computed from,\nlowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC time the source was queried.",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/cnpMethod",
+          "description": "How the underlying observations were produced.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NDT7": {
+              "value": 0,
+              "description": "M-Lab NDT7 measurement."
+            },
+            "SPEED_TEST": {
+              "value": 1,
+              "description": "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+            },
+            "PING": {
+              "value": 2,
+              "description": "ICMP or UDP echo."
+            },
+            "TRACEROUTE": {
+              "value": 3,
+              "description": "Path trace."
+            },
+            "TERMINAL_TELEMETRY": {
+              "value": 4,
+              "description": "Telemetry read from the user terminal itself."
+            },
+            "HTTP_DOWNLOAD": {
+              "value": 5,
+              "description": "Bulk HTTP transfer."
+            },
+            "PASSIVE": {
+              "value": 6,
+              "description": "Passive observation of production traffic."
+            },
+            "MODELED": {
+              "value": 7,
+              "description": "Modelled or simulated rather than measured. A modelled value is not a measurement and this member is how a consumer refuses to treat it as one."
+            },
+            "OTHER": {
+              "value": 8,
+              "description": "The source states a method none of the above names."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "MEASUREMENT_SERVER": {
+          "type": "string",
+          "description": "Measurement server, vantage point or probe set, when the source names\none. A throughput number without a vantage is not comparable to one\nwith a different vantage.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "SPDX identifier when the source states one, otherwise the licence name\nverbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain, and never a\ngrant to republish.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the licence text.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution string the licence requires this record and every derived\nproduct to carry downstream.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\nconsumer building a paid surface MUST honour this flag; it is carried\nper-source because one $CNP may mix a CC0 lane with a CC BY-NC\ncross-check.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "CNPStatistic": {
+      "type": "object",
+      "description": "One number drawn from a metric's distribution.",
+      "properties": {
+        "STATISTIC": {
+          "$ref": "#/definitions/cnpReduction",
+          "description": "Which reduction this number is.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MEAN": {
+              "value": 0
+            },
+            "MEDIAN": {
+              "value": 1
+            },
+            "PERCENTILE": {
+              "value": 2,
+              "description": "PERCENTILE_RANK carries which one."
+            },
+            "MINIMUM": {
+              "value": 3
+            },
+            "MAXIMUM": {
+              "value": 4
+            },
+            "STANDARD_DEVIATION": {
+              "value": 5
+            },
+            "COUNT": {
+              "value": 6,
+              "description": "Number of observations, not a value of the metric."
+            }
+          },
+          "x-flatbuffer-default": "MEAN"
+        },
+        "PERCENTILE_RANK": {
+          "type": "number",
+          "description": "Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\notherwise and MUST NOT be set.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "The number, expressed in the parent metric's UNITS.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CNPMetric": {
+      "type": "object",
+      "description": "One aggregated quantity for the parent record's key.\n\nA metric is a DISTRIBUTION, not a scalar. There is deliberately no\n`VALUE: double` on this table: a source that publishes only a median\nencodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\nthen never mistake it for a mean.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/cnpMetricKind",
+          "description": "Quantity aggregated.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DOWNLOAD_THROUGHPUT": {
+              "value": 0,
+              "description": "Achieved application-layer download rate."
+            },
+            "UPLOAD_THROUGHPUT": {
+              "value": 1,
+              "description": "Achieved application-layer upload rate."
+            },
+            "LATENCY_IDLE": {
+              "value": 2,
+              "description": "Round-trip time on an otherwise unloaded path."
+            },
+            "LATENCY_LOADED_DOWNLOAD": {
+              "value": 3,
+              "description": "Round-trip time measured while the download test saturates the path."
+            },
+            "LATENCY_LOADED_UPLOAD": {
+              "value": 4,
+              "description": "Round-trip time measured while the upload test saturates the path."
+            },
+            "JITTER": {
+              "value": 5,
+              "description": "Variation in inter-packet arrival time."
+            },
+            "PACKET_LOSS": {
+              "value": 6,
+              "description": "Fraction of packets lost."
+            },
+            "AVAILABILITY": {
+              "value": 7,
+              "description": "Fraction of the window in which the service was usable."
+            },
+            "OBSTRUCTION": {
+              "value": 8,
+              "description": "Fraction of the terminal's sky view blocked by terrain or structures."
+            },
+            "RTT": {
+              "value": 9,
+              "description": "Round-trip time where the source does not distinguish loaded from idle."
+            },
+            "OTHER": {
+              "value": 10,
+              "description": "The source publishes a quantity none of the above names. SOURCE_METRIC_NAME is then required to be non-empty."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "SOURCE_METRIC_NAME": {
+          "type": "string",
+          "description": "The source's own name for this metric, verbatim. REQUIRED to be\nnon-empty when KIND is OTHER; recommended always, because it is what\nmakes the mapping auditable.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units of every VALUE under STATISTICS. NORMATIVE and required: \"Mbps\",\n\"kbps\", \"ms\", \"percent\", \"fraction\", \"count\". Units are never silently\nconverted on ingest; a source publishing kbps encodes kbps.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STATISTICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPStatistic"
+          },
+          "description": "The distribution. At least one entry; a metric with none is malformed.",
+          "x-flatbuffer-type": "[CNPStatistic]"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of individual measurements aggregated. 0 means the source did\nnot publish a sample count \u2014 it never means zero measurements.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CLIENT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of distinct clients, terminals or probes contributing. 0 means\nunpublished.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/CNPProvenance",
+          "description": "Where this metric came from and under what terms.",
+          "x-flatbuffer-type": "CNPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "UNITS",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "CNP": {
+      "type": "object",
+      "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier for this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "description": "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR": {
+          "type": "string",
+          "description": "Operating company, when it differs usefully from CONSTELLATION.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AS_NAME": {
+          "type": "string",
+          "description": "Autonomous system name as the routing registry publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SERVICE_TIER": {
+          "type": "string",
+          "description": "Service tier the source distinguishes, verbatim (\"Residential\",\n\"Roam\", \"Business\", \"Maritime\"). Empty when the source does not\nseparate tiers \u2014 never guessed from the throughput.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "$ref": "#/definitions/CNPRegion",
+          "description": "Geography this aggregate is keyed to. Absent when the source published\nno geographic key at all.",
+          "x-flatbuffer-type": "CNPRegion"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "ISO 8601 UTC inclusive start of the aggregation window.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "description": "ISO 8601 UTC exclusive end of the aggregation window.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGGREGATION_PERIOD": {
+          "$ref": "#/definitions/cnpPeriod",
+          "description": "Calendar span the window represents.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CUSTOM": {
+              "value": 0,
+              "description": "WINDOW_START/WINDOW_STOP are authoritative and match none of the named periods."
+            },
+            "HOUR": {
+              "value": 1
+            },
+            "DAY": {
+              "value": 2
+            },
+            "WEEK": {
+              "value": 3
+            },
+            "MONTH": {
+              "value": 4
+            },
+            "QUARTER": {
+              "value": 5
+            },
+            "YEAR": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "CUSTOM"
+        },
+        "METRICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPMetric"
+          },
+          "description": "The aggregated quantities.",
+          "x-flatbuffer-type": "[CNPMetric]"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPProvenance"
+          },
+          "description": "Every source consulted for this key, including those that returned no\nmetric.",
+          "x-flatbuffer-type": "[CNPProvenance]"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC creation time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC last-update time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_CNP_CID": {
+          "type": "string",
+          "description": "CID of the $CNP this record replaces when a source restates a window.",
+          "x-flatbuffer-type": "string"
+        }
+      },
       "additionalProperties": false
     },
     "COM": {
@@ -36394,6 +37162,1036 @@
       },
       "additionalProperties": false
     },
+    "LKS": {
+      "type": "object",
+      "description": "Link Status",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT1": {
+          "type": "string",
+          "description": "First endpoint on-orbit identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "First endpoint satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ID_ON_ORBIT2": {
+          "type": "string",
+          "description": "Second endpoint on-orbit identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Second endpoint satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "description": "Constellation name",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_NAME": {
+          "type": "string",
+          "description": "Link name or identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_TYPE": {
+          "$ref": "#/definitions/linkCategory",
+          "description": "Link type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UPLINK": {
+              "value": 0
+            },
+            "DOWNLINK": {
+              "value": 1
+            },
+            "CROSSLINK": {
+              "value": 2
+            },
+            "INTER_SATELLITE": {
+              "value": 3
+            },
+            "GROUND_TO_GROUND": {
+              "value": 4
+            },
+            "RELAY": {
+              "value": 5
+            }
+          }
+        },
+        "LINK_STATE": {
+          "$ref": "#/definitions/linkCondition",
+          "description": "Link state",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ESTABLISHED": {
+              "value": 0
+            },
+            "DEGRADED": {
+              "value": 1
+            },
+            "INTERRUPTED": {
+              "value": 2
+            },
+            "PLANNED": {
+              "value": 3
+            },
+            "TERMINATED": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "BAND": {
+          "type": "string",
+          "description": "RF band",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_START_TIME": {
+          "type": "string",
+          "description": "Link start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_STOP_TIME": {
+          "type": "string",
+          "description": "Link stop time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_BEAM1": {
+          "type": "string",
+          "description": "First endpoint beam identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_NAME": {
+          "type": "string",
+          "description": "First endpoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_LAT": {
+          "type": "number",
+          "description": "First endpoint latitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT1_LON": {
+          "type": "number",
+          "description": "First endpoint longitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ID_BEAM2": {
+          "type": "string",
+          "description": "Second endpoint beam identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_NAME": {
+          "type": "string",
+          "description": "Second endpoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_LAT": {
+          "type": "number",
+          "description": "Second endpoint latitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT2_LON": {
+          "type": "number",
+          "description": "Second endpoint longitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE1_TO2": {
+          "type": "number",
+          "description": "Data rate from endpoint 1 to 2 (Mbps)",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE2_TO1": {
+          "type": "number",
+          "description": "Data rate from endpoint 2 to 1 (Mbps)",
+          "x-flatbuffer-type": "double"
+        },
+        "SYS_CAP": {
+          "type": "string",
+          "description": "System capability status",
+          "x-flatbuffer-type": "string"
+        },
+        "OPS_CAP": {
+          "type": "string",
+          "description": "Operational capability status",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFB": {
+      "type": "object",
+      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ENTITY": {
+          "type": "string",
+          "description": "Parent entity identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Band name or designation",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "$ref": "#/definitions/rfBandDesignation",
+          "description": "RF band designation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UHF": {
+              "value": 0
+            },
+            "L": {
+              "value": 1
+            },
+            "S": {
+              "value": 2
+            },
+            "C": {
+              "value": 3
+            },
+            "X": {
+              "value": 4
+            },
+            "KU": {
+              "value": 5
+            },
+            "K": {
+              "value": 6
+            },
+            "KA": {
+              "value": 7
+            },
+            "V": {
+              "value": 8
+            },
+            "W": {
+              "value": 9
+            },
+            "Q": {
+              "value": 10
+            },
+            "EHF": {
+              "value": 11
+            },
+            "OTHER": {
+              "value": 12,
+              "description": "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+            },
+            "VHF": {
+              "value": 13,
+              "description": "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+            },
+            "HF": {
+              "value": 14,
+              "description": "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+            },
+            "MF": {
+              "value": 15,
+              "description": "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+            },
+            "LF": {
+              "value": 16,
+              "description": "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+            },
+            "VLF": {
+              "value": 17,
+              "description": "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+            },
+            "SHF": {
+              "value": 18,
+              "description": "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
+            }
+          }
+        },
+        "MODE": {
+          "type": "string",
+          "description": "Operating mode",
+          "x-flatbuffer-type": "string"
+        },
+        "PURPOSE": {
+          "type": "string",
+          "description": "Band purpose (e.g., TT&C, PAYLOAD, BEACON)",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQ_MIN": {
+          "type": "number",
+          "description": "Minimum frequency (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MAX": {
+          "type": "number",
+          "description": "Maximum frequency (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTER_FREQ": {
+          "type": "number",
+          "description": "Center frequency (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "description": "Bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK_GAIN": {
+          "type": "number",
+          "description": "Peak antenna gain (dBi)",
+          "x-flatbuffer-type": "double"
+        },
+        "EDGE_GAIN": {
+          "type": "number",
+          "description": "Edge-of-coverage gain (dBi)",
+          "x-flatbuffer-type": "double"
+        },
+        "BEAMWIDTH": {
+          "type": "number",
+          "description": "Antenna beamwidth (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARIZATION": {
+          "$ref": "#/definitions/rfPolarization",
+          "description": "Polarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LHCP": {
+              "value": 0
+            },
+            "RHCP": {
+              "value": 1
+            },
+            "LINEAR_H": {
+              "value": 2
+            },
+            "LINEAR_V": {
+              "value": 3
+            },
+            "DUAL": {
+              "value": 4
+            },
+            "CROSS": {
+              "value": 5
+            },
+            "UNKNOWN": {
+              "value": 6
+            }
+          }
+        },
+        "ERP": {
+          "type": "number",
+          "description": "Effective radiated power (dBW)",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP": {
+          "type": "number",
+          "description": "Effective isotropic radiated power (dBW)",
+          "x-flatbuffer-type": "double"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ID_TRANSMITTER": {
+          "type": "string",
+          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_DIRECTION": {
+          "$ref": "#/definitions/linkCategory",
+          "description": "Direction of this emission relative to the spacecraft.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UPLINK": {
+              "value": 0
+            },
+            "DOWNLINK": {
+              "value": 1
+            },
+            "CROSSLINK": {
+              "value": 2
+            },
+            "INTER_SATELLITE": {
+              "value": 3
+            },
+            "GROUND_TO_GROUND": {
+              "value": 4
+            },
+            "RELAY": {
+              "value": 5
+            }
+          }
+        },
+        "BAUD": {
+          "type": "number",
+          "description": "Symbol rate in baud (symbols per second), NOT kilobaud.",
+          "x-flatbuffer-type": "double"
+        },
+        "SERVICE": {
+          "type": "string",
+          "description": "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
+          "x-flatbuffer-type": "string"
+        },
+        "XMT_STATUS": {
+          "$ref": "#/definitions/rfTransmitterState",
+          "description": "Operational state of this emitter.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            },
+            "ACTIVE": {
+              "value": 1
+            },
+            "INACTIVE": {
+              "value": 2
+            },
+            "INVALID": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "INVERT": {
+          "type": "boolean",
+          "description": "True when the modulation sideband is inverted.",
+          "x-flatbuffer-type": "bool"
+        },
+        "IARU_COORDINATION": {
+          "type": "string",
+          "description": "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Attribution/citation string the source license requires this record to\ncarry downstream.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCGeolocation": {
+      "type": "object",
+      "description": "Geodetic position of the receiver at capture time.\n\nA separate table because latitude/longitude 0,0 is a VALID coordinate: an\nabsent GEOLOCATION means \"the source published no position\", which a\nzero-defaulted scalar pair could never express.",
+      "properties": {
+        "LATITUDE_DEG": {
+          "type": "number",
+          "description": "Geodetic latitude, degrees, WGS-84, positive north.",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Geodetic longitude, degrees, WGS-84, positive east.",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_M": {
+          "type": "number",
+          "description": "Height above the WGS-84 ellipsoid, metres. Absent in most SigMF\nrecordings; SigMF `core:geolocation` is a GeoJSON Point whose third\nordinate is optional.",
+          "x-flatbuffer-type": "double"
+        },
+        "UNCERTAINTY_M": {
+          "type": "number",
+          "description": "Reported position uncertainty, metres, when the source states one.",
+          "x-flatbuffer-type": "double"
+        },
+        "METHOD": {
+          "type": "string",
+          "description": "How the position was obtained, verbatim from the source (e.g. \"GPS\",\n\"station registry\", \"author-supplied\"). Never inferred.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCHardware": {
+      "type": "object",
+      "description": "Receive chain that produced the samples.\n\nEvery field is a verbatim string. SigMF `core:hw` is free text and the\nnon-SigMF archives publish nothing more structured; splitting free text\ninto a manufacturer and a model by guessing is a defect.",
+      "properties": {
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "SigMF `core:hw` verbatim, or the source's equivalent free-text\ndescription of the receive chain.",
+          "x-flatbuffer-type": "string"
+        },
+        "MANUFACTURER": {
+          "type": "string",
+          "description": "Receiver manufacturer, only when the source names it as its own field.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL": {
+          "type": "string",
+          "description": "Receiver model, only when the source names it as its own field.",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA": {
+          "type": "string",
+          "description": "Antenna description, only when the source names it as its own field.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORDER": {
+          "type": "string",
+          "description": "SigMF `core:recorder` \u2014 the SOFTWARE that wrote the recording.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCSegment": {
+      "type": "object",
+      "description": "One SigMF capture segment: the point in the sample stream at which the\nlisted tuning took effect. A retuned or frequency-hopped recording has\nseveral; a single-tune recording has one.",
+      "properties": {
+        "SAMPLE_START": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:sample_start` \u2014 index of the first sample of this segment.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "GLOBAL_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:global_index` \u2014 index of this sample in the receiver's\nfree-running sample counter.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HEADER_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:header_bytes` \u2014 bytes preceding this segment in the data\nfile.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CENTER_FREQ_HZ": {
+          "type": "number",
+          "description": "SigMF `core:frequency` \u2014 centre frequency of this segment, HERTZ.",
+          "x-flatbuffer-type": "double"
+        },
+        "DATETIME": {
+          "type": "string",
+          "description": "SigMF `core:datetime` \u2014 ISO 8601 UTC timestamp of SAMPLE_START.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCAnnotation": {
+      "type": "object",
+      "description": "One labelled region of the capture in time and frequency.",
+      "properties": {
+        "SAMPLE_START": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:sample_start` \u2014 first sample of the annotated region.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:sample_count` \u2014 length of the annotated region in samples.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "FREQ_LOWER_EDGE_HZ": {
+          "type": "number",
+          "description": "SigMF `core:freq_lower_edge` \u2014 lower edge of the annotated band, HERTZ.",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_UPPER_EDGE_HZ": {
+          "type": "number",
+          "description": "SigMF `core:freq_upper_edge` \u2014 upper edge of the annotated band, HERTZ.",
+          "x-flatbuffer-type": "double"
+        },
+        "LABEL": {
+          "type": "string",
+          "description": "SigMF `core:label` \u2014 the short human label (\"LoRa\", \"ADS-B\", \"AIS\").",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "SigMF `core:comment` \u2014 free-text note.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATOR": {
+          "type": "string",
+          "description": "SigMF `core:generator` \u2014 the tool or person that produced the\nannotation. An annotation asserted by an automatic classifier and one\nasserted by a human are not interchangeable evidence; this field is how\na consumer tells them apart.",
+          "x-flatbuffer-type": "string"
+        },
+        "UUID": {
+          "type": "string",
+          "description": "SigMF `core:uuid` \u2014 the annotation's own identifier, when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCExtension": {
+      "type": "object",
+      "description": "A SigMF extension namespace the upstream metadata declares.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Extension namespace name.",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "Extension version.",
+          "x-flatbuffer-type": "string"
+        },
+        "IS_OPTIONAL": {
+          "type": "boolean",
+          "description": "True when the extension is declared optional for interpretation.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQCPayloadRef": {
+      "type": "object",
+      "description": "A retrievable file belonging to this capture.\n\nThe record NEVER carries sample bytes. It carries where they are, how big\nthey are, and what they hash to, so a consumer can decide for itself\nwhether to fetch 400 kB or 127 GB.",
+      "properties": {
+        "ROLE": {
+          "$ref": "#/definitions/iqcPayloadRole",
+          "description": "What this file is.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DATA": {
+              "value": 0,
+              "description": "The raw baseband sample stream itself (SigMF `.sigmf-data`)."
+            },
+            "METADATA": {
+              "value": 1,
+              "description": "The upstream metadata document the record was normalized FROM (SigMF `.sigmf-meta`)."
+            },
+            "ARCHIVE": {
+              "value": 2,
+              "description": "A container holding both (SigMF `.sigmf` tar archive, zip, tarball)."
+            },
+            "PREVIEW": {
+              "value": 3,
+              "description": "A rendered spectrogram, waterfall, audio demod or thumbnail."
+            },
+            "OTHER": {
+              "value": 4,
+              "description": "A companion file the source publishes that is none of the above."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "URL": {
+          "type": "string",
+          "description": "Upstream retrieval URL, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_NAME": {
+          "type": "string",
+          "description": "File name as the source publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "MEDIA_TYPE": {
+          "type": "string",
+          "description": "IANA media type when the source declares one.",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Byte length. 0 means the source did not publish a size \u2014 it never means\nan empty file.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BYTE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the exact bytes, lowercase hex. Populated only when computed\nor published; never guessed.",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_SHA512": {
+          "type": "string",
+          "description": "SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a\nSHA-512 over the dataset file, so it is carried in its own field rather\nthan converted or discarded.",
+          "x-flatbuffer-type": "string"
+        },
+        "CID": {
+          "type": "string",
+          "description": "IPFS CIDv1 when, and only when, this SDN pinned the bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "string",
+          "description": "Multiformat address, usually /ipfs/{CID}."
+        },
+        "CUSTODY": {
+          "$ref": "#/definitions/iqcCustody",
+          "description": "Custody of these bytes."
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC time at which URL was last confirmed retrievable."
+        }
+      },
+      "additionalProperties": false
+    },
+    "IQC": {
+      "type": "object",
+      "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier for this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "CAPTURE_ID": {
+          "type": "string",
+          "description": "The upstream archive's own identifier for this capture, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "description": "Archive that publishes the capture, verbatim (\"IQEngine\", \"SigidWiki\",\n\"IEEE DataPort\", \"SDRangel IQ Database\", \"Zenodo\"). A string rather than\nan enum so a new archive lane never requires a schema release.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "Landing page for the capture at the source.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "description": "Identifier of the source record this was normalized from, when the\nsource exposes one distinct from CAPTURE_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the raw upstream metadata bytes that produced this record,\nlowercase hex. Makes the normalization auditable.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC time the source metadata was retrieved.",
+          "x-flatbuffer-type": "string"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Human title of the capture.",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "SigMF `core:description`.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTHOR": {
+          "type": "string",
+          "description": "SigMF `core:author`.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGMF_VERSION": {
+          "type": "string",
+          "description": "SigMF `core:version` \u2014 the SigMF specification version the upstream\nmetadata declares. Empty for captures normalized from a non-SigMF\nsource; that emptiness is itself informative.",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION": {
+          "type": "string",
+          "description": "SigMF `core:collection` \u2014 identifier of the collection this recording\nbelongs to.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTENSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IQCExtension"
+          },
+          "description": "SigMF `core:extensions`.",
+          "x-flatbuffer-type": "[IQCExtension]"
+        },
+        "DATATYPE": {
+          "type": "string",
+          "description": "SigMF `core:datatype` VERBATIM, e.g. \"cf32_le\", \"ci16_le\", \"ru8\". Never\nre-spelled, never normalized to another vocabulary. A consumer that\ncannot parse the token MUST refuse the samples rather than assume a\nlayout.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLE_RATE_HZ": {
+          "type": "number",
+          "description": "SigMF `core:sample_rate`, HERTZ (complex samples per second).",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_CHANNELS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and\nMUST be written explicitly when known.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CENTER_FREQ_HZ": {
+          "type": "number",
+          "description": "Centre frequency of the FIRST capture segment, HERTZ, copied here for\nindexing. `SEGMENTS` is normative whenever it is present.",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_LOWER_EDGE_HZ": {
+          "type": "number",
+          "description": "Lowest occupied frequency across the recording, HERTZ, when the source\nstates it or its annotations bound it.",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_UPPER_EDGE_HZ": {
+          "type": "number",
+          "description": "Highest occupied frequency across the recording, HERTZ.",
+          "x-flatbuffer-type": "double"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total complex samples in the recording. 0 means unstated \u2014 it is NOT to\nbe back-computed from BYTE_LENGTH unless DATATYPE and any header bytes\nare both known.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DURATION_SECONDS": {
+          "type": "number",
+          "description": "Recording length in seconds, when stated or exactly derivable from\nSAMPLE_COUNT and SAMPLE_RATE_HZ.",
+          "x-flatbuffer-type": "double"
+        },
+        "SAMPLE_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:offset` \u2014 index of the first sample in the recording's own\nnumbering.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "METADATA_ONLY": {
+          "type": "boolean",
+          "description": "SigMF `core:metadata_only` \u2014 true when no dataset file accompanies the\nmetadata.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRAILING_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "SigMF `core:trailing_bytes` \u2014 non-sample bytes at the end of the data\nfile.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CAPTURE_START": {
+          "type": "string",
+          "description": "ISO 8601 UTC start of the recording (the first segment's\n`core:datetime`).",
+          "x-flatbuffer-type": "string"
+        },
+        "CAPTURE_STOP": {
+          "type": "string",
+          "description": "ISO 8601 UTC end of the recording, when stated or exactly derivable.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IQCSegment"
+          },
+          "description": "Per-segment tuning history.",
+          "x-flatbuffer-type": "[IQCSegment]"
+        },
+        "ANNOTATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IQCAnnotation"
+          },
+          "description": "Labelled time/frequency regions.",
+          "x-flatbuffer-type": "[IQCAnnotation]"
+        },
+        "LABELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "GEOLOCATION": {
+          "$ref": "#/definitions/IQCGeolocation",
+          "description": "Receiver position. Absent when the source published none.",
+          "x-flatbuffer-type": "IQCGeolocation"
+        },
+        "HARDWARE": {
+          "$ref": "#/definitions/IQCHardware",
+          "description": "Receive chain.",
+          "x-flatbuffer-type": "IQCHardware"
+        },
+        "SIGNAL_NAME": {
+          "type": "string",
+          "description": "Signal designation the source states, verbatim (\"LoRa\", \"DVB-S2\",\n\"ADS-B\", \"VOR\"). Not an enum: these archives catalogue the whole radio\nworld, and $RFE's `signalModulation` is a radar-emitter vocabulary that\nwould force every civil waveform into UNKNOWN.",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULATION": {
+          "type": "string",
+          "description": "Modulation the source states, verbatim. Never inferred from the samples.",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "$ref": "#/definitions/rfBandDesignation",
+          "description": "Band designation the source states. Shares $RFB's `rfBandDesignation`, so\nan HF or VHF capture is designated identically on both records.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UHF": {
+              "value": 0
+            },
+            "L": {
+              "value": 1
+            },
+            "S": {
+              "value": 2
+            },
+            "C": {
+              "value": 3
+            },
+            "X": {
+              "value": 4
+            },
+            "KU": {
+              "value": 5
+            },
+            "K": {
+              "value": 6
+            },
+            "KA": {
+              "value": 7
+            },
+            "V": {
+              "value": 8
+            },
+            "W": {
+              "value": 9
+            },
+            "Q": {
+              "value": 10
+            },
+            "EHF": {
+              "value": 11
+            },
+            "OTHER": {
+              "value": 12,
+              "description": "The source states a designation this enum cannot express. The verbatim designation MUST be preserved in NAME."
+            },
+            "VHF": {
+              "value": 13,
+              "description": "ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0."
+            },
+            "HF": {
+              "value": 14,
+              "description": "ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0."
+            },
+            "MF": {
+              "value": 15,
+              "description": "ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0."
+            },
+            "LF": {
+              "value": 16,
+              "description": "ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0."
+            },
+            "VLF": {
+              "value": 17,
+              "description": "ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0."
+            },
+            "SHF": {
+              "value": 18,
+              "description": "ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the decade ladder between the pre-existing UHF and EHF members."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalogue number of the transmitting spacecraft when the capture\nis of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International designator of the transmitting spacecraft, when known.",
+          "x-flatbuffer-type": "string"
+        },
+        "EMITTER_ID": {
+          "type": "string",
+          "description": "$RFE.ID of the emitter this capture is of, when identified.",
+          "x-flatbuffer-type": "string"
+        },
+        "RFB_ID": {
+          "type": "string",
+          "description": "$RFB.ID of the band specification this capture exercises, when\nidentified.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "SPDX identifier when the source states one, otherwise the source's\nlicence name verbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the licence text the source points at.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution/citation string the licence requires this record and any\nderived product to carry downstream.",
+          "x-flatbuffer-type": "string"
+        },
+        "META_DOI": {
+          "type": "string",
+          "description": "SigMF `core:meta_doi` \u2014 DOI of the metadata.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_DOI": {
+          "type": "string",
+          "description": "SigMF `core:data_doi` \u2014 DOI of the dataset.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAYLOADS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IQCPayloadRef"
+          },
+          "description": "Retrievable files for this capture.",
+          "x-flatbuffer-type": "[IQCPayloadRef]"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC creation time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC last-update time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_IQC_CID": {
+          "type": "string",
+          "description": "CID of the $IQC this record replaces, when the upstream capture's\nmetadata changed.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "IRO": {
       "type": "object",
       "description": "Infrared Observation",
@@ -43047,179 +44845,6 @@
         "REQUEST_ID",
         "MODULE_ID"
       ],
-      "additionalProperties": false
-    },
-    "LKS": {
-      "type": "object",
-      "description": "Link Status",
-      "properties": {
-        "ID": {
-          "type": "string",
-          "description": "Unique identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_ON_ORBIT1": {
-          "type": "string",
-          "description": "First endpoint on-orbit identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "SAT_NO1": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "description": "First endpoint satellite catalog number",
-          "x-flatbuffer-type": "uint32"
-        },
-        "ID_ON_ORBIT2": {
-          "type": "string",
-          "description": "Second endpoint on-orbit identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "SAT_NO2": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "description": "Second endpoint satellite catalog number",
-          "x-flatbuffer-type": "uint32"
-        },
-        "CONSTELLATION": {
-          "type": "string",
-          "description": "Constellation name",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_NAME": {
-          "type": "string",
-          "description": "Link name or identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_TYPE": {
-          "$ref": "#/definitions/linkCategory",
-          "description": "Link type",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "UPLINK": {
-              "value": 0
-            },
-            "DOWNLINK": {
-              "value": 1
-            },
-            "CROSSLINK": {
-              "value": 2
-            },
-            "INTER_SATELLITE": {
-              "value": 3
-            },
-            "GROUND_TO_GROUND": {
-              "value": 4
-            },
-            "RELAY": {
-              "value": 5
-            }
-          }
-        },
-        "LINK_STATE": {
-          "$ref": "#/definitions/linkCondition",
-          "description": "Link state",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "ESTABLISHED": {
-              "value": 0
-            },
-            "DEGRADED": {
-              "value": 1
-            },
-            "INTERRUPTED": {
-              "value": 2
-            },
-            "PLANNED": {
-              "value": 3
-            },
-            "TERMINATED": {
-              "value": 4
-            },
-            "UNKNOWN": {
-              "value": 5
-            }
-          }
-        },
-        "BAND": {
-          "type": "string",
-          "description": "RF band",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_START_TIME": {
-          "type": "string",
-          "description": "Link start time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_STOP_TIME": {
-          "type": "string",
-          "description": "Link stop time (ISO 8601)",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_BEAM1": {
-          "type": "string",
-          "description": "First endpoint beam identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT1_NAME": {
-          "type": "string",
-          "description": "First endpoint name",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT1_LAT": {
-          "type": "number",
-          "description": "First endpoint latitude (degrees)",
-          "x-flatbuffer-type": "double"
-        },
-        "END_POINT1_LON": {
-          "type": "number",
-          "description": "First endpoint longitude (degrees)",
-          "x-flatbuffer-type": "double"
-        },
-        "ID_BEAM2": {
-          "type": "string",
-          "description": "Second endpoint beam identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT2_NAME": {
-          "type": "string",
-          "description": "Second endpoint name",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT2_LAT": {
-          "type": "number",
-          "description": "Second endpoint latitude (degrees)",
-          "x-flatbuffer-type": "double"
-        },
-        "END_POINT2_LON": {
-          "type": "number",
-          "description": "Second endpoint longitude (degrees)",
-          "x-flatbuffer-type": "double"
-        },
-        "DATA_RATE1_TO2": {
-          "type": "number",
-          "description": "Data rate from endpoint 1 to 2 (Mbps)",
-          "x-flatbuffer-type": "double"
-        },
-        "DATA_RATE2_TO1": {
-          "type": "number",
-          "description": "Data rate from endpoint 2 to 1 (Mbps)",
-          "x-flatbuffer-type": "double"
-        },
-        "SYS_CAP": {
-          "type": "string",
-          "description": "System capability status",
-          "x-flatbuffer-type": "string"
-        },
-        "OPS_CAP": {
-          "type": "string",
-          "description": "Operational capability status",
-          "x-flatbuffer-type": "string"
-        }
-      },
       "additionalProperties": false
     },
     "lambertVector3": {
@@ -53683,243 +55308,6 @@
         "LISTING_ID",
         "REVIEWER_PEER_ID"
       ],
-      "additionalProperties": false
-    },
-    "RFB": {
-      "type": "object",
-      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
-      "properties": {
-        "ID": {
-          "type": "string",
-          "description": "Unique identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_ENTITY": {
-          "type": "string",
-          "description": "Parent entity identifier",
-          "x-flatbuffer-type": "string"
-        },
-        "NAME": {
-          "type": "string",
-          "description": "Band name or designation",
-          "x-flatbuffer-type": "string"
-        },
-        "BAND": {
-          "$ref": "#/definitions/rfBandDesignation",
-          "description": "RF band designation",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "UHF": {
-              "value": 0
-            },
-            "L": {
-              "value": 1
-            },
-            "S": {
-              "value": 2
-            },
-            "C": {
-              "value": 3
-            },
-            "X": {
-              "value": 4
-            },
-            "KU": {
-              "value": 5
-            },
-            "K": {
-              "value": 6
-            },
-            "KA": {
-              "value": 7
-            },
-            "V": {
-              "value": 8
-            },
-            "W": {
-              "value": 9
-            },
-            "Q": {
-              "value": 10
-            },
-            "EHF": {
-              "value": 11
-            },
-            "OTHER": {
-              "value": 12
-            }
-          }
-        },
-        "MODE": {
-          "type": "string",
-          "description": "Operating mode",
-          "x-flatbuffer-type": "string"
-        },
-        "PURPOSE": {
-          "type": "string",
-          "description": "Band purpose (e.g., TT&C, PAYLOAD, BEACON)",
-          "x-flatbuffer-type": "string"
-        },
-        "FREQ_MIN": {
-          "type": "number",
-          "description": "Minimum frequency (MHz)",
-          "x-flatbuffer-type": "double"
-        },
-        "FREQ_MAX": {
-          "type": "number",
-          "description": "Maximum frequency (MHz)",
-          "x-flatbuffer-type": "double"
-        },
-        "CENTER_FREQ": {
-          "type": "number",
-          "description": "Center frequency (MHz)",
-          "x-flatbuffer-type": "double"
-        },
-        "BANDWIDTH": {
-          "type": "number",
-          "description": "Bandwidth (MHz)",
-          "x-flatbuffer-type": "double"
-        },
-        "PEAK_GAIN": {
-          "type": "number",
-          "description": "Peak antenna gain (dBi)",
-          "x-flatbuffer-type": "double"
-        },
-        "EDGE_GAIN": {
-          "type": "number",
-          "description": "Edge-of-coverage gain (dBi)",
-          "x-flatbuffer-type": "double"
-        },
-        "BEAMWIDTH": {
-          "type": "number",
-          "description": "Antenna beamwidth (degrees)",
-          "x-flatbuffer-type": "double"
-        },
-        "POLARIZATION": {
-          "$ref": "#/definitions/rfPolarization",
-          "description": "Polarization",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "LHCP": {
-              "value": 0
-            },
-            "RHCP": {
-              "value": 1
-            },
-            "LINEAR_H": {
-              "value": 2
-            },
-            "LINEAR_V": {
-              "value": 3
-            },
-            "DUAL": {
-              "value": 4
-            },
-            "CROSS": {
-              "value": 5
-            },
-            "UNKNOWN": {
-              "value": 6
-            }
-          }
-        },
-        "ERP": {
-          "type": "number",
-          "description": "Effective radiated power (dBW)",
-          "x-flatbuffer-type": "double"
-        },
-        "EIRP": {
-          "type": "number",
-          "description": "Effective isotropic radiated power (dBW)",
-          "x-flatbuffer-type": "double"
-        },
-        "NORAD_CAT_ID": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "description": "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound.",
-          "x-flatbuffer-type": "uint"
-        },
-        "ID_TRANSMITTER": {
-          "type": "string",
-          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_DIRECTION": {
-          "$ref": "#/definitions/linkCategory",
-          "description": "Direction of this emission relative to the spacecraft.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "UPLINK": {
-              "value": 0
-            },
-            "DOWNLINK": {
-              "value": 1
-            },
-            "CROSSLINK": {
-              "value": 2
-            },
-            "INTER_SATELLITE": {
-              "value": 3
-            },
-            "GROUND_TO_GROUND": {
-              "value": 4
-            },
-            "RELAY": {
-              "value": 5
-            }
-          }
-        },
-        "BAUD": {
-          "type": "number",
-          "description": "Symbol rate in baud (symbols per second), NOT kilobaud.",
-          "x-flatbuffer-type": "double"
-        },
-        "SERVICE": {
-          "type": "string",
-          "description": "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).",
-          "x-flatbuffer-type": "string"
-        },
-        "XMT_STATUS": {
-          "$ref": "#/definitions/rfTransmitterState",
-          "description": "Operational state of this emitter.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            "UNKNOWN": {
-              "value": 0
-            },
-            "ACTIVE": {
-              "value": 1
-            },
-            "INACTIVE": {
-              "value": 2
-            },
-            "INVALID": {
-              "value": 3
-            }
-          },
-          "x-flatbuffer-default": "UNKNOWN"
-        },
-        "INVERT": {
-          "type": "boolean",
-          "description": "True when the modulation sideband is inverted.",
-          "x-flatbuffer-type": "bool"
-        },
-        "IARU_COORDINATION": {
-          "type": "string",
-          "description": "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).",
-          "x-flatbuffer-type": "string"
-        },
-        "CITATION": {
-          "type": "string",
-          "description": "Attribution/citation string the source license requires this record to\ncarry downstream.",
-          "x-flatbuffer-type": "string"
-        }
-      },
       "additionalProperties": false
     },
     "rfEmitterDetail": {
@@ -69375,6 +70763,12 @@
             },
             {
               "$ref": "#/definitions/OPP"
+            },
+            {
+              "$ref": "#/definitions/IQC"
+            },
+            {
+              "$ref": "#/definitions/CNP"
             }
           ],
           "description": "The record data (union of all supported standards)",

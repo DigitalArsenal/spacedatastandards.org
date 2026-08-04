@@ -7,10 +7,10 @@ extern crate alloc;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RF_BAND_DESIGNATION: i8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RF_BAND_DESIGNATION: i8 = 12;
+pub const ENUM_MAX_RF_BAND_DESIGNATION: i8 = 18;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RF_BAND_DESIGNATION: [rfBandDesignation; 13] = [
+pub const ENUM_VALUES_RF_BAND_DESIGNATION: [rfBandDesignation; 19] = [
   rfBandDesignation::UHF,
   rfBandDesignation::L,
   rfBandDesignation::S,
@@ -24,8 +24,26 @@ pub const ENUM_VALUES_RF_BAND_DESIGNATION: [rfBandDesignation; 13] = [
   rfBandDesignation::Q,
   rfBandDesignation::EHF,
   rfBandDesignation::OTHER,
+  rfBandDesignation::VHF,
+  rfBandDesignation::HF,
+  rfBandDesignation::MF,
+  rfBandDesignation::LF,
+  rfBandDesignation::VLF,
+  rfBandDesignation::SHF,
 ];
 
+/// Band designation carried by an emitter record.
+///
+/// Two naming systems coexist here on purpose. `UHF`, `SHF`, `EHF` and the
+/// members below `OTHER` are ITU-R V.431 decade bands; `L` through `Q` are the
+/// IEEE 521 letter bands. They OVERLAP by construction (an 8.4 GHz downlink is
+/// both `X` and `SHF`). A publisher encodes the designation ITS SOURCE STATES —
+/// never a re-derivation from CENTER_FREQ, and never both.
+///
+/// ORDINALS ARE WIRE VALUES. New members are APPENDED ONLY. Members added after
+/// `OTHER` are therefore out of frequency order in the declaration; that is
+/// deliberate and permanent. Reordering this enum silently re-labels every
+/// $RFB record ever published.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct rfBandDesignation(pub i8);
@@ -43,10 +61,25 @@ impl rfBandDesignation {
   pub const W: Self = Self(9);
   pub const Q: Self = Self(10);
   pub const EHF: Self = Self(11);
+  /// The source states a designation this enum cannot express. The verbatim
+  /// designation MUST be preserved in NAME.
   pub const OTHER: Self = Self(12);
+  /// ITU-R V.431 very high frequency, 30–300 MHz. Appended 1.177.0.
+  pub const VHF: Self = Self(13);
+  /// ITU-R V.431 high frequency, 3–30 MHz. Appended 1.177.0.
+  pub const HF: Self = Self(14);
+  /// ITU-R V.431 medium frequency, 300 kHz–3 MHz. Appended 1.177.0.
+  pub const MF: Self = Self(15);
+  /// ITU-R V.431 low frequency, 30–300 kHz. Appended 1.177.0.
+  pub const LF: Self = Self(16);
+  /// ITU-R V.431 very low frequency, 3–30 kHz. Appended 1.177.0.
+  pub const VLF: Self = Self(17);
+  /// ITU-R V.431 super high frequency, 3–30 GHz. Appended 1.177.0 to close the
+  /// decade ladder between the pre-existing UHF and EHF members.
+  pub const SHF: Self = Self(18);
 
   pub const ENUM_MIN: i8 = 0;
-  pub const ENUM_MAX: i8 = 12;
+  pub const ENUM_MAX: i8 = 18;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::UHF,
     Self::L,
@@ -61,6 +94,12 @@ impl rfBandDesignation {
     Self::Q,
     Self::EHF,
     Self::OTHER,
+    Self::VHF,
+    Self::HF,
+    Self::MF,
+    Self::LF,
+    Self::VLF,
+    Self::SHF,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -78,6 +117,12 @@ impl rfBandDesignation {
       Self::Q => Some("Q"),
       Self::EHF => Some("EHF"),
       Self::OTHER => Some("OTHER"),
+      Self::VHF => Some("VHF"),
+      Self::HF => Some("HF"),
+      Self::MF => Some("MF"),
+      Self::LF => Some("LF"),
+      Self::VLF => Some("VLF"),
+      Self::SHF => Some("SHF"),
       _ => None,
     }
   }

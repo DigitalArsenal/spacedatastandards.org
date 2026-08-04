@@ -4,6 +4,18 @@ package RFB
 
 import "strconv"
 
+/// Band designation carried by an emitter record.
+///
+/// Two naming systems coexist here on purpose. `UHF`, `SHF`, `EHF` and the
+/// members below `OTHER` are ITU-R V.431 decade bands; `L` through `Q` are the
+/// IEEE 521 letter bands. They OVERLAP by construction (an 8.4 GHz downlink is
+/// both `X` and `SHF`). A publisher encodes the designation ITS SOURCE STATES —
+/// never a re-derivation from CENTER_FREQ, and never both.
+///
+/// ORDINALS ARE WIRE VALUES. New members are APPENDED ONLY. Members added after
+/// `OTHER` are therefore out of frequency order in the declaration; that is
+/// deliberate and permanent. Reordering this enum silently re-labels every
+/// $RFB record ever published.
 type rfBandDesignation int8
 
 const (
@@ -19,7 +31,22 @@ const (
 	rfBandDesignationW     rfBandDesignation = 9
 	rfBandDesignationQ     rfBandDesignation = 10
 	rfBandDesignationEHF   rfBandDesignation = 11
+	/// The source states a designation this enum cannot express. The verbatim
+	/// designation MUST be preserved in NAME.
 	rfBandDesignationOTHER rfBandDesignation = 12
+	/// ITU-R V.431 very high frequency, 30–300 MHz. Appended 1.177.0.
+	rfBandDesignationVHF   rfBandDesignation = 13
+	/// ITU-R V.431 high frequency, 3–30 MHz. Appended 1.177.0.
+	rfBandDesignationHF    rfBandDesignation = 14
+	/// ITU-R V.431 medium frequency, 300 kHz–3 MHz. Appended 1.177.0.
+	rfBandDesignationMF    rfBandDesignation = 15
+	/// ITU-R V.431 low frequency, 30–300 kHz. Appended 1.177.0.
+	rfBandDesignationLF    rfBandDesignation = 16
+	/// ITU-R V.431 very low frequency, 3–30 kHz. Appended 1.177.0.
+	rfBandDesignationVLF   rfBandDesignation = 17
+	/// ITU-R V.431 super high frequency, 3–30 GHz. Appended 1.177.0 to close the
+	/// decade ladder between the pre-existing UHF and EHF members.
+	rfBandDesignationSHF   rfBandDesignation = 18
 )
 
 var EnumNamesrfBandDesignation = map[rfBandDesignation]string{
@@ -36,6 +63,12 @@ var EnumNamesrfBandDesignation = map[rfBandDesignation]string{
 	rfBandDesignationQ:     "Q",
 	rfBandDesignationEHF:   "EHF",
 	rfBandDesignationOTHER: "OTHER",
+	rfBandDesignationVHF:   "VHF",
+	rfBandDesignationHF:    "HF",
+	rfBandDesignationMF:    "MF",
+	rfBandDesignationLF:    "LF",
+	rfBandDesignationVLF:   "VLF",
+	rfBandDesignationSHF:   "SHF",
 }
 
 var EnumValuesrfBandDesignation = map[string]rfBandDesignation{
@@ -52,6 +85,12 @@ var EnumValuesrfBandDesignation = map[string]rfBandDesignation{
 	"Q":     rfBandDesignationQ,
 	"EHF":   rfBandDesignationEHF,
 	"OTHER": rfBandDesignationOTHER,
+	"VHF":   rfBandDesignationVHF,
+	"HF":    rfBandDesignationHF,
+	"MF":    rfBandDesignationMF,
+	"LF":    rfBandDesignationLF,
+	"VLF":   rfBandDesignationVLF,
+	"SHF":   rfBandDesignationSHF,
 }
 
 func (v rfBandDesignation) String() string {

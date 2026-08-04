@@ -11,7 +11,7 @@
     },
     "rfBandDesignation" : {
       "type" : "string",
-      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER"]
+      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER", "VHF", "HF", "MF", "LF", "VLF", "SHF"]
     },
     "rfPolarization" : {
       "type" : "string",

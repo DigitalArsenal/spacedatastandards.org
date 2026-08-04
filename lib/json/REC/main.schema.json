@@ -309,6 +309,26 @@
       "type" : "string",
       "enum": ["Publisher", "Platform", "Referrer", "Charity"]
     },
+    "cnpRegionKind" : {
+      "type" : "string",
+      "enum": ["GLOBAL", "COUNTRY", "SUBDIVISION", "METRO", "CELL", "POINT_OF_PRESENCE", "OTHER"]
+    },
+    "cnpPeriod" : {
+      "type" : "string",
+      "enum": ["CUSTOM", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR"]
+    },
+    "cnpMetricKind" : {
+      "type" : "string",
+      "enum": ["DOWNLOAD_THROUGHPUT", "UPLOAD_THROUGHPUT", "LATENCY_IDLE", "LATENCY_LOADED_DOWNLOAD", "LATENCY_LOADED_UPLOAD", "JITTER", "PACKET_LOSS", "AVAILABILITY", "OBSTRUCTION", "RTT", "OTHER"]
+    },
+    "cnpReduction" : {
+      "type" : "string",
+      "enum": ["MEAN", "MEDIAN", "PERCENTILE", "MINIMUM", "MAXIMUM", "STANDARD_DEVIATION", "COUNT"]
+    },
+    "cnpMethod" : {
+      "type" : "string",
+      "enum": ["NDT7", "SPEED_TEST", "PING", "TRACEROUTE", "TERMINAL_TELEMETRY", "HTTP_DOWNLOAD", "PASSIVE", "MODELED", "OTHER"]
+    },
     "ComModulationType" : {
       "type" : "string",
       "enum": ["AM", "FM", "PM", "BPSK", "QPSK", "PSK8", "QAM16", "QAM64", "QAM256", "FSK", "MSK", "OFDM", "SPREAD_SPECTRUM", "FHSS", "DSSS"]
@@ -693,6 +713,34 @@
       "type" : "string",
       "enum": ["IONOSONDE", "GPS_TEC", "BEACON", "ISR", "ALTIMETER", "RADIO_OCCULTATION", "MODEL"]
     },
+    "linkCategory" : {
+      "type" : "string",
+      "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
+    },
+    "linkCondition" : {
+      "type" : "string",
+      "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
+    },
+    "rfBandDesignation" : {
+      "type" : "string",
+      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER", "VHF", "HF", "MF", "LF", "VLF", "SHF"]
+    },
+    "rfPolarization" : {
+      "type" : "string",
+      "enum": ["LHCP", "RHCP", "LINEAR_H", "LINEAR_V", "DUAL", "CROSS", "UNKNOWN"]
+    },
+    "rfTransmitterState" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "ACTIVE", "INACTIVE", "INVALID"]
+    },
+    "iqcPayloadRole" : {
+      "type" : "string",
+      "enum": ["DATA", "METADATA", "ARCHIVE", "PREVIEW", "OTHER"]
+    },
+    "iqcCustody" : {
+      "type" : "string",
+      "enum": ["UPSTREAM_ONLY", "PINNED", "UNPINNED"]
+    },
     "irBand" : {
       "type" : "string",
       "enum": ["SWIR", "MWIR", "LWIR", "VLWIR", "BROADBAND"]
@@ -860,14 +908,6 @@
     "licensingGrantMessageType" : {
       "type" : "string",
       "enum": ["Request", "Granted", "Denied"]
-    },
-    "linkCategory" : {
-      "type" : "string",
-      "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
-    },
-    "linkCondition" : {
-      "type" : "string",
-      "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
     },
     "lambertSolveState" : {
       "type" : "string",
@@ -1148,18 +1188,6 @@
     "reviewLifecycleStatus" : {
       "type" : "string",
       "enum": ["Published", "Pending", "Flagged", "Hidden", "Removed"]
-    },
-    "rfBandDesignation" : {
-      "type" : "string",
-      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER"]
-    },
-    "rfPolarization" : {
-      "type" : "string",
-      "enum": ["LHCP", "RHCP", "LINEAR_H", "LINEAR_V", "DUAL", "CROSS", "UNKNOWN"]
-    },
-    "rfTransmitterState" : {
-      "type" : "string",
-      "enum": ["UNKNOWN", "ACTIVE", "INACTIVE", "INVALID"]
     },
     "emitterType" : {
       "type" : "string",
@@ -1631,7 +1659,7 @@
     },
     "RecordType" : {
       "type" : "string",
-      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP"]
+      "enum": ["NONE", "ACL", "ACM", "ACR", "ACW", "AEM", "ANI", "AOF", "APM", "ARM", "AST", "ATD", "ATM", "BAL", "BEM", "BMC", "BOV", "BSP", "BUS", "CAQ", "CAT", "CDM", "CFP", "CHN", "CLT", "CMS", "COM", "COT", "CRD", "CRM", "CSM", "CTR", "CZM", "DFH", "DMG", "DOA", "DPM", "DSS", "EME", "ENC", "ENV", "EOO", "EOP", "EPM", "ESL", "ETM", "EWR", "FCS", "FPC", "FRM", "GDI", "GEO", "GJN", "GNO", "GPX", "GRV", "GVH", "HEL", "HFC", "HYP", "IDM", "ION", "IRO", "KMF", "KML", "KRF", "LAM", "LCC", "LCF", "LCH", "LDM", "LGR", "LKS", "LMO", "LMR", "LMS", "LND", "LNE", "LPF", "LWK", "MBL", "MET", "MFE", "MNF", "MNV", "MPE", "MSL", "MST", "MTI", "NAV", "NUM", "OBD", "OBT", "OCM", "OEM", "OMM", "OOA", "OOB", "OOD", "OOE", "OOI", "OOL", "OON", "OOS", "OOT", "OPM", "OSM", "PCF", "PHY", "PGM", "PIV", "PLD", "PLG", "PLK", "PNM", "PPE", "PRG", "PRR", "PRW", "PUR", "RAF", "RBK", "RCF", "RDM", "RDO", "REM", "REV", "RFB", "RFE", "RFM", "RFO", "ROC", "SAR", "SCM", "SDF", "SDL", "SDR", "SEN", "SEO", "SEV", "SHW", "SIT", "SKI", "SNR", "SNW", "SOI", "SON", "SPP", "SPW", "SRI", "STF", "STR", "STV", "SWR", "TAB", "TCF", "TDM", "TIM", "TKG", "TME", "TMF", "TNR", "TPN", "TRE", "TRK", "TRN", "VCM", "WPN", "WTH", "XTC", "SCV", "FSM", "FSP", "SCC", "SCN", "VST", "ENT", "VAM", "APP", "CMT", "SCX", "CVG", "PKB", "RPT", "STO", "SUB", "WKS", "CPS", "FSB", "FSO", "GST", "MDP", "MDS", "PNL", "SHC", "CES", "QEM", "SBM", "PMM", "OPP", "IQC", "CNP"]
     },
     "GrantFieldStreamPolicy" : {
       "type" : "object",
@@ -5550,6 +5578,207 @@
               }
       },
       "required" : ["TERMS_ID"],
+      "additionalProperties" : false
+    },
+    "CNPRegion" : {
+      "type" : "object",
+      "description" : "Geography an aggregate is keyed to.\n\nA separate table so an absent REGION means \"the source did not key by\ngeography\", which is different from GLOBAL (\"the source aggregated across\nall geographies\") and different again from an empty CODE.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/cnpRegionKind",
+                "description" : "Granularity of CODE."
+              },
+        "CODE" : {
+                "type" : "string",
+                "description" : "The region key, verbatim from the source in the coding scheme KIND\nnames. Never re-coded between schemes on ingest."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable region name as the source publishes it. Joins to\n$CTR for country identity when KIND is COUNTRY."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CNPProvenance" : {
+      "type" : "object",
+      "description" : "Where one metric came from and under what terms it may be republished.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\"."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "URL of the dataset, endpoint or landing page."
+              },
+        "SOURCE_DATASET" : {
+                "type" : "string",
+                "description" : "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\"."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "The exact query or request that produced these numbers, so the\naggregate can be replayed rather than trusted."
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string",
+                "description" : "Source's own identifier for the returned batch, when it issues one."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the raw source bytes this aggregate was computed from,\nlowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the source was queried."
+              },
+        "METHOD" : {
+                "$ref" : "#/definitions/cnpMethod",
+                "description" : "How the underlying observations were produced."
+              },
+        "MEASUREMENT_SERVER" : {
+                "type" : "string",
+                "description" : "Measurement server, vantage point or probe set, when the source names\none. A throughput number without a vantage is not comparable to one\nwith a different vantage."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "SPDX identifier when the source states one, otherwise the licence name\nverbatim. EMPTY MEANS UNKNOWN TERMS — never public domain, and never a\ngrant to republish."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the licence text."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution string the licence requires this record and every derived\nproduct to carry downstream."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\nconsumer building a paid surface MUST honour this flag; it is carried\nper-source because one $CNP may mix a CC0 lane with a CC BY-NC\ncross-check."
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "CNPStatistic" : {
+      "type" : "object",
+      "description" : "One number drawn from a metric's distribution.",
+      "properties" : {
+        "STATISTIC" : {
+                "$ref" : "#/definitions/cnpReduction",
+                "description" : "Which reduction this number is."
+              },
+        "PERCENTILE_RANK" : {
+                "type" : "number",
+                "description" : "Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\notherwise and MUST NOT be set."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "The number, expressed in the parent metric's UNITS."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CNPMetric" : {
+      "type" : "object",
+      "description" : "One aggregated quantity for the parent record's key.\n\nA metric is a DISTRIBUTION, not a scalar. There is deliberately no\n`VALUE: double` on this table: a source that publishes only a median\nencodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\nthen never mistake it for a mean.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/cnpMetricKind",
+                "description" : "Quantity aggregated."
+              },
+        "SOURCE_METRIC_NAME" : {
+                "type" : "string",
+                "description" : "The source's own name for this metric, verbatim. REQUIRED to be\nnon-empty when KIND is OTHER; recommended always, because it is what\nmakes the mapping auditable."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units of every VALUE under STATISTICS. NORMATIVE and required: \"Mbps\",\n\"kbps\", \"ms\", \"percent\", \"fraction\", \"count\". Units are never silently\nconverted on ingest; a source publishing kbps encodes kbps."
+              },
+        "STATISTICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPStatistic"},
+                "description" : "The distribution. At least one entry; a metric with none is malformed."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of individual measurements aggregated. 0 means the source did\nnot publish a sample count — it never means zero measurements."
+              },
+        "CLIENT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of distinct clients, terminals or probes contributing. 0 means\nunpublished."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/CNPProvenance",
+                "description" : "Where this metric came from and under what terms."
+              }
+      },
+      "required" : ["UNITS", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "CNP" : {
+      "type" : "object",
+      "description" : "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT\nprovider — or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT — never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this record."
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
+              },
+        "OPERATOR" : {
+                "type" : "string",
+                "description" : "Operating company, when it differs usefully from CONSTELLATION."
+              },
+        "ASN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Autonomous system number of the measured client network — Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+              },
+        "AS_NAME" : {
+                "type" : "string",
+                "description" : "Autonomous system name as the routing registry publishes it."
+              },
+        "SERVICE_TIER" : {
+                "type" : "string",
+                "description" : "Service tier the source distinguishes, verbatim (\"Residential\",\n\"Roam\", \"Business\", \"Maritime\"). Empty when the source does not\nseparate tiers — never guessed from the throughput."
+              },
+        "REGION" : {
+                "$ref" : "#/definitions/CNPRegion",
+                "description" : "Geography this aggregate is keyed to. Absent when the source published\nno geographic key at all."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC inclusive start of the aggregation window."
+              },
+        "WINDOW_STOP" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC exclusive end of the aggregation window."
+              },
+        "AGGREGATION_PERIOD" : {
+                "$ref" : "#/definitions/cnpPeriod",
+                "description" : "Calendar span the window represents."
+              },
+        "METRICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPMetric"},
+                "description" : "The aggregated quantities."
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPProvenance"},
+                "description" : "Every source consulted for this key, including those that returned no\nmetric."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC creation time of this record."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC last-update time of this record."
+              },
+        "SUPERSEDES_CNP_CID" : {
+                "type" : "string",
+                "description" : "CID of the $CNP this record replaces when a source restates a window."
+              }
+      },
       "additionalProperties" : false
     },
     "COM" : {
@@ -13351,6 +13580,601 @@
       },
       "additionalProperties" : false
     },
+    "LKS" : {
+      "type" : "object",
+      "description" : "Link Status",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT1" : {
+                "type" : "string",
+                "description" : "First endpoint on-orbit identifier"
+              },
+        "SAT_NO1" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First endpoint satellite catalog number"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string",
+                "description" : "Second endpoint on-orbit identifier"
+              },
+        "SAT_NO2" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Second endpoint satellite catalog number"
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation name"
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Link name or identifier"
+              },
+        "LINK_TYPE" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Link type"
+              },
+        "LINK_STATE" : {
+                "$ref" : "#/definitions/linkCondition",
+                "description" : "Link state"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "RF band"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string",
+                "description" : "Link start time (ISO 8601)"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Link stop time (ISO 8601)"
+              },
+        "ID_BEAM1" : {
+                "type" : "string",
+                "description" : "First endpoint beam identifier"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string",
+                "description" : "First endpoint name"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number",
+                "description" : "First endpoint latitude (degrees)"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number",
+                "description" : "First endpoint longitude (degrees)"
+              },
+        "ID_BEAM2" : {
+                "type" : "string",
+                "description" : "Second endpoint beam identifier"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string",
+                "description" : "Second endpoint name"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number",
+                "description" : "Second endpoint latitude (degrees)"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number",
+                "description" : "Second endpoint longitude (degrees)"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 1 to 2 (Mbps)"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 2 to 1 (Mbps)"
+              },
+        "SYS_CAP" : {
+                "type" : "string",
+                "description" : "System capability status"
+              },
+        "OPS_CAP" : {
+                "type" : "string",
+                "description" : "Operational capability status"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFB" : {
+      "type" : "object",
+      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ENTITY" : {
+                "type" : "string",
+                "description" : "Parent entity identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Band name or designation"
+              },
+        "BAND" : {
+                "$ref" : "#/definitions/rfBandDesignation",
+                "description" : "RF band designation"
+              },
+        "MODE" : {
+                "type" : "string",
+                "description" : "Operating mode"
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Minimum frequency (MHz)"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Maximum frequency (MHz)"
+              },
+        "CENTER_FREQ" : {
+                "type" : "number",
+                "description" : "Center frequency (MHz)"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Bandwidth (MHz)"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number",
+                "description" : "Peak antenna gain (dBi)"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number",
+                "description" : "Edge-of-coverage gain (dBi)"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "Antenna beamwidth (degrees)"
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/rfPolarization",
+                "description" : "Polarization"
+              },
+        "ERP" : {
+                "type" : "number",
+                "description" : "Effective radiated power (dBW)"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "Effective isotropic radiated power (dBW)"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
+              },
+        "ID_TRANSMITTER" : {
+                "type" : "string",
+                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+              },
+        "LINK_DIRECTION" : {
+                "$ref" : "#/definitions/linkCategory",
+                "description" : "Direction of this emission relative to the spacecraft."
+              },
+        "BAUD" : {
+                "type" : "number",
+                "description" : "Symbol rate in baud (symbols per second), NOT kilobaud."
+              },
+        "SERVICE" : {
+                "type" : "string",
+                "description" : "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
+              },
+        "XMT_STATUS" : {
+                "$ref" : "#/definitions/rfTransmitterState",
+                "description" : "Operational state of this emitter."
+              },
+        "INVERT" : {
+                "type" : "boolean",
+                "description" : "True when the modulation sideband is inverted."
+              },
+        "IARU_COORDINATION" : {
+                "type" : "string",
+                "description" : "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
+              },
+        "CITATION" : {
+                "type" : "string",
+                "description" : "Attribution/citation string the source license requires this record to\ncarry downstream."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCGeolocation" : {
+      "type" : "object",
+      "description" : "Geodetic position of the receiver at capture time.\n\nA separate table because latitude/longitude 0,0 is a VALID coordinate: an\nabsent GEOLOCATION means \"the source published no position\", which a\nzero-defaulted scalar pair could never express.",
+      "properties" : {
+        "LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Geodetic latitude, degrees, WGS-84, positive north."
+              },
+        "LONGITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Geodetic longitude, degrees, WGS-84, positive east."
+              },
+        "ALTITUDE_M" : {
+                "type" : "number",
+                "description" : "Height above the WGS-84 ellipsoid, metres. Absent in most SigMF\nrecordings; SigMF `core:geolocation` is a GeoJSON Point whose third\nordinate is optional."
+              },
+        "UNCERTAINTY_M" : {
+                "type" : "number",
+                "description" : "Reported position uncertainty, metres, when the source states one."
+              },
+        "METHOD" : {
+                "type" : "string",
+                "description" : "How the position was obtained, verbatim from the source (e.g. \"GPS\",\n\"station registry\", \"author-supplied\"). Never inferred."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCHardware" : {
+      "type" : "object",
+      "description" : "Receive chain that produced the samples.\n\nEvery field is a verbatim string. SigMF `core:hw` is free text and the\nnon-SigMF archives publish nothing more structured; splitting free text\ninto a manufacturer and a model by guessing is a defect.",
+      "properties" : {
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "SigMF `core:hw` verbatim, or the source's equivalent free-text\ndescription of the receive chain."
+              },
+        "MANUFACTURER" : {
+                "type" : "string",
+                "description" : "Receiver manufacturer, only when the source names it as its own field."
+              },
+        "MODEL" : {
+                "type" : "string",
+                "description" : "Receiver model, only when the source names it as its own field."
+              },
+        "ANTENNA" : {
+                "type" : "string",
+                "description" : "Antenna description, only when the source names it as its own field."
+              },
+        "RECORDER" : {
+                "type" : "string",
+                "description" : "SigMF `core:recorder` — the SOFTWARE that wrote the recording."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCSegment" : {
+      "type" : "object",
+      "description" : "One SigMF capture segment: the point in the sample stream at which the\nlisted tuning took effect. A retuned or frequency-hopped recording has\nseveral; a single-tune recording has one.",
+      "properties" : {
+        "SAMPLE_START" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:sample_start` — index of the first sample of this segment."
+              },
+        "GLOBAL_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:global_index` — index of this sample in the receiver's\nfree-running sample counter."
+              },
+        "HEADER_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:header_bytes` — bytes preceding this segment in the data\nfile."
+              },
+        "CENTER_FREQ_HZ" : {
+                "type" : "number",
+                "description" : "SigMF `core:frequency` — centre frequency of this segment, HERTZ."
+              },
+        "DATETIME" : {
+                "type" : "string",
+                "description" : "SigMF `core:datetime` — ISO 8601 UTC timestamp of SAMPLE_START."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCAnnotation" : {
+      "type" : "object",
+      "description" : "One labelled region of the capture in time and frequency.",
+      "properties" : {
+        "SAMPLE_START" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:sample_start` — first sample of the annotated region."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:sample_count` — length of the annotated region in samples."
+              },
+        "FREQ_LOWER_EDGE_HZ" : {
+                "type" : "number",
+                "description" : "SigMF `core:freq_lower_edge` — lower edge of the annotated band, HERTZ."
+              },
+        "FREQ_UPPER_EDGE_HZ" : {
+                "type" : "number",
+                "description" : "SigMF `core:freq_upper_edge` — upper edge of the annotated band, HERTZ."
+              },
+        "LABEL" : {
+                "type" : "string",
+                "description" : "SigMF `core:label` — the short human label (\"LoRa\", \"ADS-B\", \"AIS\")."
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "SigMF `core:comment` — free-text note."
+              },
+        "GENERATOR" : {
+                "type" : "string",
+                "description" : "SigMF `core:generator` — the tool or person that produced the\nannotation. An annotation asserted by an automatic classifier and one\nasserted by a human are not interchangeable evidence; this field is how\na consumer tells them apart."
+              },
+        "UUID" : {
+                "type" : "string",
+                "description" : "SigMF `core:uuid` — the annotation's own identifier, when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCExtension" : {
+      "type" : "object",
+      "description" : "A SigMF extension namespace the upstream metadata declares.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Extension namespace name."
+              },
+        "VERSION" : {
+                "type" : "string",
+                "description" : "Extension version."
+              },
+        "IS_OPTIONAL" : {
+                "type" : "boolean",
+                "description" : "True when the extension is declared optional for interpretation."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQCPayloadRef" : {
+      "type" : "object",
+      "description" : "A retrievable file belonging to this capture.\n\nThe record NEVER carries sample bytes. It carries where they are, how big\nthey are, and what they hash to, so a consumer can decide for itself\nwhether to fetch 400 kB or 127 GB.",
+      "properties" : {
+        "ROLE" : {
+                "$ref" : "#/definitions/iqcPayloadRole",
+                "description" : "What this file is."
+              },
+        "URL" : {
+                "type" : "string",
+                "description" : "Upstream retrieval URL, verbatim."
+              },
+        "FILE_NAME" : {
+                "type" : "string",
+                "description" : "File name as the source publishes it."
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "IANA media type when the source declares one."
+              },
+        "BYTE_LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Byte length. 0 means the source did not publish a size — it never means\nan empty file."
+              },
+        "BYTE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact bytes, lowercase hex. Populated only when computed\nor published; never guessed."
+              },
+        "BYTE_SHA512" : {
+                "type" : "string",
+                "description" : "SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a\nSHA-512 over the dataset file, so it is carried in its own field rather\nthan converted or discarded."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "IPFS CIDv1 when, and only when, this SDN pinned the bytes."
+              },
+        "MULTIFORMAT_ADDRESS" : {
+                "type" : "string",
+                "description" : "Multiformat address, usually /ipfs/{CID}."
+              },
+        "CUSTODY" : {
+                "$ref" : "#/definitions/iqcCustody",
+                "description" : "Custody of these bytes."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time at which URL was last confirmed retrievable."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IQC" : {
+      "type" : "object",
+      "description" : "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive — IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo — normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention — silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this record."
+              },
+        "CAPTURE_ID" : {
+                "type" : "string",
+                "description" : "The upstream archive's own identifier for this capture, verbatim."
+              },
+        "SOURCE_NAME" : {
+                "type" : "string",
+                "description" : "Archive that publishes the capture, verbatim (\"IQEngine\", \"SigidWiki\",\n\"IEEE DataPort\", \"SDRangel IQ Database\", \"Zenodo\"). A string rather than\nan enum so a new archive lane never requires a schema release."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Landing page for the capture at the source."
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the source record this was normalized from, when the\nsource exposes one distinct from CAPTURE_ID."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the raw upstream metadata bytes that produced this record,\nlowercase hex. Makes the normalization auditable."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the source metadata was retrieved."
+              },
+        "TITLE" : {
+                "type" : "string",
+                "description" : "Human title of the capture."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "SigMF `core:description`."
+              },
+        "AUTHOR" : {
+                "type" : "string",
+                "description" : "SigMF `core:author`."
+              },
+        "SIGMF_VERSION" : {
+                "type" : "string",
+                "description" : "SigMF `core:version` — the SigMF specification version the upstream\nmetadata declares. Empty for captures normalized from a non-SigMF\nsource; that emptiness is itself informative."
+              },
+        "COLLECTION" : {
+                "type" : "string",
+                "description" : "SigMF `core:collection` — identifier of the collection this recording\nbelongs to."
+              },
+        "EXTENSIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IQCExtension"},
+                "description" : "SigMF `core:extensions`."
+              },
+        "DATATYPE" : {
+                "type" : "string",
+                "description" : "SigMF `core:datatype` VERBATIM, e.g. \"cf32_le\", \"ci16_le\", \"ru8\". Never\nre-spelled, never normalized to another vocabulary. A consumer that\ncannot parse the token MUST refuse the samples rather than assume a\nlayout."
+              },
+        "SAMPLE_RATE_HZ" : {
+                "type" : "number",
+                "description" : "SigMF `core:sample_rate`, HERTZ (complex samples per second)."
+              },
+        "NUM_CHANNELS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and\nMUST be written explicitly when known."
+              },
+        "CENTER_FREQ_HZ" : {
+                "type" : "number",
+                "description" : "Centre frequency of the FIRST capture segment, HERTZ, copied here for\nindexing. `SEGMENTS` is normative whenever it is present."
+              },
+        "FREQ_LOWER_EDGE_HZ" : {
+                "type" : "number",
+                "description" : "Lowest occupied frequency across the recording, HERTZ, when the source\nstates it or its annotations bound it."
+              },
+        "FREQ_UPPER_EDGE_HZ" : {
+                "type" : "number",
+                "description" : "Highest occupied frequency across the recording, HERTZ."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total complex samples in the recording. 0 means unstated — it is NOT to\nbe back-computed from BYTE_LENGTH unless DATATYPE and any header bytes\nare both known."
+              },
+        "DURATION_SECONDS" : {
+                "type" : "number",
+                "description" : "Recording length in seconds, when stated or exactly derivable from\nSAMPLE_COUNT and SAMPLE_RATE_HZ."
+              },
+        "SAMPLE_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:offset` — index of the first sample in the recording's own\nnumbering."
+              },
+        "METADATA_ONLY" : {
+                "type" : "boolean",
+                "description" : "SigMF `core:metadata_only` — true when no dataset file accompanies the\nmetadata."
+              },
+        "TRAILING_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "SigMF `core:trailing_bytes` — non-sample bytes at the end of the data\nfile."
+              },
+        "CAPTURE_START" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC start of the recording (the first segment's\n`core:datetime`)."
+              },
+        "CAPTURE_STOP" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC end of the recording, when stated or exactly derivable."
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IQCSegment"},
+                "description" : "Per-segment tuning history."
+              },
+        "ANNOTATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IQCAnnotation"},
+                "description" : "Labelled time/frequency regions."
+              },
+        "LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags)."
+              },
+        "GEOLOCATION" : {
+                "$ref" : "#/definitions/IQCGeolocation",
+                "description" : "Receiver position. Absent when the source published none."
+              },
+        "HARDWARE" : {
+                "$ref" : "#/definitions/IQCHardware",
+                "description" : "Receive chain."
+              },
+        "SIGNAL_NAME" : {
+                "type" : "string",
+                "description" : "Signal designation the source states, verbatim (\"LoRa\", \"DVB-S2\",\n\"ADS-B\", \"VOR\"). Not an enum: these archives catalogue the whole radio\nworld, and $RFE's `signalModulation` is a radar-emitter vocabulary that\nwould force every civil waveform into UNKNOWN."
+              },
+        "MODULATION" : {
+                "type" : "string",
+                "description" : "Modulation the source states, verbatim. Never inferred from the samples."
+              },
+        "BAND" : {
+                "$ref" : "#/definitions/rfBandDesignation",
+                "description" : "Band designation the source states. Shares $RFB's `rfBandDesignation`, so\nan HF or VHF capture is designated identically on both records."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalogue number of the transmitting spacecraft when the capture\nis of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator of the transmitting spacecraft, when known."
+              },
+        "EMITTER_ID" : {
+                "type" : "string",
+                "description" : "$RFE.ID of the emitter this capture is of, when identified."
+              },
+        "RFB_ID" : {
+                "type" : "string",
+                "description" : "$RFB.ID of the band specification this capture exercises, when\nidentified."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "SPDX identifier when the source states one, otherwise the source's\nlicence name verbatim. EMPTY MEANS UNKNOWN TERMS — never public domain."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the licence text the source points at."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution/citation string the licence requires this record and any\nderived product to carry downstream."
+              },
+        "META_DOI" : {
+                "type" : "string",
+                "description" : "SigMF `core:meta_doi` — DOI of the metadata."
+              },
+        "DATA_DOI" : {
+                "type" : "string",
+                "description" : "SigMF `core:data_doi` — DOI of the dataset."
+              },
+        "PAYLOADS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IQCPayloadRef"},
+                "description" : "Retrievable files for this capture."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC creation time of this record."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC last-update time of this record."
+              },
+        "SUPERSEDES_IQC_CID" : {
+                "type" : "string",
+                "description" : "CID of the $IQC this record replaces, when the upstream capture's\nmetadata changed."
+              }
+      },
+      "additionalProperties" : false
+    },
     "IRO" : {
       "type" : "object",
       "description" : "Infrared Observation",
@@ -17210,109 +18034,6 @@
               }
       },
       "required" : ["REQUEST_ID", "MODULE_ID"],
-      "additionalProperties" : false
-    },
-    "LKS" : {
-      "type" : "object",
-      "description" : "Link Status",
-      "properties" : {
-        "ID" : {
-                "type" : "string",
-                "description" : "Unique identifier"
-              },
-        "ID_ON_ORBIT1" : {
-                "type" : "string",
-                "description" : "First endpoint on-orbit identifier"
-              },
-        "SAT_NO1" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "First endpoint satellite catalog number"
-              },
-        "ID_ON_ORBIT2" : {
-                "type" : "string",
-                "description" : "Second endpoint on-orbit identifier"
-              },
-        "SAT_NO2" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Second endpoint satellite catalog number"
-              },
-        "CONSTELLATION" : {
-                "type" : "string",
-                "description" : "Constellation name"
-              },
-        "LINK_NAME" : {
-                "type" : "string",
-                "description" : "Link name or identifier"
-              },
-        "LINK_TYPE" : {
-                "$ref" : "#/definitions/linkCategory",
-                "description" : "Link type"
-              },
-        "LINK_STATE" : {
-                "$ref" : "#/definitions/linkCondition",
-                "description" : "Link state"
-              },
-        "BAND" : {
-                "type" : "string",
-                "description" : "RF band"
-              },
-        "LINK_START_TIME" : {
-                "type" : "string",
-                "description" : "Link start time (ISO 8601)"
-              },
-        "LINK_STOP_TIME" : {
-                "type" : "string",
-                "description" : "Link stop time (ISO 8601)"
-              },
-        "ID_BEAM1" : {
-                "type" : "string",
-                "description" : "First endpoint beam identifier"
-              },
-        "END_POINT1_NAME" : {
-                "type" : "string",
-                "description" : "First endpoint name"
-              },
-        "END_POINT1_LAT" : {
-                "type" : "number",
-                "description" : "First endpoint latitude (degrees)"
-              },
-        "END_POINT1_LON" : {
-                "type" : "number",
-                "description" : "First endpoint longitude (degrees)"
-              },
-        "ID_BEAM2" : {
-                "type" : "string",
-                "description" : "Second endpoint beam identifier"
-              },
-        "END_POINT2_NAME" : {
-                "type" : "string",
-                "description" : "Second endpoint name"
-              },
-        "END_POINT2_LAT" : {
-                "type" : "number",
-                "description" : "Second endpoint latitude (degrees)"
-              },
-        "END_POINT2_LON" : {
-                "type" : "number",
-                "description" : "Second endpoint longitude (degrees)"
-              },
-        "DATA_RATE1_TO2" : {
-                "type" : "number",
-                "description" : "Data rate from endpoint 1 to 2 (Mbps)"
-              },
-        "DATA_RATE2_TO1" : {
-                "type" : "number",
-                "description" : "Data rate from endpoint 2 to 1 (Mbps)"
-              },
-        "SYS_CAP" : {
-                "type" : "string",
-                "description" : "System capability status"
-              },
-        "OPS_CAP" : {
-                "type" : "string",
-                "description" : "Operational capability status"
-              }
-      },
       "additionalProperties" : false
     },
     "lambertVector3" : {
@@ -23545,113 +24266,6 @@
               }
       },
       "required" : ["REVIEW_ID", "LISTING_ID", "REVIEWER_PEER_ID"],
-      "additionalProperties" : false
-    },
-    "RFB" : {
-      "type" : "object",
-      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
-      "properties" : {
-        "ID" : {
-                "type" : "string",
-                "description" : "Unique identifier"
-              },
-        "ID_ENTITY" : {
-                "type" : "string",
-                "description" : "Parent entity identifier"
-              },
-        "NAME" : {
-                "type" : "string",
-                "description" : "Band name or designation"
-              },
-        "BAND" : {
-                "$ref" : "#/definitions/rfBandDesignation",
-                "description" : "RF band designation"
-              },
-        "MODE" : {
-                "type" : "string",
-                "description" : "Operating mode"
-              },
-        "PURPOSE" : {
-                "type" : "string",
-                "description" : "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
-              },
-        "FREQ_MIN" : {
-                "type" : "number",
-                "description" : "Minimum frequency (MHz)"
-              },
-        "FREQ_MAX" : {
-                "type" : "number",
-                "description" : "Maximum frequency (MHz)"
-              },
-        "CENTER_FREQ" : {
-                "type" : "number",
-                "description" : "Center frequency (MHz)"
-              },
-        "BANDWIDTH" : {
-                "type" : "number",
-                "description" : "Bandwidth (MHz)"
-              },
-        "PEAK_GAIN" : {
-                "type" : "number",
-                "description" : "Peak antenna gain (dBi)"
-              },
-        "EDGE_GAIN" : {
-                "type" : "number",
-                "description" : "Edge-of-coverage gain (dBi)"
-              },
-        "BEAMWIDTH" : {
-                "type" : "number",
-                "description" : "Antenna beamwidth (degrees)"
-              },
-        "POLARIZATION" : {
-                "$ref" : "#/definitions/rfPolarization",
-                "description" : "Polarization"
-              },
-        "ERP" : {
-                "type" : "number",
-                "description" : "Effective radiated power (dBW)"
-              },
-        "EIRP" : {
-                "type" : "number",
-                "description" : "Effective isotropic radiated power (dBW)"
-              },
-        "NORAD_CAT_ID" : {
-                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "NORAD catalog number of the spacecraft carrying this emitter. Joins to\nCAT.NORAD_CAT_ID. 0 when unbound."
-              },
-        "ID_TRANSMITTER" : {
-                "type" : "string",
-                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
-              },
-        "LINK_DIRECTION" : {
-                "$ref" : "#/definitions/linkCategory",
-                "description" : "Direction of this emission relative to the spacecraft."
-              },
-        "BAUD" : {
-                "type" : "number",
-                "description" : "Symbol rate in baud (symbols per second), NOT kilobaud."
-              },
-        "SERVICE" : {
-                "type" : "string",
-                "description" : "Regulatory/ITU service designation (e.g. Amateur, Earth Exploration)."
-              },
-        "XMT_STATUS" : {
-                "$ref" : "#/definitions/rfTransmitterState",
-                "description" : "Operational state of this emitter."
-              },
-        "INVERT" : {
-                "type" : "boolean",
-                "description" : "True when the modulation sideband is inverted."
-              },
-        "IARU_COORDINATION" : {
-                "type" : "string",
-                "description" : "IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated)."
-              },
-        "CITATION" : {
-                "type" : "string",
-                "description" : "Attribution/citation string the source license requires this record to\ncarry downstream."
-              }
-      },
       "additionalProperties" : false
     },
     "rfEmitterDetail" : {
@@ -32645,7 +33259,7 @@
                 "$ref" : "#/definitions/RecordType"
               },
         "value" : {
-                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" }],
+                "anyOf": [{ "$ref" : "#/definitions/ACL" },{ "$ref" : "#/definitions/ACM" },{ "$ref" : "#/definitions/ACR" },{ "$ref" : "#/definitions/ACW" },{ "$ref" : "#/definitions/AEM" },{ "$ref" : "#/definitions/ANI" },{ "$ref" : "#/definitions/AOF" },{ "$ref" : "#/definitions/APM" },{ "$ref" : "#/definitions/ARM" },{ "$ref" : "#/definitions/AST" },{ "$ref" : "#/definitions/ATD" },{ "$ref" : "#/definitions/ATM" },{ "$ref" : "#/definitions/BAL" },{ "$ref" : "#/definitions/BEM" },{ "$ref" : "#/definitions/BMC" },{ "$ref" : "#/definitions/BOV" },{ "$ref" : "#/definitions/BSP" },{ "$ref" : "#/definitions/BUS" },{ "$ref" : "#/definitions/CAQ" },{ "$ref" : "#/definitions/CAT" },{ "$ref" : "#/definitions/CDM" },{ "$ref" : "#/definitions/CFP" },{ "$ref" : "#/definitions/CHN" },{ "$ref" : "#/definitions/CLT" },{ "$ref" : "#/definitions/CMS" },{ "$ref" : "#/definitions/COM" },{ "$ref" : "#/definitions/COT" },{ "$ref" : "#/definitions/CRD" },{ "$ref" : "#/definitions/CRM" },{ "$ref" : "#/definitions/CSM" },{ "$ref" : "#/definitions/CTR" },{ "$ref" : "#/definitions/CZM" },{ "$ref" : "#/definitions/DFH" },{ "$ref" : "#/definitions/DMG" },{ "$ref" : "#/definitions/DOA" },{ "$ref" : "#/definitions/DPM" },{ "$ref" : "#/definitions/DSS" },{ "$ref" : "#/definitions/EME" },{ "$ref" : "#/definitions/ENC" },{ "$ref" : "#/definitions/ENV" },{ "$ref" : "#/definitions/EOO" },{ "$ref" : "#/definitions/EOP" },{ "$ref" : "#/definitions/EPM" },{ "$ref" : "#/definitions/ESL" },{ "$ref" : "#/definitions/ETM" },{ "$ref" : "#/definitions/EWR" },{ "$ref" : "#/definitions/FCS" },{ "$ref" : "#/definitions/FPC" },{ "$ref" : "#/definitions/FRM" },{ "$ref" : "#/definitions/GDI" },{ "$ref" : "#/definitions/GEO" },{ "$ref" : "#/definitions/GJN" },{ "$ref" : "#/definitions/GNO" },{ "$ref" : "#/definitions/GPX" },{ "$ref" : "#/definitions/GRV" },{ "$ref" : "#/definitions/GVH" },{ "$ref" : "#/definitions/HEL" },{ "$ref" : "#/definitions/HFC" },{ "$ref" : "#/definitions/HYP" },{ "$ref" : "#/definitions/IDM" },{ "$ref" : "#/definitions/ION" },{ "$ref" : "#/definitions/IRO" },{ "$ref" : "#/definitions/KMF" },{ "$ref" : "#/definitions/KML" },{ "$ref" : "#/definitions/KRF" },{ "$ref" : "#/definitions/LAM" },{ "$ref" : "#/definitions/LCC" },{ "$ref" : "#/definitions/LCF" },{ "$ref" : "#/definitions/LCH" },{ "$ref" : "#/definitions/LDM" },{ "$ref" : "#/definitions/LGR" },{ "$ref" : "#/definitions/LKS" },{ "$ref" : "#/definitions/LMO" },{ "$ref" : "#/definitions/LMR" },{ "$ref" : "#/definitions/LMS" },{ "$ref" : "#/definitions/LND" },{ "$ref" : "#/definitions/LNE" },{ "$ref" : "#/definitions/LPF" },{ "$ref" : "#/definitions/LWK" },{ "$ref" : "#/definitions/MBL" },{ "$ref" : "#/definitions/MET" },{ "$ref" : "#/definitions/MFE" },{ "$ref" : "#/definitions/MNF" },{ "$ref" : "#/definitions/MNV" },{ "$ref" : "#/definitions/MPE" },{ "$ref" : "#/definitions/MSL" },{ "$ref" : "#/definitions/MST" },{ "$ref" : "#/definitions/MTI" },{ "$ref" : "#/definitions/NAV" },{ "$ref" : "#/definitions/NUM" },{ "$ref" : "#/definitions/OBD" },{ "$ref" : "#/definitions/OBT" },{ "$ref" : "#/definitions/OCM" },{ "$ref" : "#/definitions/OEM" },{ "$ref" : "#/definitions/OMM" },{ "$ref" : "#/definitions/OOA" },{ "$ref" : "#/definitions/OOB" },{ "$ref" : "#/definitions/OOD" },{ "$ref" : "#/definitions/OOE" },{ "$ref" : "#/definitions/OOI" },{ "$ref" : "#/definitions/OOL" },{ "$ref" : "#/definitions/OON" },{ "$ref" : "#/definitions/OOS" },{ "$ref" : "#/definitions/OOT" },{ "$ref" : "#/definitions/OPM" },{ "$ref" : "#/definitions/OSM" },{ "$ref" : "#/definitions/PCF" },{ "$ref" : "#/definitions/PHY" },{ "$ref" : "#/definitions/PGM" },{ "$ref" : "#/definitions/PIV" },{ "$ref" : "#/definitions/PLD" },{ "$ref" : "#/definitions/PLG" },{ "$ref" : "#/definitions/PLK" },{ "$ref" : "#/definitions/PNM" },{ "$ref" : "#/definitions/PPE" },{ "$ref" : "#/definitions/PRG" },{ "$ref" : "#/definitions/PRR" },{ "$ref" : "#/definitions/PRW" },{ "$ref" : "#/definitions/PUR" },{ "$ref" : "#/definitions/RAF" },{ "$ref" : "#/definitions/RBK" },{ "$ref" : "#/definitions/RCF" },{ "$ref" : "#/definitions/RDM" },{ "$ref" : "#/definitions/RDO" },{ "$ref" : "#/definitions/REM" },{ "$ref" : "#/definitions/REV" },{ "$ref" : "#/definitions/RFB" },{ "$ref" : "#/definitions/RFE" },{ "$ref" : "#/definitions/RFM" },{ "$ref" : "#/definitions/RFO" },{ "$ref" : "#/definitions/ROC" },{ "$ref" : "#/definitions/SAR" },{ "$ref" : "#/definitions/SCM" },{ "$ref" : "#/definitions/SDF" },{ "$ref" : "#/definitions/SDL" },{ "$ref" : "#/definitions/SDR" },{ "$ref" : "#/definitions/SEN" },{ "$ref" : "#/definitions/SEO" },{ "$ref" : "#/definitions/SEV" },{ "$ref" : "#/definitions/SHW" },{ "$ref" : "#/definitions/SIT" },{ "$ref" : "#/definitions/SKI" },{ "$ref" : "#/definitions/SNR" },{ "$ref" : "#/definitions/SNW" },{ "$ref" : "#/definitions/SOI" },{ "$ref" : "#/definitions/SON" },{ "$ref" : "#/definitions/SPP" },{ "$ref" : "#/definitions/SPW" },{ "$ref" : "#/definitions/SRI" },{ "$ref" : "#/definitions/STF" },{ "$ref" : "#/definitions/STR" },{ "$ref" : "#/definitions/STV" },{ "$ref" : "#/definitions/SWR" },{ "$ref" : "#/definitions/TAB" },{ "$ref" : "#/definitions/TCF" },{ "$ref" : "#/definitions/TDM" },{ "$ref" : "#/definitions/TIM" },{ "$ref" : "#/definitions/TKG" },{ "$ref" : "#/definitions/TME" },{ "$ref" : "#/definitions/TMF" },{ "$ref" : "#/definitions/TNR" },{ "$ref" : "#/definitions/TPN" },{ "$ref" : "#/definitions/TRE" },{ "$ref" : "#/definitions/TRK" },{ "$ref" : "#/definitions/TRN" },{ "$ref" : "#/definitions/VCM" },{ "$ref" : "#/definitions/WPN" },{ "$ref" : "#/definitions/WTH" },{ "$ref" : "#/definitions/XTC" },{ "$ref" : "#/definitions/SCV" },{ "$ref" : "#/definitions/FSM" },{ "$ref" : "#/definitions/FSP" },{ "$ref" : "#/definitions/SCC" },{ "$ref" : "#/definitions/SCN" },{ "$ref" : "#/definitions/VST" },{ "$ref" : "#/definitions/ENT" },{ "$ref" : "#/definitions/VAM" },{ "$ref" : "#/definitions/APP" },{ "$ref" : "#/definitions/CMT" },{ "$ref" : "#/definitions/SCX" },{ "$ref" : "#/definitions/CVG" },{ "$ref" : "#/definitions/PKB" },{ "$ref" : "#/definitions/RPT" },{ "$ref" : "#/definitions/STO" },{ "$ref" : "#/definitions/SUB" },{ "$ref" : "#/definitions/WKS" },{ "$ref" : "#/definitions/CPS" },{ "$ref" : "#/definitions/FSB" },{ "$ref" : "#/definitions/FSO" },{ "$ref" : "#/definitions/GST" },{ "$ref" : "#/definitions/MDP" },{ "$ref" : "#/definitions/MDS" },{ "$ref" : "#/definitions/PNL" },{ "$ref" : "#/definitions/SHC" },{ "$ref" : "#/definitions/CES" },{ "$ref" : "#/definitions/QEM" },{ "$ref" : "#/definitions/SBM" },{ "$ref" : "#/definitions/PMM" },{ "$ref" : "#/definitions/OPP" },{ "$ref" : "#/definitions/IQC" },{ "$ref" : "#/definitions/CNP" }],
                 "description" : "The record data (union of all supported standards)"
               },
         "standard" : {

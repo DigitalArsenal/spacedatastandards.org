@@ -112,6 +112,8 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "LKS", desc: "Link Status" },
       { abbr: "BEM", desc: "Beam Contour Point" },
       { abbr: "BMC", desc: "Beam Contour" },
+      { abbr: "IQC", desc: "RF IQ Capture Metadata" },
+      { abbr: "CNP", desc: "Constellation Network Performance" },
     ],
   },
   {

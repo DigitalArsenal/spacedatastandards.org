@@ -18,6 +18,18 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct RFB;
 struct RFBBuilder;
 
+/// Band designation carried by an emitter record.
+///
+/// Two naming systems coexist here on purpose. `UHF`, `SHF`, `EHF` and the
+/// members below `OTHER` are ITU-R V.431 decade bands; `L` through `Q` are the
+/// IEEE 521 letter bands. They OVERLAP by construction (an 8.4 GHz downlink is
+/// both `X` and `SHF`). A publisher encodes the designation ITS SOURCE STATES —
+/// never a re-derivation from CENTER_FREQ, and never both.
+///
+/// ORDINALS ARE WIRE VALUES. New members are APPENDED ONLY. Members added after
+/// `OTHER` are therefore out of frequency order in the declaration; that is
+/// deliberate and permanent. Reordering this enum silently re-labels every
+/// $RFB record ever published.
 enum rfBandDesignation : int8_t {
   rfBandDesignation_UHF = 0,
   rfBandDesignation_L = 1,
@@ -31,12 +43,27 @@ enum rfBandDesignation : int8_t {
   rfBandDesignation_W = 9,
   rfBandDesignation_Q = 10,
   rfBandDesignation_EHF = 11,
+  /// The source states a designation this enum cannot express. The verbatim
+  /// designation MUST be preserved in NAME.
   rfBandDesignation_OTHER = 12,
+  /// ITU-R V.431 very high frequency, 30–300 MHz. Appended 1.177.0.
+  rfBandDesignation_VHF = 13,
+  /// ITU-R V.431 high frequency, 3–30 MHz. Appended 1.177.0.
+  rfBandDesignation_HF = 14,
+  /// ITU-R V.431 medium frequency, 300 kHz–3 MHz. Appended 1.177.0.
+  rfBandDesignation_MF = 15,
+  /// ITU-R V.431 low frequency, 30–300 kHz. Appended 1.177.0.
+  rfBandDesignation_LF = 16,
+  /// ITU-R V.431 very low frequency, 3–30 kHz. Appended 1.177.0.
+  rfBandDesignation_VLF = 17,
+  /// ITU-R V.431 super high frequency, 3–30 GHz. Appended 1.177.0 to close the
+  /// decade ladder between the pre-existing UHF and EHF members.
+  rfBandDesignation_SHF = 18,
   rfBandDesignation_MIN = rfBandDesignation_UHF,
-  rfBandDesignation_MAX = rfBandDesignation_OTHER
+  rfBandDesignation_MAX = rfBandDesignation_SHF
 };
 
-inline const rfBandDesignation (&EnumValuesrfBandDesignation())[13] {
+inline const rfBandDesignation (&EnumValuesrfBandDesignation())[19] {
   static const rfBandDesignation values[] = {
     rfBandDesignation_UHF,
     rfBandDesignation_L,
@@ -50,13 +77,19 @@ inline const rfBandDesignation (&EnumValuesrfBandDesignation())[13] {
     rfBandDesignation_W,
     rfBandDesignation_Q,
     rfBandDesignation_EHF,
-    rfBandDesignation_OTHER
+    rfBandDesignation_OTHER,
+    rfBandDesignation_VHF,
+    rfBandDesignation_HF,
+    rfBandDesignation_MF,
+    rfBandDesignation_LF,
+    rfBandDesignation_VLF,
+    rfBandDesignation_SHF
   };
   return values;
 }
 
 inline const char * const *EnumNamesrfBandDesignation() {
-  static const char * const names[14] = {
+  static const char * const names[20] = {
     "UHF",
     "L",
     "S",
@@ -70,13 +103,19 @@ inline const char * const *EnumNamesrfBandDesignation() {
     "Q",
     "EHF",
     "OTHER",
+    "VHF",
+    "HF",
+    "MF",
+    "LF",
+    "VLF",
+    "SHF",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamerfBandDesignation(rfBandDesignation e) {
-  if (::flatbuffers::IsOutRange(e, rfBandDesignation_UHF, rfBandDesignation_OTHER)) return "";
+  if (::flatbuffers::IsOutRange(e, rfBandDesignation_UHF, rfBandDesignation_SHF)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesrfBandDesignation()[index];
 }

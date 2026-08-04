@@ -203,5 +203,7 @@ class RecordType private constructor() {
         const val SBM: UByte = 197u
         const val PMM: UByte = 198u
         const val OPP: UByte = 199u
+        const val IQC: UByte = 200u
+        const val CNP: UByte = 201u
     }
 }

@@ -1,0 +1,685 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cnpRegionKind": {
+      "type": "string",
+      "enum": [
+        "GLOBAL",
+        "COUNTRY",
+        "SUBDIVISION",
+        "METRO",
+        "CELL",
+        "POINT_OF_PRESENCE",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GLOBAL": {
+          "value": 0,
+          "description": "No geographic restriction \u2014 the aggregate covers everywhere the operator serves."
+        },
+        "COUNTRY": {
+          "value": 1,
+          "description": "A country. CODE is ISO 3166-1 alpha-2."
+        },
+        "SUBDIVISION": {
+          "value": 2,
+          "description": "A first-level subdivision. CODE is ISO 3166-2."
+        },
+        "METRO": {
+          "value": 3,
+          "description": "A metropolitan area or city. CODE is the source's own key."
+        },
+        "CELL": {
+          "value": 4,
+          "description": "A ground-segment cell or beam footprint. CODE is the operator's own key."
+        },
+        "POINT_OF_PRESENCE": {
+          "value": 5,
+          "description": "A point of presence / ground gateway. CODE is the source's own key."
+        },
+        "OTHER": {
+          "value": 6,
+          "description": "The source keys by something none of the above describes. CODE and NAME carry the source's key verbatim."
+        }
+      }
+    },
+    "cnpPeriod": {
+      "type": "string",
+      "enum": [
+        "CUSTOM",
+        "HOUR",
+        "DAY",
+        "WEEK",
+        "MONTH",
+        "QUARTER",
+        "YEAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CUSTOM": {
+          "value": 0,
+          "description": "WINDOW_START/WINDOW_STOP are authoritative and match none of the named periods."
+        },
+        "HOUR": {
+          "value": 1
+        },
+        "DAY": {
+          "value": 2
+        },
+        "WEEK": {
+          "value": 3
+        },
+        "MONTH": {
+          "value": 4
+        },
+        "QUARTER": {
+          "value": 5
+        },
+        "YEAR": {
+          "value": 6
+        }
+      }
+    },
+    "cnpMetricKind": {
+      "type": "string",
+      "enum": [
+        "DOWNLOAD_THROUGHPUT",
+        "UPLOAD_THROUGHPUT",
+        "LATENCY_IDLE",
+        "LATENCY_LOADED_DOWNLOAD",
+        "LATENCY_LOADED_UPLOAD",
+        "JITTER",
+        "PACKET_LOSS",
+        "AVAILABILITY",
+        "OBSTRUCTION",
+        "RTT",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DOWNLOAD_THROUGHPUT": {
+          "value": 0,
+          "description": "Achieved application-layer download rate."
+        },
+        "UPLOAD_THROUGHPUT": {
+          "value": 1,
+          "description": "Achieved application-layer upload rate."
+        },
+        "LATENCY_IDLE": {
+          "value": 2,
+          "description": "Round-trip time on an otherwise unloaded path."
+        },
+        "LATENCY_LOADED_DOWNLOAD": {
+          "value": 3,
+          "description": "Round-trip time measured while the download test saturates the path."
+        },
+        "LATENCY_LOADED_UPLOAD": {
+          "value": 4,
+          "description": "Round-trip time measured while the upload test saturates the path."
+        },
+        "JITTER": {
+          "value": 5,
+          "description": "Variation in inter-packet arrival time."
+        },
+        "PACKET_LOSS": {
+          "value": 6,
+          "description": "Fraction of packets lost."
+        },
+        "AVAILABILITY": {
+          "value": 7,
+          "description": "Fraction of the window in which the service was usable."
+        },
+        "OBSTRUCTION": {
+          "value": 8,
+          "description": "Fraction of the terminal's sky view blocked by terrain or structures."
+        },
+        "RTT": {
+          "value": 9,
+          "description": "Round-trip time where the source does not distinguish loaded from idle."
+        },
+        "OTHER": {
+          "value": 10,
+          "description": "The source publishes a quantity none of the above names. SOURCE_METRIC_NAME is then required to be non-empty."
+        }
+      }
+    },
+    "cnpReduction": {
+      "type": "string",
+      "enum": [
+        "MEAN",
+        "MEDIAN",
+        "PERCENTILE",
+        "MINIMUM",
+        "MAXIMUM",
+        "STANDARD_DEVIATION",
+        "COUNT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "MEAN": {
+          "value": 0
+        },
+        "MEDIAN": {
+          "value": 1
+        },
+        "PERCENTILE": {
+          "value": 2,
+          "description": "PERCENTILE_RANK carries which one."
+        },
+        "MINIMUM": {
+          "value": 3
+        },
+        "MAXIMUM": {
+          "value": 4
+        },
+        "STANDARD_DEVIATION": {
+          "value": 5
+        },
+        "COUNT": {
+          "value": 6,
+          "description": "Number of observations, not a value of the metric."
+        }
+      }
+    },
+    "cnpMethod": {
+      "type": "string",
+      "enum": [
+        "NDT7",
+        "SPEED_TEST",
+        "PING",
+        "TRACEROUTE",
+        "TERMINAL_TELEMETRY",
+        "HTTP_DOWNLOAD",
+        "PASSIVE",
+        "MODELED",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NDT7": {
+          "value": 0,
+          "description": "M-Lab NDT7 measurement."
+        },
+        "SPEED_TEST": {
+          "value": 1,
+          "description": "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+        },
+        "PING": {
+          "value": 2,
+          "description": "ICMP or UDP echo."
+        },
+        "TRACEROUTE": {
+          "value": 3,
+          "description": "Path trace."
+        },
+        "TERMINAL_TELEMETRY": {
+          "value": 4,
+          "description": "Telemetry read from the user terminal itself."
+        },
+        "HTTP_DOWNLOAD": {
+          "value": 5,
+          "description": "Bulk HTTP transfer."
+        },
+        "PASSIVE": {
+          "value": 6,
+          "description": "Passive observation of production traffic."
+        },
+        "MODELED": {
+          "value": 7,
+          "description": "Modelled or simulated rather than measured. A modelled value is not a measurement and this member is how a consumer refuses to treat it as one."
+        },
+        "OTHER": {
+          "value": 8,
+          "description": "The source states a method none of the above names."
+        }
+      }
+    },
+    "CNPRegion": {
+      "type": "object",
+      "description": "Geography an aggregate is keyed to.\n\nA separate table so an absent REGION means \"the source did not key by\ngeography\", which is different from GLOBAL (\"the source aggregated across\nall geographies\") and different again from an empty CODE.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/cnpRegionKind",
+          "description": "Granularity of CODE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GLOBAL": {
+              "value": 0,
+              "description": "No geographic restriction \u2014 the aggregate covers everywhere the operator serves."
+            },
+            "COUNTRY": {
+              "value": 1,
+              "description": "A country. CODE is ISO 3166-1 alpha-2."
+            },
+            "SUBDIVISION": {
+              "value": 2,
+              "description": "A first-level subdivision. CODE is ISO 3166-2."
+            },
+            "METRO": {
+              "value": 3,
+              "description": "A metropolitan area or city. CODE is the source's own key."
+            },
+            "CELL": {
+              "value": 4,
+              "description": "A ground-segment cell or beam footprint. CODE is the operator's own key."
+            },
+            "POINT_OF_PRESENCE": {
+              "value": 5,
+              "description": "A point of presence / ground gateway. CODE is the source's own key."
+            },
+            "OTHER": {
+              "value": 6,
+              "description": "The source keys by something none of the above describes. CODE and NAME carry the source's key verbatim."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "CODE": {
+          "type": "string",
+          "description": "The region key, verbatim from the source in the coding scheme KIND\nnames. Never re-coded between schemes on ingest.",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable region name as the source publishes it. Joins to\n$CTR for country identity when KIND is COUNTRY.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CNPProvenance": {
+      "type": "object",
+      "description": "Where one metric came from and under what terms it may be republished.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "description": "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\".",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_URL": {
+          "type": "string",
+          "description": "URL of the dataset, endpoint or landing page.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DATASET": {
+          "type": "string",
+          "description": "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "description": "The exact query or request that produced these numbers, so the\naggregate can be replayed rather than trusted.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_RECORD_ID": {
+          "type": "string",
+          "description": "Source's own identifier for the returned batch, when it issues one.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the raw source bytes this aggregate was computed from,\nlowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC time the source was queried.",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/cnpMethod",
+          "description": "How the underlying observations were produced.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NDT7": {
+              "value": 0,
+              "description": "M-Lab NDT7 measurement."
+            },
+            "SPEED_TEST": {
+              "value": 1,
+              "description": "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+            },
+            "PING": {
+              "value": 2,
+              "description": "ICMP or UDP echo."
+            },
+            "TRACEROUTE": {
+              "value": 3,
+              "description": "Path trace."
+            },
+            "TERMINAL_TELEMETRY": {
+              "value": 4,
+              "description": "Telemetry read from the user terminal itself."
+            },
+            "HTTP_DOWNLOAD": {
+              "value": 5,
+              "description": "Bulk HTTP transfer."
+            },
+            "PASSIVE": {
+              "value": 6,
+              "description": "Passive observation of production traffic."
+            },
+            "MODELED": {
+              "value": 7,
+              "description": "Modelled or simulated rather than measured. A modelled value is not a measurement and this member is how a consumer refuses to treat it as one."
+            },
+            "OTHER": {
+              "value": 8,
+              "description": "The source states a method none of the above names."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "MEASUREMENT_SERVER": {
+          "type": "string",
+          "description": "Measurement server, vantage point or probe set, when the source names\none. A throughput number without a vantage is not comparable to one\nwith a different vantage.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "SPDX identifier when the source states one, otherwise the licence name\nverbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain, and never a\ngrant to republish.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "description": "URL of the licence text.",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTRIBUTION": {
+          "type": "string",
+          "description": "Attribution string the licence requires this record and every derived\nproduct to carry downstream.",
+          "x-flatbuffer-type": "string"
+        },
+        "NON_COMMERCIAL_ONLY": {
+          "type": "boolean",
+          "description": "True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\nconsumer building a paid surface MUST honour this flag; it is carried\nper-source because one $CNP may mix a CC0 lane with a CC BY-NC\ncross-check.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "required": [
+        "SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "CNPStatistic": {
+      "type": "object",
+      "description": "One number drawn from a metric's distribution.",
+      "properties": {
+        "STATISTIC": {
+          "$ref": "#/definitions/cnpReduction",
+          "description": "Which reduction this number is.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "MEAN": {
+              "value": 0
+            },
+            "MEDIAN": {
+              "value": 1
+            },
+            "PERCENTILE": {
+              "value": 2,
+              "description": "PERCENTILE_RANK carries which one."
+            },
+            "MINIMUM": {
+              "value": 3
+            },
+            "MAXIMUM": {
+              "value": 4
+            },
+            "STANDARD_DEVIATION": {
+              "value": 5
+            },
+            "COUNT": {
+              "value": 6,
+              "description": "Number of observations, not a value of the metric."
+            }
+          },
+          "x-flatbuffer-default": "MEAN"
+        },
+        "PERCENTILE_RANK": {
+          "type": "number",
+          "description": "Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\notherwise and MUST NOT be set.",
+          "x-flatbuffer-type": "double"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "The number, expressed in the parent metric's UNITS.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CNPMetric": {
+      "type": "object",
+      "description": "One aggregated quantity for the parent record's key.\n\nA metric is a DISTRIBUTION, not a scalar. There is deliberately no\n`VALUE: double` on this table: a source that publishes only a median\nencodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\nthen never mistake it for a mean.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/cnpMetricKind",
+          "description": "Quantity aggregated.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DOWNLOAD_THROUGHPUT": {
+              "value": 0,
+              "description": "Achieved application-layer download rate."
+            },
+            "UPLOAD_THROUGHPUT": {
+              "value": 1,
+              "description": "Achieved application-layer upload rate."
+            },
+            "LATENCY_IDLE": {
+              "value": 2,
+              "description": "Round-trip time on an otherwise unloaded path."
+            },
+            "LATENCY_LOADED_DOWNLOAD": {
+              "value": 3,
+              "description": "Round-trip time measured while the download test saturates the path."
+            },
+            "LATENCY_LOADED_UPLOAD": {
+              "value": 4,
+              "description": "Round-trip time measured while the upload test saturates the path."
+            },
+            "JITTER": {
+              "value": 5,
+              "description": "Variation in inter-packet arrival time."
+            },
+            "PACKET_LOSS": {
+              "value": 6,
+              "description": "Fraction of packets lost."
+            },
+            "AVAILABILITY": {
+              "value": 7,
+              "description": "Fraction of the window in which the service was usable."
+            },
+            "OBSTRUCTION": {
+              "value": 8,
+              "description": "Fraction of the terminal's sky view blocked by terrain or structures."
+            },
+            "RTT": {
+              "value": 9,
+              "description": "Round-trip time where the source does not distinguish loaded from idle."
+            },
+            "OTHER": {
+              "value": 10,
+              "description": "The source publishes a quantity none of the above names. SOURCE_METRIC_NAME is then required to be non-empty."
+            }
+          },
+          "x-flatbuffer-default": "OTHER"
+        },
+        "SOURCE_METRIC_NAME": {
+          "type": "string",
+          "description": "The source's own name for this metric, verbatim. REQUIRED to be\nnon-empty when KIND is OTHER; recommended always, because it is what\nmakes the mapping auditable.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units of every VALUE under STATISTICS. NORMATIVE and required: \"Mbps\",\n\"kbps\", \"ms\", \"percent\", \"fraction\", \"count\". Units are never silently\nconverted on ingest; a source publishing kbps encodes kbps.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "STATISTICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPStatistic"
+          },
+          "description": "The distribution. At least one entry; a metric with none is malformed.",
+          "x-flatbuffer-type": "[CNPStatistic]"
+        },
+        "SAMPLE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of individual measurements aggregated. 0 means the source did\nnot publish a sample count \u2014 it never means zero measurements.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CLIENT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Number of distinct clients, terminals or probes contributing. 0 means\nunpublished.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/CNPProvenance",
+          "description": "Where this metric came from and under what terms.",
+          "x-flatbuffer-type": "CNPProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "UNITS",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "CNP": {
+      "type": "object",
+      "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Stable identifier for this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "description": "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR": {
+          "type": "string",
+          "description": "Operating company, when it differs usefully from CONSTELLATION.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AS_NAME": {
+          "type": "string",
+          "description": "Autonomous system name as the routing registry publishes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "SERVICE_TIER": {
+          "type": "string",
+          "description": "Service tier the source distinguishes, verbatim (\"Residential\",\n\"Roam\", \"Business\", \"Maritime\"). Empty when the source does not\nseparate tiers \u2014 never guessed from the throughput.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "$ref": "#/definitions/CNPRegion",
+          "description": "Geography this aggregate is keyed to. Absent when the source published\nno geographic key at all.",
+          "x-flatbuffer-type": "CNPRegion"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "ISO 8601 UTC inclusive start of the aggregation window.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "description": "ISO 8601 UTC exclusive end of the aggregation window.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGGREGATION_PERIOD": {
+          "$ref": "#/definitions/cnpPeriod",
+          "description": "Calendar span the window represents.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CUSTOM": {
+              "value": 0,
+              "description": "WINDOW_START/WINDOW_STOP are authoritative and match none of the named periods."
+            },
+            "HOUR": {
+              "value": 1
+            },
+            "DAY": {
+              "value": 2
+            },
+            "WEEK": {
+              "value": 3
+            },
+            "MONTH": {
+              "value": 4
+            },
+            "QUARTER": {
+              "value": 5
+            },
+            "YEAR": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "CUSTOM"
+        },
+        "METRICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPMetric"
+          },
+          "description": "The aggregated quantities.",
+          "x-flatbuffer-type": "[CNPMetric]"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CNPProvenance"
+          },
+          "description": "Every source consulted for this key, including those that returned no\nmetric.",
+          "x-flatbuffer-type": "[CNPProvenance]"
+        },
+        "CREATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC creation time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC last-update time of this record.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUPERSEDES_CNP_CID": {
+          "type": "string",
+          "description": "CID of the $CNP this record replaces when a source restates a window.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/CNP",
+  "x-flatbuffer-root-type": "CNP",
+  "x-flatbuffer-file-identifier": "$CNP"
+}

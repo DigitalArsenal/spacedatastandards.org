@@ -200,6 +200,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -334,10 +336,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 199;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 201;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 200] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 202] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -538,6 +540,8 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 200] = [
   RecordType::SBM,
   RecordType::PMM,
   RecordType::OPP,
+  RecordType::IQC,
+  RecordType::CNP,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -745,9 +749,11 @@ impl RecordType {
   pub const SBM: Self = Self(197);
   pub const PMM: Self = Self(198);
   pub const OPP: Self = Self(199);
+  pub const IQC: Self = Self(200);
+  pub const CNP: Self = Self(201);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 199;
+  pub const ENUM_MAX: u8 = 201;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -949,6 +955,8 @@ impl RecordType {
     Self::SBM,
     Self::PMM,
     Self::OPP,
+    Self::IQC,
+    Self::CNP,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1153,6 +1161,8 @@ impl RecordType {
       Self::SBM => Some("SBM"),
       Self::PMM => Some("PMM"),
       Self::OPP => Some("OPP"),
+      Self::IQC => Some("IQC"),
+      Self::CNP => Some("CNP"),
       _ => None,
     }
   }
@@ -1413,6 +1423,8 @@ pub enum RecordTypeT {
   SBM(alloc::boxed::Box<SBMT>),
   PMM(alloc::boxed::Box<PMMT>),
   OPP(alloc::boxed::Box<OPPT>),
+  IQC(alloc::boxed::Box<IQCT>),
+  CNP(alloc::boxed::Box<CNPT>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1622,6 +1634,8 @@ impl RecordTypeT {
       Self::SBM(_) => RecordType::SBM,
       Self::PMM(_) => RecordType::PMM,
       Self::OPP(_) => RecordType::OPP,
+      Self::IQC(_) => RecordType::IQC,
+      Self::CNP(_) => RecordType::CNP,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1826,6 +1840,8 @@ impl RecordTypeT {
       Self::SBM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PMM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OPP(v) => Some(v.pack(fbb).as_union_value()),
+      Self::IQC(v) => Some(v.pack(fbb).as_union_value()),
+      Self::CNP(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6007,6 +6023,48 @@ impl RecordTypeT {
   pub fn as_opp_mut(&mut self) -> Option<&mut OPPT> {
     if let Self::OPP(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned IQCT, setting the union to NONE.
+  pub fn take_iqc(&mut self) -> Option<alloc::boxed::Box<IQCT>> {
+    if let Self::IQC(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::IQC(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the IQCT.
+  pub fn as_iqc(&self) -> Option<&IQCT> {
+    if let Self::IQC(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the IQCT.
+  pub fn as_iqc_mut(&mut self) -> Option<&mut IQCT> {
+    if let Self::IQC(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned CNPT, setting the union to NONE.
+  pub fn take_cnp(&mut self) -> Option<alloc::boxed::Box<CNPT>> {
+    if let Self::CNP(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::CNP(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the CNPT.
+  pub fn as_cnp(&self) -> Option<&CNPT> {
+    if let Self::CNP(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the CNPT.
+  pub fn as_cnp_mut(&mut self) -> Option<&mut CNPT> {
+    if let Self::CNP(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7041,6 +7099,16 @@ impl<'a> Record<'a> {
       RecordType::OPP => RecordTypeT::OPP(alloc::boxed::Box::new(
         self.value_as_opp()
             .expect("Invalid union table, expected `RecordType::OPP`.")
+            .unpack()
+      )),
+      RecordType::IQC => RecordTypeT::IQC(alloc::boxed::Box::new(
+        self.value_as_iqc()
+            .expect("Invalid union table, expected `RecordType::IQC`.")
+            .unpack()
+      )),
+      RecordType::CNP => RecordTypeT::CNP(alloc::boxed::Box::new(
+        self.value_as_cnp()
+            .expect("Invalid union table, expected `RecordType::CNP`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10062,6 +10130,36 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_iqc(&self) -> Option<IQC<'a>> {
+    if self.value_type() == RecordType::IQC {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { IQC::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_cnp(&self) -> Option<CNP<'a>> {
+    if self.value_type() == RecordType::CNP {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { CNP::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10271,6 +10369,8 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::SBM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<SBM>>("RecordType::SBM", pos),
           RecordType::PMM => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<PMM>>("RecordType::PMM", pos),
           RecordType::OPP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<OPP>>("RecordType::OPP", pos),
+          RecordType::IQC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<IQC>>("RecordType::IQC", pos),
+          RecordType::CNP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CNP>>("RecordType::CNP", pos),
           _ => Ok(()),
         }
      })?
@@ -11720,6 +11820,20 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::OPP => {
           if let Some(x) = self.value_as_opp() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::IQC => {
+          if let Some(x) = self.value_as_iqc() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::CNP => {
+          if let Some(x) = self.value_as_cnp() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

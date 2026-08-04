@@ -1,0 +1,325 @@
+// Hash: 27fe0c3d8b876d9a6c786586f9a0951ad06ddfd5860e9420737579751ea46c9f
+// Version: 1.176.0
+// -----------------------------------END_HEADER
+include "../RFB/main.fbs";
+
+/// Role a referenced payload plays for one capture.
+enum iqcPayloadRole : byte {
+  /// The raw baseband sample stream itself (SigMF `.sigmf-data`).
+  DATA,
+  /// The upstream metadata document the record was normalized FROM
+  /// (SigMF `.sigmf-meta`).
+  METADATA,
+  /// A container holding both (SigMF `.sigmf` tar archive, zip, tarball).
+  ARCHIVE,
+  /// A rendered spectrogram, waterfall, audio demod or thumbnail.
+  PREVIEW,
+  /// A companion file the source publishes that is none of the above.
+  OTHER
+}
+
+/// Where a capture's bytes physically live right now.
+enum iqcCustody : byte {
+  /// Bytes stay upstream. This record is a pointer and nothing more. This is
+  /// the DEFAULT and the correct value for every multi-gigabyte archive.
+  UPSTREAM_ONLY,
+  /// This SDN deliberately pinned the bytes; CID is populated and resolvable.
+  PINNED,
+  /// The bytes were pinned and have since been unpinned. CID is retained for
+  /// audit; it may no longer resolve.
+  UNPINNED
+}
+
+/// Geodetic position of the receiver at capture time.
+///
+/// A separate table because latitude/longitude 0,0 is a VALID coordinate: an
+/// absent GEOLOCATION means "the source published no position", which a
+/// zero-defaulted scalar pair could never express.
+table IQCGeolocation {
+  /// Geodetic latitude, degrees, WGS-84, positive north.
+  LATITUDE_DEG: double;
+  /// Geodetic longitude, degrees, WGS-84, positive east.
+  LONGITUDE_DEG: double;
+  /// Height above the WGS-84 ellipsoid, metres. Absent in most SigMF
+  /// recordings; SigMF `core:geolocation` is a GeoJSON Point whose third
+  /// ordinate is optional.
+  ALTITUDE_M: double;
+  /// Reported position uncertainty, metres, when the source states one.
+  UNCERTAINTY_M: double;
+  /// How the position was obtained, verbatim from the source (e.g. "GPS",
+  /// "station registry", "author-supplied"). Never inferred.
+  METHOD: string;
+}
+
+/// Receive chain that produced the samples.
+///
+/// Every field is a verbatim string. SigMF `core:hw` is free text and the
+/// non-SigMF archives publish nothing more structured; splitting free text
+/// into a manufacturer and a model by guessing is a defect.
+table IQCHardware {
+  /// SigMF `core:hw` verbatim, or the source's equivalent free-text
+  /// description of the receive chain.
+  DESCRIPTION: string;
+  /// Receiver manufacturer, only when the source names it as its own field.
+  MANUFACTURER: string;
+  /// Receiver model, only when the source names it as its own field.
+  MODEL: string;
+  /// Antenna description, only when the source names it as its own field.
+  ANTENNA: string;
+  /// SigMF `core:recorder` — the SOFTWARE that wrote the recording.
+  RECORDER: string;
+}
+
+/// One SigMF capture segment: the point in the sample stream at which the
+/// listed tuning took effect. A retuned or frequency-hopped recording has
+/// several; a single-tune recording has one.
+table IQCSegment {
+  /// SigMF `core:sample_start` — index of the first sample of this segment.
+  SAMPLE_START: uint64;
+  /// SigMF `core:global_index` — index of this sample in the receiver's
+  /// free-running sample counter.
+  GLOBAL_INDEX: uint64;
+  /// SigMF `core:header_bytes` — bytes preceding this segment in the data
+  /// file.
+  HEADER_BYTES: uint64;
+  /// SigMF `core:frequency` — centre frequency of this segment, HERTZ.
+  CENTER_FREQ_HZ: double;
+  /// SigMF `core:datetime` — ISO 8601 UTC timestamp of SAMPLE_START.
+  DATETIME: string;
+}
+
+/// One labelled region of the capture in time and frequency.
+table IQCAnnotation {
+  /// SigMF `core:sample_start` — first sample of the annotated region.
+  SAMPLE_START: uint64;
+  /// SigMF `core:sample_count` — length of the annotated region in samples.
+  SAMPLE_COUNT: uint64;
+  /// SigMF `core:freq_lower_edge` — lower edge of the annotated band, HERTZ.
+  FREQ_LOWER_EDGE_HZ: double;
+  /// SigMF `core:freq_upper_edge` — upper edge of the annotated band, HERTZ.
+  FREQ_UPPER_EDGE_HZ: double;
+  /// SigMF `core:label` — the short human label ("LoRa", "ADS-B", "AIS").
+  LABEL: string;
+  /// SigMF `core:comment` — free-text note.
+  COMMENT: string;
+  /// SigMF `core:generator` — the tool or person that produced the
+  /// annotation. An annotation asserted by an automatic classifier and one
+  /// asserted by a human are not interchangeable evidence; this field is how
+  /// a consumer tells them apart.
+  GENERATOR: string;
+  /// SigMF `core:uuid` — the annotation's own identifier, when present.
+  UUID: string;
+}
+
+/// A SigMF extension namespace the upstream metadata declares.
+table IQCExtension {
+  /// Extension namespace name.
+  NAME: string;
+  /// Extension version.
+  VERSION: string;
+  /// True when the extension is declared optional for interpretation.
+  IS_OPTIONAL: bool;
+}
+
+/// A retrievable file belonging to this capture.
+///
+/// The record NEVER carries sample bytes. It carries where they are, how big
+/// they are, and what they hash to, so a consumer can decide for itself
+/// whether to fetch 400 kB or 127 GB.
+table IQCPayloadRef {
+  /// What this file is.
+  ROLE: iqcPayloadRole = OTHER;
+  /// Upstream retrieval URL, verbatim.
+  URL: string;
+  /// File name as the source publishes it.
+  FILE_NAME: string;
+  /// IANA media type when the source declares one.
+  MEDIA_TYPE: string;
+  /// Byte length. 0 means the source did not publish a size — it never means
+  /// an empty file.
+  BYTE_LENGTH: uint64;
+  /// SHA-256 of the exact bytes, lowercase hex. Populated only when computed
+  /// or published; never guessed.
+  BYTE_SHA256: string;
+  /// SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a
+  /// SHA-512 over the dataset file, so it is carried in its own field rather
+  /// than converted or discarded.
+  BYTE_SHA512: string;
+  /// IPFS CIDv1 when, and only when, this SDN pinned the bytes.
+  CID: string;
+  /// Multiformat address, usually /ipfs/{CID}.
+  MULTIFORMAT_ADDRESS: string;
+  /// Custody of these bytes.
+  CUSTODY: iqcCustody = UPSTREAM_ONLY;
+  /// ISO 8601 UTC time at which URL was last confirmed retrievable.
+  RETRIEVED_AT: string;
+}
+
+/// RF IQ Capture Metadata.
+///
+/// The description of ONE raw, un-demodulated complex-baseband recording held
+/// in a public archive — IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ
+/// database, Zenodo — normalized onto the SigMF v1 core namespace, which is
+/// the only metadata vocabulary these archives share.
+///
+/// $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable
+/// and verifiable without anyone mirroring its payload: the samples stay where
+/// their publisher put them and `PAYLOADS` says where that is, how large it
+/// is, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture
+/// decision for small high-value recordings, never a default.
+///
+/// UNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and
+/// sample rate in HERTZ, so every frequency and rate field here is `_HZ` and
+/// carries the Hz value unconverted. This standard deliberately does NOT
+/// follow $RFB's MHz convention — silently rescaling a SigMF value on ingest
+/// is the exact defect the suffix exists to prevent. A consumer joining $IQC
+/// to $RFB divides by 1e6 at the join, explicitly.
+///
+/// LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.
+/// It does not mean public domain, it does not mean permissive, and it does
+/// not authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts
+/// third-party recordings, so licence is per RECORDING, never per site.
+///
+/// Division of labour: $RFO = a sensor's astrometric/RF observation of a
+/// tracked object (azimuth, elevation, range); $RFE = the parametric emitter
+/// description; $RFB = the emitter's band specification in MHz; $IQC = the
+/// archived baseband recording itself. $DPM remains the manifest under which
+/// THIS network publishes a shard of $IQC records; it does not describe an
+/// upstream third party's capture.
+table IQC {
+  /// Stable identifier for this record.
+  ID: string;
+  /// The upstream archive's own identifier for this capture, verbatim.
+  CAPTURE_ID: string;
+  /// Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",
+  /// "IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than
+  /// an enum so a new archive lane never requires a schema release.
+  SOURCE_NAME: string;
+  /// Landing page for the capture at the source.
+  SOURCE_URL: string;
+  /// Identifier of the source record this was normalized from, when the
+  /// source exposes one distinct from CAPTURE_ID.
+  SOURCE_RECORD_ID: string;
+  /// SHA-256 of the raw upstream metadata bytes that produced this record,
+  /// lowercase hex. Makes the normalization auditable.
+  SOURCE_SHA256: string;
+  /// ISO 8601 UTC time the source metadata was retrieved.
+  RETRIEVED_AT: string;
+
+  /// Human title of the capture.
+  TITLE: string;
+  /// SigMF `core:description`.
+  DESCRIPTION: string;
+  /// SigMF `core:author`.
+  AUTHOR: string;
+  /// SigMF `core:version` — the SigMF specification version the upstream
+  /// metadata declares. Empty for captures normalized from a non-SigMF
+  /// source; that emptiness is itself informative.
+  SIGMF_VERSION: string;
+  /// SigMF `core:collection` — identifier of the collection this recording
+  /// belongs to.
+  COLLECTION: string;
+  /// SigMF `core:extensions`.
+  EXTENSIONS: [IQCExtension];
+
+  /// SigMF `core:datatype` VERBATIM, e.g. "cf32_le", "ci16_le", "ru8". Never
+  /// re-spelled, never normalized to another vocabulary. A consumer that
+  /// cannot parse the token MUST refuse the samples rather than assume a
+  /// layout.
+  DATATYPE: string;
+  /// SigMF `core:sample_rate`, HERTZ (complex samples per second).
+  SAMPLE_RATE_HZ: double;
+  /// SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and
+  /// MUST be written explicitly when known.
+  NUM_CHANNELS: uint32;
+  /// Centre frequency of the FIRST capture segment, HERTZ, copied here for
+  /// indexing. `SEGMENTS` is normative whenever it is present.
+  CENTER_FREQ_HZ: double;
+  /// Lowest occupied frequency across the recording, HERTZ, when the source
+  /// states it or its annotations bound it.
+  FREQ_LOWER_EDGE_HZ: double;
+  /// Highest occupied frequency across the recording, HERTZ.
+  FREQ_UPPER_EDGE_HZ: double;
+  /// Total complex samples in the recording. 0 means unstated — it is NOT to
+  /// be back-computed from BYTE_LENGTH unless DATATYPE and any header bytes
+  /// are both known.
+  SAMPLE_COUNT: uint64;
+  /// Recording length in seconds, when stated or exactly derivable from
+  /// SAMPLE_COUNT and SAMPLE_RATE_HZ.
+  DURATION_SECONDS: double;
+  /// SigMF `core:offset` — index of the first sample in the recording's own
+  /// numbering.
+  SAMPLE_OFFSET: uint64;
+  /// SigMF `core:metadata_only` — true when no dataset file accompanies the
+  /// metadata.
+  METADATA_ONLY: bool;
+  /// SigMF `core:trailing_bytes` — non-sample bytes at the end of the data
+  /// file.
+  TRAILING_BYTES: uint64;
+
+  /// ISO 8601 UTC start of the recording (the first segment's
+  /// `core:datetime`).
+  CAPTURE_START: string;
+  /// ISO 8601 UTC end of the recording, when stated or exactly derivable.
+  CAPTURE_STOP: string;
+  /// Per-segment tuning history.
+  SEGMENTS: [IQCSegment];
+  /// Labelled time/frequency regions.
+  ANNOTATIONS: [IQCAnnotation];
+  /// Archive-level tags or categories, verbatim (SigidWiki categories,
+  /// Zenodo keywords, IQEngine tags).
+  LABELS: [string];
+
+  /// Receiver position. Absent when the source published none.
+  GEOLOCATION: IQCGeolocation;
+  /// Receive chain.
+  HARDWARE: IQCHardware;
+
+  /// Signal designation the source states, verbatim ("LoRa", "DVB-S2",
+  /// "ADS-B", "VOR"). Not an enum: these archives catalogue the whole radio
+  /// world, and $RFE's `signalModulation` is a radar-emitter vocabulary that
+  /// would force every civil waveform into UNKNOWN.
+  SIGNAL_NAME: string;
+  /// Modulation the source states, verbatim. Never inferred from the samples.
+  MODULATION: string;
+  /// Band designation the source states. Shares $RFB's `rfBandDesignation`, so
+  /// an HF or VHF capture is designated identically on both records.
+  BAND: rfBandDesignation = OTHER;
+  /// NORAD catalogue number of the transmitting spacecraft when the capture
+  /// is of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.
+  NORAD_CAT_ID: uint;
+  /// International designator of the transmitting spacecraft, when known.
+  OBJECT_ID: string;
+  /// $RFE.ID of the emitter this capture is of, when identified.
+  EMITTER_ID: string;
+  /// $RFB.ID of the band specification this capture exercises, when
+  /// identified.
+  RFB_ID: string;
+
+  /// SPDX identifier when the source states one, otherwise the source's
+  /// licence name verbatim. EMPTY MEANS UNKNOWN TERMS — never public domain.
+  LICENSE: string;
+  /// URL of the licence text the source points at.
+  LICENSE_URL: string;
+  /// Attribution/citation string the licence requires this record and any
+  /// derived product to carry downstream.
+  ATTRIBUTION: string;
+  /// SigMF `core:meta_doi` — DOI of the metadata.
+  META_DOI: string;
+  /// SigMF `core:data_doi` — DOI of the dataset.
+  DATA_DOI: string;
+
+  /// Retrievable files for this capture.
+  PAYLOADS: [IQCPayloadRef];
+
+  /// ISO 8601 UTC creation time of this record.
+  CREATED_AT: string;
+  /// ISO 8601 UTC last-update time of this record.
+  UPDATED_AT: string;
+  /// CID of the $IQC this record replaces, when the upstream capture's
+  /// metadata changed.
+  SUPERSEDES_IQC_CID: string;
+}
+
+root_type IQC;
+file_identifier "$IQC";

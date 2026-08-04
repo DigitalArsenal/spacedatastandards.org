@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cnpRegionKind" : {
+      "type" : "string",
+      "enum": ["GLOBAL", "COUNTRY", "SUBDIVISION", "METRO", "CELL", "POINT_OF_PRESENCE", "OTHER"]
+    },
+    "cnpPeriod" : {
+      "type" : "string",
+      "enum": ["CUSTOM", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR"]
+    },
+    "cnpMetricKind" : {
+      "type" : "string",
+      "enum": ["DOWNLOAD_THROUGHPUT", "UPLOAD_THROUGHPUT", "LATENCY_IDLE", "LATENCY_LOADED_DOWNLOAD", "LATENCY_LOADED_UPLOAD", "JITTER", "PACKET_LOSS", "AVAILABILITY", "OBSTRUCTION", "RTT", "OTHER"]
+    },
+    "cnpReduction" : {
+      "type" : "string",
+      "enum": ["MEAN", "MEDIAN", "PERCENTILE", "MINIMUM", "MAXIMUM", "STANDARD_DEVIATION", "COUNT"]
+    },
+    "cnpMethod" : {
+      "type" : "string",
+      "enum": ["NDT7", "SPEED_TEST", "PING", "TRACEROUTE", "TERMINAL_TELEMETRY", "HTTP_DOWNLOAD", "PASSIVE", "MODELED", "OTHER"]
+    },
+    "CNPRegion" : {
+      "type" : "object",
+      "description" : "Geography an aggregate is keyed to.\n\nA separate table so an absent REGION means \"the source did not key by\ngeography\", which is different from GLOBAL (\"the source aggregated across\nall geographies\") and different again from an empty CODE.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/cnpRegionKind",
+                "description" : "Granularity of CODE."
+              },
+        "CODE" : {
+                "type" : "string",
+                "description" : "The region key, verbatim from the source in the coding scheme KIND\nnames. Never re-coded between schemes on ingest."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable region name as the source publishes it. Joins to\n$CTR for country identity when KIND is COUNTRY."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CNPProvenance" : {
+      "type" : "object",
+      "description" : "Where one metric came from and under what terms it may be republished.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\"."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "URL of the dataset, endpoint or landing page."
+              },
+        "SOURCE_DATASET" : {
+                "type" : "string",
+                "description" : "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\"."
+              },
+        "SOURCE_QUERY" : {
+                "type" : "string",
+                "description" : "The exact query or request that produced these numbers, so the\naggregate can be replayed rather than trusted."
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string",
+                "description" : "Source's own identifier for the returned batch, when it issues one."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the raw source bytes this aggregate was computed from,\nlowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the source was queried."
+              },
+        "METHOD" : {
+                "$ref" : "#/definitions/cnpMethod",
+                "description" : "How the underlying observations were produced."
+              },
+        "MEASUREMENT_SERVER" : {
+                "type" : "string",
+                "description" : "Measurement server, vantage point or probe set, when the source names\none. A throughput number without a vantage is not comparable to one\nwith a different vantage."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "SPDX identifier when the source states one, otherwise the licence name\nverbatim. EMPTY MEANS UNKNOWN TERMS — never public domain, and never a\ngrant to republish."
+              },
+        "LICENSE_URL" : {
+                "type" : "string",
+                "description" : "URL of the licence text."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution string the licence requires this record and every derived\nproduct to carry downstream."
+              },
+        "NON_COMMERCIAL_ONLY" : {
+                "type" : "boolean",
+                "description" : "True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\nconsumer building a paid surface MUST honour this flag; it is carried\nper-source because one $CNP may mix a CC0 lane with a CC BY-NC\ncross-check."
+              }
+      },
+      "required" : ["SOURCE"],
+      "additionalProperties" : false
+    },
+    "CNPStatistic" : {
+      "type" : "object",
+      "description" : "One number drawn from a metric's distribution.",
+      "properties" : {
+        "STATISTIC" : {
+                "$ref" : "#/definitions/cnpReduction",
+                "description" : "Which reduction this number is."
+              },
+        "PERCENTILE_RANK" : {
+                "type" : "number",
+                "description" : "Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\notherwise and MUST NOT be set."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "The number, expressed in the parent metric's UNITS."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CNPMetric" : {
+      "type" : "object",
+      "description" : "One aggregated quantity for the parent record's key.\n\nA metric is a DISTRIBUTION, not a scalar. There is deliberately no\n`VALUE: double` on this table: a source that publishes only a median\nencodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\nthen never mistake it for a mean.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/cnpMetricKind",
+                "description" : "Quantity aggregated."
+              },
+        "SOURCE_METRIC_NAME" : {
+                "type" : "string",
+                "description" : "The source's own name for this metric, verbatim. REQUIRED to be\nnon-empty when KIND is OTHER; recommended always, because it is what\nmakes the mapping auditable."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units of every VALUE under STATISTICS. NORMATIVE and required: \"Mbps\",\n\"kbps\", \"ms\", \"percent\", \"fraction\", \"count\". Units are never silently\nconverted on ingest; a source publishing kbps encodes kbps."
+              },
+        "STATISTICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPStatistic"},
+                "description" : "The distribution. At least one entry; a metric with none is malformed."
+              },
+        "SAMPLE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of individual measurements aggregated. 0 means the source did\nnot publish a sample count — it never means zero measurements."
+              },
+        "CLIENT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Number of distinct clients, terminals or probes contributing. 0 means\nunpublished."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/CNPProvenance",
+                "description" : "Where this metric came from and under what terms."
+              }
+      },
+      "required" : ["UNITS", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "CNP" : {
+      "type" : "object",
+      "description" : "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT\nprovider — or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT — never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Stable identifier for this record."
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
+              },
+        "OPERATOR" : {
+                "type" : "string",
+                "description" : "Operating company, when it differs usefully from CONSTELLATION."
+              },
+        "ASN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Autonomous system number of the measured client network — Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+              },
+        "AS_NAME" : {
+                "type" : "string",
+                "description" : "Autonomous system name as the routing registry publishes it."
+              },
+        "SERVICE_TIER" : {
+                "type" : "string",
+                "description" : "Service tier the source distinguishes, verbatim (\"Residential\",\n\"Roam\", \"Business\", \"Maritime\"). Empty when the source does not\nseparate tiers — never guessed from the throughput."
+              },
+        "REGION" : {
+                "$ref" : "#/definitions/CNPRegion",
+                "description" : "Geography this aggregate is keyed to. Absent when the source published\nno geographic key at all."
+              },
+        "WINDOW_START" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC inclusive start of the aggregation window."
+              },
+        "WINDOW_STOP" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC exclusive end of the aggregation window."
+              },
+        "AGGREGATION_PERIOD" : {
+                "$ref" : "#/definitions/cnpPeriod",
+                "description" : "Calendar span the window represents."
+              },
+        "METRICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPMetric"},
+                "description" : "The aggregated quantities."
+              },
+        "SOURCES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CNPProvenance"},
+                "description" : "Every source consulted for this key, including those that returned no\nmetric."
+              },
+        "CREATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC creation time of this record."
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC last-update time of this record."
+              },
+        "SUPERSEDES_CNP_CID" : {
+                "type" : "string",
+                "description" : "CID of the $CNP this record replaces when a source restates a window."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CNP"
+}
