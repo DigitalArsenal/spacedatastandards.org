@@ -20,7 +20,7 @@ const CATEGORY_MAP = {
   'OOL': 'Orbital', 'OON': 'Orbital', 'OBD': 'Orbital', 'OBT': 'Orbital',
 
   // Conjunction/SSA
-  'CDM': 'Conjunction', 'CSM': 'Conjunction', 'CAT': 'Conjunction', 'HYP': 'Conjunction',
+  'CDM': 'Conjunction', 'CSM': 'Conjunction', 'CAT': 'Conjunction', 'CMR': 'Conjunction', 'HYP': 'Conjunction',
 
   // Entity/Identity
   'EPM': 'Entity', 'PNM': 'Entity', 'CRM': 'Entity',

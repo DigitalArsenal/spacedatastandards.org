@@ -18,6 +18,7 @@ const ROOT = path.resolve(__dirname, '..');
 const descriptionOverrides = {
   "CAT": "Satellite Catalog Entity - object types, ops status, orbit info, NORAD numbers",
   "CDM": "Conjunction Data Message - collision assessment with miss distance and probability",
+  "CMR": "Constellation Membership Record - provenance-backed per-NORAD constellation and operator membership",
   "GJN": "GeoJSON geographic data structures - points, lines, polygons, features",
   "KML": "Keyhole Markup Language - geographic annotation and visualization",
   "CMS": "Communications System - transponder channels, modulation, data rates",
@@ -78,6 +79,7 @@ const keywordsMap = {
   "ACM": ["attitude", "comprehensive", "quaternion", "Euler", "spin", "direction cosine"],
   "ATD": ["attitude", "data point", "observation", "stabilized", "spinning", "tumbling"],
   "CDM": ["conjunction", "collision", "close approach", "miss distance", "probability", "screening", "covariance", "TCA", "space debris"],
+  "CMR": ["constellation", "membership", "operator", "owner", "NORAD", "catalog", "CelesTrak", "GCAT", "aliases", "provenance"],
   "CSM": ["conjunction", "summary", "close approach", "TCA", "range", "collision probability"],
   "HYP": ["hypothesis", "event", "analysis", "matrix", "score", "categorization"],
   "TDM": ["tracking", "data", "observation", "range", "Doppler", "angles", "CCSDS"],

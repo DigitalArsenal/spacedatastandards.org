@@ -205,6 +205,7 @@ class RecordType(object):
     OPP = 199
     IQC = 200
     CNP = 201
+    CMR = 202
 
 def RecordTypeCreator(unionType, table):
     from flatbuffers.table import Table
@@ -813,4 +814,7 @@ def RecordTypeCreator(unionType, table):
     if unionType == RecordType.CNP:
         import CNP
         return CNP.CNPT.InitFromBuf(table.Bytes, table.Pos)
+    if unionType == RecordType.CMR:
+        import CMR
+        return CMR.CMRT.InitFromBuf(table.Bytes, table.Pos)
     return None

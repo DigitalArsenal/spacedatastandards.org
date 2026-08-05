@@ -206,6 +206,7 @@ public enum RecordType : byte
   OPP = 199,
   IQC = 200,
   CNP = 201,
+  CMR = 202,
 };
 
 public class RecordTypeUnion {
@@ -620,6 +621,8 @@ public class RecordTypeUnion {
   public static RecordTypeUnion FromIQC(IQCT _iqc) { return new RecordTypeUnion{ Type = RecordType.IQC, Value = _iqc }; }
   public CNPT AsCNP() { return this.As<CNPT>(); }
   public static RecordTypeUnion FromCNP(CNPT _cnp) { return new RecordTypeUnion{ Type = RecordType.CNP, Value = _cnp }; }
+  public CMRT AsCMR() { return this.As<CMRT>(); }
+  public static RecordTypeUnion FromCMR(CMRT _cmr) { return new RecordTypeUnion{ Type = RecordType.CMR, Value = _cmr }; }
 
   public static int Pack(Google.FlatBuffers.FlatBufferBuilder builder, RecordTypeUnion _o) {
     switch (_o.Type) {
@@ -825,6 +828,7 @@ public class RecordTypeUnion {
       case RecordType.OPP: return OPP.Pack(builder, _o.AsOPP()).Value;
       case RecordType.IQC: return IQC.Pack(builder, _o.AsIQC()).Value;
       case RecordType.CNP: return CNP.Pack(builder, _o.AsCNP()).Value;
+      case RecordType.CMR: return CMR.Pack(builder, _o.AsCMR()).Value;
     }
   }
 }
@@ -1440,6 +1444,9 @@ static public class RecordTypeVerify
         break;
       case RecordType.CNP:
         result = CNPVerify.Verify(verifier, tablePos);
+        break;
+      case RecordType.CMR:
+        result = CMRVerify.Verify(verifier, tablePos);
         break;
       default: result = true;
         break;

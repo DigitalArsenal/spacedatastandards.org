@@ -24,6 +24,7 @@ export * as CES from './CES/main.js';
 export * as CFP from './CFP/main.js';
 export * as CHN from './CHN/main.js';
 export * as CLT from './CLT/main.js';
+export * as CMR from './CMR/main.js';
 export * as CMS from './CMS/main.js';
 export * as CMT from './CMT/main.js';
 export * as CNP from './CNP/main.js';

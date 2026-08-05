@@ -1,0 +1,107 @@
+// Hash: 943a03e692c6b3942ce8b80eccd0e3d93a506c3fe19cca5ff5f385716941cc6c
+// Version: 1.177.0
+// -----------------------------------END_HEADER
+/// What one source assertion establishes for a constellation membership.
+/// Ordinals are wire values: append only; never reorder or reuse.
+enum cmrEvidenceRole : byte {
+  /// The source does not distinguish the assertion's role.
+  UNSPECIFIED,
+  /// The object belongs to the named constellation or curated group.
+  MEMBERSHIP,
+  /// The source identifies the constellation's operator or owner.
+  OPERATOR,
+  /// The source establishes the NORAD catalogue identity or object join.
+  OBJECT_IDENTITY,
+  /// The source establishes the object's satellite-bus join.
+  BUS_IDENTITY
+}
+
+/// Current state of the asserted membership. Ordinals are wire values: append
+/// only; never reorder or reuse.
+enum cmrMembershipState : byte {
+  /// The source does not state whether the membership is current.
+  UNSPECIFIED,
+  /// The object is a current member of the constellation.
+  ACTIVE,
+  /// The object was formerly a member and is retained for history.
+  FORMER
+}
+
+/// Replayable provenance for one fact used by a $CMR.
+///
+/// Each source gets its own entry. A publisher never merges CelesTrak group
+/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+table CMRProvenance {
+  ROLE:cmrEvidenceRole = UNSPECIFIED;
+  /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
+  /// provider that published the joined $CAT record.
+  SOURCE:string (required);
+  /// Source dataset or product name verbatim, such as "active Starlink group"
+  /// or "GCAT satcat".
+  SOURCE_DATASET:string (required);
+  /// Source-native row, group, object, or catalogue identifier.
+  SOURCE_RECORD_ID:string;
+  /// Replayable URL or provider query identifying the source material.
+  SOURCE_URL:string;
+  /// Source revision, edition, or upstream update marker verbatim.
+  SOURCE_VERSION:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// SHA-256 of the exact source payload bytes, as 64 lowercase hexadecimal
+  /// characters. Empty only when the source cannot expose replayable bytes.
+  SOURCE_SHA256:string;
+  /// Redistribution terms verbatim. Empty means unknown terms, never public
+  /// domain and never an implied grant.
+  LICENSE:string;
+  /// Attribution text required by the source.
+  ATTRIBUTION:string;
+  /// Source caveats or reconciliation notes; never a substitute for a field.
+  NOTES:string;
+}
+
+/// Constellation Membership Record.
+///
+/// One record asserts that one NORAD-catalogued object belongs (or formerly
+/// belonged) to one named constellation. Record sets are therefore directly
+/// keyable and queryable by NORAD_CAT_ID in FlatSQL. The record joins to $CAT
+/// by NORAD_CAT_ID and OBJECT_ID and may join through $CAT.BUS_ID to $BUS; it
+/// does not duplicate catalogue or bus properties.
+///
+/// CONSTELLATION_ID and OPERATOR_ID are publisher-stable identifiers. Display
+/// names and aliases are carried separately so consumers never use branding as
+/// identity. Every emitted record names the independent source assertions used
+/// to establish membership, operator, and catalogue joins.
+table CMR {
+  /// Publisher-stable identifier for this assertion, unique within its record
+  /// set. Recommended form: "<constellation-id>:<norad-cat-id>".
+  MEMBERSHIP_ID:string (required);
+  /// NORAD catalogue number. Zero is invalid for a published record.
+  NORAD_CAT_ID:uint;
+  /// International designator copied verbatim from the joined $CAT when known.
+  OBJECT_ID:string;
+  /// Publisher-stable, lowercase identifier for the constellation/group.
+  CONSTELLATION_ID:string (required);
+  /// Human-readable constellation name as published by the authoritative
+  /// membership source.
+  CONSTELLATION_NAME:string (required);
+  /// Alternate constellation names, brands, and search terms. Values are
+  /// verbatim; consumers must not treat aliases as stable identifiers.
+  CONSTELLATION_ALIASES:[string];
+  /// Publisher-stable operator/owner identifier. Empty when no source supports
+  /// one; never synthesized from a display name.
+  OPERATOR_ID:string;
+  /// Operator/owner display name verbatim from the cited source.
+  OPERATOR_NAME:string;
+  /// Alternate operator names and brands, verbatim.
+  OPERATOR_ALIASES:[string];
+  STATE:cmrMembershipState = UNSPECIFIED;
+  /// RFC 3339 UTC fixed-millisecond instant at which this reconciled assertion
+  /// was emitted.
+  UPDATED_AT:string (required);
+  /// Independent evidence used to construct this assertion. At least one
+  /// MEMBERSHIP entry is required by the publishing contract.
+  PROVENANCE:[CMRProvenance] (required);
+}
+
+root_type CMR;
+file_identifier "$CMR";

@@ -54,6 +54,8 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **VAM** — Visual Asset Manifest for ranked 3D models, LODs, transforms, provenance, licensing, review, and IPFS content identity
 
+**CMR** — Constellation Membership Record for provenance-backed, per-NORAD constellation and operator membership
+
 ### Tracking
 
 **TDM, RFM** — Tracking data and reference frame messages for observation data

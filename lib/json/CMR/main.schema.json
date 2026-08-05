@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "cmrEvidenceRole" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEMBERSHIP", "OPERATOR", "OBJECT_IDENTITY", "BUS_IDENTITY"]
+    },
+    "cmrMembershipState" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "ACTIVE", "FORMER"]
+    },
+    "CMRProvenance" : {
+      "type" : "object",
+      "description" : "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+      "properties" : {
+        "ROLE" : {
+                "$ref" : "#/definitions/cmrEvidenceRole"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Publisher name verbatim, such as \"CelesTrak\", \"GCAT\", or the SDN\nprovider that published the joined $CAT record."
+              },
+        "SOURCE_DATASET" : {
+                "type" : "string",
+                "description" : "Source dataset or product name verbatim, such as \"active Starlink group\"\nor \"GCAT satcat\"."
+              },
+        "SOURCE_RECORD_ID" : {
+                "type" : "string",
+                "description" : "Source-native row, group, object, or catalogue identifier."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "Replayable URL or provider query identifying the source material."
+              },
+        "SOURCE_VERSION" : {
+                "type" : "string",
+                "description" : "Source revision, edition, or upstream update marker verbatim."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+              },
+        "SOURCE_SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 of the exact source payload bytes, as 64 lowercase hexadecimal\ncharacters. Empty only when the source cannot expose replayable bytes."
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Redistribution terms verbatim. Empty means unknown terms, never public\ndomain and never an implied grant."
+              },
+        "ATTRIBUTION" : {
+                "type" : "string",
+                "description" : "Attribution text required by the source."
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Source caveats or reconciliation notes; never a substitute for a field."
+              }
+      },
+      "required" : ["SOURCE", "SOURCE_DATASET", "RETRIEVED_AT"],
+      "additionalProperties" : false
+    },
+    "CMR" : {
+      "type" : "object",
+      "description" : "Constellation Membership Record.\n\nOne record asserts that one NORAD-catalogued object belongs (or formerly\nbelonged) to one named constellation. Record sets are therefore directly\nkeyable and queryable by NORAD_CAT_ID in FlatSQL. The record joins to $CAT\nby NORAD_CAT_ID and OBJECT_ID and may join through $CAT.BUS_ID to $BUS; it\ndoes not duplicate catalogue or bus properties.\n\nCONSTELLATION_ID and OPERATOR_ID are publisher-stable identifiers. Display\nnames and aliases are carried separately so consumers never use branding as\nidentity. Every emitted record names the independent source assertions used\nto establish membership, operator, and catalogue joins.",
+      "properties" : {
+        "MEMBERSHIP_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable identifier for this assertion, unique within its record\nset. Recommended form: \"<constellation-id>:<norad-cat-id>\"."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalogue number. Zero is invalid for a published record."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator copied verbatim from the joined $CAT when known."
+              },
+        "CONSTELLATION_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier for the constellation/group."
+              },
+        "CONSTELLATION_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable constellation name as published by the authoritative\nmembership source."
+              },
+        "CONSTELLATION_ALIASES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Alternate constellation names, brands, and search terms. Values are\nverbatim; consumers must not treat aliases as stable identifiers."
+              },
+        "OPERATOR_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable operator/owner identifier. Empty when no source supports\none; never synthesized from a display name."
+              },
+        "OPERATOR_NAME" : {
+                "type" : "string",
+                "description" : "Operator/owner display name verbatim from the cited source."
+              },
+        "OPERATOR_ALIASES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Alternate operator names and brands, verbatim."
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/cmrMembershipState"
+              },
+        "UPDATED_AT" : {
+                "type" : "string",
+                "description" : "RFC 3339 UTC fixed-millisecond instant at which this reconciled assertion\nwas emitted."
+              },
+        "PROVENANCE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CMRProvenance"},
+                "description" : "Independent evidence used to construct this assertion. At least one\nMEMBERSHIP entry is required by the publishing contract."
+              }
+      },
+      "required" : ["MEMBERSHIP_ID", "CONSTELLATION_ID", "CONSTELLATION_NAME", "UPDATED_AT", "PROVENANCE"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/CMR"
+}

@@ -66,6 +66,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
     tag: "Objects",
     types: [
       { abbr: "CAT", desc: "Catalog Entity Message" },
+      { abbr: "CMR", desc: "Constellation Membership Record" },
       { abbr: "OON", desc: "On-Orbit Object" },
       { abbr: "OOD", desc: "On-Orbit Object Details" },
       { abbr: "OOL", desc: "On-Orbit Object List" },
