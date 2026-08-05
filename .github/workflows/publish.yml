@@ -851,27 +851,14 @@ jobs:
   publish-php:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: |
       github.event_name == 'release' ||
       contains(inputs.packages, 'php') ||
       inputs.packages == 'all'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: lib-artifacts
-          path: lib/
-
-      - name: Create and validate Packagist metadata
-        run: |
-          test -f composer.json
-          php -r 'json_decode(file_get_contents("composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
-
-      - name: Register or update Packagist package
+      - name: Check Packagist credentials
+        id: creds
         env:
           PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
           PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
@@ -879,8 +866,37 @@ jobs:
           if [ -z "$PACKAGIST_USERNAME" ] || [ -z "$PACKAGIST_TOKEN" ]; then
             echo "PACKAGIST_USERNAME and PACKAGIST_TOKEN are not configured; PHP/Packagist is not an intended target for this release."
             echo "Configure both secrets to make Packagist a required publication target."
-            exit 0
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # Shallow (default depth-1) checkout: this job only reads composer.json
+      # at HEAD and never needs history. A fetch-depth:0 clone of this repo
+      # (>3GB with every release's regenerated bindings) hung actions/checkout
+      # for 55-90 min on v1.177.0 — see sds-publish-php-checkout-hang.
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.configured == 'true'
+
+      - name: Download artifacts
+        if: steps.creds.outputs.configured == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: lib-artifacts
+          path: lib/
+
+      - name: Create and validate Packagist metadata
+        if: steps.creds.outputs.configured == 'true'
+        run: |
+          test -f composer.json
+          php -r 'json_decode(file_get_contents("composer.json"), true); if (json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, json_last_error_msg() . PHP_EOL); exit(1); }'
+
+      - name: Register or update Packagist package
+        if: steps.creds.outputs.configured == 'true'
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+        run: |
           REPO_URL="https://github.com/DigitalArsenal/spacedatastandards.org"
           AUTH="Authorization: Bearer ${PACKAGIST_USERNAME}:${PACKAGIST_TOKEN}"
           CREATE_RESPONSE=$(curl -sS -w "\n%{http_code}" \
