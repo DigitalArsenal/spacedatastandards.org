@@ -199,7 +199,60 @@ jobs:
           path: lib/
 
       - name: Install build tools
-        run: pip install build twine
+        run: pip install build twine packaging
+
+      - name: Guard against a version that would not sort as PyPI's newest
+        # sds-registry-latest-pointer-poisoned: four v23.3.3.0.3.x releases,
+        # cut in error under an incompatible major-version scheme, PEP-440-sort
+        # ABOVE every real 1.x release forever and permanently poisoned PyPI's
+        # `latest` pointer (pip install resolves to a 2026-03 build, not the
+        # newest tag). This refuses to repeat that class of mistake: any
+        # version that would not become PyPI's highest-sorting release fails
+        # the publish BEFORE upload, naming the release that outranks it.
+        run: |
+          set -euo pipefail
+          PEP440_VERSION=$(echo "${{ needs.build.outputs.version }}" | tr '-' '.' | cut -d+ -f1)
+          python3 - "$PEP440_VERSION" <<'PYEOF'
+          import json, sys, urllib.request
+          from packaging.version import Version, InvalidVersion
+
+          new_version = sys.argv[1]
+          try:
+              new = Version(new_version)
+          except InvalidVersion as e:
+              print(f"::error::new version '{new_version}' is not a valid PEP 440 version: {e}")
+              sys.exit(1)
+
+          try:
+              with urllib.request.urlopen("https://pypi.org/pypi/spacedatastandards.org/json", timeout=15) as r:
+                  data = json.load(r)
+          except Exception as e:
+              print(f"::warning::could not reach PyPI to check existing releases ({e}); proceeding without the guard")
+              sys.exit(0)
+
+          higher = []
+          for v in data.get("releases", {}):
+              try:
+                  parsed = Version(v)
+              except InvalidVersion:
+                  continue
+              if parsed > new:
+                  higher.append(v)
+
+          if higher:
+              higher.sort(key=Version, reverse=True)
+              print(
+                  f"::error::refusing to publish {new_version}: PyPI already carries {len(higher)} "
+                  f"HIGHER-sorting release(s), topped by {higher[0]}. Publishing now would not become "
+                  f"'latest' and would repeat the v23.3.3-0.3.x pointer-poisoning incident "
+                  f"(sds-registry-latest-pointer-poisoned). If {higher[0]} etc. are legacy "
+                  f"mis-published versions, yank them on PyPI first (owner action, needs PyPI "
+                  f"credentials), then re-run this workflow."
+              )
+              sys.exit(1)
+
+          print(f"OK: {new_version} sorts above every existing PyPI release.")
+          PYEOF
 
       - name: Create pyproject.toml
         run: |
@@ -829,6 +882,16 @@ jobs:
           go 1.21
 
           require github.com/google/flatbuffers v25.12.19+incompatible
+
+          retract (
+          	v23.3.3-0.3.7 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.6 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.5 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.4 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.3 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.2 // published in error under an incompatible major-version scheme; use a 1.x release
+          	v23.3.3-0.3.1 // published in error under an incompatible major-version scheme; use a 1.x release
+          )
           EOF
 
       - name: Create and push Go module tag
