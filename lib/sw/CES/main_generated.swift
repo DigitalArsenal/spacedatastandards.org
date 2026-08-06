@@ -32,7 +32,6 @@ public enum cesPoolingKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
   case max = 2
   case unknown = 3
 
-  public static var max: cesPoolingKind { return .unknown }
   public static var min: cesPoolingKind { return .mean }
 }
 

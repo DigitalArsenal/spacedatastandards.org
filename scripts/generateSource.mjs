@@ -198,6 +198,70 @@ function dedupeGoAccessors(source, relativePath) {
   return out;
 }
 
+// flatc's C++ generator always appends an auto MIN/MAX convenience pair to
+// every enum ("<Name>_MIN = <first real member>", "<Name>_MAX = <last real
+// member>"). When a schema declares a real member literally named MAX (or
+// MIN), its fully-qualified name ("<Name>_MAX") collides byte-for-byte with
+// the auto sentinel of the SAME name -> a duplicate enumerator, which every
+// C++ compiler rejects. The real member (whatever ordinal it holds) is
+// always declared FIRST; the auto sentinel is always redundant with some
+// real member's value, so keeping the first occurrence of each identifier
+// and dropping later duplicates never loses information. See
+// sds-ces-enum-max-collision.
+function dedupeCppEnumConstants(source) {
+  const enumRe = /^enum (\w+) : \w+ \{\n([\s\S]*?)\n\};\n/gm;
+  return source.replace(enumRe, (whole, enumName, body) => {
+    const lines = body.split("\n");
+    const seen = new Set();
+    const kept = [];
+    for (const line of lines) {
+      const m = line.match(/^(\s*)(\w+)\s*=\s*(.+?),?\s*$/);
+      if (!m) {
+        kept.push(line);
+        continue;
+      }
+      const [, indent, ident, value] = m;
+      if (seen.has(ident)) {
+        continue;
+      }
+      seen.add(ident);
+      kept.push({ indent, ident, value });
+    }
+    const lastEntryIndex = kept.map((e) => typeof e).lastIndexOf("object");
+    const rebuilt = kept
+      .map((entry, i) => {
+        if (typeof entry === "string") {
+          return entry;
+        }
+        const comma = i < lastEntryIndex ? "," : "";
+        return `${entry.indent}${entry.ident} = ${entry.value}${comma}`;
+      })
+      .join("\n");
+    return `enum ${enumName} : ${whole.match(/: (\w+) \{/)[1]} {\n${rebuilt}\n};\n`;
+  });
+}
+
+// Swift's generator emits the same real-member-vs-auto-sentinel collision as
+// C++, but as a `case max = N` (real, wire-encoded) vs a `public static var
+// max: <Name> { ... }` (auto MIN/MAX convenience, always computable from the
+// real cases) — Swift refuses two members named `max` in one type. Drop only
+// the auto static var when its name collides with a declared case; the case
+// is the one every accessor/default actually references.
+function dedupeSwiftEnumStatics(source) {
+  const enumRe = /^public enum (\w+): [^{]+\{\n([\s\S]*?)\n\}\n/gm;
+  return source.replace(enumRe, (whole, enumName, body) => {
+    const caseNames = new Set(
+      [...body.matchAll(/^\s*case (\w+)/gm)].map((m) => m[1]),
+    );
+    const lines = body.split("\n");
+    const kept = lines.filter((line) => {
+      const m = line.match(/^\s*public static var (\w+): /);
+      return !(m && caseNames.has(m[1]));
+    });
+    return whole.replace(body, kept.join("\n"));
+  });
+}
+
 async function writeOutputs(baseDir, outputs, datatype) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
@@ -206,6 +270,12 @@ async function writeOutputs(baseDir, outputs, datatype) {
       .replace(/\n+$/u, "\n");
     if (datatype?.ext === "go" && relativePath.endsWith(".go")) {
       normalizedSource = dedupeGoAccessors(normalizedSource, relativePath);
+    }
+    if (datatype?.ext === "cpp" && relativePath.endsWith(".h")) {
+      normalizedSource = dedupeCppEnumConstants(normalizedSource);
+    }
+    if (datatype?.ext === "sw" && relativePath.endsWith(".swift")) {
+      normalizedSource = dedupeSwiftEnumStatics(normalizedSource);
     }
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, normalizedSource, "utf8");
