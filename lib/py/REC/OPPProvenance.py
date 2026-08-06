@@ -36,8 +36,9 @@ class OPPProvenance(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-    # "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+    # Publisher of the value, named as the publisher names itself — a space
+    # agency's object database, a public satellite catalogue, a third-party
+    # satellite reference site, or the operator itself.
     # OPPProvenance
     def SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -46,7 +47,7 @@ class OPPProvenance(object):
         return None
 
     # The source's own identifier for the record this value was read from, such
-    # as a DISCOS object id. Verbatim, never normalized.
+    # as that database's object id. Verbatim, never normalized.
     # OPPProvenance
     def SOURCE_RECORD_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))

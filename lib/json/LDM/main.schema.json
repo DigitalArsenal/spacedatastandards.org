@@ -361,7 +361,7 @@
               },
         "XPUB" : {
                 "type" : "string",
-                "description" : "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                "description" : "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
               },
         "PRIVATE_KEY" : {
                 "type" : "string",
@@ -369,7 +369,7 @@
               },
         "XPRIV" : {
                 "type" : "string",
-                "description" : "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                "description" : "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
               },
         "KEY_ADDRESS" : {
                 "type" : "string",
@@ -474,7 +474,7 @@
       "properties" : {
         "DOMAIN" : {
                 "type" : "string",
-                "description" : "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                "description" : "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
               },
         "PUBLIC_KEY" : {
                 "type" : "string",

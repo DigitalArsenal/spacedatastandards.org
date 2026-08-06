@@ -27,7 +27,7 @@ public struct STR : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  /// CelesTrak Star catalog identifier
+  /// Community satellite-tracking star catalog identifier
   public long CS_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   /// GNC star catalog identifier
   public uint GNC_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }

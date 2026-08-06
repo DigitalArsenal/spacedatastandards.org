@@ -10,9 +10,10 @@ import (
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -30,9 +31,9 @@ import (
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 type CNP struct {
 	_tab flatbuffers.Table
 }
@@ -94,8 +95,8 @@ func (rcv *CNP) Id() []byte {
 }
 
 /// Stable identifier for this record.
-/// Constellation or network name, verbatim ("Starlink", "OneWeb",
-/// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+/// Constellation or network name, carried verbatim as its operator states
+/// it. Empty when the record is a terrestrial baseline. Joins to
 /// $LKS.CONSTELLATION and to $CAT by the same name.
 func (rcv *CNP) CONSTELLATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -109,8 +110,8 @@ func (rcv *CNP) Constellation() []byte {
 	return rcv.CONSTELLATION()
 }
 
-/// Constellation or network name, verbatim ("Starlink", "OneWeb",
-/// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+/// Constellation or network name, carried verbatim as its operator states
+/// it. Empty when the record is a terrestrial baseline. Joins to
 /// $LKS.CONSTELLATION and to $CAT by the same name.
 /// Operating company, when it differs usefully from CONSTELLATION.
 func (rcv *CNP) OPERATOR() []byte {
@@ -126,9 +127,9 @@ func (rcv *CNP) Operator() []byte {
 }
 
 /// Operating company, when it differs usefully from CONSTELLATION.
-/// Autonomous system number of the measured client network — Starlink is
-/// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-/// is never a real measurement key.
+/// Autonomous system number of the measured client network, as allocated in
+/// the public routing registry. 0 means the aggregate is not keyed by ASN;
+/// AS 0 is reserved and is never a real measurement key.
 func (rcv *CNP) ASN() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -141,9 +142,9 @@ func (rcv *CNP) Asn() uint32 {
 	return rcv.ASN()
 }
 
-/// Autonomous system number of the measured client network — Starlink is
-/// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-/// is never a real measurement key.
+/// Autonomous system number of the measured client network, as allocated in
+/// the public routing registry. 0 means the aggregate is not keyed by ASN;
+/// AS 0 is reserved and is never a real measurement key.
 func (rcv *CNP) MutateASN(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(10, n)
 }

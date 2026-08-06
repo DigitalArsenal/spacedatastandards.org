@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Result of one Basilisk-compatible Gauss-Markov random sequence.
+ * Result of one first-order Gauss-Markov random sequence.
  */
 @Suppress("unused")
 class NUMGaussMarkovResult : Table() {

@@ -8,9 +8,10 @@ import "strconv"
 type cnpMethod int8
 
 const (
-	/// M-Lab NDT7 measurement.
+	/// NDT7 network-diagnostic protocol measurement.
 	cnpMethodNDT7               cnpMethod = 0
-	/// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+	/// A speed test other than NDT7 — a third-party measurement platform, a
+	/// CDN-operated test, or an operator-native test.
 	cnpMethodSPEED_TEST         cnpMethod = 1
 	/// ICMP or UDP echo.
 	cnpMethodPING               cnpMethod = 2

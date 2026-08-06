@@ -55,7 +55,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    # Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     # CryptoKey
     def XPUB(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -71,7 +71,7 @@ class CryptoKey(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    # Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     # CryptoKey
     def XPRIV(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))

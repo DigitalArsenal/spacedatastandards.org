@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 type RBKQuaternion struct {
 	_tab flatbuffers.Table
 }

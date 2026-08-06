@@ -11,7 +11,7 @@ public final class splitRole {
    */
   public static final byte Publisher = 0;
   /**
-   * The store operator platform (e.g. SpaceAware) — the commission recipient
+   * The store operator platform — the commission recipient
    */
   public static final byte Platform = 1;
   /**

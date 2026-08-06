@@ -8,7 +8,7 @@ class STR : flatbuffers.handle
     /// Unique internal identifier
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// CelesTrak Star catalog identifier
+    /// Community satellite-tracking star catalog identifier
     def CS_ID() -> int:
         return flatbuffers.field_int64(buf_, pos_, 6, 0)
     /// GNC star catalog identifier

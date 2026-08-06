@@ -64,7 +64,7 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  /// CelesTrak Star catalog identifier
+  /// Community satellite-tracking star catalog identifier
   int64_t CS_ID() const {
     return GetField<int64_t>(VT_CS_ID, 0);
   }

@@ -8,9 +8,9 @@ using global::Google.FlatBuffers;
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 public struct OPPRadarCrossSection : IFlatbufferObject
 {
   private Table __p;
@@ -47,7 +47,7 @@ public struct OPPRadarCrossSection : IFlatbufferObject
   /// it; the two are never mixed within one entry and never silently converted.
   public OPPQuantity? CROSS_SECTION { get { int o = __p.__offset(12); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Size bucket verbatim when a source publishes a bucket instead of a number,
-  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   /// turned into a number.
   public string SIZE_CLASS { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T

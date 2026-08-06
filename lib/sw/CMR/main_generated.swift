@@ -50,8 +50,9 @@ public enum cmrMembershipState: Int8, FlatbuffersVectorInitializable, Enum, Veri
 
 ///  Replayable provenance for one fact used by a $CMR.
 ///
-///  Each source gets its own entry. A publisher never merges CelesTrak group
-///  membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+///  Each source gets its own entry. A publisher never merges a catalogue's
+///  group membership, a reference catalogue's ownership assertion, and
+///  $CAT/$BUS joins into one ambiguous citation.
 public struct CMRProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -78,12 +79,13 @@ public struct CMRProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 
   public var ROLE: cmrEvidenceRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unspecified : cmrEvidenceRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  ///  provider that published the joined $CAT record.
+  ///  Publisher name verbatim as that publisher states it — a public satellite
+  ///  catalogue, a general object reference catalogue, or the network provider
+  ///  that published the joined $CAT record.
   public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
-  ///  Source dataset or product name verbatim, such as "active Starlink group"
-  ///  or "GCAT satcat".
+  ///  Source dataset or product name verbatim, such as a named constellation
+  ///  group file or a catalogue's satellite-catalog product.
   public var SOURCE_DATASET: String! { let o = _accessor.offset(VT.SOURCE_DATASET); return _accessor.string(at: o) }
   public var SOURCE_DATASETSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE_DATASET) }
   ///  Source-native row, group, object, or catalogue identifier.

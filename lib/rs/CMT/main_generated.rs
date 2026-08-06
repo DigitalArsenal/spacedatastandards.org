@@ -208,7 +208,7 @@ pub struct splitRole(pub i8);
 impl splitRole {
   /// The module/flow publisher (vendor)
   pub const Publisher: Self = Self(0);
-  /// The store operator platform (e.g. SpaceAware) — the commission recipient
+  /// The store operator platform — the commission recipient
   pub const Platform: Self = Self(1);
   /// A referrer who drove the sale
   pub const Referrer: Self = Self(2);

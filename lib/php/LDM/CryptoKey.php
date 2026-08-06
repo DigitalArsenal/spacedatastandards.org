@@ -66,7 +66,7 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     public function getXPUB()
     {
         $o = $this->__offset(6);
@@ -80,7 +80,7 @@ class CryptoKey extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     public function getXPRIV()
     {
         $o = $this->__offset(10);

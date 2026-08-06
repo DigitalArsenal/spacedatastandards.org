@@ -108,12 +108,12 @@ class CryptoKey {
   ///  REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get publicKey => PUBLIC_KEY;
-  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  ///  Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   String? get XPUB => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
   String? get PRIVATE_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get privateKey => PRIVATE_KEY;
-  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  ///  Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   String? get XPRIV => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Address generated from the cryptographic key. An address only — NOT a
   ///  derivation path; the derivation path lives in KEY_PATH
@@ -616,7 +616,7 @@ class DomainProof {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org")
   String? get DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Public key for this proof (hex-encoded)
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);

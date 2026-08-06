@@ -8,8 +8,9 @@ import (
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 type CMRProvenance struct {
 	_tab flatbuffers.Table
 }
@@ -65,8 +66,9 @@ func (rcv *CMRProvenance) MutateRole(n cmrEvidenceRole) bool {
 	return rcv.MutateROLE(n)
 }
 
-/// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-/// provider that published the joined $CAT record.
+/// Publisher name verbatim as that publisher states it — a public satellite
+/// catalogue, a general object reference catalogue, or the network provider
+/// that published the joined $CAT record.
 func (rcv *CMRProvenance) SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -79,10 +81,11 @@ func (rcv *CMRProvenance) Source() []byte {
 	return rcv.SOURCE()
 }
 
-/// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-/// provider that published the joined $CAT record.
-/// Source dataset or product name verbatim, such as "active Starlink group"
-/// or "GCAT satcat".
+/// Publisher name verbatim as that publisher states it — a public satellite
+/// catalogue, a general object reference catalogue, or the network provider
+/// that published the joined $CAT record.
+/// Source dataset or product name verbatim, such as a named constellation
+/// group file or a catalogue's satellite-catalog product.
 func (rcv *CMRProvenance) SOURCE_DATASET() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -95,8 +98,8 @@ func (rcv *CMRProvenance) SourceDataset() []byte {
 	return rcv.SOURCE_DATASET()
 }
 
-/// Source dataset or product name verbatim, such as "active Starlink group"
-/// or "GCAT satcat".
+/// Source dataset or product name verbatim, such as a named constellation
+/// group file or a catalogue's satellite-catalog product.
 /// Source-native row, group, object, or catalogue identifier.
 func (rcv *CMRProvenance) SOURCE_RECORD_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))

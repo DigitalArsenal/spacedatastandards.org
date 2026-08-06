@@ -1,7 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { numResultStatus } from './numResultStatus.js';
 /**
- * Result of one Basilisk-compatible Gauss-Markov random sequence.
+ * Result of one first-order Gauss-Markov random sequence.
  */
 export declare class NUMGaussMarkovResult implements flatbuffers.IUnpackableObject<NUMGaussMarkovResultT> {
     bb: flatbuffers.ByteBuffer | null;

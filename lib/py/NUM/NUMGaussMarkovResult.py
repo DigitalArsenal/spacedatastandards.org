@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Result of one Basilisk-compatible Gauss-Markov random sequence.
+# Result of one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovResult(object):
     __slots__ = ['_tab']
 

@@ -1,12 +1,13 @@
-// Hash: 15bf98fd81c89cdaf5d6a64df9db203e7d3fe976eb44b6a30fb358d549fe48fe
-// Version: 0.0.3
+// Hash: 74f752a91f51bda263c14cd7363e54da265daf705822f1afebbc854eea94cc05
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 // CZML (Cesium Language)
 //
-// CZML is a JSON-based format for describing time-dynamic 3D scenes,
-// primarily for use with CesiumJS. A CZML document is an array of packets
-// that describe objects and their properties over time.
-// Reference: https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide
+// CZML is a JSON-based format for describing time-dynamic 3D scenes for
+// virtual-globe renderers. A CZML document is an array of packets that
+// describe objects and their properties over time.
+// Reference: the CZML Guide published with the CZML writer reference
+// implementation.
 
 enum CZMHeightReference : byte {
   NONE,

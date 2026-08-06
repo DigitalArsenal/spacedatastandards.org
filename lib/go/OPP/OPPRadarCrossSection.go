@@ -8,9 +8,9 @@ import (
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 type OPPRadarCrossSection struct {
 	_tab flatbuffers.Table
 }
@@ -144,7 +144,7 @@ func (rcv *OPPRadarCrossSection) CrossSection(obj *OPPQuantity) *OPPQuantity {
 /// The cross-section itself. UNITS is "m2" or "dBsm" as the source published
 /// it; the two are never mixed within one entry and never silently converted.
 /// Size bucket verbatim when a source publishes a bucket instead of a number,
-/// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+/// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
 /// turned into a number.
 func (rcv *OPPRadarCrossSection) SIZE_CLASS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
@@ -159,7 +159,7 @@ func (rcv *OPPRadarCrossSection) SizeClass() []byte {
 }
 
 /// Size bucket verbatim when a source publishes a bucket instead of a number,
-/// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+/// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
 /// turned into a number.
 /// Sensor or facility that produced the measurement, when stated.
 func (rcv *OPPRadarCrossSection) SENSOR() []byte {

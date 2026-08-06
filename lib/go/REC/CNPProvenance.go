@@ -42,8 +42,8 @@ func (rcv *CNPProvenance) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-/// Radar", "RIPE Atlas", "LENS".
+/// Name of the organization or programme publishing the underlying
+/// measurements, carried verbatim as that publisher states it.
 func (rcv *CNPProvenance) SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -56,8 +56,8 @@ func (rcv *CNPProvenance) Source() []byte {
 	return rcv.SOURCE()
 }
 
-/// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-/// Radar", "RIPE Atlas", "LENS".
+/// Name of the organization or programme publishing the underlying
+/// measurements, carried verbatim as that publisher states it.
 /// URL of the dataset, endpoint or landing page.
 func (rcv *CNPProvenance) SOURCE_URL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -72,8 +72,8 @@ func (rcv *CNPProvenance) SourceUrl() []byte {
 }
 
 /// URL of the dataset, endpoint or landing page.
-/// Dataset, table or API path queried, e.g.
-/// "measurement-lab.ndt.unified_downloads".
+/// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+/// warehouse table name or a REST route.
 func (rcv *CNPProvenance) SOURCE_DATASET() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -86,8 +86,8 @@ func (rcv *CNPProvenance) SourceDataset() []byte {
 	return rcv.SOURCE_DATASET()
 }
 
-/// Dataset, table or API path queried, e.g.
-/// "measurement-lab.ndt.unified_downloads".
+/// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+/// warehouse table name or a REST route.
 /// The exact query or request that produced these numbers, so the
 /// aggregate can be replayed rather than trusted.
 func (rcv *CNPProvenance) SOURCE_QUERY() []byte {

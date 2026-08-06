@@ -302,15 +302,15 @@
         },
         "M1_ROTATION_MATRIX": {
           "value": 58,
-          "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+          "description": "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
         },
         "M2_ROTATION_MATRIX": {
           "value": 59,
-          "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+          "description": "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
         },
         "M3_ROTATION_MATRIX": {
           "value": 60,
-          "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+          "description": "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
         }
       }
     },
@@ -420,7 +420,7 @@
     },
     "RBKQuaternion": {
       "type": "object",
-      "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+      "description": "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
       "properties": {
         "Q0": {
           "type": "number",
@@ -443,7 +443,7 @@
     },
     "RBKMatrix3": {
       "type": "object",
-      "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+      "description": "Row-major 3x3 direction cosine matrix.",
       "properties": {
         "M11": {
           "type": "number",
@@ -726,15 +726,15 @@
             },
             "M1_ROTATION_MATRIX": {
               "value": 58,
-              "description": "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+              "description": "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             "M2_ROTATION_MATRIX": {
               "value": 59,
-              "description": "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+              "description": "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             "M3_ROTATION_MATRIX": {
               "value": 60,
-              "description": "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+              "description": "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
             }
           }
         },

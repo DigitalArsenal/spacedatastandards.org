@@ -174,7 +174,9 @@ class PPE(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
-    # Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+    # Generating ephemeris source, verbatim as the generator names itself
+    # (e.g., a planetary ephemeris series designation, a numerical propagator
+    # name and version, or an in-house tool identifier).
     # PPE
     def EPHEMERIS_SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))

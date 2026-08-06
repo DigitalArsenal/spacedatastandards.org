@@ -294,7 +294,7 @@ class DPMAsset {
   ///  update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   ///  requests, subscriber caches, replay, audit, and completeness proofs.
   ///  Example:
-  ///  celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  ///  provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   String? get FILE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get fileId => FILE_ID;
   ///  Provider protocol name/version used to fetch this asset when

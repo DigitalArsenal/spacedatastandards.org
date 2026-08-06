@@ -637,7 +637,7 @@ impl<'a> DPMAsset<'a> {
   /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   /// requests, subscriber caches, replay, audit, and completeness proofs.
   /// Example:
-  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   #[inline]
   pub fn FILE_ID(&self) -> Option<&'a str> {
     // Safety:

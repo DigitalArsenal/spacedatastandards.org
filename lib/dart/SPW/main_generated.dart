@@ -11,7 +11,7 @@ enum FluxQualifier {
   BURST_ADJUSTED(1),
   INTERPOLATED_EXTRAPOLATED(2),
   NO_OBSERVATION(3),
-  CELESTRAK_INTERPOLATED(4);
+  PROVIDER_INTERPOLATED(4);
 
   final int value;
   const FluxQualifier(this.value);
@@ -22,7 +22,7 @@ enum FluxQualifier {
       case 1: return FluxQualifier.BURST_ADJUSTED;
       case 2: return FluxQualifier.INTERPOLATED_EXTRAPOLATED;
       case 3: return FluxQualifier.NO_OBSERVATION;
-      case 4: return FluxQualifier.CELESTRAK_INTERPOLATED;
+      case 4: return FluxQualifier.PROVIDER_INTERPOLATED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }

@@ -1,5 +1,5 @@
-// Hash: f98f02698c8b5e704762f9f6a665efff550f665eedcd87cdfebe0cd851e0574e
-// Version: 1.171.0
+// Hash: 88352e6bb4dc5ff1264097a167f8c87f94c747cb444eb7b6e21103727ef3ee91
+// Version: 1.171.1
 // -----------------------------------END_HEADER
 /// How one physical value was determined. Append new values only; never
 /// reorder or reuse existing values.
@@ -28,8 +28,8 @@ enum oppDeterminationMethod : byte {
 /// Aspect convention a radar cross-section value was reported under. Append new
 /// values only; never reorder or reuse existing values.
 enum oppRcsAspect : byte {
-  /// The source states no aspect convention. ESA DISCOS characteristic
-  /// cross-sections and CelesTrak SATCAT RCS use this value.
+  /// The source states no aspect convention. Characteristic cross-sections
+  /// published by catalogue-level object databases use this value.
   UNSPECIFIED,
   AVERAGE,
   MINIMUM,
@@ -92,11 +92,12 @@ enum oppMaterialClass : byte {
 /// zero, never a placeholder, and never carried forward from a different
 /// object.
 table OPPProvenance {
-  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  /// Publisher of the value, named as the publisher names itself — a space
+  /// agency's object database, a public satellite catalogue, a third-party
+  /// satellite reference site, or the operator itself.
   SOURCE:string (required);
   /// The source's own identifier for the record this value was read from, such
-  /// as a DISCOS object id. Verbatim, never normalized.
+  /// as that database's object id. Verbatim, never normalized.
   SOURCE_RECORD_ID:string;
   /// Deep link to the exact source record when the source publishes one.
   SOURCE_URL:string;
@@ -141,9 +142,9 @@ table OPPQuantity {
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 table OPPRadarCrossSection {
   /// Radar band designation verbatim from the source: "UHF", "L", "S", "C",
   /// "X", "Ku". Empty when the source states no band.
@@ -159,7 +160,7 @@ table OPPRadarCrossSection {
   /// it; the two are never mixed within one entry and never silently converted.
   CROSS_SECTION:OPPQuantity (required);
   /// Size bucket verbatim when a source publishes a bucket instead of a number,
-  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   /// turned into a number.
   SIZE_CLASS:string;
   /// Sensor or facility that produced the measurement, when stated.
@@ -191,7 +192,7 @@ table OPPDimensions {
   BODY_X:OPPQuantity;
   BODY_Y:OPPQuantity;
   BODY_Z:OPPQuantity;
-  /// Envelope terms as ESA DISCOS publishes them [m].
+  /// Envelope terms as an object database publishes them [m].
   HEIGHT:OPPQuantity;
   WIDTH:OPPQuantity;
   DEPTH:OPPQuantity;
@@ -200,8 +201,8 @@ table OPPDimensions {
   SPAN_STOWED:OPPQuantity;
   /// Largest extent with appendages deployed [m].
   SPAN_DEPLOYED:OPPQuantity;
-  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  /// Gross geometric shape verbatim from the source, such as a shape string
+  /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   SHAPE:string;
   /// Provenance of SHAPE. Present whenever SHAPE is nonempty.
   SHAPE_PROVENANCE:OPPProvenance;
@@ -236,8 +237,9 @@ table OPPSurface {
   /// Stable identifier for this surface within the record.
   ID:string (required);
   KIND:oppSurfaceKind = UNSPECIFIED;
-  /// Material name verbatim from the source: "Kapton MLI", "GaAs
-  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  /// Material name verbatim from the source, in whatever designation the
+  /// source uses: a multi-layer-insulation film, a photovoltaic cell
+  /// chemistry, an alloy temper designation. Empty when unstated.
   MATERIAL:string;
   MATERIAL_CLASS:oppMaterialClass = UNSPECIFIED;
   /// How many identical surfaces this entry represents, such as two solar-array

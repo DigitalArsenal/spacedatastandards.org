@@ -1,11 +1,11 @@
-// Hash: 77ed603b245aca902d8b88606337419ce328cd67c1b7d29b0194fb89781efb3e
-// Version: 0.0.3
+// Hash: 56de8cd0ac994478ca06eba4aad2b0e259f564799238f9e1c28c569a1e2c2f35
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 /// Star Catalog Entry
 table STR {
   /// Unique internal identifier
   ID:string;
-  /// CelesTrak Star catalog identifier
+  /// Community satellite-tracking star catalog identifier
   CS_ID:long;
   /// GNC star catalog identifier
   GNC_CAT_ID:uint32;

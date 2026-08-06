@@ -1,5 +1,5 @@
-// Hash: f0876606c763c51f5bb0c4cd1ee5914b2ad3bf1deafa9f351464775f9f489c6f
-// Version: 0.0.5
+// Hash: 59c60bc1b2ea74493068a0e374ba11f8a24ac505b7d955fdc8670c7fbcfab88e
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../LKS/main.fbs";
 
@@ -67,7 +67,8 @@ enum rfTransmitterState : byte {
 /// RF Band Specification
 ///
 /// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
-/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish Hz (as open transmitter databases commonly do) MUST divide by
+/// 1e6 before encoding; sources
 /// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
 /// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
 /// convention.
@@ -113,7 +114,8 @@ table RFB {
   /// CAT.NORAD_CAT_ID. 0 when unbound.
   NORAD_CAT_ID:uint;
   /// Identifier of the physical transmitter, transceiver or transponder this
-  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+  /// record describes (e.g. an upstream transmitter database's UUID). Uplink
+  /// and downlink
   /// records of the same device share this value.
   ID_TRANSMITTER:string;
   /// Direction of this emission relative to the spacecraft.

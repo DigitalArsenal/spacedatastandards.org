@@ -62,7 +62,7 @@ class CryptoKey : Table() {
     val publicKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun publicKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+     * Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
      */
     val xpub : String?
         get() {
@@ -90,7 +90,7 @@ class CryptoKey : Table() {
     val privateKeyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun privateKeyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
-     * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+     * Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
      */
     val xpriv : String?
         get() {

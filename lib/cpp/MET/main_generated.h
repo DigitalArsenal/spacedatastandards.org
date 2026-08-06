@@ -19,7 +19,8 @@ struct METBuilder;
 enum meanElementSource : int8_t {
   /// Simplified General Perturbation Model 4
   meanElementSource_SGP4 = 0,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
   meanElementSource_SGP4XP = 1,
   /// Draper Semi-analytical Satellite Theory
   meanElementSource_DSST = 2,

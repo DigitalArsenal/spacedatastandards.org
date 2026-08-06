@@ -99,7 +99,7 @@ inline const char *EnumNamecommissionEnforcement(commissionEnforcement e) {
 enum splitRole : int8_t {
   /// The module/flow publisher (vendor)
   splitRole_Publisher = 0,
-  /// The store operator platform (e.g. SpaceAware) — the commission recipient
+  /// The store operator platform — the commission recipient
   splitRole_Platform = 1,
   /// A referrer who drove the sale
   splitRole_Referrer = 2,

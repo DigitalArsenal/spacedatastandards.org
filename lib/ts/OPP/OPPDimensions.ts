@@ -50,7 +50,7 @@ BODY_Z(obj?:OPPQuantity):OPPQuantity|null {
 }
 
 /**
- * Envelope terms as ESA DISCOS publishes them [m].
+ * Envelope terms as an object database publishes them [m].
  */
 HEIGHT(obj?:OPPQuantity):OPPQuantity|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -89,8 +89,8 @@ SPAN_DEPLOYED(obj?:OPPQuantity):OPPQuantity|null {
 }
 
 /**
- * Gross geometric shape verbatim from the source, such as the DISCOS shape
- * string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+ * Gross geometric shape verbatim from the source, such as a shape string
+ * of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
  */
 SHAPE():string|null
 SHAPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

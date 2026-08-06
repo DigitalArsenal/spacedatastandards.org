@@ -55,7 +55,7 @@ func (rcv *PMM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+/// Domain of the provider, e.g. "node.example.org". Required. MUST equal
 /// the origin the manifest was served from.
 func (rcv *PMM) PROVIDER_DOMAIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
@@ -69,7 +69,7 @@ func (rcv *PMM) ProviderDomain() []byte {
 	return rcv.PROVIDER_DOMAIN()
 }
 
-/// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+/// Domain of the provider, e.g. "node.example.org". Required. MUST equal
 /// the origin the manifest was served from.
 /// Display name of the provider.
 func (rcv *PMM) PROVIDER_NAME() []byte {

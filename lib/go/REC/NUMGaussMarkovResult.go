@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 type NUMGaussMarkovResult struct {
 	_tab flatbuffers.Table
 }

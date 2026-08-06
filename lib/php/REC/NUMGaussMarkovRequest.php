@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovRequest extends Table
 {
     /**
@@ -81,7 +81,7 @@ class NUMGaussMarkovRequest extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Seed for the Basilisk-compatible standard normal generator.
+    /// Seed for the standard-normal generator.
     /**
      * @return uint
      */

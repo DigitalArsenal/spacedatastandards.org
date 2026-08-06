@@ -166,7 +166,9 @@ class PPE extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+    /// Generating ephemeris source, verbatim as the generator names itself
+    /// (e.g., a planetary ephemeris series designation, a numerical propagator
+    /// name and version, or an in-house tool identifier).
     public function getEPHEMERIS_SOURCE()
     {
         $o = $this->__offset(24);

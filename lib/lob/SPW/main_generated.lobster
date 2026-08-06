@@ -6,7 +6,9 @@ enum FluxQualifier:
     FluxQualifier_BURST_ADJUSTED = 1
     FluxQualifier_INTERPOLATED_EXTRAPOLATED = 2
     FluxQualifier_NO_OBSERVATION = 3
-    FluxQualifier_CELESTRAK_INTERPOLATED = 4
+    /// Interpolated by the upstream data provider rather than the issuing
+    /// observatory. Wire value 4 is unchanged from prior releases.
+    FluxQualifier_PROVIDER_INTERPOLATED = 4
 
 enum F107DataType:
     F107DataType_OBS = 0

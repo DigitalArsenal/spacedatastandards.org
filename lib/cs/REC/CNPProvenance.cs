@@ -17,8 +17,8 @@ public struct CNPProvenance : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CNPProvenance __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-  /// Radar", "RIPE Atlas", "LENS".
+  /// Name of the organization or programme publishing the underlying
+  /// measurements, carried verbatim as that publisher states it.
   public string SOURCE { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -34,8 +34,8 @@ public struct CNPProvenance : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_URLBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetSOURCE_URLArray() { return __p.__vector_as_array<byte>(6); }
-  /// Dataset, table or API path queried, e.g.
-  /// "measurement-lab.ndt.unified_downloads".
+  /// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+  /// warehouse table name or a REST route.
   public string SOURCE_DATASET { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCE_DATASETBytes() { return __p.__vector_as_span<byte>(8, 1); }

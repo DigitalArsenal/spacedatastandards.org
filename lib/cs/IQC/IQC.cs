@@ -9,9 +9,11 @@ using global::Google.FlatBuffers;
 /// RF IQ Capture Metadata.
 ///
 /// The description of ONE raw, un-demodulated complex-baseband recording held
-/// in a public archive — IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ
-/// database, Zenodo — normalized onto the SigMF v1 core namespace, which is
-/// the only metadata vocabulary these archives share.
+/// in a public archive — a hosted IQ-capture repository, a crowdsourced
+/// signal-identification catalog, an institutional dataset repository, an
+/// SDR project's capture database, a general-purpose research data archive —
+/// normalized onto the SigMF v1 core namespace, which is the only metadata
+/// vocabulary these archive classes share.
 ///
 /// $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable
 /// and verifiable without anyone mirroring its payload: the samples stay where
@@ -28,8 +30,9 @@ using global::Google.FlatBuffers;
 ///
 /// LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.
 /// It does not mean public domain, it does not mean permissive, and it does
-/// not authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts
-/// third-party recordings, so licence is per RECORDING, never per site.
+/// not authorize redistribution. Crowdsourced catalogs and hosted repositories
+/// both carry third-party recordings, so licence is per RECORDING, never per
+/// archive.
 ///
 /// Division of labour: $RFO = a sensor's astrometric/RF observation of a
 /// tracked object (azimuth, elevation, range); $RFE = the parametric emitter
@@ -65,9 +68,9 @@ public struct IQC : IFlatbufferObject
   public ArraySegment<byte>? GetCAPTURE_IDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCAPTURE_IDArray() { return __p.__vector_as_array<byte>(6); }
-  /// Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",
-  /// "IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than
-  /// an enum so a new archive lane never requires a schema release.
+  /// Name of the archive that publishes the capture, carried verbatim as that
+  /// archive states it. A string rather than an enum so a new archive lane
+  /// never requires a schema release.
   public string SOURCE_NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCE_NAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -218,8 +221,8 @@ public struct IQC : IFlatbufferObject
   /// Labelled time/frequency regions.
   public IQCAnnotation? ANNOTATIONS(int j) { int o = __p.__offset(58); return o != 0 ? (IQCAnnotation?)(new IQCAnnotation()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ANNOTATIONSLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Archive-level tags or categories, verbatim (SigidWiki categories,
-  /// Zenodo keywords, IQEngine tags).
+  /// Archive-level tags, categories or keywords, carried verbatim in whatever
+  /// vocabulary the publishing archive uses.
   public string LABELS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int LABELSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Receiver position. Absent when the source published none.

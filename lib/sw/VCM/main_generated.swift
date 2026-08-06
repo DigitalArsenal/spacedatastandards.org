@@ -14,7 +14,8 @@ public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verif
   public var value: Int8 { return self.rawValue }
   ///  Simplified General Perturbation Model 4
   case sgp4 = 0
-  ///  Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  ///  Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  ///  as published in the 2022 astrodynamics conference literature.
   case sgp4xp = 1
   ///  Draper Semi-analytical Satellite Theory
   case dsst = 2

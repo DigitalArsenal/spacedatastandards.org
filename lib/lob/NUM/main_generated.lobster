@@ -523,7 +523,7 @@ struct NUMScalarInterpolationResultBuilder:
     def end():
         return b_.EndObject()
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovRequest : flatbuffers.handle
     /// GAUSS_MARKOV_SEQUENCE.
     def OPERATION() -> numOperationCode:
@@ -537,7 +537,7 @@ class NUMGaussMarkovRequest : flatbuffers.handle
     /// Number of initial state propagations excluded from the result statistics.
     def WARMUP_COUNT() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 10, 0)
-    /// Seed for the Basilisk-compatible standard normal generator.
+    /// Seed for the standard-normal generator.
     def RNG_SEED() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 12, 0)
     /// Row-major DIMENSION x DIMENSION state propagation matrix.
@@ -623,7 +623,7 @@ def NUMGaussMarkovRequestCreateSTATEBOUNDSVector(b_:flatbuffers.builder, v_:[flo
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovResult : flatbuffers.handle
     def STATUS() -> numResultStatus:
         return numResultStatus(flatbuffers.field_int8(buf_, pos_, 4, 0))

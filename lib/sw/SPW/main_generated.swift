@@ -16,9 +16,11 @@ public enum FluxQualifier: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case burstAdjusted = 1
   case interpolatedExtrapolated = 2
   case noObservation = 3
-  case celestrakInterpolated = 4
+  ///  Interpolated by the upstream data provider rather than the issuing
+  ///  observatory. Wire value 4 is unchanged from prior releases.
+  case providerInterpolated = 4
 
-  public static var max: FluxQualifier { return .celestrakInterpolated }
+  public static var max: FluxQualifier { return .providerInterpolated }
   public static var min: FluxQualifier { return .observed }
 }
 

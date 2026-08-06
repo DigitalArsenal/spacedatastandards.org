@@ -49,8 +49,9 @@ func (rcv *OPPProvenance) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-/// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+/// Publisher of the value, named as the publisher names itself — a space
+/// agency's object database, a public satellite catalogue, a third-party
+/// satellite reference site, or the operator itself.
 func (rcv *OPPProvenance) SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -63,10 +64,11 @@ func (rcv *OPPProvenance) Source() []byte {
 	return rcv.SOURCE()
 }
 
-/// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-/// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+/// Publisher of the value, named as the publisher names itself — a space
+/// agency's object database, a public satellite catalogue, a third-party
+/// satellite reference site, or the operator itself.
 /// The source's own identifier for the record this value was read from, such
-/// as a DISCOS object id. Verbatim, never normalized.
+/// as that database's object id. Verbatim, never normalized.
 func (rcv *OPPProvenance) SOURCE_RECORD_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -80,7 +82,7 @@ func (rcv *OPPProvenance) SourceRecordId() []byte {
 }
 
 /// The source's own identifier for the record this value was read from, such
-/// as a DISCOS object id. Verbatim, never normalized.
+/// as that database's object id. Verbatim, never normalized.
 /// Deep link to the exact source record when the source publishes one.
 func (rcv *OPPProvenance) SOURCE_URL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))

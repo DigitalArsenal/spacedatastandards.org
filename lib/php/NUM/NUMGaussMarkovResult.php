@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovResult extends Table
 {
     /**

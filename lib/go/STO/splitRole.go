@@ -10,7 +10,7 @@ type splitRole int8
 const (
 	/// The module/flow publisher (vendor)
 	splitRolePublisher splitRole = 0
-	/// The store operator platform (e.g. SpaceAware) — the commission recipient
+	/// The store operator platform — the commission recipient
 	splitRolePlatform  splitRole = 1
 	/// A referrer who drove the sale
 	splitRoleReferrer  splitRole = 2

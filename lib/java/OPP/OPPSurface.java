@@ -42,8 +42,9 @@ public final class OPPSurface extends com.google.flatbuffers.Table {
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   public byte KIND() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
-   * Material name verbatim from the source: "Kapton MLI", "GaAs
-   * triple-junction", "Al 6061-T6". Empty when unstated.
+   * Material name verbatim from the source, in whatever designation the
+   * source uses: a multi-layer-insulation film, a photovoltaic cell
+   * chemistry, an alloy temper designation. Empty when unstated.
    */
   public String MATERIAL() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MATERIALAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

@@ -24,8 +24,9 @@ public struct OPPProvenance : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OPPProvenance __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  /// Publisher of the value, named as the publisher names itself — a space
+  /// agency's object database, a public satellite catalogue, a third-party
+  /// satellite reference site, or the operator itself.
   public string SOURCE { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -34,7 +35,7 @@ public struct OPPProvenance : IFlatbufferObject
 #endif
   public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(4); }
   /// The source's own identifier for the record this value was read from, such
-  /// as a DISCOS object id. Verbatim, never normalized.
+  /// as that database's object id. Verbatim, never normalized.
   public string SOURCE_RECORD_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCE_RECORD_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }

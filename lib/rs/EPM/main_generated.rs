@@ -291,7 +291,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_PUBLIC_KEY, None)}
   }
-  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   #[inline]
   pub fn XPUB(&self) -> Option<&'a str> {
     // Safety:
@@ -307,7 +307,7 @@ impl<'a> CryptoKey<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CryptoKey::VT_PRIVATE_KEY, None)}
   }
-  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   #[inline]
   pub fn XPRIV(&self) -> Option<&'a str> {
     // Safety:
@@ -1258,7 +1258,7 @@ impl<'a> DomainProof<'a> {
     }
   }
 
-  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
   #[inline]
   pub fn DOMAIN(&self) -> Option<&'a str> {
     // Safety:

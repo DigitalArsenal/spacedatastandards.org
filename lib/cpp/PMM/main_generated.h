@@ -844,7 +844,7 @@ struct PMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SIGNATURE = 24,
     VT_SIGNED_STATEMENT = 26
   };
-  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal
   /// the origin the manifest was served from.
   const ::flatbuffers::String *PROVIDER_DOMAIN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PROVIDER_DOMAIN);

@@ -89,7 +89,7 @@ FILE_NAME(optionalEncoding?:any):string|Uint8Array|null {
  * update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
  * requests, subscriber caches, replay, audit, and completeness proofs.
  * Example:
- * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+ * provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
  */
 FILE_ID():string|null
 FILE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

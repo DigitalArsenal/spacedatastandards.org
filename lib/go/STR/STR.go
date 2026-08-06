@@ -68,7 +68,7 @@ func (rcv *STR) Id() []byte {
 }
 
 /// Unique internal identifier
-/// CelesTrak Star catalog identifier
+/// Community satellite-tracking star catalog identifier
 func (rcv *STR) CS_ID() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -81,7 +81,7 @@ func (rcv *STR) CsId() int64 {
 	return rcv.CS_ID()
 }
 
-/// CelesTrak Star catalog identifier
+/// Community satellite-tracking star catalog identifier
 func (rcv *STR) MutateCS_ID(n int64) bool {
 	return rcv._tab.MutateInt64Slot(6, n)
 }

@@ -340,7 +340,7 @@ class RBKVector3ObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+///  Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 class RBKQuaternion {
   RBKQuaternion._(this._bc, this._bcOffset);
   factory RBKQuaternion(List<int> bytes) {
@@ -439,7 +439,7 @@ class RBKQuaternionObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+///  Row-major 3x3 direction cosine matrix.
 class RBKMatrix3 {
   RBKMatrix3._(this._bc, this._bcOffset);
   factory RBKMatrix3(List<int> bytes) {

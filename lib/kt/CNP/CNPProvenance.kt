@@ -30,8 +30,8 @@ class CNPProvenance : Table() {
         return this
     }
     /**
-     * Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-     * Radar", "RIPE Atlas", "LENS".
+     * Name of the organization or programme publishing the underlying
+     * measurements, carried verbatim as that publisher states it.
      */
     val source : String
         get() {
@@ -59,8 +59,8 @@ class CNPProvenance : Table() {
     val sourceUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun sourceUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Dataset, table or API path queried, e.g.
-     * "measurement-lab.ndt.unified_downloads".
+     * Dataset, table or API path queried, verbatim, e.g. a fully qualified
+     * warehouse table name or a REST route.
      */
     val sourceDataset : String?
         get() {

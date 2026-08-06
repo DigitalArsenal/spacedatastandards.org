@@ -1,5 +1,5 @@
-// Hash: 943a03e692c6b3942ce8b80eccd0e3d93a506c3fe19cca5ff5f385716941cc6c
-// Version: 1.177.0
+// Hash: 222c56617a7e48ca31ce7893610ff943e7bd1e33bf640ba92d774512e6103fc1
+// Version: 1.177.1
 // -----------------------------------END_HEADER
 /// What one source assertion establishes for a constellation membership.
 /// Ordinals are wire values: append only; never reorder or reuse.
@@ -29,15 +29,17 @@ enum cmrMembershipState : byte {
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 table CMRProvenance {
   ROLE:cmrEvidenceRole = UNSPECIFIED;
-  /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  /// provider that published the joined $CAT record.
+  /// Publisher name verbatim as that publisher states it — a public satellite
+  /// catalogue, a general object reference catalogue, or the network provider
+  /// that published the joined $CAT record.
   SOURCE:string (required);
-  /// Source dataset or product name verbatim, such as "active Starlink group"
-  /// or "GCAT satcat".
+  /// Source dataset or product name verbatim, such as a named constellation
+  /// group file or a catalogue's satellite-catalog product.
   SOURCE_DATASET:string (required);
   /// Source-native row, group, object, or catalogue identifier.
   SOURCE_RECORD_ID:string;

@@ -231,7 +231,7 @@
                     "properties": {
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\"."
+                            "description": "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -239,7 +239,7 @@
                         },
                         "SOURCE_DATASET": {
                             "type": "string",
-                            "description": "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\"."
+                            "description": "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route."
                         },
                         "SOURCE_QUERY": {
                             "type": "string",
@@ -354,7 +354,7 @@
                 },
                 "CNP": {
                     "type": "object",
-                    "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+                    "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -362,7 +362,7 @@
                         },
                         "CONSTELLATION": {
                             "type": "string",
-                            "description": "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
+                            "description": "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
                         },
                         "OPERATOR": {
                             "type": "string",
@@ -372,7 +372,7 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+                            "description": "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key."
                         },
                         "AS_NAME": {
                             "type": "string",
@@ -1224,7 +1224,7 @@
                         "BURST_ADJUSTED",
                         "INTERPOLATED_EXTRAPOLATED",
                         "NO_OBSERVATION",
-                        "CELESTRAK_INTERPOLATED"
+                        "PROVIDER_INTERPOLATED"
                     ]
                 },
                 "F107DataType": {
@@ -3479,7 +3479,7 @@
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+                            "description": "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
                         },
                         "PUBLISH_TIMESTAMP": {
                             "type": "string",
@@ -3487,7 +3487,7 @@
                         },
                         "CID": {
                             "type": "string",
-                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
                         },
                         "FILE_NAME": {
                             "type": "string",
@@ -3495,7 +3495,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "SIGNATURE": {
                             "type": "string",
@@ -3854,7 +3854,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -3862,7 +3862,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -3967,7 +3967,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -7424,7 +7424,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -7432,7 +7432,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -7537,7 +7537,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -9235,11 +9235,11 @@
                     "properties": {
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher of the value, named as the publisher names itself: \"ESA DISCOS\",\n\"CelesTrak SATCAT\", \"Gunter's Space Page\", \"NASA\", the operator's name."
+                            "description": "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
                         },
                         "SOURCE_RECORD_ID": {
                             "type": "string",
-                            "description": "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+                            "description": "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -9309,7 +9309,7 @@
                 },
                 "OPPRadarCrossSection": {
                     "type": "object",
-                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
                     "properties": {
                         "BAND": {
                             "type": "string",
@@ -9332,7 +9332,7 @@
                         },
                         "SIZE_CLASS": {
                             "type": "string",
-                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
+                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as a public catalogue's \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
                         },
                         "SENSOR": {
                             "type": "string",
@@ -9391,7 +9391,7 @@
                         },
                         "HEIGHT": {
                             "$ref": "#/definitions/OPPQuantity",
-                            "description": "Envelope terms as ESA DISCOS publishes them [m]."
+                            "description": "Envelope terms as an object database publishes them [m]."
                         },
                         "WIDTH": {
                             "$ref": "#/definitions/OPPQuantity"
@@ -9412,7 +9412,7 @@
                         },
                         "SHAPE": {
                             "type": "string",
-                            "description": "Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
+                            "description": "Gross geometric shape verbatim from the source, such as a shape string\nof the form \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
                         },
                         "SHAPE_PROVENANCE": {
                             "$ref": "#/definitions/OPPProvenance",
@@ -9465,7 +9465,7 @@
                         },
                         "MATERIAL": {
                             "type": "string",
-                            "description": "Material name verbatim from the source: \"Kapton MLI\", \"GaAs\ntriple-junction\", \"Al 6061-T6\". Empty when unstated."
+                            "description": "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
                         },
                         "MATERIAL_CLASS": {
                             "$ref": "#/definitions/oppMaterialClass"
@@ -11047,7 +11047,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -14608,7 +14608,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -17108,7 +17108,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -18550,7 +18550,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -18558,7 +18558,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -18663,7 +18663,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -20250,7 +20250,7 @@
                 },
                 "RFB": {
                     "type": "object",
-                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -20324,7 +20324,7 @@
                         },
                         "ID_TRANSMITTER": {
                             "type": "string",
-                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
                         },
                         "LINK_DIRECTION": {
                             "$ref": "#/definitions/linkCategory",
@@ -20561,7 +20561,7 @@
                 },
                 "IQC": {
                     "type": "object",
-                    "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+                    "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -20573,7 +20573,7 @@
                         },
                         "SOURCE_NAME": {
                             "type": "string",
-                            "description": "Archive that publishes the capture, verbatim (\"IQEngine\", \"SigidWiki\",\n\"IEEE DataPort\", \"SDRangel IQ Database\", \"Zenodo\"). A string rather than\nan enum so a new archive lane never requires a schema release."
+                            "description": "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -20697,7 +20697,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags)."
+                            "description": "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses."
                         },
                         "GEOLOCATION": {
                             "$ref": "#/definitions/IQCGeolocation",
@@ -28669,7 +28669,7 @@
                 },
                 "NUMGaussMarkovRequest": {
                     "type": "object",
-                    "description": "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+                    "description": "Request for one first-order Gauss-Markov random sequence.",
                     "properties": {
                         "OPERATION": {
                             "$ref": "#/definitions/numOperationCode",
@@ -28697,7 +28697,7 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Seed for the Basilisk-compatible standard normal generator."
+                            "description": "Seed for the standard-normal generator."
                         },
                         "PROPAGATION_MATRIX": {
                             "type": "array",
@@ -28733,7 +28733,7 @@
                 },
                 "NUMGaussMarkovResult": {
                     "type": "object",
-                    "description": "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+                    "description": "Result of one first-order Gauss-Markov random sequence.",
                     "properties": {
                         "STATUS": {
                             "$ref": "#/definitions/numResultStatus"
@@ -31069,7 +31069,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -34151,7 +34151,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -36128,7 +36128,7 @@
                 },
                 "RFB": {
                     "type": "object",
-                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -36202,7 +36202,7 @@
                         },
                         "ID_TRANSMITTER": {
                             "type": "string",
-                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
                         },
                         "LINK_DIRECTION": {
                             "$ref": "#/definitions/linkCategory",
@@ -41041,7 +41041,7 @@
                         "BURST_ADJUSTED",
                         "INTERPOLATED_EXTRAPOLATED",
                         "NO_OBSERVATION",
-                        "CELESTRAK_INTERPOLATED"
+                        "PROVIDER_INTERPOLATED"
                     ]
                 },
                 "F107DataType": {
@@ -44977,7 +44977,7 @@
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+                            "description": "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
                         },
                         "PUBLISH_TIMESTAMP": {
                             "type": "string",
@@ -44985,7 +44985,7 @@
                         },
                         "CID": {
                             "type": "string",
-                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
                         },
                         "FILE_NAME": {
                             "type": "string",
@@ -44993,7 +44993,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "SIGNATURE": {
                             "type": "string",
@@ -45024,7 +45024,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -45032,7 +45032,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -45137,7 +45137,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -45910,18 +45910,18 @@
                 },
                 "CMRProvenance": {
                     "type": "object",
-                    "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+                    "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
                     "properties": {
                         "ROLE": {
                             "$ref": "#/definitions/cmrEvidenceRole"
                         },
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher name verbatim, such as \"CelesTrak\", \"GCAT\", or the SDN\nprovider that published the joined $CAT record."
+                            "description": "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record."
                         },
                         "SOURCE_DATASET": {
                             "type": "string",
-                            "description": "Source dataset or product name verbatim, such as \"active Starlink group\"\nor \"GCAT satcat\"."
+                            "description": "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product."
                         },
                         "SOURCE_RECORD_ID": {
                             "type": "string",
@@ -46431,7 +46431,7 @@
                     "properties": {
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\"."
+                            "description": "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -46439,7 +46439,7 @@
                         },
                         "SOURCE_DATASET": {
                             "type": "string",
-                            "description": "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\"."
+                            "description": "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route."
                         },
                         "SOURCE_QUERY": {
                             "type": "string",
@@ -46554,7 +46554,7 @@
                 },
                 "CNP": {
                     "type": "object",
-                    "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+                    "description": "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -46562,7 +46562,7 @@
                         },
                         "CONSTELLATION": {
                             "type": "string",
-                            "description": "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
+                            "description": "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
                         },
                         "OPERATOR": {
                             "type": "string",
@@ -46572,7 +46572,7 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+                            "description": "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key."
                         },
                         "AS_NAME": {
                             "type": "string",
@@ -49889,7 +49889,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "TRANSPORT_PROTOCOL": {
                             "type": "string",
@@ -53945,7 +53945,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -55619,7 +55619,7 @@
                 },
                 "RFB": {
                     "type": "object",
-                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+                    "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -55693,7 +55693,7 @@
                         },
                         "ID_TRANSMITTER": {
                             "type": "string",
-                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+                            "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
                         },
                         "LINK_DIRECTION": {
                             "$ref": "#/definitions/linkCategory",
@@ -55930,7 +55930,7 @@
                 },
                 "IQC": {
                     "type": "object",
-                    "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+                    "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
                     "properties": {
                         "ID": {
                             "type": "string",
@@ -55942,7 +55942,7 @@
                         },
                         "SOURCE_NAME": {
                             "type": "string",
-                            "description": "Archive that publishes the capture, verbatim (\"IQEngine\", \"SigidWiki\",\n\"IEEE DataPort\", \"SDRangel IQ Database\", \"Zenodo\"). A string rather than\nan enum so a new archive lane never requires a schema release."
+                            "description": "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -56066,7 +56066,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags)."
+                            "description": "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses."
                         },
                         "GEOLOCATION": {
                             "$ref": "#/definitions/IQCGeolocation",
@@ -62846,7 +62846,7 @@
                 },
                 "NUMGaussMarkovRequest": {
                     "type": "object",
-                    "description": "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+                    "description": "Request for one first-order Gauss-Markov random sequence.",
                     "properties": {
                         "OPERATION": {
                             "$ref": "#/definitions/numOperationCode",
@@ -62874,7 +62874,7 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 4294967295,
-                            "description": "Seed for the Basilisk-compatible standard normal generator."
+                            "description": "Seed for the standard-normal generator."
                         },
                         "PROPAGATION_MATRIX": {
                             "type": "array",
@@ -62910,7 +62910,7 @@
                 },
                 "NUMGaussMarkovResult": {
                     "type": "object",
-                    "description": "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+                    "description": "Result of one first-order Gauss-Markov random sequence.",
                     "properties": {
                         "STATUS": {
                             "$ref": "#/definitions/numResultStatus"
@@ -64571,11 +64571,11 @@
                     "properties": {
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher of the value, named as the publisher names itself: \"ESA DISCOS\",\n\"CelesTrak SATCAT\", \"Gunter's Space Page\", \"NASA\", the operator's name."
+                            "description": "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
                         },
                         "SOURCE_RECORD_ID": {
                             "type": "string",
-                            "description": "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+                            "description": "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
                         },
                         "SOURCE_URL": {
                             "type": "string",
@@ -64645,7 +64645,7 @@
                 },
                 "OPPRadarCrossSection": {
                     "type": "object",
-                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+                    "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
                     "properties": {
                         "BAND": {
                             "type": "string",
@@ -64668,7 +64668,7 @@
                         },
                         "SIZE_CLASS": {
                             "type": "string",
-                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
+                            "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as a public catalogue's \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number."
                         },
                         "SENSOR": {
                             "type": "string",
@@ -64727,7 +64727,7 @@
                         },
                         "HEIGHT": {
                             "$ref": "#/definitions/OPPQuantity",
-                            "description": "Envelope terms as ESA DISCOS publishes them [m]."
+                            "description": "Envelope terms as an object database publishes them [m]."
                         },
                         "WIDTH": {
                             "$ref": "#/definitions/OPPQuantity"
@@ -64748,7 +64748,7 @@
                         },
                         "SHAPE": {
                             "type": "string",
-                            "description": "Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
+                            "description": "Gross geometric shape verbatim from the source, such as a shape string\nof the form \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry."
                         },
                         "SHAPE_PROVENANCE": {
                             "$ref": "#/definitions/OPPProvenance",
@@ -64801,7 +64801,7 @@
                         },
                         "MATERIAL": {
                             "type": "string",
-                            "description": "Material name verbatim from the source: \"Kapton MLI\", \"GaAs\ntriple-junction\", \"Al 6061-T6\". Empty when unstated."
+                            "description": "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
                         },
                         "MATERIAL_CLASS": {
                             "$ref": "#/definitions/oppMaterialClass"
@@ -65757,7 +65757,7 @@
                     "properties": {
                         "PROVIDER_DOMAIN": {
                             "type": "string",
-                            "description": "Domain of the provider, e.g. \"sdn.spaceaware.io\". Required. MUST equal\nthe origin the manifest was served from."
+                            "description": "Domain of the provider, e.g. \"node.example.org\". Required. MUST equal\nthe origin the manifest was served from."
                         },
                         "PROVIDER_NAME": {
                             "type": "string",
@@ -66671,7 +66671,7 @@
                 },
                 "RBKQuaternion": {
                     "type": "object",
-                    "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+                    "description": "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
                     "properties": {
                         "Q0": {
                             "type": "number"
@@ -66690,7 +66690,7 @@
                 },
                 "RBKMatrix3": {
                     "type": "object",
-                    "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+                    "description": "Row-major 3x3 direction cosine matrix.",
                     "properties": {
                         "M11": {
                             "type": "number"
@@ -73124,7 +73124,7 @@
                             "type": "integer",
                             "minimum": -9223372036854775808,
                             "maximum": 9223372036854775807,
-                            "description": "CelesTrak Star catalog identifier"
+                            "description": "Community satellite-tracking star catalog identifier"
                         },
                         "GNC_CAT_ID": {
                             "type": "integer",
@@ -80142,18 +80142,18 @@
                 },
                 "CMRProvenance": {
                     "type": "object",
-                    "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+                    "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
                     "properties": {
                         "ROLE": {
                             "$ref": "#/definitions/cmrEvidenceRole"
                         },
                         "SOURCE": {
                             "type": "string",
-                            "description": "Publisher name verbatim, such as \"CelesTrak\", \"GCAT\", or the SDN\nprovider that published the joined $CAT record."
+                            "description": "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record."
                         },
                         "SOURCE_DATASET": {
                             "type": "string",
-                            "description": "Source dataset or product name verbatim, such as \"active Starlink group\"\nor \"GCAT satcat\"."
+                            "description": "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product."
                         },
                         "SOURCE_RECORD_ID": {
                             "type": "string",
@@ -98401,7 +98401,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -98409,7 +98409,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -98514,7 +98514,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -106799,7 +106799,7 @@
                         },
                         "XPUB": {
                             "type": "string",
-                            "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "PRIVATE_KEY": {
                             "type": "string",
@@ -106807,7 +106807,7 @@
                         },
                         "XPRIV": {
                             "type": "string",
-                            "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+                            "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\"."
                         },
                         "KEY_ADDRESS": {
                             "type": "string",
@@ -106912,7 +106912,7 @@
                     "properties": {
                         "DOMAIN": {
                             "type": "string",
-                            "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")"
+                            "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")"
                         },
                         "PUBLIC_KEY": {
                             "type": "string",
@@ -108162,7 +108162,7 @@
                     "properties": {
                         "PROVIDER_DOMAIN": {
                             "type": "string",
-                            "description": "Domain of the provider, e.g. \"sdn.spaceaware.io\". Required. MUST equal\nthe origin the manifest was served from."
+                            "description": "Domain of the provider, e.g. \"node.example.org\". Required. MUST equal\nthe origin the manifest was served from."
                         },
                         "PROVIDER_NAME": {
                             "type": "string",
@@ -109554,7 +109554,7 @@
                         },
                         "EPHEMERIS_SOURCE": {
                             "type": "string",
-                            "description": "Generating ephemeris source (e.g., \"JPL DE440\", \"HPOP v2.1\", \"Basilisk chebyPosEphem\")."
+                            "description": "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
                         },
                         "NOMINAL_SEGMENT_SPAN": {
                             "type": "number",
@@ -111812,7 +111812,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "TRANSPORT_PROTOCOL": {
                             "type": "string",
@@ -113541,7 +113541,7 @@
                             "type": "integer",
                             "minimum": -9223372036854775808,
                             "maximum": 9223372036854775807,
-                            "description": "CelesTrak Star catalog identifier"
+                            "description": "Community satellite-tracking star catalog identifier"
                         },
                         "GNC_CAT_ID": {
                             "type": "integer",
@@ -114096,7 +114096,7 @@
                 },
                 "RBKQuaternion": {
                     "type": "object",
-                    "description": "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+                    "description": "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
                     "properties": {
                         "Q0": {
                             "type": "number"
@@ -114115,7 +114115,7 @@
                 },
                 "RBKMatrix3": {
                     "type": "object",
-                    "description": "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+                    "description": "Row-major 3x3 direction cosine matrix.",
                     "properties": {
                         "M11": {
                             "type": "number"
@@ -114237,7 +114237,7 @@
                     "properties": {
                         "MULTIFORMAT_ADDRESS": {
                             "type": "string",
-                            "description": "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+                            "description": "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
                         },
                         "PUBLISH_TIMESTAMP": {
                             "type": "string",
@@ -114245,7 +114245,7 @@
                         },
                         "CID": {
                             "type": "string",
-                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+                            "description": "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
                         },
                         "FILE_NAME": {
                             "type": "string",
@@ -114253,7 +114253,7 @@
                         },
                         "FILE_ID": {
                             "type": "string",
-                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+                            "description": "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
                         },
                         "SIGNATURE": {
                             "type": "string",

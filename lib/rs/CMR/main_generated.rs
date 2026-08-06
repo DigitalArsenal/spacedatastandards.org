@@ -204,8 +204,9 @@ pub enum CMRProvenanceOffset {}
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 pub struct CMRProvenance<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -312,8 +313,9 @@ impl<'a> CMRProvenance<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<cmrEvidenceRole>(CMRProvenance::VT_ROLE, Some(cmrEvidenceRole::UNSPECIFIED)).unwrap()}
   }
-  /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  /// provider that published the joined $CAT record.
+  /// Publisher name verbatim as that publisher states it — a public satellite
+  /// catalogue, a general object reference catalogue, or the network provider
+  /// that published the joined $CAT record.
   #[inline]
   pub fn SOURCE(&self) -> &'a str {
     // Safety:
@@ -321,8 +323,8 @@ impl<'a> CMRProvenance<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CMRProvenance::VT_SOURCE, None).unwrap()}
   }
-  /// Source dataset or product name verbatim, such as "active Starlink group"
-  /// or "GCAT satcat".
+  /// Source dataset or product name verbatim, such as a named constellation
+  /// group file or a catalogue's satellite-catalog product.
   #[inline]
   pub fn SOURCE_DATASET(&self) -> &'a str {
     // Safety:

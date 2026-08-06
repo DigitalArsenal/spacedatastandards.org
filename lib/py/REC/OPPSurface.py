@@ -51,8 +51,9 @@ class OPPSurface(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Material name verbatim from the source: "Kapton MLI", "GaAs
-    # triple-junction", "Al 6061-T6". Empty when unstated.
+    # Material name verbatim from the source, in whatever designation the
+    # source uses: a multi-layer-insulation film, a photovoltaic cell
+    # chemistry, an alloy temper designation. Empty when unstated.
     # OPPSurface
     def MATERIAL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

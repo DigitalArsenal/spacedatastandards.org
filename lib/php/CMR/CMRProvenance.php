@@ -8,8 +8,9 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 class CMRProvenance extends Table
 {
     /**
@@ -53,16 +54,17 @@ class CMRProvenance extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \cmrEvidenceRole::UNSPECIFIED;
     }
 
-    /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-    /// provider that published the joined $CAT record.
+    /// Publisher name verbatim as that publisher states it — a public satellite
+    /// catalogue, a general object reference catalogue, or the network provider
+    /// that published the joined $CAT record.
     public function getSOURCE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Source dataset or product name verbatim, such as "active Starlink group"
-    /// or "GCAT satcat".
+    /// Source dataset or product name verbatim, such as a named constellation
+    /// group file or a catalogue's satellite-catalog product.
     public function getSOURCE_DATASET()
     {
         $o = $this->__offset(8);

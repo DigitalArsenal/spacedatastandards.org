@@ -11,7 +11,7 @@
               },
         "CS_ID" : {
                 "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
-                "description" : "CelesTrak Star catalog identifier"
+                "description" : "Community satellite-tracking star catalog identifier"
               },
         "GNC_CAT_ID" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,

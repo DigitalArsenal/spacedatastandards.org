@@ -44,7 +44,7 @@ class STR : Table() {
     val idAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun idInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * CelesTrak Star catalog identifier
+     * Community satellite-tracking star catalog identifier
      */
     val csId : Long
         get() {

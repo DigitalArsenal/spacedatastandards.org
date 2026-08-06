@@ -427,7 +427,9 @@ public struct PPE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Array of orbital element polynomial records.
   ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
   public var ORBITAL_ELEMENT_RECORDS: FlatbufferVector<PPEOrbitalElementRecord> { return _accessor.vector(at: VT.ORBITAL_ELEMENT_RECORDS, byteSize: 4) }
-  ///  Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  ///  Generating ephemeris source, verbatim as the generator names itself
+  ///  (e.g., a planetary ephemeris series designation, a numerical propagator
+  ///  name and version, or an in-house tool identifier).
   public var EPHEMERIS_SOURCE: String? { let o = _accessor.offset(VT.EPHEMERIS_SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPHEMERIS_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
   ///  Fit span in seconds used to generate each polynomial segment.

@@ -9,8 +9,8 @@ import "strconv"
 type oppRcsAspect int8
 
 const (
-	/// The source states no aspect convention. ESA DISCOS characteristic
-	/// cross-sections and CelesTrak SATCAT RCS use this value.
+	/// The source states no aspect convention. Characteristic cross-sections
+	/// published by catalogue-level object databases use this value.
 	oppRcsAspectUNSPECIFIED oppRcsAspect = 0
 	oppRcsAspectAVERAGE     oppRcsAspect = 1
 	oppRcsAspectMINIMUM     oppRcsAspect = 2

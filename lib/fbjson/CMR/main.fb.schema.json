@@ -61,7 +61,7 @@
     },
     "CMRProvenance": {
       "type": "object",
-      "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+      "description": "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
       "properties": {
         "ROLE": {
           "$ref": "#/definitions/cmrEvidenceRole",
@@ -93,13 +93,13 @@
         },
         "SOURCE": {
           "type": "string",
-          "description": "Publisher name verbatim, such as \"CelesTrak\", \"GCAT\", or the SDN\nprovider that published the joined $CAT record.",
+          "description": "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },
         "SOURCE_DATASET": {
           "type": "string",
-          "description": "Source dataset or product name verbatim, such as \"active Starlink group\"\nor \"GCAT satcat\".",
+          "description": "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },

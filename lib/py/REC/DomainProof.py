@@ -34,7 +34,7 @@ class DomainProof(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+    # Fully-qualified domain name the proof binds (e.g., "node.example.org")
     # DomainProof
     def DOMAIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))

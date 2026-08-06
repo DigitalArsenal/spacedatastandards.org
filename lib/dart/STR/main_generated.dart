@@ -21,7 +21,7 @@ class STR {
 
   ///  Unique internal identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  CelesTrak Star catalog identifier
+  ///  Community satellite-tracking star catalog identifier
   int get CS_ID => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 6, 0);
   int get csId => CS_ID;
   ///  GNC star catalog identifier

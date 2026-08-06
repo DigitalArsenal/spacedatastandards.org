@@ -454,7 +454,7 @@
     },
     "RFB": {
       "type": "object",
-      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "description": "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
       "properties": {
         "ID": {
           "type": "string",
@@ -636,7 +636,7 @@
         },
         "ID_TRANSMITTER": {
           "type": "string",
-          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
+          "description": "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
           "x-flatbuffer-type": "string"
         },
         "LINK_DIRECTION": {
@@ -976,7 +976,7 @@
     },
     "IQC": {
       "type": "object",
-      "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+      "description": "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
       "properties": {
         "ID": {
           "type": "string",
@@ -990,7 +990,7 @@
         },
         "SOURCE_NAME": {
           "type": "string",
-          "description": "Archive that publishes the capture, verbatim (\"IQEngine\", \"SigidWiki\",\n\"IEEE DataPort\", \"SDRangel IQ Database\", \"Zenodo\"). A string rather than\nan enum so a new archive lane never requires a schema release.",
+          "description": "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release.",
           "x-flatbuffer-type": "string"
         },
         "SOURCE_URL": {
@@ -1140,7 +1140,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags).",
+          "description": "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses.",
           "x-flatbuffer-type": "[string]"
         },
         "GEOLOCATION": {

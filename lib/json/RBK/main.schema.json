@@ -31,7 +31,7 @@
     },
     "RBKQuaternion" : {
       "type" : "object",
-      "description" : "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+      "description" : "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
       "properties" : {
         "Q0" : {
                 "type" : "number"
@@ -50,7 +50,7 @@
     },
     "RBKMatrix3" : {
       "type" : "object",
-      "description" : "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+      "description" : "Row-major 3x3 direction cosine matrix.",
       "properties" : {
         "M11" : {
                 "type" : "number"

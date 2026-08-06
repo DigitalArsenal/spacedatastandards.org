@@ -8,9 +8,9 @@ np = import_numpy()
 
 # Radar cross-section as reported for one band, polarization and aspect
 # convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-# carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-# xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-# MAXIMUM sharing one SOURCE.
+# carries a list of these and never a single scalar. A source publishing
+# minimum, average and maximum cross-sections becomes three entries with
+# ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 class OPPRadarCrossSection(object):
     __slots__ = ['_tab']
 
@@ -81,7 +81,7 @@ class OPPRadarCrossSection(object):
         return None
 
     # Size bucket verbatim when a source publishes a bucket instead of a number,
-    # such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+    # such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
     # turned into a number.
     # OPPRadarCrossSection
     def SIZE_CLASS(self):

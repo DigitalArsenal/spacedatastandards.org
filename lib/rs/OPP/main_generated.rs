@@ -145,8 +145,8 @@ pub const ENUM_VALUES_OPP_RCS_ASPECT: [oppRcsAspect; 8] = [
 pub struct oppRcsAspect(pub i8);
 #[allow(non_upper_case_globals)]
 impl oppRcsAspect {
-  /// The source states no aspect convention. ESA DISCOS characteristic
-  /// cross-sections and CelesTrak SATCAT RCS use this value.
+  /// The source states no aspect convention. Characteristic cross-sections
+  /// published by catalogue-level object databases use this value.
   pub const UNSPECIFIED: Self = Self(0);
   pub const AVERAGE: Self = Self(1);
   pub const MINIMUM: Self = Self(2);
@@ -623,8 +623,9 @@ impl<'a> OPPProvenance<'a> {
     }
   }
 
-  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  /// Publisher of the value, named as the publisher names itself — a space
+  /// agency's object database, a public satellite catalogue, a third-party
+  /// satellite reference site, or the operator itself.
   #[inline]
   pub fn SOURCE(&self) -> &'a str {
     // Safety:
@@ -633,7 +634,7 @@ impl<'a> OPPProvenance<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OPPProvenance::VT_SOURCE, None).unwrap()}
   }
   /// The source's own identifier for the record this value was read from, such
-  /// as a DISCOS object id. Verbatim, never normalized.
+  /// as that database's object id. Verbatim, never normalized.
   #[inline]
   pub fn SOURCE_RECORD_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1161,9 +1162,9 @@ pub enum OPPRadarCrossSectionOffset {}
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 pub struct OPPRadarCrossSection<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -1279,7 +1280,7 @@ impl<'a> OPPRadarCrossSection<'a> {
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OPPQuantity>>(OPPRadarCrossSection::VT_CROSS_SECTION, None).unwrap()}
   }
   /// Size bucket verbatim when a source publishes a bucket instead of a number,
-  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   /// turned into a number.
   #[inline]
   pub fn SIZE_CLASS(&self) -> Option<&'a str> {
@@ -1857,7 +1858,7 @@ impl<'a> OPPDimensions<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OPPQuantity>>(OPPDimensions::VT_BODY_Z, None)}
   }
-  /// Envelope terms as ESA DISCOS publishes them [m].
+  /// Envelope terms as an object database publishes them [m].
   #[inline]
   pub fn HEIGHT(&self) -> Option<OPPQuantity<'a>> {
     // Safety:
@@ -1902,8 +1903,8 @@ impl<'a> OPPDimensions<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<OPPQuantity>>(OPPDimensions::VT_SPAN_DEPLOYED, None)}
   }
-  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  /// Gross geometric shape verbatim from the source, such as a shape string
+  /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   #[inline]
   pub fn SHAPE(&self) -> Option<&'a str> {
     // Safety:
@@ -2559,8 +2560,9 @@ impl<'a> OPPSurface<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<oppSurfaceKind>(OPPSurface::VT_KIND, Some(oppSurfaceKind::UNSPECIFIED)).unwrap()}
   }
-  /// Material name verbatim from the source: "Kapton MLI", "GaAs
-  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  /// Material name verbatim from the source, in whatever designation the
+  /// source uses: a multi-layer-insulation film, a photovoltaic cell
+  /// chemistry, an alloy temper designation. Empty when unstated.
   #[inline]
   pub fn MATERIAL(&self) -> Option<&'a str> {
     // Safety:

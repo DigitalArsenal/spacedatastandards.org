@@ -33,7 +33,7 @@ public struct PNM : IFlatbufferObject
   public PNM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Multiformat Address
-  /// https://multiformats.io/multiaddr/
+  /// As specified by the multiaddr specification.
   /// A universal address format for representing multiple network protocols. Examples include:
   /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
   /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
@@ -56,7 +56,8 @@ public struct PNM : IFlatbufferObject
   public byte[] GetPUBLISH_TIMESTAMPArray() { return __p.__vector_as_array<byte>(6); }
   /// Concatenated Content Identifier (CID)
   /// This field is a unique ID for distributed systems (CID).
-  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+  /// The CID provides a unique identifier within distributed systems, as
+  /// detailed in the multiformats CID specification.
   /// For dataset-update PNMs this SHOULD identify a compact DPM manifest,
   /// manifest digest, or other small verification object, not necessarily the
   /// full dataset bytes.
@@ -84,7 +85,7 @@ public struct PNM : IFlatbufferObject
   /// verification. Provider-mediated query requests and responses MUST bind
   /// their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST
   /// reject responses whose DPM, records, or proofs bind to a different FILE_ID.
-  /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// Example: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public string FILE_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }

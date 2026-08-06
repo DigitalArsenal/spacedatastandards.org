@@ -62,7 +62,7 @@
       "x-flatbuffer-enum-values": {
         "UNSPECIFIED": {
           "value": 0,
-          "description": "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+          "description": "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
         },
         "AVERAGE": {
           "value": 1
@@ -235,13 +235,13 @@
       "properties": {
         "SOURCE": {
           "type": "string",
-          "description": "Publisher of the value, named as the publisher names itself: \"ESA DISCOS\",\n\"CelesTrak SATCAT\", \"Gunter's Space Page\", \"NASA\", the operator's name.",
+          "description": "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },
         "SOURCE_RECORD_ID": {
           "type": "string",
-          "description": "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized.",
+          "description": "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized.",
           "x-flatbuffer-type": "string"
         },
         "SOURCE_URL": {
@@ -359,7 +359,7 @@
     },
     "OPPRadarCrossSection": {
       "type": "object",
-      "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+      "description": "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
       "properties": {
         "BAND": {
           "type": "string",
@@ -383,7 +383,7 @@
           "x-flatbuffer-enum-values": {
             "UNSPECIFIED": {
               "value": 0,
-              "description": "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+              "description": "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
             },
             "AVERAGE": {
               "value": 1
@@ -417,7 +417,7 @@
         },
         "SIZE_CLASS": {
           "type": "string",
-          "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number.",
+          "description": "Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as a public catalogue's \"SMALL\", \"MEDIUM\", \"LARGE\". A bucket is never\nturned into a number.",
           "x-flatbuffer-type": "string"
         },
         "SENSOR": {
@@ -487,7 +487,7 @@
         },
         "HEIGHT": {
           "$ref": "#/definitions/OPPQuantity",
-          "description": "Envelope terms as ESA DISCOS publishes them [m].",
+          "description": "Envelope terms as an object database publishes them [m].",
           "x-flatbuffer-type": "OPPQuantity"
         },
         "WIDTH": {
@@ -514,7 +514,7 @@
         },
         "SHAPE": {
           "type": "string",
-          "description": "Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry.",
+          "description": "Gross geometric shape verbatim from the source, such as a shape string\nof the form \"Box + 1 Pan\" or \"Cyl\". Never parsed into geometry.",
           "x-flatbuffer-type": "string"
         },
         "SHAPE_PROVENANCE": {
@@ -627,7 +627,7 @@
         },
         "MATERIAL": {
           "type": "string",
-          "description": "Material name verbatim from the source: \"Kapton MLI\", \"GaAs\ntriple-junction\", \"Al 6061-T6\". Empty when unstated.",
+          "description": "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated.",
           "x-flatbuffer-type": "string"
         },
         "MATERIAL_CLASS": {

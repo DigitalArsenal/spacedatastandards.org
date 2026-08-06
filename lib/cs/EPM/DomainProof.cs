@@ -22,7 +22,7 @@ public struct DomainProof : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
   public string DOMAIN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDOMAINBytes() { return __p.__vector_as_span<byte>(4, 1); }

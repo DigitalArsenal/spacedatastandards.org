@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Request for one Basilisk-compatible Gauss-Markov random sequence.
+# Request for one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovRequest(object):
     __slots__ = ['_tab']
 
@@ -61,7 +61,7 @@ class NUMGaussMarkovRequest(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Seed for the Basilisk-compatible standard normal generator.
+    # Seed for the standard-normal generator.
     # NUMGaussMarkovRequest
     def RNG_SEED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))

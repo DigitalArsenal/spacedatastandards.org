@@ -254,9 +254,10 @@ inline const char *EnumNamecnpReduction(cnpReduction e) {
 
 /// How the underlying observations were produced.
 enum cnpMethod : int8_t {
-  /// M-Lab NDT7 measurement.
+  /// NDT7 network-diagnostic protocol measurement.
   cnpMethod_NDT7 = 0,
-  /// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+  /// A speed test other than NDT7 — a third-party measurement platform, a
+  /// CDN-operated test, or an operator-native test.
   cnpMethod_SPEED_TEST = 1,
   /// ICMP or UDP echo.
   cnpMethod_PING = 2,
@@ -420,8 +421,8 @@ struct CNPProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ATTRIBUTION = 26,
     VT_NON_COMMERCIAL_ONLY = 28
   };
-  /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-  /// Radar", "RIPE Atlas", "LENS".
+  /// Name of the organization or programme publishing the underlying
+  /// measurements, carried verbatim as that publisher states it.
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
@@ -429,8 +430,8 @@ struct CNPProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SOURCE_URL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_URL);
   }
-  /// Dataset, table or API path queried, e.g.
-  /// "measurement-lab.ndt.unified_downloads".
+  /// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+  /// warehouse table name or a REST route.
   const ::flatbuffers::String *SOURCE_DATASET() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_DATASET);
   }
@@ -867,9 +868,10 @@ inline ::flatbuffers::Offset<CNPMetric> CreateCNPMetricDirect(
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -887,9 +889,9 @@ inline ::flatbuffers::Offset<CNPMetric> CreateCNPMetricDirect(
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 struct CNP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef CNPBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -913,8 +915,8 @@ struct CNP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  /// Constellation or network name, verbatim ("Starlink", "OneWeb",
-  /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+  /// Constellation or network name, carried verbatim as its operator states
+  /// it. Empty when the record is a terrestrial baseline. Joins to
   /// $LKS.CONSTELLATION and to $CAT by the same name.
   const ::flatbuffers::String *CONSTELLATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONSTELLATION);
@@ -923,9 +925,9 @@ struct CNP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OPERATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OPERATOR);
   }
-  /// Autonomous system number of the measured client network — Starlink is
-  /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-  /// is never a real measurement key.
+  /// Autonomous system number of the measured client network, as allocated in
+  /// the public routing registry. 0 means the aggregate is not keyed by ASN;
+  /// AS 0 is reserved and is never a real measurement key.
   uint32_t ASN() const {
     return GetField<uint32_t>(VT_ASN, 0);
   }

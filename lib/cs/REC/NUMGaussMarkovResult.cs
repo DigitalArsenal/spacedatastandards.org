@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 public struct NUMGaussMarkovResult : IFlatbufferObject
 {
   private Table __p;

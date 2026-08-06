@@ -68,7 +68,9 @@ public struct PPE : IFlatbufferObject
   /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
   public PPEOrbitalElementRecord? ORBITAL_ELEMENT_RECORDS(int j) { int o = __p.__offset(22); return o != 0 ? (PPEOrbitalElementRecord?)(new PPEOrbitalElementRecord()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int ORBITAL_ELEMENT_RECORDSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Generating ephemeris source, verbatim as the generator names itself
+  /// (e.g., a planetary ephemeris series designation, a numerical propagator
+  /// name and version, or an in-house tool identifier).
   public string EPHEMERIS_SOURCE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPHEMERIS_SOURCEBytes() { return __p.__vector_as_span<byte>(24, 1); }

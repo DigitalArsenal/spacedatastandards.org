@@ -7,6 +7,10 @@ class FluxQualifier private constructor() {
         const val BURST_ADJUSTED: Byte = 1
         const val INTERPOLATED_EXTRAPOLATED: Byte = 2
         const val NO_OBSERVATION: Byte = 3
-        const val CELESTRAK_INTERPOLATED: Byte = 4
+        /**
+         * Interpolated by the upstream data provider rather than the issuing
+         * observatory. Wire value 4 is unchanged from prior releases.
+         */
+        const val PROVIDER_INTERPOLATED: Byte = 4
     }
 }

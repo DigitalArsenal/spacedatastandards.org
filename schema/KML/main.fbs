@@ -1,11 +1,10 @@
-// Hash: 416f2d751cc0235abd9b192c0421675ecf924cb2c4709d9083eb0b98b5269ef1
-// Version: 0.0.3
+// Hash: 3d50b35aa366676f927b1a27045e848876b598b978980702d77034b763f0a702
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 // KML (Keyhole Markup Language)
 //
 // KML is an OGC standard for expressing geographic annotation and
-// visualization within 2D maps and 3D Earth browsers. Originally
-// developed for Google Earth.
+// visualization within 2D maps and 3D Earth browsers.
 // Reference: OGC 07-147r2 (KML 2.2), OGC 12-007r2 (KML 2.3)
 
 enum KMLAltitudeMode : byte {

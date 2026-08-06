@@ -33,7 +33,7 @@ static getSizePrefixedRootAsDomainProof(bb:flatbuffers.ByteBuffer, obj?:DomainPr
 }
 
 /**
- * Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+ * Fully-qualified domain name the proof binds (e.g., "node.example.org")
  */
 DOMAIN():string|null
 DOMAIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

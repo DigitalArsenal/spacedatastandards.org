@@ -10,8 +10,8 @@ export declare class CNPProvenance implements flatbuffers.IUnpackableObject<CNPP
     static getRootAsCNPProvenance(bb: flatbuffers.ByteBuffer, obj?: CNPProvenance): CNPProvenance;
     static getSizePrefixedRootAsCNPProvenance(bb: flatbuffers.ByteBuffer, obj?: CNPProvenance): CNPProvenance;
     /**
-     * Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-     * Radar", "RIPE Atlas", "LENS".
+     * Name of the organization or programme publishing the underlying
+     * measurements, carried verbatim as that publisher states it.
      */
     SOURCE(): string;
     SOURCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
@@ -21,8 +21,8 @@ export declare class CNPProvenance implements flatbuffers.IUnpackableObject<CNPP
     SOURCE_URL(): string | null;
     SOURCE_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Dataset, table or API path queried, e.g.
-     * "measurement-lab.ndt.unified_downloads".
+     * Dataset, table or API path queried, verbatim, e.g. a fully qualified
+     * warehouse table name or a REST route.
      */
     SOURCE_DATASET(): string | null;
     SOURCE_DATASET(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

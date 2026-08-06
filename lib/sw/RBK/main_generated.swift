@@ -127,11 +127,11 @@ public enum rbkOperationCode: Int8, FlatbuffersVectorInitializable, Enum, Verifi
   case dEuler = 56
   ///  Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
   case tildeMatrix = 57
-  ///  Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+  ///  Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
   case m1RotationMatrix = 58
-  ///  Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+  ///  Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
   case m2RotationMatrix = 59
-  ///  Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+  ///  Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
   case m3RotationMatrix = 60
 
   public static var max: rbkOperationCode { return .m3RotationMatrix }
@@ -226,7 +226,7 @@ public struct RBKVector3: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   }
 }
 
-///  Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+///  Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 public struct RBKQuaternion: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -280,7 +280,7 @@ public struct RBKQuaternion: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 }
 
-///  Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+///  Row-major 3x3 direction cosine matrix.
 public struct RBKMatrix3: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }

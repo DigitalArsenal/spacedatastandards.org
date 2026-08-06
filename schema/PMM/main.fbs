@@ -1,5 +1,5 @@
-// Hash: e6d2299aa3197576e363815f6e6847a19a8983fdfcccb6050986e4ae4dfa15a9
-// Version: 1.170.1
+// Hash: 6bd5253e4dda7dc9e69a13ec0cc30871b5f08357411f62ff43a75887c30b5e61
+// Version: 1.170.2
 // -----------------------------------END_HEADER
 // Provider Module Manifest (PMM)
 // Description
@@ -231,7 +231,7 @@ table PMMModuleEntry {
 /// Provider Module Manifest — what one provider node offers, signed by that
 /// node's key.
 table PMM {
-  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal
   /// the origin the manifest was served from.
   PROVIDER_DOMAIN: string (required);
   /// Display name of the provider.

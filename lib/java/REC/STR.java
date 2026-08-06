@@ -35,7 +35,7 @@ public final class STR extends com.google.flatbuffers.Table {
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * CelesTrak Star catalog identifier
+   * Community satellite-tracking star catalog identifier
    */
   public long CS_ID() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**

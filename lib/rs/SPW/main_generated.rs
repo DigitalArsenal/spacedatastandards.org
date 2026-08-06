@@ -14,7 +14,7 @@ pub const ENUM_VALUES_FLUX_QUALIFIER: [FluxQualifier; 5] = [
   FluxQualifier::BURST_ADJUSTED,
   FluxQualifier::INTERPOLATED_EXTRAPOLATED,
   FluxQualifier::NO_OBSERVATION,
-  FluxQualifier::CELESTRAK_INTERPOLATED,
+  FluxQualifier::PROVIDER_INTERPOLATED,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -26,7 +26,9 @@ impl FluxQualifier {
   pub const BURST_ADJUSTED: Self = Self(1);
   pub const INTERPOLATED_EXTRAPOLATED: Self = Self(2);
   pub const NO_OBSERVATION: Self = Self(3);
-  pub const CELESTRAK_INTERPOLATED: Self = Self(4);
+  /// Interpolated by the upstream data provider rather than the issuing
+  /// observatory. Wire value 4 is unchanged from prior releases.
+  pub const PROVIDER_INTERPOLATED: Self = Self(4);
 
   pub const ENUM_MIN: i8 = 0;
   pub const ENUM_MAX: i8 = 4;
@@ -35,7 +37,7 @@ impl FluxQualifier {
     Self::BURST_ADJUSTED,
     Self::INTERPOLATED_EXTRAPOLATED,
     Self::NO_OBSERVATION,
-    Self::CELESTRAK_INTERPOLATED,
+    Self::PROVIDER_INTERPOLATED,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -44,7 +46,7 @@ impl FluxQualifier {
       Self::BURST_ADJUSTED => Some("BURST_ADJUSTED"),
       Self::INTERPOLATED_EXTRAPOLATED => Some("INTERPOLATED_EXTRAPOLATED"),
       Self::NO_OBSERVATION => Some("NO_OBSERVATION"),
-      Self::CELESTRAK_INTERPOLATED => Some("CELESTRAK_INTERPOLATED"),
+      Self::PROVIDER_INTERPOLATED => Some("PROVIDER_INTERPOLATED"),
       _ => None,
     }
   }

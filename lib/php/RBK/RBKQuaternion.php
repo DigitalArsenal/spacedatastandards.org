@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 class RBKQuaternion extends Table
 {
     /**

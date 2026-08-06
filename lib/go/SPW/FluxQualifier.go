@@ -11,7 +11,9 @@ const (
 	FluxQualifierBURST_ADJUSTED            FluxQualifier = 1
 	FluxQualifierINTERPOLATED_EXTRAPOLATED FluxQualifier = 2
 	FluxQualifierNO_OBSERVATION            FluxQualifier = 3
-	FluxQualifierCELESTRAK_INTERPOLATED    FluxQualifier = 4
+	/// Interpolated by the upstream data provider rather than the issuing
+	/// observatory. Wire value 4 is unchanged from prior releases.
+	FluxQualifierPROVIDER_INTERPOLATED     FluxQualifier = 4
 )
 
 var EnumNamesFluxQualifier = map[FluxQualifier]string{
@@ -19,7 +21,7 @@ var EnumNamesFluxQualifier = map[FluxQualifier]string{
 	FluxQualifierBURST_ADJUSTED:            "BURST_ADJUSTED",
 	FluxQualifierINTERPOLATED_EXTRAPOLATED: "INTERPOLATED_EXTRAPOLATED",
 	FluxQualifierNO_OBSERVATION:            "NO_OBSERVATION",
-	FluxQualifierCELESTRAK_INTERPOLATED:    "CELESTRAK_INTERPOLATED",
+	FluxQualifierPROVIDER_INTERPOLATED:     "PROVIDER_INTERPOLATED",
 }
 
 var EnumValuesFluxQualifier = map[string]FluxQualifier{
@@ -27,7 +29,7 @@ var EnumValuesFluxQualifier = map[string]FluxQualifier{
 	"BURST_ADJUSTED":            FluxQualifierBURST_ADJUSTED,
 	"INTERPOLATED_EXTRAPOLATED": FluxQualifierINTERPOLATED_EXTRAPOLATED,
 	"NO_OBSERVATION":            FluxQualifierNO_OBSERVATION,
-	"CELESTRAK_INTERPOLATED":    FluxQualifierCELESTRAK_INTERPOLATED,
+	"PROVIDER_INTERPOLATED":     FluxQualifierPROVIDER_INTERPOLATED,
 }
 
 func (v FluxQualifier) String() string {

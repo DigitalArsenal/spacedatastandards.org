@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 class RBKMatrix3 extends Table
 {
     /**

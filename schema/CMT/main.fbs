@@ -1,5 +1,5 @@
-// Hash: 20ac40536507a3bf565bb1cdf7d823adef6541dc5da7169454f9a5e24d3490d2
-// Version: 1.155.0
+// Hash: 7b970aa0a2b1040e79ef168bb739e273c2d4980ee549448aab3861d7189560aa
+// Version: 1.155.1
 // -----------------------------------END_HEADER
 include "../SCX/main.fbs";
 
@@ -29,7 +29,7 @@ enum commissionEnforcement : byte {
 enum splitRole : byte {
   /// The module/flow publisher (vendor)
   Publisher,
-  /// The store operator platform (e.g. SpaceAware) — the commission recipient
+  /// The store operator platform — the commission recipient
   Platform,
   /// A referrer who drove the sale
   Referrer,

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.180.0+1786029953426",
+  version: "1.181.0+1786050147275",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -72,7 +72,7 @@ var manifest_default = {
       ]
     },
     CNP: {
-      IDL: '// Hash: 6130bc4bb85b7a40bdb86d864e10ef059659eb69b6deeddd9188756595f23564\n// Version: 1.176.0\n// -----------------------------------END_HEADER\n/// Granularity of the geography a measurement window is keyed to.\nenum cnpRegionKind : byte {\n  /// No geographic restriction \u2014 the aggregate covers everywhere the operator\n  /// serves.\n  GLOBAL,\n  /// A country. CODE is ISO 3166-1 alpha-2.\n  COUNTRY,\n  /// A first-level subdivision. CODE is ISO 3166-2.\n  SUBDIVISION,\n  /// A metropolitan area or city. CODE is the source\'s own key.\n  METRO,\n  /// A ground-segment cell or beam footprint. CODE is the operator\'s own key.\n  CELL,\n  /// A point of presence / ground gateway. CODE is the source\'s own key.\n  POINT_OF_PRESENCE,\n  /// The source keys by something none of the above describes. CODE and NAME\n  /// carry the source\'s key verbatim.\n  OTHER\n}\n\n/// Calendar span an aggregate covers.\nenum cnpPeriod : byte {\n  /// WINDOW_START/WINDOW_STOP are authoritative and match none of the named\n  /// periods.\n  CUSTOM,\n  HOUR,\n  DAY,\n  WEEK,\n  MONTH,\n  QUARTER,\n  YEAR\n}\n\n/// Quantity being aggregated.\nenum cnpMetricKind : byte {\n  /// Achieved application-layer download rate.\n  DOWNLOAD_THROUGHPUT,\n  /// Achieved application-layer upload rate.\n  UPLOAD_THROUGHPUT,\n  /// Round-trip time on an otherwise unloaded path.\n  LATENCY_IDLE,\n  /// Round-trip time measured while the download test saturates the path.\n  LATENCY_LOADED_DOWNLOAD,\n  /// Round-trip time measured while the upload test saturates the path.\n  LATENCY_LOADED_UPLOAD,\n  /// Variation in inter-packet arrival time.\n  JITTER,\n  /// Fraction of packets lost.\n  PACKET_LOSS,\n  /// Fraction of the window in which the service was usable.\n  AVAILABILITY,\n  /// Fraction of the terminal\'s sky view blocked by terrain or structures.\n  OBSTRUCTION,\n  /// Round-trip time where the source does not distinguish loaded from idle.\n  RTT,\n  /// The source publishes a quantity none of the above names.\n  /// SOURCE_METRIC_NAME is then required to be non-empty.\n  OTHER\n}\n\n/// Statistical reduction a single number expresses.\n///\n/// Named `cnpReduction`, not `cnpStatistic`, so it can never differ from the\n/// `CNPStatistic` table by case alone in any generated language tree.\nenum cnpReduction : byte {\n  MEAN,\n  MEDIAN,\n  /// PERCENTILE_RANK carries which one.\n  PERCENTILE,\n  MINIMUM,\n  MAXIMUM,\n  STANDARD_DEVIATION,\n  /// Number of observations, not a value of the metric.\n  COUNT\n}\n\n/// How the underlying observations were produced.\nenum cnpMethod : byte {\n  /// M-Lab NDT7 measurement.\n  NDT7,\n  /// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).\n  SPEED_TEST,\n  /// ICMP or UDP echo.\n  PING,\n  /// Path trace.\n  TRACEROUTE,\n  /// Telemetry read from the user terminal itself.\n  TERMINAL_TELEMETRY,\n  /// Bulk HTTP transfer.\n  HTTP_DOWNLOAD,\n  /// Passive observation of production traffic.\n  PASSIVE,\n  /// Modelled or simulated rather than measured. A modelled value is not a\n  /// measurement and this member is how a consumer refuses to treat it as one.\n  MODELED,\n  /// The source states a method none of the above names.\n  OTHER\n}\n\n/// Geography an aggregate is keyed to.\n///\n/// A separate table so an absent REGION means "the source did not key by\n/// geography", which is different from GLOBAL ("the source aggregated across\n/// all geographies") and different again from an empty CODE.\ntable CNPRegion {\n  /// Granularity of CODE.\n  KIND: cnpRegionKind = OTHER;\n  /// The region key, verbatim from the source in the coding scheme KIND\n  /// names. Never re-coded between schemes on ingest.\n  CODE: string;\n  /// Human-readable region name as the source publishes it. Joins to\n  /// $CTR for country identity when KIND is COUNTRY.\n  NAME: string;\n}\n\n/// Where one metric came from and under what terms it may be republished.\ntable CNPProvenance {\n  /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare\n  /// Radar", "RIPE Atlas", "LENS".\n  SOURCE: string (required);\n  /// URL of the dataset, endpoint or landing page.\n  SOURCE_URL: string;\n  /// Dataset, table or API path queried, e.g.\n  /// "measurement-lab.ndt.unified_downloads".\n  SOURCE_DATASET: string;\n  /// The exact query or request that produced these numbers, so the\n  /// aggregate can be replayed rather than trusted.\n  SOURCE_QUERY: string;\n  /// Source\'s own identifier for the returned batch, when it issues one.\n  SOURCE_RECORD_ID: string;\n  /// SHA-256 of the raw source bytes this aggregate was computed from,\n  /// lowercase hex.\n  SOURCE_SHA256: string;\n  /// ISO 8601 UTC time the source was queried.\n  RETRIEVED_AT: string;\n  /// How the underlying observations were produced.\n  METHOD: cnpMethod = OTHER;\n  /// Measurement server, vantage point or probe set, when the source names\n  /// one. A throughput number without a vantage is not comparable to one\n  /// with a different vantage.\n  MEASUREMENT_SERVER: string;\n  /// SPDX identifier when the source states one, otherwise the licence name\n  /// verbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain, and never a\n  /// grant to republish.\n  LICENSE: string;\n  /// URL of the licence text.\n  LICENSE_URL: string;\n  /// Attribution string the licence requires this record and every derived\n  /// product to carry downstream.\n  ATTRIBUTION: string;\n  /// True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\n  /// consumer building a paid surface MUST honour this flag; it is carried\n  /// per-source because one $CNP may mix a CC0 lane with a CC BY-NC\n  /// cross-check.\n  NON_COMMERCIAL_ONLY: bool;\n}\n\n/// One number drawn from a metric\'s distribution.\ntable CNPStatistic {\n  /// Which reduction this number is.\n  STATISTIC: cnpReduction = MEAN;\n  /// Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\n  /// otherwise and MUST NOT be set.\n  PERCENTILE_RANK: double;\n  /// The number, expressed in the parent metric\'s UNITS.\n  VALUE: double;\n}\n\n/// One aggregated quantity for the parent record\'s key.\n///\n/// A metric is a DISTRIBUTION, not a scalar. There is deliberately no\n/// `VALUE: double` on this table: a source that publishes only a median\n/// encodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\n/// then never mistake it for a mean.\ntable CNPMetric {\n  /// Quantity aggregated.\n  KIND: cnpMetricKind = OTHER;\n  /// The source\'s own name for this metric, verbatim. REQUIRED to be\n  /// non-empty when KIND is OTHER; recommended always, because it is what\n  /// makes the mapping auditable.\n  SOURCE_METRIC_NAME: string;\n  /// Units of every VALUE under STATISTICS. NORMATIVE and required: "Mbps",\n  /// "kbps", "ms", "percent", "fraction", "count". Units are never silently\n  /// converted on ingest; a source publishing kbps encodes kbps.\n  UNITS: string (required);\n  /// The distribution. At least one entry; a metric with none is malformed.\n  STATISTICS: [CNPStatistic];\n  /// Number of individual measurements aggregated. 0 means the source did\n  /// not publish a sample count \u2014 it never means zero measurements.\n  SAMPLE_COUNT: uint64;\n  /// Number of distinct clients, terminals or probes contributing. 0 means\n  /// unpublished.\n  CLIENT_COUNT: uint64;\n  /// Where this metric came from and under what terms.\n  PROVENANCE: CNPProvenance (required);\n}\n\n/// Constellation Network Performance.\n///\n/// Aggregated throughput, latency and availability for one satellite\n/// constellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\n/// closed time window. Built for the Starlink connectivity lane (AS14593 via\n/// M-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\n/// provider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n///\n/// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\n/// speed test, not a single client\'s result, and not a per-satellite link\n/// state: $LKS carries the instantaneous state and data rate of ONE named\n/// link between two endpoints, and no $LKS can express "the p50 download rate\n/// observed by 41,000 terminals in Germany during July".\n///\n/// NEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\n/// CNPMetric, and CNPMetric carries `UNITS: string (required)` and\n/// `PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\n/// number that does not state its unit and name its source, query,\n/// retrieval time, method and licence. A metric the source did not publish is\n/// ABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\n/// including ones that returned nothing, so a consumer can distinguish "not\n/// looked for" from "looked for and empty".\n///\n/// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\n/// because a single record may legitimately carry a CC0 M-Lab lane beside a\n/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\n/// metric that inherited it, never to the record as a whole.\ntable CNP {\n  /// Stable identifier for this record.\n  ID: string;\n  /// Constellation or network name, verbatim ("Starlink", "OneWeb",\n  /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to\n  /// $LKS.CONSTELLATION and to $CAT by the same name.\n  CONSTELLATION: string;\n  /// Operating company, when it differs usefully from CONSTELLATION.\n  OPERATOR: string;\n  /// Autonomous system number of the measured client network \u2014 Starlink is\n  /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\n  /// is never a real measurement key.\n  ASN: uint32;\n  /// Autonomous system name as the routing registry publishes it.\n  AS_NAME: string;\n  /// Service tier the source distinguishes, verbatim ("Residential",\n  /// "Roam", "Business", "Maritime"). Empty when the source does not\n  /// separate tiers \u2014 never guessed from the throughput.\n  SERVICE_TIER: string;\n  /// Geography this aggregate is keyed to. Absent when the source published\n  /// no geographic key at all.\n  REGION: CNPRegion;\n  /// ISO 8601 UTC inclusive start of the aggregation window.\n  WINDOW_START: string;\n  /// ISO 8601 UTC exclusive end of the aggregation window.\n  WINDOW_STOP: string;\n  /// Calendar span the window represents.\n  AGGREGATION_PERIOD: cnpPeriod = CUSTOM;\n  /// The aggregated quantities.\n  METRICS: [CNPMetric];\n  /// Every source consulted for this key, including those that returned no\n  /// metric.\n  SOURCES: [CNPProvenance];\n  /// ISO 8601 UTC creation time of this record.\n  CREATED_AT: string;\n  /// ISO 8601 UTC last-update time of this record.\n  UPDATED_AT: string;\n  /// CID of the $CNP this record replaces when a source restates a window.\n  SUPERSEDES_CNP_CID: string;\n}\n\nroot_type CNP;\nfile_identifier "$CNP";',
+      IDL: '// Hash: 0eddce77e4efb121810fc76f42dbdd5d6e5dd721d973c98073e5aeff25053388\n// Version: 1.176.1\n// -----------------------------------END_HEADER\n/// Granularity of the geography a measurement window is keyed to.\nenum cnpRegionKind : byte {\n  /// No geographic restriction \u2014 the aggregate covers everywhere the operator\n  /// serves.\n  GLOBAL,\n  /// A country. CODE is ISO 3166-1 alpha-2.\n  COUNTRY,\n  /// A first-level subdivision. CODE is ISO 3166-2.\n  SUBDIVISION,\n  /// A metropolitan area or city. CODE is the source\'s own key.\n  METRO,\n  /// A ground-segment cell or beam footprint. CODE is the operator\'s own key.\n  CELL,\n  /// A point of presence / ground gateway. CODE is the source\'s own key.\n  POINT_OF_PRESENCE,\n  /// The source keys by something none of the above describes. CODE and NAME\n  /// carry the source\'s key verbatim.\n  OTHER\n}\n\n/// Calendar span an aggregate covers.\nenum cnpPeriod : byte {\n  /// WINDOW_START/WINDOW_STOP are authoritative and match none of the named\n  /// periods.\n  CUSTOM,\n  HOUR,\n  DAY,\n  WEEK,\n  MONTH,\n  QUARTER,\n  YEAR\n}\n\n/// Quantity being aggregated.\nenum cnpMetricKind : byte {\n  /// Achieved application-layer download rate.\n  DOWNLOAD_THROUGHPUT,\n  /// Achieved application-layer upload rate.\n  UPLOAD_THROUGHPUT,\n  /// Round-trip time on an otherwise unloaded path.\n  LATENCY_IDLE,\n  /// Round-trip time measured while the download test saturates the path.\n  LATENCY_LOADED_DOWNLOAD,\n  /// Round-trip time measured while the upload test saturates the path.\n  LATENCY_LOADED_UPLOAD,\n  /// Variation in inter-packet arrival time.\n  JITTER,\n  /// Fraction of packets lost.\n  PACKET_LOSS,\n  /// Fraction of the window in which the service was usable.\n  AVAILABILITY,\n  /// Fraction of the terminal\'s sky view blocked by terrain or structures.\n  OBSTRUCTION,\n  /// Round-trip time where the source does not distinguish loaded from idle.\n  RTT,\n  /// The source publishes a quantity none of the above names.\n  /// SOURCE_METRIC_NAME is then required to be non-empty.\n  OTHER\n}\n\n/// Statistical reduction a single number expresses.\n///\n/// Named `cnpReduction`, not `cnpStatistic`, so it can never differ from the\n/// `CNPStatistic` table by case alone in any generated language tree.\nenum cnpReduction : byte {\n  MEAN,\n  MEDIAN,\n  /// PERCENTILE_RANK carries which one.\n  PERCENTILE,\n  MINIMUM,\n  MAXIMUM,\n  STANDARD_DEVIATION,\n  /// Number of observations, not a value of the metric.\n  COUNT\n}\n\n/// How the underlying observations were produced.\nenum cnpMethod : byte {\n  /// NDT7 network-diagnostic protocol measurement.\n  NDT7,\n  /// A speed test other than NDT7 \u2014 a third-party measurement platform, a\n  /// CDN-operated test, or an operator-native test.\n  SPEED_TEST,\n  /// ICMP or UDP echo.\n  PING,\n  /// Path trace.\n  TRACEROUTE,\n  /// Telemetry read from the user terminal itself.\n  TERMINAL_TELEMETRY,\n  /// Bulk HTTP transfer.\n  HTTP_DOWNLOAD,\n  /// Passive observation of production traffic.\n  PASSIVE,\n  /// Modelled or simulated rather than measured. A modelled value is not a\n  /// measurement and this member is how a consumer refuses to treat it as one.\n  MODELED,\n  /// The source states a method none of the above names.\n  OTHER\n}\n\n/// Geography an aggregate is keyed to.\n///\n/// A separate table so an absent REGION means "the source did not key by\n/// geography", which is different from GLOBAL ("the source aggregated across\n/// all geographies") and different again from an empty CODE.\ntable CNPRegion {\n  /// Granularity of CODE.\n  KIND: cnpRegionKind = OTHER;\n  /// The region key, verbatim from the source in the coding scheme KIND\n  /// names. Never re-coded between schemes on ingest.\n  CODE: string;\n  /// Human-readable region name as the source publishes it. Joins to\n  /// $CTR for country identity when KIND is COUNTRY.\n  NAME: string;\n}\n\n/// Where one metric came from and under what terms it may be republished.\ntable CNPProvenance {\n  /// Name of the organization or programme publishing the underlying\n  /// measurements, carried verbatim as that publisher states it.\n  SOURCE: string (required);\n  /// URL of the dataset, endpoint or landing page.\n  SOURCE_URL: string;\n  /// Dataset, table or API path queried, verbatim, e.g. a fully qualified\n  /// warehouse table name or a REST route.\n  SOURCE_DATASET: string;\n  /// The exact query or request that produced these numbers, so the\n  /// aggregate can be replayed rather than trusted.\n  SOURCE_QUERY: string;\n  /// Source\'s own identifier for the returned batch, when it issues one.\n  SOURCE_RECORD_ID: string;\n  /// SHA-256 of the raw source bytes this aggregate was computed from,\n  /// lowercase hex.\n  SOURCE_SHA256: string;\n  /// ISO 8601 UTC time the source was queried.\n  RETRIEVED_AT: string;\n  /// How the underlying observations were produced.\n  METHOD: cnpMethod = OTHER;\n  /// Measurement server, vantage point or probe set, when the source names\n  /// one. A throughput number without a vantage is not comparable to one\n  /// with a different vantage.\n  MEASUREMENT_SERVER: string;\n  /// SPDX identifier when the source states one, otherwise the licence name\n  /// verbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain, and never a\n  /// grant to republish.\n  LICENSE: string;\n  /// URL of the licence text.\n  LICENSE_URL: string;\n  /// Attribution string the licence requires this record and every derived\n  /// product to carry downstream.\n  ATTRIBUTION: string;\n  /// True when the licence forbids commercial use (e.g. CC BY-NC 4.0). A\n  /// consumer building a paid surface MUST honour this flag; it is carried\n  /// per-source because one $CNP may mix a CC0 lane with a CC BY-NC\n  /// cross-check.\n  NON_COMMERCIAL_ONLY: bool;\n}\n\n/// One number drawn from a metric\'s distribution.\ntable CNPStatistic {\n  /// Which reduction this number is.\n  STATISTIC: cnpReduction = MEAN;\n  /// Percentile rank in 0..100 when STATISTIC is PERCENTILE. Meaningless\n  /// otherwise and MUST NOT be set.\n  PERCENTILE_RANK: double;\n  /// The number, expressed in the parent metric\'s UNITS.\n  VALUE: double;\n}\n\n/// One aggregated quantity for the parent record\'s key.\n///\n/// A metric is a DISTRIBUTION, not a scalar. There is deliberately no\n/// `VALUE: double` on this table: a source that publishes only a median\n/// encodes exactly one CNPStatistic with STATISTIC MEDIAN, and a consumer can\n/// then never mistake it for a mean.\ntable CNPMetric {\n  /// Quantity aggregated.\n  KIND: cnpMetricKind = OTHER;\n  /// The source\'s own name for this metric, verbatim. REQUIRED to be\n  /// non-empty when KIND is OTHER; recommended always, because it is what\n  /// makes the mapping auditable.\n  SOURCE_METRIC_NAME: string;\n  /// Units of every VALUE under STATISTICS. NORMATIVE and required: "Mbps",\n  /// "kbps", "ms", "percent", "fraction", "count". Units are never silently\n  /// converted on ingest; a source publishing kbps encodes kbps.\n  UNITS: string (required);\n  /// The distribution. At least one entry; a metric with none is malformed.\n  STATISTICS: [CNPStatistic];\n  /// Number of individual measurements aggregated. 0 means the source did\n  /// not publish a sample count \u2014 it never means zero measurements.\n  SAMPLE_COUNT: uint64;\n  /// Number of distinct clients, terminals or probes contributing. 0 means\n  /// unpublished.\n  CLIENT_COUNT: uint64;\n  /// Where this metric came from and under what terms.\n  PROVENANCE: CNPProvenance (required);\n}\n\n/// Constellation Network Performance.\n///\n/// Aggregated throughput, latency and availability for one satellite\n/// constellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\n/// closed time window. Built for a broadband LEO consumer-terminal lane\n/// (one operator ASN measured via NDT7) and shaped so any operator \u2014 another\n/// LEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\n/// baseline fits the same record.\n///\n/// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\n/// speed test, not a single client\'s result, and not a per-satellite link\n/// state: $LKS carries the instantaneous state and data rate of ONE named\n/// link between two endpoints, and no $LKS can express "the p50 download rate\n/// observed by 41,000 terminals in Germany during July".\n///\n/// NEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\n/// CNPMetric, and CNPMetric carries `UNITS: string (required)` and\n/// `PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\n/// number that does not state its unit and name its source, query,\n/// retrieval time, method and licence. A metric the source did not publish is\n/// ABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\n/// including ones that returned nothing, so a consumer can distinguish "not\n/// looked for" from "looked for and empty".\n///\n/// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\n/// because a single record may legitimately carry a CC0 open-measurement lane\n/// beside a CC BY-NC cross-check from a restricted publisher; the restriction\n/// attaches to the metric that inherited it, never to the record as a whole.\ntable CNP {\n  /// Stable identifier for this record.\n  ID: string;\n  /// Constellation or network name, carried verbatim as its operator states\n  /// it. Empty when the record is a terrestrial baseline. Joins to\n  /// $LKS.CONSTELLATION and to $CAT by the same name.\n  CONSTELLATION: string;\n  /// Operating company, when it differs usefully from CONSTELLATION.\n  OPERATOR: string;\n  /// Autonomous system number of the measured client network, as allocated in\n  /// the public routing registry. 0 means the aggregate is not keyed by ASN;\n  /// AS 0 is reserved and is never a real measurement key.\n  ASN: uint32;\n  /// Autonomous system name as the routing registry publishes it.\n  AS_NAME: string;\n  /// Service tier the source distinguishes, verbatim ("Residential",\n  /// "Roam", "Business", "Maritime"). Empty when the source does not\n  /// separate tiers \u2014 never guessed from the throughput.\n  SERVICE_TIER: string;\n  /// Geography this aggregate is keyed to. Absent when the source published\n  /// no geographic key at all.\n  REGION: CNPRegion;\n  /// ISO 8601 UTC inclusive start of the aggregation window.\n  WINDOW_START: string;\n  /// ISO 8601 UTC exclusive end of the aggregation window.\n  WINDOW_STOP: string;\n  /// Calendar span the window represents.\n  AGGREGATION_PERIOD: cnpPeriod = CUSTOM;\n  /// The aggregated quantities.\n  METRICS: [CNPMetric];\n  /// Every source consulted for this key, including those that returned no\n  /// metric.\n  SOURCES: [CNPProvenance];\n  /// ISO 8601 UTC creation time of this record.\n  CREATED_AT: string;\n  /// ISO 8601 UTC last-update time of this record.\n  UPDATED_AT: string;\n  /// CID of the $CNP this record replaces when a source restates a window.\n  SUPERSEDES_CNP_CID: string;\n}\n\nroot_type CNP;\nfile_identifier "$CNP";',
       files: [
         "./dist/CNP/CNP.sw.tar.gz",
         "./dist/CNP/CNP.py.tar.gz",
@@ -91,13 +91,13 @@ var manifest_default = {
       ]
     },
     CAT: {
-      IDL: `// Hash: 5e5815830049eba64055f87a5c027434592fe5acafc9da044af35b79e474a247
-// Version: 1.0.3
+      IDL: `// Hash: ca31386aeea83a2033af7c01248dcff7251e14618cd0d08147a0a9839f778619
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
 
-// https://www.celestrak.com/satcat/satcat-format.php
+// Field layout follows the public satellite-catalog fixed-width format.
 
 enum spaceObjectClass: byte {
   /// 0
@@ -338,7 +338,7 @@ file_identifier "$PLK";`,
       ]
     },
     SPW: {
-      IDL: '// Hash: be6dac70f41acb6310e5f601c9e9a7986d51d724b3f3ef983f979e79de1389aa\n// Version: 1.0.2\n// -----------------------------------END_HEADER\nenum FluxQualifier: byte {\n  OBSERVED = 0,\n  BURST_ADJUSTED = 1,\n  INTERPOLATED_EXTRAPOLATED = 2,\n  NO_OBSERVATION = 3,\n  CELESTRAK_INTERPOLATED = 4\n}\n\nenum F107DataType: byte {\n  OBS = 0,  // Observed flux measurement\n  INT = 1,  // CelesTrak linear interpolation\n  PRD = 2,  // 45-Day predicted flux\n  PRM = 3   // Monthly predicted flux\n}\n\n/// Space Weather Data Record\ntable SPW {\n  /// Date in ISO 8601 format\n  DATE: string;\n  \n  /// Bartels Solar Rotation Number\n  BSRN: int;\n  \n  /// Day within Bartels cycle (1-27)\n  ND: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10\n  KP1: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10\n  KP2: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10\n  KP3: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10\n  KP4: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10\n  KP5: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10\n  KP6: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10\n  KP7: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10\n  KP8: int;\n  \n  /// Sum of the 8 Kp indices for the day\n  KP_SUM: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT\n  AP1: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT\n  AP2: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT\n  AP3: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT\n  AP4: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT\n  AP5: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT\n  AP6: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT\n  AP7: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT\n  AP8: int;\n  \n  /// Arithmetic average of the 8 Ap indices for the day\n  AP_AVG: int;\n  \n  /// Planetary Daily Character Figure (0.0 to 2.5)\n  CP: float;\n  \n  /// C9 index (0-9)\n  C9: int;\n  \n  /// International Sunspot Number\n  ISN: int;\n  \n  /// Observed 10.7cm Solar Radio Flux\n  F107_OBS: float;\n  \n  /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)\n  F107_ADJ: float;\n  \n  /// F10.7 Data Type\n  F107_DATA_TYPE: F107DataType;\n  \n  /// 81-day centered average of observed F10.7\n  F107_OBS_CENTER81: float;\n  \n  /// 81-day trailing average of observed F10.7\n  F107_OBS_LAST81: float;\n  \n  /// 81-day centered average of adjusted F10.7\n  F107_ADJ_CENTER81: float;\n  \n  /// 81-day trailing average of adjusted F10.7\n  F107_ADJ_LAST81: float;\n}\n\ntable SPWCOLLECTION {\n  RECORDS: [SPW];\n}\n\nroot_type SPW;\nfile_identifier "$SPW";',
+      IDL: '// Hash: f450aecfc546934b6b8e2b4a62dca10cef82be302c5f7e5c3ea025a7ba2a1abe\n// Version: 1.0.3\n// -----------------------------------END_HEADER\nenum FluxQualifier: byte {\n  OBSERVED = 0,\n  BURST_ADJUSTED = 1,\n  INTERPOLATED_EXTRAPOLATED = 2,\n  NO_OBSERVATION = 3,\n  /// Interpolated by the upstream data provider rather than the issuing\n  /// observatory. Wire value 4 is unchanged from prior releases.\n  PROVIDER_INTERPOLATED = 4\n}\n\nenum F107DataType: byte {\n  OBS = 0,  // Observed flux measurement\n  INT = 1,  // Provider linear interpolation\n  PRD = 2,  // 45-Day predicted flux\n  PRM = 3   // Monthly predicted flux\n}\n\n/// Space Weather Data Record\ntable SPW {\n  /// Date in ISO 8601 format\n  DATE: string;\n  \n  /// Bartels Solar Rotation Number\n  BSRN: int;\n  \n  /// Day within Bartels cycle (1-27)\n  ND: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10\n  KP1: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10\n  KP2: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10\n  KP3: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10\n  KP4: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10\n  KP5: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10\n  KP6: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10\n  KP7: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10\n  KP8: int;\n  \n  /// Sum of the 8 Kp indices for the day\n  KP_SUM: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT\n  AP1: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT\n  AP2: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT\n  AP3: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT\n  AP4: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT\n  AP5: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT\n  AP6: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT\n  AP7: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT\n  AP8: int;\n  \n  /// Arithmetic average of the 8 Ap indices for the day\n  AP_AVG: int;\n  \n  /// Planetary Daily Character Figure (0.0 to 2.5)\n  CP: float;\n  \n  /// C9 index (0-9)\n  C9: int;\n  \n  /// International Sunspot Number\n  ISN: int;\n  \n  /// Observed 10.7cm Solar Radio Flux\n  F107_OBS: float;\n  \n  /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)\n  F107_ADJ: float;\n  \n  /// F10.7 Data Type\n  F107_DATA_TYPE: F107DataType;\n  \n  /// 81-day centered average of observed F10.7\n  F107_OBS_CENTER81: float;\n  \n  /// 81-day trailing average of observed F10.7\n  F107_OBS_LAST81: float;\n  \n  /// 81-day centered average of adjusted F10.7\n  F107_ADJ_CENTER81: float;\n  \n  /// 81-day trailing average of adjusted F10.7\n  F107_ADJ_LAST81: float;\n}\n\ntable SPWCOLLECTION {\n  RECORDS: [SPW];\n}\n\nroot_type SPW;\nfile_identifier "$SPW";',
       files: [
         "./dist/SPW/SPW.sw.tar.gz",
         "./dist/SPW/SPW.py.tar.gz",
@@ -357,7 +357,7 @@ file_identifier "$PLK";`,
       ]
     },
     VCM: {
-      IDL: '// Hash: fb734998a79de979a28198e7261c19971df393f6ef193423f5b40f7bbf440c1f\n// Version: 2.0.3\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../MET/main.fbs";\n\n// Vector Covariance Message (VCM)\n//\n// The Vector Covariance Message (VCM) is used to exchange detailed orbit information, which\n// includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant\n// physical parameters. The VCM provides a versatile format that can support a variety of\n// propagators, models, and perturbations, allowing users to fully describe the orbital state\n// and the conditions influencing its propagation.\n//\n// VCM supports both mean and osculating element sets, along with additional perturbative models\n// like geopotential, atmospheric drag, solar radiation pressure, and resonance effects. Covariance\n// matrices and custom user-defined fields can also be included to enhance precision and flexibility.\n//\n// The message recipient must use the appropriate orbit propagation algorithms and models to correctly\n// propagate the orbit based on the provided data. The message is compatible with both classical\n// and modern perturbation models, making it ideal for high-precision orbit prediction and analysis.\n//\n// CCSDS Reference documentation: 502.0-B-3.\n// https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/vcm/README.md\n\nenum elementType : byte {\n  OSCULATING = 0,\n  MEAN = 1\n}\n\nenum anomalyConvention : byte {\n  TRUE_ANOMALY = 0,\n  MEAN_ANOMALY = 1\n}\n\n/// Enum to represent common atmospheric models\nenum atmosphericSource : byte {\n  NONE = 0,\n  JACCHIA_70 = 1,\n  JB2008 = 2,\n  NRLMSISE_00 = 3,\n  DTM_2000 = 4,\n  HWM14 = 5,\n  HASDM = 6\n}\n\n/// Enum to represent common geopotential models\nenum geopotentialSource : byte {\n  NONE = 0,\n  EGM96 = 1,\n  WGS84 = 2,\n  JGM2 = 3,\n  GEMT3 = 4,\n  EGM96_J5 = 5\n}\n\n/// Enum to represent zonal harmonics\nenum zonalHarmonic : byte {\n  NONE = 0,\n  J2 = 1,\n  J3 = 2,\n  J4 = 3,\n  J5 = 4,\n  J6 = 5,\n  J7 = 6,\n  J8 = 7,\n  J9 = 8,\n  J10 = 9,\n  J11 = 10,\n  J12 = 11\n}\n\n/// Enum to represent solar radiation pressure models\nenum solarRadiationPressureModel : byte {\n  NONE = 0,\n  SPHERICAL_MODEL = 1,\n  FLAT_PLATE_MODEL = 2\n}\n\n/// Enum to represent common lunar perturbation models\nenum lunarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2,\n  LP150Q = 3\n}\n\n/// Enum to represent various solar perturbation models\nenum solarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2\n}\n\n/// Enum to represent resonance models\nenum resonanceSource : byte {\n  NONE = 0,\n  HIGH_ALTITUDE_RESONANCE = 1,\n  LOW_ALTITUDE_RESONANCE = 2,\n  LUNAR_RESONANCE = 3,\n  SOLAR_RESONANCE = 4\n}\n\n/// Enum to represent the status of various perturbations (ON/OFF)\nenum perturbationStatus : byte {\n  OFF = 0,\n  ON = 1\n}\n\n/// Enum to represent propagator types\nenum propagatorFamily : byte {\n  NONE = 0,\n  SEMI_ANALYTICAL = 1,\n  VINTI = 2,\n  SGP4 = 3,\n  COWELL = 4,\n  RK4 = 5,\n  NYX = 6,\n  GMAT = 7,\n  SPICE = 8,\n  SGP = 9,\n  SDP4 = 10,\n  SGP8 = 11,\n  SDP8 = 12\n}\n\n/// Propagator configuration structure to describe propagation settings\ntable propagatorConfig {\n  PROPAGATOR_NAME: string;\n  PROPAGATOR_TYPE: propagatorFamily;\n  FORCE_MODELS: [string];\n  EPOCH: string;\n  TIME_STEP: double;\n  ZONAL_HARMONIC_TERMS: [zonalHarmonic];  // Full list of zonal harmonic terms (J2 through J12)\n}\n\n/// VCM State Vector (position and velocity)\ntable VCMStateVector {\n  EPOCH: string;\n  X: double;\n  Y: double;\n  Z: double;\n  X_DOT: double;\n  Y_DOT: double;\n  Z_DOT: double;\n}\n\n/// Keplerian Elements\ntable keplerianElements {\n  SEMI_MAJOR_AXIS: double; // km\n  ECCENTRICITY: double;\n  INCLINATION: double;     // degrees\n  RA_OF_ASC_NODE: double;  // degrees\n  ARG_OF_PERICENTER: double; // degrees\n  ANOMALY_TYPE: anomalyConvention;\n  ANOMALY: double;         // degrees\n  PERIAPSIS_RADIUS: double; // km, used when ECCENTRICITY is 1 and SEMI_MAJOR_AXIS is 0 for parabolic states\n}\n\n/// Equinoctial Elements\ntable equinoctialElements {\n  AF: double;           // e cos(\u03C9 + fr\u03A9)\n  AG: double;           // e sin(\u03C9 + fr\u03A9)\n  L: double;            // True longitude\n  N: double;            // Semi-major axis (a)\n  CHI: double;          // TAN(i/2) SIN(\u03A9)\n  PSI: double;          // TAN(i/2) COS(\u03A9)\n}\n\n/// UVW Sigmas (Covariance matrix in UVW frame)\ntable uvwSigmas {\n  U_SIGMA: double;        // Standard deviation in U direction\n  V_SIGMA: double;        // Standard deviation in V direction\n  W_SIGMA: double;        // Standard deviation in W direction\n  UD_SIGMA: double;       // Standard deviation in U direction for velocity\n  VD_SIGMA: double;       // Standard deviation in V direction for velocity\n  WD_SIGMA: double;       // Standard deviation in W direction for velocity\n}\n\n/// VCM Atmospheric and Perturbation Model Data\ntable VCMAtmosphericModelData {\n  ATMOSPHERIC_MODEL: atmosphericSource;\n  GEOPOTENTIAL_MODEL: geopotentialSource;\n  LUNAR_SOLAR_PERTURBATION: perturbationStatus;\n  LUNAR_PERTURBATION_MODEL: lunarPerturbationSource;\n  SOLAR_PERTURBATION_MODEL: solarPerturbationSource;\n  SOLAR_RADIATION_PRESSURE: perturbationStatus;\n  SRP_MODEL: solarRadiationPressureModel;\n  RESONANCE_MODEL: resonanceSource;\n}\n\n/// Vector Covariance Message\ntable VCM {\n  CCSDS_OMM_VERS: double;\n  CREATION_DATE: string;\n  ORIGINATOR: string;\n\n  OBJECT_NAME: string;\n  OBJECT_ID: string;      // International Designator (YYYY-NNNAAA)\n  CENTER_NAME: string;\n  REF_FRAME: string;\n  TIME_SYSTEM: string;\n\n  STATE_VECTOR: VCMStateVector;\n  KEPLERIAN_ELEMENTS: keplerianElements;\n  EQUINOCTIAL_ELEMENTS: equinoctialElements;\n\n  GM: double;              // Gravitational Coefficient\n\n  ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelData;\n  PROPAGATOR_SETTINGS: propagatorConfig;\n\n  UVW_SIGMAS: uvwSigmas;\n\n  // Spacecraft Parameters from OMM and OCM\n  MASS: double;\n  SOLAR_RAD_AREA: double;\n  SOLAR_RAD_COEFF: double; // Solar Radiation Pressure Coefficient\n  DRAG_AREA: double;\n  DRAG_COEFF: double;\n  SRP: perturbationStatus; // Solar Radiation Pressure\n\n  // TLE Related Parameters\n  CLASSIFICATION_TYPE: string;\n  NORAD_CAT_ID: uint32;\n  ELEMENT_SET_NO: uint32;\n  REV_AT_EPOCH: double;\n  BSTAR: double;\n  MEAN_MOTION_DOT: double;\n  MEAN_MOTION_DDOT: double;\n\n  // Covariance Matrix for position/velocity\n  COV_REFERENCE_FRAME: string;\n  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).\n  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\n  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\n  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\n  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\n  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s\n  COVARIANCE:[double];\n\n  // User-defined fields\n  USER_DEFINED_BIP_0044_TYPE: uint;\n  USER_DEFINED_OBJECT_DESIGNATOR: string;\n  USER_DEFINED_EARTH_MODEL: string;\n  USER_DEFINED_EPOCH_TIMESTAMP: double;\n  USER_DEFINED_MICROSECONDS: double;\n}\n\nroot_type VCM;',
+      IDL: '// Hash: b9d8f974244eef5d1c4af81d1e06588b06722ee494c055c210e65e5c8bd7c183\n// Version: 2.0.4\n// -----------------------------------END_HEADER\ninclude "../RFM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../MET/main.fbs";\n\n// Vector Covariance Message (VCM)\n//\n// The Vector Covariance Message (VCM) is used to exchange detailed orbit information, which\n// includes the spacecraft state vector, Keplerian elements, equinoctial elements, and relevant\n// physical parameters. The VCM provides a versatile format that can support a variety of\n// propagators, models, and perturbations, allowing users to fully describe the orbital state\n// and the conditions influencing its propagation.\n//\n// VCM supports both mean and osculating element sets, along with additional perturbative models\n// like geopotential, atmospheric drag, solar radiation pressure, and resonance effects. Covariance\n// matrices and custom user-defined fields can also be included to enhance precision and flexibility.\n//\n// The message recipient must use the appropriate orbit propagation algorithms and models to correctly\n// propagate the orbit based on the provided data. The message is compatible with both classical\n// and modern perturbation models, making it ideal for high-precision orbit prediction and analysis.\n//\n// CCSDS Reference documentation: 502.0-B-3.\n// See this repository: survey/legacy-messages/vcm/README.md\n\nenum elementType : byte {\n  OSCULATING = 0,\n  MEAN = 1\n}\n\nenum anomalyConvention : byte {\n  TRUE_ANOMALY = 0,\n  MEAN_ANOMALY = 1\n}\n\n/// Enum to represent common atmospheric models\nenum atmosphericSource : byte {\n  NONE = 0,\n  JACCHIA_70 = 1,\n  JB2008 = 2,\n  NRLMSISE_00 = 3,\n  DTM_2000 = 4,\n  HWM14 = 5,\n  HASDM = 6\n}\n\n/// Enum to represent common geopotential models\nenum geopotentialSource : byte {\n  NONE = 0,\n  EGM96 = 1,\n  WGS84 = 2,\n  JGM2 = 3,\n  GEMT3 = 4,\n  EGM96_J5 = 5\n}\n\n/// Enum to represent zonal harmonics\nenum zonalHarmonic : byte {\n  NONE = 0,\n  J2 = 1,\n  J3 = 2,\n  J4 = 3,\n  J5 = 4,\n  J6 = 5,\n  J7 = 6,\n  J8 = 7,\n  J9 = 8,\n  J10 = 9,\n  J11 = 10,\n  J12 = 11\n}\n\n/// Enum to represent solar radiation pressure models\nenum solarRadiationPressureModel : byte {\n  NONE = 0,\n  SPHERICAL_MODEL = 1,\n  FLAT_PLATE_MODEL = 2\n}\n\n/// Enum to represent common lunar perturbation models\nenum lunarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2,\n  LP150Q = 3\n}\n\n/// Enum to represent various solar perturbation models\nenum solarPerturbationSource : byte {\n  NONE = 0,\n  DE430 = 1,\n  DE431 = 2\n}\n\n/// Enum to represent resonance models\nenum resonanceSource : byte {\n  NONE = 0,\n  HIGH_ALTITUDE_RESONANCE = 1,\n  LOW_ALTITUDE_RESONANCE = 2,\n  LUNAR_RESONANCE = 3,\n  SOLAR_RESONANCE = 4\n}\n\n/// Enum to represent the status of various perturbations (ON/OFF)\nenum perturbationStatus : byte {\n  OFF = 0,\n  ON = 1\n}\n\n/// Enum to represent propagator types\nenum propagatorFamily : byte {\n  NONE = 0,\n  SEMI_ANALYTICAL = 1,\n  VINTI = 2,\n  SGP4 = 3,\n  COWELL = 4,\n  RK4 = 5,\n  NYX = 6,\n  GMAT = 7,\n  SPICE = 8,\n  SGP = 9,\n  SDP4 = 10,\n  SGP8 = 11,\n  SDP8 = 12\n}\n\n/// Propagator configuration structure to describe propagation settings\ntable propagatorConfig {\n  PROPAGATOR_NAME: string;\n  PROPAGATOR_TYPE: propagatorFamily;\n  FORCE_MODELS: [string];\n  EPOCH: string;\n  TIME_STEP: double;\n  ZONAL_HARMONIC_TERMS: [zonalHarmonic];  // Full list of zonal harmonic terms (J2 through J12)\n}\n\n/// VCM State Vector (position and velocity)\ntable VCMStateVector {\n  EPOCH: string;\n  X: double;\n  Y: double;\n  Z: double;\n  X_DOT: double;\n  Y_DOT: double;\n  Z_DOT: double;\n}\n\n/// Keplerian Elements\ntable keplerianElements {\n  SEMI_MAJOR_AXIS: double; // km\n  ECCENTRICITY: double;\n  INCLINATION: double;     // degrees\n  RA_OF_ASC_NODE: double;  // degrees\n  ARG_OF_PERICENTER: double; // degrees\n  ANOMALY_TYPE: anomalyConvention;\n  ANOMALY: double;         // degrees\n  PERIAPSIS_RADIUS: double; // km, used when ECCENTRICITY is 1 and SEMI_MAJOR_AXIS is 0 for parabolic states\n}\n\n/// Equinoctial Elements\ntable equinoctialElements {\n  AF: double;           // e cos(\u03C9 + fr\u03A9)\n  AG: double;           // e sin(\u03C9 + fr\u03A9)\n  L: double;            // True longitude\n  N: double;            // Semi-major axis (a)\n  CHI: double;          // TAN(i/2) SIN(\u03A9)\n  PSI: double;          // TAN(i/2) COS(\u03A9)\n}\n\n/// UVW Sigmas (Covariance matrix in UVW frame)\ntable uvwSigmas {\n  U_SIGMA: double;        // Standard deviation in U direction\n  V_SIGMA: double;        // Standard deviation in V direction\n  W_SIGMA: double;        // Standard deviation in W direction\n  UD_SIGMA: double;       // Standard deviation in U direction for velocity\n  VD_SIGMA: double;       // Standard deviation in V direction for velocity\n  WD_SIGMA: double;       // Standard deviation in W direction for velocity\n}\n\n/// VCM Atmospheric and Perturbation Model Data\ntable VCMAtmosphericModelData {\n  ATMOSPHERIC_MODEL: atmosphericSource;\n  GEOPOTENTIAL_MODEL: geopotentialSource;\n  LUNAR_SOLAR_PERTURBATION: perturbationStatus;\n  LUNAR_PERTURBATION_MODEL: lunarPerturbationSource;\n  SOLAR_PERTURBATION_MODEL: solarPerturbationSource;\n  SOLAR_RADIATION_PRESSURE: perturbationStatus;\n  SRP_MODEL: solarRadiationPressureModel;\n  RESONANCE_MODEL: resonanceSource;\n}\n\n/// Vector Covariance Message\ntable VCM {\n  CCSDS_OMM_VERS: double;\n  CREATION_DATE: string;\n  ORIGINATOR: string;\n\n  OBJECT_NAME: string;\n  OBJECT_ID: string;      // International Designator (YYYY-NNNAAA)\n  CENTER_NAME: string;\n  REF_FRAME: string;\n  TIME_SYSTEM: string;\n\n  STATE_VECTOR: VCMStateVector;\n  KEPLERIAN_ELEMENTS: keplerianElements;\n  EQUINOCTIAL_ELEMENTS: equinoctialElements;\n\n  GM: double;              // Gravitational Coefficient\n\n  ATMOSPHERIC_MODEL_DATA: VCMAtmosphericModelData;\n  PROPAGATOR_SETTINGS: propagatorConfig;\n\n  UVW_SIGMAS: uvwSigmas;\n\n  // Spacecraft Parameters from OMM and OCM\n  MASS: double;\n  SOLAR_RAD_AREA: double;\n  SOLAR_RAD_COEFF: double; // Solar Radiation Pressure Coefficient\n  DRAG_AREA: double;\n  DRAG_COEFF: double;\n  SRP: perturbationStatus; // Solar Radiation Pressure\n\n  // TLE Related Parameters\n  CLASSIFICATION_TYPE: string;\n  NORAD_CAT_ID: uint32;\n  ELEMENT_SET_NO: uint32;\n  REV_AT_EPOCH: double;\n  BSTAR: double;\n  MEAN_MOTION_DOT: double;\n  MEAN_MOTION_DDOT: double;\n\n  // Covariance Matrix for position/velocity\n  COV_REFERENCE_FRAME: string;\n  /// Covariance matrix as flat array (6x6 lower triangular = 21 elements).\n  /// Order: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\n  ///         CX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\n  ///         CY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\n  ///         CZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\n  /// Units: position in km**2, velocity in km**2/s**2, cross in km**2/s\n  COVARIANCE:[double];\n\n  // User-defined fields\n  USER_DEFINED_BIP_0044_TYPE: uint;\n  USER_DEFINED_OBJECT_DESIGNATOR: string;\n  USER_DEFINED_EARTH_MODEL: string;\n  USER_DEFINED_EPOCH_TIMESTAMP: double;\n  USER_DEFINED_MICROSECONDS: double;\n}\n\nroot_type VCM;',
       files: [
         "./dist/VCM/VCM.sw.tar.gz",
         "./dist/VCM/VCM.py.tar.gz",
@@ -1598,8 +1598,8 @@ file_identifier "$SHC";`,
       ]
     },
     EPM: {
-      IDL: `// Hash: 5b66c5bfde9e7f3160ba2910d085700c080674ac96b25d04752abaeeda60bd9e
-// Version: 1.0.5
+      IDL: `// Hash: b92859b89d3ce264dd6156da614b75f383688fb8b6175ddebccf90b5f27c71d6
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -1633,11 +1633,11 @@ table CryptoKey {
   /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
   /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   PUBLIC_KEY: string;
-  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   XPUB: string;
   /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   PRIVATE_KEY: string;
-  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   XPRIV: string;
   /// Address generated from the cryptographic key. An address only \u2014 NOT a
   /// derivation path; the derivation path lives in KEY_PATH
@@ -1705,7 +1705,7 @@ table ChainProof {
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.
 table DomainProof {
-  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
   DOMAIN: string;
   /// Public key for this proof (hex-encoded)
   PUBLIC_KEY: string;
@@ -2394,8 +2394,8 @@ file_identifier "$LCH";`,
       ]
     },
     OPP: {
-      IDL: `// Hash: f98f02698c8b5e704762f9f6a665efff550f665eedcd87cdfebe0cd851e0574e
-// Version: 1.171.0
+      IDL: `// Hash: 88352e6bb4dc5ff1264097a167f8c87f94c747cb444eb7b6e21103727ef3ee91
+// Version: 1.171.1
 // -----------------------------------END_HEADER
 /// How one physical value was determined. Append new values only; never
 /// reorder or reuse existing values.
@@ -2424,8 +2424,8 @@ enum oppDeterminationMethod : byte {
 /// Aspect convention a radar cross-section value was reported under. Append new
 /// values only; never reorder or reuse existing values.
 enum oppRcsAspect : byte {
-  /// The source states no aspect convention. ESA DISCOS characteristic
-  /// cross-sections and CelesTrak SATCAT RCS use this value.
+  /// The source states no aspect convention. Characteristic cross-sections
+  /// published by catalogue-level object databases use this value.
   UNSPECIFIED,
   AVERAGE,
   MINIMUM,
@@ -2488,11 +2488,12 @@ enum oppMaterialClass : byte {
 /// zero, never a placeholder, and never carried forward from a different
 /// object.
 table OPPProvenance {
-  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  /// Publisher of the value, named as the publisher names itself \u2014 a space
+  /// agency's object database, a public satellite catalogue, a third-party
+  /// satellite reference site, or the operator itself.
   SOURCE:string (required);
   /// The source's own identifier for the record this value was read from, such
-  /// as a DISCOS object id. Verbatim, never normalized.
+  /// as that database's object id. Verbatim, never normalized.
   SOURCE_RECORD_ID:string;
   /// Deep link to the exact source record when the source publishes one.
   SOURCE_URL:string;
@@ -2537,9 +2538,9 @@ table OPPQuantity {
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 table OPPRadarCrossSection {
   /// Radar band designation verbatim from the source: "UHF", "L", "S", "C",
   /// "X", "Ku". Empty when the source states no band.
@@ -2555,7 +2556,7 @@ table OPPRadarCrossSection {
   /// it; the two are never mixed within one entry and never silently converted.
   CROSS_SECTION:OPPQuantity (required);
   /// Size bucket verbatim when a source publishes a bucket instead of a number,
-  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   /// turned into a number.
   SIZE_CLASS:string;
   /// Sensor or facility that produced the measurement, when stated.
@@ -2587,7 +2588,7 @@ table OPPDimensions {
   BODY_X:OPPQuantity;
   BODY_Y:OPPQuantity;
   BODY_Z:OPPQuantity;
-  /// Envelope terms as ESA DISCOS publishes them [m].
+  /// Envelope terms as an object database publishes them [m].
   HEIGHT:OPPQuantity;
   WIDTH:OPPQuantity;
   DEPTH:OPPQuantity;
@@ -2596,8 +2597,8 @@ table OPPDimensions {
   SPAN_STOWED:OPPQuantity;
   /// Largest extent with appendages deployed [m].
   SPAN_DEPLOYED:OPPQuantity;
-  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  /// Gross geometric shape verbatim from the source, such as a shape string
+  /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   SHAPE:string;
   /// Provenance of SHAPE. Present whenever SHAPE is nonempty.
   SHAPE_PROVENANCE:OPPProvenance;
@@ -2632,8 +2633,9 @@ table OPPSurface {
   /// Stable identifier for this surface within the record.
   ID:string (required);
   KIND:oppSurfaceKind = UNSPECIFIED;
-  /// Material name verbatim from the source: "Kapton MLI", "GaAs
-  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  /// Material name verbatim from the source, in whatever designation the
+  /// source uses: a multi-layer-insulation film, a photovoltaic cell
+  /// chemistry, an alloy temper designation. Empty when unstated.
   MATERIAL:string;
   MATERIAL_CLASS:oppMaterialClass = UNSPECIFIED;
   /// How many identical surfaces this entry represents, such as two solar-array
@@ -2985,8 +2987,8 @@ file_identifier "$PRG";`,
       ]
     },
     PPE: {
-      IDL: `// Hash: fe5160d454c33a395094179293b3c094b99fe77d1173564e70f592fb3e1886aa
-// Version: 1.0.3
+      IDL: `// Hash: 20bb0784c303cd1c818a5d8a412c8a87b09e12eeeb696112efed08bf1b038ae8
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -3005,9 +3007,10 @@ include "../CAT/main.fbs";
 //   1. Cartesian position (and optionally velocity) coefficients per axis
 //   2. Classical orbital element coefficients (SMA/rPeriap, ecc, inc, RAAN, argPer, anomaly)
 //
-// The record structure follows the pattern established by Basilisk's chebyPosEphem and
-// oeStateEphem modules: each record covers a time segment defined by a midpoint epoch
-// and half-span, with a fixed number of polynomial coefficients per component.
+// The record structure follows the established Chebyshev position-ephemeris and
+// orbital-element state-ephemeris pattern: each record covers a time segment
+// defined by a midpoint epoch and half-span, with a fixed number of polynomial
+// coefficients per component.
 //
 // CCSDS Reference documentation: 502.0-B-3 (April 2023), Section 7 \u2014 Trajectory State Types.
 // The OCM Blue Book specifies polynomial representations as a valid trajectory
@@ -3245,7 +3248,9 @@ table PPE {
   /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
   ORBITAL_ELEMENT_RECORDS: [PPEOrbitalElementRecord];
 
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Generating ephemeris source, verbatim as the generator names itself
+  /// (e.g., a planetary ephemeris series designation, a numerical propagator
+  /// name and version, or an in-house tool identifier).
   EPHEMERIS_SOURCE: string;
 
   /// Fit span in seconds used to generate each polynomial segment.
@@ -3467,7 +3472,7 @@ file_identifier "$PPE";`,
       ]
     },
     IQC: {
-      IDL: '// Hash: 27fe0c3d8b876d9a6c786586f9a0951ad06ddfd5860e9420737579751ea46c9f\n// Version: 1.176.0\n// -----------------------------------END_HEADER\ninclude "../RFB/main.fbs";\n\n/// Role a referenced payload plays for one capture.\nenum iqcPayloadRole : byte {\n  /// The raw baseband sample stream itself (SigMF `.sigmf-data`).\n  DATA,\n  /// The upstream metadata document the record was normalized FROM\n  /// (SigMF `.sigmf-meta`).\n  METADATA,\n  /// A container holding both (SigMF `.sigmf` tar archive, zip, tarball).\n  ARCHIVE,\n  /// A rendered spectrogram, waterfall, audio demod or thumbnail.\n  PREVIEW,\n  /// A companion file the source publishes that is none of the above.\n  OTHER\n}\n\n/// Where a capture\'s bytes physically live right now.\nenum iqcCustody : byte {\n  /// Bytes stay upstream. This record is a pointer and nothing more. This is\n  /// the DEFAULT and the correct value for every multi-gigabyte archive.\n  UPSTREAM_ONLY,\n  /// This SDN deliberately pinned the bytes; CID is populated and resolvable.\n  PINNED,\n  /// The bytes were pinned and have since been unpinned. CID is retained for\n  /// audit; it may no longer resolve.\n  UNPINNED\n}\n\n/// Geodetic position of the receiver at capture time.\n///\n/// A separate table because latitude/longitude 0,0 is a VALID coordinate: an\n/// absent GEOLOCATION means "the source published no position", which a\n/// zero-defaulted scalar pair could never express.\ntable IQCGeolocation {\n  /// Geodetic latitude, degrees, WGS-84, positive north.\n  LATITUDE_DEG: double;\n  /// Geodetic longitude, degrees, WGS-84, positive east.\n  LONGITUDE_DEG: double;\n  /// Height above the WGS-84 ellipsoid, metres. Absent in most SigMF\n  /// recordings; SigMF `core:geolocation` is a GeoJSON Point whose third\n  /// ordinate is optional.\n  ALTITUDE_M: double;\n  /// Reported position uncertainty, metres, when the source states one.\n  UNCERTAINTY_M: double;\n  /// How the position was obtained, verbatim from the source (e.g. "GPS",\n  /// "station registry", "author-supplied"). Never inferred.\n  METHOD: string;\n}\n\n/// Receive chain that produced the samples.\n///\n/// Every field is a verbatim string. SigMF `core:hw` is free text and the\n/// non-SigMF archives publish nothing more structured; splitting free text\n/// into a manufacturer and a model by guessing is a defect.\ntable IQCHardware {\n  /// SigMF `core:hw` verbatim, or the source\'s equivalent free-text\n  /// description of the receive chain.\n  DESCRIPTION: string;\n  /// Receiver manufacturer, only when the source names it as its own field.\n  MANUFACTURER: string;\n  /// Receiver model, only when the source names it as its own field.\n  MODEL: string;\n  /// Antenna description, only when the source names it as its own field.\n  ANTENNA: string;\n  /// SigMF `core:recorder` \u2014 the SOFTWARE that wrote the recording.\n  RECORDER: string;\n}\n\n/// One SigMF capture segment: the point in the sample stream at which the\n/// listed tuning took effect. A retuned or frequency-hopped recording has\n/// several; a single-tune recording has one.\ntable IQCSegment {\n  /// SigMF `core:sample_start` \u2014 index of the first sample of this segment.\n  SAMPLE_START: uint64;\n  /// SigMF `core:global_index` \u2014 index of this sample in the receiver\'s\n  /// free-running sample counter.\n  GLOBAL_INDEX: uint64;\n  /// SigMF `core:header_bytes` \u2014 bytes preceding this segment in the data\n  /// file.\n  HEADER_BYTES: uint64;\n  /// SigMF `core:frequency` \u2014 centre frequency of this segment, HERTZ.\n  CENTER_FREQ_HZ: double;\n  /// SigMF `core:datetime` \u2014 ISO 8601 UTC timestamp of SAMPLE_START.\n  DATETIME: string;\n}\n\n/// One labelled region of the capture in time and frequency.\ntable IQCAnnotation {\n  /// SigMF `core:sample_start` \u2014 first sample of the annotated region.\n  SAMPLE_START: uint64;\n  /// SigMF `core:sample_count` \u2014 length of the annotated region in samples.\n  SAMPLE_COUNT: uint64;\n  /// SigMF `core:freq_lower_edge` \u2014 lower edge of the annotated band, HERTZ.\n  FREQ_LOWER_EDGE_HZ: double;\n  /// SigMF `core:freq_upper_edge` \u2014 upper edge of the annotated band, HERTZ.\n  FREQ_UPPER_EDGE_HZ: double;\n  /// SigMF `core:label` \u2014 the short human label ("LoRa", "ADS-B", "AIS").\n  LABEL: string;\n  /// SigMF `core:comment` \u2014 free-text note.\n  COMMENT: string;\n  /// SigMF `core:generator` \u2014 the tool or person that produced the\n  /// annotation. An annotation asserted by an automatic classifier and one\n  /// asserted by a human are not interchangeable evidence; this field is how\n  /// a consumer tells them apart.\n  GENERATOR: string;\n  /// SigMF `core:uuid` \u2014 the annotation\'s own identifier, when present.\n  UUID: string;\n}\n\n/// A SigMF extension namespace the upstream metadata declares.\ntable IQCExtension {\n  /// Extension namespace name.\n  NAME: string;\n  /// Extension version.\n  VERSION: string;\n  /// True when the extension is declared optional for interpretation.\n  IS_OPTIONAL: bool;\n}\n\n/// A retrievable file belonging to this capture.\n///\n/// The record NEVER carries sample bytes. It carries where they are, how big\n/// they are, and what they hash to, so a consumer can decide for itself\n/// whether to fetch 400 kB or 127 GB.\ntable IQCPayloadRef {\n  /// What this file is.\n  ROLE: iqcPayloadRole = OTHER;\n  /// Upstream retrieval URL, verbatim.\n  URL: string;\n  /// File name as the source publishes it.\n  FILE_NAME: string;\n  /// IANA media type when the source declares one.\n  MEDIA_TYPE: string;\n  /// Byte length. 0 means the source did not publish a size \u2014 it never means\n  /// an empty file.\n  BYTE_LENGTH: uint64;\n  /// SHA-256 of the exact bytes, lowercase hex. Populated only when computed\n  /// or published; never guessed.\n  BYTE_SHA256: string;\n  /// SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a\n  /// SHA-512 over the dataset file, so it is carried in its own field rather\n  /// than converted or discarded.\n  BYTE_SHA512: string;\n  /// IPFS CIDv1 when, and only when, this SDN pinned the bytes.\n  CID: string;\n  /// Multiformat address, usually /ipfs/{CID}.\n  MULTIFORMAT_ADDRESS: string;\n  /// Custody of these bytes.\n  CUSTODY: iqcCustody = UPSTREAM_ONLY;\n  /// ISO 8601 UTC time at which URL was last confirmed retrievable.\n  RETRIEVED_AT: string;\n}\n\n/// RF IQ Capture Metadata.\n///\n/// The description of ONE raw, un-demodulated complex-baseband recording held\n/// in a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\n/// database, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\n/// the only metadata vocabulary these archives share.\n///\n/// $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\n/// and verifiable without anyone mirroring its payload: the samples stay where\n/// their publisher put them and `PAYLOADS` says where that is, how large it\n/// is, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\n/// decision for small high-value recordings, never a default.\n///\n/// UNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\n/// sample rate in HERTZ, so every frequency and rate field here is `_HZ` and\n/// carries the Hz value unconverted. This standard deliberately does NOT\n/// follow $RFB\'s MHz convention \u2014 silently rescaling a SigMF value on ingest\n/// is the exact defect the suffix exists to prevent. A consumer joining $IQC\n/// to $RFB divides by 1e6 at the join, explicitly.\n///\n/// LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\n/// It does not mean public domain, it does not mean permissive, and it does\n/// not authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\n/// third-party recordings, so licence is per RECORDING, never per site.\n///\n/// Division of labour: $RFO = a sensor\'s astrometric/RF observation of a\n/// tracked object (azimuth, elevation, range); $RFE = the parametric emitter\n/// description; $RFB = the emitter\'s band specification in MHz; $IQC = the\n/// archived baseband recording itself. $DPM remains the manifest under which\n/// THIS network publishes a shard of $IQC records; it does not describe an\n/// upstream third party\'s capture.\ntable IQC {\n  /// Stable identifier for this record.\n  ID: string;\n  /// The upstream archive\'s own identifier for this capture, verbatim.\n  CAPTURE_ID: string;\n  /// Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",\n  /// "IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than\n  /// an enum so a new archive lane never requires a schema release.\n  SOURCE_NAME: string;\n  /// Landing page for the capture at the source.\n  SOURCE_URL: string;\n  /// Identifier of the source record this was normalized from, when the\n  /// source exposes one distinct from CAPTURE_ID.\n  SOURCE_RECORD_ID: string;\n  /// SHA-256 of the raw upstream metadata bytes that produced this record,\n  /// lowercase hex. Makes the normalization auditable.\n  SOURCE_SHA256: string;\n  /// ISO 8601 UTC time the source metadata was retrieved.\n  RETRIEVED_AT: string;\n\n  /// Human title of the capture.\n  TITLE: string;\n  /// SigMF `core:description`.\n  DESCRIPTION: string;\n  /// SigMF `core:author`.\n  AUTHOR: string;\n  /// SigMF `core:version` \u2014 the SigMF specification version the upstream\n  /// metadata declares. Empty for captures normalized from a non-SigMF\n  /// source; that emptiness is itself informative.\n  SIGMF_VERSION: string;\n  /// SigMF `core:collection` \u2014 identifier of the collection this recording\n  /// belongs to.\n  COLLECTION: string;\n  /// SigMF `core:extensions`.\n  EXTENSIONS: [IQCExtension];\n\n  /// SigMF `core:datatype` VERBATIM, e.g. "cf32_le", "ci16_le", "ru8". Never\n  /// re-spelled, never normalized to another vocabulary. A consumer that\n  /// cannot parse the token MUST refuse the samples rather than assume a\n  /// layout.\n  DATATYPE: string;\n  /// SigMF `core:sample_rate`, HERTZ (complex samples per second).\n  SAMPLE_RATE_HZ: double;\n  /// SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and\n  /// MUST be written explicitly when known.\n  NUM_CHANNELS: uint32;\n  /// Centre frequency of the FIRST capture segment, HERTZ, copied here for\n  /// indexing. `SEGMENTS` is normative whenever it is present.\n  CENTER_FREQ_HZ: double;\n  /// Lowest occupied frequency across the recording, HERTZ, when the source\n  /// states it or its annotations bound it.\n  FREQ_LOWER_EDGE_HZ: double;\n  /// Highest occupied frequency across the recording, HERTZ.\n  FREQ_UPPER_EDGE_HZ: double;\n  /// Total complex samples in the recording. 0 means unstated \u2014 it is NOT to\n  /// be back-computed from BYTE_LENGTH unless DATATYPE and any header bytes\n  /// are both known.\n  SAMPLE_COUNT: uint64;\n  /// Recording length in seconds, when stated or exactly derivable from\n  /// SAMPLE_COUNT and SAMPLE_RATE_HZ.\n  DURATION_SECONDS: double;\n  /// SigMF `core:offset` \u2014 index of the first sample in the recording\'s own\n  /// numbering.\n  SAMPLE_OFFSET: uint64;\n  /// SigMF `core:metadata_only` \u2014 true when no dataset file accompanies the\n  /// metadata.\n  METADATA_ONLY: bool;\n  /// SigMF `core:trailing_bytes` \u2014 non-sample bytes at the end of the data\n  /// file.\n  TRAILING_BYTES: uint64;\n\n  /// ISO 8601 UTC start of the recording (the first segment\'s\n  /// `core:datetime`).\n  CAPTURE_START: string;\n  /// ISO 8601 UTC end of the recording, when stated or exactly derivable.\n  CAPTURE_STOP: string;\n  /// Per-segment tuning history.\n  SEGMENTS: [IQCSegment];\n  /// Labelled time/frequency regions.\n  ANNOTATIONS: [IQCAnnotation];\n  /// Archive-level tags or categories, verbatim (SigidWiki categories,\n  /// Zenodo keywords, IQEngine tags).\n  LABELS: [string];\n\n  /// Receiver position. Absent when the source published none.\n  GEOLOCATION: IQCGeolocation;\n  /// Receive chain.\n  HARDWARE: IQCHardware;\n\n  /// Signal designation the source states, verbatim ("LoRa", "DVB-S2",\n  /// "ADS-B", "VOR"). Not an enum: these archives catalogue the whole radio\n  /// world, and $RFE\'s `signalModulation` is a radar-emitter vocabulary that\n  /// would force every civil waveform into UNKNOWN.\n  SIGNAL_NAME: string;\n  /// Modulation the source states, verbatim. Never inferred from the samples.\n  MODULATION: string;\n  /// Band designation the source states. Shares $RFB\'s `rfBandDesignation`, so\n  /// an HF or VHF capture is designated identically on both records.\n  BAND: rfBandDesignation = OTHER;\n  /// NORAD catalogue number of the transmitting spacecraft when the capture\n  /// is of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.\n  NORAD_CAT_ID: uint;\n  /// International designator of the transmitting spacecraft, when known.\n  OBJECT_ID: string;\n  /// $RFE.ID of the emitter this capture is of, when identified.\n  EMITTER_ID: string;\n  /// $RFB.ID of the band specification this capture exercises, when\n  /// identified.\n  RFB_ID: string;\n\n  /// SPDX identifier when the source states one, otherwise the source\'s\n  /// licence name verbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain.\n  LICENSE: string;\n  /// URL of the licence text the source points at.\n  LICENSE_URL: string;\n  /// Attribution/citation string the licence requires this record and any\n  /// derived product to carry downstream.\n  ATTRIBUTION: string;\n  /// SigMF `core:meta_doi` \u2014 DOI of the metadata.\n  META_DOI: string;\n  /// SigMF `core:data_doi` \u2014 DOI of the dataset.\n  DATA_DOI: string;\n\n  /// Retrievable files for this capture.\n  PAYLOADS: [IQCPayloadRef];\n\n  /// ISO 8601 UTC creation time of this record.\n  CREATED_AT: string;\n  /// ISO 8601 UTC last-update time of this record.\n  UPDATED_AT: string;\n  /// CID of the $IQC this record replaces, when the upstream capture\'s\n  /// metadata changed.\n  SUPERSEDES_IQC_CID: string;\n}\n\nroot_type IQC;\nfile_identifier "$IQC";',
+      IDL: '// Hash: 02ac54940fb540fd33f1e26de7a2ebd7756d533d4b022fdb0ca18a2f8589abf4\n// Version: 1.176.1\n// -----------------------------------END_HEADER\ninclude "../RFB/main.fbs";\n\n/// Role a referenced payload plays for one capture.\nenum iqcPayloadRole : byte {\n  /// The raw baseband sample stream itself (SigMF `.sigmf-data`).\n  DATA,\n  /// The upstream metadata document the record was normalized FROM\n  /// (SigMF `.sigmf-meta`).\n  METADATA,\n  /// A container holding both (SigMF `.sigmf` tar archive, zip, tarball).\n  ARCHIVE,\n  /// A rendered spectrogram, waterfall, audio demod or thumbnail.\n  PREVIEW,\n  /// A companion file the source publishes that is none of the above.\n  OTHER\n}\n\n/// Where a capture\'s bytes physically live right now.\nenum iqcCustody : byte {\n  /// Bytes stay upstream. This record is a pointer and nothing more. This is\n  /// the DEFAULT and the correct value for every multi-gigabyte archive.\n  UPSTREAM_ONLY,\n  /// This SDN deliberately pinned the bytes; CID is populated and resolvable.\n  PINNED,\n  /// The bytes were pinned and have since been unpinned. CID is retained for\n  /// audit; it may no longer resolve.\n  UNPINNED\n}\n\n/// Geodetic position of the receiver at capture time.\n///\n/// A separate table because latitude/longitude 0,0 is a VALID coordinate: an\n/// absent GEOLOCATION means "the source published no position", which a\n/// zero-defaulted scalar pair could never express.\ntable IQCGeolocation {\n  /// Geodetic latitude, degrees, WGS-84, positive north.\n  LATITUDE_DEG: double;\n  /// Geodetic longitude, degrees, WGS-84, positive east.\n  LONGITUDE_DEG: double;\n  /// Height above the WGS-84 ellipsoid, metres. Absent in most SigMF\n  /// recordings; SigMF `core:geolocation` is a GeoJSON Point whose third\n  /// ordinate is optional.\n  ALTITUDE_M: double;\n  /// Reported position uncertainty, metres, when the source states one.\n  UNCERTAINTY_M: double;\n  /// How the position was obtained, verbatim from the source (e.g. "GPS",\n  /// "station registry", "author-supplied"). Never inferred.\n  METHOD: string;\n}\n\n/// Receive chain that produced the samples.\n///\n/// Every field is a verbatim string. SigMF `core:hw` is free text and the\n/// non-SigMF archives publish nothing more structured; splitting free text\n/// into a manufacturer and a model by guessing is a defect.\ntable IQCHardware {\n  /// SigMF `core:hw` verbatim, or the source\'s equivalent free-text\n  /// description of the receive chain.\n  DESCRIPTION: string;\n  /// Receiver manufacturer, only when the source names it as its own field.\n  MANUFACTURER: string;\n  /// Receiver model, only when the source names it as its own field.\n  MODEL: string;\n  /// Antenna description, only when the source names it as its own field.\n  ANTENNA: string;\n  /// SigMF `core:recorder` \u2014 the SOFTWARE that wrote the recording.\n  RECORDER: string;\n}\n\n/// One SigMF capture segment: the point in the sample stream at which the\n/// listed tuning took effect. A retuned or frequency-hopped recording has\n/// several; a single-tune recording has one.\ntable IQCSegment {\n  /// SigMF `core:sample_start` \u2014 index of the first sample of this segment.\n  SAMPLE_START: uint64;\n  /// SigMF `core:global_index` \u2014 index of this sample in the receiver\'s\n  /// free-running sample counter.\n  GLOBAL_INDEX: uint64;\n  /// SigMF `core:header_bytes` \u2014 bytes preceding this segment in the data\n  /// file.\n  HEADER_BYTES: uint64;\n  /// SigMF `core:frequency` \u2014 centre frequency of this segment, HERTZ.\n  CENTER_FREQ_HZ: double;\n  /// SigMF `core:datetime` \u2014 ISO 8601 UTC timestamp of SAMPLE_START.\n  DATETIME: string;\n}\n\n/// One labelled region of the capture in time and frequency.\ntable IQCAnnotation {\n  /// SigMF `core:sample_start` \u2014 first sample of the annotated region.\n  SAMPLE_START: uint64;\n  /// SigMF `core:sample_count` \u2014 length of the annotated region in samples.\n  SAMPLE_COUNT: uint64;\n  /// SigMF `core:freq_lower_edge` \u2014 lower edge of the annotated band, HERTZ.\n  FREQ_LOWER_EDGE_HZ: double;\n  /// SigMF `core:freq_upper_edge` \u2014 upper edge of the annotated band, HERTZ.\n  FREQ_UPPER_EDGE_HZ: double;\n  /// SigMF `core:label` \u2014 the short human label ("LoRa", "ADS-B", "AIS").\n  LABEL: string;\n  /// SigMF `core:comment` \u2014 free-text note.\n  COMMENT: string;\n  /// SigMF `core:generator` \u2014 the tool or person that produced the\n  /// annotation. An annotation asserted by an automatic classifier and one\n  /// asserted by a human are not interchangeable evidence; this field is how\n  /// a consumer tells them apart.\n  GENERATOR: string;\n  /// SigMF `core:uuid` \u2014 the annotation\'s own identifier, when present.\n  UUID: string;\n}\n\n/// A SigMF extension namespace the upstream metadata declares.\ntable IQCExtension {\n  /// Extension namespace name.\n  NAME: string;\n  /// Extension version.\n  VERSION: string;\n  /// True when the extension is declared optional for interpretation.\n  IS_OPTIONAL: bool;\n}\n\n/// A retrievable file belonging to this capture.\n///\n/// The record NEVER carries sample bytes. It carries where they are, how big\n/// they are, and what they hash to, so a consumer can decide for itself\n/// whether to fetch 400 kB or 127 GB.\ntable IQCPayloadRef {\n  /// What this file is.\n  ROLE: iqcPayloadRole = OTHER;\n  /// Upstream retrieval URL, verbatim.\n  URL: string;\n  /// File name as the source publishes it.\n  FILE_NAME: string;\n  /// IANA media type when the source declares one.\n  MEDIA_TYPE: string;\n  /// Byte length. 0 means the source did not publish a size \u2014 it never means\n  /// an empty file.\n  BYTE_LENGTH: uint64;\n  /// SHA-256 of the exact bytes, lowercase hex. Populated only when computed\n  /// or published; never guessed.\n  BYTE_SHA256: string;\n  /// SHA-512 of the exact bytes, lowercase hex. SigMF `core:sha512` is a\n  /// SHA-512 over the dataset file, so it is carried in its own field rather\n  /// than converted or discarded.\n  BYTE_SHA512: string;\n  /// IPFS CIDv1 when, and only when, this SDN pinned the bytes.\n  CID: string;\n  /// Multiformat address, usually /ipfs/{CID}.\n  MULTIFORMAT_ADDRESS: string;\n  /// Custody of these bytes.\n  CUSTODY: iqcCustody = UPSTREAM_ONLY;\n  /// ISO 8601 UTC time at which URL was last confirmed retrievable.\n  RETRIEVED_AT: string;\n}\n\n/// RF IQ Capture Metadata.\n///\n/// The description of ONE raw, un-demodulated complex-baseband recording held\n/// in a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\n/// signal-identification catalog, an institutional dataset repository, an\n/// SDR project\'s capture database, a general-purpose research data archive \u2014\n/// normalized onto the SigMF v1 core namespace, which is the only metadata\n/// vocabulary these archive classes share.\n///\n/// $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\n/// and verifiable without anyone mirroring its payload: the samples stay where\n/// their publisher put them and `PAYLOADS` says where that is, how large it\n/// is, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\n/// decision for small high-value recordings, never a default.\n///\n/// UNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\n/// sample rate in HERTZ, so every frequency and rate field here is `_HZ` and\n/// carries the Hz value unconverted. This standard deliberately does NOT\n/// follow $RFB\'s MHz convention \u2014 silently rescaling a SigMF value on ingest\n/// is the exact defect the suffix exists to prevent. A consumer joining $IQC\n/// to $RFB divides by 1e6 at the join, explicitly.\n///\n/// LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\n/// It does not mean public domain, it does not mean permissive, and it does\n/// not authorize redistribution. Crowdsourced catalogs and hosted repositories\n/// both carry third-party recordings, so licence is per RECORDING, never per\n/// archive.\n///\n/// Division of labour: $RFO = a sensor\'s astrometric/RF observation of a\n/// tracked object (azimuth, elevation, range); $RFE = the parametric emitter\n/// description; $RFB = the emitter\'s band specification in MHz; $IQC = the\n/// archived baseband recording itself. $DPM remains the manifest under which\n/// THIS network publishes a shard of $IQC records; it does not describe an\n/// upstream third party\'s capture.\ntable IQC {\n  /// Stable identifier for this record.\n  ID: string;\n  /// The upstream archive\'s own identifier for this capture, verbatim.\n  CAPTURE_ID: string;\n  /// Name of the archive that publishes the capture, carried verbatim as that\n  /// archive states it. A string rather than an enum so a new archive lane\n  /// never requires a schema release.\n  SOURCE_NAME: string;\n  /// Landing page for the capture at the source.\n  SOURCE_URL: string;\n  /// Identifier of the source record this was normalized from, when the\n  /// source exposes one distinct from CAPTURE_ID.\n  SOURCE_RECORD_ID: string;\n  /// SHA-256 of the raw upstream metadata bytes that produced this record,\n  /// lowercase hex. Makes the normalization auditable.\n  SOURCE_SHA256: string;\n  /// ISO 8601 UTC time the source metadata was retrieved.\n  RETRIEVED_AT: string;\n\n  /// Human title of the capture.\n  TITLE: string;\n  /// SigMF `core:description`.\n  DESCRIPTION: string;\n  /// SigMF `core:author`.\n  AUTHOR: string;\n  /// SigMF `core:version` \u2014 the SigMF specification version the upstream\n  /// metadata declares. Empty for captures normalized from a non-SigMF\n  /// source; that emptiness is itself informative.\n  SIGMF_VERSION: string;\n  /// SigMF `core:collection` \u2014 identifier of the collection this recording\n  /// belongs to.\n  COLLECTION: string;\n  /// SigMF `core:extensions`.\n  EXTENSIONS: [IQCExtension];\n\n  /// SigMF `core:datatype` VERBATIM, e.g. "cf32_le", "ci16_le", "ru8". Never\n  /// re-spelled, never normalized to another vocabulary. A consumer that\n  /// cannot parse the token MUST refuse the samples rather than assume a\n  /// layout.\n  DATATYPE: string;\n  /// SigMF `core:sample_rate`, HERTZ (complex samples per second).\n  SAMPLE_RATE_HZ: double;\n  /// SigMF `core:num_channels`. 0 means unstated; 1 is the SigMF default and\n  /// MUST be written explicitly when known.\n  NUM_CHANNELS: uint32;\n  /// Centre frequency of the FIRST capture segment, HERTZ, copied here for\n  /// indexing. `SEGMENTS` is normative whenever it is present.\n  CENTER_FREQ_HZ: double;\n  /// Lowest occupied frequency across the recording, HERTZ, when the source\n  /// states it or its annotations bound it.\n  FREQ_LOWER_EDGE_HZ: double;\n  /// Highest occupied frequency across the recording, HERTZ.\n  FREQ_UPPER_EDGE_HZ: double;\n  /// Total complex samples in the recording. 0 means unstated \u2014 it is NOT to\n  /// be back-computed from BYTE_LENGTH unless DATATYPE and any header bytes\n  /// are both known.\n  SAMPLE_COUNT: uint64;\n  /// Recording length in seconds, when stated or exactly derivable from\n  /// SAMPLE_COUNT and SAMPLE_RATE_HZ.\n  DURATION_SECONDS: double;\n  /// SigMF `core:offset` \u2014 index of the first sample in the recording\'s own\n  /// numbering.\n  SAMPLE_OFFSET: uint64;\n  /// SigMF `core:metadata_only` \u2014 true when no dataset file accompanies the\n  /// metadata.\n  METADATA_ONLY: bool;\n  /// SigMF `core:trailing_bytes` \u2014 non-sample bytes at the end of the data\n  /// file.\n  TRAILING_BYTES: uint64;\n\n  /// ISO 8601 UTC start of the recording (the first segment\'s\n  /// `core:datetime`).\n  CAPTURE_START: string;\n  /// ISO 8601 UTC end of the recording, when stated or exactly derivable.\n  CAPTURE_STOP: string;\n  /// Per-segment tuning history.\n  SEGMENTS: [IQCSegment];\n  /// Labelled time/frequency regions.\n  ANNOTATIONS: [IQCAnnotation];\n  /// Archive-level tags, categories or keywords, carried verbatim in whatever\n  /// vocabulary the publishing archive uses.\n  LABELS: [string];\n\n  /// Receiver position. Absent when the source published none.\n  GEOLOCATION: IQCGeolocation;\n  /// Receive chain.\n  HARDWARE: IQCHardware;\n\n  /// Signal designation the source states, verbatim ("LoRa", "DVB-S2",\n  /// "ADS-B", "VOR"). Not an enum: these archives catalogue the whole radio\n  /// world, and $RFE\'s `signalModulation` is a radar-emitter vocabulary that\n  /// would force every civil waveform into UNKNOWN.\n  SIGNAL_NAME: string;\n  /// Modulation the source states, verbatim. Never inferred from the samples.\n  MODULATION: string;\n  /// Band designation the source states. Shares $RFB\'s `rfBandDesignation`, so\n  /// an HF or VHF capture is designated identically on both records.\n  BAND: rfBandDesignation = OTHER;\n  /// NORAD catalogue number of the transmitting spacecraft when the capture\n  /// is of a known space object. Joins to $CAT.NORAD_CAT_ID. 0 when unbound.\n  NORAD_CAT_ID: uint;\n  /// International designator of the transmitting spacecraft, when known.\n  OBJECT_ID: string;\n  /// $RFE.ID of the emitter this capture is of, when identified.\n  EMITTER_ID: string;\n  /// $RFB.ID of the band specification this capture exercises, when\n  /// identified.\n  RFB_ID: string;\n\n  /// SPDX identifier when the source states one, otherwise the source\'s\n  /// licence name verbatim. EMPTY MEANS UNKNOWN TERMS \u2014 never public domain.\n  LICENSE: string;\n  /// URL of the licence text the source points at.\n  LICENSE_URL: string;\n  /// Attribution/citation string the licence requires this record and any\n  /// derived product to carry downstream.\n  ATTRIBUTION: string;\n  /// SigMF `core:meta_doi` \u2014 DOI of the metadata.\n  META_DOI: string;\n  /// SigMF `core:data_doi` \u2014 DOI of the dataset.\n  DATA_DOI: string;\n\n  /// Retrievable files for this capture.\n  PAYLOADS: [IQCPayloadRef];\n\n  /// ISO 8601 UTC creation time of this record.\n  CREATED_AT: string;\n  /// ISO 8601 UTC last-update time of this record.\n  UPDATED_AT: string;\n  /// CID of the $IQC this record replaces, when the upstream capture\'s\n  /// metadata changed.\n  SUPERSEDES_IQC_CID: string;\n}\n\nroot_type IQC;\nfile_identifier "$IQC";',
       files: [
         "./dist/IQC/IQC.sw.tar.gz",
         "./dist/IQC/IQC.py.tar.gz",
@@ -4080,8 +4085,8 @@ file_identifier "$FPC";`,
       ]
     },
     NUM: {
-      IDL: `// Hash: 49079382d1d22164afa1b9db6494b3243d8f83cd2aa6a8b529539cf4e692c75e
-// Version: 1.113.4
+      IDL: `// Hash: 1f74c19a776f826ac31ebf88531a244afea55581a12edf6b3a6455b50a9fd34c
+// Version: 1.113.5
 // -----------------------------------END_HEADER
 // Shared numerical utility records for reusable math modules.
 
@@ -4236,7 +4241,7 @@ table NUMScalarInterpolationResult {
   TRACE_ID:string;
 }
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 table NUMGaussMarkovRequest {
   /// GAUSS_MARKOV_SEQUENCE.
   OPERATION:numOperationCode;
@@ -4246,7 +4251,7 @@ table NUMGaussMarkovRequest {
   SAMPLE_COUNT:uint32;
   /// Number of initial state propagations excluded from the result statistics.
   WARMUP_COUNT:uint32;
-  /// Seed for the Basilisk-compatible standard normal generator.
+  /// Seed for the standard-normal generator.
   RNG_SEED:uint32;
   /// Row-major DIMENSION x DIMENSION state propagation matrix.
   PROPAGATION_MATRIX:[double];
@@ -4260,7 +4265,7 @@ table NUMGaussMarkovRequest {
   TRACE_ID:string;
 }
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 table NUMGaussMarkovResult {
   STATUS:numResultStatus;
   ERROR_MESSAGE:string;
@@ -4371,7 +4376,7 @@ file_identifier "$NUM";`,
       ]
     },
     MET: {
-      IDL: '// Hash: 4704303474281bd094245a41c594caefde3309d0ffd6816a4b87a48f176235d1\n// Version: 1.0.2\n// -----------------------------------END_HEADER\nenum meanElementSource : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Mean Element Theory\ntable MET {\n  MEAN_ELEMENT_THEORY:meanElementSource;\n}\nroot_type MET;\nfile_identifier "$MET";',
+      IDL: '// Hash: baf37f69ec211c87c4c638876f09a2cbf7d780681463980fee792c7fc1053d96\n// Version: 1.0.3\n// -----------------------------------END_HEADER\nenum meanElementSource : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),\n  /// as published in the 2022 astrodynamics conference literature.\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Mean Element Theory\ntable MET {\n  MEAN_ELEMENT_THEORY:meanElementSource;\n}\nroot_type MET;\nfile_identifier "$MET";',
       files: [
         "./dist/MET/MET.sw.tar.gz",
         "./dist/MET/MET.py.tar.gz",
@@ -4805,7 +4810,7 @@ file_identifier "$CES";`,
       ]
     },
     RFB: {
-      IDL: '// Hash: f0876606c763c51f5bb0c4cd1ee5914b2ad3bf1deafa9f351464775f9f489c6f\n// Version: 0.0.5\n// -----------------------------------END_HEADER\ninclude "../LKS/main.fbs";\n\n/// Band designation carried by an emitter record.\n///\n/// Two naming systems coexist here on purpose. `UHF`, `SHF`, `EHF` and the\n/// members below `OTHER` are ITU-R V.431 decade bands; `L` through `Q` are the\n/// IEEE 521 letter bands. They OVERLAP by construction (an 8.4 GHz downlink is\n/// both `X` and `SHF`). A publisher encodes the designation ITS SOURCE STATES \u2014\n/// never a re-derivation from CENTER_FREQ, and never both.\n///\n/// ORDINALS ARE WIRE VALUES. New members are APPENDED ONLY. Members added after\n/// `OTHER` are therefore out of frequency order in the declaration; that is\n/// deliberate and permanent. Reordering this enum silently re-labels every\n/// $RFB record ever published.\nenum rfBandDesignation : byte {\n  UHF,\n  L,\n  S,\n  C,\n  X,\n  KU,\n  K,\n  KA,\n  V,\n  W,\n  Q,\n  EHF,\n  /// The source states a designation this enum cannot express. The verbatim\n  /// designation MUST be preserved in NAME.\n  OTHER,\n  /// ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0.\n  VHF,\n  /// ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0.\n  HF,\n  /// ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0.\n  MF,\n  /// ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0.\n  LF,\n  /// ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0.\n  VLF,\n  /// ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the\n  /// decade ladder between the pre-existing UHF and EHF members.\n  SHF\n}\n\nenum rfPolarization : byte {\n  LHCP,\n  RHCP,\n  LINEAR_H,\n  LINEAR_V,\n  DUAL,\n  CROSS,\n  UNKNOWN\n}\n\n/// Operational state of a single emitter.\nenum rfTransmitterState : byte {\n  UNKNOWN,\n  ACTIVE,\n  INACTIVE,\n  INVALID\n}\n\n/// RF Band Specification\n///\n/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\n/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\n/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\n/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a\n/// convention.\n///\n/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or\n/// transponder is therefore represented as TWO RFB records \u2014 one UPLINK and\n/// one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\n/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.\ntable RFB {\n  /// Unique identifier\n  ID:string;\n  /// Parent entity identifier\n  ID_ENTITY:string;\n  /// Band name or designation\n  NAME:string;\n  /// RF band designation\n  BAND:rfBandDesignation;\n  /// Operating mode\n  MODE:string;\n  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)\n  PURPOSE:string;\n  /// Minimum frequency (MHz)\n  FREQ_MIN:double;\n  /// Maximum frequency (MHz)\n  FREQ_MAX:double;\n  /// Center frequency (MHz)\n  CENTER_FREQ:double;\n  /// Bandwidth (MHz)\n  BANDWIDTH:double;\n  /// Peak antenna gain (dBi)\n  PEAK_GAIN:double;\n  /// Edge-of-coverage gain (dBi)\n  EDGE_GAIN:double;\n  /// Antenna beamwidth (degrees)\n  BEAMWIDTH:double;\n  /// Polarization\n  POLARIZATION:rfPolarization;\n  /// Effective radiated power (dBW)\n  ERP:double;\n  /// Effective isotropic radiated power (dBW)\n  EIRP:double;\n  /// NORAD catalog number of the spacecraft carrying this emitter. Joins to\n  /// CAT.NORAD_CAT_ID. 0 when unbound.\n  NORAD_CAT_ID:uint;\n  /// Identifier of the physical transmitter, transceiver or transponder this\n  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\n  /// records of the same device share this value.\n  ID_TRANSMITTER:string;\n  /// Direction of this emission relative to the spacecraft.\n  LINK_DIRECTION:linkCategory;\n  /// Symbol rate in baud (symbols per second), NOT kilobaud.\n  BAUD:double;\n  /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).\n  SERVICE:string;\n  /// Operational state of this emitter.\n  XMT_STATUS:rfTransmitterState = UNKNOWN;\n  /// True when the modulation sideband is inverted.\n  INVERT:bool;\n  /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).\n  IARU_COORDINATION:string;\n  /// Attribution/citation string the source license requires this record to\n  /// carry downstream.\n  CITATION:string;\n}\n\nroot_type RFB;\nfile_identifier "$RFB";',
+      IDL: '// Hash: 59c60bc1b2ea74493068a0e374ba11f8a24ac505b7d955fdc8670c7fbcfab88e\n// Version: 0.0.6\n// -----------------------------------END_HEADER\ninclude "../LKS/main.fbs";\n\n/// Band designation carried by an emitter record.\n///\n/// Two naming systems coexist here on purpose. `UHF`, `SHF`, `EHF` and the\n/// members below `OTHER` are ITU-R V.431 decade bands; `L` through `Q` are the\n/// IEEE 521 letter bands. They OVERLAP by construction (an 8.4 GHz downlink is\n/// both `X` and `SHF`). A publisher encodes the designation ITS SOURCE STATES \u2014\n/// never a re-derivation from CENTER_FREQ, and never both.\n///\n/// ORDINALS ARE WIRE VALUES. New members are APPENDED ONLY. Members added after\n/// `OTHER` are therefore out of frequency order in the declaration; that is\n/// deliberate and permanent. Reordering this enum silently re-labels every\n/// $RFB record ever published.\nenum rfBandDesignation : byte {\n  UHF,\n  L,\n  S,\n  C,\n  X,\n  KU,\n  K,\n  KA,\n  V,\n  W,\n  Q,\n  EHF,\n  /// The source states a designation this enum cannot express. The verbatim\n  /// designation MUST be preserved in NAME.\n  OTHER,\n  /// ITU-R V.431 very high frequency, 30\u2013300 MHz. Appended 1.177.0.\n  VHF,\n  /// ITU-R V.431 high frequency, 3\u201330 MHz. Appended 1.177.0.\n  HF,\n  /// ITU-R V.431 medium frequency, 300 kHz\u20133 MHz. Appended 1.177.0.\n  MF,\n  /// ITU-R V.431 low frequency, 30\u2013300 kHz. Appended 1.177.0.\n  LF,\n  /// ITU-R V.431 very low frequency, 3\u201330 kHz. Appended 1.177.0.\n  VLF,\n  /// ITU-R V.431 super high frequency, 3\u201330 GHz. Appended 1.177.0 to close the\n  /// decade ladder between the pre-existing UHF and EHF members.\n  SHF\n}\n\nenum rfPolarization : byte {\n  LHCP,\n  RHCP,\n  LINEAR_H,\n  LINEAR_V,\n  DUAL,\n  CROSS,\n  UNKNOWN\n}\n\n/// Operational state of a single emitter.\nenum rfTransmitterState : byte {\n  UNKNOWN,\n  ACTIVE,\n  INACTIVE,\n  INVALID\n}\n\n/// RF Band Specification\n///\n/// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\n/// that publish Hz (as open transmitter databases commonly do) MUST divide by\n/// 1e6 before encoding; sources\n/// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\n/// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a\n/// convention.\n///\n/// One RFB record carries exactly one LINK_DIRECTION. A transceiver or\n/// transponder is therefore represented as TWO RFB records \u2014 one UPLINK and\n/// one DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\n/// FREQ_MIN, FREQ_MAX and CENTER_FREQ.\ntable RFB {\n  /// Unique identifier\n  ID:string;\n  /// Parent entity identifier\n  ID_ENTITY:string;\n  /// Band name or designation\n  NAME:string;\n  /// RF band designation\n  BAND:rfBandDesignation;\n  /// Operating mode\n  MODE:string;\n  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)\n  PURPOSE:string;\n  /// Minimum frequency (MHz)\n  FREQ_MIN:double;\n  /// Maximum frequency (MHz)\n  FREQ_MAX:double;\n  /// Center frequency (MHz)\n  CENTER_FREQ:double;\n  /// Bandwidth (MHz)\n  BANDWIDTH:double;\n  /// Peak antenna gain (dBi)\n  PEAK_GAIN:double;\n  /// Edge-of-coverage gain (dBi)\n  EDGE_GAIN:double;\n  /// Antenna beamwidth (degrees)\n  BEAMWIDTH:double;\n  /// Polarization\n  POLARIZATION:rfPolarization;\n  /// Effective radiated power (dBW)\n  ERP:double;\n  /// Effective isotropic radiated power (dBW)\n  EIRP:double;\n  /// NORAD catalog number of the spacecraft carrying this emitter. Joins to\n  /// CAT.NORAD_CAT_ID. 0 when unbound.\n  NORAD_CAT_ID:uint;\n  /// Identifier of the physical transmitter, transceiver or transponder this\n  /// record describes (e.g. an upstream transmitter database\'s UUID). Uplink\n  /// and downlink\n  /// records of the same device share this value.\n  ID_TRANSMITTER:string;\n  /// Direction of this emission relative to the spacecraft.\n  LINK_DIRECTION:linkCategory;\n  /// Symbol rate in baud (symbols per second), NOT kilobaud.\n  BAUD:double;\n  /// Regulatory/ITU service designation (e.g. Amateur, Earth Exploration).\n  SERVICE:string;\n  /// Operational state of this emitter.\n  XMT_STATUS:rfTransmitterState = UNKNOWN;\n  /// True when the modulation sideband is inverted.\n  INVERT:bool;\n  /// IARU frequency-coordination state (e.g. IARU Coordinated, Uncoordinated).\n  IARU_COORDINATION:string;\n  /// Attribution/citation string the source license requires this record to\n  /// carry downstream.\n  CITATION:string;\n}\n\nroot_type RFB;\nfile_identifier "$RFB";',
       files: [
         "./dist/RFB/RFB.sw.tar.gz",
         "./dist/RFB/RFB.py.tar.gz",
@@ -5103,8 +5108,8 @@ file_identifier "$ENC";`,
       ]
     },
     CMR: {
-      IDL: `// Hash: 943a03e692c6b3942ce8b80eccd0e3d93a506c3fe19cca5ff5f385716941cc6c
-// Version: 1.177.0
+      IDL: `// Hash: 222c56617a7e48ca31ce7893610ff943e7bd1e33bf640ba92d774512e6103fc1
+// Version: 1.177.1
 // -----------------------------------END_HEADER
 /// What one source assertion establishes for a constellation membership.
 /// Ordinals are wire values: append only; never reorder or reuse.
@@ -5134,15 +5139,17 @@ enum cmrMembershipState : byte {
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 table CMRProvenance {
   ROLE:cmrEvidenceRole = UNSPECIFIED;
-  /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  /// provider that published the joined $CAT record.
+  /// Publisher name verbatim as that publisher states it \u2014 a public satellite
+  /// catalogue, a general object reference catalogue, or the network provider
+  /// that published the joined $CAT record.
   SOURCE:string (required);
-  /// Source dataset or product name verbatim, such as "active Starlink group"
-  /// or "GCAT satcat".
+  /// Source dataset or product name verbatim, such as a named constellation
+  /// group file or a catalogue's satellite-catalog product.
   SOURCE_DATASET:string (required);
   /// Source-native row, group, object, or catalogue identifier.
   SOURCE_RECORD_ID:string;
@@ -5285,7 +5292,7 @@ file_identifier "$CMR";`,
       ]
     },
     KML: {
-      IDL: '// Hash: 416f2d751cc0235abd9b192c0421675ecf924cb2c4709d9083eb0b98b5269ef1\n// Version: 0.0.3\n// -----------------------------------END_HEADER\n// KML (Keyhole Markup Language)\n//\n// KML is an OGC standard for expressing geographic annotation and\n// visualization within 2D maps and 3D Earth browsers. Originally\n// developed for Google Earth.\n// Reference: OGC 07-147r2 (KML 2.2), OGC 12-007r2 (KML 2.3)\n\nenum KMLAltitudeMode : byte {\n  /// Altitude relative to ground surface\n  CLAMP_TO_GROUND,\n  /// Altitude relative to ground elevation\n  RELATIVE_TO_GROUND,\n  /// Altitude as absolute meters above WGS84 ellipsoid\n  ABSOLUTE,\n  /// Clamp to sea floor\n  CLAMP_TO_SEA_FLOOR,\n  /// Relative to sea floor\n  RELATIVE_TO_SEA_FLOOR\n}\n\nenum KMLColorMode : byte {\n  NORMAL,\n  RANDOM\n}\n\nenum KMLStyleState : byte {\n  NORMAL,\n  HIGHLIGHT\n}\n\nenum KMLUnits : byte {\n  PIXELS,\n  FRACTION,\n  INSET_PIXELS\n}\n\nenum KMLRefreshMode : byte {\n  ON_CHANGE,\n  ON_INTERVAL,\n  ON_EXPIRE\n}\n\nenum KMLViewRefreshMode : byte {\n  NEVER,\n  ON_STOP,\n  ON_REQUEST,\n  ON_REGION\n}\n\nenum KMLListItemType : byte {\n  CHECK,\n  CHECK_OFF_ONLY,\n  CHECK_HIDE_CHILDREN,\n  RADIO_FOLDER\n}\n\nenum KMLDisplayMode : byte {\n  DEFAULT,\n  HIDE\n}\n\nenum KMLGridOrigin : byte {\n  LOWER_LEFT,\n  UPPER_LEFT\n}\n\nenum KMLShape : byte {\n  RECTANGLE,\n  CYLINDER,\n  SPHERE\n}\n\nenum KMLFlyToMode : byte {\n  BOUNCE,\n  SMOOTH\n}\n\n/// KML coordinate (longitude, latitude, optional altitude)\ntable KMLCoordinate {\n  /// Longitude in decimal degrees\n  LONGITUDE:double;\n  /// Latitude in decimal degrees\n  LATITUDE:double;\n  /// Altitude in meters\n  ALTITUDE:double;\n}\n\n/// LookAt viewpoint\ntable KMLLookAt {\n  /// Longitude of the point being looked at\n  LONGITUDE:double;\n  /// Latitude of the point being looked at\n  LATITUDE:double;\n  /// Altitude of the point being looked at\n  ALTITUDE:double;\n  /// Heading in degrees (0=North)\n  HEADING:double;\n  /// Tilt in degrees from vertical (0=straight down)\n  TILT:double;\n  /// Range in meters from the point\n  RANGE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Camera viewpoint\ntable KMLCamera {\n  /// Camera longitude\n  LONGITUDE:double;\n  /// Camera latitude\n  LATITUDE:double;\n  /// Camera altitude\n  ALTITUDE:double;\n  /// Heading in degrees (0=North)\n  HEADING:double;\n  /// Tilt in degrees from vertical\n  TILT:double;\n  /// Roll in degrees\n  ROLL:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Icon style\ntable KMLIconStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Scale factor\n  SCALE:double;\n  /// Heading in degrees\n  HEADING:double;\n  /// Icon href (URL)\n  ICON_HREF:string;\n  /// Hot spot X value\n  HOTSPOT_X:double;\n  /// Hot spot Y value\n  HOTSPOT_Y:double;\n  /// Hot spot X units\n  HOTSPOT_X_UNITS:KMLUnits;\n  /// Hot spot Y units\n  HOTSPOT_Y_UNITS:KMLUnits;\n}\n\n/// Line style\ntable KMLLineStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Width in pixels\n  WIDTH:double;\n  /// gx:outerColor\n  GX_OUTER_COLOR:string;\n  /// gx:outerWidth\n  GX_OUTER_WIDTH:double;\n  /// gx:physicalWidth\n  GX_PHYSICAL_WIDTH:double;\n  /// gx:labelVisibility\n  GX_LABEL_VISIBILITY:bool;\n}\n\n/// Polygon style\ntable KMLPolyStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Whether to fill\n  FILL:bool;\n  /// Whether to outline\n  OUTLINE:bool;\n}\n\n/// Label style\ntable KMLLabelStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Scale factor\n  SCALE:double;\n}\n\n/// Balloon style\ntable KMLBalloonStyle {\n  /// Background color in aabbggrr hex format\n  BG_COLOR:string;\n  /// Text color in aabbggrr hex format\n  TEXT_COLOR:string;\n  /// Balloon text template (supports $[name], $[description])\n  TEXT:string;\n  /// Display mode\n  DISPLAY_MODE:KMLDisplayMode;\n}\n\n/// Item icon for ListStyle\ntable KMLItemIcon {\n  /// State (open, closed, error, fetching0-2)\n  STATE:string;\n  /// Icon URL\n  HREF:string;\n}\n\n/// List style\ntable KMLListStyle {\n  /// List item type\n  LIST_ITEM_TYPE:KMLListItemType;\n  /// Background color\n  BG_COLOR:string;\n  /// Item icons\n  ITEM_ICONS:[KMLItemIcon];\n  /// Maximum snippet lines\n  MAX_SNIPPET_LINES:int;\n}\n\n/// Style definition\ntable KMLStyle {\n  /// Style identifier\n  ID:string;\n  /// Icon style\n  ICON_STYLE:KMLIconStyle;\n  /// Label style\n  LABEL_STYLE:KMLLabelStyle;\n  /// Line style\n  LINE_STYLE:KMLLineStyle;\n  /// Polygon style\n  POLY_STYLE:KMLPolyStyle;\n  /// Balloon style\n  BALLOON_STYLE:KMLBalloonStyle;\n  /// List style\n  LIST_STYLE:KMLListStyle;\n}\n\n/// Style map pair\ntable KMLStyleMapPair {\n  /// State (normal or highlight)\n  STATE:KMLStyleState;\n  /// Style URL or inline style ID\n  STYLE_URL:string;\n}\n\n/// Style map (normal/highlight pair)\ntable KMLStyleMap {\n  /// Style map identifier\n  ID:string;\n  /// Pairs\n  PAIRS:[KMLStyleMapPair];\n}\n\n/// Point geometry\ntable KMLPoint {\n  /// Coordinate\n  COORDINATES:KMLCoordinate;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n}\n\n/// LineString geometry\ntable KMLLineString {\n  /// Coordinates\n  COORDINATES:[KMLCoordinate];\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate (follow terrain)\n  TESSELLATE:bool;\n  /// gx:drawOrder\n  GX_DRAW_ORDER:int;\n}\n\n/// LinearRing geometry\ntable KMLLinearRing {\n  /// Coordinates (first = last to close the ring)\n  COORDINATES:[KMLCoordinate];\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Polygon geometry\ntable KMLPolygon {\n  /// Outer boundary\n  OUTER_BOUNDARY:KMLLinearRing;\n  /// Inner boundaries (holes)\n  INNER_BOUNDARIES:[KMLLinearRing];\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n}\n\n/// Resource map alias for Model\ntable KMLResourceMapAlias {\n  /// Target href\n  TARGET_HREF:string;\n  /// Source href\n  SOURCE_HREF:string;\n}\n\n/// 3D Model geometry\ntable KMLModel {\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Location longitude\n  LOCATION_LON:double;\n  /// Location latitude\n  LOCATION_LAT:double;\n  /// Location altitude\n  LOCATION_ALT:double;\n  /// Orientation heading\n  ORIENTATION_HEADING:double;\n  /// Orientation tilt\n  ORIENTATION_TILT:double;\n  /// Orientation roll\n  ORIENTATION_ROLL:double;\n  /// Scale X\n  SCALE_X:double;\n  /// Scale Y\n  SCALE_Y:double;\n  /// Scale Z\n  SCALE_Z:double;\n  /// Link to 3D model file\n  LINK_HREF:string;\n  /// Resource map aliases\n  RESOURCE_MAP:[KMLResourceMapAlias];\n}\n\n/// gx:Track \u2014 time-stamped position track\ntable KMLTrack {\n  /// Whether to extrude\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Time stamps (ISO 8601)\n  WHEN:[string];\n  /// Coordinates (lon lat alt per entry)\n  COORDS:[KMLCoordinate];\n  /// Angles (heading tilt roll per entry)\n  ANGLES:[KMLCoordinate];\n  /// Model for track visualization\n  MODEL:KMLModel;\n}\n\n/// gx:MultiTrack\ntable KMLMultiTrack {\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to interpolate between tracks\n  INTERPOLATE:bool;\n  /// Child tracks\n  TRACKS:[KMLTrack];\n}\n\n/// MultiGeometry\ntable KMLMultiGeometry {\n  /// Child points\n  POINTS:[KMLPoint];\n  /// Child line strings\n  LINE_STRINGS:[KMLLineString];\n  /// Child polygons\n  POLYGONS:[KMLPolygon];\n  /// Nested multi-geometries\n  MULTI_GEOMETRIES:[KMLMultiGeometry];\n  /// Child linear rings (standalone)\n  LINEAR_RINGS:[KMLLinearRing];\n  /// Child 3D models\n  MODELS:[KMLModel];\n  /// Child tracks\n  TRACKS:[KMLTrack];\n  /// Child multi-tracks\n  MULTI_TRACKS:[KMLMultiTrack];\n}\n\n/// TimeSpan\ntable KMLTimeSpan {\n  /// Begin time (ISO 8601)\n  BEGIN:string;\n  /// End time (ISO 8601)\n  END:string;\n}\n\n/// TimeStamp\ntable KMLTimeStamp {\n  /// Time (ISO 8601)\n  WHEN:string;\n}\n\n/// Extended data key-value pair\ntable KMLData {\n  /// Data name\n  NAME:string;\n  /// Display name\n  DISPLAY_NAME:string;\n  /// Data value\n  VALUE:string;\n}\n\n/// Schema simple field definition\ntable KMLSimpleField {\n  /// Field name\n  NAME:string;\n  /// Field type (xsd:string, xsd:int, xsd:float, etc.)\n  FIELD_TYPE:string;\n  /// Display name\n  DISPLAY_NAME:string;\n}\n\n/// Schema definition\ntable KMLSchema {\n  /// Schema name\n  NAME:string;\n  /// Schema ID\n  ID:string;\n  /// Simple field definitions\n  SIMPLE_FIELDS:[KMLSimpleField];\n}\n\n/// Simple data value for SchemaData\ntable KMLSimpleData {\n  /// Field name\n  NAME:string;\n  /// Field value\n  VALUE:string;\n}\n\n/// Schema data reference\ntable KMLSchemaData {\n  /// Schema URL reference\n  SCHEMA_URL:string;\n  /// Simple data values\n  SIMPLE_DATA:[KMLSimpleData];\n}\n\n/// LatLonQuad \u2014 four corner coordinates for ground overlay\ntable KMLLatLonQuad {\n  /// Four corner coordinates\n  COORDINATES:[KMLCoordinate];\n}\n\n/// Region \u2014 Level of Detail bounding region\ntable KMLRegion {\n  /// LatLonAltBox\n  LAT_LON_ALT_BOX:KMLLatLonAltBox;\n  /// Level of detail\n  LOD:KMLLod;\n}\n\n/// LatLonAltBox for Region\ntable KMLLatLonAltBox {\n  /// North latitude\n  NORTH:double;\n  /// South latitude\n  SOUTH:double;\n  /// East longitude\n  EAST:double;\n  /// West longitude\n  WEST:double;\n  /// Minimum altitude\n  MIN_ALTITUDE:double;\n  /// Maximum altitude\n  MAX_ALTITUDE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Level of Detail parameters\ntable KMLLod {\n  /// Minimum LOD pixels\n  MIN_LOD_PIXELS:double;\n  /// Maximum LOD pixels (-1 = infinite)\n  MAX_LOD_PIXELS:double;\n  /// Minimum fade extent\n  MIN_FADE_EXTENT:double;\n  /// Maximum fade extent\n  MAX_FADE_EXTENT:double;\n}\n\n/// Full Link element\ntable KMLLink {\n  /// URL\n  HREF:string;\n  /// Refresh mode\n  REFRESH_MODE:KMLRefreshMode;\n  /// Refresh interval in seconds\n  REFRESH_INTERVAL:double;\n  /// View refresh mode\n  VIEW_REFRESH_MODE:KMLViewRefreshMode;\n  /// View refresh time in seconds\n  VIEW_REFRESH_TIME:double;\n  /// View bound scale\n  VIEW_BOUND_SCALE:double;\n  /// View format string\n  VIEW_FORMAT:string;\n  /// HTTP query string\n  HTTP_QUERY:string;\n}\n\n/// ViewVolume for PhotoOverlay\ntable KMLViewVolume {\n  /// Left field of view angle\n  LEFT_FOV:double;\n  /// Right field of view angle\n  RIGHT_FOV:double;\n  /// Bottom field of view angle\n  BOTTOM_FOV:double;\n  /// Top field of view angle\n  TOP_FOV:double;\n  /// Near clipping plane\n  NEAR:double;\n}\n\n/// ImagePyramid for PhotoOverlay\ntable KMLImagePyramid {\n  /// Tile size in pixels\n  TILE_SIZE:int;\n  /// Maximum image width\n  MAX_WIDTH:int;\n  /// Maximum image height\n  MAX_HEIGHT:int;\n  /// Grid origin\n  GRID_ORIGIN:KMLGridOrigin;\n}\n\n/// Network link\ntable KMLNetworkLink {\n  /// Name of the network link\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Whether the link is visible\n  VISIBILITY:bool;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Link URL\n  HREF:string;\n  /// Refresh mode\n  REFRESH_MODE:KMLRefreshMode;\n  /// Refresh interval in seconds\n  REFRESH_INTERVAL:double;\n  /// View refresh mode\n  VIEW_REFRESH_MODE:KMLViewRefreshMode;\n  /// View refresh time in seconds\n  VIEW_REFRESH_TIME:double;\n  /// Whether to refresh on visibility change\n  REFRESH_VISIBILITY:bool;\n  /// Whether to fly to view on refresh\n  FLY_TO_VIEW:bool;\n  /// Full link element\n  LINK:KMLLink;\n}\n\n/// Screen overlay\ntable KMLScreenOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color\n  COLOR:string;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// Overlay X position\n  OVERLAY_XY_X:double;\n  /// Overlay Y position\n  OVERLAY_XY_Y:double;\n  /// Overlay X units\n  OVERLAY_XY_XUNITS:KMLUnits;\n  /// Overlay Y units\n  OVERLAY_XY_YUNITS:KMLUnits;\n  /// Screen X position\n  SCREEN_XY_X:double;\n  /// Screen Y position\n  SCREEN_XY_Y:double;\n  /// Screen X units\n  SCREEN_XY_XUNITS:KMLUnits;\n  /// Screen Y units\n  SCREEN_XY_YUNITS:KMLUnits;\n  /// Rotation X\n  ROTATION_XY_X:double;\n  /// Rotation Y\n  ROTATION_XY_Y:double;\n  /// Rotation X units\n  ROTATION_XY_XUNITS:KMLUnits;\n  /// Rotation Y units\n  ROTATION_XY_YUNITS:KMLUnits;\n  /// Size X\n  SIZE_X:double;\n  /// Size Y\n  SIZE_Y:double;\n  /// Size X units\n  SIZE_XUNITS:KMLUnits;\n  /// Size Y units\n  SIZE_YUNITS:KMLUnits;\n  /// Rotation in degrees\n  ROTATION:double;\n}\n\n/// Photo overlay\ntable KMLPhotoOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color\n  COLOR:string;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// Rotation\n  ROTATION:double;\n  /// View volume\n  VIEW_VOLUME:KMLViewVolume;\n  /// Image pyramid\n  IMAGE_PYRAMID:KMLImagePyramid;\n  /// Point for position\n  POINT:KMLPoint;\n  /// Shape\n  SHAPE:KMLShape;\n}\n\n/// Ground overlay\ntable KMLGroundOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color in aabbggrr hex format\n  COLOR:string;\n  /// North latitude of bounding box\n  NORTH:double;\n  /// South latitude of bounding box\n  SOUTH:double;\n  /// East longitude of bounding box\n  EAST:double;\n  /// West longitude of bounding box\n  WEST:double;\n  /// Rotation in degrees\n  ROTATION:double;\n  /// Altitude in meters\n  ALTITUDE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// LatLonQuad (non-rectangular overlay)\n  LAT_LON_QUAD:KMLLatLonQuad;\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Region\n  REGION:KMLRegion;\n}\n\n/// Update element for NetworkLinkControl\ntable KMLUpdate {\n  /// Target href\n  TARGET_HREF:string;\n  /// Change KML (raw)\n  CHANGE_KML:string;\n  /// Create KML (raw)\n  CREATE_KML:string;\n  /// Delete KML (raw)\n  DELETE_KML:string;\n}\n\n/// NetworkLinkControl\ntable KMLNetworkLinkControl {\n  /// Minimum refresh period in seconds\n  MIN_REFRESH_PERIOD:double;\n  /// Maximum session length in seconds\n  MAX_SESSION_LENGTH:double;\n  /// Cookie\n  COOKIE:string;\n  /// Message to display\n  MESSAGE:string;\n  /// Link name override\n  LINK_NAME:string;\n  /// Link description override\n  LINK_DESCRIPTION:string;\n  /// Link snippet override\n  LINK_SNIPPET:string;\n  /// Expiration time (ISO 8601)\n  EXPIRES:string;\n  /// Update\n  UPDATE:KMLUpdate;\n  /// LookAt\n  LOOK_AT:KMLLookAt;\n  /// Camera\n  CAMERA:KMLCamera;\n}\n\n/// gx:FlyTo tour primitive\ntable KMLFlyTo {\n  /// Duration in seconds\n  DURATION:double;\n  /// Fly-to mode\n  FLY_TO_MODE:KMLFlyToMode;\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n}\n\n/// gx:Wait tour primitive\ntable KMLWait {\n  /// Duration in seconds\n  DURATION:double;\n}\n\n/// gx:AnimatedUpdate tour primitive\ntable KMLAnimatedUpdate {\n  /// Duration in seconds\n  DURATION:double;\n  /// Delayed start in seconds\n  DELAYED_START:double;\n  /// Update\n  UPDATE:KMLUpdate;\n}\n\n/// gx:TourControl tour primitive\ntable KMLTourControl {\n  /// Play mode (pause)\n  PLAY_MODE:string;\n}\n\n/// gx:SoundCue tour primitive\ntable KMLSoundCue {\n  /// Audio file URL\n  HREF:string;\n  /// Delayed start in seconds\n  DELAYED_START:double;\n}\n\n/// Tour primitive (union-like)\ntable KMLTourPrimitive {\n  /// FlyTo\n  FLY_TO:KMLFlyTo;\n  /// Wait\n  WAIT:KMLWait;\n  /// AnimatedUpdate\n  ANIMATED_UPDATE:KMLAnimatedUpdate;\n  /// TourControl\n  TOUR_CONTROL:KMLTourControl;\n  /// SoundCue\n  SOUND_CUE:KMLSoundCue;\n}\n\n/// gx:Playlist\ntable KMLPlaylist {\n  /// Tour primitives\n  PRIMITIVES:[KMLTourPrimitive];\n}\n\n/// gx:Tour\ntable KMLTour {\n  /// Tour name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Playlist\n  PLAYLIST:KMLPlaylist;\n}\n\n/// Placemark feature\ntable KMLPlacemark {\n  /// Placemark name\n  NAME:string;\n  /// Description (may contain HTML)\n  DESCRIPTION:string;\n  /// Visibility flag\n  VISIBILITY:bool;\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Inline style\n  STYLE:KMLStyle;\n  /// Snippet (short description)\n  SNIPPET:string;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Address\n  ADDRESS:string;\n  /// Point geometry\n  POINT:KMLPoint;\n  /// LineString geometry\n  LINE_STRING:KMLLineString;\n  /// Polygon geometry\n  POLYGON:KMLPolygon;\n  /// LinearRing geometry (standalone)\n  LINEAR_RING:KMLLinearRing;\n  /// MultiGeometry\n  MULTI_GEOMETRY:KMLMultiGeometry;\n  /// 3D Model\n  MODEL:KMLModel;\n  /// gx:Track\n  TRACK:KMLTrack;\n  /// gx:MultiTrack\n  MULTI_TRACK:KMLMultiTrack;\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n  /// TimeSpan\n  TIME_SPAN:KMLTimeSpan;\n  /// TimeStamp\n  TIME_STAMP:KMLTimeStamp;\n  /// Extended data\n  EXTENDED_DATA:[KMLData];\n  /// Schema data\n  SCHEMA_DATA:KMLSchemaData;\n  /// Region\n  REGION:KMLRegion;\n  /// StyleMap (inline)\n  STYLE_MAP:KMLStyleMap;\n}\n\n/// Folder container\ntable KMLFolder {\n  /// Folder name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility flag\n  VISIBILITY:bool;\n  /// Whether folder is open in tree view\n  OPEN:bool;\n  /// Placemarks in this folder\n  PLACEMARKS:[KMLPlacemark];\n  /// Sub-folders\n  FOLDERS:[KMLFolder];\n  /// Network links\n  NETWORK_LINKS:[KMLNetworkLink];\n  /// Ground overlays\n  GROUND_OVERLAYS:[KMLGroundOverlay];\n  /// Shared styles\n  STYLES:[KMLStyle];\n  /// Style maps\n  STYLE_MAPS:[KMLStyleMap];\n  /// Screen overlays\n  SCREEN_OVERLAYS:[KMLScreenOverlay];\n  /// Photo overlays\n  PHOTO_OVERLAYS:[KMLPhotoOverlay];\n  /// Tours\n  TOURS:[KMLTour];\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Region\n  REGION:KMLRegion;\n  /// Extended data\n  EXTENDED_DATA:[KMLData];\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n  /// TimeSpan\n  TIME_SPAN:KMLTimeSpan;\n  /// TimeStamp\n  TIME_STAMP:KMLTimeStamp;\n}\n\n/// KML Document\ntable KML {\n  /// Document name\n  NAME:string;\n  /// Document description\n  DESCRIPTION:string;\n  /// Whether document is visible\n  VISIBILITY:bool;\n  /// Whether document is open in tree view\n  OPEN:bool;\n  /// Shared styles\n  STYLES:[KMLStyle];\n  /// Style maps\n  STYLE_MAPS:[KMLStyleMap];\n  /// Top-level placemarks\n  PLACEMARKS:[KMLPlacemark];\n  /// Top-level folders\n  FOLDERS:[KMLFolder];\n  /// Network links\n  NETWORK_LINKS:[KMLNetworkLink];\n  /// Ground overlays\n  GROUND_OVERLAYS:[KMLGroundOverlay];\n  /// Schemas\n  SCHEMAS:[KMLSchema];\n  /// Screen overlays\n  SCREEN_OVERLAYS:[KMLScreenOverlay];\n  /// Photo overlays\n  PHOTO_OVERLAYS:[KMLPhotoOverlay];\n  /// Tours\n  TOURS:[KMLTour];\n  /// NetworkLinkControl\n  NETWORK_LINK_CONTROL:KMLNetworkLinkControl;\n}\n\nroot_type KML;\nfile_identifier "$KML";',
+      IDL: '// Hash: 3d50b35aa366676f927b1a27045e848876b598b978980702d77034b763f0a702\n// Version: 0.0.4\n// -----------------------------------END_HEADER\n// KML (Keyhole Markup Language)\n//\n// KML is an OGC standard for expressing geographic annotation and\n// visualization within 2D maps and 3D Earth browsers.\n// Reference: OGC 07-147r2 (KML 2.2), OGC 12-007r2 (KML 2.3)\n\nenum KMLAltitudeMode : byte {\n  /// Altitude relative to ground surface\n  CLAMP_TO_GROUND,\n  /// Altitude relative to ground elevation\n  RELATIVE_TO_GROUND,\n  /// Altitude as absolute meters above WGS84 ellipsoid\n  ABSOLUTE,\n  /// Clamp to sea floor\n  CLAMP_TO_SEA_FLOOR,\n  /// Relative to sea floor\n  RELATIVE_TO_SEA_FLOOR\n}\n\nenum KMLColorMode : byte {\n  NORMAL,\n  RANDOM\n}\n\nenum KMLStyleState : byte {\n  NORMAL,\n  HIGHLIGHT\n}\n\nenum KMLUnits : byte {\n  PIXELS,\n  FRACTION,\n  INSET_PIXELS\n}\n\nenum KMLRefreshMode : byte {\n  ON_CHANGE,\n  ON_INTERVAL,\n  ON_EXPIRE\n}\n\nenum KMLViewRefreshMode : byte {\n  NEVER,\n  ON_STOP,\n  ON_REQUEST,\n  ON_REGION\n}\n\nenum KMLListItemType : byte {\n  CHECK,\n  CHECK_OFF_ONLY,\n  CHECK_HIDE_CHILDREN,\n  RADIO_FOLDER\n}\n\nenum KMLDisplayMode : byte {\n  DEFAULT,\n  HIDE\n}\n\nenum KMLGridOrigin : byte {\n  LOWER_LEFT,\n  UPPER_LEFT\n}\n\nenum KMLShape : byte {\n  RECTANGLE,\n  CYLINDER,\n  SPHERE\n}\n\nenum KMLFlyToMode : byte {\n  BOUNCE,\n  SMOOTH\n}\n\n/// KML coordinate (longitude, latitude, optional altitude)\ntable KMLCoordinate {\n  /// Longitude in decimal degrees\n  LONGITUDE:double;\n  /// Latitude in decimal degrees\n  LATITUDE:double;\n  /// Altitude in meters\n  ALTITUDE:double;\n}\n\n/// LookAt viewpoint\ntable KMLLookAt {\n  /// Longitude of the point being looked at\n  LONGITUDE:double;\n  /// Latitude of the point being looked at\n  LATITUDE:double;\n  /// Altitude of the point being looked at\n  ALTITUDE:double;\n  /// Heading in degrees (0=North)\n  HEADING:double;\n  /// Tilt in degrees from vertical (0=straight down)\n  TILT:double;\n  /// Range in meters from the point\n  RANGE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Camera viewpoint\ntable KMLCamera {\n  /// Camera longitude\n  LONGITUDE:double;\n  /// Camera latitude\n  LATITUDE:double;\n  /// Camera altitude\n  ALTITUDE:double;\n  /// Heading in degrees (0=North)\n  HEADING:double;\n  /// Tilt in degrees from vertical\n  TILT:double;\n  /// Roll in degrees\n  ROLL:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Icon style\ntable KMLIconStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Scale factor\n  SCALE:double;\n  /// Heading in degrees\n  HEADING:double;\n  /// Icon href (URL)\n  ICON_HREF:string;\n  /// Hot spot X value\n  HOTSPOT_X:double;\n  /// Hot spot Y value\n  HOTSPOT_Y:double;\n  /// Hot spot X units\n  HOTSPOT_X_UNITS:KMLUnits;\n  /// Hot spot Y units\n  HOTSPOT_Y_UNITS:KMLUnits;\n}\n\n/// Line style\ntable KMLLineStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Width in pixels\n  WIDTH:double;\n  /// gx:outerColor\n  GX_OUTER_COLOR:string;\n  /// gx:outerWidth\n  GX_OUTER_WIDTH:double;\n  /// gx:physicalWidth\n  GX_PHYSICAL_WIDTH:double;\n  /// gx:labelVisibility\n  GX_LABEL_VISIBILITY:bool;\n}\n\n/// Polygon style\ntable KMLPolyStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Whether to fill\n  FILL:bool;\n  /// Whether to outline\n  OUTLINE:bool;\n}\n\n/// Label style\ntable KMLLabelStyle {\n  /// KML color in aabbggrr hex format\n  COLOR:string;\n  /// Color mode\n  COLOR_MODE:KMLColorMode;\n  /// Scale factor\n  SCALE:double;\n}\n\n/// Balloon style\ntable KMLBalloonStyle {\n  /// Background color in aabbggrr hex format\n  BG_COLOR:string;\n  /// Text color in aabbggrr hex format\n  TEXT_COLOR:string;\n  /// Balloon text template (supports $[name], $[description])\n  TEXT:string;\n  /// Display mode\n  DISPLAY_MODE:KMLDisplayMode;\n}\n\n/// Item icon for ListStyle\ntable KMLItemIcon {\n  /// State (open, closed, error, fetching0-2)\n  STATE:string;\n  /// Icon URL\n  HREF:string;\n}\n\n/// List style\ntable KMLListStyle {\n  /// List item type\n  LIST_ITEM_TYPE:KMLListItemType;\n  /// Background color\n  BG_COLOR:string;\n  /// Item icons\n  ITEM_ICONS:[KMLItemIcon];\n  /// Maximum snippet lines\n  MAX_SNIPPET_LINES:int;\n}\n\n/// Style definition\ntable KMLStyle {\n  /// Style identifier\n  ID:string;\n  /// Icon style\n  ICON_STYLE:KMLIconStyle;\n  /// Label style\n  LABEL_STYLE:KMLLabelStyle;\n  /// Line style\n  LINE_STYLE:KMLLineStyle;\n  /// Polygon style\n  POLY_STYLE:KMLPolyStyle;\n  /// Balloon style\n  BALLOON_STYLE:KMLBalloonStyle;\n  /// List style\n  LIST_STYLE:KMLListStyle;\n}\n\n/// Style map pair\ntable KMLStyleMapPair {\n  /// State (normal or highlight)\n  STATE:KMLStyleState;\n  /// Style URL or inline style ID\n  STYLE_URL:string;\n}\n\n/// Style map (normal/highlight pair)\ntable KMLStyleMap {\n  /// Style map identifier\n  ID:string;\n  /// Pairs\n  PAIRS:[KMLStyleMapPair];\n}\n\n/// Point geometry\ntable KMLPoint {\n  /// Coordinate\n  COORDINATES:KMLCoordinate;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n}\n\n/// LineString geometry\ntable KMLLineString {\n  /// Coordinates\n  COORDINATES:[KMLCoordinate];\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate (follow terrain)\n  TESSELLATE:bool;\n  /// gx:drawOrder\n  GX_DRAW_ORDER:int;\n}\n\n/// LinearRing geometry\ntable KMLLinearRing {\n  /// Coordinates (first = last to close the ring)\n  COORDINATES:[KMLCoordinate];\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Polygon geometry\ntable KMLPolygon {\n  /// Outer boundary\n  OUTER_BOUNDARY:KMLLinearRing;\n  /// Inner boundaries (holes)\n  INNER_BOUNDARIES:[KMLLinearRing];\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to extrude to ground\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n}\n\n/// Resource map alias for Model\ntable KMLResourceMapAlias {\n  /// Target href\n  TARGET_HREF:string;\n  /// Source href\n  SOURCE_HREF:string;\n}\n\n/// 3D Model geometry\ntable KMLModel {\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Location longitude\n  LOCATION_LON:double;\n  /// Location latitude\n  LOCATION_LAT:double;\n  /// Location altitude\n  LOCATION_ALT:double;\n  /// Orientation heading\n  ORIENTATION_HEADING:double;\n  /// Orientation tilt\n  ORIENTATION_TILT:double;\n  /// Orientation roll\n  ORIENTATION_ROLL:double;\n  /// Scale X\n  SCALE_X:double;\n  /// Scale Y\n  SCALE_Y:double;\n  /// Scale Z\n  SCALE_Z:double;\n  /// Link to 3D model file\n  LINK_HREF:string;\n  /// Resource map aliases\n  RESOURCE_MAP:[KMLResourceMapAlias];\n}\n\n/// gx:Track \u2014 time-stamped position track\ntable KMLTrack {\n  /// Whether to extrude\n  EXTRUDE:bool;\n  /// Whether to tessellate\n  TESSELLATE:bool;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Time stamps (ISO 8601)\n  WHEN:[string];\n  /// Coordinates (lon lat alt per entry)\n  COORDS:[KMLCoordinate];\n  /// Angles (heading tilt roll per entry)\n  ANGLES:[KMLCoordinate];\n  /// Model for track visualization\n  MODEL:KMLModel;\n}\n\n/// gx:MultiTrack\ntable KMLMultiTrack {\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Whether to interpolate between tracks\n  INTERPOLATE:bool;\n  /// Child tracks\n  TRACKS:[KMLTrack];\n}\n\n/// MultiGeometry\ntable KMLMultiGeometry {\n  /// Child points\n  POINTS:[KMLPoint];\n  /// Child line strings\n  LINE_STRINGS:[KMLLineString];\n  /// Child polygons\n  POLYGONS:[KMLPolygon];\n  /// Nested multi-geometries\n  MULTI_GEOMETRIES:[KMLMultiGeometry];\n  /// Child linear rings (standalone)\n  LINEAR_RINGS:[KMLLinearRing];\n  /// Child 3D models\n  MODELS:[KMLModel];\n  /// Child tracks\n  TRACKS:[KMLTrack];\n  /// Child multi-tracks\n  MULTI_TRACKS:[KMLMultiTrack];\n}\n\n/// TimeSpan\ntable KMLTimeSpan {\n  /// Begin time (ISO 8601)\n  BEGIN:string;\n  /// End time (ISO 8601)\n  END:string;\n}\n\n/// TimeStamp\ntable KMLTimeStamp {\n  /// Time (ISO 8601)\n  WHEN:string;\n}\n\n/// Extended data key-value pair\ntable KMLData {\n  /// Data name\n  NAME:string;\n  /// Display name\n  DISPLAY_NAME:string;\n  /// Data value\n  VALUE:string;\n}\n\n/// Schema simple field definition\ntable KMLSimpleField {\n  /// Field name\n  NAME:string;\n  /// Field type (xsd:string, xsd:int, xsd:float, etc.)\n  FIELD_TYPE:string;\n  /// Display name\n  DISPLAY_NAME:string;\n}\n\n/// Schema definition\ntable KMLSchema {\n  /// Schema name\n  NAME:string;\n  /// Schema ID\n  ID:string;\n  /// Simple field definitions\n  SIMPLE_FIELDS:[KMLSimpleField];\n}\n\n/// Simple data value for SchemaData\ntable KMLSimpleData {\n  /// Field name\n  NAME:string;\n  /// Field value\n  VALUE:string;\n}\n\n/// Schema data reference\ntable KMLSchemaData {\n  /// Schema URL reference\n  SCHEMA_URL:string;\n  /// Simple data values\n  SIMPLE_DATA:[KMLSimpleData];\n}\n\n/// LatLonQuad \u2014 four corner coordinates for ground overlay\ntable KMLLatLonQuad {\n  /// Four corner coordinates\n  COORDINATES:[KMLCoordinate];\n}\n\n/// Region \u2014 Level of Detail bounding region\ntable KMLRegion {\n  /// LatLonAltBox\n  LAT_LON_ALT_BOX:KMLLatLonAltBox;\n  /// Level of detail\n  LOD:KMLLod;\n}\n\n/// LatLonAltBox for Region\ntable KMLLatLonAltBox {\n  /// North latitude\n  NORTH:double;\n  /// South latitude\n  SOUTH:double;\n  /// East longitude\n  EAST:double;\n  /// West longitude\n  WEST:double;\n  /// Minimum altitude\n  MIN_ALTITUDE:double;\n  /// Maximum altitude\n  MAX_ALTITUDE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n}\n\n/// Level of Detail parameters\ntable KMLLod {\n  /// Minimum LOD pixels\n  MIN_LOD_PIXELS:double;\n  /// Maximum LOD pixels (-1 = infinite)\n  MAX_LOD_PIXELS:double;\n  /// Minimum fade extent\n  MIN_FADE_EXTENT:double;\n  /// Maximum fade extent\n  MAX_FADE_EXTENT:double;\n}\n\n/// Full Link element\ntable KMLLink {\n  /// URL\n  HREF:string;\n  /// Refresh mode\n  REFRESH_MODE:KMLRefreshMode;\n  /// Refresh interval in seconds\n  REFRESH_INTERVAL:double;\n  /// View refresh mode\n  VIEW_REFRESH_MODE:KMLViewRefreshMode;\n  /// View refresh time in seconds\n  VIEW_REFRESH_TIME:double;\n  /// View bound scale\n  VIEW_BOUND_SCALE:double;\n  /// View format string\n  VIEW_FORMAT:string;\n  /// HTTP query string\n  HTTP_QUERY:string;\n}\n\n/// ViewVolume for PhotoOverlay\ntable KMLViewVolume {\n  /// Left field of view angle\n  LEFT_FOV:double;\n  /// Right field of view angle\n  RIGHT_FOV:double;\n  /// Bottom field of view angle\n  BOTTOM_FOV:double;\n  /// Top field of view angle\n  TOP_FOV:double;\n  /// Near clipping plane\n  NEAR:double;\n}\n\n/// ImagePyramid for PhotoOverlay\ntable KMLImagePyramid {\n  /// Tile size in pixels\n  TILE_SIZE:int;\n  /// Maximum image width\n  MAX_WIDTH:int;\n  /// Maximum image height\n  MAX_HEIGHT:int;\n  /// Grid origin\n  GRID_ORIGIN:KMLGridOrigin;\n}\n\n/// Network link\ntable KMLNetworkLink {\n  /// Name of the network link\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Whether the link is visible\n  VISIBILITY:bool;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Link URL\n  HREF:string;\n  /// Refresh mode\n  REFRESH_MODE:KMLRefreshMode;\n  /// Refresh interval in seconds\n  REFRESH_INTERVAL:double;\n  /// View refresh mode\n  VIEW_REFRESH_MODE:KMLViewRefreshMode;\n  /// View refresh time in seconds\n  VIEW_REFRESH_TIME:double;\n  /// Whether to refresh on visibility change\n  REFRESH_VISIBILITY:bool;\n  /// Whether to fly to view on refresh\n  FLY_TO_VIEW:bool;\n  /// Full link element\n  LINK:KMLLink;\n}\n\n/// Screen overlay\ntable KMLScreenOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color\n  COLOR:string;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// Overlay X position\n  OVERLAY_XY_X:double;\n  /// Overlay Y position\n  OVERLAY_XY_Y:double;\n  /// Overlay X units\n  OVERLAY_XY_XUNITS:KMLUnits;\n  /// Overlay Y units\n  OVERLAY_XY_YUNITS:KMLUnits;\n  /// Screen X position\n  SCREEN_XY_X:double;\n  /// Screen Y position\n  SCREEN_XY_Y:double;\n  /// Screen X units\n  SCREEN_XY_XUNITS:KMLUnits;\n  /// Screen Y units\n  SCREEN_XY_YUNITS:KMLUnits;\n  /// Rotation X\n  ROTATION_XY_X:double;\n  /// Rotation Y\n  ROTATION_XY_Y:double;\n  /// Rotation X units\n  ROTATION_XY_XUNITS:KMLUnits;\n  /// Rotation Y units\n  ROTATION_XY_YUNITS:KMLUnits;\n  /// Size X\n  SIZE_X:double;\n  /// Size Y\n  SIZE_Y:double;\n  /// Size X units\n  SIZE_XUNITS:KMLUnits;\n  /// Size Y units\n  SIZE_YUNITS:KMLUnits;\n  /// Rotation in degrees\n  ROTATION:double;\n}\n\n/// Photo overlay\ntable KMLPhotoOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color\n  COLOR:string;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// Rotation\n  ROTATION:double;\n  /// View volume\n  VIEW_VOLUME:KMLViewVolume;\n  /// Image pyramid\n  IMAGE_PYRAMID:KMLImagePyramid;\n  /// Point for position\n  POINT:KMLPoint;\n  /// Shape\n  SHAPE:KMLShape;\n}\n\n/// Ground overlay\ntable KMLGroundOverlay {\n  /// Name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Icon/image URL\n  ICON_HREF:string;\n  /// Color in aabbggrr hex format\n  COLOR:string;\n  /// North latitude of bounding box\n  NORTH:double;\n  /// South latitude of bounding box\n  SOUTH:double;\n  /// East longitude of bounding box\n  EAST:double;\n  /// West longitude of bounding box\n  WEST:double;\n  /// Rotation in degrees\n  ROTATION:double;\n  /// Altitude in meters\n  ALTITUDE:double;\n  /// Altitude mode\n  ALTITUDE_MODE:KMLAltitudeMode;\n  /// Draw order\n  DRAW_ORDER:int;\n  /// LatLonQuad (non-rectangular overlay)\n  LAT_LON_QUAD:KMLLatLonQuad;\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Region\n  REGION:KMLRegion;\n}\n\n/// Update element for NetworkLinkControl\ntable KMLUpdate {\n  /// Target href\n  TARGET_HREF:string;\n  /// Change KML (raw)\n  CHANGE_KML:string;\n  /// Create KML (raw)\n  CREATE_KML:string;\n  /// Delete KML (raw)\n  DELETE_KML:string;\n}\n\n/// NetworkLinkControl\ntable KMLNetworkLinkControl {\n  /// Minimum refresh period in seconds\n  MIN_REFRESH_PERIOD:double;\n  /// Maximum session length in seconds\n  MAX_SESSION_LENGTH:double;\n  /// Cookie\n  COOKIE:string;\n  /// Message to display\n  MESSAGE:string;\n  /// Link name override\n  LINK_NAME:string;\n  /// Link description override\n  LINK_DESCRIPTION:string;\n  /// Link snippet override\n  LINK_SNIPPET:string;\n  /// Expiration time (ISO 8601)\n  EXPIRES:string;\n  /// Update\n  UPDATE:KMLUpdate;\n  /// LookAt\n  LOOK_AT:KMLLookAt;\n  /// Camera\n  CAMERA:KMLCamera;\n}\n\n/// gx:FlyTo tour primitive\ntable KMLFlyTo {\n  /// Duration in seconds\n  DURATION:double;\n  /// Fly-to mode\n  FLY_TO_MODE:KMLFlyToMode;\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n}\n\n/// gx:Wait tour primitive\ntable KMLWait {\n  /// Duration in seconds\n  DURATION:double;\n}\n\n/// gx:AnimatedUpdate tour primitive\ntable KMLAnimatedUpdate {\n  /// Duration in seconds\n  DURATION:double;\n  /// Delayed start in seconds\n  DELAYED_START:double;\n  /// Update\n  UPDATE:KMLUpdate;\n}\n\n/// gx:TourControl tour primitive\ntable KMLTourControl {\n  /// Play mode (pause)\n  PLAY_MODE:string;\n}\n\n/// gx:SoundCue tour primitive\ntable KMLSoundCue {\n  /// Audio file URL\n  HREF:string;\n  /// Delayed start in seconds\n  DELAYED_START:double;\n}\n\n/// Tour primitive (union-like)\ntable KMLTourPrimitive {\n  /// FlyTo\n  FLY_TO:KMLFlyTo;\n  /// Wait\n  WAIT:KMLWait;\n  /// AnimatedUpdate\n  ANIMATED_UPDATE:KMLAnimatedUpdate;\n  /// TourControl\n  TOUR_CONTROL:KMLTourControl;\n  /// SoundCue\n  SOUND_CUE:KMLSoundCue;\n}\n\n/// gx:Playlist\ntable KMLPlaylist {\n  /// Tour primitives\n  PRIMITIVES:[KMLTourPrimitive];\n}\n\n/// gx:Tour\ntable KMLTour {\n  /// Tour name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility\n  VISIBILITY:bool;\n  /// Playlist\n  PLAYLIST:KMLPlaylist;\n}\n\n/// Placemark feature\ntable KMLPlacemark {\n  /// Placemark name\n  NAME:string;\n  /// Description (may contain HTML)\n  DESCRIPTION:string;\n  /// Visibility flag\n  VISIBILITY:bool;\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Inline style\n  STYLE:KMLStyle;\n  /// Snippet (short description)\n  SNIPPET:string;\n  /// Whether open in tree view\n  OPEN:bool;\n  /// Address\n  ADDRESS:string;\n  /// Point geometry\n  POINT:KMLPoint;\n  /// LineString geometry\n  LINE_STRING:KMLLineString;\n  /// Polygon geometry\n  POLYGON:KMLPolygon;\n  /// LinearRing geometry (standalone)\n  LINEAR_RING:KMLLinearRing;\n  /// MultiGeometry\n  MULTI_GEOMETRY:KMLMultiGeometry;\n  /// 3D Model\n  MODEL:KMLModel;\n  /// gx:Track\n  TRACK:KMLTrack;\n  /// gx:MultiTrack\n  MULTI_TRACK:KMLMultiTrack;\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n  /// TimeSpan\n  TIME_SPAN:KMLTimeSpan;\n  /// TimeStamp\n  TIME_STAMP:KMLTimeStamp;\n  /// Extended data\n  EXTENDED_DATA:[KMLData];\n  /// Schema data\n  SCHEMA_DATA:KMLSchemaData;\n  /// Region\n  REGION:KMLRegion;\n  /// StyleMap (inline)\n  STYLE_MAP:KMLStyleMap;\n}\n\n/// Folder container\ntable KMLFolder {\n  /// Folder name\n  NAME:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Visibility flag\n  VISIBILITY:bool;\n  /// Whether folder is open in tree view\n  OPEN:bool;\n  /// Placemarks in this folder\n  PLACEMARKS:[KMLPlacemark];\n  /// Sub-folders\n  FOLDERS:[KMLFolder];\n  /// Network links\n  NETWORK_LINKS:[KMLNetworkLink];\n  /// Ground overlays\n  GROUND_OVERLAYS:[KMLGroundOverlay];\n  /// Shared styles\n  STYLES:[KMLStyle];\n  /// Style maps\n  STYLE_MAPS:[KMLStyleMap];\n  /// Screen overlays\n  SCREEN_OVERLAYS:[KMLScreenOverlay];\n  /// Photo overlays\n  PHOTO_OVERLAYS:[KMLPhotoOverlay];\n  /// Tours\n  TOURS:[KMLTour];\n  /// Style URL reference\n  STYLE_URL:string;\n  /// Region\n  REGION:KMLRegion;\n  /// Extended data\n  EXTENDED_DATA:[KMLData];\n  /// LookAt viewpoint\n  LOOK_AT:KMLLookAt;\n  /// Camera viewpoint\n  CAMERA:KMLCamera;\n  /// TimeSpan\n  TIME_SPAN:KMLTimeSpan;\n  /// TimeStamp\n  TIME_STAMP:KMLTimeStamp;\n}\n\n/// KML Document\ntable KML {\n  /// Document name\n  NAME:string;\n  /// Document description\n  DESCRIPTION:string;\n  /// Whether document is visible\n  VISIBILITY:bool;\n  /// Whether document is open in tree view\n  OPEN:bool;\n  /// Shared styles\n  STYLES:[KMLStyle];\n  /// Style maps\n  STYLE_MAPS:[KMLStyleMap];\n  /// Top-level placemarks\n  PLACEMARKS:[KMLPlacemark];\n  /// Top-level folders\n  FOLDERS:[KMLFolder];\n  /// Network links\n  NETWORK_LINKS:[KMLNetworkLink];\n  /// Ground overlays\n  GROUND_OVERLAYS:[KMLGroundOverlay];\n  /// Schemas\n  SCHEMAS:[KMLSchema];\n  /// Screen overlays\n  SCREEN_OVERLAYS:[KMLScreenOverlay];\n  /// Photo overlays\n  PHOTO_OVERLAYS:[KMLPhotoOverlay];\n  /// Tours\n  TOURS:[KMLTour];\n  /// NetworkLinkControl\n  NETWORK_LINK_CONTROL:KMLNetworkLinkControl;\n}\n\nroot_type KML;\nfile_identifier "$KML";',
       files: [
         "./dist/KML/KML.sw.tar.gz",
         "./dist/KML/KML.py.tar.gz",
@@ -5655,7 +5662,7 @@ file_identifier "$RFM";`,
       ]
     },
     CMT: {
-      IDL: "// Hash: 20ac40536507a3bf565bb1cdf7d823adef6541dc5da7169454f9a5e24d3490d2\n// Version: 1.155.0\n// -----------------------------------END_HEADER\ninclude \"../SCX/main.fbs\";\n\n/// What a set of commission terms applies to.\nenum commissionScope : byte {\n  /// A single listing\n  Listing,\n  /// A whole store's default terms\n  Store,\n  /// A publisher's default terms\n  Publisher\n}\n\n/// How the commission split is enforced.\nenum commissionEnforcement : byte {\n  /// Enforced on-chain by an established splitter contract/program: the split\n  /// executes when the buyer pays the splitter. No off-chain or manual\n  /// settlement \u2014 the platform collects commission purely by the buyer's\n  /// payment routing through the splitter contract.\n  SplitterContract,\n  /// Provider-attested off-contract split, used only where no splitter exists\n  /// (e.g. BTC / DirectAddress)\n  ProviderAttested\n}\n\n/// Role a split recipient plays in the revenue division.\nenum splitRole : byte {\n  /// The module/flow publisher (vendor)\n  Publisher,\n  /// The store operator platform (e.g. SpaceAware) \u2014 the commission recipient\n  Platform,\n  /// A referrer who drove the sale\n  Referrer,\n  /// A charitable recipient\n  Charity\n}\n\n/// One recipient's share of a sale, expressed in basis points.\ntable RevenueSplit {\n  /// The payout recipient\n  RECIPIENT: SplitRecipient;\n  /// Share in basis points (1/100 of a percent); all splits plus the platform\n  /// commission sum to 10000\n  BPS: uint16;\n  /// The role this recipient plays\n  ROLE: splitRole;\n}\n\n/// Commission Terms / Revenue Split. Binds a listing, store, or publisher to a\n/// platform commission and the on-chain split that enforces it. This record\n/// makes \"the platform earns on every transaction\" auditable and portable\n/// across store deployments. Commission is realized purely by the buyer's\n/// payment routing through the on-chain splitter contract described in\n/// CONTRACTS \u2014 never by a manual or off-chain settlement step.\ntable CMT {\n  /// Stable terms identifier, referenced by `$PUR`/`$ACL`/listings\n  TERMS_ID: string (required);\n  /// What these terms cover\n  SCOPE: commissionScope;\n  /// The `$PLG.PLUGIN_ID` / store id / publisher xpub the terms apply to\n  TARGET_ID: string;\n  /// Platform commission in basis points (e.g. 500 = 5%)\n  COMMISSION_BPS: uint16;\n  /// Recipient splits; each in basis points, summing with the commission to 10000\n  SPLITS: [RevenueSplit];\n  /// The platform's per-chain payout identity (the commission recipient)\n  PLATFORM_RECIPIENT: SplitRecipient;\n  /// How the split is enforced (on-chain splitter vs provider-attested)\n  ENFORCEMENT: commissionEnforcement;\n  /// The established splitter contract(s)/program(s) that perform the split,\n  /// one per accepted chain/asset\n  CONTRACTS: [SCX];\n  /// Unix ms when these terms take effect\n  EFFECTIVE_AT: uint64;\n  /// Unix ms when these terms expire, or 0 for no expiry\n  EXPIRES_AT: uint64;\n  /// Ed25519 signature by the store operator `$EPM`\n  SIGNATURE: [ubyte];\n}\n\nroot_type CMT;\nfile_identifier \"$CMT\";",
+      IDL: "// Hash: 7b970aa0a2b1040e79ef168bb739e273c2d4980ee549448aab3861d7189560aa\n// Version: 1.155.1\n// -----------------------------------END_HEADER\ninclude \"../SCX/main.fbs\";\n\n/// What a set of commission terms applies to.\nenum commissionScope : byte {\n  /// A single listing\n  Listing,\n  /// A whole store's default terms\n  Store,\n  /// A publisher's default terms\n  Publisher\n}\n\n/// How the commission split is enforced.\nenum commissionEnforcement : byte {\n  /// Enforced on-chain by an established splitter contract/program: the split\n  /// executes when the buyer pays the splitter. No off-chain or manual\n  /// settlement \u2014 the platform collects commission purely by the buyer's\n  /// payment routing through the splitter contract.\n  SplitterContract,\n  /// Provider-attested off-contract split, used only where no splitter exists\n  /// (e.g. BTC / DirectAddress)\n  ProviderAttested\n}\n\n/// Role a split recipient plays in the revenue division.\nenum splitRole : byte {\n  /// The module/flow publisher (vendor)\n  Publisher,\n  /// The store operator platform \u2014 the commission recipient\n  Platform,\n  /// A referrer who drove the sale\n  Referrer,\n  /// A charitable recipient\n  Charity\n}\n\n/// One recipient's share of a sale, expressed in basis points.\ntable RevenueSplit {\n  /// The payout recipient\n  RECIPIENT: SplitRecipient;\n  /// Share in basis points (1/100 of a percent); all splits plus the platform\n  /// commission sum to 10000\n  BPS: uint16;\n  /// The role this recipient plays\n  ROLE: splitRole;\n}\n\n/// Commission Terms / Revenue Split. Binds a listing, store, or publisher to a\n/// platform commission and the on-chain split that enforces it. This record\n/// makes \"the platform earns on every transaction\" auditable and portable\n/// across store deployments. Commission is realized purely by the buyer's\n/// payment routing through the on-chain splitter contract described in\n/// CONTRACTS \u2014 never by a manual or off-chain settlement step.\ntable CMT {\n  /// Stable terms identifier, referenced by `$PUR`/`$ACL`/listings\n  TERMS_ID: string (required);\n  /// What these terms cover\n  SCOPE: commissionScope;\n  /// The `$PLG.PLUGIN_ID` / store id / publisher xpub the terms apply to\n  TARGET_ID: string;\n  /// Platform commission in basis points (e.g. 500 = 5%)\n  COMMISSION_BPS: uint16;\n  /// Recipient splits; each in basis points, summing with the commission to 10000\n  SPLITS: [RevenueSplit];\n  /// The platform's per-chain payout identity (the commission recipient)\n  PLATFORM_RECIPIENT: SplitRecipient;\n  /// How the split is enforced (on-chain splitter vs provider-attested)\n  ENFORCEMENT: commissionEnforcement;\n  /// The established splitter contract(s)/program(s) that perform the split,\n  /// one per accepted chain/asset\n  CONTRACTS: [SCX];\n  /// Unix ms when these terms take effect\n  EFFECTIVE_AT: uint64;\n  /// Unix ms when these terms expire, or 0 for no expiry\n  EXPIRES_AT: uint64;\n  /// Ed25519 signature by the store operator `$EPM`\n  SIGNATURE: [ubyte];\n}\n\nroot_type CMT;\nfile_identifier \"$CMT\";",
       files: [
         "./dist/CMT/CMT.sw.tar.gz",
         "./dist/CMT/CMT.py.tar.gz",
@@ -5945,7 +5952,7 @@ file_identifier "$MDS";`,
       ]
     },
     PLG: {
-      IDL: '// Hash: 251c86bc34bebb44a958191e245279f57d7c0ad7145fe5db7d0236f863b5a7a3\n// Version: 1.0.14\n// -----------------------------------END_HEADER\ninclude "../TAB/main.fbs";\n\n/// Plugin type category\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader,\n  /// Parses raw upstream bytes into canonical SDS records\n  Parser,\n  /// Validates records (integrity, physical bounds, continuity)\n  Validator,\n  /// Interpolates ephemeris / state-vector records\n  Interpolator,\n  /// Exports records to external formats (CSV, etc.)\n  Exporter,\n  /// Foundational math / utility library module\n  Foundation,\n  /// Node infrastructure (runtime, delivery, registry)\n  Infrastructure,\n  /// Module-delivery licensing / key authority\n  Licensing,\n  /// Storefront listing / discovery\n  Storefront,\n  /// Publication: PNM signing + pub/sub announcement\n  Publisher,\n  /// Basilisk astrodynamics simulation module\n  Basilisk,\n  /// Maneuver planning, targeting and trajectory optimization\n  Maneuver,\n  /// A composed flow published as a single loadable module. The unit is a\n  /// graph of other modules, not a leaf algorithm.\n  Flow,\n  /// No family stated. Sits at the end of the enum rather than at 0 because\n  /// this enum is append-only and `Sensor` already holds 0; it exists so a\n  /// record can distinguish "the provider did not say" from "Sensor". A\n  /// consumer MUST render an `Unspecified` module as ungrouped, never as a\n  /// member of any family.\n  Unspecified\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration\ntable PluginCapability {\n  /// Capability name, e.g., "gpu_compute", "wasm_simd"\n  NAME: string;\n  /// Capability version\n  VERSION: string;\n  /// Whether this capability is required\n  REQUIRED: bool;\n}\n\n/// Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON,\n  /// Batch record ingest with source provenance tags (provider id, source\n  /// name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a\n  /// single record without source attribution. Hosts gate\n  /// storage.ingest_with_source on this capability specifically.\n  STORAGE_INGEST\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.\ntable PLGAcceptedTypeSet {\n  /// Stable type-set identifier within the port.\n  SET_ID: string (required);\n  /// Specific FlatBuffer types accepted by the set.\n  ALLOWED_TYPES: [FlatBufferTypeRef];\n  /// Wire formats this set accepts. If ALIGNED_BINARY is present,\n  /// FLATBUFFER MUST also be present for the same schemas.\n  ALLOWED_WIRE_FORMATS: [payloadWireFormat];\n  /// Human-readable explanation of the accepted schema family.\n  DESCRIPTION: string;\n}\n\n/// One input or output port on a method.\ntable PLGPortManifest {\n  /// Stable port identifier within the method.\n  PORT_ID: string (required);\n  /// Human-readable name for UIs.\n  DISPLAY_NAME: string;\n  /// Type sets accepted on this port.\n  ACCEPTED_TYPE_SETS: [PLGAcceptedTypeSet];\n  /// Minimum number of streams that must be connected.\n  MIN_STREAMS: uint16 = 1;\n  /// Maximum number of streams that may be connected.\n  MAX_STREAMS: uint16 = 1;\n  /// Whether the port must be connected for invocation.\n  REQUIRED: bool = true;\n  /// Optional human-readable description.\n  DESCRIPTION: string;\n}\n\n/// One host capability dependency (richer form of PluginCapability).\ntable PLGHostCapability {\n  CAPABILITY: hostCapabilityKind;\n  SCOPE: string;\n  REQUIRED: bool = true;\n  DESCRIPTION: string;\n}\n\n/// Timer entry declared by a plugin.\ntable PLGTimerSpec {\n  TIMER_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  DEFAULT_INTERVAL_MS: uint64;\n  DESCRIPTION: string;\n}\n\n/// Protocol handler declared by a plugin.\ntable PLGProtocolSpec {\n  PROTOCOL_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  OUTPUT_PORT_ID: string;\n  DESCRIPTION: string;\n  WIRE_ID: string;\n  TRANSPORT_KIND: string;\n  ROLE: string;\n  SPEC_URI: string;\n  AUTO_INSTALL: bool = true;\n  ADVERTISE: bool = false;\n  DISCOVERY_KEY: string;\n  DEFAULT_PORT: uint16;\n  REQUIRE_SECURE_TRANSPORT: bool = false;\n}\n\n/// Build artifact emitted by the plugin toolchain.\ntable PLGBuildArtifact {\n  ARTIFACT_ID: string (required);\n  KIND: string;\n  PATH: string (required);\n  TARGET: string;\n  ENTRY_SYMBOL: string;\n}\n\n/// Canonical method declaration.\ntable PLGMethodManifest {\n  METHOD_ID: string (required);\n  DISPLAY_NAME: string;\n  INPUT_PORTS: [PLGPortManifest];\n  OUTPUT_PORTS: [PLGPortManifest];\n  MAX_BATCH: uint32 = 1;\n  DRAIN_POLICY: drainBehavior = DRAIN_UNTIL_YIELD;\n  DESCRIPTION: string;\n}\n\n/// Plugin dependency on another plugin\ntable PluginDependency {\n  /// Plugin ID of the dependency\n  PLUGIN_ID: string;\n  /// Minimum version required (semver)\n  MIN_VERSION: string;\n  /// Maximum version allowed (optional)\n  MAX_VERSION: string;\n}\n\n/// Plugin entry point function definition\ntable EntryFunction {\n  /// Function name as exported from WASM\n  NAME: string (required);\n  /// Human-readable description\n  DESCRIPTION: string;\n  /// Input parameter types (FlatBuffer schema names)\n  INPUT_SCHEMAS: [string];\n  /// Output type (FlatBuffer schema name)\n  OUTPUT_SCHEMA: string;\n}\n\n/// One node in a composed flow graph. A degenerate flow IS a module: a leaf\n/// module leaves the flow-graph fields on PLG empty; a composed flow populates\n/// them. This is how flows reuse the module schema rather than a separate one.\ntable PLGFlowNode {\n  /// Stable node identifier within this flow\n  NODE_ID: string (required);\n  /// Plugin id of the module this node invokes\n  PLUGIN_ID: string (required);\n  /// Method id invoked on the module\n  METHOD_ID: string;\n  /// Node kind, e.g. "transform", "trigger", "capability"\n  KIND: string;\n  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an\n  /// independently instantiated signed WASM node, and "host-capability" = a\n  /// generic host adapter.\n  DISPATCH_MODEL: string;\n  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)\n  CONFIG: [ubyte];\n  /// Editor layout X position\n  UI_X: float;\n  /// Editor layout Y position\n  UI_Y: float;\n}\n\n/// Compile-time routing decision for an edge. The aligned option is legal only\n/// when the producer and consumer share the declared arena and the runtime can\n/// prove bounds, alignment, ownership, mutability, and lifetime.\nenum flowEdgeRoutePolicy : ubyte {\n  CANONICAL_ONLY,\n  ALIGNED_SHARED_ARENA_OR_CANONICAL\n}\n\n/// Exact validated SDS and representation contract bound into a signed flow\n/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;\n/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.\ntable PLGFlowEdgeContract {\n  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may\n  /// be opaque by design (see OPAQUE), and a signer must never be forced to\n  /// invent an identity to satisfy the schema. A contract MUST carry exactly\n  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with\n  /// both, is invalid and MUST be rejected by the compiler that signs the flow.\n  CANONICAL_TYPE: FlatBufferTypeRef;\n  ALIGNED_TYPE: FlatBufferTypeRef;\n  CANONICAL_FALLBACK_AVAILABLE: bool = true;\n  ALIGNED_ELIGIBLE: bool = false;\n  ROUTE_POLICY: flowEdgeRoutePolicy = CANONICAL_ONLY;\n  /// The edge carries bytes with no SDS identity BY DESIGN \u2014 an\n  /// application-blind host-capability adapter (an HTTP body, a raw file\n  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate\n  /// signed assertion of opacity, which is why it is an explicit flag rather\n  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable\n  /// from a declared-opaque one. An opaque edge is ineligible for the aligned\n  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.\n  OPAQUE: bool = false;\n}\n\n/// One directed edge wiring a producer output port to a consumer input port.\ntable PLGFlowEdge {\n  /// Stable edge identifier\n  EDGE_ID: string;\n  /// Source node id\n  FROM_NODE_ID: string (required);\n  /// Source output port id\n  FROM_PORT_ID: string (required);\n  /// Destination node id\n  TO_NODE_ID: string (required);\n  /// Destination input port id\n  TO_PORT_ID: string (required);\n  /// Exact identity/layout and compile-time representation policy. NOT\n  /// `required`: marking a NEW field of an EXISTING table required makes the\n  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,\n  /// which is a breaking change to a ratified standard. Presence is enforced\n  /// where it belongs \u2014 the flow compiler MUST refuse to SIGN a flow whose\n  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge\n  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.\n  CONTRACT: PLGFlowEdgeContract;\n}\n\n/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.\ntable PLGFlowTrigger {\n  /// Stable trigger identifier\n  TRIGGER_ID: string (required);\n  /// Trigger kind, e.g. "timer", "http"\n  KIND: string;\n  /// Trigger source, e.g. "host-cron"\n  SOURCE: string;\n  /// Default firing interval in milliseconds (timer triggers)\n  DEFAULT_INTERVAL_MS: uint64;\n  /// Mounted HTTP path (http triggers)\n  HTTP_PATH: string;\n}\n\n/// Binds a trigger to the node + input port it delivers its frame to.\ntable PLGFlowTriggerBinding {\n  /// Trigger identifier\n  TRIGGER_ID: string (required);\n  /// Target node id\n  TARGET_NODE_ID: string (required);\n  /// Target input port id\n  TARGET_PORT_ID: string (required);\n}\n\n/// Plugin Manifest - canonical signed storefront and WASM distribution record\ntable PLG {\n  /// Unique identifier for the plugin\n  PLUGIN_ID: string (required);\n  /// Human-readable plugin name\n  NAME: string (required);\n  /// Plugin version (semver format)\n  VERSION: string (required);\n  /// Detailed description of plugin functionality\n  DESCRIPTION: string;\n  /// Short marketing summary shown in storefront listings\n  TAGLINE: string;\n  /// Type/category of the plugin\n  PLUGIN_TYPE: pluginCategory;\n  /// Human-readable publisher or organization name\n  PUBLISHER_NAME: string;\n  /// Publisher handle or username\n  PUBLISHER_HANDLE: string;\n  /// Canonical publisher website\n  PUBLISHER_URL: string;\n  /// Support or helpdesk URL for this plugin\n  SUPPORT_URL: string;\n  /// Search and categorization tags for discovery\n  TAGS: [string];\n  /// Short feature bullets highlighted in storefront listings\n  FEATURES: [string];\n  /// Screenshot URLs showing the plugin in use\n  SCREENSHOT_URLS: [string];\n  /// Optional hero/banner image URL for the listing\n  BANNER_URL: string;\n\n  /// ABI version for compatibility checking\n  ABI_VERSION: uint32 = 1;\n\n  /// SHA256 hash of the decrypted WASM binary\n  WASM_HASH: [ubyte];\n  /// Size of decrypted WASM binary in bytes\n  WASM_SIZE: uint64;\n  /// IPFS CID of the encrypted WASM binary\n  WASM_CID: string;\n  /// SHA256 hash of the encrypted delivery artifact bytes\n  ENCRYPTED_WASM_HASH: [ubyte];\n  /// Size of the encrypted delivery artifact in bytes\n  ENCRYPTED_WASM_SIZE: uint64;\n\n  /// Entry point functions exported by the plugin\n  ENTRY_FUNCTIONS: [EntryFunction];\n  /// FlatBuffer schemas required by this plugin\n  REQUIRED_SCHEMAS: [string];\n  /// Other plugins this depends on\n  DEPENDENCIES: [PluginDependency];\n  /// Capabilities provided by this plugin\n  CAPABILITIES: [PluginCapability];\n\n  /// Peer ID of the plugin provider\n  PROVIDER_PEER_ID: string;\n  /// IPFS CID of provider\'s EPM (Entity Profile Message)\n  PROVIDER_EPM_CID: string;\n\n  /// Whether the WASM binary is encrypted\n  ENCRYPTED: bool = true;\n  /// Canonical required scope for grant issuance\n  REQUIRED_SCOPE: string;\n  /// Provider-local identifier for the module content key\n  KEY_ID: string;\n  /// Maximum grant timeout allowed for this module publication\n  MAX_GRANT_TIMEOUT_MS: uint64;\n  /// Minimum permissions required to run\n  MIN_PERMISSIONS: [string];\n\n  /// Unix timestamp when plugin was created\n  CREATED_AT: uint64;\n  /// Unix timestamp when plugin was last updated\n  UPDATED_AT: uint64;\n  /// URL to plugin documentation\n  DOCUMENTATION_URL: string;\n  /// URL to plugin changelog or release notes\n  CHANGELOG_URL: string;\n  /// URL to plugin icon/logo\n  ICON_URL: string;\n  /// License identifier (SPDX format)\n  LICENSE: string;\n  /// Commercial model used for storefront purchase flows\n  PAYMENT_MODEL: purchaseTier = Free;\n  /// Price in USD cents for one-time purchase or subscription period\n  PRICE_USD_CENTS: uint32;\n  /// Subscription billing period length in days\n  SUBSCRIPTION_PERIOD_DAYS: uint32;\n  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"\n  ACCEPTED_PAYMENT_METHODS: [string];\n  /// Storefront publication state for this manifest version\n  LISTING_STATUS: publicationState = Public;\n\n  /// Ed25519 signature from provider over manifest\n  SIGNATURE: [ubyte];\n\n  /// Canonical invoke surfaces this artifact exposes. A single plugin\n  /// MAY list both DIRECT and COMMAND when it supports both.\n  INVOKE_SURFACES: [invokeSurfaceKind];\n  /// Rich per-method invoke manifests (port shape, drain semantics,\n  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim\n  /// name+input_schemas+output_schema summary; METHODS carries the full\n  /// invoke-surface detail including aligned-binary advertisement.\n  METHODS: [PLGMethodManifest];\n  /// Enum-typed host capability dependencies (richer than CAPABILITIES,\n  /// which is string-tagged metadata).\n  HOST_CAPABILITIES: [PLGHostCapability];\n  /// Timer declarations for scheduled invocations.\n  TIMERS: [PLGTimerSpec];\n  /// Protocol handler declarations.\n  PROTOCOLS: [PLGProtocolSpec];\n  /// FlatBuffer schemas this plugin depends on at the invoke surface.\n  SCHEMAS_USED: [FlatBufferTypeRef];\n  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).\n  BUILD_ARTIFACTS: [PLGBuildArtifact];\n  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").\n  RUNTIME_TARGETS: [string];\n  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:\n  /// a requester whose verified EPM binds an xpub in this list is granted (PKI\n  /// identity authorization). Empty list = no xpub allowlist gate.\n  ALLOWED_XPUBS: [string];\n\n  /// Composition graph (a degenerate flow is a module): the nodes this flow\n  /// invokes. Empty for a leaf module; populated for a composed flow. The flow\n  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.\n  FLOW_NODES: [PLGFlowNode];\n  /// Composition-graph edges wiring node output ports to input ports.\n  FLOW_EDGES: [PLGFlowEdge];\n  /// Flow triggers (timer/http) that start a drain.\n  FLOW_TRIGGERS: [PLGFlowTrigger];\n  /// Bindings from triggers to the node + input port they deliver to.\n  FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];\n}\n\nroot_type PLG;\nfile_identifier "$PLG";',
+      IDL: '// Hash: 21ab7f73650ba93974e467e91256dda72cfa8dfaa84bef0360d8b4e4ed9ca019\n// Version: 1.0.15\n// -----------------------------------END_HEADER\ninclude "../TAB/main.fbs";\n\n/// Plugin type category\nenum pluginCategory : byte {\n  /// Sensor simulation and analysis\n  Sensor,\n  /// Orbital propagation algorithms\n  Propagator,\n  /// Custom rendering/visualization\n  Renderer,\n  /// Data analysis and processing\n  Analysis,\n  /// External data source integration\n  DataSource,\n  /// Electronic warfare simulation\n  EW,\n  /// Communications modeling\n  Comms,\n  /// Physics simulation\n  Physics,\n  /// GLSL shader plugins for custom visualization\n  Shader,\n  /// Parses raw upstream bytes into canonical SDS records\n  Parser,\n  /// Validates records (integrity, physical bounds, continuity)\n  Validator,\n  /// Interpolates ephemeris / state-vector records\n  Interpolator,\n  /// Exports records to external formats (CSV, etc.)\n  Exporter,\n  /// Foundational math / utility library module\n  Foundation,\n  /// Node infrastructure (runtime, delivery, registry)\n  Infrastructure,\n  /// Module-delivery licensing / key authority\n  Licensing,\n  /// Storefront listing / discovery\n  Storefront,\n  /// Publication: PNM signing + pub/sub announcement\n  Publisher,\n  /// Astrodynamics simulation and dynamics-modelling module family. The member\n  /// identifier is a legacy vocabulary key retained for wire and manifest\n  /// compatibility; renaming it is an owner-gated breaking change.\n  Basilisk,\n  /// Maneuver planning, targeting and trajectory optimization\n  Maneuver,\n  /// A composed flow published as a single loadable module. The unit is a\n  /// graph of other modules, not a leaf algorithm.\n  Flow,\n  /// No family stated. Sits at the end of the enum rather than at 0 because\n  /// this enum is append-only and `Sensor` already holds 0; it exists so a\n  /// record can distinguish "the provider did not say" from "Sensor". A\n  /// consumer MUST render an `Unspecified` module as ungrouped, never as a\n  /// member of any family.\n  Unspecified\n}\n\n/// Storefront payment model for the plugin listing\nenum purchaseTier : byte {\n  /// No payment required\n  Free,\n  /// Single one-time purchase\n  OneTime,\n  /// Recurring subscription purchase\n  Subscription\n}\n\n/// Publication visibility for the plugin listing\nenum publicationState : byte {\n  /// Discoverable in public storefront listings\n  Public,\n  /// Addressable directly but hidden from public browse surfaces\n  Unlisted,\n  /// No longer offered for new installs or purchases\n  Retired\n}\n\n/// Plugin capability declaration\ntable PluginCapability {\n  /// Capability name, e.g., "gpu_compute", "wasm_simd"\n  NAME: string;\n  /// Capability version\n  VERSION: string;\n  /// Whether this capability is required\n  REQUIRED: bool;\n}\n\n/// Canonical invoke surfaces a plugin artifact can expose. A single\n/// artifact can support multiple.\nenum invokeSurfaceKind : ubyte {\n  /// Direct ABI \u2014 host calls `plugin_invoke_stream` in-process.\n  DIRECT,\n  /// Command surface \u2014 envelope is queued by a runtime host.\n  COMMAND\n}\n\n/// Drain semantics for a method that operates over queued stream frames.\n/// Enum name is deliberately distinct from any camelCase field name\n/// (`DRAIN_POLICY` would collide otherwise).\nenum drainBehavior : ubyte {\n  /// One invocation consumes exactly one input frame.\n  SINGLE_SHOT,\n  /// Invocation drains queued work until it voluntarily yields.\n  DRAIN_UNTIL_YIELD,\n  /// Invocation drains to empty before returning.\n  DRAIN_TO_EMPTY\n}\n\n/// Host capability classes a plugin may request. Extends the simpler\n/// `PluginCapability` (which is name+version metadata) with the richer\n/// enum-based surface that runtime hosts gate on.\nenum hostCapabilityKind : ushort {\n  CLOCK,\n  RANDOM,\n  LOGGING,\n  TIMERS,\n  PUBSUB,\n  PROTOCOL_DIAL,\n  PROTOCOL_HANDLE,\n  STORAGE_QUERY,\n  SCENE_ACCESS,\n  ENTITY_ACCESS,\n  RENDER_HOOKS,\n  HTTP,\n  FILESYSTEM,\n  PIPE,\n  NETWORK,\n  DATABASE,\n  STORAGE_ADAPTER,\n  STORAGE_WRITE,\n  WALLET_SIGN,\n  IPFS,\n  TLS,\n  MQTT,\n  WEBSOCKET,\n  TCP,\n  UDP,\n  PROCESS_EXEC,\n  CONTEXT_READ,\n  CONTEXT_WRITE,\n  CRYPTO_HASH,\n  CRYPTO_SIGN,\n  CRYPTO_VERIFY,\n  CRYPTO_ENCRYPT,\n  CRYPTO_DECRYPT,\n  CRYPTO_KEY_AGREEMENT,\n  CRYPTO_KDF,\n  SCHEDULE_CRON,\n  /// Batch record ingest with source provenance tags (provider id, source\n  /// name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a\n  /// single record without source attribution. Hosts gate\n  /// storage.ingest_with_source on this capability specifically.\n  STORAGE_INGEST\n}\n\n/// Accepted schema family for a port. When a port accepts multiple wire\n/// formats (canonical FlatBuffer + aligned-binary), each ALLOWED_TYPE\n/// entry carries its own TAB.FlatBufferTypeRef with the schema identity,\n/// and the enclosing PLGPortManifest advertises both wire formats via\n/// ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises\n/// aligned-binary MUST also advertise the canonical flatbuffer fallback\n/// for the same schema and file identifier in the same set.\ntable PLGAcceptedTypeSet {\n  /// Stable type-set identifier within the port.\n  SET_ID: string (required);\n  /// Specific FlatBuffer types accepted by the set.\n  ALLOWED_TYPES: [FlatBufferTypeRef];\n  /// Wire formats this set accepts. If ALIGNED_BINARY is present,\n  /// FLATBUFFER MUST also be present for the same schemas.\n  ALLOWED_WIRE_FORMATS: [payloadWireFormat];\n  /// Human-readable explanation of the accepted schema family.\n  DESCRIPTION: string;\n}\n\n/// One input or output port on a method.\ntable PLGPortManifest {\n  /// Stable port identifier within the method.\n  PORT_ID: string (required);\n  /// Human-readable name for UIs.\n  DISPLAY_NAME: string;\n  /// Type sets accepted on this port.\n  ACCEPTED_TYPE_SETS: [PLGAcceptedTypeSet];\n  /// Minimum number of streams that must be connected.\n  MIN_STREAMS: uint16 = 1;\n  /// Maximum number of streams that may be connected.\n  MAX_STREAMS: uint16 = 1;\n  /// Whether the port must be connected for invocation.\n  REQUIRED: bool = true;\n  /// Optional human-readable description.\n  DESCRIPTION: string;\n}\n\n/// One host capability dependency (richer form of PluginCapability).\ntable PLGHostCapability {\n  CAPABILITY: hostCapabilityKind;\n  SCOPE: string;\n  REQUIRED: bool = true;\n  DESCRIPTION: string;\n}\n\n/// Timer entry declared by a plugin.\ntable PLGTimerSpec {\n  TIMER_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  DEFAULT_INTERVAL_MS: uint64;\n  DESCRIPTION: string;\n}\n\n/// Protocol handler declared by a plugin.\ntable PLGProtocolSpec {\n  PROTOCOL_ID: string (required);\n  METHOD_ID: string (required);\n  INPUT_PORT_ID: string;\n  OUTPUT_PORT_ID: string;\n  DESCRIPTION: string;\n  WIRE_ID: string;\n  TRANSPORT_KIND: string;\n  ROLE: string;\n  SPEC_URI: string;\n  AUTO_INSTALL: bool = true;\n  ADVERTISE: bool = false;\n  DISCOVERY_KEY: string;\n  DEFAULT_PORT: uint16;\n  REQUIRE_SECURE_TRANSPORT: bool = false;\n}\n\n/// Build artifact emitted by the plugin toolchain.\ntable PLGBuildArtifact {\n  ARTIFACT_ID: string (required);\n  KIND: string;\n  PATH: string (required);\n  TARGET: string;\n  ENTRY_SYMBOL: string;\n}\n\n/// Canonical method declaration.\ntable PLGMethodManifest {\n  METHOD_ID: string (required);\n  DISPLAY_NAME: string;\n  INPUT_PORTS: [PLGPortManifest];\n  OUTPUT_PORTS: [PLGPortManifest];\n  MAX_BATCH: uint32 = 1;\n  DRAIN_POLICY: drainBehavior = DRAIN_UNTIL_YIELD;\n  DESCRIPTION: string;\n}\n\n/// Plugin dependency on another plugin\ntable PluginDependency {\n  /// Plugin ID of the dependency\n  PLUGIN_ID: string;\n  /// Minimum version required (semver)\n  MIN_VERSION: string;\n  /// Maximum version allowed (optional)\n  MAX_VERSION: string;\n}\n\n/// Plugin entry point function definition\ntable EntryFunction {\n  /// Function name as exported from WASM\n  NAME: string (required);\n  /// Human-readable description\n  DESCRIPTION: string;\n  /// Input parameter types (FlatBuffer schema names)\n  INPUT_SCHEMAS: [string];\n  /// Output type (FlatBuffer schema name)\n  OUTPUT_SCHEMA: string;\n}\n\n/// One node in a composed flow graph. A degenerate flow IS a module: a leaf\n/// module leaves the flow-graph fields on PLG empty; a composed flow populates\n/// them. This is how flows reuse the module schema rather than a separate one.\ntable PLGFlowNode {\n  /// Stable node identifier within this flow\n  NODE_ID: string (required);\n  /// Plugin id of the module this node invokes\n  PLUGIN_ID: string (required);\n  /// Method id invoked on the module\n  METHOD_ID: string;\n  /// Node kind, e.g. "transform", "trigger", "capability"\n  KIND: string;\n  /// Dispatch model: empty = linked-direct (in-wasm), "isomorphic" = an\n  /// independently instantiated signed WASM node, and "host-capability" = a\n  /// generic host adapter.\n  DISPATCH_MODEL: string;\n  /// Opaque per-node configuration (FlatBuffer or raw bytes; never JSON)\n  CONFIG: [ubyte];\n  /// Editor layout X position\n  UI_X: float;\n  /// Editor layout Y position\n  UI_Y: float;\n}\n\n/// Compile-time routing decision for an edge. The aligned option is legal only\n/// when the producer and consumer share the declared arena and the runtime can\n/// prove bounds, alignment, ownership, mutability, and lifetime.\nenum flowEdgeRoutePolicy : ubyte {\n  CANONICAL_ONLY,\n  ALIGNED_SHARED_ARENA_OR_CANONICAL\n}\n\n/// Exact validated SDS and representation contract bound into a signed flow\n/// edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;\n/// ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.\ntable PLGFlowEdgeContract {\n  /// Canonical SDS identity carried by the edge. NOT `required`: an edge may\n  /// be opaque by design (see OPAQUE), and a signer must never be forced to\n  /// invent an identity to satisfy the schema. A contract MUST carry exactly\n  /// one of CANONICAL_TYPE or OPAQUE = true; a contract with neither, or with\n  /// both, is invalid and MUST be rejected by the compiler that signs the flow.\n  CANONICAL_TYPE: FlatBufferTypeRef;\n  ALIGNED_TYPE: FlatBufferTypeRef;\n  CANONICAL_FALLBACK_AVAILABLE: bool = true;\n  ALIGNED_ELIGIBLE: bool = false;\n  ROUTE_POLICY: flowEdgeRoutePolicy = CANONICAL_ONLY;\n  /// The edge carries bytes with no SDS identity BY DESIGN \u2014 an\n  /// application-blind host-capability adapter (an HTTP body, a raw file\n  /// chunk) or a timer TICK frame with no payload at all. This is a deliberate\n  /// signed assertion of opacity, which is why it is an explicit flag rather\n  /// than an absent CANONICAL_TYPE: a missing type must stay distinguishable\n  /// from a declared-opaque one. An opaque edge is ineligible for the aligned\n  /// route, so ALIGNED_ELIGIBLE MUST be false when OPAQUE is true.\n  OPAQUE: bool = false;\n}\n\n/// One directed edge wiring a producer output port to a consumer input port.\ntable PLGFlowEdge {\n  /// Stable edge identifier\n  EDGE_ID: string;\n  /// Source node id\n  FROM_NODE_ID: string (required);\n  /// Source output port id\n  FROM_PORT_ID: string (required);\n  /// Destination node id\n  TO_NODE_ID: string (required);\n  /// Destination input port id\n  TO_PORT_ID: string (required);\n  /// Exact identity/layout and compile-time representation policy. NOT\n  /// `required`: marking a NEW field of an EXISTING table required makes the\n  /// FlatBuffers verifier reject every $PLG buffer written before 1.0.13,\n  /// which is a breaking change to a ratified standard. Presence is enforced\n  /// where it belongs \u2014 the flow compiler MUST refuse to SIGN a flow whose\n  /// edges lack a CONTRACT, and a verifier MUST reject a signed flow edge\n  /// without one. Buffers predating 1.0.13 stay readable and stay unsigned.\n  CONTRACT: PLGFlowEdgeContract;\n}\n\n/// One flow trigger (e.g. a host timer or HTTP route) that starts a drain.\ntable PLGFlowTrigger {\n  /// Stable trigger identifier\n  TRIGGER_ID: string (required);\n  /// Trigger kind, e.g. "timer", "http"\n  KIND: string;\n  /// Trigger source, e.g. "host-cron"\n  SOURCE: string;\n  /// Default firing interval in milliseconds (timer triggers)\n  DEFAULT_INTERVAL_MS: uint64;\n  /// Mounted HTTP path (http triggers)\n  HTTP_PATH: string;\n}\n\n/// Binds a trigger to the node + input port it delivers its frame to.\ntable PLGFlowTriggerBinding {\n  /// Trigger identifier\n  TRIGGER_ID: string (required);\n  /// Target node id\n  TARGET_NODE_ID: string (required);\n  /// Target input port id\n  TARGET_PORT_ID: string (required);\n}\n\n/// Plugin Manifest - canonical signed storefront and WASM distribution record\ntable PLG {\n  /// Unique identifier for the plugin\n  PLUGIN_ID: string (required);\n  /// Human-readable plugin name\n  NAME: string (required);\n  /// Plugin version (semver format)\n  VERSION: string (required);\n  /// Detailed description of plugin functionality\n  DESCRIPTION: string;\n  /// Short marketing summary shown in storefront listings\n  TAGLINE: string;\n  /// Type/category of the plugin\n  PLUGIN_TYPE: pluginCategory;\n  /// Human-readable publisher or organization name\n  PUBLISHER_NAME: string;\n  /// Publisher handle or username\n  PUBLISHER_HANDLE: string;\n  /// Canonical publisher website\n  PUBLISHER_URL: string;\n  /// Support or helpdesk URL for this plugin\n  SUPPORT_URL: string;\n  /// Search and categorization tags for discovery\n  TAGS: [string];\n  /// Short feature bullets highlighted in storefront listings\n  FEATURES: [string];\n  /// Screenshot URLs showing the plugin in use\n  SCREENSHOT_URLS: [string];\n  /// Optional hero/banner image URL for the listing\n  BANNER_URL: string;\n\n  /// ABI version for compatibility checking\n  ABI_VERSION: uint32 = 1;\n\n  /// SHA256 hash of the decrypted WASM binary\n  WASM_HASH: [ubyte];\n  /// Size of decrypted WASM binary in bytes\n  WASM_SIZE: uint64;\n  /// IPFS CID of the encrypted WASM binary\n  WASM_CID: string;\n  /// SHA256 hash of the encrypted delivery artifact bytes\n  ENCRYPTED_WASM_HASH: [ubyte];\n  /// Size of the encrypted delivery artifact in bytes\n  ENCRYPTED_WASM_SIZE: uint64;\n\n  /// Entry point functions exported by the plugin\n  ENTRY_FUNCTIONS: [EntryFunction];\n  /// FlatBuffer schemas required by this plugin\n  REQUIRED_SCHEMAS: [string];\n  /// Other plugins this depends on\n  DEPENDENCIES: [PluginDependency];\n  /// Capabilities provided by this plugin\n  CAPABILITIES: [PluginCapability];\n\n  /// Peer ID of the plugin provider\n  PROVIDER_PEER_ID: string;\n  /// IPFS CID of provider\'s EPM (Entity Profile Message)\n  PROVIDER_EPM_CID: string;\n\n  /// Whether the WASM binary is encrypted\n  ENCRYPTED: bool = true;\n  /// Canonical required scope for grant issuance\n  REQUIRED_SCOPE: string;\n  /// Provider-local identifier for the module content key\n  KEY_ID: string;\n  /// Maximum grant timeout allowed for this module publication\n  MAX_GRANT_TIMEOUT_MS: uint64;\n  /// Minimum permissions required to run\n  MIN_PERMISSIONS: [string];\n\n  /// Unix timestamp when plugin was created\n  CREATED_AT: uint64;\n  /// Unix timestamp when plugin was last updated\n  UPDATED_AT: uint64;\n  /// URL to plugin documentation\n  DOCUMENTATION_URL: string;\n  /// URL to plugin changelog or release notes\n  CHANGELOG_URL: string;\n  /// URL to plugin icon/logo\n  ICON_URL: string;\n  /// License identifier (SPDX format)\n  LICENSE: string;\n  /// Commercial model used for storefront purchase flows\n  PAYMENT_MODEL: purchaseTier = Free;\n  /// Price in USD cents for one-time purchase or subscription period\n  PRICE_USD_CENTS: uint32;\n  /// Subscription billing period length in days\n  SUBSCRIPTION_PERIOD_DAYS: uint32;\n  /// Accepted payment methods, e.g. "stripe", "sol", "usdc"\n  ACCEPTED_PAYMENT_METHODS: [string];\n  /// Storefront publication state for this manifest version\n  LISTING_STATUS: publicationState = Public;\n\n  /// Ed25519 signature from provider over manifest\n  SIGNATURE: [ubyte];\n\n  /// Canonical invoke surfaces this artifact exposes. A single plugin\n  /// MAY list both DIRECT and COMMAND when it supports both.\n  INVOKE_SURFACES: [invokeSurfaceKind];\n  /// Rich per-method invoke manifests (port shape, drain semantics,\n  /// accepted wire formats). ENTRY_FUNCTIONS retains the slim\n  /// name+input_schemas+output_schema summary; METHODS carries the full\n  /// invoke-surface detail including aligned-binary advertisement.\n  METHODS: [PLGMethodManifest];\n  /// Enum-typed host capability dependencies (richer than CAPABILITIES,\n  /// which is string-tagged metadata).\n  HOST_CAPABILITIES: [PLGHostCapability];\n  /// Timer declarations for scheduled invocations.\n  TIMERS: [PLGTimerSpec];\n  /// Protocol handler declarations.\n  PROTOCOLS: [PLGProtocolSpec];\n  /// FlatBuffer schemas this plugin depends on at the invoke surface.\n  SCHEMAS_USED: [FlatBufferTypeRef];\n  /// Build artifacts emitted by the toolchain (WASM, bindings, etc.).\n  BUILD_ARTIFACTS: [PLGBuildArtifact];\n  /// Opaque runtime-target tags (e.g. "wasmtime", "wasmedge", "browser").\n  RUNTIME_TARGETS: [string];\n  /// Allowed requester xpub identities (BIP-32 account xpubs) for module grants:\n  /// a requester whose verified EPM binds an xpub in this list is granted (PKI\n  /// identity authorization). Empty list = no xpub allowlist gate.\n  ALLOWED_XPUBS: [string];\n\n  /// Composition graph (a degenerate flow is a module): the nodes this flow\n  /// invokes. Empty for a leaf module; populated for a composed flow. The flow\n  /// definition is this PLG FlatBuffer, not a bespoke JSON graph.\n  FLOW_NODES: [PLGFlowNode];\n  /// Composition-graph edges wiring node output ports to input ports.\n  FLOW_EDGES: [PLGFlowEdge];\n  /// Flow triggers (timer/http) that start a drain.\n  FLOW_TRIGGERS: [PLGFlowTrigger];\n  /// Bindings from triggers to the node + input port they deliver to.\n  FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];\n}\n\nroot_type PLG;\nfile_identifier "$PLG";',
       files: [
         "./dist/PLG/PLG.sw.tar.gz",
         "./dist/PLG/PLG.py.tar.gz",
@@ -7511,7 +7518,7 @@ file_identifier "$XTC";`,
       ]
     },
     GPX: {
-      IDL: '// Hash: 6aec30c7ddc6f550df2c2bf01b6d49254441ba165aa6779def14fd70543baec3\n// Version: 0.0.2\n// -----------------------------------END_HEADER\n// GPX (GPS Exchange Format)\n//\n// GPX is an XML schema for exchanging GPS data (waypoints, tracks, routes)\n// between applications and web services. It is an open standard maintained\n// by the TopoGrafix community.\n// Reference: https://www.topografix.com/gpx.asp (GPX 1.1)\n\nenum GPXFixType : byte {\n  NONE,\n  /// 2D fix\n  FIX_2D,\n  /// 3D fix\n  FIX_3D,\n  /// Differential GPS fix\n  DGPS,\n  /// PPP fix\n  PPS\n}\n\n/// GPX link to an external resource\ntable GPXLink {\n  /// URL\n  HREF:string;\n  /// Link text\n  TEXT:string;\n  /// MIME type\n  TYPE:string;\n}\n\n/// A waypoint, point of interest, or named feature\ntable GPXWaypoint {\n  /// Latitude in decimal degrees (WGS84)\n  LATITUDE:double;\n  /// Longitude in decimal degrees (WGS84)\n  LONGITUDE:double;\n  /// Elevation in meters above WGS84 ellipsoid\n  ELEVATION:double;\n  /// UTC timestamp (ISO 8601)\n  TIME:string;\n  /// Magnetic variation in degrees\n  MAGVAR:double;\n  /// Height of geoid above WGS84 ellipsoid in meters\n  GEOID_HEIGHT:double;\n  /// Waypoint name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Symbol name\n  SYMBOL:string;\n  /// Type/category\n  TYPE:string;\n  /// Type of GPS fix\n  FIX:GPXFixType;\n  /// Number of satellites used for fix\n  SAT:uint16;\n  /// Horizontal dilution of precision\n  HDOP:double;\n  /// Vertical dilution of precision\n  VDOP:double;\n  /// Position dilution of precision\n  PDOP:double;\n  /// Age of DGPS data in seconds\n  AGE_OF_DGPS_DATA:double;\n  /// DGPS station ID\n  DGPS_ID:uint16;\n  /// Speed in meters per second\n  SPEED:double;\n  /// Course/heading in degrees true\n  COURSE:double;\n}\n\n/// Track segment (continuous span of track points)\ntable GPXTrackSegment {\n  /// Ordered track points in this segment\n  POINTS:[GPXWaypoint];\n}\n\n/// Track (ordered list of track segments)\ntable GPXTrack {\n  /// Track name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Track number\n  NUMBER:uint32;\n  /// Type/category\n  TYPE:string;\n  /// Track segments\n  SEGMENTS:[GPXTrackSegment];\n}\n\n/// Route (ordered list of waypoints for navigation)\ntable GPXRoute {\n  /// Route name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Route number\n  NUMBER:uint32;\n  /// Type/category\n  TYPE:string;\n  /// Route points (ordered waypoints)\n  POINTS:[GPXWaypoint];\n}\n\n/// GPX Document\ntable GPX {\n  /// GPX schema version\n  VERSION:string;\n  /// Creator software/organization\n  CREATOR:string;\n  /// File name\n  NAME:string;\n  /// File description\n  DESCRIPTION:string;\n  /// Person or organization who created the file\n  AUTHOR_NAME:string;\n  /// Author email\n  AUTHOR_EMAIL:string;\n  /// Author link\n  AUTHOR_LINK:GPXLink;\n  /// Copyright holder\n  COPYRIGHT_AUTHOR:string;\n  /// Copyright year\n  COPYRIGHT_YEAR:string;\n  /// Copyright license URL\n  COPYRIGHT_LICENSE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Creation timestamp (ISO 8601)\n  TIME:string;\n  /// Keywords\n  KEYWORDS:string;\n  /// Minimum latitude of bounding box\n  BOUNDS_MIN_LAT:double;\n  /// Minimum longitude of bounding box\n  BOUNDS_MIN_LON:double;\n  /// Maximum latitude of bounding box\n  BOUNDS_MAX_LAT:double;\n  /// Maximum longitude of bounding box\n  BOUNDS_MAX_LON:double;\n  /// Waypoints\n  WAYPOINTS:[GPXWaypoint];\n  /// Routes\n  ROUTES:[GPXRoute];\n  /// Tracks\n  TRACKS:[GPXTrack];\n}\n\nroot_type GPX;\nfile_identifier "$GPX";',
+      IDL: '// Hash: 4fbf8c18f4d1add07d428f9922e33eeb4465056b4458323d2df840469919e28f\n// Version: 0.0.3\n// -----------------------------------END_HEADER\n// GPX (GPS Exchange Format)\n//\n// GPX is an XML schema for exchanging GPS data (waypoints, tracks, routes)\n// between applications and web services. It is an open,\n// community-maintained standard.\n// Reference: the GPX 1.1 schema specification.\n\nenum GPXFixType : byte {\n  NONE,\n  /// 2D fix\n  FIX_2D,\n  /// 3D fix\n  FIX_3D,\n  /// Differential GPS fix\n  DGPS,\n  /// PPP fix\n  PPS\n}\n\n/// GPX link to an external resource\ntable GPXLink {\n  /// URL\n  HREF:string;\n  /// Link text\n  TEXT:string;\n  /// MIME type\n  TYPE:string;\n}\n\n/// A waypoint, point of interest, or named feature\ntable GPXWaypoint {\n  /// Latitude in decimal degrees (WGS84)\n  LATITUDE:double;\n  /// Longitude in decimal degrees (WGS84)\n  LONGITUDE:double;\n  /// Elevation in meters above WGS84 ellipsoid\n  ELEVATION:double;\n  /// UTC timestamp (ISO 8601)\n  TIME:string;\n  /// Magnetic variation in degrees\n  MAGVAR:double;\n  /// Height of geoid above WGS84 ellipsoid in meters\n  GEOID_HEIGHT:double;\n  /// Waypoint name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Symbol name\n  SYMBOL:string;\n  /// Type/category\n  TYPE:string;\n  /// Type of GPS fix\n  FIX:GPXFixType;\n  /// Number of satellites used for fix\n  SAT:uint16;\n  /// Horizontal dilution of precision\n  HDOP:double;\n  /// Vertical dilution of precision\n  VDOP:double;\n  /// Position dilution of precision\n  PDOP:double;\n  /// Age of DGPS data in seconds\n  AGE_OF_DGPS_DATA:double;\n  /// DGPS station ID\n  DGPS_ID:uint16;\n  /// Speed in meters per second\n  SPEED:double;\n  /// Course/heading in degrees true\n  COURSE:double;\n}\n\n/// Track segment (continuous span of track points)\ntable GPXTrackSegment {\n  /// Ordered track points in this segment\n  POINTS:[GPXWaypoint];\n}\n\n/// Track (ordered list of track segments)\ntable GPXTrack {\n  /// Track name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Track number\n  NUMBER:uint32;\n  /// Type/category\n  TYPE:string;\n  /// Track segments\n  SEGMENTS:[GPXTrackSegment];\n}\n\n/// Route (ordered list of waypoints for navigation)\ntable GPXRoute {\n  /// Route name\n  NAME:string;\n  /// Comment\n  COMMENT:string;\n  /// Description\n  DESCRIPTION:string;\n  /// Source of data\n  SOURCE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Route number\n  NUMBER:uint32;\n  /// Type/category\n  TYPE:string;\n  /// Route points (ordered waypoints)\n  POINTS:[GPXWaypoint];\n}\n\n/// GPX Document\ntable GPX {\n  /// GPX schema version\n  VERSION:string;\n  /// Creator software/organization\n  CREATOR:string;\n  /// File name\n  NAME:string;\n  /// File description\n  DESCRIPTION:string;\n  /// Person or organization who created the file\n  AUTHOR_NAME:string;\n  /// Author email\n  AUTHOR_EMAIL:string;\n  /// Author link\n  AUTHOR_LINK:GPXLink;\n  /// Copyright holder\n  COPYRIGHT_AUTHOR:string;\n  /// Copyright year\n  COPYRIGHT_YEAR:string;\n  /// Copyright license URL\n  COPYRIGHT_LICENSE:string;\n  /// Links to additional information\n  LINKS:[GPXLink];\n  /// Creation timestamp (ISO 8601)\n  TIME:string;\n  /// Keywords\n  KEYWORDS:string;\n  /// Minimum latitude of bounding box\n  BOUNDS_MIN_LAT:double;\n  /// Minimum longitude of bounding box\n  BOUNDS_MIN_LON:double;\n  /// Maximum latitude of bounding box\n  BOUNDS_MAX_LAT:double;\n  /// Maximum longitude of bounding box\n  BOUNDS_MAX_LON:double;\n  /// Waypoints\n  WAYPOINTS:[GPXWaypoint];\n  /// Routes\n  ROUTES:[GPXRoute];\n  /// Tracks\n  TRACKS:[GPXTrack];\n}\n\nroot_type GPX;\nfile_identifier "$GPX";',
       files: [
         "./dist/GPX/GPX.sw.tar.gz",
         "./dist/GPX/GPX.py.tar.gz",
@@ -7812,15 +7819,16 @@ file_identifier "$LCC";`,
       ]
     },
     CZM: {
-      IDL: `// Hash: 15bf98fd81c89cdaf5d6a64df9db203e7d3fe976eb44b6a30fb358d549fe48fe
-// Version: 0.0.3
+      IDL: `// Hash: 74f752a91f51bda263c14cd7363e54da265daf705822f1afebbc854eea94cc05
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 // CZML (Cesium Language)
 //
-// CZML is a JSON-based format for describing time-dynamic 3D scenes,
-// primarily for use with CesiumJS. A CZML document is an array of packets
-// that describe objects and their properties over time.
-// Reference: https://github.com/AnalyticalGraphicsInc/czml-writer/wiki/CZML-Guide
+// CZML is a JSON-based format for describing time-dynamic 3D scenes for
+// virtual-globe renderers. A CZML document is an array of packets that
+// describe objects and their properties over time.
+// Reference: the CZML Guide published with the CZML writer reference
+// implementation.
 
 enum CZMHeightReference : byte {
   NONE,
@@ -10023,7 +10031,7 @@ file_identifier "$EOO";`,
       ]
     },
     PMM: {
-      IDL: '// Hash: e6d2299aa3197576e363815f6e6847a19a8983fdfcccb6050986e4ae4dfa15a9\n// Version: 1.170.1\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
+      IDL: '// Hash: 6bd5253e4dda7dc9e69a13ec0cc30871b5f08357411f62ff43a75887c30b5e61\n// Version: 1.170.2\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
       files: [
         "./dist/PMM/PMM.sw.tar.gz",
         "./dist/PMM/PMM.py.tar.gz",
@@ -11005,8 +11013,8 @@ file_identifier "$VAM";`,
       ]
     },
     DPM: {
-      IDL: `// Hash: 434e1c33d9de1859b6c00785c110be2866550b8880969849fe8c665496c0cef7
-// Version: 1.0.8
+      IDL: `// Hash: bef01cefae37f338f92f8bdf2332978f3e95ab7f95c1fe3c7f2bf9f54b31d526
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -11109,7 +11117,7 @@ table DPMAsset {
   /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   /// requests, subscriber caches, replay, audit, and completeness proofs.
   /// Example:
-  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   FILE_ID: string;
   /// Provider protocol name/version used to fetch this asset when
   /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
@@ -11509,7 +11517,7 @@ file_identifier "$ACL";`,
       ]
     },
     STR: {
-      IDL: '// Hash: 77ed603b245aca902d8b88606337419ce328cd67c1b7d29b0194fb89781efb3e\n// Version: 0.0.3\n// -----------------------------------END_HEADER\n/// Star Catalog Entry\ntable STR {\n  /// Unique internal identifier\n  ID:string;\n  /// CelesTrak Star catalog identifier\n  CS_ID:long;\n  /// GNC star catalog identifier\n  GNC_CAT_ID:uint32;\n  /// Gaia DR3 source identifier\n  GAIADR3_CAT_ID:long;\n  /// Hipparcos catalog identifier\n  HIP_CAT_ID:uint32;\n  /// Catalog version string\n  CAT_VERSION:string;\n  /// Astrometry source description\n  ASTROMETRY_ORIGIN:string;\n  /// Epoch of stellar position (Julian years)\n  STAR_EPOCH:double;\n  /// Right ascension (degrees, ICRS)\n  RA:double;\n  /// Right ascension uncertainty (arcseconds)\n  RA_UNC:double;\n  /// Declination (degrees, ICRS)\n  DEC:double;\n  /// Declination uncertainty (arcseconds)\n  DEC_UNC:double;\n  /// True if position uncertainty is flagged\n  POS_UNC_FLAG:bool;\n  /// Parallax (milliarcseconds)\n  PARALLAX:double;\n  /// Parallax uncertainty (milliarcseconds)\n  PARALLAX_UNC:double;\n  /// Proper motion in RA (milliarcseconds/year)\n  PMRA:double;\n  /// Proper motion in RA uncertainty (milliarcseconds/year)\n  PMRA_UNC:double;\n  /// Proper motion in DEC (milliarcseconds/year)\n  PMDEC:double;\n  /// Proper motion in DEC uncertainty (milliarcseconds/year)\n  PMDEC_UNC:double;\n  /// True if proper motion uncertainty is flagged\n  PM_UNC_FLAG:bool;\n  /// Gaia G-band magnitude\n  GMAG:double;\n  /// Gaia G-band magnitude uncertainty\n  GMAG_UNC:double;\n  /// Gaia BP-band magnitude (blue photometer)\n  BPMAG:double;\n  /// Gaia BP-band magnitude uncertainty\n  BPMAG_UNC:double;\n  /// Gaia RP-band magnitude (red photometer)\n  RPMAG:double;\n  /// Gaia RP-band magnitude uncertainty\n  RPMAG_UNC:double;\n  /// 2MASS J-band magnitude (1.25 um)\n  JMAG:double;\n  /// J-band magnitude uncertainty\n  JMAG_UNC:double;\n  /// 2MASS K-band magnitude (2.17 um)\n  KMAG:double;\n  /// K-band magnitude uncertainty\n  KMAG_UNC:double;\n  /// 2MASS H-band magnitude (1.65 um)\n  HMAG:double;\n  /// H-band magnitude uncertainty\n  HMAG_UNC:double;\n  /// True if star is variable\n  VAR_FLAG:bool;\n  /// True if star is in a multiple system\n  MULT_FLAG:bool;\n  /// Nearest neighbor catalog identifier\n  NEIGHBOR_ID:uint32;\n  /// True if nearest neighbor is within confusion radius\n  NEIGHBOR_FLAG:bool;\n  /// Distance to nearest neighbor (arcseconds)\n  NEIGHBOR_DISTANCE:double;\n  /// True if position shift detected between catalogs\n  SHIFT_FLAG:bool;\n  /// Position shift magnitude (arcseconds)\n  SHIFT:double;\n}\n\nroot_type STR;\nfile_identifier "$STR";',
+      IDL: '// Hash: 56de8cd0ac994478ca06eba4aad2b0e259f564799238f9e1c28c569a1e2c2f35\n// Version: 0.0.4\n// -----------------------------------END_HEADER\n/// Star Catalog Entry\ntable STR {\n  /// Unique internal identifier\n  ID:string;\n  /// Community satellite-tracking star catalog identifier\n  CS_ID:long;\n  /// GNC star catalog identifier\n  GNC_CAT_ID:uint32;\n  /// Gaia DR3 source identifier\n  GAIADR3_CAT_ID:long;\n  /// Hipparcos catalog identifier\n  HIP_CAT_ID:uint32;\n  /// Catalog version string\n  CAT_VERSION:string;\n  /// Astrometry source description\n  ASTROMETRY_ORIGIN:string;\n  /// Epoch of stellar position (Julian years)\n  STAR_EPOCH:double;\n  /// Right ascension (degrees, ICRS)\n  RA:double;\n  /// Right ascension uncertainty (arcseconds)\n  RA_UNC:double;\n  /// Declination (degrees, ICRS)\n  DEC:double;\n  /// Declination uncertainty (arcseconds)\n  DEC_UNC:double;\n  /// True if position uncertainty is flagged\n  POS_UNC_FLAG:bool;\n  /// Parallax (milliarcseconds)\n  PARALLAX:double;\n  /// Parallax uncertainty (milliarcseconds)\n  PARALLAX_UNC:double;\n  /// Proper motion in RA (milliarcseconds/year)\n  PMRA:double;\n  /// Proper motion in RA uncertainty (milliarcseconds/year)\n  PMRA_UNC:double;\n  /// Proper motion in DEC (milliarcseconds/year)\n  PMDEC:double;\n  /// Proper motion in DEC uncertainty (milliarcseconds/year)\n  PMDEC_UNC:double;\n  /// True if proper motion uncertainty is flagged\n  PM_UNC_FLAG:bool;\n  /// Gaia G-band magnitude\n  GMAG:double;\n  /// Gaia G-band magnitude uncertainty\n  GMAG_UNC:double;\n  /// Gaia BP-band magnitude (blue photometer)\n  BPMAG:double;\n  /// Gaia BP-band magnitude uncertainty\n  BPMAG_UNC:double;\n  /// Gaia RP-band magnitude (red photometer)\n  RPMAG:double;\n  /// Gaia RP-band magnitude uncertainty\n  RPMAG_UNC:double;\n  /// 2MASS J-band magnitude (1.25 um)\n  JMAG:double;\n  /// J-band magnitude uncertainty\n  JMAG_UNC:double;\n  /// 2MASS K-band magnitude (2.17 um)\n  KMAG:double;\n  /// K-band magnitude uncertainty\n  KMAG_UNC:double;\n  /// 2MASS H-band magnitude (1.65 um)\n  HMAG:double;\n  /// H-band magnitude uncertainty\n  HMAG_UNC:double;\n  /// True if star is variable\n  VAR_FLAG:bool;\n  /// True if star is in a multiple system\n  MULT_FLAG:bool;\n  /// Nearest neighbor catalog identifier\n  NEIGHBOR_ID:uint32;\n  /// True if nearest neighbor is within confusion radius\n  NEIGHBOR_FLAG:bool;\n  /// Distance to nearest neighbor (arcseconds)\n  NEIGHBOR_DISTANCE:double;\n  /// True if position shift detected between catalogs\n  SHIFT_FLAG:bool;\n  /// Position shift magnitude (arcseconds)\n  SHIFT:double;\n}\n\nroot_type STR;\nfile_identifier "$STR";',
       files: [
         "./dist/STR/STR.sw.tar.gz",
         "./dist/STR/STR.py.tar.gz",
@@ -11566,7 +11574,7 @@ file_identifier "$ACL";`,
       ]
     },
     RBK: {
-      IDL: '// Hash: 4cbf1287bd5a31908ed85d9302d353af8e6d859347373f20e67e7d9fd52827bb\n// Version: 1.103.9\n// -----------------------------------END_HEADER\n// Rigid-body kinematics utility records for attitude math modules.\n\nenum rbkOperationCode : byte {\n  UNKNOWN = 0,\n  /// Compose two Modified Rodrigues Parameter rotations.\n  ADD_MRP = 1,\n  /// Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A.\n  SUB_MRP = 2,\n  /// Force a Modified Rodrigues Parameter vector to its shadow set.\n  MRP_SHADOW = 3,\n  /// Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD.\n  MRP_SWITCH = 4,\n  /// Convert scalar-first Euler parameters/quaternion to MRP.\n  EP_TO_MRP = 5,\n  /// Convert MRP to scalar-first Euler parameters/quaternion.\n  MRP_TO_EP = 6,\n  /// Convert direction cosine matrix to scalar-first Euler parameters/quaternion.\n  DCM_TO_EP = 7,\n  /// Convert scalar-first Euler parameters/quaternion to direction cosine matrix.\n  EP_TO_DCM = 8,\n  /// Convert direction cosine matrix to Modified Rodrigues Parameters.\n  DCM_TO_MRP = 9,\n  /// Convert Modified Rodrigues Parameters to direction cosine matrix.\n  MRP_TO_DCM = 10,\n  /// Return the MRP B matrix that maps body angular rate to MRP derivative.\n  B_MATRIX_MRP = 11,\n  /// Return the inverse MRP B matrix that maps MRP derivative to body angular rate.\n  B_INV_MATRIX_MRP = 12,\n  /// Compute MRP derivative from MRP and body angular rate vectors.\n  D_MRP = 13,\n  /// Compute body angular rate from MRP and MRP derivative vectors.\n  D_MRP_TO_OMEGA = 14,\n  /// Return the MRP B-dot matrix from MRP and MRP derivative vectors.\n  B_DOT_MATRIX_MRP = 15,\n  /// Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration.\n  DD_MRP = 16,\n  /// Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative.\n  DD_MRP_TO_D_OMEGA = 17,\n  /// Compose two Gibbs-vector rotations.\n  ADD_GIBBS = 18,\n  /// Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A.\n  SUB_GIBBS = 19,\n  /// Convert scalar-first Euler parameters/quaternion to Gibbs vector.\n  EP_TO_GIBBS = 20,\n  /// Convert Gibbs vector to scalar-first Euler parameters/quaternion.\n  GIBBS_TO_EP = 21,\n  /// Convert direction cosine matrix to Gibbs vector.\n  DCM_TO_GIBBS = 22,\n  /// Convert Gibbs vector to direction cosine matrix.\n  GIBBS_TO_DCM = 23,\n  /// Convert Modified Rodrigues Parameters to Gibbs vector.\n  MRP_TO_GIBBS = 24,\n  /// Convert Gibbs vector to Modified Rodrigues Parameters.\n  GIBBS_TO_MRP = 25,\n  /// Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative.\n  B_MATRIX_GIBBS = 26,\n  /// Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate.\n  B_INV_MATRIX_GIBBS = 27,\n  /// Compute Gibbs derivative from Gibbs vector and body angular rate vectors.\n  D_GIBBS = 28,\n  /// Compose two principal rotation vector rotations.\n  ADD_PRV = 29,\n  /// Compute the relative principal rotation vector from VECTOR_B to VECTOR_A.\n  SUB_PRV = 30,\n  /// Convert scalar-first Euler parameters/quaternion to principal rotation vector.\n  EP_TO_PRV = 31,\n  /// Convert principal rotation vector to scalar-first Euler parameters/quaternion.\n  PRV_TO_EP = 32,\n  /// Convert direction cosine matrix to principal rotation vector.\n  DCM_TO_PRV = 33,\n  /// Convert principal rotation vector to direction cosine matrix.\n  PRV_TO_DCM = 34,\n  /// Convert Modified Rodrigues Parameters to principal rotation vector.\n  MRP_TO_PRV = 35,\n  /// Convert principal rotation vector to Modified Rodrigues Parameters.\n  PRV_TO_MRP = 36,\n  /// Convert Gibbs vector to principal rotation vector.\n  GIBBS_TO_PRV = 37,\n  /// Convert principal rotation vector to Gibbs vector.\n  PRV_TO_GIBBS = 38,\n  /// Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative.\n  B_MATRIX_PRV = 39,\n  /// Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate.\n  B_INV_MATRIX_PRV = 40,\n  /// Compute principal rotation vector derivative from PRV and body angular rate vectors.\n  D_PRV = 41,\n  /// Compose two Euler-angle rotations using EULER_SEQUENCE.\n  ADD_EULER = 42,\n  /// Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE.\n  SUB_EULER = 43,\n  /// Convert Euler angles to direction cosine matrix using EULER_SEQUENCE.\n  EULER_TO_DCM = 44,\n  /// Convert direction cosine matrix to Euler angles using EULER_SEQUENCE.\n  DCM_TO_EULER = 45,\n  /// Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE.\n  EULER_TO_EP = 46,\n  /// Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE.\n  EP_TO_EULER = 47,\n  /// Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE.\n  EULER_TO_MRP = 48,\n  /// Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE.\n  MRP_TO_EULER = 49,\n  /// Convert Euler angles to Gibbs vector using EULER_SEQUENCE.\n  EULER_TO_GIBBS = 50,\n  /// Convert Gibbs vector to Euler angles using EULER_SEQUENCE.\n  GIBBS_TO_EULER = 51,\n  /// Convert Euler angles to principal rotation vector using EULER_SEQUENCE.\n  EULER_TO_PRV = 52,\n  /// Convert principal rotation vector to Euler angles using EULER_SEQUENCE.\n  PRV_TO_EULER = 53,\n  /// Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative.\n  B_MATRIX_EULER = 54,\n  /// Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate.\n  B_INV_MATRIX_EULER = 55,\n  /// Compute Euler-angle derivative from Euler angles and body angular rate vectors.\n  D_EULER = 56,\n  /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.\n  TILDE_MATRIX = 57,\n  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M1_ROTATION_MATRIX = 58,\n  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M2_ROTATION_MATRIX = 59,\n  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M3_ROTATION_MATRIX = 60\n}\n\nenum rbkEulerSequenceCode : byte {\n  UNKNOWN = 0,\n  EULER_121 = 1,\n  EULER_123 = 2,\n  EULER_131 = 3,\n  EULER_132 = 4,\n  EULER_212 = 5,\n  EULER_213 = 6,\n  EULER_231 = 7,\n  EULER_232 = 8,\n  EULER_312 = 9,\n  EULER_313 = 10,\n  EULER_321 = 11,\n  EULER_323 = 12\n}\n\nenum rbkResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request is missing required vector/quaternion data or has invalid values.\n  INVALID_INPUT = 1,\n  /// Operation is unknown or not supported by the module implementation.\n  UNSUPPORTED_OPERATION = 2\n}\n\n/// Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.\ntable RBKVector3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\n/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.\ntable RBKQuaternion {\n  Q0:double;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n}\n\n/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.\ntable RBKMatrix3 {\n  M11:double;\n  M12:double;\n  M13:double;\n  M21:double;\n  M22:double;\n  M23:double;\n  M31:double;\n  M32:double;\n  M33:double;\n}\n\n/// Request for one rigid-body kinematics utility operation.\ntable RBKRigidBodyKinematicsRequest {\n  OPERATION:rbkOperationCode;\n  VECTOR_A:RBKVector3;\n  VECTOR_B:RBKVector3;\n  QUATERNION_A:RBKQuaternion;\n  MATRIX_A:RBKMatrix3;\n  SWITCH_THRESHOLD:double;\n  TRACE_ID:string;\n  VECTOR_C:RBKVector3;\n  VECTOR_D:RBKVector3;\n  EULER_SEQUENCE:rbkEulerSequenceCode;\n  ANGLE_RAD:double;\n}\n\n/// Result for one rigid-body kinematics utility operation.\ntable RBKRigidBodyKinematicsResult {\n  STATUS:rbkResultStatus;\n  ERROR_MESSAGE:string;\n  VECTOR:RBKVector3;\n  QUATERNION:RBKQuaternion;\n  MATRIX:RBKMatrix3;\n  TRACE_ID:string;\n}\n\n/// Rigid-body kinematics utility envelope.\ntable RBK {\n  RIGID_BODY_REQUEST:RBKRigidBodyKinematicsRequest;\n  RIGID_BODY_RESULT:RBKRigidBodyKinematicsResult;\n}\n\nroot_type RBK;\nfile_identifier "$RBK";',
+      IDL: '// Hash: 85aa3523422fe9bcbe76968dca73ce173a86e2958f025df8bd4a95f9e746c15d\n// Version: 1.103.10\n// -----------------------------------END_HEADER\n// Rigid-body kinematics utility records for attitude math modules.\n\nenum rbkOperationCode : byte {\n  UNKNOWN = 0,\n  /// Compose two Modified Rodrigues Parameter rotations.\n  ADD_MRP = 1,\n  /// Compute the relative Modified Rodrigues Parameter rotation from VECTOR_B to VECTOR_A.\n  SUB_MRP = 2,\n  /// Force a Modified Rodrigues Parameter vector to its shadow set.\n  MRP_SHADOW = 3,\n  /// Switch to the MRP shadow set when norm exceeds SWITCH_THRESHOLD.\n  MRP_SWITCH = 4,\n  /// Convert scalar-first Euler parameters/quaternion to MRP.\n  EP_TO_MRP = 5,\n  /// Convert MRP to scalar-first Euler parameters/quaternion.\n  MRP_TO_EP = 6,\n  /// Convert direction cosine matrix to scalar-first Euler parameters/quaternion.\n  DCM_TO_EP = 7,\n  /// Convert scalar-first Euler parameters/quaternion to direction cosine matrix.\n  EP_TO_DCM = 8,\n  /// Convert direction cosine matrix to Modified Rodrigues Parameters.\n  DCM_TO_MRP = 9,\n  /// Convert Modified Rodrigues Parameters to direction cosine matrix.\n  MRP_TO_DCM = 10,\n  /// Return the MRP B matrix that maps body angular rate to MRP derivative.\n  B_MATRIX_MRP = 11,\n  /// Return the inverse MRP B matrix that maps MRP derivative to body angular rate.\n  B_INV_MATRIX_MRP = 12,\n  /// Compute MRP derivative from MRP and body angular rate vectors.\n  D_MRP = 13,\n  /// Compute body angular rate from MRP and MRP derivative vectors.\n  D_MRP_TO_OMEGA = 14,\n  /// Return the MRP B-dot matrix from MRP and MRP derivative vectors.\n  B_DOT_MATRIX_MRP = 15,\n  /// Compute second MRP derivative from MRP, MRP derivative, body rate, and body acceleration.\n  DD_MRP = 16,\n  /// Compute body angular acceleration from MRP, MRP derivative, and second MRP derivative.\n  DD_MRP_TO_D_OMEGA = 17,\n  /// Compose two Gibbs-vector rotations.\n  ADD_GIBBS = 18,\n  /// Compute the relative Gibbs-vector rotation from VECTOR_B to VECTOR_A.\n  SUB_GIBBS = 19,\n  /// Convert scalar-first Euler parameters/quaternion to Gibbs vector.\n  EP_TO_GIBBS = 20,\n  /// Convert Gibbs vector to scalar-first Euler parameters/quaternion.\n  GIBBS_TO_EP = 21,\n  /// Convert direction cosine matrix to Gibbs vector.\n  DCM_TO_GIBBS = 22,\n  /// Convert Gibbs vector to direction cosine matrix.\n  GIBBS_TO_DCM = 23,\n  /// Convert Modified Rodrigues Parameters to Gibbs vector.\n  MRP_TO_GIBBS = 24,\n  /// Convert Gibbs vector to Modified Rodrigues Parameters.\n  GIBBS_TO_MRP = 25,\n  /// Return the Gibbs-vector B matrix that maps body angular rate to Gibbs derivative.\n  B_MATRIX_GIBBS = 26,\n  /// Return the inverse Gibbs-vector B matrix that maps Gibbs derivative to body angular rate.\n  B_INV_MATRIX_GIBBS = 27,\n  /// Compute Gibbs derivative from Gibbs vector and body angular rate vectors.\n  D_GIBBS = 28,\n  /// Compose two principal rotation vector rotations.\n  ADD_PRV = 29,\n  /// Compute the relative principal rotation vector from VECTOR_B to VECTOR_A.\n  SUB_PRV = 30,\n  /// Convert scalar-first Euler parameters/quaternion to principal rotation vector.\n  EP_TO_PRV = 31,\n  /// Convert principal rotation vector to scalar-first Euler parameters/quaternion.\n  PRV_TO_EP = 32,\n  /// Convert direction cosine matrix to principal rotation vector.\n  DCM_TO_PRV = 33,\n  /// Convert principal rotation vector to direction cosine matrix.\n  PRV_TO_DCM = 34,\n  /// Convert Modified Rodrigues Parameters to principal rotation vector.\n  MRP_TO_PRV = 35,\n  /// Convert principal rotation vector to Modified Rodrigues Parameters.\n  PRV_TO_MRP = 36,\n  /// Convert Gibbs vector to principal rotation vector.\n  GIBBS_TO_PRV = 37,\n  /// Convert principal rotation vector to Gibbs vector.\n  PRV_TO_GIBBS = 38,\n  /// Return the principal-rotation-vector B matrix that maps body angular rate to PRV derivative.\n  B_MATRIX_PRV = 39,\n  /// Return the inverse principal-rotation-vector B matrix that maps PRV derivative to body angular rate.\n  B_INV_MATRIX_PRV = 40,\n  /// Compute principal rotation vector derivative from PRV and body angular rate vectors.\n  D_PRV = 41,\n  /// Compose two Euler-angle rotations using EULER_SEQUENCE.\n  ADD_EULER = 42,\n  /// Compute the relative Euler-angle rotation from VECTOR_B to VECTOR_A using EULER_SEQUENCE.\n  SUB_EULER = 43,\n  /// Convert Euler angles to direction cosine matrix using EULER_SEQUENCE.\n  EULER_TO_DCM = 44,\n  /// Convert direction cosine matrix to Euler angles using EULER_SEQUENCE.\n  DCM_TO_EULER = 45,\n  /// Convert Euler angles to scalar-first Euler parameters/quaternion using EULER_SEQUENCE.\n  EULER_TO_EP = 46,\n  /// Convert scalar-first Euler parameters/quaternion to Euler angles using EULER_SEQUENCE.\n  EP_TO_EULER = 47,\n  /// Convert Euler angles to Modified Rodrigues Parameters using EULER_SEQUENCE.\n  EULER_TO_MRP = 48,\n  /// Convert Modified Rodrigues Parameters to Euler angles using EULER_SEQUENCE.\n  MRP_TO_EULER = 49,\n  /// Convert Euler angles to Gibbs vector using EULER_SEQUENCE.\n  EULER_TO_GIBBS = 50,\n  /// Convert Gibbs vector to Euler angles using EULER_SEQUENCE.\n  GIBBS_TO_EULER = 51,\n  /// Convert Euler angles to principal rotation vector using EULER_SEQUENCE.\n  EULER_TO_PRV = 52,\n  /// Convert principal rotation vector to Euler angles using EULER_SEQUENCE.\n  PRV_TO_EULER = 53,\n  /// Return the Euler-angle B matrix that maps body angular rate to Euler-angle derivative.\n  B_MATRIX_EULER = 54,\n  /// Return the inverse Euler-angle B matrix that maps Euler-angle derivative to body angular rate.\n  B_INV_MATRIX_EULER = 55,\n  /// Compute Euler-angle derivative from Euler angles and body angular rate vectors.\n  D_EULER = 56,\n  /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.\n  TILDE_MATRIX = 57,\n  /// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M1_ROTATION_MATRIX = 58,\n  /// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M2_ROTATION_MATRIX = 59,\n  /// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.\n  M3_ROTATION_MATRIX = 60\n}\n\nenum rbkEulerSequenceCode : byte {\n  UNKNOWN = 0,\n  EULER_121 = 1,\n  EULER_123 = 2,\n  EULER_131 = 3,\n  EULER_132 = 4,\n  EULER_212 = 5,\n  EULER_213 = 6,\n  EULER_231 = 7,\n  EULER_232 = 8,\n  EULER_312 = 9,\n  EULER_313 = 10,\n  EULER_321 = 11,\n  EULER_323 = 12\n}\n\nenum rbkResultStatus : byte {\n  /// Operation completed.\n  OK = 0,\n  /// Request is missing required vector/quaternion data or has invalid values.\n  INVALID_INPUT = 1,\n  /// Operation is unknown or not supported by the module implementation.\n  UNSUPPORTED_OPERATION = 2\n}\n\n/// Three-vector used for MRP, Gibbs, PRV, angular rate, and related attitude math values.\ntable RBKVector3 {\n  X:double;\n  Y:double;\n  Z:double;\n}\n\n/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).\ntable RBKQuaternion {\n  Q0:double;\n  Q1:double;\n  Q2:double;\n  Q3:double;\n}\n\n/// Row-major 3x3 direction cosine matrix.\ntable RBKMatrix3 {\n  M11:double;\n  M12:double;\n  M13:double;\n  M21:double;\n  M22:double;\n  M23:double;\n  M31:double;\n  M32:double;\n  M33:double;\n}\n\n/// Request for one rigid-body kinematics utility operation.\ntable RBKRigidBodyKinematicsRequest {\n  OPERATION:rbkOperationCode;\n  VECTOR_A:RBKVector3;\n  VECTOR_B:RBKVector3;\n  QUATERNION_A:RBKQuaternion;\n  MATRIX_A:RBKMatrix3;\n  SWITCH_THRESHOLD:double;\n  TRACE_ID:string;\n  VECTOR_C:RBKVector3;\n  VECTOR_D:RBKVector3;\n  EULER_SEQUENCE:rbkEulerSequenceCode;\n  ANGLE_RAD:double;\n}\n\n/// Result for one rigid-body kinematics utility operation.\ntable RBKRigidBodyKinematicsResult {\n  STATUS:rbkResultStatus;\n  ERROR_MESSAGE:string;\n  VECTOR:RBKVector3;\n  QUATERNION:RBKQuaternion;\n  MATRIX:RBKMatrix3;\n  TRACE_ID:string;\n}\n\n/// Rigid-body kinematics utility envelope.\ntable RBK {\n  RIGID_BODY_REQUEST:RBKRigidBodyKinematicsRequest;\n  RIGID_BODY_RESULT:RBKRigidBodyKinematicsResult;\n}\n\nroot_type RBK;\nfile_identifier "$RBK";',
       files: [
         "./dist/RBK/RBK.sw.tar.gz",
         "./dist/RBK/RBK.py.tar.gz",
@@ -11585,7 +11593,7 @@ file_identifier "$ACL";`,
       ]
     },
     PNM: {
-      IDL: '// Hash: 82b0cb3242a62a872b7378b3ac19e5bde7cbd9f0954ab257ca5f4c3010ef2481\n// Version: 1.0.5\n// -----------------------------------END_HEADER\n/// Publish Notification Message.\n///\n/// PNM is the compact network announcement for a published record, manifest, or\n/// dataset update. For dataset updates, FILE_ID is the complete canonical\n/// identity for the published update and CID usually points to a small DPM\n/// manifest or digest. The DPM carries the full verification contract:\n/// provider identity, retrieval protocol, canonical query, result hash, Merkle\n/// roots, completeness-capable indexes, file_id partition key, and signature.\n/// Large or paid dataset updates do not need to be published as globally\n/// discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\n/// query protocol. In that mode the PNM is only the announcement. The DPM is\n/// the signed commitment, and each provider response carries records plus\n/// Merkle proof material that the subscriber verifies against the DPM roots and\n/// the announced FILE_ID before import.\ntable PNM {\n  /// Multiformat Address\n  /// https://multiformats.io/multiaddr/\n  /// A universal address format for representing multiple network protocols. Examples include:\n  /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n  /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n  /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses\n  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.\n  MULTIFORMAT_ADDRESS: string;\n\n  /// Publish Time OF THE Publish Notification Message\n  PUBLISH_TIMESTAMP: string;\n\n  /// Concatenated Content Identifier (CID)\n  /// This field is a unique ID for distributed systems (CID).\n  /// The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\n  /// For dataset-update PNMs this SHOULD identify a compact DPM manifest,\n  /// manifest digest, or other small verification object, not necessarily the\n  /// full dataset bytes.\n  CID: string;\n\n  /// File ID\n  /// This field is the Name\n  FILE_NAME: string;\n\n  /// File ID\n  /// Canonical publication/update partition identity. For dataset-update PNMs,\n  /// this MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\n  /// component refers to the update: PNMs, DPMs, assets, entitlements, provider\n  /// query requests, subscriber caches, replay, audit, and completeness\n  /// verification. Provider-mediated query requests and responses MUST bind\n  /// their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\n  /// reject responses whose DPM, records, or proofs bind to a different FILE_ID.\n  /// Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.\n  FILE_ID: string;\n\n  /// Digital Signature of the CID\n  /// This is the digital signature of the CID, signed using the specified cryptographic method.\n  SIGNATURE: string;\n\n  /// Timestamp Signature\n  /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.\n  TIMESTAMP_SIGNATURE: string;\n\n  /// Type of Cryptographic Signature Used\n  /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.\n  SIGNATURE_TYPE: string;\n\n  /// Type of Cryptographic Signature Used for Timestamp\n  /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.\n  TIMESTAMP_SIGNATURE_TYPE: string;\n}\n\nroot_type PNM;\nfile_identifier "$PNM";',
+      IDL: '// Hash: 5960379ce415c874b886ddc31dd6b7e882e36e590682136409929b7ca3741298\n// Version: 1.0.6\n// -----------------------------------END_HEADER\n/// Publish Notification Message.\n///\n/// PNM is the compact network announcement for a published record, manifest, or\n/// dataset update. For dataset updates, FILE_ID is the complete canonical\n/// identity for the published update and CID usually points to a small DPM\n/// manifest or digest. The DPM carries the full verification contract:\n/// provider identity, retrieval protocol, canonical query, result hash, Merkle\n/// roots, completeness-capable indexes, file_id partition key, and signature.\n/// Large or paid dataset updates do not need to be published as globally\n/// discoverable IPFS files; a PNM may instead advertise a provider-mediated SDN\n/// query protocol. In that mode the PNM is only the announcement. The DPM is\n/// the signed commitment, and each provider response carries records plus\n/// Merkle proof material that the subscriber verifies against the DPM roots and\n/// the announced FILE_ID before import.\ntable PNM {\n  /// Multiformat Address\n  /// As specified by the multiaddr specification.\n  /// A universal address format for representing multiple network protocols. Examples include:\n  /// - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n  /// - /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n  /// - /dns4/example.com for a domain name resolvable only to IPv4 addresses\n  /// - /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.\n  MULTIFORMAT_ADDRESS: string;\n\n  /// Publish Time OF THE Publish Notification Message\n  PUBLISH_TIMESTAMP: string;\n\n  /// Concatenated Content Identifier (CID)\n  /// This field is a unique ID for distributed systems (CID).\n  /// The CID provides a unique identifier within distributed systems, as\n  /// detailed in the multiformats CID specification.\n  /// For dataset-update PNMs this SHOULD identify a compact DPM manifest,\n  /// manifest digest, or other small verification object, not necessarily the\n  /// full dataset bytes.\n  CID: string;\n\n  /// File ID\n  /// This field is the Name\n  FILE_NAME: string;\n\n  /// File ID\n  /// Canonical publication/update partition identity. For dataset-update PNMs,\n  /// this MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\n  /// component refers to the update: PNMs, DPMs, assets, entitlements, provider\n  /// query requests, subscriber caches, replay, audit, and completeness\n  /// verification. Provider-mediated query requests and responses MUST bind\n  /// their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\n  /// reject responses whose DPM, records, or proofs bind to a different FILE_ID.\n  /// Example: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.\n  FILE_ID: string;\n\n  /// Digital Signature of the CID\n  /// This is the digital signature of the CID, signed using the specified cryptographic method.\n  SIGNATURE: string;\n\n  /// Timestamp Signature\n  /// Digital signature of the publish timestamp, using the specified cryptographic method for timestamp verification.\n  TIMESTAMP_SIGNATURE: string;\n\n  /// Type of Cryptographic Signature Used\n  /// Specifies the type of cryptographic signature used for the SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.\n  SIGNATURE_TYPE: string;\n\n  /// Type of Cryptographic Signature Used for Timestamp\n  /// Specifies the type of cryptographic signature used for the TIMESTAMP_SIGNATURE field, indicating the specific blockchain technology, such as Ethereum or BTC.\n  TIMESTAMP_SIGNATURE_TYPE: string;\n}\n\nroot_type PNM;\nfile_identifier "$PNM";',
       files: [
         "./dist/PNM/PNM.sw.tar.gz",
         "./dist/PNM/PNM.py.tar.gz",
@@ -12232,7 +12240,7 @@ var json_default = {
           properties: {
             SOURCE: {
               type: "string",
-              description: 'Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare\nRadar", "RIPE Atlas", "LENS".'
+              description: "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it."
             },
             SOURCE_URL: {
               type: "string",
@@ -12240,7 +12248,7 @@ var json_default = {
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Dataset, table or API path queried, e.g.\n"measurement-lab.ndt.unified_downloads".'
+              description: "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route."
             },
             SOURCE_QUERY: {
               type: "string",
@@ -12355,7 +12363,7 @@ var json_default = {
         },
         CNP: {
           type: "object",
-          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.',
+          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.',
           properties: {
             ID: {
               type: "string",
@@ -12363,7 +12371,7 @@ var json_default = {
             },
             CONSTELLATION: {
               type: "string",
-              description: 'Constellation or network name, verbatim ("Starlink", "OneWeb",\n"Kuiper"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.'
+              description: "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
             },
             OPERATOR: {
               type: "string",
@@ -12373,7 +12381,7 @@ var json_default = {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+              description: "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key."
             },
             AS_NAME: {
               type: "string",
@@ -13225,7 +13233,7 @@ var json_default = {
             "BURST_ADJUSTED",
             "INTERPOLATED_EXTRAPOLATED",
             "NO_OBSERVATION",
-            "CELESTRAK_INTERPOLATED"
+            "PROVIDER_INTERPOLATED"
           ]
         },
         F107DataType: {
@@ -15480,7 +15488,7 @@ var json_default = {
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
             },
             PUBLISH_TIMESTAMP: {
               type: "string",
@@ -15488,7 +15496,7 @@ var json_default = {
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
             },
             FILE_NAME: {
               type: "string",
@@ -15496,7 +15504,7 @@ var json_default = {
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             SIGNATURE: {
               type: "string",
@@ -15871,7 +15879,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -15879,7 +15887,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -15986,7 +15994,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -19459,7 +19467,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -19467,7 +19475,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -19574,7 +19582,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -21272,12 +21280,11 @@ ed25519 hardened)`
           properties: {
             SOURCE: {
               type: "string",
-              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
             },
             SOURCE_RECORD_ID: {
               type: "string",
-              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
             },
             SOURCE_URL: {
               type: "string",
@@ -21347,7 +21354,7 @@ ed25519 hardened)`
         },
         OPPRadarCrossSection: {
           type: "object",
-          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
           properties: {
             BAND: {
               type: "string",
@@ -21370,7 +21377,9 @@ ed25519 hardened)`
             },
             SIZE_CLASS: {
               type: "string",
-              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.'
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`
             },
             SENSOR: {
               type: "string",
@@ -21429,7 +21438,7 @@ ed25519 hardened)`
             },
             HEIGHT: {
               $ref: "#/definitions/OPPQuantity",
-              description: "Envelope terms as ESA DISCOS publishes them [m]."
+              description: "Envelope terms as an object database publishes them [m]."
             },
             WIDTH: {
               $ref: "#/definitions/OPPQuantity"
@@ -21450,7 +21459,7 @@ ed25519 hardened)`
             },
             SHAPE: {
               type: "string",
-              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
             },
             SHAPE_PROVENANCE: {
               $ref: "#/definitions/OPPProvenance",
@@ -21503,7 +21512,7 @@ ed25519 hardened)`
             },
             MATERIAL: {
               type: "string",
-              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.'
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
             },
             MATERIAL_CLASS: {
               $ref: "#/definitions/oppMaterialClass"
@@ -23085,7 +23094,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -26646,7 +26655,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -29146,7 +29155,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -30604,7 +30613,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -30612,7 +30621,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -30719,7 +30728,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -32306,7 +32315,7 @@ ed25519 hardened)`
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -32380,7 +32389,7 @@ ed25519 hardened)`
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
             },
             LINK_DIRECTION: {
               $ref: "#/definitions/linkCategory",
@@ -32617,7 +32626,7 @@ ed25519 hardened)`
         },
         IQC: {
           type: "object",
-          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
           properties: {
             ID: {
               type: "string",
@@ -32629,7 +32638,7 @@ ed25519 hardened)`
             },
             SOURCE_NAME: {
               type: "string",
-              description: 'Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",\n"IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than\nan enum so a new archive lane never requires a schema release.'
+              description: "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release."
             },
             SOURCE_URL: {
               type: "string",
@@ -32753,7 +32762,7 @@ ed25519 hardened)`
               items: {
                 type: "string"
               },
-              description: "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags)."
+              description: "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses."
             },
             GEOLOCATION: {
               $ref: "#/definitions/IQCGeolocation",
@@ -40725,7 +40734,7 @@ ed25519 hardened)`
         },
         NUMGaussMarkovRequest: {
           type: "object",
-          description: "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Request for one first-order Gauss-Markov random sequence.",
           properties: {
             OPERATION: {
               $ref: "#/definitions/numOperationCode",
@@ -40753,7 +40762,7 @@ ed25519 hardened)`
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Seed for the Basilisk-compatible standard normal generator."
+              description: "Seed for the standard-normal generator."
             },
             PROPAGATION_MATRIX: {
               type: "array",
@@ -40789,7 +40798,7 @@ ed25519 hardened)`
         },
         NUMGaussMarkovResult: {
           type: "object",
-          description: "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Result of one first-order Gauss-Markov random sequence.",
           properties: {
             STATUS: {
               $ref: "#/definitions/numResultStatus"
@@ -43125,7 +43134,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -46207,7 +46216,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -48184,7 +48193,7 @@ ed25519 hardened)`
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -48258,7 +48267,7 @@ ed25519 hardened)`
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
             },
             LINK_DIRECTION: {
               $ref: "#/definitions/linkCategory",
@@ -53097,7 +53106,7 @@ ed25519 hardened)`
             "BURST_ADJUSTED",
             "INTERPOLATED_EXTRAPOLATED",
             "NO_OBSERVATION",
-            "CELESTRAK_INTERPOLATED"
+            "PROVIDER_INTERPOLATED"
           ]
         },
         F107DataType: {
@@ -57033,7 +57042,7 @@ ed25519 hardened)`
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
             },
             PUBLISH_TIMESTAMP: {
               type: "string",
@@ -57041,7 +57050,7 @@ ed25519 hardened)`
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
             },
             FILE_NAME: {
               type: "string",
@@ -57049,7 +57058,7 @@ ed25519 hardened)`
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             SIGNATURE: {
               type: "string",
@@ -57096,7 +57105,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -57104,7 +57113,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -57211,7 +57220,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -57984,18 +57993,18 @@ ed25519 hardened)`
         },
         CMRProvenance: {
           type: "object",
-          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
           properties: {
             ROLE: {
               $ref: "#/definitions/cmrEvidenceRole"
             },
             SOURCE: {
               type: "string",
-              description: 'Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN\nprovider that published the joined $CAT record.'
+              description: "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record."
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Source dataset or product name verbatim, such as "active Starlink group"\nor "GCAT satcat".'
+              description: "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product."
             },
             SOURCE_RECORD_ID: {
               type: "string",
@@ -58510,7 +58519,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             SOURCE: {
               type: "string",
-              description: 'Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare\nRadar", "RIPE Atlas", "LENS".'
+              description: "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it."
             },
             SOURCE_URL: {
               type: "string",
@@ -58518,7 +58527,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Dataset, table or API path queried, e.g.\n"measurement-lab.ndt.unified_downloads".'
+              description: "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route."
             },
             SOURCE_QUERY: {
               type: "string",
@@ -58633,7 +58642,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CNP: {
           type: "object",
-          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.',
+          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.',
           properties: {
             ID: {
               type: "string",
@@ -58641,7 +58650,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CONSTELLATION: {
               type: "string",
-              description: 'Constellation or network name, verbatim ("Starlink", "OneWeb",\n"Kuiper"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.'
+              description: "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
             },
             OPERATOR: {
               type: "string",
@@ -58651,7 +58660,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+              description: "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key."
             },
             AS_NAME: {
               type: "string",
@@ -61968,7 +61977,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             FILE_ID: {
               type: "string",
-              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             TRANSPORT_PROTOCOL: {
               type: "string",
@@ -66024,7 +66033,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -67698,7 +67707,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -67772,7 +67781,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
             },
             LINK_DIRECTION: {
               $ref: "#/definitions/linkCategory",
@@ -68009,7 +68018,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         IQC: {
           type: "object",
-          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
           properties: {
             ID: {
               type: "string",
@@ -68021,7 +68030,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOURCE_NAME: {
               type: "string",
-              description: 'Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",\n"IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than\nan enum so a new archive lane never requires a schema release.'
+              description: "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release."
             },
             SOURCE_URL: {
               type: "string",
@@ -68145,7 +68154,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               items: {
                 type: "string"
               },
-              description: "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags)."
+              description: "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses."
             },
             GEOLOCATION: {
               $ref: "#/definitions/IQCGeolocation",
@@ -74925,7 +74934,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         NUMGaussMarkovRequest: {
           type: "object",
-          description: "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Request for one first-order Gauss-Markov random sequence.",
           properties: {
             OPERATION: {
               $ref: "#/definitions/numOperationCode",
@@ -74953,7 +74962,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Seed for the Basilisk-compatible standard normal generator."
+              description: "Seed for the standard-normal generator."
             },
             PROPAGATION_MATRIX: {
               type: "array",
@@ -74989,7 +74998,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         NUMGaussMarkovResult: {
           type: "object",
-          description: "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Result of one first-order Gauss-Markov random sequence.",
           properties: {
             STATUS: {
               $ref: "#/definitions/numResultStatus"
@@ -76650,12 +76659,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             SOURCE: {
               type: "string",
-              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself."
             },
             SOURCE_RECORD_ID: {
               type: "string",
-              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized."
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized."
             },
             SOURCE_URL: {
               type: "string",
@@ -76725,7 +76733,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         OPPRadarCrossSection: {
           type: "object",
-          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
           properties: {
             BAND: {
               type: "string",
@@ -76748,7 +76756,9 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIZE_CLASS: {
               type: "string",
-              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.'
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`
             },
             SENSOR: {
               type: "string",
@@ -76807,7 +76817,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             HEIGHT: {
               $ref: "#/definitions/OPPQuantity",
-              description: "Envelope terms as ESA DISCOS publishes them [m]."
+              description: "Envelope terms as an object database publishes them [m]."
             },
             WIDTH: {
               $ref: "#/definitions/OPPQuantity"
@@ -76828,7 +76838,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SHAPE: {
               type: "string",
-              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.'
             },
             SHAPE_PROVENANCE: {
               $ref: "#/definitions/OPPProvenance",
@@ -76881,7 +76891,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MATERIAL: {
               type: "string",
-              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.'
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated."
             },
             MATERIAL_CLASS: {
               $ref: "#/definitions/oppMaterialClass"
@@ -77837,7 +77847,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             PROVIDER_DOMAIN: {
               type: "string",
-              description: 'Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\nthe origin the manifest was served from.'
+              description: 'Domain of the provider, e.g. "node.example.org". Required. MUST equal\nthe origin the manifest was served from.'
             },
             PROVIDER_NAME: {
               type: "string",
@@ -78751,7 +78761,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RBKQuaternion: {
           type: "object",
-          description: "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+          description: "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
           properties: {
             Q0: {
               type: "number"
@@ -78770,7 +78780,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RBKMatrix3: {
           type: "object",
-          description: "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+          description: "Row-major 3x3 direction cosine matrix.",
           properties: {
             M11: {
               type: "number"
@@ -85204,7 +85214,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "CelesTrak Star catalog identifier"
+              description: "Community satellite-tracking star catalog identifier"
             },
             GNC_CAT_ID: {
               type: "integer",
@@ -92222,18 +92232,18 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CMRProvenance: {
           type: "object",
-          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
           properties: {
             ROLE: {
               $ref: "#/definitions/cmrEvidenceRole"
             },
             SOURCE: {
               type: "string",
-              description: 'Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN\nprovider that published the joined $CAT record.'
+              description: "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record."
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Source dataset or product name verbatim, such as "active Starlink group"\nor "GCAT satcat".'
+              description: "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product."
             },
             SOURCE_RECORD_ID: {
               type: "string",
@@ -110502,7 +110512,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -110510,7 +110520,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -110617,7 +110627,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -118918,7 +118928,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             PRIVATE_KEY: {
               type: "string",
@@ -118926,7 +118936,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys"
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".'
             },
             KEY_ADDRESS: {
               type: "string",
@@ -119033,7 +119043,7 @@ ed25519 hardened)`
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")'
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
             },
             PUBLIC_KEY: {
               type: "string",
@@ -120283,7 +120293,7 @@ ed25519 hardened)`
           properties: {
             PROVIDER_DOMAIN: {
               type: "string",
-              description: 'Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\nthe origin the manifest was served from.'
+              description: 'Domain of the provider, e.g. "node.example.org". Required. MUST equal\nthe origin the manifest was served from.'
             },
             PROVIDER_NAME: {
               type: "string",
@@ -121675,7 +121685,7 @@ ed25519 hardened)`
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").'
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
             },
             NOMINAL_SEGMENT_SPAN: {
               type: "number",
@@ -123933,7 +123943,7 @@ ed25519 hardened)`
             },
             FILE_ID: {
               type: "string",
-              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             TRANSPORT_PROTOCOL: {
               type: "string",
@@ -125662,7 +125672,7 @@ ed25519 hardened)`
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "CelesTrak Star catalog identifier"
+              description: "Community satellite-tracking star catalog identifier"
             },
             GNC_CAT_ID: {
               type: "integer",
@@ -126217,7 +126227,7 @@ ed25519 hardened)`
         },
         RBKQuaternion: {
           type: "object",
-          description: "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+          description: "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
           properties: {
             Q0: {
               type: "number"
@@ -126236,7 +126246,7 @@ ed25519 hardened)`
         },
         RBKMatrix3: {
           type: "object",
-          description: "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+          description: "Row-major 3x3 direction cosine matrix.",
           properties: {
             M11: {
               type: "number"
@@ -126358,7 +126368,7 @@ ed25519 hardened)`
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`."
             },
             PUBLISH_TIMESTAMP: {
               type: "string",
@@ -126366,7 +126376,7 @@ ed25519 hardened)`
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes."
             },
             FILE_NAME: {
               type: "string",
@@ -126374,7 +126384,7 @@ ed25519 hardened)`
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             SIGNATURE: {
               type: "string",
@@ -128831,11 +128841,11 @@ var fbjson_default = {
           "x-flatbuffer-enum-values": {
             NDT7: {
               value: 0,
-              description: "M-Lab NDT7 measurement."
+              description: "NDT7 network-diagnostic protocol measurement."
             },
             SPEED_TEST: {
               value: 1,
-              description: "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+              description: "A speed test other than NDT7 \u2014 a third-party measurement platform, a CDN-operated test, or an operator-native test."
             },
             PING: {
               value: 2,
@@ -128927,7 +128937,7 @@ var fbjson_default = {
           properties: {
             SOURCE: {
               type: "string",
-              description: 'Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare\nRadar", "RIPE Atlas", "LENS".',
+              description: "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -128938,7 +128948,7 @@ var fbjson_default = {
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Dataset, table or API path queried, e.g.\n"measurement-lab.ndt.unified_downloads".',
+              description: "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_QUERY: {
@@ -128969,11 +128979,11 @@ var fbjson_default = {
               "x-flatbuffer-enum-values": {
                 NDT7: {
                   value: 0,
-                  description: "M-Lab NDT7 measurement."
+                  description: "NDT7 network-diagnostic protocol measurement."
                 },
                 SPEED_TEST: {
                   value: 1,
-                  description: "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+                  description: "A speed test other than NDT7 \u2014 a third-party measurement platform, a CDN-operated test, or an operator-native test."
                 },
                 PING: {
                   value: 2,
@@ -129191,7 +129201,7 @@ var fbjson_default = {
         },
         CNP: {
           type: "object",
-          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.',
+          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.',
           properties: {
             ID: {
               type: "string",
@@ -129200,7 +129210,7 @@ var fbjson_default = {
             },
             CONSTELLATION: {
               type: "string",
-              description: 'Constellation or network name, verbatim ("Starlink", "OneWeb",\n"Kuiper"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.',
+              description: "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.",
               "x-flatbuffer-type": "string"
             },
             OPERATOR: {
@@ -129212,7 +129222,7 @@ var fbjson_default = {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key.",
+              description: "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key.",
               "x-flatbuffer-type": "uint32"
             },
             AS_NAME: {
@@ -132497,7 +132507,7 @@ var fbjson_default = {
             "BURST_ADJUSTED",
             "INTERPOLATED_EXTRAPOLATED",
             "NO_OBSERVATION",
-            "CELESTRAK_INTERPOLATED"
+            "PROVIDER_INTERPOLATED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -132514,8 +132524,9 @@ var fbjson_default = {
             NO_OBSERVATION: {
               value: 3
             },
-            CELESTRAK_INTERPOLATED: {
-              value: 4
+            PROVIDER_INTERPOLATED: {
+              value: 4,
+              description: "Interpolated by the upstream data provider rather than the issuing observatory. Wire value 4 is unchanged from prior releases."
             }
           }
         },
@@ -133455,7 +133466,7 @@ var fbjson_default = {
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -134782,7 +134793,7 @@ var fbjson_default = {
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -138149,7 +138160,7 @@ var fbjson_default = {
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
               "x-flatbuffer-type": "string"
             },
             PUBLISH_TIMESTAMP: {
@@ -138159,7 +138170,7 @@ var fbjson_default = {
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
               "x-flatbuffer-type": "string"
             },
             FILE_NAME: {
@@ -138169,7 +138180,7 @@ var fbjson_default = {
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE: {
@@ -139977,7 +139988,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -139987,7 +139998,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -140124,7 +140135,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -146636,7 +146647,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -146646,7 +146657,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -146783,7 +146794,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -149599,7 +149610,7 @@ ed25519 hardened)`,
           "x-flatbuffer-enum-values": {
             UNSPECIFIED: {
               value: 0,
-              description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+              description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
             },
             AVERAGE: {
               value: 1
@@ -149772,14 +149783,13 @@ ed25519 hardened)`,
           properties: {
             SOURCE: {
               type: "string",
-              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`,
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             SOURCE_RECORD_ID: {
               type: "string",
-              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized.",
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_URL: {
@@ -149897,7 +149907,7 @@ ed25519 hardened)`,
         },
         OPPRadarCrossSection: {
           type: "object",
-          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
           properties: {
             BAND: {
               type: "string",
@@ -149921,7 +149931,7 @@ ed25519 hardened)`,
               "x-flatbuffer-enum-values": {
                 UNSPECIFIED: {
                   value: 0,
-                  description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+                  description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
                 },
                 AVERAGE: {
                   value: 1
@@ -149955,7 +149965,9 @@ ed25519 hardened)`,
             },
             SIZE_CLASS: {
               type: "string",
-              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.',
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`,
               "x-flatbuffer-type": "string"
             },
             SENSOR: {
@@ -150025,7 +150037,7 @@ ed25519 hardened)`,
             },
             HEIGHT: {
               $ref: "#/definitions/OPPQuantity",
-              description: "Envelope terms as ESA DISCOS publishes them [m].",
+              description: "Envelope terms as an object database publishes them [m].",
               "x-flatbuffer-type": "OPPQuantity"
             },
             WIDTH: {
@@ -150052,7 +150064,7 @@ ed25519 hardened)`,
             },
             SHAPE: {
               type: "string",
-              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
               "x-flatbuffer-type": "string"
             },
             SHAPE_PROVENANCE: {
@@ -150165,7 +150177,7 @@ ed25519 hardened)`,
             },
             MATERIAL: {
               type: "string",
-              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.',
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated.",
               "x-flatbuffer-type": "string"
             },
             MATERIAL_CLASS: {
@@ -155839,7 +155851,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -164026,7 +164038,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -172152,7 +172164,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -174125,7 +174137,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -174135,7 +174147,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -174272,7 +174284,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -176755,7 +176767,7 @@ ed25519 hardened)`,
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -176937,7 +176949,7 @@ ed25519 hardened)`,
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
               "x-flatbuffer-type": "string"
             },
             LINK_DIRECTION: {
@@ -177277,7 +177289,7 @@ ed25519 hardened)`,
         },
         IQC: {
           type: "object",
-          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
           properties: {
             ID: {
               type: "string",
@@ -177291,7 +177303,7 @@ ed25519 hardened)`,
             },
             SOURCE_NAME: {
               type: "string",
-              description: 'Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",\n"IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than\nan enum so a new archive lane never requires a schema release.',
+              description: "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_URL: {
@@ -177441,7 +177453,7 @@ ed25519 hardened)`,
               items: {
                 type: "string"
               },
-              description: "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags).",
+              description: "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses.",
               "x-flatbuffer-type": "[string]"
             },
             GEOLOCATION: {
@@ -179974,7 +179986,7 @@ ed25519 hardened)`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -183129,7 +183141,7 @@ ed25519 hardened)`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -183281,7 +183293,7 @@ ed25519 hardened)`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -186637,7 +186649,7 @@ ed25519 hardened)`,
             },
             Basilisk: {
               value: 18,
-              description: "Basilisk astrodynamics simulation module"
+              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             Maneuver: {
               value: 19,
@@ -188010,7 +188022,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -191726,7 +191738,7 @@ ed25519 hardened)`,
         },
         NUMGaussMarkovRequest: {
           type: "object",
-          description: "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Request for one first-order Gauss-Markov random sequence.",
           properties: {
             OPERATION: {
               $ref: "#/definitions/numOperationCode",
@@ -191780,7 +191792,7 @@ ed25519 hardened)`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Seed for the Basilisk-compatible standard normal generator.",
+              description: "Seed for the standard-normal generator.",
               "x-flatbuffer-type": "uint32"
             },
             PROPAGATION_MATRIX: {
@@ -191822,7 +191834,7 @@ ed25519 hardened)`,
         },
         NUMGaussMarkovResult: {
           type: "object",
-          description: "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Result of one first-order Gauss-Markov random sequence.",
           properties: {
             STATUS: {
               $ref: "#/definitions/numResultStatus",
@@ -192474,7 +192486,7 @@ ed25519 hardened)`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -192501,7 +192513,7 @@ ed25519 hardened)`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -198471,7 +198483,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -206638,7 +206650,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -209449,7 +209461,7 @@ ed25519 hardened)`,
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -209631,7 +209643,7 @@ ed25519 hardened)`,
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
               "x-flatbuffer-type": "string"
             },
             LINK_DIRECTION: {
@@ -214257,7 +214269,7 @@ ed25519 hardened)`,
             },
             Platform: {
               value: 1,
-              description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+              description: "The store operator platform \u2014 the commission recipient"
             },
             Referrer: {
               value: 2,
@@ -214472,11 +214484,11 @@ ed25519 hardened)`,
           "x-flatbuffer-enum-values": {
             NDT7: {
               value: 0,
-              description: "M-Lab NDT7 measurement."
+              description: "NDT7 network-diagnostic protocol measurement."
             },
             SPEED_TEST: {
               value: 1,
-              description: "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+              description: "A speed test other than NDT7 \u2014 a third-party measurement platform, a CDN-operated test, or an operator-native test."
             },
             PING: {
               value: 2,
@@ -219346,7 +219358,7 @@ ed25519 hardened)`,
             },
             Basilisk: {
               value: 18,
-              description: "Basilisk astrodynamics simulation module"
+              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             Maneuver: {
               value: 19,
@@ -219889,7 +219901,7 @@ ed25519 hardened)`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -220956,7 +220968,7 @@ ed25519 hardened)`,
           "x-flatbuffer-enum-values": {
             UNSPECIFIED: {
               value: 0,
-              description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+              description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
             },
             AVERAGE: {
               value: 1
@@ -222148,15 +222160,15 @@ ed25519 hardened)`,
             },
             M1_ROTATION_MATRIX: {
               value: 58,
-              description: "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             M2_ROTATION_MATRIX: {
               value: 59,
-              description: "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             M3_ROTATION_MATRIX: {
               value: 60,
-              description: "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
             }
           }
         },
@@ -224655,7 +224667,7 @@ ed25519 hardened)`,
             "BURST_ADJUSTED",
             "INTERPOLATED_EXTRAPOLATED",
             "NO_OBSERVATION",
-            "CELESTRAK_INTERPOLATED"
+            "PROVIDER_INTERPOLATED"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -224672,8 +224684,9 @@ ed25519 hardened)`,
             NO_OBSERVATION: {
               value: 3
             },
-            CELESTRAK_INTERPOLATED: {
-              value: 4
+            PROVIDER_INTERPOLATED: {
+              value: 4,
+              description: "Interpolated by the upstream data provider rather than the issuing observatory. Wire value 4 is unchanged from prior releases."
             }
           }
         },
@@ -232483,7 +232496,7 @@ ed25519 hardened)`,
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
               "x-flatbuffer-type": "string"
             },
             PUBLISH_TIMESTAMP: {
@@ -232493,7 +232506,7 @@ ed25519 hardened)`,
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
               "x-flatbuffer-type": "string"
             },
             FILE_NAME: {
@@ -232503,7 +232516,7 @@ ed25519 hardened)`,
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE: {
@@ -232556,7 +232569,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -232566,7 +232579,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -232703,7 +232716,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -234084,7 +234097,7 @@ ed25519 hardened)`,
         },
         CMRProvenance: {
           type: "object",
-          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
           properties: {
             ROLE: {
               $ref: "#/definitions/cmrEvidenceRole",
@@ -234116,13 +234129,13 @@ ed25519 hardened)`,
             },
             SOURCE: {
               type: "string",
-              description: 'Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN\nprovider that published the joined $CAT record.',
+              description: "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Source dataset or product name verbatim, such as "active Starlink group"\nor "GCAT satcat".',
+              description: "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -234760,7 +234773,7 @@ ed25519 hardened)`,
                 },
                 Platform: {
                   value: 1,
-                  description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+                  description: "The store operator platform \u2014 the commission recipient"
                 },
                 Referrer: {
                   value: 2,
@@ -234949,7 +234962,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             SOURCE: {
               type: "string",
-              description: 'Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare\nRadar", "RIPE Atlas", "LENS".',
+              description: "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -234960,7 +234973,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Dataset, table or API path queried, e.g.\n"measurement-lab.ndt.unified_downloads".',
+              description: "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_QUERY: {
@@ -234991,11 +235004,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               "x-flatbuffer-enum-values": {
                 NDT7: {
                   value: 0,
-                  description: "M-Lab NDT7 measurement."
+                  description: "NDT7 network-diagnostic protocol measurement."
                 },
                 SPEED_TEST: {
                   value: 1,
-                  description: "A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native)."
+                  description: "A speed test other than NDT7 \u2014 a third-party measurement platform, a CDN-operated test, or an operator-native test."
                 },
                 PING: {
                   value: 2,
@@ -235213,7 +235226,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CNP: {
           type: "object",
-          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator \u2014 OneWeb, Kuiper, a GEO VSAT\nprovider \u2014 or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.',
+          description: 'Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation\'s user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator \u2014 another\nLEO constellation, a GEO VSAT provider \u2014 or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client\'s result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express "the p50 download rate\nobserved by 41,000 terminals in Germany during July".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT \u2014 never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish "not\nlooked for" from "looked for and empty".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.',
           properties: {
             ID: {
               type: "string",
@@ -235222,7 +235235,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CONSTELLATION: {
               type: "string",
-              description: 'Constellation or network name, verbatim ("Starlink", "OneWeb",\n"Kuiper"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.',
+              description: "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name.",
               "x-flatbuffer-type": "string"
             },
             OPERATOR: {
@@ -235234,7 +235247,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Autonomous system number of the measured client network \u2014 Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key.",
+              description: "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key.",
               "x-flatbuffer-type": "uint32"
             },
             AS_NAME: {
@@ -239549,7 +239562,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             FILE_ID: {
               type: "string",
-              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             TRANSPORT_PROTOCOL: {
               type: "string",
@@ -245888,7 +245901,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -248163,7 +248176,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RFB: {
           type: "object",
-          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+          description: "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records \u2014 one UPLINK and\none DOWNLINK \u2014 sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
           properties: {
             ID: {
               type: "string",
@@ -248345,7 +248358,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             ID_TRANSMITTER: {
               type: "string",
-              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value.",
+              description: "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value.",
               "x-flatbuffer-type": "string"
             },
             LINK_DIRECTION: {
@@ -248685,7 +248698,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         IQC: {
           type: "object",
-          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ\ndatabase, Zenodo \u2014 normalized onto the SigMF v1 core namespace, which is\nthe only metadata vocabulary these archives share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts\nthird-party recordings, so licence is per RECORDING, never per site.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
+          description: "RF IQ Capture Metadata.\n\nThe description of ONE raw, un-demodulated complex-baseband recording held\nin a public archive \u2014 a hosted IQ-capture repository, a crowdsourced\nsignal-identification catalog, an institutional dataset repository, an\nSDR project's capture database, a general-purpose research data archive \u2014\nnormalized onto the SigMF v1 core namespace, which is the only metadata\nvocabulary these archive classes share.\n\n$IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable\nand verifiable without anyone mirroring its payload: the samples stay where\ntheir publisher put them and `PAYLOADS` says where that is, how large it\nis, and what it hashes to. `iqcCustody.PINNED` is a deliberate per-capture\ndecision for small high-value recordings, never a default.\n\nUNITS ARE NORMATIVE AND NAMED IN EVERY FIELD. SigMF publishes frequency and\nsample rate in HERTZ, so every frequency and rate field here is `_HZ` and\ncarries the Hz value unconverted. This standard deliberately does NOT\nfollow $RFB's MHz convention \u2014 silently rescaling a SigMF value on ingest\nis the exact defect the suffix exists to prevent. A consumer joining $IQC\nto $RFB divides by 1e6 at the join, explicitly.\n\nLICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.\nIt does not mean public domain, it does not mean permissive, and it does\nnot authorize redistribution. Crowdsourced catalogs and hosted repositories\nboth carry third-party recordings, so licence is per RECORDING, never per\narchive.\n\nDivision of labour: $RFO = a sensor's astrometric/RF observation of a\ntracked object (azimuth, elevation, range); $RFE = the parametric emitter\ndescription; $RFB = the emitter's band specification in MHz; $IQC = the\narchived baseband recording itself. $DPM remains the manifest under which\nTHIS network publishes a shard of $IQC records; it does not describe an\nupstream third party's capture.",
           properties: {
             ID: {
               type: "string",
@@ -248699,7 +248712,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOURCE_NAME: {
               type: "string",
-              description: 'Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",\n"IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than\nan enum so a new archive lane never requires a schema release.',
+              description: "Name of the archive that publishes the capture, carried verbatim as that\narchive states it. A string rather than an enum so a new archive lane\nnever requires a schema release.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_URL: {
@@ -248849,7 +248862,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               items: {
                 type: "string"
               },
-              description: "Archive-level tags or categories, verbatim (SigidWiki categories,\nZenodo keywords, IQEngine tags).",
+              description: "Archive-level tags, categories or keywords, carried verbatim in whatever\nvocabulary the publishing archive uses.",
               "x-flatbuffer-type": "[string]"
             },
             GEOLOCATION: {
@@ -255116,7 +255129,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -256942,7 +256955,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -257873,7 +257886,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -258805,7 +258818,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         NUMGaussMarkovRequest: {
           type: "object",
-          description: "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Request for one first-order Gauss-Markov random sequence.",
           properties: {
             OPERATION: {
               $ref: "#/definitions/numOperationCode",
@@ -258859,7 +258872,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Seed for the Basilisk-compatible standard normal generator.",
+              description: "Seed for the standard-normal generator.",
               "x-flatbuffer-type": "uint32"
             },
             PROPAGATION_MATRIX: {
@@ -258901,7 +258914,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         NUMGaussMarkovResult: {
           type: "object",
-          description: "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+          description: "Result of one first-order Gauss-Markov random sequence.",
           properties: {
             STATUS: {
               $ref: "#/definitions/numResultStatus",
@@ -259694,7 +259707,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -261270,14 +261283,13 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             SOURCE: {
               type: "string",
-              description: `Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-"CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.`,
+              description: "Publisher of the value, named as the publisher names itself \u2014 a space\nagency's object database, a public satellite catalogue, a third-party\nsatellite reference site, or the operator itself.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             SOURCE_RECORD_ID: {
               type: "string",
-              description: "The source's own identifier for the record this value was read from, such\nas a DISCOS object id. Verbatim, never normalized.",
+              description: "The source's own identifier for the record this value was read from, such\nas that database's object id. Verbatim, never normalized.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_URL: {
@@ -261395,7 +261407,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         OPPRadarCrossSection: {
           type: "object",
-          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. ESA DISCOS xSectMin,\nxSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and\nMAXIMUM sharing one SOURCE.",
+          description: "Radar cross-section as reported for one band, polarization and aspect\nconvention. Radar cross-section is band- and aspect-dependent, so an $OPP\ncarries a list of these and never a single scalar. A source publishing\nminimum, average and maximum cross-sections becomes three entries with\nASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.",
           properties: {
             BAND: {
               type: "string",
@@ -261419,7 +261431,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               "x-flatbuffer-enum-values": {
                 UNSPECIFIED: {
                   value: 0,
-                  description: "The source states no aspect convention. ESA DISCOS characteristic cross-sections and CelesTrak SATCAT RCS use this value."
+                  description: "The source states no aspect convention. Characteristic cross-sections published by catalogue-level object databases use this value."
                 },
                 AVERAGE: {
                   value: 1
@@ -261453,7 +261465,9 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIZE_CLASS: {
               type: "string",
-              description: 'Size bucket verbatim when a source publishes a bucket instead of a number,\nsuch as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never\nturned into a number.',
+              description: `Size bucket verbatim when a source publishes a bucket instead of a number,
+such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
+turned into a number.`,
               "x-flatbuffer-type": "string"
             },
             SENSOR: {
@@ -261523,7 +261537,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             HEIGHT: {
               $ref: "#/definitions/OPPQuantity",
-              description: "Envelope terms as ESA DISCOS publishes them [m].",
+              description: "Envelope terms as an object database publishes them [m].",
               "x-flatbuffer-type": "OPPQuantity"
             },
             WIDTH: {
@@ -261550,7 +261564,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SHAPE: {
               type: "string",
-              description: 'Gross geometric shape verbatim from the source, such as the DISCOS shape\nstring "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
+              description: 'Gross geometric shape verbatim from the source, such as a shape string\nof the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.',
               "x-flatbuffer-type": "string"
             },
             SHAPE_PROVENANCE: {
@@ -261663,7 +261677,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MATERIAL: {
               type: "string",
-              description: 'Material name verbatim from the source: "Kapton MLI", "GaAs\ntriple-junction", "Al 6061-T6". Empty when unstated.',
+              description: "Material name verbatim from the source, in whatever designation the\nsource uses: a multi-layer-insulation film, a photovoltaic cell\nchemistry, an alloy temper designation. Empty when unstated.",
               "x-flatbuffer-type": "string"
             },
             MATERIAL_CLASS: {
@@ -263083,7 +263097,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -263112,7 +263126,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           properties: {
             PROVIDER_DOMAIN: {
               type: "string",
-              description: 'Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\nthe origin the manifest was served from.',
+              description: 'Domain of the provider, e.g. "node.example.org". Required. MUST equal\nthe origin the manifest was served from.',
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -264427,7 +264441,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RBKQuaternion: {
           type: "object",
-          description: "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+          description: "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
           properties: {
             Q0: {
               type: "number",
@@ -264450,7 +264464,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         RBKMatrix3: {
           type: "object",
-          description: "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+          description: "Row-major 3x3 direction cosine matrix.",
           properties: {
             M11: {
               type: "number",
@@ -264733,15 +264747,15 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 M1_ROTATION_MATRIX: {
                   value: 58,
-                  description: "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
                 },
                 M2_ROTATION_MATRIX: {
                   value: 59,
-                  description: "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
                 },
                 M3_ROTATION_MATRIX: {
                   value: 60,
-                  description: "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
                 }
               }
             },
@@ -274070,7 +274084,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "CelesTrak Star catalog identifier",
+              description: "Community satellite-tracking star catalog identifier",
               "x-flatbuffer-type": "long"
             },
             GNC_CAT_ID: {
@@ -284227,7 +284241,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
         },
         CMRProvenance: {
           type: "object",
-          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges CelesTrak group\nmembership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.",
+          description: "Replayable provenance for one fact used by a $CMR.\n\nEach source gets its own entry. A publisher never merges a catalogue's\ngroup membership, a reference catalogue's ownership assertion, and\n$CAT/$BUS joins into one ambiguous citation.",
           properties: {
             ROLE: {
               $ref: "#/definitions/cmrEvidenceRole",
@@ -284259,13 +284273,13 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SOURCE: {
               type: "string",
-              description: 'Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN\nprovider that published the joined $CAT record.',
+              description: "Publisher name verbatim as that publisher states it \u2014 a public satellite\ncatalogue, a general object reference catalogue, or the network provider\nthat published the joined $CAT record.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             SOURCE_DATASET: {
               type: "string",
-              description: 'Source dataset or product name verbatim, such as "active Starlink group"\nor "GCAT satcat".',
+              description: "Source dataset or product name verbatim, such as a named constellation\ngroup file or a catalogue's satellite-catalog product.",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -288733,7 +288747,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             Platform: {
               value: 1,
-              description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+              description: "The store operator platform \u2014 the commission recipient"
             },
             Referrer: {
               value: 2,
@@ -288922,7 +288936,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Platform: {
                   value: 1,
-                  description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+                  description: "The store operator platform \u2014 the commission recipient"
                 },
                 Referrer: {
                   value: 2,
@@ -289728,7 +289742,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -290754,7 +290768,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -290906,7 +290920,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -293071,7 +293085,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             Basilisk: {
               value: 18,
-              description: "Basilisk astrodynamics simulation module"
+              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             Maneuver: {
               value: 19,
@@ -294382,7 +294396,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -312607,7 +312621,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -312634,7 +312648,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -312819,7 +312833,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -317797,7 +317811,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -317807,7 +317821,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -317944,7 +317958,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -322386,7 +322400,7 @@ ed25519 hardened)`,
             },
             SGP4XP: {
               value: 1,
-              description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             DSST: {
               value: 2,
@@ -325624,7 +325638,7 @@ ed25519 hardened)`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -325776,7 +325790,7 @@ ed25519 hardened)`,
                 },
                 SGP4XP: {
                   value: 1,
-                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+                  description: "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
                 },
                 DSST: {
                   value: 2,
@@ -335396,7 +335410,7 @@ ed25519 hardened)`,
             },
             Basilisk: {
               value: 18,
-              description: "Basilisk astrodynamics simulation module"
+              description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             Maneuver: {
               value: 19,
@@ -335787,7 +335801,7 @@ not a transitional leftover.`,
             },
             XPUB: {
               type: "string",
-              description: "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             PRIVATE_KEY: {
@@ -335797,7 +335811,7 @@ not a transitional leftover.`,
             },
             XPRIV: {
               type: "string",
-              description: "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+              description: 'Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".',
               "x-flatbuffer-type": "string"
             },
             KEY_ADDRESS: {
@@ -335934,7 +335948,7 @@ ed25519 hardened)`,
           properties: {
             DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")',
+              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -337138,7 +337152,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -337893,7 +337907,7 @@ ed25519 hardened)`,
                 },
                 Basilisk: {
                   value: 18,
-                  description: "Basilisk astrodynamics simulation module"
+                  description: "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
                 },
                 Maneuver: {
                   value: 19,
@@ -337922,7 +337936,7 @@ ed25519 hardened)`,
           properties: {
             PROVIDER_DOMAIN: {
               type: "string",
-              description: 'Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal\nthe origin the manifest was served from.',
+              description: 'Domain of the provider, e.g. "node.example.org". Required. MUST equal\nthe origin the manifest was served from.',
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
@@ -343269,7 +343283,7 @@ ed25519 hardened)`,
             },
             EPHEMERIS_SOURCE: {
               type: "string",
-              description: 'Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").',
+              description: "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier).",
               "x-flatbuffer-type": "string"
             },
             NOMINAL_SEGMENT_SPAN: {
@@ -346898,7 +346912,7 @@ ed25519 hardened)`,
             },
             FILE_ID: {
               type: "string",
-              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+              description: "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
             },
             TRANSPORT_PROTOCOL: {
               type: "string",
@@ -349392,7 +349406,7 @@ ed25519 hardened)`,
               type: "integer",
               minimum: -9223372036854776e3,
               maximum: 9223372036854776e3,
-              description: "CelesTrak Star catalog identifier",
+              description: "Community satellite-tracking star catalog identifier",
               "x-flatbuffer-type": "long"
             },
             GNC_CAT_ID: {
@@ -350473,15 +350487,15 @@ ed25519 hardened)`,
             },
             M1_ROTATION_MATRIX: {
               value: 58,
-              description: "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             M2_ROTATION_MATRIX: {
               value: 59,
-              description: "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
             },
             M3_ROTATION_MATRIX: {
               value: 60,
-              description: "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+              description: "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
             }
           }
         },
@@ -350591,7 +350605,7 @@ ed25519 hardened)`,
         },
         RBKQuaternion: {
           type: "object",
-          description: "Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.",
+          description: "Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).",
           properties: {
             Q0: {
               type: "number",
@@ -350614,7 +350628,7 @@ ed25519 hardened)`,
         },
         RBKMatrix3: {
           type: "object",
-          description: "Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.",
+          description: "Row-major 3x3 direction cosine matrix.",
           properties: {
             M11: {
               type: "number",
@@ -350897,15 +350911,15 @@ ed25519 hardened)`,
                 },
                 M1_ROTATION_MATRIX: {
                   value: 58,
-                  description: "Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the one-axis elementary direction-cosine matrix for ANGLE_RAD."
                 },
                 M2_ROTATION_MATRIX: {
                   value: 59,
-                  description: "Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the two-axis elementary direction-cosine matrix for ANGLE_RAD."
                 },
                 M3_ROTATION_MATRIX: {
                   value: 60,
-                  description: "Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD."
+                  description: "Return the three-axis elementary direction-cosine matrix for ANGLE_RAD."
                 }
               }
             },
@@ -351069,7 +351083,7 @@ ed25519 hardened)`,
           properties: {
             MULTIFORMAT_ADDRESS: {
               type: "string",
-              description: "Multiformat Address\nhttps://multiformats.io/multiaddr/\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
+              description: "Multiformat Address\nAs specified by the multiaddr specification.\nA universal address format for representing multiple network protocols. Examples include:\n- /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol\n- /ip6zone/x/ip6/::1 for an IPv6 address with a zone\n- /dns4/example.com for a domain name resolvable only to IPv4 addresses\n- /ipfs/bafybeiccfclkdtucu6y4yc5cpr6y3yuinr67svmii46v5cfcrkp47ihehy/README.txt -IPFS address w/CID and path to `README.txt`.",
               "x-flatbuffer-type": "string"
             },
             PUBLISH_TIMESTAMP: {
@@ -351079,7 +351093,7 @@ ed25519 hardened)`,
             },
             CID: {
               type: "string",
-              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
+              description: "Concatenated Content Identifier (CID)\nThis field is a unique ID for distributed systems (CID).\nThe CID provides a unique identifier within distributed systems, as\ndetailed in the multiformats CID specification.\nFor dataset-update PNMs this SHOULD identify a compact DPM manifest,\nmanifest digest, or other small verification object, not necessarily the\nfull dataset bytes.",
               "x-flatbuffer-type": "string"
             },
             FILE_NAME: {
@@ -351089,7 +351103,7 @@ ed25519 hardened)`,
             },
             FILE_ID: {
               type: "string",
-              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.",
+              description: "File ID\nCanonical publication/update partition identity. For dataset-update PNMs,\nthis MUST match DPM.FILE_ID and is the stable key used everywhere an SDN\ncomponent refers to the update: PNMs, DPMs, assets, entitlements, provider\nquery requests, subscriber caches, replay, audit, and completeness\nverification. Provider-mediated query requests and responses MUST bind\ntheir Merkle leaves and proof paths to this FILE_ID, and subscribers MUST\nreject responses whose DPM, records, or proofs bind to a different FILE_ID.\nExample: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.",
               "x-flatbuffer-type": "string"
             },
             SIGNATURE: {
@@ -351568,7 +351582,7 @@ ed25519 hardened)`,
             },
             Platform: {
               value: 1,
-              description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+              description: "The store operator platform \u2014 the commission recipient"
             },
             Referrer: {
               value: 2,
@@ -351757,7 +351771,7 @@ ed25519 hardened)`,
                 },
                 Platform: {
                   value: 1,
-                  description: "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+                  description: "The store operator platform \u2014 the commission recipient"
                 },
                 Referrer: {
                   value: 2,

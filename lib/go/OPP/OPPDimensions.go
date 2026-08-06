@@ -97,7 +97,7 @@ func (rcv *OPPDimensions) BodyZ(obj *OPPQuantity) *OPPQuantity {
 	return rcv.BODY_Z(obj)
 }
 
-/// Envelope terms as ESA DISCOS publishes them [m].
+/// Envelope terms as an object database publishes them [m].
 func (rcv *OPPDimensions) HEIGHT(obj *OPPQuantity) *OPPQuantity {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -115,7 +115,7 @@ func (rcv *OPPDimensions) Height(obj *OPPQuantity) *OPPQuantity {
 	return rcv.HEIGHT(obj)
 }
 
-/// Envelope terms as ESA DISCOS publishes them [m].
+/// Envelope terms as an object database publishes them [m].
 func (rcv *OPPDimensions) WIDTH(obj *OPPQuantity) *OPPQuantity {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -205,8 +205,8 @@ func (rcv *OPPDimensions) SpanDeployed(obj *OPPQuantity) *OPPQuantity {
 }
 
 /// Largest extent with appendages deployed [m].
-/// Gross geometric shape verbatim from the source, such as the DISCOS shape
-/// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+/// Gross geometric shape verbatim from the source, such as a shape string
+/// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
 func (rcv *OPPDimensions) SHAPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -219,8 +219,8 @@ func (rcv *OPPDimensions) Shape() []byte {
 	return rcv.SHAPE()
 }
 
-/// Gross geometric shape verbatim from the source, such as the DISCOS shape
-/// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+/// Gross geometric shape verbatim from the source, such as a shape string
+/// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
 /// Provenance of SHAPE. Present whenever SHAPE is nonempty.
 func (rcv *OPPDimensions) SHAPE_PROVENANCE(obj *OPPProvenance) *OPPProvenance {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))

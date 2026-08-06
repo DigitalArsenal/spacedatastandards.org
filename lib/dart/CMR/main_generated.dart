@@ -88,8 +88,9 @@ class _cmrMembershipStateReader extends fb.Reader<cmrMembershipState> {
 
 ///  Replayable provenance for one fact used by a $CMR.
 ///
-///  Each source gets its own entry. A publisher never merges CelesTrak group
-///  membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+///  Each source gets its own entry. A publisher never merges a catalogue's
+///  group membership, a reference catalogue's ownership assertion, and
+///  $CAT/$BUS joins into one ambiguous citation.
 class CMRProvenance {
   CMRProvenance._(this._bc, this._bcOffset);
   factory CMRProvenance(List<int> bytes) {
@@ -103,11 +104,12 @@ class CMRProvenance {
   final int _bcOffset;
 
   cmrEvidenceRole get ROLE => cmrEvidenceRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
-  ///  Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  ///  provider that published the joined $CAT record.
+  ///  Publisher name verbatim as that publisher states it — a public satellite
+  ///  catalogue, a general object reference catalogue, or the network provider
+  ///  that published the joined $CAT record.
   String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  ///  Source dataset or product name verbatim, such as "active Starlink group"
-  ///  or "GCAT satcat".
+  ///  Source dataset or product name verbatim, such as a named constellation
+  ///  group file or a catalogue's satellite-catalog product.
   String? get SOURCE_DATASET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get sourceDataset => SOURCE_DATASET;
   ///  Source-native row, group, object, or catalogue identifier.

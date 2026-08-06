@@ -1,5 +1,5 @@
-// Hash: 434e1c33d9de1859b6c00785c110be2866550b8880969849fe8c665496c0cef7
-// Version: 1.0.8
+// Hash: bef01cefae37f338f92f8bdf2332978f3e95ab7f95c1fe3c7f2bf9f54b31d526
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -102,7 +102,7 @@ table DPMAsset {
   /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   /// requests, subscriber caches, replay, audit, and completeness proofs.
   /// Example:
-  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   FILE_ID: string;
   /// Provider protocol name/version used to fetch this asset when
   /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol

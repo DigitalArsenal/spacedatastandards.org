@@ -65,7 +65,7 @@ public struct STR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Unique internal identifier
   public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  CelesTrak Star catalog identifier
+  ///  Community satellite-tracking star catalog identifier
   public var CS_ID: Int64 { let o = _accessor.offset(VT.CS_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  GNC star catalog identifier
   public var GNC_CAT_ID: UInt32 { let o = _accessor.offset(VT.GNC_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }

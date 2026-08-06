@@ -1,5 +1,5 @@
-// Hash: fe5160d454c33a395094179293b3c094b99fe77d1173564e70f592fb3e1886aa
-// Version: 1.0.3
+// Hash: 20bb0784c303cd1c818a5d8a412c8a87b09e12eeeb696112efed08bf1b038ae8
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -18,9 +18,10 @@ include "../CAT/main.fbs";
 //   1. Cartesian position (and optionally velocity) coefficients per axis
 //   2. Classical orbital element coefficients (SMA/rPeriap, ecc, inc, RAAN, argPer, anomaly)
 //
-// The record structure follows the pattern established by Basilisk's chebyPosEphem and
-// oeStateEphem modules: each record covers a time segment defined by a midpoint epoch
-// and half-span, with a fixed number of polynomial coefficients per component.
+// The record structure follows the established Chebyshev position-ephemeris and
+// orbital-element state-ephemeris pattern: each record covers a time segment
+// defined by a midpoint epoch and half-span, with a fixed number of polynomial
+// coefficients per component.
 //
 // CCSDS Reference documentation: 502.0-B-3 (April 2023), Section 7 — Trajectory State Types.
 // The OCM Blue Book specifies polynomial representations as a valid trajectory
@@ -258,7 +259,9 @@ table PPE {
   /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
   ORBITAL_ELEMENT_RECORDS: [PPEOrbitalElementRecord];
 
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Generating ephemeris source, verbatim as the generator names itself
+  /// (e.g., a planetary ephemeris series designation, a numerical propagator
+  /// name and version, or an in-house tool identifier).
   EPHEMERIS_SOURCE: string;
 
   /// Fit span in seconds used to generate each polynomial segment.

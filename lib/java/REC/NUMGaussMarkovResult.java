@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Result of one Basilisk-compatible Gauss-Markov random sequence.
+ * Result of one first-order Gauss-Markov random sequence.
  */
 @SuppressWarnings("unused")
 public final class NUMGaussMarkovResult extends com.google.flatbuffers.Table {

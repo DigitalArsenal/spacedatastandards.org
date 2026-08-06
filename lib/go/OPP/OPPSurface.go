@@ -83,8 +83,9 @@ func (rcv *OPPSurface) MutateKind(n oppSurfaceKind) bool {
 	return rcv.MutateKIND(n)
 }
 
-/// Material name verbatim from the source: "Kapton MLI", "GaAs
-/// triple-junction", "Al 6061-T6". Empty when unstated.
+/// Material name verbatim from the source, in whatever designation the
+/// source uses: a multi-layer-insulation film, a photovoltaic cell
+/// chemistry, an alloy temper designation. Empty when unstated.
 func (rcv *OPPSurface) MATERIAL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -97,8 +98,9 @@ func (rcv *OPPSurface) Material() []byte {
 	return rcv.MATERIAL()
 }
 
-/// Material name verbatim from the source: "Kapton MLI", "GaAs
-/// triple-junction", "Al 6061-T6". Empty when unstated.
+/// Material name verbatim from the source, in whatever designation the
+/// source uses: a multi-layer-insulation film, a photovoltaic cell
+/// chemistry, an alloy temper designation. Empty when unstated.
 func (rcv *OPPSurface) MATERIAL_CLASS() oppMaterialClass {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {

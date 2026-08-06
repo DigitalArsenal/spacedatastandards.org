@@ -82,7 +82,7 @@ class DPMAsset(object):
     # update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
     # requests, subscriber caches, replay, audit, and completeness proofs.
     # Example:
-    # celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+    # provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
     # DPMAsset
     def FILE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

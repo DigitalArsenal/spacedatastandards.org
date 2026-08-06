@@ -18,7 +18,7 @@
         },
         "SGP4XP": {
           "value": 1,
-          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
         },
         "DSST": {
           "value": 2,
@@ -45,7 +45,7 @@
             },
             "SGP4XP": {
               "value": 1,
-              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             "DSST": {
               "value": 2,
@@ -230,7 +230,7 @@
             },
             "SGP4XP": {
               "value": 1,
-              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)"
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
             },
             "DSST": {
               "value": 2,

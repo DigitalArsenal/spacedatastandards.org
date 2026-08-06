@@ -33,7 +33,7 @@ export declare class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKe
     PUBLIC_KEY(): string | null;
     PUBLIC_KEY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+     * Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
      */
     XPUB(): string | null;
     XPUB(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -43,7 +43,7 @@ export declare class CryptoKey implements flatbuffers.IUnpackableObject<CryptoKe
     PRIVATE_KEY(): string | null;
     PRIVATE_KEY(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+     * Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
      */
     XPRIV(): string | null;
     XPRIV(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

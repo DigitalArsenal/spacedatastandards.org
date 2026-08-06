@@ -26,8 +26,9 @@ export declare class OPPSurface implements flatbuffers.IUnpackableObject<OPPSurf
     ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     KIND(): oppSurfaceKind;
     /**
-     * Material name verbatim from the source: "Kapton MLI", "GaAs
-     * triple-junction", "Al 6061-T6". Empty when unstated.
+     * Material name verbatim from the source, in whatever designation the
+     * source uses: a multi-layer-insulation film, a photovoltaic cell
+     * chemistry, an alloy temper designation. Empty when unstated.
      */
     MATERIAL(): string | null;
     MATERIAL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

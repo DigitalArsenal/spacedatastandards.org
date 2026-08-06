@@ -20,7 +20,7 @@ public struct PMM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal
   /// the origin the manifest was served from.
   public string PROVIDER_DOMAIN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T

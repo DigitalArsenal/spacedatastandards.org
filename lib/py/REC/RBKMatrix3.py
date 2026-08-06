@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+# Row-major 3x3 direction cosine matrix.
 class RBKMatrix3(object):
     __slots__ = ['_tab']
 

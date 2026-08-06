@@ -4,9 +4,10 @@
 
 # How the underlying observations were produced.
 class cnpMethod(object):
-    # M-Lab NDT7 measurement.
+    # NDT7 network-diagnostic protocol measurement.
     NDT7 = 0
-    # A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+    # A speed test other than NDT7 — a third-party measurement platform, a
+    # CDN-operated test, or an operator-native test.
     SPEED_TEST = 1
     # ICMP or UDP echo.
     PING = 2

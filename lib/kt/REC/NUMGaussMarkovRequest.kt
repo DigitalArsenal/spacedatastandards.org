@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Request for one Basilisk-compatible Gauss-Markov random sequence.
+ * Request for one first-order Gauss-Markov random sequence.
  */
 @Suppress("unused")
 class NUMGaussMarkovRequest : Table() {
@@ -62,7 +62,7 @@ class NUMGaussMarkovRequest : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Seed for the Basilisk-compatible standard normal generator.
+     * Seed for the standard-normal generator.
      */
     val rngSeed : UInt
         get() {

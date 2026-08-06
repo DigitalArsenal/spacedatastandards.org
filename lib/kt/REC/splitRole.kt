@@ -11,7 +11,7 @@ class splitRole private constructor() {
          */
         const val Publisher: Byte = 0
         /**
-         * The store operator platform (e.g. SpaceAware) — the commission recipient
+         * The store operator platform — the commission recipient
          */
         const val Platform: Byte = 1
         /**

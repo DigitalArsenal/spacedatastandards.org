@@ -380,7 +380,8 @@ pub enum RFBOffset {}
 /// RF Band Specification
 ///
 /// UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
-/// that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+/// that publish Hz (as open transmitter databases commonly do) MUST divide by
+/// 1e6 before encoding; sources
 /// that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
 /// never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
 /// convention.
@@ -677,7 +678,8 @@ impl<'a> RFB<'a> {
     unsafe { self._tab.get::<u32>(RFB::VT_NORAD_CAT_ID, Some(0)).unwrap()}
   }
   /// Identifier of the physical transmitter, transceiver or transponder this
-  /// record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+  /// record describes (e.g. an upstream transmitter database's UUID). Uplink
+  /// and downlink
   /// records of the same device share this value.
   #[inline]
   pub fn ID_TRANSMITTER(&self) -> Option<&'a str> {

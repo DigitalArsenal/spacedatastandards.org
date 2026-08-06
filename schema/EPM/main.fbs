@@ -1,5 +1,5 @@
-// Hash: 5b66c5bfde9e7f3160ba2910d085700c080674ac96b25d04752abaeeda60bd9e
-// Version: 1.0.5
+// Hash: b92859b89d3ce264dd6156da614b75f383688fb8b6175ddebccf90b5f27c71d6
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -33,11 +33,11 @@ table CryptoKey {
   /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
   /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   PUBLIC_KEY: string;
-  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   XPUB: string;
   /// Private part of the cryptographic key in hexidecimal format, should be kept secret
   PRIVATE_KEY: string;
-  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   XPRIV: string;
   /// Address generated from the cryptographic key. An address only — NOT a
   /// derivation path; the derivation path lives in KEY_PATH
@@ -105,7 +105,7 @@ table ChainProof {
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
 table DomainProof {
-  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
   DOMAIN: string;
   /// Public key for this proof (hex-encoded)
   PUBLIC_KEY: string;

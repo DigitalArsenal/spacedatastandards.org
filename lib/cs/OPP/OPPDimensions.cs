@@ -23,7 +23,7 @@ public struct OPPDimensions : IFlatbufferObject
   public OPPQuantity? BODY_X { get { int o = __p.__offset(4); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public OPPQuantity? BODY_Y { get { int o = __p.__offset(6); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public OPPQuantity? BODY_Z { get { int o = __p.__offset(8); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Envelope terms as ESA DISCOS publishes them [m].
+  /// Envelope terms as an object database publishes them [m].
   public OPPQuantity? HEIGHT { get { int o = __p.__offset(10); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public OPPQuantity? WIDTH { get { int o = __p.__offset(12); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public OPPQuantity? DEPTH { get { int o = __p.__offset(14); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -32,8 +32,8 @@ public struct OPPDimensions : IFlatbufferObject
   public OPPQuantity? SPAN_STOWED { get { int o = __p.__offset(18); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Largest extent with appendages deployed [m].
   public OPPQuantity? SPAN_DEPLOYED { get { int o = __p.__offset(20); return o != 0 ? (OPPQuantity?)(new OPPQuantity()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  /// Gross geometric shape verbatim from the source, such as a shape string
+  /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   public string SHAPE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSHAPEBytes() { return __p.__vector_as_span<byte>(22, 1); }

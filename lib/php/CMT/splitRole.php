@@ -6,7 +6,7 @@ class splitRole
 {
     /// The module/flow publisher (vendor)
     const Publisher = 0;
-    /// The store operator platform (e.g. SpaceAware) — the commission recipient
+    /// The store operator platform — the commission recipient
     const Platform = 1;
     /// A referrer who drove the sale
     const Referrer = 2;

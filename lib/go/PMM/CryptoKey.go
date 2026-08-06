@@ -76,7 +76,7 @@ func (rcv *CryptoKey) PublicKey() []byte {
 /// Public part of the cryptographic key, in hexidecimal format. Optional for
 /// secp256k1 keys at non-hardened paths (derivable from XPUB + KEY_PATH);
 /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
-/// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+/// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
 func (rcv *CryptoKey) XPUB() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -89,7 +89,7 @@ func (rcv *CryptoKey) Xpub() []byte {
 	return rcv.XPUB()
 }
 
-/// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+/// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
 /// Private part of the cryptographic key in hexidecimal format, should be kept secret
 func (rcv *CryptoKey) PRIVATE_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -104,7 +104,7 @@ func (rcv *CryptoKey) PrivateKey() []byte {
 }
 
 /// Private part of the cryptographic key in hexidecimal format, should be kept secret
-/// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+/// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
 func (rcv *CryptoKey) XPRIV() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -117,7 +117,7 @@ func (rcv *CryptoKey) Xpriv() []byte {
 	return rcv.XPRIV()
 }
 
-/// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+/// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
 /// Address generated from the cryptographic key. An address only — NOT a
 /// derivation path; the derivation path lives in KEY_PATH
 func (rcv *CryptoKey) KEY_ADDRESS() []byte {

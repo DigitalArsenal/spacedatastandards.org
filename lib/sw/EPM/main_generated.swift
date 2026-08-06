@@ -78,13 +78,13 @@ public struct CryptoKey: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   ///  REQUIRED in practice for ed25519 keys, which are never xpub-derivable
   public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
-  ///  Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  ///  Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   public var XPUB: String? { let o = _accessor.offset(VT.XPUB); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPUBSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPUB) }
   ///  Private part of the cryptographic key in hexidecimal format, should be kept secret
   public var PRIVATE_KEY: String? { let o = _accessor.offset(VT.PRIVATE_KEY); return o == 0 ? nil : _accessor.string(at: o) }
   public var PRIVATE_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PRIVATE_KEY) }
-  ///  Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  ///  Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   public var XPRIV: String? { let o = _accessor.offset(VT.XPRIV); return o == 0 ? nil : _accessor.string(at: o) }
   public var XPRIVSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.XPRIV) }
   ///  Address generated from the cryptographic key. An address only — NOT a
@@ -367,7 +367,7 @@ public struct DomainProof: FlatBufferTable, FlatbuffersVectorInitializable, Veri
     static let ENCODING: VOffset = 16
   }
 
-  ///  Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org")
   public var DOMAIN: String? { let o = _accessor.offset(VT.DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
   public var DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DOMAIN) }
   ///  Public key for this proof (hex-encoded)

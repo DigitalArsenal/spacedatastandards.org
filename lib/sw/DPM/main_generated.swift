@@ -207,7 +207,7 @@ public struct DPMAsset: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   ///  update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   ///  requests, subscriber caches, replay, audit, and completeness proofs.
   ///  Example:
-  ///  celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  ///  provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public var FILE_ID: String? { let o = _accessor.offset(VT.FILE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var FILE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FILE_ID) }
   ///  Provider protocol name/version used to fetch this asset when

@@ -24,9 +24,11 @@ enum FluxQualifier : int8_t {
   FluxQualifier_BURST_ADJUSTED = 1,
   FluxQualifier_INTERPOLATED_EXTRAPOLATED = 2,
   FluxQualifier_NO_OBSERVATION = 3,
-  FluxQualifier_CELESTRAK_INTERPOLATED = 4,
+  /// Interpolated by the upstream data provider rather than the issuing
+  /// observatory. Wire value 4 is unchanged from prior releases.
+  FluxQualifier_PROVIDER_INTERPOLATED = 4,
   FluxQualifier_MIN = FluxQualifier_OBSERVED,
-  FluxQualifier_MAX = FluxQualifier_CELESTRAK_INTERPOLATED
+  FluxQualifier_MAX = FluxQualifier_PROVIDER_INTERPOLATED
 };
 
 inline const FluxQualifier (&EnumValuesFluxQualifier())[5] {
@@ -35,7 +37,7 @@ inline const FluxQualifier (&EnumValuesFluxQualifier())[5] {
     FluxQualifier_BURST_ADJUSTED,
     FluxQualifier_INTERPOLATED_EXTRAPOLATED,
     FluxQualifier_NO_OBSERVATION,
-    FluxQualifier_CELESTRAK_INTERPOLATED
+    FluxQualifier_PROVIDER_INTERPOLATED
   };
   return values;
 }
@@ -46,14 +48,14 @@ inline const char * const *EnumNamesFluxQualifier() {
     "BURST_ADJUSTED",
     "INTERPOLATED_EXTRAPOLATED",
     "NO_OBSERVATION",
-    "CELESTRAK_INTERPOLATED",
+    "PROVIDER_INTERPOLATED",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameFluxQualifier(FluxQualifier e) {
-  if (::flatbuffers::IsOutRange(e, FluxQualifier_OBSERVED, FluxQualifier_CELESTRAK_INTERPOLATED)) return "";
+  if (::flatbuffers::IsOutRange(e, FluxQualifier_OBSERVED, FluxQualifier_PROVIDER_INTERPOLATED)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesFluxQualifier()[index];
 }

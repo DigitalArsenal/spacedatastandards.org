@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+ * Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
  */
 @SuppressWarnings("unused")
 public final class RBKQuaternion extends com.google.flatbuffers.Table {

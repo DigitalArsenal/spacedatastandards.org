@@ -9,7 +9,8 @@ export enum meanElementSource {
   SGP4 = 0,
 
   /**
-   * Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+   * Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+   * as published in the 2022 astrodynamics conference literature.
    */
   SGP4XP = 1,
 

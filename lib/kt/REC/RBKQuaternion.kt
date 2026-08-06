@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+ * Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
  */
 @Suppress("unused")
 class RBKQuaternion : Table() {

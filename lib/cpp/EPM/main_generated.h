@@ -125,7 +125,7 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PUBLIC_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PUBLIC_KEY);
   }
-  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   const ::flatbuffers::String *XPUB() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPUB);
   }
@@ -133,7 +133,7 @@ struct CryptoKey FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *PRIVATE_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PRIVATE_KEY);
   }
-  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   const ::flatbuffers::String *XPRIV() const {
     return GetPointer<const ::flatbuffers::String *>(VT_XPRIV);
   }
@@ -607,7 +607,7 @@ struct DomainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ALGORITHM = 14,
     VT_ENCODING = 16
   };
-  /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
   const ::flatbuffers::String *DOMAIN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DOMAIN);
   }

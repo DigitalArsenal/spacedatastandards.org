@@ -102,8 +102,8 @@ inline const char *EnumNameoppDeterminationMethod(oppDeterminationMethod e) {
 /// Aspect convention a radar cross-section value was reported under. Append new
 /// values only; never reorder or reuse existing values.
 enum oppRcsAspect : int8_t {
-  /// The source states no aspect convention. ESA DISCOS characteristic
-  /// cross-sections and CelesTrak SATCAT RCS use this value.
+  /// The source states no aspect convention. Characteristic cross-sections
+  /// published by catalogue-level object databases use this value.
   oppRcsAspect_UNSPECIFIED = 0,
   oppRcsAspect_AVERAGE = 1,
   oppRcsAspect_MINIMUM = 2,
@@ -321,13 +321,14 @@ struct OPPProvenance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SOURCE_SHA256 = 22,
     VT_NOTES = 24
   };
-  /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  /// Publisher of the value, named as the publisher names itself — a space
+  /// agency's object database, a public satellite catalogue, a third-party
+  /// satellite reference site, or the operator itself.
   const ::flatbuffers::String *SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
   }
   /// The source's own identifier for the record this value was read from, such
-  /// as a DISCOS object id. Verbatim, never normalized.
+  /// as that database's object id. Verbatim, never normalized.
   const ::flatbuffers::String *SOURCE_RECORD_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_RECORD_ID);
   }
@@ -617,9 +618,9 @@ inline ::flatbuffers::Offset<OPPQuantity> CreateOPPQuantityDirect(
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 struct OPPRadarCrossSection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OPPRadarCrossSectionBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -655,7 +656,7 @@ struct OPPRadarCrossSection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tab
     return GetPointer<const OPPQuantity *>(VT_CROSS_SECTION);
   }
   /// Size bucket verbatim when a source publishes a bucket instead of a number,
-  /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   /// turned into a number.
   const ::flatbuffers::String *SIZE_CLASS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SIZE_CLASS);
@@ -898,7 +899,7 @@ struct OPPDimensions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const OPPQuantity *BODY_Z() const {
     return GetPointer<const OPPQuantity *>(VT_BODY_Z);
   }
-  /// Envelope terms as ESA DISCOS publishes them [m].
+  /// Envelope terms as an object database publishes them [m].
   const OPPQuantity *HEIGHT() const {
     return GetPointer<const OPPQuantity *>(VT_HEIGHT);
   }
@@ -919,8 +920,8 @@ struct OPPDimensions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const OPPQuantity *SPAN_DEPLOYED() const {
     return GetPointer<const OPPQuantity *>(VT_SPAN_DEPLOYED);
   }
-  /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-  /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  /// Gross geometric shape verbatim from the source, such as a shape string
+  /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   const ::flatbuffers::String *SHAPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SHAPE);
   }
@@ -1203,8 +1204,9 @@ struct OPPSurface FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   oppSurfaceKind KIND() const {
     return static_cast<oppSurfaceKind>(GetField<int8_t>(VT_KIND, 0));
   }
-  /// Material name verbatim from the source: "Kapton MLI", "GaAs
-  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  /// Material name verbatim from the source, in whatever designation the
+  /// source uses: a multi-layer-insulation film, a photovoltaic cell
+  /// chemistry, an alloy temper designation. Empty when unstated.
   const ::flatbuffers::String *MATERIAL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MATERIAL);
   }

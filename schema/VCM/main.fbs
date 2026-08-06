@@ -1,5 +1,5 @@
-// Hash: fb734998a79de979a28198e7261c19971df393f6ef193423f5b40f7bbf440c1f
-// Version: 2.0.3
+// Hash: b9d8f974244eef5d1c4af81d1e06588b06722ee494c055c210e65e5c8bd7c183
+// Version: 2.0.4
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -22,7 +22,7 @@ include "../MET/main.fbs";
 // and modern perturbation models, making it ideal for high-precision orbit prediction and analysis.
 //
 // CCSDS Reference documentation: 502.0-B-3.
-// https://github.com/DigitalArsenal/spacedatastandards.org/blob/main/survey/legacy-messages/vcm/README.md
+// See this repository: survey/legacy-messages/vcm/README.md
 
 enum elementType : byte {
   OSCULATING = 0,

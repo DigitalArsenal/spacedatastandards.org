@@ -21,9 +21,10 @@ import java.nio.ByteOrder;
  *
  * Aggregated throughput, latency and availability for one satellite
  * constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
- * closed time window. Built for the Starlink connectivity lane (AS14593 via
- * M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
- * provider — or a terrestrial ASN used as a baseline fits the same record.
+ * closed time window. Built for a broadband LEO consumer-terminal lane
+ * (one operator ASN measured via NDT7) and shaped so any operator — another
+ * LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+ * baseline fits the same record.
  *
  * KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
  * speed test, not a single client's result, and not a per-satellite link
@@ -41,9 +42,9 @@ import java.nio.ByteOrder;
  * looked for" from "looked for and empty".
  *
  * LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
- * because a single record may legitimately carry a CC0 M-Lab lane beside a
- * CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
- * metric that inherited it, never to the record as a whole.
+ * because a single record may legitimately carry a CC0 open-measurement lane
+ * beside a CC BY-NC cross-check from a restricted publisher; the restriction
+ * attaches to the metric that inherited it, never to the record as a whole.
  */
 @SuppressWarnings("unused")
 public final class CNP extends com.google.flatbuffers.Table {
@@ -61,8 +62,8 @@ public final class CNP extends com.google.flatbuffers.Table {
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Constellation or network name, verbatim ("Starlink", "OneWeb",
-   * "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+   * Constellation or network name, carried verbatim as its operator states
+   * it. Empty when the record is a terrestrial baseline. Joins to
    * $LKS.CONSTELLATION and to $CAT by the same name.
    */
   public String CONSTELLATION() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
@@ -75,9 +76,9 @@ public final class CNP extends com.google.flatbuffers.Table {
   public ByteBuffer OPERATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer OPERATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Autonomous system number of the measured client network — Starlink is
-   * 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-   * is never a real measurement key.
+   * Autonomous system number of the measured client network, as allocated in
+   * the public routing registry. 0 means the aggregate is not keyed by ASN;
+   * AS 0 is reserved and is never a real measurement key.
    */
   public long ASN() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**

@@ -8,8 +8,9 @@ using global::Google.FlatBuffers;
 
 /// Replayable provenance for one fact used by a $CMR.
 ///
-/// Each source gets its own entry. A publisher never merges CelesTrak group
-/// membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+/// Each source gets its own entry. A publisher never merges a catalogue's
+/// group membership, a reference catalogue's ownership assertion, and
+/// $CAT/$BUS joins into one ambiguous citation.
 public struct CMRProvenance : IFlatbufferObject
 {
   private Table __p;
@@ -21,8 +22,9 @@ public struct CMRProvenance : IFlatbufferObject
   public CMRProvenance __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public cmrEvidenceRole ROLE { get { int o = __p.__offset(4); return o != 0 ? (cmrEvidenceRole)__p.bb.GetSbyte(o + __p.bb_pos) : cmrEvidenceRole.UNSPECIFIED; } }
-  /// Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-  /// provider that published the joined $CAT record.
+  /// Publisher name verbatim as that publisher states it — a public satellite
+  /// catalogue, a general object reference catalogue, or the network provider
+  /// that published the joined $CAT record.
   public string SOURCE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -30,8 +32,8 @@ public struct CMRProvenance : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(6); }
-  /// Source dataset or product name verbatim, such as "active Starlink group"
-  /// or "GCAT satcat".
+  /// Source dataset or product name verbatim, such as a named constellation
+  /// group file or a catalogue's satellite-catalog product.
   public string SOURCE_DATASET { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSOURCE_DATASETBytes() { return __p.__vector_as_span<byte>(8, 1); }

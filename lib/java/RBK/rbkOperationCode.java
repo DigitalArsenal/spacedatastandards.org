@@ -233,15 +233,15 @@ public final class rbkOperationCode {
    */
   public static final byte TILDE_MATRIX = 57;
   /**
-   * Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+   * Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
    */
   public static final byte M1_ROTATION_MATRIX = 58;
   /**
-   * Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+   * Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
    */
   public static final byte M2_ROTATION_MATRIX = 59;
   /**
-   * Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+   * Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
    */
   public static final byte M3_ROTATION_MATRIX = 60;
 

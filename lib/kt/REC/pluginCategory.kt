@@ -79,7 +79,9 @@ class pluginCategory private constructor() {
          */
         const val Publisher: Byte = 17
         /**
-         * Basilisk astrodynamics simulation module
+         * Astrodynamics simulation and dynamics-modelling module family. The member
+         * identifier is a legacy vocabulary key retained for wire and manifest
+         * compatibility; renaming it is an owner-gated breaking change.
          */
         const val Basilisk: Byte = 18
         /**

@@ -256,7 +256,7 @@
     },
     "NUMGaussMarkovRequest" : {
       "type" : "object",
-      "description" : "Request for one Basilisk-compatible Gauss-Markov random sequence.",
+      "description" : "Request for one first-order Gauss-Markov random sequence.",
       "properties" : {
         "OPERATION" : {
                 "$ref" : "#/definitions/numOperationCode",
@@ -276,7 +276,7 @@
               },
         "RNG_SEED" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Seed for the Basilisk-compatible standard normal generator."
+                "description" : "Seed for the standard-normal generator."
               },
         "PROPAGATION_MATRIX" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -303,7 +303,7 @@
     },
     "NUMGaussMarkovResult" : {
       "type" : "object",
-      "description" : "Result of one Basilisk-compatible Gauss-Markov random sequence.",
+      "description" : "Result of one first-order Gauss-Markov random sequence.",
       "properties" : {
         "STATUS" : {
                 "$ref" : "#/definitions/numResultStatus"

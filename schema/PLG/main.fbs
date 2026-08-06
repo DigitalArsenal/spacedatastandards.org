@@ -1,5 +1,5 @@
-// Hash: 251c86bc34bebb44a958191e245279f57d7c0ad7145fe5db7d0236f863b5a7a3
-// Version: 1.0.14
+// Hash: 21ab7f73650ba93974e467e91256dda72cfa8dfaa84bef0360d8b4e4ed9ca019
+// Version: 1.0.15
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 
@@ -41,7 +41,9 @@ enum pluginCategory : byte {
   Storefront,
   /// Publication: PNM signing + pub/sub announcement
   Publisher,
-  /// Basilisk astrodynamics simulation module
+  /// Astrodynamics simulation and dynamics-modelling module family. The member
+  /// identifier is a legacy vocabulary key retained for wire and manifest
+  /// compatibility; renaming it is an owner-gated breaking change.
   Basilisk,
   /// Maneuver planning, targeting and trajectory optimization
   Maneuver,

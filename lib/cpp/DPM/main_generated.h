@@ -315,7 +315,7 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   /// requests, subscriber caches, replay, audit, and completeness proofs.
   /// Example:
-  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   const ::flatbuffers::String *FILE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_ID);
   }

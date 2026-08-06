@@ -8,7 +8,7 @@ import { numOperationCode } from './numOperationCode.js';
 
 
 /**
- * Request for one Basilisk-compatible Gauss-Markov random sequence.
+ * Request for one first-order Gauss-Markov random sequence.
  */
 export class NUMGaussMarkovRequest implements flatbuffers.IUnpackableObject<NUMGaussMarkovRequestT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -61,7 +61,7 @@ WARMUP_COUNT():number {
 }
 
 /**
- * Seed for the Basilisk-compatible standard normal generator.
+ * Seed for the standard-normal generator.
  */
 RNG_SEED():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);

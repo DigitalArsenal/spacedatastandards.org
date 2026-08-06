@@ -20,7 +20,8 @@ import java.nio.ByteOrder;
  * RF Band Specification
  *
  * UNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources
- * that publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources
+ * that publish Hz (as open transmitter databases commonly do) MUST divide by
+ * 1e6 before encoding; sources
  * that publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),
  * never kilobaud. Encoding a Hz value into a MHz field is a defect, not a
  * convention.
@@ -120,7 +121,8 @@ public final class RFB extends com.google.flatbuffers.Table {
   public long NORAD_CAT_ID() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
    * Identifier of the physical transmitter, transceiver or transponder this
-   * record describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink
+   * record describes (e.g. an upstream transmitter database's UUID). Uplink
+   * and downlink
    * records of the same device share this value.
    */
   public String ID_TRANSMITTER() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }

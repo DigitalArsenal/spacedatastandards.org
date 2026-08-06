@@ -20,9 +20,11 @@ import kotlin.math.sign
  * RF IQ Capture Metadata.
  *
  * The description of ONE raw, un-demodulated complex-baseband recording held
- * in a public archive — IQEngine, SigidWiki, IEEE DataPort, the SDRangel IQ
- * database, Zenodo — normalized onto the SigMF v1 core namespace, which is
- * the only metadata vocabulary these archives share.
+ * in a public archive — a hosted IQ-capture repository, a crowdsourced
+ * signal-identification catalog, an institutional dataset repository, an
+ * SDR project's capture database, a general-purpose research data archive —
+ * normalized onto the SigMF v1 core namespace, which is the only metadata
+ * vocabulary these archive classes share.
  *
  * $IQC is a POINTER RECORD. It exists so a capture is discoverable, joinable
  * and verifiable without anyone mirroring its payload: the samples stay where
@@ -39,8 +41,9 @@ import kotlin.math.sign
  *
  * LICENCE IS NEVER ASSUMED. An empty `LICENSE` means the terms are UNKNOWN.
  * It does not mean public domain, it does not mean permissive, and it does
- * not authorize redistribution. SigidWiki is crowdsourced and IQEngine hosts
- * third-party recordings, so licence is per RECORDING, never per site.
+ * not authorize redistribution. Crowdsourced catalogs and hosted repositories
+ * both carry third-party recordings, so licence is per RECORDING, never per
+ * archive.
  *
  * Division of labour: $RFO = a sensor's astrometric/RF observation of a
  * tracked object (azimuth, elevation, range); $RFE = the parametric emitter
@@ -88,9 +91,9 @@ class IQC : Table() {
     val captureIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun captureIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
     /**
-     * Archive that publishes the capture, verbatim ("IQEngine", "SigidWiki",
-     * "IEEE DataPort", "SDRangel IQ Database", "Zenodo"). A string rather than
-     * an enum so a new archive lane never requires a schema release.
+     * Name of the archive that publishes the capture, carried verbatim as that
+     * archive states it. A string rather than an enum so a new archive lane
+     * never requires a schema release.
      */
     val sourceName : String?
         get() {
@@ -418,8 +421,8 @@ class IQC : Table() {
             val o = __offset(58); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Archive-level tags or categories, verbatim (SigidWiki categories,
-     * Zenodo keywords, IQEngine tags).
+     * Archive-level tags, categories or keywords, carried verbatim in whatever
+     * vocabulary the publishing archive uses.
      */
     fun labels(j: Int) : String? {
         val o = __offset(60)

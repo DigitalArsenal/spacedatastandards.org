@@ -8,5 +8,7 @@ public enum FluxQualifier : sbyte
   BURST_ADJUSTED = 1,
   INTERPOLATED_EXTRAPOLATED = 2,
   NO_OBSERVATION = 3,
-  CELESTRAK_INTERPOLATED = 4,
+  /// Interpolated by the upstream data provider rather than the issuing
+  /// observatory. Wire value 4 is unchanged from prior releases.
+  PROVIDER_INTERPOLATED = 4,
 };

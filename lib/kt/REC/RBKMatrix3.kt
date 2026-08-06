@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+ * Row-major 3x3 direction cosine matrix.
  */
 @Suppress("unused")
 class RBKMatrix3 : Table() {

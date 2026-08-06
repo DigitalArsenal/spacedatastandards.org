@@ -2467,7 +2467,7 @@ impl NUMScalarInterpolationResultT {
 pub enum NUMGaussMarkovRequestOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 pub struct NUMGaussMarkovRequest<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -2580,7 +2580,7 @@ impl<'a> NUMGaussMarkovRequest<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<u32>(NUMGaussMarkovRequest::VT_WARMUP_COUNT, Some(0)).unwrap()}
   }
-  /// Seed for the Basilisk-compatible standard normal generator.
+  /// Seed for the standard-normal generator.
   #[inline]
   pub fn RNG_SEED(&self) -> u32 {
     // Safety:
@@ -2826,7 +2826,7 @@ impl NUMGaussMarkovRequestT {
 pub enum NUMGaussMarkovResultOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 pub struct NUMGaussMarkovResult<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }

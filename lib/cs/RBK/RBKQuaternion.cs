@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 public struct RBKQuaternion : IFlatbufferObject
 {
   private Table __p;

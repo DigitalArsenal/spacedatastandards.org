@@ -48,7 +48,7 @@ class STR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// CelesTrak Star catalog identifier
+    /// Community satellite-tracking star catalog identifier
     /**
      * @return long
      */

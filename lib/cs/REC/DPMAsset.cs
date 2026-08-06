@@ -58,7 +58,7 @@ public struct DPMAsset : IFlatbufferObject
   /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
   /// requests, subscriber caches, replay, audit, and completeness proofs.
   /// Example:
-  /// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+  /// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
   public string FILE_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFILE_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }

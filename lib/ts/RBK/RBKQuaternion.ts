@@ -7,7 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+ * Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
  */
 export class RBKQuaternion implements flatbuffers.IUnpackableObject<RBKQuaternionT> {
   bb: flatbuffers.ByteBuffer|null = null;

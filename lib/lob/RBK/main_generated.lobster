@@ -117,11 +117,11 @@ enum rbkOperationCode:
     rbkOperationCode_D_EULER = 56
     /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
     rbkOperationCode_TILDE_MATRIX = 57
-    /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+    /// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
     rbkOperationCode_M1_ROTATION_MATRIX = 58
-    /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+    /// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
     rbkOperationCode_M2_ROTATION_MATRIX = 59
-    /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+    /// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
     rbkOperationCode_M3_ROTATION_MATRIX = 60
 
 enum rbkEulerSequenceCode:
@@ -187,7 +187,7 @@ struct RBKVector3Builder:
     def end():
         return b_.EndObject()
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 class RBKQuaternion : flatbuffers.handle
     def Q0() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
@@ -220,7 +220,7 @@ struct RBKQuaternionBuilder:
     def end():
         return b_.EndObject()
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 class RBKMatrix3 : flatbuffers.handle
     def M11() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)

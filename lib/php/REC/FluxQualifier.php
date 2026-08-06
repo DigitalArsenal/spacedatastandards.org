@@ -7,14 +7,16 @@ class FluxQualifier
     const BURST_ADJUSTED = 1;
     const INTERPOLATED_EXTRAPOLATED = 2;
     const NO_OBSERVATION = 3;
-    const CELESTRAK_INTERPOLATED = 4;
+    /// Interpolated by the upstream data provider rather than the issuing
+    /// observatory. Wire value 4 is unchanged from prior releases.
+    const PROVIDER_INTERPOLATED = 4;
 
     private static $names = array(
         FluxQualifier::OBSERVED=>"OBSERVED",
         FluxQualifier::BURST_ADJUSTED=>"BURST_ADJUSTED",
         FluxQualifier::INTERPOLATED_EXTRAPOLATED=>"INTERPOLATED_EXTRAPOLATED",
         FluxQualifier::NO_OBSERVATION=>"NO_OBSERVATION",
-        FluxQualifier::CELESTRAK_INTERPOLATED=>"CELESTRAK_INTERPOLATED",
+        FluxQualifier::PROVIDER_INTERPOLATED=>"PROVIDER_INTERPOLATED",
     );
 
     public static function Name($e)

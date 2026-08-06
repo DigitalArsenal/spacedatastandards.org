@@ -47,7 +47,7 @@ func (rcv *DomainProof) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+/// Fully-qualified domain name the proof binds (e.g., "node.example.org")
 func (rcv *DomainProof) DOMAIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -60,7 +60,7 @@ func (rcv *DomainProof) Domain() []byte {
 	return rcv.DOMAIN()
 }
 
-/// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+/// Fully-qualified domain name the proof binds (e.g., "node.example.org")
 /// Public key for this proof (hex-encoded)
 func (rcv *DomainProof) PUBLIC_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))

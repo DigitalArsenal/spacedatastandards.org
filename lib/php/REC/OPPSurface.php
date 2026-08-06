@@ -64,8 +64,9 @@ class OPPSurface extends Table
         return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \oppSurfaceKind::UNSPECIFIED;
     }
 
-    /// Material name verbatim from the source: "Kapton MLI", "GaAs
-    /// triple-junction", "Al 6061-T6". Empty when unstated.
+    /// Material name verbatim from the source, in whatever designation the
+    /// source uses: a multi-layer-insulation film, a photovoltaic cell
+    /// chemistry, an alloy temper designation. Empty when unstated.
     public function getMATERIAL()
     {
         $o = $this->__offset(8);

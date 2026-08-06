@@ -7,7 +7,7 @@ export declare enum splitRole {
      */
     Publisher = 0,
     /**
-     * The store operator platform (e.g. SpaceAware) — the commission recipient
+     * The store operator platform — the commission recipient
      */
     Platform = 1,
     /**

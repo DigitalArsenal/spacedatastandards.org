@@ -19,9 +19,9 @@ import java.nio.ByteOrder;
 /**
  * Radar cross-section as reported for one band, polarization and aspect
  * convention. Radar cross-section is band- and aspect-dependent, so an $OPP
- * carries a list of these and never a single scalar. ESA DISCOS xSectMin,
- * xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
- * MAXIMUM sharing one SOURCE.
+ * carries a list of these and never a single scalar. A source publishing
+ * minimum, average and maximum cross-sections becomes three entries with
+ * ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
  */
 @SuppressWarnings("unused")
 public final class OPPRadarCrossSection extends com.google.flatbuffers.Table {
@@ -59,7 +59,7 @@ public final class OPPRadarCrossSection extends com.google.flatbuffers.Table {
   public OPPQuantity CROSS_SECTION(OPPQuantity obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Size bucket verbatim when a source publishes a bucket instead of a number,
-   * such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+   * such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
    * turned into a number.
    */
   public String SIZE_CLASS() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }

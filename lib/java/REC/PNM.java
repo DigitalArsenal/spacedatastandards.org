@@ -43,7 +43,7 @@ public final class PNM extends com.google.flatbuffers.Table {
 
   /**
    * Multiformat Address
-   * https://multiformats.io/multiaddr/
+   * As specified by the multiaddr specification.
    * A universal address format for representing multiple network protocols. Examples include:
    * - /ip4/192.168.1.1/tcp/80 for an IPv4 address with TCP protocol
    * - /ip6zone/x/ip6/::1 for an IPv6 address with a zone
@@ -62,7 +62,8 @@ public final class PNM extends com.google.flatbuffers.Table {
   /**
    * Concatenated Content Identifier (CID)
    * This field is a unique ID for distributed systems (CID).
-   * The CID provides a unique identifier within distributed systems, as detailed at https://github.com/multiformats/cid.
+   * The CID provides a unique identifier within distributed systems, as
+   * detailed in the multiformats CID specification.
    * For dataset-update PNMs this SHOULD identify a compact DPM manifest,
    * manifest digest, or other small verification object, not necessarily the
    * full dataset bytes.
@@ -86,7 +87,7 @@ public final class PNM extends com.google.flatbuffers.Table {
    * verification. Provider-mediated query requests and responses MUST bind
    * their Merkle leaves and proof paths to this FILE_ID, and subscribers MUST
    * reject responses whose DPM, records, or proofs bind to a different FILE_ID.
-   * Example: celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+   * Example: provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
    */
   public String FILE_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }

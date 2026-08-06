@@ -205,7 +205,7 @@
         },
         "Basilisk": {
           "value": 18,
-          "description": "Basilisk astrodynamics simulation module"
+          "description": "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
         },
         "Maneuver": {
           "value": 19,
@@ -580,7 +580,7 @@
         },
         "XPUB": {
           "type": "string",
-          "description": "Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "description": "Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\".",
           "x-flatbuffer-type": "string"
         },
         "PRIVATE_KEY": {
@@ -590,7 +590,7 @@
         },
         "XPRIV": {
           "type": "string",
-          "description": "Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys",
+          "description": "Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), \"Extended keys\".",
           "x-flatbuffer-type": "string"
         },
         "KEY_ADDRESS": {
@@ -725,7 +725,7 @@
       "properties": {
         "DOMAIN": {
           "type": "string",
-          "description": "Fully-qualified domain name the proof binds (e.g., \"sdn.spaceaware.io\")",
+          "description": "Fully-qualified domain name the proof binds (e.g., \"node.example.org\")",
           "x-flatbuffer-type": "string"
         },
         "PUBLIC_KEY": {
@@ -1929,7 +1929,7 @@
             },
             "Basilisk": {
               "value": 18,
-              "description": "Basilisk astrodynamics simulation module"
+              "description": "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             "Maneuver": {
               "value": 19,
@@ -2684,7 +2684,7 @@
             },
             "Basilisk": {
               "value": 18,
-              "description": "Basilisk astrodynamics simulation module"
+              "description": "Astrodynamics simulation and dynamics-modelling module family. The member identifier is a legacy vocabulary key retained for wire and manifest compatibility; renaming it is an owner-gated breaking change."
             },
             "Maneuver": {
               "value": 19,
@@ -2713,7 +2713,7 @@
       "properties": {
         "PROVIDER_DOMAIN": {
           "type": "string",
-          "description": "Domain of the provider, e.g. \"sdn.spaceaware.io\". Required. MUST equal\nthe origin the manifest was served from.",
+          "description": "Domain of the provider, e.g. \"node.example.org\". Required. MUST equal\nthe origin the manifest was served from.",
           "x-flatbuffer-type": "string",
           "x-flatbuffer-required": true
         },

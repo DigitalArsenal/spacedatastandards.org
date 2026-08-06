@@ -8,8 +8,9 @@ np = import_numpy()
 
 # Replayable provenance for one fact used by a $CMR.
 #
-# Each source gets its own entry. A publisher never merges CelesTrak group
-# membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+# Each source gets its own entry. A publisher never merges a catalogue's
+# group membership, a reference catalogue's ownership assertion, and
+# $CAT/$BUS joins into one ambiguous citation.
 class CMRProvenance(object):
     __slots__ = ['_tab']
 
@@ -39,8 +40,9 @@ class CMRProvenance(object):
             return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
-    # Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
-    # provider that published the joined $CAT record.
+    # Publisher name verbatim as that publisher states it — a public satellite
+    # catalogue, a general object reference catalogue, or the network provider
+    # that published the joined $CAT record.
     # CMRProvenance
     def SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -48,8 +50,8 @@ class CMRProvenance(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Source dataset or product name verbatim, such as "active Starlink group"
-    # or "GCAT satcat".
+    # Source dataset or product name verbatim, such as a named constellation
+    # group file or a catalogue's satellite-catalog product.
     # CMRProvenance
     def SOURCE_DATASET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

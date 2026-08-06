@@ -75,9 +75,10 @@ enum cnpReduction:
 
 /// How the underlying observations were produced.
 enum cnpMethod:
-    /// M-Lab NDT7 measurement.
+    /// NDT7 network-diagnostic protocol measurement.
     cnpMethod_NDT7 = 0
-    /// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+    /// A speed test other than NDT7 — a third-party measurement platform, a
+    /// CDN-operated test, or an operator-native test.
     cnpMethod_SPEED_TEST = 1
     /// ICMP or UDP echo.
     cnpMethod_PING = 2
@@ -144,15 +145,15 @@ struct CNPRegionBuilder:
 
 /// Where one metric came from and under what terms it may be republished.
 class CNPProvenance : flatbuffers.handle
-    /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-    /// Radar", "RIPE Atlas", "LENS".
+    /// Name of the organization or programme publishing the underlying
+    /// measurements, carried verbatim as that publisher states it.
     def SOURCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// URL of the dataset, endpoint or landing page.
     def SOURCE_URL() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
-    /// Dataset, table or API path queried, e.g.
-    /// "measurement-lab.ndt.unified_downloads".
+    /// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+    /// warehouse table name or a REST route.
     def SOURCE_DATASET() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     /// The exact query or request that produced these numbers, so the
@@ -357,9 +358,10 @@ def CNPMetricCreateSTATISTICSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -377,24 +379,24 @@ def CNPMetricCreateSTATISTICSVector(b_:flatbuffers.builder, v_:[flatbuffers.offs
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 class CNP : flatbuffers.handle
     /// Stable identifier for this record.
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Constellation or network name, verbatim ("Starlink", "OneWeb",
-    /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+    /// Constellation or network name, carried verbatim as its operator states
+    /// it. Empty when the record is a terrestrial baseline. Joins to
     /// $LKS.CONSTELLATION and to $CAT by the same name.
     def CONSTELLATION() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Operating company, when it differs usefully from CONSTELLATION.
     def OPERATOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Autonomous system number of the measured client network — Starlink is
-    /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-    /// is never a real measurement key.
+    /// Autonomous system number of the measured client network, as allocated in
+    /// the public routing registry. 0 means the aggregate is not keyed by ASN;
+    /// AS 0 is reserved and is never a real measurement key.
     def ASN() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 10, 0)
     /// Autonomous system name as the routing registry publishes it.

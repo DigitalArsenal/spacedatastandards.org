@@ -1,10 +1,11 @@
-// Hash: 4704303474281bd094245a41c594caefde3309d0ffd6816a4b87a48f176235d1
-// Version: 1.0.2
+// Hash: baf37f69ec211c87c4c638876f09a2cbf7d780681463980fee792c7fc1053d96
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 enum meanElementSource : byte {
   /// Simplified General Perturbation Model 4
   SGP4,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
   SGP4XP,
   /// Draper Semi-analytical Satellite Theory
   DSST,

@@ -65,7 +65,7 @@ class OPPDimensions(object):
             return obj
         return None
 
-    # Envelope terms as ESA DISCOS publishes them [m].
+    # Envelope terms as an object database publishes them [m].
     # OPPDimensions
     def HEIGHT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -134,8 +134,8 @@ class OPPDimensions(object):
             return obj
         return None
 
-    # Gross geometric shape verbatim from the source, such as the DISCOS shape
-    # string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+    # Gross geometric shape verbatim from the source, such as a shape string
+    # of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
     # OPPDimensions
     def SHAPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))

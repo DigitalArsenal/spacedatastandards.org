@@ -1,5 +1,5 @@
-// Hash: 4cbf1287bd5a31908ed85d9302d353af8e6d859347373f20e67e7d9fd52827bb
-// Version: 1.103.9
+// Hash: 85aa3523422fe9bcbe76968dca73ce173a86e2958f025df8bd4a95f9e746c15d
+// Version: 1.103.10
 // -----------------------------------END_HEADER
 // Rigid-body kinematics utility records for attitude math modules.
 
@@ -119,11 +119,11 @@ enum rbkOperationCode : byte {
   D_EULER = 56,
   /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
   TILDE_MATRIX = 57,
-  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
   M1_ROTATION_MATRIX = 58,
-  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
   M2_ROTATION_MATRIX = 59,
-  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
   M3_ROTATION_MATRIX = 60
 }
 
@@ -159,7 +159,7 @@ table RBKVector3 {
   Z:double;
 }
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 table RBKQuaternion {
   Q0:double;
   Q1:double;
@@ -167,7 +167,7 @@ table RBKQuaternion {
   Q3:double;
 }
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 table RBKMatrix3 {
   M11:double;
   M12:double;

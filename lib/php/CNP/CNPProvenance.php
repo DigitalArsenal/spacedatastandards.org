@@ -41,8 +41,8 @@ class CNPProvenance extends Table
         return $this;
     }
 
-    /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-    /// Radar", "RIPE Atlas", "LENS".
+    /// Name of the organization or programme publishing the underlying
+    /// measurements, carried verbatim as that publisher states it.
     public function getSOURCE()
     {
         $o = $this->__offset(4);
@@ -56,8 +56,8 @@ class CNPProvenance extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Dataset, table or API path queried, e.g.
-    /// "measurement-lab.ndt.unified_downloads".
+    /// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+    /// warehouse table name or a REST route.
     public function getSOURCE_DATASET()
     {
         $o = $this->__offset(8);

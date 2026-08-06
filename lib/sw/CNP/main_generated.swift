@@ -117,9 +117,10 @@ public enum cnpMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  M-Lab NDT7 measurement.
+  ///  NDT7 network-diagnostic protocol measurement.
   case ndt7 = 0
-  ///  A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+  ///  A speed test other than NDT7 — a third-party measurement platform, a
+  ///  CDN-operated test, or an operator-native test.
   case speedTest = 1
   ///  ICMP or UDP echo.
   case ping = 2
@@ -229,15 +230,15 @@ public struct CNPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     static let NON_COMMERCIAL_ONLY: VOffset = 28
   }
 
-  ///  Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-  ///  Radar", "RIPE Atlas", "LENS".
+  ///  Name of the organization or programme publishing the underlying
+  ///  measurements, carried verbatim as that publisher states it.
   public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
   ///  URL of the dataset, endpoint or landing page.
   public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
-  ///  Dataset, table or API path queried, e.g.
-  ///  "measurement-lab.ndt.unified_downloads".
+  ///  Dataset, table or API path queried, verbatim, e.g. a fully qualified
+  ///  warehouse table name or a REST route.
   public var SOURCE_DATASET: String? { let o = _accessor.offset(VT.SOURCE_DATASET); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_DATASETSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_DATASET) }
   ///  The exact query or request that produced these numbers, so the
@@ -494,9 +495,10 @@ public struct CNPMetric: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 ///
 ///  Aggregated throughput, latency and availability for one satellite
 ///  constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-///  closed time window. Built for the Starlink connectivity lane (AS14593 via
-///  M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-///  provider — or a terrestrial ASN used as a baseline fits the same record.
+///  closed time window. Built for a broadband LEO consumer-terminal lane
+///  (one operator ASN measured via NDT7) and shaped so any operator — another
+///  LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+///  baseline fits the same record.
 ///
 ///  KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 ///  speed test, not a single client's result, and not a per-satellite link
@@ -514,9 +516,9 @@ public struct CNPMetric: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 ///  looked for" from "looked for and empty".
 ///
 ///  LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-///  because a single record may legitimately carry a CC0 M-Lab lane beside a
-///  CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-///  metric that inherited it, never to the record as a whole.
+///  because a single record may legitimately carry a CC0 open-measurement lane
+///  beside a CC BY-NC cross-check from a restricted publisher; the restriction
+///  attaches to the metric that inherited it, never to the record as a whole.
 public struct CNP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -549,17 +551,17 @@ public struct CNP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Stable identifier for this record.
   public var ID: String? { let o = _accessor.offset(VT.ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ID) }
-  ///  Constellation or network name, verbatim ("Starlink", "OneWeb",
-  ///  "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+  ///  Constellation or network name, carried verbatim as its operator states
+  ///  it. Empty when the record is a terrestrial baseline. Joins to
   ///  $LKS.CONSTELLATION and to $CAT by the same name.
   public var CONSTELLATION: String? { let o = _accessor.offset(VT.CONSTELLATION); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONSTELLATION) }
   ///  Operating company, when it differs usefully from CONSTELLATION.
   public var OPERATOR: String? { let o = _accessor.offset(VT.OPERATOR); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPERATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OPERATOR) }
-  ///  Autonomous system number of the measured client network — Starlink is
-  ///  14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-  ///  is never a real measurement key.
+  ///  Autonomous system number of the measured client network, as allocated in
+  ///  the public routing registry. 0 means the aggregate is not keyed by ASN;
+  ///  AS 0 is reserved and is never a real measurement key.
   public var ASN: UInt32 { let o = _accessor.offset(VT.ASN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Autonomous system name as the routing registry publishes it.
   public var AS_NAME: String? { let o = _accessor.offset(VT.AS_NAME); return o == 0 ? nil : _accessor.string(at: o) }

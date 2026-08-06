@@ -45,8 +45,8 @@ public enum oppRcsAspect: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
-  ///  The source states no aspect convention. ESA DISCOS characteristic
-  ///  cross-sections and CelesTrak SATCAT RCS use this value.
+  ///  The source states no aspect convention. Characteristic cross-sections
+  ///  published by catalogue-level object databases use this value.
   case unspecified = 0
   case average = 1
   case minimum = 2
@@ -151,12 +151,13 @@ public struct OPPProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
     static let NOTES: VOffset = 24
   }
 
-  ///  Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  ///  "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  ///  Publisher of the value, named as the publisher names itself — a space
+  ///  agency's object database, a public satellite catalogue, a third-party
+  ///  satellite reference site, or the operator itself.
   public var SOURCE: String! { let o = _accessor.offset(VT.SOURCE); return _accessor.string(at: o) }
   public var SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.SOURCE) }
   ///  The source's own identifier for the record this value was read from, such
-  ///  as a DISCOS object id. Verbatim, never normalized.
+  ///  as that database's object id. Verbatim, never normalized.
   public var SOURCE_RECORD_ID: String? { let o = _accessor.offset(VT.SOURCE_RECORD_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_RECORD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_RECORD_ID) }
   ///  Deep link to the exact source record when the source publishes one.
@@ -314,9 +315,9 @@ public struct OPPQuantity: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
 ///  Radar cross-section as reported for one band, polarization and aspect
 ///  convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-///  carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-///  xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-///  MAXIMUM sharing one SOURCE.
+///  carries a list of these and never a single scalar. A source publishing
+///  minimum, average and maximum cross-sections becomes three entries with
+///  ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 public struct OPPRadarCrossSection: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -354,7 +355,7 @@ public struct OPPRadarCrossSection: FlatBufferTable, FlatbuffersVectorInitializa
   ///  it; the two are never mixed within one entry and never silently converted.
   public var CROSS_SECTION: OPPQuantity! { let o = _accessor.offset(VT.CROSS_SECTION); return OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Size bucket verbatim when a source publishes a bucket instead of a number,
-  ///  such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  ///  such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   ///  turned into a number.
   public var SIZE_CLASS: String? { let o = _accessor.offset(VT.SIZE_CLASS); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIZE_CLASSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIZE_CLASS) }
@@ -509,7 +510,7 @@ public struct OPPDimensions: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public var BODY_X: OPPQuantity? { let o = _accessor.offset(VT.BODY_X); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var BODY_Y: OPPQuantity? { let o = _accessor.offset(VT.BODY_Y); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var BODY_Z: OPPQuantity? { let o = _accessor.offset(VT.BODY_Z); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Envelope terms as ESA DISCOS publishes them [m].
+  ///  Envelope terms as an object database publishes them [m].
   public var HEIGHT: OPPQuantity? { let o = _accessor.offset(VT.HEIGHT); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var WIDTH: OPPQuantity? { let o = _accessor.offset(VT.WIDTH); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var DEPTH: OPPQuantity? { let o = _accessor.offset(VT.DEPTH); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -518,8 +519,8 @@ public struct OPPDimensions: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   public var SPAN_STOWED: OPPQuantity? { let o = _accessor.offset(VT.SPAN_STOWED); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Largest extent with appendages deployed [m].
   public var SPAN_DEPLOYED: OPPQuantity? { let o = _accessor.offset(VT.SPAN_DEPLOYED); return o == 0 ? nil : OPPQuantity(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  Gross geometric shape verbatim from the source, such as the DISCOS shape
-  ///  string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  ///  Gross geometric shape verbatim from the source, such as a shape string
+  ///  of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   public var SHAPE: String? { let o = _accessor.offset(VT.SHAPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SHAPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SHAPE) }
   ///  Provenance of SHAPE. Present whenever SHAPE is nonempty.
@@ -698,8 +699,9 @@ public struct OPPSurface: FlatBufferTable, FlatbuffersVectorInitializable, Verif
   public var ID: String! { let o = _accessor.offset(VT.ID); return _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.ID) }
   public var KIND: oppSurfaceKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : oppSurfaceKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
-  ///  Material name verbatim from the source: "Kapton MLI", "GaAs
-  ///  triple-junction", "Al 6061-T6". Empty when unstated.
+  ///  Material name verbatim from the source, in whatever designation the
+  ///  source uses: a multi-layer-insulation film, a photovoltaic cell
+  ///  chemistry, an alloy temper designation. Empty when unstated.
   public var MATERIAL: String? { let o = _accessor.offset(VT.MATERIAL); return o == 0 ? nil : _accessor.string(at: o) }
   public var MATERIALSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MATERIAL) }
   public var MATERIAL_CLASS: oppMaterialClass { let o = _accessor.offset(VT.MATERIAL_CLASS); return o == 0 ? .unspecified : oppMaterialClass(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }

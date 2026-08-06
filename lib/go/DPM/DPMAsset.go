@@ -148,7 +148,7 @@ func (rcv *DPMAsset) FileName() []byte {
 /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
 /// requests, subscriber caches, replay, audit, and completeness proofs.
 /// Example:
-/// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+/// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
 func (rcv *DPMAsset) FILE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -166,7 +166,7 @@ func (rcv *DPMAsset) FileId() []byte {
 /// update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
 /// requests, subscriber caches, replay, audit, and completeness proofs.
 /// Example:
-/// celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+/// provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
 /// Provider protocol name/version used to fetch this asset when
 /// TRANSPORT_KIND is SDN_QUERY, e.g. /sdn/dataset-query/1.0.0. The protocol
 /// response MUST be verifiable against DATA_ROOT, INDEXES, QUERY, and the

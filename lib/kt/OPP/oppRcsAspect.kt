@@ -8,8 +8,8 @@
 class oppRcsAspect private constructor() {
     companion object {
         /**
-         * The source states no aspect convention. ESA DISCOS characteristic
-         * cross-sections and CelesTrak SATCAT RCS use this value.
+         * The source states no aspect convention. Characteristic cross-sections
+         * published by catalogue-level object databases use this value.
          */
         const val UNSPECIFIED: Byte = 0
         const val AVERAGE: Byte = 1

@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 public struct NUMGaussMarkovRequest : IFlatbufferObject
 {
   private Table __p;
@@ -25,7 +25,7 @@ public struct NUMGaussMarkovRequest : IFlatbufferObject
   public uint SAMPLE_COUNT { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Number of initial state propagations excluded from the result statistics.
   public uint WARMUP_COUNT { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Seed for the Basilisk-compatible standard normal generator.
+  /// Seed for the standard-normal generator.
   public uint RNG_SEED { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Row-major DIMENSION x DIMENSION state propagation matrix.
   public double PROPAGATION_MATRIX(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }

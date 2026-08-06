@@ -29,8 +29,8 @@ class CNPProvenance(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-    # Radar", "RIPE Atlas", "LENS".
+    # Name of the organization or programme publishing the underlying
+    # measurements, carried verbatim as that publisher states it.
     # CNPProvenance
     def SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -46,8 +46,8 @@ class CNPProvenance(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Dataset, table or API path queried, e.g.
-    # "measurement-lab.ndt.unified_downloads".
+    # Dataset, table or API path queried, verbatim, e.g. a fully qualified
+    # warehouse table name or a REST route.
     # CNPProvenance
     def SOURCE_DATASET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))

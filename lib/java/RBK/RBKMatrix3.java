@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+ * Row-major 3x3 direction cosine matrix.
  */
 @SuppressWarnings("unused")
 public final class RBKMatrix3 extends com.google.flatbuffers.Table {

@@ -8,7 +8,7 @@
         "BURST_ADJUSTED",
         "INTERPOLATED_EXTRAPOLATED",
         "NO_OBSERVATION",
-        "CELESTRAK_INTERPOLATED"
+        "PROVIDER_INTERPOLATED"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -25,8 +25,9 @@
         "NO_OBSERVATION": {
           "value": 3
         },
-        "CELESTRAK_INTERPOLATED": {
-          "value": 4
+        "PROVIDER_INTERPOLATED": {
+          "value": 4,
+          "description": "Interpolated by the upstream data provider rather than the issuing observatory. Wire value 4 is unchanged from prior releases."
         }
       }
     },

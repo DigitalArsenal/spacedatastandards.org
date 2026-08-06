@@ -282,7 +282,9 @@ func (rcv *PPE) OrbitalElementRecordsLength() int {
 
 /// Array of orbital element polynomial records.
 /// Each record covers a time segment; together they span [START_TIME, STOP_TIME].
-/// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+/// Generating ephemeris source, verbatim as the generator names itself
+/// (e.g., a planetary ephemeris series designation, a numerical propagator
+/// name and version, or an in-house tool identifier).
 func (rcv *PPE) EPHEMERIS_SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -295,7 +297,9 @@ func (rcv *PPE) EphemerisSource() []byte {
 	return rcv.EPHEMERIS_SOURCE()
 }
 
-/// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+/// Generating ephemeris source, verbatim as the generator names itself
+/// (e.g., a planetary ephemeris series designation, a numerical propagator
+/// name and version, or an in-house tool identifier).
 /// Fit span in seconds used to generate each polynomial segment.
 /// Informational; actual spans are in individual records.
 func (rcv *PPE) NOMINAL_SEGMENT_SPAN() float64 {

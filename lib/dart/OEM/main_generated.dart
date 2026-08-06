@@ -686,7 +686,9 @@ class PPE {
   ///  Each record covers a time segment; together they span [START_TIME, STOP_TIME].
   List<PPEOrbitalElementRecord>? get ORBITAL_ELEMENT_RECORDS => const fb.ListReader<PPEOrbitalElementRecord>(PPEOrbitalElementRecord.reader).vTableGetNullable(_bc, _bcOffset, 22);
   List<PPEOrbitalElementRecord>? get orbitalElementRecords => ORBITAL_ELEMENT_RECORDS;
-  ///  Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  ///  Generating ephemeris source, verbatim as the generator names itself
+  ///  (e.g., a planetary ephemeris series designation, a numerical propagator
+  ///  name and version, or an in-house tool identifier).
   String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get ephemerisSource => EPHEMERIS_SOURCE;
   ///  Fit span in seconds used to generate each polynomial segment.

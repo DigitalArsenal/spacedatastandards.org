@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Request for one Basilisk-compatible Gauss-Markov random sequence.
+ * Request for one first-order Gauss-Markov random sequence.
  */
 @SuppressWarnings("unused")
 public final class NUMGaussMarkovRequest extends com.google.flatbuffers.Table {
@@ -44,7 +44,7 @@ public final class NUMGaussMarkovRequest extends com.google.flatbuffers.Table {
    */
   public long WARMUP_COUNT() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Seed for the Basilisk-compatible standard normal generator.
+   * Seed for the standard-normal generator.
    */
   public long RNG_SEED() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**

@@ -10,9 +10,10 @@ using global::Google.FlatBuffers;
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -30,9 +31,9 @@ using global::Google.FlatBuffers;
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 public struct CNP : IFlatbufferObject
 {
   private Table __p;
@@ -53,8 +54,8 @@ public struct CNP : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Constellation or network name, verbatim ("Starlink", "OneWeb",
-  /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+  /// Constellation or network name, carried verbatim as its operator states
+  /// it. Empty when the record is a terrestrial baseline. Joins to
   /// $LKS.CONSTELLATION and to $CAT by the same name.
   public string CONSTELLATION { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -71,9 +72,9 @@ public struct CNP : IFlatbufferObject
   public ArraySegment<byte>? GetOPERATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetOPERATORArray() { return __p.__vector_as_array<byte>(8); }
-  /// Autonomous system number of the measured client network — Starlink is
-  /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-  /// is never a real measurement key.
+  /// Autonomous system number of the measured client network, as allocated in
+  /// the public routing registry. 0 means the aggregate is not keyed by ASN;
+  /// AS 0 is reserved and is never a real measurement key.
   public uint ASN { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Autonomous system name as the routing registry publishes it.
   public string AS_NAME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }

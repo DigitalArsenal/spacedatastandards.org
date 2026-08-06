@@ -147,11 +147,11 @@ enum rbkOperationCode : int8_t {
   rbkOperationCode_D_EULER = 56,
   /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
   rbkOperationCode_TILDE_MATRIX = 57,
-  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
   rbkOperationCode_M1_ROTATION_MATRIX = 58,
-  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
   rbkOperationCode_M2_ROTATION_MATRIX = 59,
-  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
   rbkOperationCode_M3_ROTATION_MATRIX = 60,
   rbkOperationCode_MIN = rbkOperationCode_UNKNOWN,
   rbkOperationCode_MAX = rbkOperationCode_M3_ROTATION_MATRIX
@@ -460,7 +460,7 @@ inline ::flatbuffers::Offset<RBKVector3> CreateRBKVector3(
   return builder_.Finish();
 }
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 struct RBKQuaternion FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RBKQuaternionBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -533,7 +533,7 @@ inline ::flatbuffers::Offset<RBKQuaternion> CreateRBKQuaternion(
   return builder_.Finish();
 }
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 struct RBKMatrix3 FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RBKMatrix3Builder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {

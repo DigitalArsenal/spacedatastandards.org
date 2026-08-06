@@ -96,7 +96,9 @@ public final class PPE extends com.google.flatbuffers.Table {
   public PPEOrbitalElementRecord.Vector orbitalElementRecordsVector() { return orbitalElementRecordsVector(new PPEOrbitalElementRecord.Vector()); }
   public PPEOrbitalElementRecord.Vector orbitalElementRecordsVector(PPEOrbitalElementRecord.Vector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+   * Generating ephemeris source, verbatim as the generator names itself
+   * (e.g., a planetary ephemeris series designation, a numerical propagator
+   * name and version, or an in-house tool identifier).
    */
   public String EPHEMERIS_SOURCE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPHEMERIS_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }

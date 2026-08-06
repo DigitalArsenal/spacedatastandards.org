@@ -67,7 +67,7 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
    * update is referenced: PNMs, DPMs, assets, manifests, entitlements, query
    * requests, subscriber caches, replay, audit, and completeness proofs.
    * Example:
-   * celestrak:gp:OMM.fbs:2026-05-06T03:00:00Z.
+   * provider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z.
    */
   public String FILE_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FILE_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }

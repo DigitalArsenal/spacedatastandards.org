@@ -1,5 +1,5 @@
-// Hash: 49079382d1d22164afa1b9db6494b3243d8f83cd2aa6a8b529539cf4e692c75e
-// Version: 1.113.4
+// Hash: 1f74c19a776f826ac31ebf88531a244afea55581a12edf6b3a6455b50a9fd34c
+// Version: 1.113.5
 // -----------------------------------END_HEADER
 // Shared numerical utility records for reusable math modules.
 
@@ -154,7 +154,7 @@ table NUMScalarInterpolationResult {
   TRACE_ID:string;
 }
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 table NUMGaussMarkovRequest {
   /// GAUSS_MARKOV_SEQUENCE.
   OPERATION:numOperationCode;
@@ -164,7 +164,7 @@ table NUMGaussMarkovRequest {
   SAMPLE_COUNT:uint32;
   /// Number of initial state propagations excluded from the result statistics.
   WARMUP_COUNT:uint32;
-  /// Seed for the Basilisk-compatible standard normal generator.
+  /// Seed for the standard-normal generator.
   RNG_SEED:uint32;
   /// Row-major DIMENSION x DIMENSION state propagation matrix.
   PROPAGATION_MATRIX:[double];
@@ -178,7 +178,7 @@ table NUMGaussMarkovRequest {
   TRACE_ID:string;
 }
 
-/// Result of one Basilisk-compatible Gauss-Markov random sequence.
+/// Result of one first-order Gauss-Markov random sequence.
 table NUMGaussMarkovResult {
   STATUS:numResultStatus;
   ERROR_MESSAGE:string;

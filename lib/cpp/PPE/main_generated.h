@@ -718,7 +718,9 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *>(VT_ORBITAL_ELEMENT_RECORDS);
   }
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Generating ephemeris source, verbatim as the generator names itself
+  /// (e.g., a planetary ephemeris series designation, a numerical propagator
+  /// name and version, or an in-house tool identifier).
   const ::flatbuffers::String *EPHEMERIS_SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPHEMERIS_SOURCE);
   }

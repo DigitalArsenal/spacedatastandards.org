@@ -46,7 +46,7 @@
       "properties" : {
         "SOURCE" : {
                 "type" : "string",
-                "description" : "Publisher of the underlying measurements, e.g. \"M-Lab\", \"Cloudflare\nRadar\", \"RIPE Atlas\", \"LENS\"."
+                "description" : "Name of the organization or programme publishing the underlying\nmeasurements, carried verbatim as that publisher states it."
               },
         "SOURCE_URL" : {
                 "type" : "string",
@@ -54,7 +54,7 @@
               },
         "SOURCE_DATASET" : {
                 "type" : "string",
-                "description" : "Dataset, table or API path queried, e.g.\n\"measurement-lab.ndt.unified_downloads\"."
+                "description" : "Dataset, table or API path queried, verbatim, e.g. a fully qualified\nwarehouse table name or a REST route."
               },
         "SOURCE_QUERY" : {
                 "type" : "string",
@@ -157,7 +157,7 @@
     },
     "CNP" : {
       "type" : "object",
-      "description" : "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for the Starlink connectivity lane (AS14593 via\nM-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT\nprovider — or a terrestrial ASN used as a baseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT — never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 M-Lab lane beside a\nCC BY-NC Cloudflare Radar cross-check; the restriction attaches to the\nmetric that inherited it, never to the record as a whole.",
+      "description" : "Constellation Network Performance.\n\nAggregated throughput, latency and availability for one satellite\nconstellation's user network, keyed by CONSTELLATION, ASN, REGION and a\nclosed time window. Built for a broadband LEO consumer-terminal lane\n(one operator ASN measured via NDT7) and shaped so any operator — another\nLEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a\nbaseline fits the same record.\n\nKEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a\nspeed test, not a single client's result, and not a per-satellite link\nstate: $LKS carries the instantaneous state and data rate of ONE named\nlink between two endpoints, and no $LKS can express \"the p50 download rate\nobserved by 41,000 terminals in Germany during July\".\n\nNEVER-INVENT-DATA IS ENFORCED BY THE SHAPE. A quantity exists only as a\nCNPMetric, and CNPMetric carries `UNITS: string (required)` and\n`PROVENANCE: CNPProvenance (required)`, so there is no encoding for a\nnumber that does not state its unit and name its source, query,\nretrieval time, method and licence. A metric the source did not publish is\nABSENT — never zero. `SOURCES` lists every provider consulted for this key,\nincluding ones that returned nothing, so a consumer can distinguish \"not\nlooked for\" from \"looked for and empty\".\n\nLICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists\nbecause a single record may legitimately carry a CC0 open-measurement lane\nbeside a CC BY-NC cross-check from a restricted publisher; the restriction\nattaches to the metric that inherited it, never to the record as a whole.",
       "properties" : {
         "ID" : {
                 "type" : "string",
@@ -165,7 +165,7 @@
               },
         "CONSTELLATION" : {
                 "type" : "string",
-                "description" : "Constellation or network name, verbatim (\"Starlink\", \"OneWeb\",\n\"Kuiper\"). Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
+                "description" : "Constellation or network name, carried verbatim as its operator states\nit. Empty when the record is a terrestrial baseline. Joins to\n$LKS.CONSTELLATION and to $CAT by the same name."
               },
         "OPERATOR" : {
                 "type" : "string",
@@ -173,7 +173,7 @@
               },
         "ASN" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Autonomous system number of the measured client network — Starlink is\n14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and\nis never a real measurement key."
+                "description" : "Autonomous system number of the measured client network, as allocated in\nthe public routing registry. 0 means the aggregate is not keyed by ASN;\nAS 0 is reserved and is never a real measurement key."
               },
         "AS_NAME" : {
                 "type" : "string",

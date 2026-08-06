@@ -126,7 +126,7 @@
     },
     "RFB" : {
       "type" : "object",
-      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (SatNOGS DB) MUST divide by 1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
+      "description" : "RF Band Specification\n\nUNITS ARE NORMATIVE. Every frequency field in this table is MHz. Sources\nthat publish Hz (as open transmitter databases commonly do) MUST divide by\n1e6 before encoding; sources\nthat publish kHz MUST divide by 1e3. BAUD is baud (symbols per second),\nnever kilobaud. Encoding a Hz value into a MHz field is a defect, not a\nconvention.\n\nOne RFB record carries exactly one LINK_DIRECTION. A transceiver or\ntransponder is therefore represented as TWO RFB records — one UPLINK and\none DOWNLINK — sharing ID_TRANSMITTER, each carrying its own MODE,\nFREQ_MIN, FREQ_MAX and CENTER_FREQ.",
       "properties" : {
         "ID" : {
                 "type" : "string",
@@ -198,7 +198,7 @@
               },
         "ID_TRANSMITTER" : {
                 "type" : "string",
-                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. a SatNOGS transmitter UUID). Uplink and downlink\nrecords of the same device share this value."
+                "description" : "Identifier of the physical transmitter, transceiver or transponder this\nrecord describes (e.g. an upstream transmitter database's UUID). Uplink\nand downlink\nrecords of the same device share this value."
               },
         "LINK_DIRECTION" : {
                 "$ref" : "#/definitions/linkCategory",

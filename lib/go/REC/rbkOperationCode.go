@@ -122,11 +122,11 @@ const (
 	rbkOperationCodeD_EULER            rbkOperationCode = 56
 	/// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
 	rbkOperationCodeTILDE_MATRIX       rbkOperationCode = 57
-	/// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+	/// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
 	rbkOperationCodeM1_ROTATION_MATRIX rbkOperationCode = 58
-	/// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+	/// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
 	rbkOperationCodeM2_ROTATION_MATRIX rbkOperationCode = 59
-	/// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+	/// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
 	rbkOperationCodeM3_ROTATION_MATRIX rbkOperationCode = 60
 )
 

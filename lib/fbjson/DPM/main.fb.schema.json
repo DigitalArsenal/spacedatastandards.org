@@ -161,7 +161,7 @@
         },
         "FILE_ID": {
           "type": "string",
-          "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\ncelestrak:gp:OMM.fbs:2026-05-06T03:00:00Z."
+          "description": "Canonical publication/update partition identity for this asset. FILE_ID is\nnot a display filename; it is the stable identifier used everywhere this\nupdate is referenced: PNMs, DPMs, assets, manifests, entitlements, query\nrequests, subscriber caches, replay, audit, and completeness proofs.\nExample:\nprovider-slug:gp:OMM.fbs:2026-05-06T03:00:00Z."
         },
         "TRANSPORT_PROTOCOL": {
           "type": "string",

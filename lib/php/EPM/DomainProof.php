@@ -46,7 +46,7 @@ class DomainProof extends Table
         return $this;
     }
 
-    /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+    /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
     public function getDOMAIN()
     {
         $o = $this->__offset(4);

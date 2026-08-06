@@ -15,7 +15,7 @@ export declare class STR implements flatbuffers.IUnpackableObject<STRT> {
     ID(): string | null;
     ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * CelesTrak Star catalog identifier
+     * Community satellite-tracking star catalog identifier
      */
     CS_ID(): bigint;
     /**

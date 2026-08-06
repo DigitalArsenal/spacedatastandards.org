@@ -491,9 +491,10 @@ pub const ENUM_VALUES_CNP_METHOD: [cnpMethod; 9] = [
 pub struct cnpMethod(pub i8);
 #[allow(non_upper_case_globals)]
 impl cnpMethod {
-  /// M-Lab NDT7 measurement.
+  /// NDT7 network-diagnostic protocol measurement.
   pub const NDT7: Self = Self(0);
-  /// A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+  /// A speed test other than NDT7 — a third-party measurement platform, a
+  /// CDN-operated test, or an operator-native test.
   pub const SPEED_TEST: Self = Self(1);
   /// ICMP or UDP echo.
   pub const PING: Self = Self(2);
@@ -890,8 +891,8 @@ impl<'a> CNPProvenance<'a> {
     }
   }
 
-  /// Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-  /// Radar", "RIPE Atlas", "LENS".
+  /// Name of the organization or programme publishing the underlying
+  /// measurements, carried verbatim as that publisher states it.
   #[inline]
   pub fn SOURCE(&self) -> &'a str {
     // Safety:
@@ -907,8 +908,8 @@ impl<'a> CNPProvenance<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CNPProvenance::VT_SOURCE_URL, None)}
   }
-  /// Dataset, table or API path queried, e.g.
-  /// "measurement-lab.ndt.unified_downloads".
+  /// Dataset, table or API path queried, verbatim, e.g. a fully qualified
+  /// warehouse table name or a REST route.
   #[inline]
   pub fn SOURCE_DATASET(&self) -> Option<&'a str> {
     // Safety:
@@ -1740,9 +1741,10 @@ pub enum CNPOffset {}
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -1760,9 +1762,9 @@ pub enum CNPOffset {}
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 pub struct CNP<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -1889,8 +1891,8 @@ impl<'a> CNP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CNP::VT_ID, None)}
   }
-  /// Constellation or network name, verbatim ("Starlink", "OneWeb",
-  /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+  /// Constellation or network name, carried verbatim as its operator states
+  /// it. Empty when the record is a terrestrial baseline. Joins to
   /// $LKS.CONSTELLATION and to $CAT by the same name.
   #[inline]
   pub fn CONSTELLATION(&self) -> Option<&'a str> {
@@ -1907,9 +1909,9 @@ impl<'a> CNP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CNP::VT_OPERATOR, None)}
   }
-  /// Autonomous system number of the measured client network — Starlink is
-  /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-  /// is never a real measurement key.
+  /// Autonomous system number of the measured client network, as allocated in
+  /// the public routing registry. 0 means the aggregate is not keyed by ASN;
+  /// AS 0 is reserved and is never a real measurement key.
   #[inline]
   pub fn ASN(&self) -> u32 {
     // Safety:

@@ -10,8 +10,9 @@ import { cmrEvidenceRole } from './cmrEvidenceRole.js';
 /**
  * Replayable provenance for one fact used by a $CMR.
  *
- * Each source gets its own entry. A publisher never merges CelesTrak group
- * membership, GCAT ownership, and $CAT/$BUS joins into one ambiguous citation.
+ * Each source gets its own entry. A publisher never merges a catalogue's
+ * group membership, a reference catalogue's ownership assertion, and
+ * $CAT/$BUS joins into one ambiguous citation.
  */
 export class CMRProvenance implements flatbuffers.IUnpackableObject<CMRProvenanceT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -37,8 +38,9 @@ ROLE():cmrEvidenceRole {
 }
 
 /**
- * Publisher name verbatim, such as "CelesTrak", "GCAT", or the SDN
- * provider that published the joined $CAT record.
+ * Publisher name verbatim as that publisher states it — a public satellite
+ * catalogue, a general object reference catalogue, or the network provider
+ * that published the joined $CAT record.
  */
 SOURCE():string
 SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -48,8 +50,8 @@ SOURCE(optionalEncoding?:any):string|Uint8Array {
 }
 
 /**
- * Source dataset or product name verbatim, such as "active Starlink group"
- * or "GCAT satcat".
+ * Source dataset or product name verbatim, such as a named constellation
+ * group file or a catalogue's satellite-catalog product.
  */
 SOURCE_DATASET():string
 SOURCE_DATASET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array

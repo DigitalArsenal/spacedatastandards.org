@@ -52,7 +52,7 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
   public ByteBuffer PUBLIC_KEYAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer PUBLIC_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+   * Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
    */
   public String XPUB() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer XPUBAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
@@ -64,7 +64,7 @@ public final class CryptoKey extends com.google.flatbuffers.Table {
   public ByteBuffer PRIVATE_KEYAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer PRIVATE_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
   /**
-   * Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+   * Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
    */
   public String XPRIV() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer XPRIVAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }

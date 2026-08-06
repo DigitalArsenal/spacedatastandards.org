@@ -233,15 +233,15 @@ class rbkOperationCode private constructor() {
          */
         const val TILDE_MATRIX: Byte = 57
         /**
-         * Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+         * Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
          */
         const val M1_ROTATION_MATRIX: Byte = 58
         /**
-         * Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+         * Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
          */
         const val M2_ROTATION_MATRIX: Byte = 59
         /**
-         * Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+         * Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
          */
         const val M3_ROTATION_MATRIX: Byte = 60
     }

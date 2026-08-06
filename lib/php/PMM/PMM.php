@@ -42,7 +42,7 @@ class PMM extends Table
         return $this;
     }
 
-    /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+    /// Domain of the provider, e.g. "node.example.org". Required. MUST equal
     /// the origin the manifest was served from.
     public function getPROVIDER_DOMAIN()
     {

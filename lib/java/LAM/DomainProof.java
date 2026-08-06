@@ -33,7 +33,7 @@ public final class DomainProof extends com.google.flatbuffers.Table {
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+   * Fully-qualified domain name the proof binds (e.g., "node.example.org")
    */
   public String DOMAIN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DOMAINAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }

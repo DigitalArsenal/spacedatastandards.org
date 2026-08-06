@@ -40,7 +40,9 @@ class pluginCategory
     const Storefront = 16;
     /// Publication: PNM signing + pub/sub announcement
     const Publisher = 17;
-    /// Basilisk astrodynamics simulation module
+    /// Astrodynamics simulation and dynamics-modelling module family. The member
+    /// identifier is a legacy vocabulary key retained for wire and manifest
+    /// compatibility; renaming it is an owner-gated breaking change.
     const Basilisk = 18;
     /// Maneuver planning, targeting and trajectory optimization
     const Maneuver = 19;

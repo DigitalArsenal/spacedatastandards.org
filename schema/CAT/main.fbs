@@ -1,10 +1,10 @@
-// Hash: 5e5815830049eba64055f87a5c027434592fe5acafc9da044af35b79e474a247
-// Version: 1.0.3
+// Hash: ca31386aeea83a2033af7c01248dcff7251e14618cd0d08147a0a9839f778619
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../PLD/main.fbs";
 include "../LCC/main.fbs";
 
-// https://www.celestrak.com/satcat/satcat-format.php
+// Field layout follows the public satellite-catalog fixed-width format.
 
 enum spaceObjectClass: byte {
   /// 0

@@ -1231,7 +1231,7 @@ class NUMScalarInterpolationResultObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Request for one Basilisk-compatible Gauss-Markov random sequence.
+///  Request for one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovRequest {
   NUMGaussMarkovRequest._(this._bc, this._bcOffset);
   factory NUMGaussMarkovRequest(List<int> bytes) {
@@ -1254,7 +1254,7 @@ class NUMGaussMarkovRequest {
   ///  Number of initial state propagations excluded from the result statistics.
   int get WARMUP_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
   int get warmupCount => WARMUP_COUNT;
-  ///  Seed for the Basilisk-compatible standard normal generator.
+  ///  Seed for the standard-normal generator.
   int get RNG_SEED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get rngSeed => RNG_SEED;
   ///  Row-major DIMENSION x DIMENSION state propagation matrix.
@@ -1418,7 +1418,7 @@ class NUMGaussMarkovRequestObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Result of one Basilisk-compatible Gauss-Markov random sequence.
+///  Result of one first-order Gauss-Markov random sequence.
 class NUMGaussMarkovResult {
   NUMGaussMarkovResult._(this._bc, this._bcOffset);
   factory NUMGaussMarkovResult(List<int> bytes) {

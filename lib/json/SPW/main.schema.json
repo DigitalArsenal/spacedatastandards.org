@@ -3,7 +3,7 @@
   "definitions": {
     "FluxQualifier" : {
       "type" : "string",
-      "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "CELESTRAK_INTERPOLATED"]
+      "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "PROVIDER_INTERPOLATED"]
     },
     "F107DataType" : {
       "type" : "string",

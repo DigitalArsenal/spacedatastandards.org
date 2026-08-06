@@ -209,7 +209,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STR::VT_ID, None)}
   }
-  /// CelesTrak Star catalog identifier
+  /// Community satellite-tracking star catalog identifier
   #[inline]
   pub fn CS_ID(&self) -> i64 {
     // Safety:

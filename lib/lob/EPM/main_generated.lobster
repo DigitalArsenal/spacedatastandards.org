@@ -42,13 +42,13 @@ class CryptoKey : flatbuffers.handle
     /// REQUIRED in practice for ed25519 keys, which are never xpub-derivable
     def PUBLIC_KEY() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     def XPUB() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Private part of the cryptographic key in hexidecimal format, should be kept secret
     def PRIVATE_KEY() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
-    /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+    /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
     def XPRIV() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
     /// Address generated from the cryptographic key. An address only — NOT a
@@ -236,7 +236,7 @@ struct ChainProofBuilder:
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
 class DomainProof : flatbuffers.handle
-    /// Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+    /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
     def DOMAIN() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Public key for this proof (hex-encoded)

@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Request for one Basilisk-compatible Gauss-Markov random sequence.
+/// Request for one first-order Gauss-Markov random sequence.
 type NUMGaussMarkovRequest struct {
 	_tab flatbuffers.Table
 }
@@ -130,7 +130,7 @@ func (rcv *NUMGaussMarkovRequest) MutateWarmupCount(n uint32) bool {
 	return rcv.MutateWARMUP_COUNT(n)
 }
 
-/// Seed for the Basilisk-compatible standard normal generator.
+/// Seed for the standard-normal generator.
 func (rcv *NUMGaussMarkovRequest) RNG_SEED() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -143,7 +143,7 @@ func (rcv *NUMGaussMarkovRequest) RngSeed() uint32 {
 	return rcv.RNG_SEED()
 }
 
-/// Seed for the Basilisk-compatible standard normal generator.
+/// Seed for the standard-normal generator.
 func (rcv *NUMGaussMarkovRequest) MutateRNG_SEED(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(12, n)
 }

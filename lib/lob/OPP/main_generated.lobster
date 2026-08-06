@@ -27,8 +27,8 @@ enum oppDeterminationMethod:
 /// Aspect convention a radar cross-section value was reported under. Append new
 /// values only; never reorder or reuse existing values.
 enum oppRcsAspect:
-    /// The source states no aspect convention. ESA DISCOS characteristic
-    /// cross-sections and CelesTrak SATCAT RCS use this value.
+    /// The source states no aspect convention. Characteristic cross-sections
+    /// published by catalogue-level object databases use this value.
     oppRcsAspect_UNSPECIFIED = 0
     oppRcsAspect_AVERAGE = 1
     oppRcsAspect_MINIMUM = 2
@@ -106,12 +106,13 @@ class OPP
 /// zero, never a placeholder, and never carried forward from a different
 /// object.
 class OPPProvenance : flatbuffers.handle
-    /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-    /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+    /// Publisher of the value, named as the publisher names itself — a space
+    /// agency's object database, a public satellite catalogue, a third-party
+    /// satellite reference site, or the operator itself.
     def SOURCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// The source's own identifier for the record this value was read from, such
-    /// as a DISCOS object id. Verbatim, never normalized.
+    /// as that database's object id. Verbatim, never normalized.
     def SOURCE_RECORD_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Deep link to the exact source record when the source publishes one.
@@ -234,9 +235,9 @@ struct OPPQuantityBuilder:
 
 /// Radar cross-section as reported for one band, polarization and aspect
 /// convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-/// carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-/// xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-/// MAXIMUM sharing one SOURCE.
+/// carries a list of these and never a single scalar. A source publishing
+/// minimum, average and maximum cross-sections becomes three entries with
+/// ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 class OPPRadarCrossSection : flatbuffers.handle
     /// Radar band designation verbatim from the source: "UHF", "L", "S", "C",
     /// "X", "Ku". Empty when the source states no band.
@@ -258,7 +259,7 @@ class OPPRadarCrossSection : flatbuffers.handle
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return OPPQuantity { buf_, assert o }
     /// Size bucket verbatim when a source publishes a bucket instead of a number,
-    /// such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+    /// such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
     /// turned into a number.
     def SIZE_CLASS() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
@@ -367,7 +368,7 @@ class OPPDimensions : flatbuffers.handle
     def BODY_Z() -> OPPQuantity?:
         let o = flatbuffers.field_table(buf_, pos_, 8)
         return if o: OPPQuantity { buf_, o } else: nil
-    /// Envelope terms as ESA DISCOS publishes them [m].
+    /// Envelope terms as an object database publishes them [m].
     def HEIGHT() -> OPPQuantity?:
         let o = flatbuffers.field_table(buf_, pos_, 10)
         return if o: OPPQuantity { buf_, o } else: nil
@@ -388,8 +389,8 @@ class OPPDimensions : flatbuffers.handle
     def SPAN_DEPLOYED() -> OPPQuantity?:
         let o = flatbuffers.field_table(buf_, pos_, 20)
         return if o: OPPQuantity { buf_, o } else: nil
-    /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-    /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+    /// Gross geometric shape verbatim from the source, such as a shape string
+    /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
     def SHAPE() -> string:
         return flatbuffers.field_string(buf_, pos_, 22)
     /// Provenance of SHAPE. Present whenever SHAPE is nonempty.
@@ -510,8 +511,9 @@ class OPPSurface : flatbuffers.handle
         return flatbuffers.field_string(buf_, pos_, 4)
     def KIND() -> oppSurfaceKind:
         return oppSurfaceKind(flatbuffers.field_int8(buf_, pos_, 6, 0))
-    /// Material name verbatim from the source: "Kapton MLI", "GaAs
-    /// triple-junction", "Al 6061-T6". Empty when unstated.
+    /// Material name verbatim from the source, in whatever designation the
+    /// source uses: a multi-layer-insulation film, a photovoltaic cell
+    /// chemistry, an alloy temper designation. Empty when unstated.
     def MATERIAL() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
     def MATERIAL_CLASS() -> oppMaterialClass:

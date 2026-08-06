@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 type RBKMatrix3 struct {
 	_tab flatbuffers.Table
 }

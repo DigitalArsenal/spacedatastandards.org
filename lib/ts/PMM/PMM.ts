@@ -35,7 +35,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+ * Domain of the provider, e.g. "node.example.org". Required. MUST equal
  * the origin the manifest was served from.
  */
 PROVIDER_DOMAIN():string

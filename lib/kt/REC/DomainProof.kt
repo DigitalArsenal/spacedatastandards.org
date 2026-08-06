@@ -35,7 +35,7 @@ class DomainProof : Table() {
         return this
     }
     /**
-     * Fully-qualified domain name the proof binds (e.g., "sdn.spaceaware.io")
+     * Fully-qualified domain name the proof binds (e.g., "node.example.org")
      */
     val domain : String?
         get() {

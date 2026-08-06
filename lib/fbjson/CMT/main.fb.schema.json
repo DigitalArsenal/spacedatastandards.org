@@ -124,7 +124,7 @@
         },
         "Platform": {
           "value": 1,
-          "description": "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+          "description": "The store operator platform \u2014 the commission recipient"
         },
         "Referrer": {
           "value": 2,
@@ -313,7 +313,7 @@
             },
             "Platform": {
               "value": 1,
-              "description": "The store operator platform (e.g. SpaceAware) \u2014 the commission recipient"
+              "description": "The store operator platform \u2014 the commission recipient"
             },
             "Referrer": {
               "value": 2,

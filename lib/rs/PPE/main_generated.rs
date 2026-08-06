@@ -1470,7 +1470,9 @@ impl<'a> PPE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PPEOrbitalElementRecord>>>>(PPE::VT_ORBITAL_ELEMENT_RECORDS, None)}
   }
-  /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+  /// Generating ephemeris source, verbatim as the generator names itself
+  /// (e.g., a planetary ephemeris series designation, a numerical propagator
+  /// name and version, or an in-house tool identifier).
   #[inline]
   pub fn EPHEMERIS_SOURCE(&self) -> Option<&'a str> {
     // Safety:

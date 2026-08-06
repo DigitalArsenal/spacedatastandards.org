@@ -30,7 +30,7 @@ public final class PMM extends com.google.flatbuffers.Table {
   public PMM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+   * Domain of the provider, e.g. "node.example.org". Required. MUST equal
    * the origin the manifest was served from.
    */
   public String PROVIDER_DOMAIN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }

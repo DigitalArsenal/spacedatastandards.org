@@ -43,7 +43,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetPUBLIC_KEYBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetPUBLIC_KEYArray() { return __p.__vector_as_array<byte>(4); }
-  /// Extended public key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended public key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   public string XPUB { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetXPUBBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -59,7 +59,7 @@ public struct CryptoKey : IFlatbufferObject
   public ArraySegment<byte>? GetPRIVATE_KEYBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetPRIVATE_KEYArray() { return __p.__vector_as_array<byte>(8); }
-  /// Extended private key https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki#extended-keys
+  /// Extended private key, as specified by BIP-32 (hierarchical deterministic wallets), "Extended keys".
   public string XPRIV { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetXPRIVBytes() { return __p.__vector_as_span<byte>(10, 1); }

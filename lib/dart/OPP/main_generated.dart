@@ -248,11 +248,12 @@ class OPPProvenance {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-  ///  "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+  ///  Publisher of the value, named as the publisher names itself — a space
+  ///  agency's object database, a public satellite catalogue, a third-party
+  ///  satellite reference site, or the operator itself.
   String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  The source's own identifier for the record this value was read from, such
-  ///  as a DISCOS object id. Verbatim, never normalized.
+  ///  as that database's object id. Verbatim, never normalized.
   String? get SOURCE_RECORD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get sourceRecordId => SOURCE_RECORD_ID;
   ///  Deep link to the exact source record when the source publishes one.
@@ -557,9 +558,9 @@ class OPPQuantityObjectBuilder extends fb.ObjectBuilder {
 }
 ///  Radar cross-section as reported for one band, polarization and aspect
 ///  convention. Radar cross-section is band- and aspect-dependent, so an $OPP
-///  carries a list of these and never a single scalar. ESA DISCOS xSectMin,
-///  xSectAvg and xSectMax become three entries with ASPECT MINIMUM, AVERAGE and
-///  MAXIMUM sharing one SOURCE.
+///  carries a list of these and never a single scalar. A source publishing
+///  minimum, average and maximum cross-sections becomes three entries with
+///  ASPECT MINIMUM, AVERAGE and MAXIMUM sharing one SOURCE.
 class OPPRadarCrossSection {
   OPPRadarCrossSection._(this._bc, this._bcOffset);
   factory OPPRadarCrossSection(List<int> bytes) {
@@ -588,7 +589,7 @@ class OPPRadarCrossSection {
   OPPQuantity? get CROSS_SECTION => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 12);
   OPPQuantity? get crossSection => CROSS_SECTION;
   ///  Size bucket verbatim when a source publishes a bucket instead of a number,
-  ///  such as CelesTrak SATCAT "SMALL", "MEDIUM", "LARGE". A bucket is never
+  ///  such as a public catalogue's "SMALL", "MEDIUM", "LARGE". A bucket is never
   ///  turned into a number.
   String? get SIZE_CLASS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get sizeClass => SIZE_CLASS;
@@ -864,7 +865,7 @@ class OPPDimensions {
   OPPQuantity? get bodyY => BODY_Y;
   OPPQuantity? get BODY_Z => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 8);
   OPPQuantity? get bodyZ => BODY_Z;
-  ///  Envelope terms as ESA DISCOS publishes them [m].
+  ///  Envelope terms as an object database publishes them [m].
   OPPQuantity? get HEIGHT => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 10);
   OPPQuantity? get WIDTH => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 12);
   OPPQuantity? get DEPTH => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 14);
@@ -875,8 +876,8 @@ class OPPDimensions {
   ///  Largest extent with appendages deployed [m].
   OPPQuantity? get SPAN_DEPLOYED => OPPQuantity.reader.vTableGetNullable(_bc, _bcOffset, 20);
   OPPQuantity? get spanDeployed => SPAN_DEPLOYED;
-  ///  Gross geometric shape verbatim from the source, such as the DISCOS shape
-  ///  string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+  ///  Gross geometric shape verbatim from the source, such as a shape string
+  ///  of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
   String? get SHAPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   ///  Provenance of SHAPE. Present whenever SHAPE is nonempty.
   OPPProvenance? get SHAPE_PROVENANCE => OPPProvenance.reader.vTableGetNullable(_bc, _bcOffset, 24);
@@ -1202,8 +1203,9 @@ class OPPSurface {
   ///  Stable identifier for this surface within the record.
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   oppSurfaceKind get KIND => oppSurfaceKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
-  ///  Material name verbatim from the source: "Kapton MLI", "GaAs
-  ///  triple-junction", "Al 6061-T6". Empty when unstated.
+  ///  Material name verbatim from the source, in whatever designation the
+  ///  source uses: a multi-layer-insulation film, a photovoltaic cell
+  ///  chemistry, an alloy temper designation. Empty when unstated.
   String? get MATERIAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   oppMaterialClass get MATERIAL_CLASS => oppMaterialClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
   oppMaterialClass get materialClass => MATERIAL_CLASS;

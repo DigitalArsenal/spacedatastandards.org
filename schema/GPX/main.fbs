@@ -1,12 +1,12 @@
-// Hash: 6aec30c7ddc6f550df2c2bf01b6d49254441ba165aa6779def14fd70543baec3
-// Version: 0.0.2
+// Hash: 4fbf8c18f4d1add07d428f9922e33eeb4465056b4458323d2df840469919e28f
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 // GPX (GPS Exchange Format)
 //
 // GPX is an XML schema for exchanging GPS data (waypoints, tracks, routes)
-// between applications and web services. It is an open standard maintained
-// by the TopoGrafix community.
-// Reference: https://www.topografix.com/gpx.asp (GPX 1.1)
+// between applications and web services. It is an open,
+// community-maintained standard.
+// Reference: the GPX 1.1 schema specification.
 
 enum GPXFixType : byte {
   NONE,

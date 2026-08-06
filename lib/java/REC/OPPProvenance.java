@@ -35,15 +35,16 @@ public final class OPPProvenance extends com.google.flatbuffers.Table {
   public OPPProvenance __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-   * "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+   * Publisher of the value, named as the publisher names itself — a space
+   * agency's object database, a public satellite catalogue, a third-party
+   * satellite reference site, or the operator itself.
    */
   public String SOURCE() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * The source's own identifier for the record this value was read from, such
-   * as a DISCOS object id. Verbatim, never normalized.
+   * as that database's object id. Verbatim, never normalized.
    */
   public String SOURCE_RECORD_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_RECORD_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }

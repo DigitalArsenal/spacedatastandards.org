@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 /**
- * Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+ * Row-major 3x3 direction cosine matrix.
  */
 export declare class RBKMatrix3 implements flatbuffers.IUnpackableObject<RBKMatrix3T> {
     bb: flatbuffers.ByteBuffer | null;

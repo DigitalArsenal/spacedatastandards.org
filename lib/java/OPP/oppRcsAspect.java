@@ -8,8 +8,8 @@
 public final class oppRcsAspect {
   private oppRcsAspect() { }
   /**
-   * The source states no aspect convention. ESA DISCOS characteristic
-   * cross-sections and CelesTrak SATCAT RCS use this value.
+   * The source states no aspect convention. Characteristic cross-sections
+   * published by catalogue-level object databases use this value.
    */
   public static final byte UNSPECIFIED = 0;
   public static final byte AVERAGE = 1;

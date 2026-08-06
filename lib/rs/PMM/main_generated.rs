@@ -1673,7 +1673,7 @@ impl<'a> PMM<'a> {
     }
   }
 
-  /// Domain of the provider, e.g. "sdn.spaceaware.io". Required. MUST equal
+  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal
   /// the origin the manifest was served from.
   #[inline]
   pub fn PROVIDER_DOMAIN(&self) -> &'a str {

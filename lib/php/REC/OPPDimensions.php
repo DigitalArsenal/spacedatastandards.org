@@ -65,7 +65,7 @@ class OPPDimensions extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Envelope terms as ESA DISCOS publishes them [m].
+    /// Envelope terms as an object database publishes them [m].
     public function getHEIGHT()
     {
         $obj = new OPPQuantity();
@@ -110,8 +110,8 @@ class OPPDimensions extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Gross geometric shape verbatim from the source, such as the DISCOS shape
-    /// string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+    /// Gross geometric shape verbatim from the source, such as a shape string
+    /// of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
     public function getSHAPE()
     {
         $o = $this->__offset(22);

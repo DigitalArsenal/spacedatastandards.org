@@ -667,7 +667,7 @@ public struct NUMScalarInterpolationResult: FlatBufferTable, FlatbuffersVectorIn
   }
 }
 
-///  Request for one Basilisk-compatible Gauss-Markov random sequence.
+///  Request for one first-order Gauss-Markov random sequence.
 public struct NUMGaussMarkovRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -700,7 +700,7 @@ public struct NUMGaussMarkovRequest: FlatBufferTable, FlatbuffersVectorInitializ
   public var SAMPLE_COUNT: UInt32 { let o = _accessor.offset(VT.SAMPLE_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Number of initial state propagations excluded from the result statistics.
   public var WARMUP_COUNT: UInt32 { let o = _accessor.offset(VT.WARMUP_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Seed for the Basilisk-compatible standard normal generator.
+  ///  Seed for the standard-normal generator.
   public var RNG_SEED: UInt32 { let o = _accessor.offset(VT.RNG_SEED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Row-major DIMENSION x DIMENSION state propagation matrix.
   public var PROPAGATION_MATRIX: FlatbufferVector<Double> { return _accessor.vector(at: VT.PROPAGATION_MATRIX, byteSize: 8) }
@@ -772,7 +772,7 @@ public struct NUMGaussMarkovRequest: FlatBufferTable, FlatbuffersVectorInitializ
   }
 }
 
-///  Result of one Basilisk-compatible Gauss-Markov random sequence.
+///  Result of one first-order Gauss-Markov random sequence.
 public struct NUMGaussMarkovResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }

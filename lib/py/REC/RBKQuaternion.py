@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+# Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 class RBKQuaternion(object):
     __slots__ = ['_tab']
 

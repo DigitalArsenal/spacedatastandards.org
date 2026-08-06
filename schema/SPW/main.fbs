@@ -1,17 +1,19 @@
-// Hash: be6dac70f41acb6310e5f601c9e9a7986d51d724b3f3ef983f979e79de1389aa
-// Version: 1.0.2
+// Hash: f450aecfc546934b6b8e2b4a62dca10cef82be302c5f7e5c3ea025a7ba2a1abe
+// Version: 1.0.3
 // -----------------------------------END_HEADER
 enum FluxQualifier: byte {
   OBSERVED = 0,
   BURST_ADJUSTED = 1,
   INTERPOLATED_EXTRAPOLATED = 2,
   NO_OBSERVATION = 3,
-  CELESTRAK_INTERPOLATED = 4
+  /// Interpolated by the upstream data provider rather than the issuing
+  /// observatory. Wire value 4 is unchanged from prior releases.
+  PROVIDER_INTERPOLATED = 4
 }
 
 enum F107DataType: byte {
   OBS = 0,  // Observed flux measurement
-  INT = 1,  // CelesTrak linear interpolation
+  INT = 1,  // Provider linear interpolation
   PRD = 2,  // 45-Day predicted flux
   PRM = 3   // Monthly predicted flux
 }

@@ -37,7 +37,7 @@ class STR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # CelesTrak Star catalog identifier
+    # Community satellite-tracking star catalog identifier
     # STR
     def CS_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))

@@ -7,9 +7,13 @@ public final class FluxQualifier {
   public static final byte BURST_ADJUSTED = 1;
   public static final byte INTERPOLATED_EXTRAPOLATED = 2;
   public static final byte NO_OBSERVATION = 3;
-  public static final byte CELESTRAK_INTERPOLATED = 4;
+  /**
+   * Interpolated by the upstream data provider rather than the issuing
+   * observatory. Wire value 4 is unchanged from prior releases.
+   */
+  public static final byte PROVIDER_INTERPOLATED = 4;
 
-  public static final String[] names = { "OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "CELESTRAK_INTERPOLATED", };
+  public static final String[] names = { "OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "PROVIDER_INTERPOLATED", };
 
   public static String name(int e) { return names[e]; }
 }

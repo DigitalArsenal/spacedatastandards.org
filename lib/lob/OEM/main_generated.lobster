@@ -423,7 +423,9 @@ class PPE : flatbuffers.handle
         return PPEOrbitalElementRecord { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 22) + i * 4) }
     def ORBITAL_ELEMENT_RECORDS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 22)
-    /// Generating ephemeris source (e.g., "JPL DE440", "HPOP v2.1", "Basilisk chebyPosEphem").
+    /// Generating ephemeris source, verbatim as the generator names itself
+    /// (e.g., a planetary ephemeris series designation, a numerical propagator
+    /// name and version, or an in-house tool identifier).
     def EPHEMERIS_SOURCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
     /// Fit span in seconds used to generate each polynomial segment.

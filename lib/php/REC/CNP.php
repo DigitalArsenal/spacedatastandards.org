@@ -10,9 +10,10 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 ///
 /// Aggregated throughput, latency and availability for one satellite
 /// constellation's user network, keyed by CONSTELLATION, ASN, REGION and a
-/// closed time window. Built for the Starlink connectivity lane (AS14593 via
-/// M-Lab NDT7) and shaped so any operator — OneWeb, Kuiper, a GEO VSAT
-/// provider — or a terrestrial ASN used as a baseline fits the same record.
+/// closed time window. Built for a broadband LEO consumer-terminal lane
+/// (one operator ASN measured via NDT7) and shaped so any operator — another
+/// LEO constellation, a GEO VSAT provider — or a terrestrial ASN used as a
+/// baseline fits the same record.
 ///
 /// KEY, NOT MEASUREMENT. One $CNP is an AGGREGATE over a window. It is not a
 /// speed test, not a single client's result, and not a per-satellite link
@@ -30,9 +31,9 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 /// looked for" from "looked for and empty".
 ///
 /// LICENCE RIDES PER SOURCE. `CNPProvenance.NON_COMMERCIAL_ONLY` exists
-/// because a single record may legitimately carry a CC0 M-Lab lane beside a
-/// CC BY-NC Cloudflare Radar cross-check; the restriction attaches to the
-/// metric that inherited it, never to the record as a whole.
+/// because a single record may legitimately carry a CC0 open-measurement lane
+/// beside a CC BY-NC cross-check from a restricted publisher; the restriction
+/// attaches to the metric that inherited it, never to the record as a whole.
 class CNP extends Table
 {
     /**
@@ -74,8 +75,8 @@ class CNP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Constellation or network name, verbatim ("Starlink", "OneWeb",
-    /// "Kuiper"). Empty when the record is a terrestrial baseline. Joins to
+    /// Constellation or network name, carried verbatim as its operator states
+    /// it. Empty when the record is a terrestrial baseline. Joins to
     /// $LKS.CONSTELLATION and to $CAT by the same name.
     public function getCONSTELLATION()
     {
@@ -90,9 +91,9 @@ class CNP extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Autonomous system number of the measured client network — Starlink is
-    /// 14593. 0 means the aggregate is not keyed by ASN; AS 0 is reserved and
-    /// is never a real measurement key.
+    /// Autonomous system number of the measured client network, as allocated in
+    /// the public routing registry. 0 means the aggregate is not keyed by ASN;
+    /// AS 0 is reserved and is never a real measurement key.
     /**
      * @return uint
      */

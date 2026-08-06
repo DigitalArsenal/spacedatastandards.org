@@ -37,8 +37,9 @@ class OPPProvenance : Table() {
         return this
     }
     /**
-     * Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-     * "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+     * Publisher of the value, named as the publisher names itself — a space
+     * agency's object database, a public satellite catalogue, a third-party
+     * satellite reference site, or the operator itself.
      */
     val source : String
         get() {
@@ -53,7 +54,7 @@ class OPPProvenance : Table() {
     fun sourceInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * The source's own identifier for the record this value was read from, such
-     * as a DISCOS object id. Verbatim, never normalized.
+     * as that database's object id. Verbatim, never normalized.
      */
     val sourceRecordId : String?
         get() {

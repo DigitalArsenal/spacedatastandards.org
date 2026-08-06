@@ -33,8 +33,9 @@ public struct OPPSurface : IFlatbufferObject
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
   public oppSurfaceKind KIND { get { int o = __p.__offset(6); return o != 0 ? (oppSurfaceKind)__p.bb.GetSbyte(o + __p.bb_pos) : oppSurfaceKind.UNSPECIFIED; } }
-  /// Material name verbatim from the source: "Kapton MLI", "GaAs
-  /// triple-junction", "Al 6061-T6". Empty when unstated.
+  /// Material name verbatim from the source, in whatever designation the
+  /// source uses: a multi-layer-insulation film, a photovoltaic cell
+  /// chemistry, an alloy temper designation. Empty when unstated.
   public string MATERIAL { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMATERIALBytes() { return __p.__vector_as_span<byte>(8, 1); }

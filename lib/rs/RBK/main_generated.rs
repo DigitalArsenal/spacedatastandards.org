@@ -193,11 +193,11 @@ impl rbkOperationCode {
   pub const D_EULER: Self = Self(56);
   /// Return the skew-symmetric tilde matrix that maps VECTOR_A cross products.
   pub const TILDE_MATRIX: Self = Self(57);
-  /// Return the Basilisk AVS one-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the one-axis elementary direction-cosine matrix for ANGLE_RAD.
   pub const M1_ROTATION_MATRIX: Self = Self(58);
-  /// Return the Basilisk AVS two-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the two-axis elementary direction-cosine matrix for ANGLE_RAD.
   pub const M2_ROTATION_MATRIX: Self = Self(59);
-  /// Return the Basilisk AVS three-axis elementary direction-cosine matrix for ANGLE_RAD.
+  /// Return the three-axis elementary direction-cosine matrix for ANGLE_RAD.
   pub const M3_ROTATION_MATRIX: Self = Self(60);
 
   pub const ENUM_MIN: i8 = 0;
@@ -777,7 +777,7 @@ impl RBKVector3T {
 pub enum RBKQuaternionOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Scalar-first Euler parameter/quaternion record, matching Basilisk EP ordering.
+/// Scalar-first Euler parameter/quaternion record, ordered (q0, q1, q2, q3).
 pub struct RBKQuaternion<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }
@@ -972,7 +972,7 @@ impl RBKQuaternionT {
 pub enum RBKMatrix3Offset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Row-major 3x3 direction cosine matrix, matching Basilisk C matrix ordering.
+/// Row-major 3x3 direction cosine matrix.
 pub struct RBKMatrix3<'a> {
   pub _tab: ::flatbuffers::Table<'a>,
 }

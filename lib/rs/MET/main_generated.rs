@@ -23,7 +23,8 @@ pub struct meanElementSource(pub i8);
 impl meanElementSource {
   /// Simplified General Perturbation Model 4
   pub const SGP4: Self = Self(0);
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (https://amostech.com/TechnicalPapers/2022/Astrodynamics/Payne_2.pdf)
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
   pub const SGP4XP: Self = Self(1);
   /// Draper Semi-analytical Satellite Theory
   pub const DSST: Self = Self(2);

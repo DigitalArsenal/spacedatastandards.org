@@ -7,11 +7,12 @@
 class cnpMethod private constructor() {
     companion object {
         /**
-         * M-Lab NDT7 measurement.
+         * NDT7 network-diagnostic protocol measurement.
          */
         const val NDT7: Byte = 0
         /**
-         * A speed test other than NDT7 (Ookla, Cloudflare AIM, operator-native).
+         * A speed test other than NDT7 — a third-party measurement platform, a
+         * CDN-operated test, or an operator-native test.
          */
         const val SPEED_TEST: Byte = 1
         /**

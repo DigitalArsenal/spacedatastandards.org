@@ -28,8 +28,8 @@ public final class CNPProvenance extends com.google.flatbuffers.Table {
   public CNPProvenance __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Publisher of the underlying measurements, e.g. "M-Lab", "Cloudflare
-   * Radar", "RIPE Atlas", "LENS".
+   * Name of the organization or programme publishing the underlying
+   * measurements, carried verbatim as that publisher states it.
    */
   public String SOURCE() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
@@ -41,8 +41,8 @@ public final class CNPProvenance extends com.google.flatbuffers.Table {
   public ByteBuffer SOURCE_URLAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer SOURCE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
   /**
-   * Dataset, table or API path queried, e.g.
-   * "measurement-lab.ndt.unified_downloads".
+   * Dataset, table or API path queried, verbatim, e.g. a fully qualified
+   * warehouse table name or a REST route.
    */
   public String SOURCE_DATASET() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_DATASETAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }

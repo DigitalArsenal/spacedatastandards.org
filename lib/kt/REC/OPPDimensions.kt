@@ -62,7 +62,7 @@ class OPPDimensions : Table() {
         }
     }
     /**
-     * Envelope terms as ESA DISCOS publishes them [m].
+     * Envelope terms as an object database publishes them [m].
      */
     val height : OPPQuantity? get() = height(OPPQuantity())
     fun height(obj: OPPQuantity) : OPPQuantity? {
@@ -125,8 +125,8 @@ class OPPDimensions : Table() {
         }
     }
     /**
-     * Gross geometric shape verbatim from the source, such as the DISCOS shape
-     * string "Box + 1 Pan" or "Cyl". Never parsed into geometry.
+     * Gross geometric shape verbatim from the source, such as a shape string
+     * of the form "Box + 1 Pan" or "Cyl". Never parsed into geometry.
      */
     val shape : String?
         get() {

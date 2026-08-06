@@ -42,7 +42,7 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * CelesTrak Star catalog identifier
+ * Community satellite-tracking star catalog identifier
  */
 CS_ID():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 6);

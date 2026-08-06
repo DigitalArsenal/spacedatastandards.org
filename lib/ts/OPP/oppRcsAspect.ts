@@ -8,8 +8,8 @@
  */
 export enum oppRcsAspect {
   /**
-   * The source states no aspect convention. ESA DISCOS characteristic
-   * cross-sections and CelesTrak SATCAT RCS use this value.
+   * The source states no aspect convention. Characteristic cross-sections
+   * published by catalogue-level object databases use this value.
    */
   UNSPECIFIED = 0,
   AVERAGE = 1,

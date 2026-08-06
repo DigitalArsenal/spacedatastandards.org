@@ -77,7 +77,9 @@ impl pluginCategory {
   pub const Storefront: Self = Self(16);
   /// Publication: PNM signing + pub/sub announcement
   pub const Publisher: Self = Self(17);
-  /// Basilisk astrodynamics simulation module
+  /// Astrodynamics simulation and dynamics-modelling module family. The member
+  /// identifier is a legacy vocabulary key retained for wire and manifest
+  /// compatibility; renaming it is an owner-gated breaking change.
   pub const Basilisk: Self = Self(18);
   /// Maneuver planning, targeting and trajectory optimization
   pub const Maneuver: Self = Self(19);

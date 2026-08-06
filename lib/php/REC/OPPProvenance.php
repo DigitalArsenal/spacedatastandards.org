@@ -48,8 +48,9 @@ class OPPProvenance extends Table
         return $this;
     }
 
-    /// Publisher of the value, named as the publisher names itself: "ESA DISCOS",
-    /// "CelesTrak SATCAT", "Gunter's Space Page", "NASA", the operator's name.
+    /// Publisher of the value, named as the publisher names itself — a space
+    /// agency's object database, a public satellite catalogue, a third-party
+    /// satellite reference site, or the operator itself.
     public function getSOURCE()
     {
         $o = $this->__offset(4);
@@ -57,7 +58,7 @@ class OPPProvenance extends Table
     }
 
     /// The source's own identifier for the record this value was read from, such
-    /// as a DISCOS object id. Verbatim, never normalized.
+    /// as that database's object id. Verbatim, never normalized.
     public function getSOURCE_RECORD_ID()
     {
         $o = $this->__offset(6);
