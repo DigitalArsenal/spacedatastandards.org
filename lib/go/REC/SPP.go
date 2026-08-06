@@ -195,9 +195,6 @@ func (rcv *SPP) DATA_LENGTH() uint16 {
 	return 0
 }
 
-func (rcv *SPP) DataLength() uint16 {
-	return rcv.DATA_LENGTH()
-}
 
 /// Data length minus 1
 func (rcv *SPP) MutateDATA_LENGTH(n uint16) bool {

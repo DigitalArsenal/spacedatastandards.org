@@ -68,9 +68,6 @@ func (rcv *PRW) INIT(obj *PRWInit) *PRWInit {
 	return nil
 }
 
-func (rcv *PRW) Init(obj *PRWInit) *PRWInit {
-	return rcv.INIT(obj)
-}
 
 func (rcv *PRW) BATCH_REQUEST(obj *PRWBatchRequest) *PRWBatchRequest {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))

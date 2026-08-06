@@ -85,9 +85,6 @@ func (rcv *SDL) IV_LENGTH() byte {
 	return 0
 }
 
-func (rcv *SDL) IvLength() byte {
-	return rcv.IV_LENGTH()
-}
 
 /// Initialization vector length in bytes
 func (rcv *SDL) MutateIV_LENGTH(n byte) bool {
@@ -159,9 +156,6 @@ func (rcv *SDL) MAC_LENGTH() byte {
 	return 0
 }
 
-func (rcv *SDL) MacLength() byte {
-	return rcv.MAC_LENGTH()
-}
 
 /// MAC length in bytes
 func (rcv *SDL) MutateMAC_LENGTH(n byte) bool {
