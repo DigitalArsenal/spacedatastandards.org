@@ -213,8 +213,23 @@ class APP(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
+    # App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+    # self-describe where the app as a whole is meant to run, instead of that
+    # classification being supplied externally at install time. This is the
+    # app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+    # RUNTIME_TARGET still governs where that specific member module loads and
+    # may specialize away from RUNTIME_CLASS (for example a NODE-class app
+    # with one PAGE-capable module). Defaults to NODE to preserve the prior
+    # node-only assumption of manifests written before this field existed.
+    # APP
+    def RUNTIME_CLASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def APPStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(12)
 
 def Start(builder):
     APPStart(builder)
@@ -345,6 +360,12 @@ def APPCreateDATAFLOWVector(builder, data):
 def CreateDATAFLOWVector(builder, data):
     APPCreateDATAFLOWVector(builder, data)
 
+def APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS):
+    builder.PrependUint8Slot(11, RUNTIME_CLASS, 0)
+
+def AddRUNTIME_CLASS(builder, RUNTIME_CLASS):
+    APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS)
+
 def APPEnd(builder):
     return builder.EndObject()
 
@@ -377,6 +398,7 @@ class APPT(object):
         CREATED_AT = None,
         UPDATED_AT = None,
         DATAFLOW = None,
+        RUNTIME_CLASS = 0,
     ):
         self.ID = ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -389,6 +411,7 @@ class APPT(object):
         self.CREATED_AT = CREATED_AT  # type: Optional[str]
         self.UPDATED_AT = UPDATED_AT  # type: Optional[str]
         self.DATAFLOW = DATAFLOW  # type: Optional[List[APPDataflow.APPDataflowT]]
+        self.RUNTIME_CLASS = RUNTIME_CLASS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -457,6 +480,7 @@ class APPT(object):
                 else:
                     aPPDataflow_ = APPDataflow.APPDataflowT.InitFromObj(APP.DATAFLOW(i))
                     self.DATAFLOW.append(aPPDataflow_)
+        self.RUNTIME_CLASS = APP.RUNTIME_CLASS()
 
     # APPT
     def Pack(self, builder):
@@ -535,5 +559,6 @@ class APPT(object):
             APPAddUPDATED_AT(builder, UPDATED_AT)
         if self.DATAFLOW is not None:
             APPAddDATAFLOW(builder, DATAFLOW)
+        APPAddRUNTIME_CLASS(builder, self.RUNTIME_CLASS)
         APP = APPEnd(builder)
         return APP

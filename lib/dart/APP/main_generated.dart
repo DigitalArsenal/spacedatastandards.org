@@ -1203,10 +1203,20 @@ class APP {
   ///  resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
   ///  name a method port advertised by that module's PLG manifest.
   List<APPDataflow>? get DATAFLOW => const fb.ListReader<APPDataflow>(APPDataflow.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  ///  self-describe where the app as a whole is meant to run, instead of that
+  ///  classification being supplied externally at install time. This is the
+  ///  app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  ///  RUNTIME_TARGET still governs where that specific member module loads and
+  ///  may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  ///  with one PAGE-capable module). Defaults to NODE to preserve the prior
+  ///  node-only assumption of manifests written before this field existed.
+  appRuntimeTarget get RUNTIME_CLASS => appRuntimeTarget.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  appRuntimeTarget get runtimeClass => RUNTIME_CLASS;
 
   @override
   String toString() {
-    return 'APP{ID: ${ID}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, MODULES: ${MODULES}, DATA: ${DATA}, SOURCES: ${SOURCES}, UI: ${UI}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, DATAFLOW: ${DATAFLOW}}';
+    return 'APP{ID: ${ID}, NAME: ${NAME}, VERSION: ${VERSION}, DESCRIPTION: ${DESCRIPTION}, MODULES: ${MODULES}, DATA: ${DATA}, SOURCES: ${SOURCES}, UI: ${UI}, createdAt: ${createdAt}, updatedAt: ${updatedAt}, DATAFLOW: ${DATAFLOW}, runtimeClass: ${runtimeClass}}';
   }
 }
 
@@ -1224,7 +1234,7 @@ class APPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(12);
   }
 
   int addIdOffset(int? offset) {
@@ -1271,6 +1281,10 @@ class APPBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
+  int addRuntimeClass(appRuntimeTarget? RUNTIME_CLASS) {
+    fbBuilder.addUint8(11, RUNTIME_CLASS?.value);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1289,6 +1303,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
   final String? _CREATED_AT;
   final String? _UPDATED_AT;
   final List<APPDataflowObjectBuilder>? _DATAFLOW;
+  final appRuntimeTarget? _RUNTIME_CLASS;
 
   APPObjectBuilder({
     String? ID,
@@ -1304,6 +1319,8 @@ class APPObjectBuilder extends fb.ObjectBuilder {
     String? UPDATED_AT,
     String? updatedAt,
     List<APPDataflowObjectBuilder>? DATAFLOW,
+    appRuntimeTarget? RUNTIME_CLASS,
+    appRuntimeTarget? runtimeClass,
   })
       : _ID = ID,
         _NAME = NAME,
@@ -1315,7 +1332,8 @@ class APPObjectBuilder extends fb.ObjectBuilder {
         _UI = UI,
         _CREATED_AT = createdAt ?? CREATED_AT,
         _UPDATED_AT = updatedAt ?? UPDATED_AT,
-        _DATAFLOW = DATAFLOW;
+        _DATAFLOW = DATAFLOW,
+        _RUNTIME_CLASS = runtimeClass ?? RUNTIME_CLASS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1342,7 +1360,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_UPDATED_AT!);
     final int? DATAFLOWOffset = _DATAFLOW == null ? null
         : fbBuilder.writeList(_DATAFLOW!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(12);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, VERSIONOffset);
@@ -1354,6 +1372,7 @@ class APPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, CREATED_ATOffset);
     fbBuilder.addOffset(9, UPDATED_ATOffset);
     fbBuilder.addOffset(10, DATAFLOWOffset);
+    fbBuilder.addUint8(11, _RUNTIME_CLASS?.value);
     return fbBuilder.endTable();
   }
 

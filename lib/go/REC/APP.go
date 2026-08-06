@@ -380,8 +380,44 @@ func (rcv *APP) DataflowLength() int {
 /// running page and how. Referential integrity: every MODULE_ID here must
 /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
 /// name a method port advertised by that module's PLG manifest.
+/// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+/// self-describe where the app as a whole is meant to run, instead of that
+/// classification being supplied externally at install time. This is the
+/// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+/// RUNTIME_TARGET still governs where that specific member module loads and
+/// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+/// with one PAGE-capable module). Defaults to NODE to preserve the prior
+/// node-only assumption of manifests written before this field existed.
+func (rcv *APP) RUNTIME_CLASS() appRuntimeTarget {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return appRuntimeTarget(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *APP) RuntimeClass() appRuntimeTarget {
+	return rcv.RUNTIME_CLASS()
+}
+
+/// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+/// self-describe where the app as a whole is meant to run, instead of that
+/// classification being supplied externally at install time. This is the
+/// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+/// RUNTIME_TARGET still governs where that specific member module loads and
+/// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+/// with one PAGE-capable module). Defaults to NODE to preserve the prior
+/// node-only assumption of manifests written before this field existed.
+func (rcv *APP) MutateRUNTIME_CLASS(n appRuntimeTarget) bool {
+	return rcv._tab.MutateByteSlot(26, byte(n))
+}
+
+func (rcv *APP) MutateRuntimeClass(n appRuntimeTarget) bool {
+	return rcv.MutateRUNTIME_CLASS(n)
+}
+
 func APPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(12)
 }
 func APPAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -478,6 +514,12 @@ func APPStartDATAFLOWVector(builder *flatbuffers.Builder, numElems int) flatbuff
 }
 func APPStartDataflowVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return APPStartDATAFLOWVector(builder, numElems)
+}
+func APPAddRUNTIME_CLASS(builder *flatbuffers.Builder, RUNTIME_CLASS appRuntimeTarget) {
+	builder.PrependByteSlot(11, byte(RUNTIME_CLASS), 0)
+}
+func APPAddRuntimeClass(builder *flatbuffers.Builder, RUNTIME_CLASS appRuntimeTarget) {
+	APPAddRUNTIME_CLASS(builder, RUNTIME_CLASS)
 }
 func APPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

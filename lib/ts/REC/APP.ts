@@ -9,6 +9,7 @@ import { APPDataflow, APPDataflowT } from './APPDataflow.js';
 import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
+import { appRuntimeTarget } from './appRuntimeTarget.js';
 
 
 /**
@@ -167,8 +168,23 @@ dataflowLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+ * self-describe where the app as a whole is meant to run, instead of that
+ * classification being supplied externally at install time. This is the
+ * app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+ * RUNTIME_TARGET still governs where that specific member module loads and
+ * may specialize away from RUNTIME_CLASS (for example a NODE-class app
+ * with one PAGE-capable module). Defaults to NODE to preserve the prior
+ * node-only assumption of manifests written before this field existed.
+ */
+RUNTIME_CLASS():appRuntimeTarget {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : appRuntimeTarget.NODE;
+}
+
 static startAPP(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(12);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -275,6 +291,10 @@ static startDataflowVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addRuntimeClass(builder:flatbuffers.Builder, RUNTIME_CLASS:appRuntimeTarget) {
+  builder.addFieldInt8(11, RUNTIME_CLASS, appRuntimeTarget.NODE);
+}
+
 static endAPP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // ID
@@ -289,7 +309,7 @@ static finishSizePrefixedAPPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$APP', true);
 }
 
-static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, DATAFLOWOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, VERSIONOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, MODULESOffset:flatbuffers.Offset, DATAOffset:flatbuffers.Offset, SOURCESOffset:flatbuffers.Offset, UIOffset:flatbuffers.Offset, CREATED_ATOffset:flatbuffers.Offset, UPDATED_ATOffset:flatbuffers.Offset, DATAFLOWOffset:flatbuffers.Offset, RUNTIME_CLASS:appRuntimeTarget):flatbuffers.Offset {
   APP.startAPP(builder);
   APP.addId(builder, IDOffset);
   APP.addName(builder, NAMEOffset);
@@ -302,6 +322,7 @@ static createAPP(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, NAMEO
   APP.addCreatedAt(builder, CREATED_ATOffset);
   APP.addUpdatedAt(builder, UPDATED_ATOffset);
   APP.addDataflow(builder, DATAFLOWOffset);
+  APP.addRuntimeClass(builder, RUNTIME_CLASS);
   return APP.endAPP(builder);
 }
 
@@ -317,7 +338,8 @@ unpack(): APPT {
     this.bb!.createObjList<APPUIPage, APPUIPageT>(this.UI.bind(this), this.uiLength()),
     this.CREATED_AT(),
     this.UPDATED_AT(),
-    this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength())
+    this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength()),
+    this.RUNTIME_CLASS()
   );
 }
 
@@ -334,6 +356,7 @@ unpackTo(_o: APPT): void {
   _o.CREATED_AT = this.CREATED_AT();
   _o.UPDATED_AT = this.UPDATED_AT();
   _o.DATAFLOW = this.bb!.createObjList<APPDataflow, APPDataflowT>(this.DATAFLOW.bind(this), this.dataflowLength());
+  _o.RUNTIME_CLASS = this.RUNTIME_CLASS();
 }
 }
 
@@ -349,7 +372,8 @@ constructor(
   public UI: (APPUIPageT)[] = [],
   public CREATED_AT: string|Uint8Array|null = null,
   public UPDATED_AT: string|Uint8Array|null = null,
-  public DATAFLOW: (APPDataflowT)[] = []
+  public DATAFLOW: (APPDataflowT)[] = [],
+  public RUNTIME_CLASS: appRuntimeTarget = appRuntimeTarget.NODE
 ){}
 
 
@@ -377,7 +401,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     UI,
     CREATED_AT,
     UPDATED_AT,
-    DATAFLOW
+    DATAFLOW,
+    this.RUNTIME_CLASS
   );
 }
 }

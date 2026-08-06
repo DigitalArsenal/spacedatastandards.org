@@ -538,13 +538,23 @@ class APP : flatbuffers.handle
         return APPDataflow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 24) + i * 4) }
     def DATAFLOW_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+    /// self-describe where the app as a whole is meant to run, instead of that
+    /// classification being supplied externally at install time. This is the
+    /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+    /// RUNTIME_TARGET still governs where that specific member module loads and
+    /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+    /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+    /// node-only assumption of manifests written before this field existed.
+    def RUNTIME_CLASS() -> appRuntimeTarget:
+        return appRuntimeTarget(flatbuffers.field_uint8(buf_, pos_, 26, 0))
 
 def GetRootAsAPP(buf:string): return APP { buf, flatbuffers.indirect(buf, 0) }
 
 struct APPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(12)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -578,6 +588,9 @@ struct APPBuilder:
         return this
     def add_DATAFLOW(DATAFLOW:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, DATAFLOW)
+        return this
+    def add_RUNTIME_CLASS(RUNTIME_CLASS:appRuntimeTarget):
+        b_.PrependUint8Slot(11, RUNTIME_CLASS, 0)
         return this
     def end():
         return b_.EndObject()

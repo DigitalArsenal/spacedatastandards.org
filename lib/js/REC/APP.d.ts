@@ -4,6 +4,7 @@ import { APPDataflow, APPDataflowT } from './APPDataflow.js';
 import { APPModuleRef, APPModuleRefT } from './APPModuleRef.js';
 import { APPSourceRef, APPSourceRefT } from './APPSourceRef.js';
 import { APPUIPage, APPUIPageT } from './APPUIPage.js';
+import { appRuntimeTarget } from './appRuntimeTarget.js';
 /**
  * Application Package Manifest — one launchable app.
  */
@@ -75,6 +76,17 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
      */
     DATAFLOW(index: number, obj?: APPDataflow): APPDataflow | null;
     dataflowLength(): number;
+    /**
+     * App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+     * self-describe where the app as a whole is meant to run, instead of that
+     * classification being supplied externally at install time. This is the
+     * app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+     * RUNTIME_TARGET still governs where that specific member module loads and
+     * may specialize away from RUNTIME_CLASS (for example a NODE-class app
+     * with one PAGE-capable module). Defaults to NODE to preserve the prior
+     * node-only assumption of manifests written before this field existed.
+     */
+    RUNTIME_CLASS(): appRuntimeTarget;
     static startAPP(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -97,10 +109,11 @@ export declare class APP implements flatbuffers.IUnpackableObject<APPT> {
     static addDataflow(builder: flatbuffers.Builder, DATAFLOWOffset: flatbuffers.Offset): void;
     static createDataflowVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startDataflowVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addRuntimeClass(builder: flatbuffers.Builder, RUNTIME_CLASS: appRuntimeTarget): void;
     static endAPP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedAPPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, DATAFLOWOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createAPP(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, NAMEOffset: flatbuffers.Offset, VERSIONOffset: flatbuffers.Offset, DESCRIPTIONOffset: flatbuffers.Offset, MODULESOffset: flatbuffers.Offset, DATAOffset: flatbuffers.Offset, SOURCESOffset: flatbuffers.Offset, UIOffset: flatbuffers.Offset, CREATED_ATOffset: flatbuffers.Offset, UPDATED_ATOffset: flatbuffers.Offset, DATAFLOWOffset: flatbuffers.Offset, RUNTIME_CLASS: appRuntimeTarget): flatbuffers.Offset;
     unpack(): APPT;
     unpackTo(_o: APPT): void;
 }
@@ -116,7 +129,8 @@ export declare class APPT implements flatbuffers.IGeneratedObject {
     CREATED_AT: string | Uint8Array | null;
     UPDATED_AT: string | Uint8Array | null;
     DATAFLOW: (APPDataflowT)[];
-    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, DATAFLOW?: (APPDataflowT)[]);
+    RUNTIME_CLASS: appRuntimeTarget;
+    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, VERSION?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODULES?: (APPModuleRefT)[], DATA?: (APPDataRefT)[], SOURCES?: (APPSourceRefT)[], UI?: (APPUIPageT)[], CREATED_AT?: string | Uint8Array | null, UPDATED_AT?: string | Uint8Array | null, DATAFLOW?: (APPDataflowT)[], RUNTIME_CLASS?: appRuntimeTarget);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=APP.d.ts.map

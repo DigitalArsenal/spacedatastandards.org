@@ -838,6 +838,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let CREATED_AT: VOffset = 20
     static let UPDATED_AT: VOffset = 22
     static let DATAFLOW: VOffset = 24
+    static let RUNTIME_CLASS: VOffset = 26
   }
 
   ///  Stable app identity, unique per publisher. Required.
@@ -879,7 +880,16 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  name a method port advertised by that module's PLG manifest.
   public var DATAFLOW: FlatbufferVector<APPDataflow> { return _accessor.vector(at: VT.DATAFLOW, byteSize: 4) }
   public func DATAFLOWBy(key: String) -> APPDataflow? { let o = _accessor.offset(VT.DATAFLOW); return o == 0 ? nil : APPDataflow.lookupByKey(vector: _accessor.vector(at: o), key: key, fbb: _accessor.bb) }
-  public static func startAPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  ///  self-describe where the app as a whole is meant to run, instead of that
+  ///  classification being supplied externally at install time. This is the
+  ///  app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  ///  RUNTIME_TARGET still governs where that specific member module loads and
+  ///  may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  ///  with one PAGE-capable module). Defaults to NODE to preserve the prior
+  ///  node-only assumption of manifests written before this field existed.
+  public var RUNTIME_CLASS: appRuntimeTarget { let o = _accessor.offset(VT.RUNTIME_CLASS); return o == 0 ? .node : appRuntimeTarget(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .node }
+  public static func startAPP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VERSION, at: VT.VERSION) }
@@ -891,6 +901,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(CREATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATED_AT, at: VT.CREATED_AT) }
   public static func add(UPDATED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UPDATED_AT, at: VT.UPDATED_AT) }
   public static func addVectorOf(DATAFLOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATAFLOW, at: VT.DATAFLOW) }
+  public static func add(RUNTIME_CLASS: appRuntimeTarget, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RUNTIME_CLASS.rawValue, def: 0, at: VT.RUNTIME_CLASS) }
   public static func endAPP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createAPP(
     _ fbb: inout FlatBufferBuilder,
@@ -904,7 +915,8 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     UIVectorOffset UI: Offset = Offset(),
     CREATED_ATOffset CREATED_AT: Offset = Offset(),
     UPDATED_ATOffset UPDATED_AT: Offset = Offset(),
-    DATAFLOWVectorOffset DATAFLOW: Offset = Offset()
+    DATAFLOWVectorOffset DATAFLOW: Offset = Offset(),
+    RUNTIME_CLASS: appRuntimeTarget = .node
   ) -> Offset {
     let __start = APP.startAPP(&fbb)
     APP.add(ID: ID, &fbb)
@@ -918,6 +930,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     APP.add(CREATED_AT: CREATED_AT, &fbb)
     APP.add(UPDATED_AT: UPDATED_AT, &fbb)
     APP.addVectorOf(DATAFLOW: DATAFLOW, &fbb)
+    APP.add(RUNTIME_CLASS: RUNTIME_CLASS, &fbb)
     return APP.endAPP(&fbb, start: __start)
   }
 
@@ -934,6 +947,7 @@ public struct APP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.CREATED_AT, fieldName: "CREATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.UPDATED_AT, fieldName: "UPDATED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.DATAFLOW, fieldName: "DATAFLOW", required: false, type: ForwardOffset<Vector<ForwardOffset<APPDataflow>, APPDataflow>>.self)
+    try _v.visit(field: VT.RUNTIME_CLASS, fieldName: "RUNTIME_CLASS", required: false, type: appRuntimeTarget.self)
     _v.finish()
   }
 }

@@ -2410,6 +2410,7 @@ impl<'a> APP<'a> {
   pub const VT_CREATED_AT: ::flatbuffers::VOffsetT = 20;
   pub const VT_UPDATED_AT: ::flatbuffers::VOffsetT = 22;
   pub const VT_DATAFLOW: ::flatbuffers::VOffsetT = 24;
+  pub const VT_RUNTIME_CLASS: ::flatbuffers::VOffsetT = 26;
 
   #[inline]
   pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2432,6 +2433,7 @@ impl<'a> APP<'a> {
     if let Some(x) = args.VERSION { builder.add_VERSION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_RUNTIME_CLASS(args.RUNTIME_CLASS);
     builder.finish()
   }
 
@@ -2470,6 +2472,7 @@ impl<'a> APP<'a> {
     let DATAFLOW = self.DATAFLOW().map(|x| {
       x.iter().map(|t| t.unpack()).collect()
     });
+    let RUNTIME_CLASS = self.RUNTIME_CLASS();
     APPT {
       ID,
       NAME,
@@ -2482,6 +2485,7 @@ impl<'a> APP<'a> {
       CREATED_AT,
       UPDATED_AT,
       DATAFLOW,
+      RUNTIME_CLASS,
     }
   }
 
@@ -2579,6 +2583,21 @@ impl<'a> APP<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPDataflow>>>>(APP::VT_DATAFLOW, None)}
   }
+  /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  /// self-describe where the app as a whole is meant to run, instead of that
+  /// classification being supplied externally at install time. This is the
+  /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  /// RUNTIME_TARGET still governs where that specific member module loads and
+  /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+  /// node-only assumption of manifests written before this field existed.
+  #[inline]
+  pub fn RUNTIME_CLASS(&self) -> appRuntimeTarget {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<appRuntimeTarget>(APP::VT_RUNTIME_CLASS, Some(appRuntimeTarget::NODE)).unwrap()}
+  }
 }
 
 impl ::flatbuffers::Verifiable for APP<'_> {
@@ -2598,6 +2617,7 @@ impl ::flatbuffers::Verifiable for APP<'_> {
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CREATED_AT", Self::VT_CREATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("UPDATED_AT", Self::VT_UPDATED_AT, false)?
      .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<APPDataflow>>>>("DATAFLOW", Self::VT_DATAFLOW, false)?
+     .visit_field::<appRuntimeTarget>("RUNTIME_CLASS", Self::VT_RUNTIME_CLASS, false)?
      .finish();
     Ok(())
   }
@@ -2614,6 +2634,7 @@ pub struct APPArgs<'a> {
     pub CREATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub UPDATED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub DATAFLOW: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<APPDataflow<'a>>>>>,
+    pub RUNTIME_CLASS: appRuntimeTarget,
 }
 impl<'a> Default for APPArgs<'a> {
   #[inline]
@@ -2630,6 +2651,7 @@ impl<'a> Default for APPArgs<'a> {
       CREATED_AT: None,
       UPDATED_AT: None,
       DATAFLOW: None,
+      RUNTIME_CLASS: appRuntimeTarget::NODE,
     }
   }
 }
@@ -2684,6 +2706,10 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> APPBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(APP::VT_DATAFLOW, DATAFLOW);
   }
   #[inline]
+  pub fn add_RUNTIME_CLASS(&mut self, RUNTIME_CLASS: appRuntimeTarget) {
+    self.fbb_.push_slot::<appRuntimeTarget>(APP::VT_RUNTIME_CLASS, RUNTIME_CLASS, appRuntimeTarget::NODE);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> APPBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     APPBuilder {
@@ -2713,6 +2739,7 @@ impl ::core::fmt::Debug for APP<'_> {
       ds.field("CREATED_AT", &self.CREATED_AT());
       ds.field("UPDATED_AT", &self.UPDATED_AT());
       ds.field("DATAFLOW", &self.DATAFLOW());
+      ds.field("RUNTIME_CLASS", &self.RUNTIME_CLASS());
       ds.finish()
   }
 }
@@ -2730,6 +2757,7 @@ pub struct APPT {
   pub CREATED_AT: Option<alloc::string::String>,
   pub UPDATED_AT: Option<alloc::string::String>,
   pub DATAFLOW: Option<alloc::vec::Vec<APPDataflowT>>,
+  pub RUNTIME_CLASS: appRuntimeTarget,
 }
 impl Default for APPT {
   fn default() -> Self {
@@ -2745,6 +2773,7 @@ impl Default for APPT {
       CREATED_AT: None,
       UPDATED_AT: None,
       DATAFLOW: None,
+      RUNTIME_CLASS: appRuntimeTarget::NODE,
     }
   }
 }
@@ -2787,6 +2816,7 @@ impl APPT {
     let DATAFLOW = self.DATAFLOW.as_ref().map(|x|{
       let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
     });
+    let RUNTIME_CLASS = self.RUNTIME_CLASS;
     APP::create(_fbb, &APPArgs{
       ID,
       NAME,
@@ -2799,6 +2829,7 @@ impl APPT {
       CREATED_AT,
       UPDATED_AT,
       DATAFLOW,
+      RUNTIME_CLASS,
     })
   }
 }

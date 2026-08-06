@@ -279,6 +279,21 @@ class APP : Table() {
             null
         }
     }
+    /**
+     * App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+     * self-describe where the app as a whole is meant to run, instead of that
+     * classification being supplied externally at install time. This is the
+     * app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+     * RUNTIME_TARGET still governs where that specific member module loads and
+     * may specialize away from RUNTIME_CLASS (for example a NODE-class app
+     * with one PAGE-capable module). Defaults to NODE to preserve the prior
+     * node-only assumption of manifests written before this field existed.
+     */
+    val runtimeClass : UByte
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsAPP(_bb: ByteBuffer): APP = getRootAsAPP(_bb, APP())
@@ -287,8 +302,8 @@ class APP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun APPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APP")
-        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int) : Int {
-            builder.startTable(11)
+        fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int, runtimeClass: UByte) : Int {
+            builder.startTable(12)
             addDATAFLOW(builder, dataflowOffset)
             addUPDATEDAT(builder, updatedAtOffset)
             addCREATEDAT(builder, createdAtOffset)
@@ -300,9 +315,10 @@ class APP : Table() {
             addVERSION(builder, versionOffset)
             addNAME(builder, nameOffset)
             addID(builder, idOffset)
+            addRUNTIMECLASS(builder, runtimeClass)
             return endAPP(builder)
         }
-        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startAPP(builder: FlatBufferBuilder) = builder.startTable(12)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addVERSION(builder: FlatBufferBuilder, version: Int) = builder.addOffset(2, version, 0)
@@ -354,6 +370,7 @@ class APP : Table() {
             return builder.endVector()
         }
         fun startDataflowVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addRUNTIMECLASS(builder: FlatBufferBuilder, runtimeClass: UByte) = builder.addByte(11, runtimeClass.toByte(), 0)
         fun endAPP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

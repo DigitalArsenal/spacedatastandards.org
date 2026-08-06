@@ -189,22 +189,39 @@ class APP extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+    /// self-describe where the app as a whole is meant to run, instead of that
+    /// classification being supplied externally at install time. This is the
+    /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+    /// RUNTIME_TARGET still governs where that specific member module loads and
+    /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+    /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+    /// node-only assumption of manifests written before this field existed.
+    /**
+     * @return byte
+     */
+    public function getRUNTIME_CLASS()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \appRuntimeTarget::NODE;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startAPP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(12);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return APP
      */
-    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT, $DATAFLOW)
+    public static function createAPP(FlatBufferBuilder $builder, $ID, $NAME, $VERSION, $DESCRIPTION, $MODULES, $DATA, $SOURCES, $UI, $CREATED_AT, $UPDATED_AT, $DATAFLOW, $RUNTIME_CLASS)
     {
-        $builder->startObject(11);
+        $builder->startObject(12);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addVERSION($builder, $VERSION);
@@ -216,6 +233,7 @@ class APP extends Table
         self::addCREATED_AT($builder, $CREATED_AT);
         self::addUPDATED_AT($builder, $UPDATED_AT);
         self::addDATAFLOW($builder, $DATAFLOW);
+        self::addRUNTIME_CLASS($builder, $RUNTIME_CLASS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // ID
         return $o;
@@ -449,6 +467,16 @@ class APP extends Table
     public static function startDATAFLOWVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addRUNTIME_CLASS(FlatBufferBuilder $builder, $RUNTIME_CLASS)
+    {
+        $builder->addByteX(11, $RUNTIME_CLASS, 0);
     }
 
     /**

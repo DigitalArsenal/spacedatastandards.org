@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.179.0+1785958800000",
+  version: "1.180.0+1786029953426",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -1798,8 +1798,8 @@ file_identifier "$EPM";`,
       ]
     },
     APP: {
-      IDL: `// Hash: af1f13b9b0b5da3fe376a8baf001da07b05f005cbba735c6de9760318fe44883
-// Version: 1.151.1
+      IDL: `// Hash: 69ad94651a445542e7b97ecaa4b6cf01cf51330fd6c13cd70ffd4b061555051f
+// Version: 1.151.2
 // -----------------------------------END_HEADER
 /// Application Package Manifest
 ///
@@ -2099,6 +2099,15 @@ table APP {
   /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
   /// name a method port advertised by that module's PLG manifest.
   DATAFLOW:[APPDataflow];
+  /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  /// self-describe where the app as a whole is meant to run, instead of that
+  /// classification being supplied externally at install time. This is the
+  /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  /// RUNTIME_TARGET still governs where that specific member module loads and
+  /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+  /// node-only assumption of manifests written before this field existed.
+  RUNTIME_CLASS:appRuntimeTarget = NODE;
 }
 
 root_type APP;
@@ -20046,6 +20055,10 @@ ed25519 hardened)`
                 $ref: "#/definitions/APPDataflow"
               },
               description: "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest."
+            },
+            RUNTIME_CLASS: {
+              $ref: "#/definitions/appRuntimeTarget",
+              description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed."
             }
           },
           required: [
@@ -55666,6 +55679,10 @@ ed25519 hardened)`
                 $ref: "#/definitions/APPDataflow"
               },
               description: "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest."
+            },
+            RUNTIME_CLASS: {
+              $ref: "#/definitions/appRuntimeTarget",
+              description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed."
             }
           },
           required: [
@@ -147563,6 +147580,27 @@ ed25519 hardened)`,
               },
               description: "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest.",
               "x-flatbuffer-type": "[APPDataflow]"
+            },
+            RUNTIME_CLASS: {
+              $ref: "#/definitions/appRuntimeTarget",
+              description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NODE: {
+                  value: 0,
+                  description: "Loads only in the desktop/server node runtime."
+                },
+                PAGE: {
+                  value: 1,
+                  description: "Loads in the page through the isomorphic JS harness."
+                },
+                BOTH: {
+                  value: 2,
+                  description: "Loads in both hosts from the same content-addressed bytes and ABI."
+                }
+              },
+              "x-flatbuffer-default": "NODE"
             }
           },
           required: [
@@ -229156,6 +229194,27 @@ ed25519 hardened)`,
               },
               description: "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest.",
               "x-flatbuffer-type": "[APPDataflow]"
+            },
+            RUNTIME_CLASS: {
+              $ref: "#/definitions/appRuntimeTarget",
+              description: "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NODE: {
+                  value: 0,
+                  description: "Loads only in the desktop/server node runtime."
+                },
+                PAGE: {
+                  value: 1,
+                  description: "Loads in the page through the isomorphic JS harness."
+                },
+                BOTH: {
+                  value: 2,
+                  description: "Loads in both hosts from the same content-addressed bytes and ABI."
+                }
+              },
+              "x-flatbuffer-default": "NODE"
             }
           },
           required: [

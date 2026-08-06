@@ -120,6 +120,17 @@ public final class APP extends com.google.flatbuffers.Table {
   public APPDataflow DATAFLOWByKey(APPDataflow obj, String key) { int o = __offset(24); return o != 0 ? APPDataflow.__lookup_by_key(obj, __vector(o), key, bb) : null; }
   public APPDataflow.Vector dataflowVector() { return dataflowVector(new APPDataflow.Vector()); }
   public APPDataflow.Vector dataflowVector(APPDataflow.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+   * self-describe where the app as a whole is meant to run, instead of that
+   * classification being supplied externally at install time. This is the
+   * app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+   * RUNTIME_TARGET still governs where that specific member module loads and
+   * may specialize away from RUNTIME_CLASS (for example a NODE-class app
+   * with one PAGE-capable module). Defaults to NODE to preserve the prior
+   * node-only assumption of manifests written before this field existed.
+   */
+  public int RUNTIME_CLASS() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createAPP(FlatBufferBuilder builder,
       int IDOffset,
@@ -132,8 +143,9 @@ public final class APP extends com.google.flatbuffers.Table {
       int UIOffset,
       int CREATED_ATOffset,
       int UPDATED_ATOffset,
-      int DATAFLOWOffset) {
-    builder.startTable(11);
+      int DATAFLOWOffset,
+      int RUNTIME_CLASS) {
+    builder.startTable(12);
     APP.addDataflow(builder, DATAFLOWOffset);
     APP.addUpdatedAt(builder, UPDATED_ATOffset);
     APP.addCreatedAt(builder, CREATED_ATOffset);
@@ -145,10 +157,11 @@ public final class APP extends com.google.flatbuffers.Table {
     APP.addVersion(builder, VERSIONOffset);
     APP.addName(builder, NAMEOffset);
     APP.addId(builder, IDOffset);
+    APP.addRuntimeClass(builder, RUNTIME_CLASS);
     return APP.endAPP(builder);
   }
 
-  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startAPP(FlatBufferBuilder builder) { builder.startTable(12); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addVersion(FlatBufferBuilder builder, int VERSIONOffset) { builder.addOffset(2, VERSIONOffset, 0); }
@@ -170,6 +183,7 @@ public final class APP extends com.google.flatbuffers.Table {
   public static void addDataflow(FlatBufferBuilder builder, int DATAFLOWOffset) { builder.addOffset(10, DATAFLOWOffset, 0); }
   public static int createDataflowVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDataflowVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addRuntimeClass(FlatBufferBuilder builder, int RUNTIME_CLASS) { builder.addByte(11, (byte) RUNTIME_CLASS, (byte) 0); }
   public static int endAPP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // ID

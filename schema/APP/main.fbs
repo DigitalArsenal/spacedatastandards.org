@@ -1,5 +1,5 @@
-// Hash: af1f13b9b0b5da3fe376a8baf001da07b05f005cbba735c6de9760318fe44883
-// Version: 1.151.1
+// Hash: 69ad94651a445542e7b97ecaa4b6cf01cf51330fd6c13cd70ffd4b061555051f
+// Version: 1.151.2
 // -----------------------------------END_HEADER
 /// Application Package Manifest
 ///
@@ -299,6 +299,15 @@ table APP {
   /// resolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must
   /// name a method port advertised by that module's PLG manifest.
   DATAFLOW:[APPDataflow];
+  /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  /// self-describe where the app as a whole is meant to run, instead of that
+  /// classification being supplied externally at install time. This is the
+  /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  /// RUNTIME_TARGET still governs where that specific member module loads and
+  /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+  /// node-only assumption of manifests written before this field existed.
+  RUNTIME_CLASS:appRuntimeTarget = NODE;
 }
 
 root_type APP;

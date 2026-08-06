@@ -93,6 +93,15 @@ public struct APP : IFlatbufferObject
   public APPDataflow? DATAFLOW(int j) { int o = __p.__offset(24); return o != 0 ? (APPDataflow?)(new APPDataflow()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int DATAFLOWLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
   public APPDataflow? DATAFLOWByKey(string key) { int o = __p.__offset(24); return o != 0 ? APPDataflow.__lookup_by_key(__p.__vector(o), key, __p.bb) : null; }
+  /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  /// self-describe where the app as a whole is meant to run, instead of that
+  /// classification being supplied externally at install time. This is the
+  /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  /// RUNTIME_TARGET still governs where that specific member module loads and
+  /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+  /// node-only assumption of manifests written before this field existed.
+  public appRuntimeTarget RUNTIME_CLASS { get { int o = __p.__offset(26); return o != 0 ? (appRuntimeTarget)__p.bb.Get(o + __p.bb_pos) : appRuntimeTarget.NODE; } }
 
   public static Offset<APP> CreateAPP(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -105,8 +114,9 @@ public struct APP : IFlatbufferObject
       VectorOffset UIOffset = default(VectorOffset),
       StringOffset CREATED_ATOffset = default(StringOffset),
       StringOffset UPDATED_ATOffset = default(StringOffset),
-      VectorOffset DATAFLOWOffset = default(VectorOffset)) {
-    builder.StartTable(11);
+      VectorOffset DATAFLOWOffset = default(VectorOffset),
+      appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget.NODE) {
+    builder.StartTable(12);
     APP.AddDATAFLOW(builder, DATAFLOWOffset);
     APP.AddUPDATED_AT(builder, UPDATED_ATOffset);
     APP.AddCREATED_AT(builder, CREATED_ATOffset);
@@ -118,10 +128,11 @@ public struct APP : IFlatbufferObject
     APP.AddVERSION(builder, VERSIONOffset);
     APP.AddNAME(builder, NAMEOffset);
     APP.AddID(builder, IDOffset);
+    APP.AddRUNTIME_CLASS(builder, RUNTIME_CLASS);
     return APP.EndAPP(builder);
   }
 
-  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartAPP(FlatBufferBuilder builder) { builder.StartTable(12); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddVERSION(FlatBufferBuilder builder, StringOffset VERSIONOffset) { builder.AddOffset(2, VERSIONOffset.Value, 0); }
@@ -158,6 +169,7 @@ public struct APP : IFlatbufferObject
   public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<APPDataflow>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDATAFLOWVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<APPDataflow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDATAFLOWVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddRUNTIME_CLASS(FlatBufferBuilder builder, appRuntimeTarget RUNTIME_CLASS) { builder.AddByte(11, (byte)RUNTIME_CLASS, 0); }
   public static Offset<APP> EndAPP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // ID
@@ -187,6 +199,7 @@ public struct APP : IFlatbufferObject
     _o.UPDATED_AT = this.UPDATED_AT;
     _o.DATAFLOW = new List<APPDataflowT>();
     for (var _j = 0; _j < this.DATAFLOWLength; ++_j) {_o.DATAFLOW.Add(this.DATAFLOW(_j).HasValue ? this.DATAFLOW(_j).Value.UnPack() : null);}
+    _o.RUNTIME_CLASS = this.RUNTIME_CLASS;
   }
   public static Offset<APP> Pack(FlatBufferBuilder builder, APPT _o) {
     if (_o == null) return default(Offset<APP>);
@@ -238,7 +251,8 @@ public struct APP : IFlatbufferObject
       _UI,
       _CREATED_AT,
       _UPDATED_AT,
-      _DATAFLOW);
+      _DATAFLOW,
+      _o.RUNTIME_CLASS);
   }
 }
 
@@ -255,6 +269,7 @@ public class APPT
   public string CREATED_AT { get; set; }
   public string UPDATED_AT { get; set; }
   public List<APPDataflowT> DATAFLOW { get; set; }
+  public appRuntimeTarget RUNTIME_CLASS { get; set; }
 
   public APPT() {
     this.ID = null;
@@ -268,6 +283,7 @@ public class APPT
     this.CREATED_AT = null;
     this.UPDATED_AT = null;
     this.DATAFLOW = null;
+    this.RUNTIME_CLASS = appRuntimeTarget.NODE;
   }
   public static APPT DeserializeFromBinary(byte[] fbBuffer) {
     return APP.GetRootAsAPP(new ByteBuffer(fbBuffer)).UnPack();
@@ -296,6 +312,7 @@ static public class APPVerify
       && verifier.VerifyString(tablePos, 20 /*CREATED_AT*/, false)
       && verifier.VerifyString(tablePos, 22 /*UPDATED_AT*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 24 /*DATAFLOW*/, APPDataflowVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 26 /*RUNTIME_CLASS*/, 1 /*appRuntimeTarget*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

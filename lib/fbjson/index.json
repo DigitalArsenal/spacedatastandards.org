@@ -19115,6 +19115,27 @@
                             },
                             "description": "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest.",
                             "x-flatbuffer-type": "[APPDataflow]"
+                        },
+                        "RUNTIME_CLASS": {
+                            "$ref": "#/definitions/appRuntimeTarget",
+                            "description": "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NODE": {
+                                    "value": 0,
+                                    "description": "Loads only in the desktop/server node runtime."
+                                },
+                                "PAGE": {
+                                    "value": 1,
+                                    "description": "Loads in the page through the isomorphic JS harness."
+                                },
+                                "BOTH": {
+                                    "value": 2,
+                                    "description": "Loads in both hosts from the same content-addressed bytes and ABI."
+                                }
+                            },
+                            "x-flatbuffer-default": "NODE"
                         }
                     },
                     "required": [
@@ -100689,6 +100710,27 @@
                             },
                             "description": "The page's declarative data contract: what data enters and leaves the\nrunning page and how. Referential integrity: every MODULE_ID here must\nresolve into MODULES, and each MODULE_ID/METHOD_ID/PORT_ID triple must\nname a method port advertised by that module's PLG manifest.",
                             "x-flatbuffer-type": "[APPDataflow]"
+                        },
+                        "RUNTIME_CLASS": {
+                            "$ref": "#/definitions/appRuntimeTarget",
+                            "description": "App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest\nself-describe where the app as a whole is meant to run, instead of that\nclassification being supplied externally at install time. This is the\napp-level DEFAULT/DECLARATION only: an individual APPModuleRef.\nRUNTIME_TARGET still governs where that specific member module loads and\nmay specialize away from RUNTIME_CLASS (for example a NODE-class app\nwith one PAGE-capable module). Defaults to NODE to preserve the prior\nnode-only assumption of manifests written before this field existed.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "ubyte",
+                            "x-flatbuffer-enum-values": {
+                                "NODE": {
+                                    "value": 0,
+                                    "description": "Loads only in the desktop/server node runtime."
+                                },
+                                "PAGE": {
+                                    "value": 1,
+                                    "description": "Loads in the page through the isomorphic JS harness."
+                                },
+                                "BOTH": {
+                                    "value": 2,
+                                    "description": "Loads in both hosts from the same content-addressed bytes and ABI."
+                                }
+                            },
+                            "x-flatbuffer-default": "NODE"
                         }
                     },
                     "required": [

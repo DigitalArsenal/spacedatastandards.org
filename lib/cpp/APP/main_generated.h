@@ -1243,7 +1243,8 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_UI = 18,
     VT_CREATED_AT = 20,
     VT_UPDATED_AT = 22,
-    VT_DATAFLOW = 24
+    VT_DATAFLOW = 24,
+    VT_RUNTIME_CLASS = 26
   };
   /// Stable app identity, unique per publisher. Required.
   const ::flatbuffers::String *ID() const {
@@ -1295,6 +1296,17 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>> *>(VT_DATAFLOW);
   }
+  /// App-wide runtime class, reusing appRuntimeTarget. Lets a pulled manifest
+  /// self-describe where the app as a whole is meant to run, instead of that
+  /// classification being supplied externally at install time. This is the
+  /// app-level DEFAULT/DECLARATION only: an individual APPModuleRef.
+  /// RUNTIME_TARGET still governs where that specific member module loads and
+  /// may specialize away from RUNTIME_CLASS (for example a NODE-class app
+  /// with one PAGE-capable module). Defaults to NODE to preserve the prior
+  /// node-only assumption of manifests written before this field existed.
+  appRuntimeTarget RUNTIME_CLASS() const {
+    return static_cast<appRuntimeTarget>(GetField<uint8_t>(VT_RUNTIME_CLASS, 0));
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1325,6 +1337,7 @@ struct APP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_DATAFLOW) &&
            verifier.VerifyVector(DATAFLOW()) &&
            verifier.VerifyVectorOfTables(DATAFLOW()) &&
+           VerifyField<uint8_t>(verifier, VT_RUNTIME_CLASS, 1) &&
            verifier.EndTable();
   }
 };
@@ -1366,6 +1379,9 @@ struct APPBuilder {
   void add_DATAFLOW(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW) {
     fbb_.AddOffset(APP::VT_DATAFLOW, DATAFLOW);
   }
+  void add_RUNTIME_CLASS(appRuntimeTarget RUNTIME_CLASS) {
+    fbb_.AddElement<uint8_t>(APP::VT_RUNTIME_CLASS, static_cast<uint8_t>(RUNTIME_CLASS), 0);
+  }
   explicit APPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1390,7 +1406,8 @@ inline ::flatbuffers::Offset<APP> CreateAPP(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPUIPage>>> UI = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CREATED_AT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> UPDATED_AT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<APPDataflow>>> DATAFLOW = 0,
+    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE) {
   APPBuilder builder_(_fbb);
   builder_.add_DATAFLOW(DATAFLOW);
   builder_.add_UPDATED_AT(UPDATED_AT);
@@ -1403,6 +1420,7 @@ inline ::flatbuffers::Offset<APP> CreateAPP(
   builder_.add_VERSION(VERSION);
   builder_.add_NAME(NAME);
   builder_.add_ID(ID);
+  builder_.add_RUNTIME_CLASS(RUNTIME_CLASS);
   return builder_.Finish();
 }
 
@@ -1418,7 +1436,8 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
     std::vector<::flatbuffers::Offset<APPUIPage>> *UI = nullptr,
     const char *CREATED_AT = nullptr,
     const char *UPDATED_AT = nullptr,
-    std::vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW = nullptr) {
+    std::vector<::flatbuffers::Offset<APPDataflow>> *DATAFLOW = nullptr,
+    appRuntimeTarget RUNTIME_CLASS = appRuntimeTarget_NODE) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto VERSION__ = VERSION ? _fbb.CreateString(VERSION) : 0;
@@ -1442,7 +1461,8 @@ inline ::flatbuffers::Offset<APP> CreateAPPDirect(
       UI__,
       CREATED_AT__,
       UPDATED_AT__,
-      DATAFLOW__);
+      DATAFLOW__,
+      RUNTIME_CLASS);
 }
 
 inline const APP *GetAPP(const void *buf) {

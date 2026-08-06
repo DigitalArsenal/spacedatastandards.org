@@ -16,11 +16,30 @@ def update_go_package_names(parent_dir):
                         f.write(line)
 
 def create_go_mod(lib_go_path):
+    # Keep this literally in sync with the "Update go.mod version" heredoc in
+    # .github/workflows/publish.yml's Go-tag job -- that job overwrites go.mod
+    # at release time and REFUSES to tag if the result doesn't match what's
+    # committed (git diff --cached --exit-code lib/go/). Drifting the two
+    # apart fails every future release at the tag step. Retract entries must
+    # carry the module's own +incompatible suffix (no /vN path suffix here) or
+    # `go mod tidy`/`go build` run from inside this repo hard-fail parsing
+    # go.mod even though proxy.golang.org's @latest resolution tolerates the
+    # bare form -- see sds-go-bindings-duplicate-methods.
     go_mod_content = """module github.com/DigitalArsenal/spacedatastandards.org/lib/go
 
 go 1.21
 
 require github.com/google/flatbuffers v25.12.19+incompatible
+
+retract (
+	v23.3.3-0.3.7+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.6+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.5+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.4+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.3+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.2+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+	v23.3.3-0.3.1+incompatible // published in error under an incompatible major-version scheme; use a 1.x release
+)
 """
     go_mod_path = os.path.join(lib_go_path, "go.mod")
     with open(go_mod_path, "w") as f:
