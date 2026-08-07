@@ -131,6 +131,49 @@ table PLG {
 If you can't think of a distinct name, rename the FIELD as well so field-param
 and enum-type are unambiguously different tokens at every casing.
 
+### `MIN` and `MAX` are reserved (flatc sentinel collision)
+
+No enum or union member may be named `MIN` or `MAX`, in any casing. flatc
+appends an automatic MIN/MAX convenience pair to every enum and union, and a
+real member of the same name collides with it byte-for-byte: C++ reports
+`redefinition of enumerator`, Swift reports `invalid redeclaration of 'max'`,
+and the whole generated header set is uncompilable.
+
+This repo post-processes its own generated C++/Swift to drop the redundant
+sentinel, but any downstream generator that calls `flatc` directly bypasses
+that repair. The IDL is the only fix that binds every consumer.
+
+Use a descriptive name instead — `MAX_POOL`, `MAXIMUM`, `UPPER_BOUND`. The
+member's ordinal is wire data and must be preserved across such a rename; the
+name is not.
+
+Guard: `npm run check:enum-names` (`scripts/checkReservedEnumNames.mjs`), run
+by `build:flatbuffers`, `npm test` and the pre-commit hook.
+
+### `union RecordType` ordinals are wire-frozen — APPEND ONLY
+
+A union member's position IS its wire value. flatc writes it into the
+`Record.value_type` byte of every `$REC` ever serialized, including the
+publication trailer appended to every protected module artifact.
+
+- NEVER insert a member anywhere but the end of the union.
+- NEVER reorder members.
+- NEVER remove a member — deprecate it in place; the ordinal is never reused.
+
+Adding a new standard directory appends automatically
+(`scripts/createREC.mjs :: stableRecordUnionOrder`); record the append with
+`node scripts/checkRecordTypeOrdinals.mjs --update`, which refuses to run for
+anything that is not a pure append. There is no `--force`.
+
+`schema/REC/RECORDTYPE_ORDINALS.json` is the contract and ships in the package
+so consumers can validate against it. It also carries the history of the three
+pre-freeze renumberings; records written before 2026-07-08 are decodable only
+via `Record.standard`, the one discriminator that has never shifted. Consumers
+should dispatch on `Record.standard`, not on the ordinal.
+
+Guard: `npm run check:ordinals` (`scripts/checkRecordTypeOrdinals.mjs`), run by
+`build:flatbuffers`, `npm test` and the pre-commit hook.
+
 ### Other rules
 
 - Field names are `UPPER_SNAKE_CASE`.

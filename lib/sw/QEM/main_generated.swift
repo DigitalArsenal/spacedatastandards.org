@@ -23,15 +23,20 @@ public enum cesVectorEncoding: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 ///  Sentence/document pooling method an embedding encoder used.
 ///  Append new values only; never reorder or reuse existing values.
+///  MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+///  every enum, so a member of either name makes the generated C++ and Swift
+///  uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+///  keeps ordinal 2, which is the wire value.
 public enum cesPoolingKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
   public var value: Int8 { return self.rawValue }
   case mean = 0
   case cls = 1
-  case max = 2
+  case maxPool = 2
   case unknown = 3
 
+  public static var max: cesPoolingKind { return .unknown }
   public static var min: cesPoolingKind { return .mean }
 }
 

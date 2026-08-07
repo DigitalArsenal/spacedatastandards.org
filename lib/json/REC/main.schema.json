@@ -259,7 +259,7 @@
     },
     "cesPoolingKind" : {
       "type" : "string",
-      "enum": ["MEAN", "CLS", "MAX", "UNKNOWN"]
+      "enum": ["MEAN", "CLS", "MAX_POOL", "UNKNOWN"]
     },
     "cesNormalizationKind" : {
       "type" : "string",

@@ -70696,7 +70696,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ],
                     "x-flatbuffer-type": "enum",
@@ -70708,7 +70708,7 @@
                         "CLS": {
                             "value": 1
                         },
-                        "MAX": {
+                        "MAX_POOL": {
                             "value": 2
                         },
                         "UNKNOWN": {
@@ -70892,7 +70892,7 @@
                                 "CLS": {
                                     "value": 1
                                 },
-                                "MAX": {
+                                "MAX_POOL": {
                                     "value": 2
                                 },
                                 "UNKNOWN": {
@@ -85338,7 +85338,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ],
                     "x-flatbuffer-type": "enum",
@@ -85350,7 +85350,7 @@
                         "CLS": {
                             "value": 1
                         },
-                        "MAX": {
+                        "MAX_POOL": {
                             "value": 2
                         },
                         "UNKNOWN": {
@@ -105288,7 +105288,7 @@
                                 "CLS": {
                                     "value": 1
                                 },
-                                "MAX": {
+                                "MAX_POOL": {
                                     "value": 2
                                 },
                                 "UNKNOWN": {
@@ -135735,7 +135735,7 @@
                                 "CLS": {
                                     "value": 1
                                 },
-                                "MAX": {
+                                "MAX_POOL": {
                                     "value": 2
                                 },
                                 "UNKNOWN": {
@@ -186606,7 +186606,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ],
                     "x-flatbuffer-type": "enum",
@@ -186618,7 +186618,7 @@
                         "CLS": {
                             "value": 1
                         },
-                        "MAX": {
+                        "MAX_POOL": {
                             "value": 2
                         },
                         "UNKNOWN": {
@@ -186802,7 +186802,7 @@
                                 "CLS": {
                                     "value": 1
                                 },
-                                "MAX": {
+                                "MAX_POOL": {
                                     "value": 2
                                 },
                                 "UNKNOWN": {
@@ -186905,7 +186905,7 @@
                                 "CLS": {
                                     "value": 1
                                 },
-                                "MAX": {
+                                "MAX_POOL": {
                                     "value": 2
                                 },
                                 "UNKNOWN": {

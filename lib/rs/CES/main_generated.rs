@@ -97,12 +97,16 @@ pub const ENUM_MAX_CES_POOLING_KIND: i8 = 3;
 pub const ENUM_VALUES_CES_POOLING_KIND: [cesPoolingKind; 4] = [
   cesPoolingKind::MEAN,
   cesPoolingKind::CLS,
-  cesPoolingKind::MAX,
+  cesPoolingKind::MAX_POOL,
   cesPoolingKind::UNKNOWN,
 ];
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct cesPoolingKind(pub i8);
@@ -110,7 +114,7 @@ pub struct cesPoolingKind(pub i8);
 impl cesPoolingKind {
   pub const MEAN: Self = Self(0);
   pub const CLS: Self = Self(1);
-  pub const MAX: Self = Self(2);
+  pub const MAX_POOL: Self = Self(2);
   pub const UNKNOWN: Self = Self(3);
 
   pub const ENUM_MIN: i8 = 0;
@@ -118,7 +122,7 @@ impl cesPoolingKind {
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::MEAN,
     Self::CLS,
-    Self::MAX,
+    Self::MAX_POOL,
     Self::UNKNOWN,
   ];
   /// Returns the variant's name or "" if unknown.
@@ -126,7 +130,7 @@ impl cesPoolingKind {
     match self {
       Self::MEAN => Some("MEAN"),
       Self::CLS => Some("CLS"),
-      Self::MAX => Some("MAX"),
+      Self::MAX_POOL => Some("MAX_POOL"),
       Self::UNKNOWN => Some("UNKNOWN"),
       _ => None,
     }

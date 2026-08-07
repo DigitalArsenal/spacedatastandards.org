@@ -31511,7 +31511,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ]
                 },
@@ -37584,7 +37584,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ]
                 },
@@ -97345,7 +97345,7 @@
                     "enum": [
                         "MEAN",
                         "CLS",
-                        "MAX",
+                        "MAX_POOL",
                         "UNKNOWN"
                     ]
                 },

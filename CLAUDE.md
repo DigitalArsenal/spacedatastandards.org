@@ -52,6 +52,31 @@ table PLG {
 If you can't think of a distinct name, rename the FIELD as well so field-param
 and enum-type are unambiguously different tokens at every casing.
 
+### `MIN` and `MAX` are reserved (flatc sentinel collision)
+
+No enum or union member may be named `MIN` or `MAX`, in any casing. flatc
+appends an automatic MIN/MAX pair to every enum and union; a real member of the
+same name collides with it, and the generated C++ (`redefinition of enumerator`)
+and Swift (`invalid redeclaration of 'max'`) will not compile — here AND in any
+downstream generator that calls `flatc` directly, which bypasses this repo's
+post-processing repair. Use `MAX_POOL`, `MAXIMUM`, `UPPER_BOUND`. Preserve the
+member's ordinal across such a rename: the value is wire data, the name is not.
+
+Guard: `npm run check:enum-names`.
+
+### `union RecordType` ordinals are wire-frozen — APPEND ONLY
+
+A member's position IS its wire value — flatc writes it into the
+`Record.value_type` byte of every `$REC` ever serialized, including every
+protected module artifact's publication trailer. Never insert mid-union, never
+reorder, never remove (deprecate in place; ordinals are never reused). New
+standards append at the end; record the append with
+`node scripts/checkRecordTypeOrdinals.mjs --update`, which refuses anything that
+is not a pure append. `schema/REC/RECORDTYPE_ORDINALS.json` is the contract.
+Consumers dispatch on `Record.standard`, never on the ordinal.
+
+Guard: `npm run check:ordinals`.
+
 ### Other rules
 
 - Field names are `UPPER_SNAKE_CASE`.

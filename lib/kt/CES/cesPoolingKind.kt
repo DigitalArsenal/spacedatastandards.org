@@ -3,13 +3,17 @@
 /**
  * Sentence/document pooling method an embedding encoder used.
  * Append new values only; never reorder or reuse existing values.
+ * MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+ * every enum, so a member of either name makes the generated C++ and Swift
+ * uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+ * keeps ordinal 2, which is the wire value.
  */
 @Suppress("unused")
 class cesPoolingKind private constructor() {
     companion object {
         const val MEAN: Byte = 0
         const val CLS: Byte = 1
-        const val MAX: Byte = 2
+        const val MAX_POOL: Byte = 2
         const val UNKNOWN: Byte = 3
     }
 }

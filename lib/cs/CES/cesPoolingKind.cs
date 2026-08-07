@@ -4,10 +4,14 @@
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 public enum cesPoolingKind : sbyte
 {
   MEAN = 0,
   CLS = 1,
-  MAX = 2,
+  MAX_POOL = 2,
   UNKNOWN = 3,
 };

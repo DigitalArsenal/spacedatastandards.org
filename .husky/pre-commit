@@ -1,6 +1,12 @@
 # Detect case-insensitive name collisions in FlatBuffer schemas
 node scripts/checkSchemaCasing.js
 
+# Refuse any non-append change to the wire-frozen RecordType union ordinals
+node scripts/checkRecordTypeOrdinals.mjs
+
+# Refuse enum/union members named MIN or MAX (flatc sentinel collision)
+node scripts/checkReservedEnumNames.mjs
+
 # Update schema list and count in index.html from manifest
 node scripts/updateSchemaList.cjs
 node scripts/updateSchemaCount.cjs

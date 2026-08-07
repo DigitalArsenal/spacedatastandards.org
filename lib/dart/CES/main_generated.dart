@@ -43,10 +43,14 @@ class _cesVectorEncodingReader extends fb.Reader<cesVectorEncoding> {
 
 ///  Sentence/document pooling method an embedding encoder used.
 ///  Append new values only; never reorder or reuse existing values.
+///  MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+///  every enum, so a member of either name makes the generated C++ and Swift
+///  uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+///  keeps ordinal 2, which is the wire value.
 enum cesPoolingKind {
   MEAN(0),
   CLS(1),
-  MAX(2),
+  MAX_POOL(2),
   UNKNOWN(3);
 
   final int value;
@@ -56,7 +60,7 @@ enum cesPoolingKind {
     switch (value) {
       case 0: return cesPoolingKind.MEAN;
       case 1: return cesPoolingKind.CLS;
-      case 2: return cesPoolingKind.MAX;
+      case 2: return cesPoolingKind.MAX_POOL;
       case 3: return cesPoolingKind.UNKNOWN;
       default: throw StateError('Invalid value $value for bit flag enum');
     }

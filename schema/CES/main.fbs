@@ -1,5 +1,5 @@
-// Hash: 5480e37e3b8a509ecbdc5bd269db05384db6471dc7781c1dc73f5ebb1be00291
-// Version: 1.168.0
+// Hash: faa9ecbe08da77927b04bfecad8a94cd6fa7a34dca4045c1d1a65c3af26d1663
+// Version: 1.168.1
 // -----------------------------------END_HEADER
 /// Row element encoding used by a CES or QEM vector table.
 enum cesVectorEncoding : byte {
@@ -9,10 +9,14 @@ enum cesVectorEncoding : byte {
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 enum cesPoolingKind : byte {
   MEAN,
   CLS,
-  MAX,
+  MAX_POOL,
   UNKNOWN
 }
 

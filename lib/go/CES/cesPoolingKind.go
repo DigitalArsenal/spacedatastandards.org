@@ -6,27 +6,31 @@ import "strconv"
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 type cesPoolingKind int8
 
 const (
-	cesPoolingKindMEAN    cesPoolingKind = 0
-	cesPoolingKindCLS     cesPoolingKind = 1
-	cesPoolingKindMAX     cesPoolingKind = 2
-	cesPoolingKindUNKNOWN cesPoolingKind = 3
+	cesPoolingKindMEAN     cesPoolingKind = 0
+	cesPoolingKindCLS      cesPoolingKind = 1
+	cesPoolingKindMAX_POOL cesPoolingKind = 2
+	cesPoolingKindUNKNOWN  cesPoolingKind = 3
 )
 
 var EnumNamescesPoolingKind = map[cesPoolingKind]string{
-	cesPoolingKindMEAN:    "MEAN",
-	cesPoolingKindCLS:     "CLS",
-	cesPoolingKindMAX:     "MAX",
-	cesPoolingKindUNKNOWN: "UNKNOWN",
+	cesPoolingKindMEAN:     "MEAN",
+	cesPoolingKindCLS:      "CLS",
+	cesPoolingKindMAX_POOL: "MAX_POOL",
+	cesPoolingKindUNKNOWN:  "UNKNOWN",
 }
 
 var EnumValuescesPoolingKind = map[string]cesPoolingKind{
-	"MEAN":    cesPoolingKindMEAN,
-	"CLS":     cesPoolingKindCLS,
-	"MAX":     cesPoolingKindMAX,
-	"UNKNOWN": cesPoolingKindUNKNOWN,
+	"MEAN":     cesPoolingKindMEAN,
+	"CLS":      cesPoolingKindCLS,
+	"MAX_POOL": cesPoolingKindMAX_POOL,
+	"UNKNOWN":  cesPoolingKindUNKNOWN,
 }
 
 func (v cesPoolingKind) String() string {

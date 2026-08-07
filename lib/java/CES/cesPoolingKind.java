@@ -3,16 +3,20 @@
 /**
  * Sentence/document pooling method an embedding encoder used.
  * Append new values only; never reorder or reuse existing values.
+ * MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+ * every enum, so a member of either name makes the generated C++ and Swift
+ * uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+ * keeps ordinal 2, which is the wire value.
  */
 @SuppressWarnings("unused")
 public final class cesPoolingKind {
   private cesPoolingKind() { }
   public static final byte MEAN = 0;
   public static final byte CLS = 1;
-  public static final byte MAX = 2;
+  public static final byte MAX_POOL = 2;
   public static final byte UNKNOWN = 3;
 
-  public static final String[] names = { "MEAN", "CLS", "MAX", "UNKNOWN", };
+  public static final String[] names = { "MEAN", "CLS", "MAX_POOL", "UNKNOWN", };
 
   public static String name(int e) { return names[e]; }
 }

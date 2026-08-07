@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.182.0+1786050461428",
+  version: "1.183.0+1786126386091",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -4547,8 +4547,8 @@ file_identifier "$NUM";`,
       ]
     },
     CES: {
-      IDL: `// Hash: 5480e37e3b8a509ecbdc5bd269db05384db6471dc7781c1dc73f5ebb1be00291
-// Version: 1.168.0
+      IDL: `// Hash: faa9ecbe08da77927b04bfecad8a94cd6fa7a34dca4045c1d1a65c3af26d1663
+// Version: 1.168.1
 // -----------------------------------END_HEADER
 /// Row element encoding used by a CES or QEM vector table.
 enum cesVectorEncoding : byte {
@@ -4558,10 +4558,14 @@ enum cesVectorEncoding : byte {
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 enum cesPoolingKind : byte {
   MEAN,
   CLS,
-  MAX,
+  MAX_POOL,
   UNKNOWN
 }
 
@@ -4886,7 +4890,298 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: '// Hash: 9561b8aef790b1cbe7680e76fff61213a76268cd05a2218b7152d336c5af6010\n// Version: 1.44.48\n// -----------------------------------END_HEADER\ninclude "../ACL/main.fbs";\ninclude "../ACM/main.fbs";\ninclude "../ACR/main.fbs";\ninclude "../ACW/main.fbs";\ninclude "../AEM/main.fbs";\ninclude "../ANI/main.fbs";\ninclude "../AOF/main.fbs";\ninclude "../APM/main.fbs";\ninclude "../APP/main.fbs";\ninclude "../ARM/main.fbs";\ninclude "../AST/main.fbs";\ninclude "../ATD/main.fbs";\ninclude "../ATM/main.fbs";\ninclude "../BAL/main.fbs";\ninclude "../BEM/main.fbs";\ninclude "../BMC/main.fbs";\ninclude "../BOV/main.fbs";\ninclude "../BSP/main.fbs";\ninclude "../BUS/main.fbs";\ninclude "../CAQ/main.fbs";\ninclude "../CAT/main.fbs";\ninclude "../CDM/main.fbs";\ninclude "../CES/main.fbs";\ninclude "../CFP/main.fbs";\ninclude "../CHN/main.fbs";\ninclude "../CLT/main.fbs";\ninclude "../CMR/main.fbs";\ninclude "../CMS/main.fbs";\ninclude "../CMT/main.fbs";\ninclude "../CNP/main.fbs";\ninclude "../COM/main.fbs";\ninclude "../COT/main.fbs";\ninclude "../CPS/main.fbs";\ninclude "../CRD/main.fbs";\ninclude "../CRM/main.fbs";\ninclude "../CSM/main.fbs";\ninclude "../CTR/main.fbs";\ninclude "../CVG/main.fbs";\ninclude "../CZM/main.fbs";\ninclude "../DFH/main.fbs";\ninclude "../DMG/main.fbs";\ninclude "../DOA/main.fbs";\ninclude "../DPM/main.fbs";\ninclude "../DSS/main.fbs";\ninclude "../EME/main.fbs";\ninclude "../ENC/main.fbs";\ninclude "../ENT/main.fbs";\ninclude "../ENV/main.fbs";\ninclude "../EOO/main.fbs";\ninclude "../EOP/main.fbs";\ninclude "../EPM/main.fbs";\ninclude "../ESL/main.fbs";\ninclude "../ETM/main.fbs";\ninclude "../EWR/main.fbs";\ninclude "../FCS/main.fbs";\ninclude "../FPC/main.fbs";\ninclude "../FRM/main.fbs";\ninclude "../FSB/main.fbs";\ninclude "../FSM/main.fbs";\ninclude "../FSO/main.fbs";\ninclude "../FSP/main.fbs";\ninclude "../GDI/main.fbs";\ninclude "../GEO/main.fbs";\ninclude "../GJN/main.fbs";\ninclude "../GNO/main.fbs";\ninclude "../GPX/main.fbs";\ninclude "../GRV/main.fbs";\ninclude "../GST/main.fbs";\ninclude "../GVH/main.fbs";\ninclude "../HEL/main.fbs";\ninclude "../HFC/main.fbs";\ninclude "../HYP/main.fbs";\ninclude "../IDM/main.fbs";\ninclude "../ION/main.fbs";\ninclude "../IQC/main.fbs";\ninclude "../IRO/main.fbs";\ninclude "../KMF/main.fbs";\ninclude "../KML/main.fbs";\ninclude "../KRF/main.fbs";\ninclude "../LAM/main.fbs";\ninclude "../LCC/main.fbs";\ninclude "../LCF/main.fbs";\ninclude "../LCH/main.fbs";\ninclude "../LDM/main.fbs";\ninclude "../LGR/main.fbs";\ninclude "../LKS/main.fbs";\ninclude "../LMO/main.fbs";\ninclude "../LMR/main.fbs";\ninclude "../LMS/main.fbs";\ninclude "../LND/main.fbs";\ninclude "../LNE/main.fbs";\ninclude "../LPF/main.fbs";\ninclude "../LWK/main.fbs";\ninclude "../MBL/main.fbs";\ninclude "../MDP/main.fbs";\ninclude "../MDS/main.fbs";\ninclude "../MET/main.fbs";\ninclude "../MFE/main.fbs";\ninclude "../MNF/main.fbs";\ninclude "../MNV/main.fbs";\ninclude "../MPE/main.fbs";\ninclude "../MSL/main.fbs";\ninclude "../MST/main.fbs";\ninclude "../MTI/main.fbs";\ninclude "../NAV/main.fbs";\ninclude "../NUM/main.fbs";\ninclude "../OBD/main.fbs";\ninclude "../OBT/main.fbs";\ninclude "../OCM/main.fbs";\ninclude "../OEM/main.fbs";\ninclude "../OMM/main.fbs";\ninclude "../OOA/main.fbs";\ninclude "../OOB/main.fbs";\ninclude "../OOD/main.fbs";\ninclude "../OOE/main.fbs";\ninclude "../OOI/main.fbs";\ninclude "../OOL/main.fbs";\ninclude "../OON/main.fbs";\ninclude "../OOS/main.fbs";\ninclude "../OOT/main.fbs";\ninclude "../OPM/main.fbs";\ninclude "../OPP/main.fbs";\ninclude "../OSM/main.fbs";\ninclude "../PCF/main.fbs";\ninclude "../PGM/main.fbs";\ninclude "../PHY/main.fbs";\ninclude "../PIV/main.fbs";\ninclude "../PKB/main.fbs";\ninclude "../PLD/main.fbs";\ninclude "../PLG/main.fbs";\ninclude "../PLK/main.fbs";\ninclude "../PMM/main.fbs";\ninclude "../PNL/main.fbs";\ninclude "../PNM/main.fbs";\ninclude "../PPE/main.fbs";\ninclude "../PRG/main.fbs";\ninclude "../PRR/main.fbs";\ninclude "../PRW/main.fbs";\ninclude "../PUR/main.fbs";\ninclude "../QEM/main.fbs";\ninclude "../RAF/main.fbs";\ninclude "../RBK/main.fbs";\ninclude "../RCF/main.fbs";\ninclude "../RDM/main.fbs";\ninclude "../RDO/main.fbs";\ninclude "../REM/main.fbs";\ninclude "../REV/main.fbs";\ninclude "../RFB/main.fbs";\ninclude "../RFE/main.fbs";\ninclude "../RFM/main.fbs";\ninclude "../RFO/main.fbs";\ninclude "../ROC/main.fbs";\ninclude "../RPT/main.fbs";\ninclude "../SAR/main.fbs";\ninclude "../SBM/main.fbs";\ninclude "../SCC/main.fbs";\ninclude "../SCM/main.fbs";\ninclude "../SCN/main.fbs";\ninclude "../SCV/main.fbs";\ninclude "../SCX/main.fbs";\ninclude "../SDF/main.fbs";\ninclude "../SDL/main.fbs";\ninclude "../SDR/main.fbs";\ninclude "../SEN/main.fbs";\ninclude "../SEO/main.fbs";\ninclude "../SEV/main.fbs";\ninclude "../SHC/main.fbs";\ninclude "../SHW/main.fbs";\ninclude "../SIT/main.fbs";\ninclude "../SKI/main.fbs";\ninclude "../SNR/main.fbs";\ninclude "../SNW/main.fbs";\ninclude "../SOI/main.fbs";\ninclude "../SON/main.fbs";\ninclude "../SPP/main.fbs";\ninclude "../SPW/main.fbs";\ninclude "../SRI/main.fbs";\ninclude "../STF/main.fbs";\ninclude "../STO/main.fbs";\ninclude "../STR/main.fbs";\ninclude "../STV/main.fbs";\ninclude "../SUB/main.fbs";\ninclude "../SWR/main.fbs";\ninclude "../TAB/main.fbs";\ninclude "../TCF/main.fbs";\ninclude "../TDM/main.fbs";\ninclude "../TIM/main.fbs";\ninclude "../TKG/main.fbs";\ninclude "../TME/main.fbs";\ninclude "../TMF/main.fbs";\ninclude "../TNR/main.fbs";\ninclude "../TPN/main.fbs";\ninclude "../TRE/main.fbs";\ninclude "../TRK/main.fbs";\ninclude "../TRN/main.fbs";\ninclude "../VAM/main.fbs";\ninclude "../VCM/main.fbs";\ninclude "../VST/main.fbs";\ninclude "../WKS/main.fbs";\ninclude "../WPN/main.fbs";\ninclude "../WTH/main.fbs";\ninclude "../XTC/main.fbs";\n\nunion RecordType {\n  ACL, ACM, ACR, ACW,\n  AEM, ANI, AOF, APM,\n  ARM, AST, ATD, ATM,\n  BAL, BEM, BMC, BOV,\n  BSP, BUS, CAQ, CAT,\n  CDM, CFP, CHN, CLT,\n  CMS, COM, COT, CRD,\n  CRM, CSM, CTR, CZM,\n  DFH, DMG, DOA, DPM,\n  DSS, EME, ENC, ENV,\n  EOO, EOP, EPM, ESL,\n  ETM, EWR, FCS, FPC,\n  FRM, GDI, GEO, GJN,\n  GNO, GPX, GRV, GVH,\n  HEL, HFC, HYP, IDM,\n  ION, IRO, KMF, KML,\n  KRF, LAM, LCC, LCF,\n  LCH, LDM, LGR, LKS,\n  LMO, LMR, LMS, LND,\n  LNE, LPF, LWK, MBL,\n  MET, MFE, MNF, MNV,\n  MPE, MSL, MST, MTI,\n  NAV, NUM, OBD, OBT,\n  OCM, OEM, OMM, OOA,\n  OOB, OOD, OOE, OOI,\n  OOL, OON, OOS, OOT,\n  OPM, OSM, PCF, PHY,\n  PGM, PIV, PLD, PLG,\n  PLK, PNM, PPE, PRG,\n  PRR, PRW, PUR, RAF,\n  RBK, RCF, RDM, RDO,\n  REM, REV, RFB, RFE,\n  RFM, RFO, ROC, SAR,\n  SCM, SDF, SDL, SDR,\n  SEN, SEO, SEV, SHW,\n  SIT, SKI, SNR, SNW,\n  SOI, SON, SPP, SPW,\n  SRI, STF, STR, STV,\n  SWR, TAB, TCF, TDM,\n  TIM, TKG, TME, TMF,\n  TNR, TPN, TRE, TRK,\n  TRN, VCM, WPN, WTH,\n  XTC, SCV, FSM, FSP,\n  SCC, SCN, VST, ENT,\n  VAM, APP, CMT, SCX,\n  CVG, PKB, RPT, STO,\n  SUB, WKS, CPS, FSB,\n  FSO, GST, MDP, MDS,\n  PNL, SHC, CES, QEM,\n  SBM, PMM, OPP, IQC,\n  CNP, CMR\n}  // Union of all record types\n\n/// Individual record wrapper for any standard type\ntable Record {\n  /// The record data (union of all supported standards)\n  value: RecordType;\n  /// Standard identifier (e.g., "OMM", "CDM", "CAT")\n  standard: string;\n}\n\n/// Collection of Standard Records\ntable REC {\n  /// Schema version identifier\n  version: string;\n  /// Array of heterogeneous records from any supported standard\n  RECORDS: [Record];\n}\n\nroot_type REC;\nfile_identifier "$REC";',
+      IDL: `// Hash: 6d85a8c8c2495ab5d78ff4ee591bbfd16158b39eadaef61aa8dc036cfdd220d4
+// Version: 1.44.49
+// -----------------------------------END_HEADER
+include "../ACL/main.fbs";
+include "../ACM/main.fbs";
+include "../ACR/main.fbs";
+include "../ACW/main.fbs";
+include "../AEM/main.fbs";
+include "../ANI/main.fbs";
+include "../AOF/main.fbs";
+include "../APM/main.fbs";
+include "../APP/main.fbs";
+include "../ARM/main.fbs";
+include "../AST/main.fbs";
+include "../ATD/main.fbs";
+include "../ATM/main.fbs";
+include "../BAL/main.fbs";
+include "../BEM/main.fbs";
+include "../BMC/main.fbs";
+include "../BOV/main.fbs";
+include "../BSP/main.fbs";
+include "../BUS/main.fbs";
+include "../CAQ/main.fbs";
+include "../CAT/main.fbs";
+include "../CDM/main.fbs";
+include "../CES/main.fbs";
+include "../CFP/main.fbs";
+include "../CHN/main.fbs";
+include "../CLT/main.fbs";
+include "../CMR/main.fbs";
+include "../CMS/main.fbs";
+include "../CMT/main.fbs";
+include "../CNP/main.fbs";
+include "../COM/main.fbs";
+include "../COT/main.fbs";
+include "../CPS/main.fbs";
+include "../CRD/main.fbs";
+include "../CRM/main.fbs";
+include "../CSM/main.fbs";
+include "../CTR/main.fbs";
+include "../CVG/main.fbs";
+include "../CZM/main.fbs";
+include "../DFH/main.fbs";
+include "../DMG/main.fbs";
+include "../DOA/main.fbs";
+include "../DPM/main.fbs";
+include "../DSS/main.fbs";
+include "../EME/main.fbs";
+include "../ENC/main.fbs";
+include "../ENT/main.fbs";
+include "../ENV/main.fbs";
+include "../EOO/main.fbs";
+include "../EOP/main.fbs";
+include "../EPM/main.fbs";
+include "../ESL/main.fbs";
+include "../ETM/main.fbs";
+include "../EWR/main.fbs";
+include "../FCS/main.fbs";
+include "../FPC/main.fbs";
+include "../FRM/main.fbs";
+include "../FSB/main.fbs";
+include "../FSM/main.fbs";
+include "../FSO/main.fbs";
+include "../FSP/main.fbs";
+include "../GDI/main.fbs";
+include "../GEO/main.fbs";
+include "../GJN/main.fbs";
+include "../GNO/main.fbs";
+include "../GPX/main.fbs";
+include "../GRV/main.fbs";
+include "../GST/main.fbs";
+include "../GVH/main.fbs";
+include "../HEL/main.fbs";
+include "../HFC/main.fbs";
+include "../HYP/main.fbs";
+include "../IDM/main.fbs";
+include "../ION/main.fbs";
+include "../IQC/main.fbs";
+include "../IRO/main.fbs";
+include "../KMF/main.fbs";
+include "../KML/main.fbs";
+include "../KRF/main.fbs";
+include "../LAM/main.fbs";
+include "../LCC/main.fbs";
+include "../LCF/main.fbs";
+include "../LCH/main.fbs";
+include "../LDM/main.fbs";
+include "../LGR/main.fbs";
+include "../LKS/main.fbs";
+include "../LMO/main.fbs";
+include "../LMR/main.fbs";
+include "../LMS/main.fbs";
+include "../LND/main.fbs";
+include "../LNE/main.fbs";
+include "../LPF/main.fbs";
+include "../LWK/main.fbs";
+include "../MBL/main.fbs";
+include "../MDP/main.fbs";
+include "../MDS/main.fbs";
+include "../MET/main.fbs";
+include "../MFE/main.fbs";
+include "../MNF/main.fbs";
+include "../MNV/main.fbs";
+include "../MPE/main.fbs";
+include "../MSL/main.fbs";
+include "../MST/main.fbs";
+include "../MTI/main.fbs";
+include "../NAV/main.fbs";
+include "../NUM/main.fbs";
+include "../OBD/main.fbs";
+include "../OBT/main.fbs";
+include "../OCM/main.fbs";
+include "../OEM/main.fbs";
+include "../OMM/main.fbs";
+include "../OOA/main.fbs";
+include "../OOB/main.fbs";
+include "../OOD/main.fbs";
+include "../OOE/main.fbs";
+include "../OOI/main.fbs";
+include "../OOL/main.fbs";
+include "../OON/main.fbs";
+include "../OOS/main.fbs";
+include "../OOT/main.fbs";
+include "../OPM/main.fbs";
+include "../OPP/main.fbs";
+include "../OSM/main.fbs";
+include "../PCF/main.fbs";
+include "../PGM/main.fbs";
+include "../PHY/main.fbs";
+include "../PIV/main.fbs";
+include "../PKB/main.fbs";
+include "../PLD/main.fbs";
+include "../PLG/main.fbs";
+include "../PLK/main.fbs";
+include "../PMM/main.fbs";
+include "../PNL/main.fbs";
+include "../PNM/main.fbs";
+include "../PPE/main.fbs";
+include "../PRG/main.fbs";
+include "../PRR/main.fbs";
+include "../PRW/main.fbs";
+include "../PUR/main.fbs";
+include "../QEM/main.fbs";
+include "../RAF/main.fbs";
+include "../RBK/main.fbs";
+include "../RCF/main.fbs";
+include "../RDM/main.fbs";
+include "../RDO/main.fbs";
+include "../REM/main.fbs";
+include "../REV/main.fbs";
+include "../RFB/main.fbs";
+include "../RFE/main.fbs";
+include "../RFM/main.fbs";
+include "../RFO/main.fbs";
+include "../ROC/main.fbs";
+include "../RPT/main.fbs";
+include "../SAR/main.fbs";
+include "../SBM/main.fbs";
+include "../SCC/main.fbs";
+include "../SCM/main.fbs";
+include "../SCN/main.fbs";
+include "../SCV/main.fbs";
+include "../SCX/main.fbs";
+include "../SDF/main.fbs";
+include "../SDL/main.fbs";
+include "../SDR/main.fbs";
+include "../SEN/main.fbs";
+include "../SEO/main.fbs";
+include "../SEV/main.fbs";
+include "../SHC/main.fbs";
+include "../SHW/main.fbs";
+include "../SIT/main.fbs";
+include "../SKI/main.fbs";
+include "../SNR/main.fbs";
+include "../SNW/main.fbs";
+include "../SOI/main.fbs";
+include "../SON/main.fbs";
+include "../SPP/main.fbs";
+include "../SPW/main.fbs";
+include "../SRI/main.fbs";
+include "../STF/main.fbs";
+include "../STO/main.fbs";
+include "../STR/main.fbs";
+include "../STV/main.fbs";
+include "../SUB/main.fbs";
+include "../SWR/main.fbs";
+include "../TAB/main.fbs";
+include "../TCF/main.fbs";
+include "../TDM/main.fbs";
+include "../TIM/main.fbs";
+include "../TKG/main.fbs";
+include "../TME/main.fbs";
+include "../TMF/main.fbs";
+include "../TNR/main.fbs";
+include "../TPN/main.fbs";
+include "../TRE/main.fbs";
+include "../TRK/main.fbs";
+include "../TRN/main.fbs";
+include "../VAM/main.fbs";
+include "../VCM/main.fbs";
+include "../VST/main.fbs";
+include "../WKS/main.fbs";
+include "../WPN/main.fbs";
+include "../WTH/main.fbs";
+include "../XTC/main.fbs";
+
+/// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
+/// A member's position IS its wire value: flatc writes it into the
+/// Record.value_type byte of every $REC ever serialized, including the
+/// publication trailer of every protected module artifact. Inserting,
+/// reordering or removing a member silently re-points every record ever
+/// written at the wrong standard. This has already happened three times;
+/// inserting $PGM mid-union (c1580d4700, 2026-07-08) moved $PNM 113 -> 114
+/// and broke protected-plugin decryption fleet-wide for three weeks.
+/// New standards are APPENDED at the end. A retired standard is deprecated
+/// in place, never deleted -- an ordinal is never reused.
+/// Contract: schema/REC/RECORDTYPE_ORDINALS.json
+/// Guard:    node scripts/checkRecordTypeOrdinals.mjs
+/// Records written before 2026-07-08 are only decodable via Record.standard,
+/// which is the sole discriminator that has never shifted.
+union RecordType {
+  ACL, ACM, ACR, ACW,
+  AEM, ANI, AOF, APM,
+  ARM, AST, ATD, ATM,
+  BAL, BEM, BMC, BOV,
+  BSP, BUS, CAQ, CAT,
+  CDM, CFP, CHN, CLT,
+  CMS, COM, COT, CRD,
+  CRM, CSM, CTR, CZM,
+  DFH, DMG, DOA, DPM,
+  DSS, EME, ENC, ENV,
+  EOO, EOP, EPM, ESL,
+  ETM, EWR, FCS, FPC,
+  FRM, GDI, GEO, GJN,
+  GNO, GPX, GRV, GVH,
+  HEL, HFC, HYP, IDM,
+  ION, IRO, KMF, KML,
+  KRF, LAM, LCC, LCF,
+  LCH, LDM, LGR, LKS,
+  LMO, LMR, LMS, LND,
+  LNE, LPF, LWK, MBL,
+  MET, MFE, MNF, MNV,
+  MPE, MSL, MST, MTI,
+  NAV, NUM, OBD, OBT,
+  OCM, OEM, OMM, OOA,
+  OOB, OOD, OOE, OOI,
+  OOL, OON, OOS, OOT,
+  OPM, OSM, PCF, PHY,
+  PGM, PIV, PLD, PLG,
+  PLK, PNM, PPE, PRG,
+  PRR, PRW, PUR, RAF,
+  RBK, RCF, RDM, RDO,
+  REM, REV, RFB, RFE,
+  RFM, RFO, ROC, SAR,
+  SCM, SDF, SDL, SDR,
+  SEN, SEO, SEV, SHW,
+  SIT, SKI, SNR, SNW,
+  SOI, SON, SPP, SPW,
+  SRI, STF, STR, STV,
+  SWR, TAB, TCF, TDM,
+  TIM, TKG, TME, TMF,
+  TNR, TPN, TRE, TRK,
+  TRN, VCM, WPN, WTH,
+  XTC, SCV, FSM, FSP,
+  SCC, SCN, VST, ENT,
+  VAM, APP, CMT, SCX,
+  CVG, PKB, RPT, STO,
+  SUB, WKS, CPS, FSB,
+  FSO, GST, MDP, MDS,
+  PNL, SHC, CES, QEM,
+  SBM, PMM, OPP, IQC,
+  CNP, CMR
+}  // Union of all record types
+
+/// Individual record wrapper for any standard type
+table Record {
+  /// The record data (union of all supported standards)
+  value: RecordType;
+  /// Standard identifier (e.g., "OMM", "CDM", "CAT")
+  standard: string;
+}
+
+/// Collection of Standard Records
+table REC {
+  /// Schema version identifier
+  version: string;
+  /// Array of heterogeneous records from any supported standard
+  RECORDS: [Record];
+}
+
+root_type REC;
+file_identifier "$REC";`,
       files: [
         "./dist/REC/REC.sw.tar.gz",
         "./dist/REC/REC.py.tar.gz",
@@ -43576,7 +43871,7 @@ ed25519 hardened)`
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ]
         },
@@ -49649,7 +49944,7 @@ ed25519 hardened)`
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ]
         },
@@ -109440,7 +109735,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ]
         },
@@ -199191,7 +199486,7 @@ ed25519 hardened)`,
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ],
           "x-flatbuffer-type": "enum",
@@ -199203,7 +199498,7 @@ ed25519 hardened)`,
             CLS: {
               value: 1
             },
-            MAX: {
+            MAX_POOL: {
               value: 2
             },
             UNKNOWN: {
@@ -199387,7 +199682,7 @@ ed25519 hardened)`,
                 CLS: {
                   value: 1
                 },
-                MAX: {
+                MAX_POOL: {
                   value: 2
                 },
                 UNKNOWN: {
@@ -213833,7 +214128,7 @@ ed25519 hardened)`,
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ],
           "x-flatbuffer-type": "enum",
@@ -213845,7 +214140,7 @@ ed25519 hardened)`,
             CLS: {
               value: 1
             },
-            MAX: {
+            MAX_POOL: {
               value: 2
             },
             UNKNOWN: {
@@ -233801,7 +234096,7 @@ ed25519 hardened)`,
                 CLS: {
                   value: 1
                 },
-                MAX: {
+                MAX_POOL: {
                   value: 2
                 },
                 UNKNOWN: {
@@ -264255,7 +264550,7 @@ turned into a number.`,
                 CLS: {
                   value: 1
                 },
-                MAX: {
+                MAX_POOL: {
                   value: 2
                 },
                 UNKNOWN: {
@@ -315131,7 +315426,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           enum: [
             "MEAN",
             "CLS",
-            "MAX",
+            "MAX_POOL",
             "UNKNOWN"
           ],
           "x-flatbuffer-type": "enum",
@@ -315143,7 +315438,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             CLS: {
               value: 1
             },
-            MAX: {
+            MAX_POOL: {
               value: 2
             },
             UNKNOWN: {
@@ -315327,7 +315622,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 CLS: {
                   value: 1
                 },
-                MAX: {
+                MAX_POOL: {
                   value: 2
                 },
                 UNKNOWN: {
@@ -315430,7 +315725,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 CLS: {
                   value: 1
                 },
-                MAX: {
+                MAX_POOL: {
                   value: 2
                 },
                 UNKNOWN: {

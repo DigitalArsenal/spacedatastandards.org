@@ -7,12 +7,35 @@ function generateIncludes(schemaNames) {
   return schemaNames.map((schemaName) => `include "../${schemaName}/main.fbs";`);
 }
 
+/**
+ * The wire-freeze banner is emitted with the union so a regeneration can never
+ * drop it. Ordinals are append-only forever; the guard is
+ * scripts/checkRecordTypeOrdinals.mjs against schema/REC/RECORDTYPE_ORDINALS.json.
+ */
+const UNION_BANNER = [
+  "/// ORDINAL FREEZE -- APPEND ONLY, FOREVER.",
+  "/// A member's position IS its wire value: flatc writes it into the",
+  "/// Record.value_type byte of every $REC ever serialized, including the",
+  "/// publication trailer of every protected module artifact. Inserting,",
+  "/// reordering or removing a member silently re-points every record ever",
+  "/// written at the wrong standard. This has already happened three times;",
+  "/// inserting $PGM mid-union (c1580d4700, 2026-07-08) moved $PNM 113 -> 114",
+  "/// and broke protected-plugin decryption fleet-wide for three weeks.",
+  "/// New standards are APPENDED at the end. A retired standard is deprecated",
+  "/// in place, never deleted -- an ordinal is never reused.",
+  "/// Contract: schema/REC/RECORDTYPE_ORDINALS.json",
+  "/// Guard:    node scripts/checkRecordTypeOrdinals.mjs",
+  "/// Records written before 2026-07-08 are only decodable via Record.standard,",
+  "/// which is the sole discriminator that has never shifted.",
+];
+
 function generateUnion(schemaNames) {
   const rows = [];
   for (let index = 0; index < schemaNames.length; index += 4) {
     rows.push(schemaNames.slice(index, index + 4).join(", "));
   }
   return [
+    ...UNION_BANNER,
     "union RecordType {",
     ...rows.map((row, index) => `  ${row}${index === rows.length - 1 ? "" : ","}`),
     "}  // Union of all record types",
@@ -56,12 +79,12 @@ async function main() {
 
   let updated = replaceSection(
     original,
-    /(\/\/ -----------------------------------END_HEADER\n)(.*?)(?=\nunion RecordType\s*\{)/s,
+    /(\/\/ -----------------------------------END_HEADER\n)(.*?)(?=\n(?:\/\/\/[^\n]*\n)*union RecordType\s*\{)/s,
     `$1${includes}\n`,
   );
   updated = replaceSection(
     updated,
-    /union\s+RecordType\s*\{[^}]+\}\s*\/\/\s*Union of all record types/s,
+    /(?:\/\/\/[^\n]*\n)*union\s+RecordType\s*\{[^}]+\}\s*\/\/\s*Union of all record types/s,
     union,
   );
 

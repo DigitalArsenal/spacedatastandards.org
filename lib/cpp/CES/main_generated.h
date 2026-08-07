@@ -52,19 +52,24 @@ inline const char *EnumNamecesVectorEncoding(cesVectorEncoding e) {
 
 /// Sentence/document pooling method an embedding encoder used.
 /// Append new values only; never reorder or reuse existing values.
+/// MIN and MAX are reserved: flatc synthesises a MIN/MAX sentinel pair for
+/// every enum, so a member of either name makes the generated C++ and Swift
+/// uncompilable. MAX_POOL carries the element-wise maximum pooling method and
+/// keeps ordinal 2, which is the wire value.
 enum cesPoolingKind : int8_t {
   cesPoolingKind_MEAN = 0,
   cesPoolingKind_CLS = 1,
-  cesPoolingKind_MAX = 2,
+  cesPoolingKind_MAX_POOL = 2,
   cesPoolingKind_UNKNOWN = 3,
-  cesPoolingKind_MIN = cesPoolingKind_MEAN
+  cesPoolingKind_MIN = cesPoolingKind_MEAN,
+  cesPoolingKind_MAX = cesPoolingKind_UNKNOWN
 };
 
 inline const cesPoolingKind (&EnumValuescesPoolingKind())[4] {
   static const cesPoolingKind values[] = {
     cesPoolingKind_MEAN,
     cesPoolingKind_CLS,
-    cesPoolingKind_MAX,
+    cesPoolingKind_MAX_POOL,
     cesPoolingKind_UNKNOWN
   };
   return values;
@@ -74,7 +79,7 @@ inline const char * const *EnumNamescesPoolingKind() {
   static const char * const names[5] = {
     "MEAN",
     "CLS",
-    "MAX",
+    "MAX_POOL",
     "UNKNOWN",
     nullptr
   };
