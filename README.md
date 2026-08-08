@@ -60,6 +60,8 @@ Space Data Standards modernizes decades-old formats while maintaining compatibil
 
 **TDM, RFM** — Tracking data and reference frame messages for observation data
 
+**TBS** — Terrestrial Base Station Site with required multi-provider provenance and an explicit position-consensus record
+
 ### Maneuver
 
 **MET, MPE** — Maneuver planning and execution messages for operations

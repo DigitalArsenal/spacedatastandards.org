@@ -220,6 +220,7 @@ class RecordType
     const IQC = 200;
     const CNP = 201;
     const CMR = 202;
+    const TBS = 203;
 
     private static $names = array(
         RecordType::NONE=>"NONE",
@@ -425,6 +426,7 @@ class RecordType
         RecordType::IQC=>"IQC",
         RecordType::CNP=>"CNP",
         RecordType::CMR=>"CMR",
+        RecordType::TBS=>"TBS",
     );
 
     public static function Name($e)

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.183.0+1786126386091",
+  version: "1.184.0+1786183176432",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -4890,8 +4890,8 @@ file_identifier "$CES";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 6d85a8c8c2495ab5d78ff4ee591bbfd16158b39eadaef61aa8dc036cfdd220d4
-// Version: 1.44.49
+      IDL: `// Hash: 68ef8381e404f050837cd09076e68b6c5e70e49f7a60e937b907df29aa372eb2
+// Version: 1.44.50
 // -----------------------------------END_HEADER
 include "../ACL/main.fbs";
 include "../ACM/main.fbs";
@@ -5077,6 +5077,7 @@ include "../STV/main.fbs";
 include "../SUB/main.fbs";
 include "../SWR/main.fbs";
 include "../TAB/main.fbs";
+include "../TBS/main.fbs";
 include "../TCF/main.fbs";
 include "../TDM/main.fbs";
 include "../TIM/main.fbs";
@@ -5161,7 +5162,7 @@ union RecordType {
   FSO, GST, MDP, MDS,
   PNL, SHC, CES, QEM,
   SBM, PMM, OPP, IQC,
-  CNP, CMR
+  CNP, CMR, TBS
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type
@@ -10304,6 +10305,244 @@ file_identifier "$EOO";`,
         "./dist/OOA/OOA.cpp.tar.gz",
         "./dist/OOA/OOA.kt.tar.gz",
         "./dist/OOA/OOA.ts.tar.gz"
+      ]
+    },
+    TBS: {
+      IDL: `// Hash: d4e42a32f0daaf17b7e83b48f732eff68d1a5479d09a65ea9a80f0ec1f475bb1
+// Version: 1.183.0
+// -----------------------------------END_HEADER
+/// Radio access technology class of a terrestrial base-station site.
+///
+/// Members name generation-level access technologies only. A publisher encodes
+/// the class ITS SOURCE STATES and never re-derives one from frequency,
+/// identifier width, or operator. Ordinals are wire values: append only; never
+/// reorder or reuse.
+enum tbsRadioClass : byte {
+  /// Second-generation circuit-switched cellular access.
+  GSM,
+  /// Code-division multiple-access cellular access.
+  CDMA,
+  /// Third-generation wideband code-division cellular access.
+  UMTS,
+  /// Fourth-generation long-term-evolution cellular access.
+  LTE,
+  /// Fifth-generation new-radio cellular access.
+  NR,
+  /// An access technology the source names but this enum does not model. The
+  /// source's own term is retained in the provenance entry, never discarded.
+  OTHER,
+  /// The source publishes no access technology. RADIO defaults here so an
+  /// unset field can never be read as GSM, which holds ordinal 0.
+  UNKNOWN
+}
+
+/// How independent provider reports for one site were reduced to the one
+/// published position. Ordinals are wire values: append only; never reorder or
+/// reuse.
+enum tbsMergeMethod : byte {
+  /// Exactly one provider reported the site; nothing was reconciled.
+  SINGLE_SOURCE,
+  /// The report backed by the largest independent observation count won.
+  HIGHEST_SAMPLE_COUNT,
+  /// The report with the most recent observation window won.
+  MOST_RECENT,
+  /// A declared precedence ranking over publishing authorities selected the
+  /// winning report, regardless of sample count or recency.
+  AUTHORITY_PRECEDENCE,
+  /// The published position is computed from the agreeing reports and belongs
+  /// to no single provider.
+  CENTROID,
+  /// The publisher does not state how the reports were reduced. METHOD
+  /// defaults here so an unset field can never be read as SINGLE_SOURCE,
+  /// which holds ordinal 0.
+  UNSPECIFIED
+}
+
+/// Replayable provenance for ONE provider's report of ONE site.
+///
+/// Every provider consulted gets its own entry, including providers that
+/// returned nothing, so a consumer can tell "not looked for" from "looked for
+/// and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+/// carry verbatim what that provider states about itself. The standard names
+/// no provider, dataset, or site.
+table TBSProvenance {
+  /// Publisher-stable, lowercase identifier for the consulted provider,
+  /// unique within the publisher's own provider registry. Never a display
+  /// name and never a URL.
+  PROVIDER_ID:string (required);
+  /// The authority under which that provider publishes, verbatim as the
+  /// provider states it: a spectrum regulator, a network operator, a
+  /// crowd-sourced observation programme, or a research dataset. Never
+  /// inferred by the publisher.
+  AUTHORITY:string;
+  /// Replayable URL identifying the source material.
+  SOURCE_URL:string;
+  /// The exact query, filter, or request parameters used, so the same rows can
+  /// be recovered by repeating the fetch.
+  SOURCE_QUERY:string;
+  /// RFC 3339 UTC fixed-millisecond retrieval timestamp.
+  RETRIEVED_AT:string (required);
+  /// Redistribution terms verbatim. Required: there is no encoding for a
+  /// redistributed site whose terms are unstated. A provider that publishes no
+  /// terms is recorded as publishing no terms; unknown terms are never public
+  /// domain and never an implied grant.
+  LICENSE:string (required);
+  /// URL of the full licence text as that provider publishes it.
+  LICENSE_URL:string;
+  /// Attribution text the licence requires a redistributor to display.
+  ATTRIBUTION:string;
+  /// The licence forbids commercial use. Rides PER SOURCE because one record
+  /// may merge an open-terms lane beside a non-commercial cross-check, and the
+  /// strictest consulted lane governs any derived product.
+  NON_COMMERCIAL_ONLY:bool = false;
+  /// This provider's own row, cell, or site identifier, verbatim.
+  NATIVE_ID:string;
+  /// Position this provider reported, in decimal degrees on WGS 84, before
+  /// reconciliation. Retained unrounded so the merge stays auditable. Absent
+  /// when the provider was consulted and reported no position.
+  REPORTED_LATITUDE:double;
+  REPORTED_LONGITUDE:double;
+  /// This provider's report materially contributed to the published CONSENSUS
+  /// position. False marks a provider that was consulted and either returned
+  /// nothing or was outvoted; its entry is published either way.
+  CONTRIBUTED:bool = false;
+}
+
+/// How one site's independent provider reports were reduced to the single
+/// published position, and how strongly those reports agreed.
+table TBSConsensus {
+  METHOD:tbsMergeMethod = UNSPECIFIED;
+  /// Providers queried for this site, including those that returned nothing.
+  /// Never fewer than the number of SOURCES entries.
+  PROVIDERS_CONSULTED:uint;
+  /// Providers whose reported position fell within the publisher's agreement
+  /// threshold. A value of 1 means the published position rests on a single
+  /// report and was never independently corroborated.
+  PROVIDERS_AGREEING:uint;
+  /// PROVIDER_ID of the report the merge selected, copied verbatim from the
+  /// matching SOURCES entry. Absent when METHOD is CENTROID: a computed
+  /// position belongs to no single provider.
+  WINNING_PROVIDER_ID:string;
+  /// Greatest surface distance in metres between any two agreeing reported
+  /// positions. Zero is meaningful only when PROVIDERS_AGREEING is 1.
+  POSITION_SPREAD_M:double;
+  /// The publisher's own confidence in the merged position, on [0,1]. Never a
+  /// provider's figure and never a probability from a model this standard does
+  /// not name.
+  CONFIDENCE:double;
+  /// RFC 3339 UTC fixed-millisecond instant at which the merge was performed.
+  MERGED_AT:string;
+}
+
+/// Terrestrial Base Station Site.
+///
+/// One record describes ONE terrestrial cellular base-station site as
+/// reconciled from every provider the publisher consulted. It is the wire
+/// record for terrestrial mobile-network infrastructure, and it is not an
+/// emitter model ($RFE), a band specification ($RFB), a geodetic tracking
+/// station ($GST), a satellite ground station ($SIT), or an observation.
+///
+/// A site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both
+/// required, so every published position carries the providers it came from and
+/// the rule that reconciled them; a consumer that strips attribution has to
+/// leave the standard to do it. Unknown values are ABSENT \u2014 never zero, never a
+/// placeholder, never carried across from a neighbouring site.
+///
+/// Identity is ID, the publisher's own. The network addressing fields are the
+/// mobile network's, are assigned by its operator, and are reused worldwide;
+/// none of them is a global key on its own.
+table TBS {
+  /// Publisher-stable identifier for this site, unique within its record set.
+  /// Recommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".
+  ID:string (required);
+  /// Winning provider's native site identifier, copied verbatim from the
+  /// SOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute
+  /// for ID and never stable across providers.
+  NATIVE_ID:string;
+  RADIO:tbsRadioClass = UNKNOWN;
+  /// Mobile country code from the international mobile-subscriber identity
+  /// numbering plan. Zero means the source published none.
+  MCC:uint;
+  /// Mobile network code within MCC. Carried as an integer, so decimal leading
+  /// zeros are NOT preserved: a two- versus three-digit network code is
+  /// distinguished by the numbering plan of MCC, and the source's own text is
+  /// retained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished.
+  MNC:uint;
+  /// Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means
+  /// unpublished. A site published with a location area code does not also
+  /// carry a tracking area code; publishing both asserts two access
+  /// generations for one cell.
+  LAC:uint;
+  /// Tracking area code, used by LTE- and NR-class access. Zero means
+  /// unpublished.
+  TAC:uint;
+  /// Cell identity verbatim from the source. A string because width, radix and
+  /// leading zeros are significant and differ by access class: a 16-bit cell
+  /// identity, a 28-bit evolved cell identity and a 36-bit new-radio cell
+  /// identity are not interchangeable integers, and this field never converts
+  /// between them.
+  CELL_ID:string;
+  /// Reconciled site position in decimal degrees on WGS 84, produced by the
+  /// merge described in CONSENSUS. Per-provider positions before
+  /// reconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and
+  /// are never overwritten by this value.
+  LATITUDE:double;
+  LONGITUDE:double;
+  /// Radius in metres of the area within which the site's observations were
+  /// collected \u2014 a positional-uncertainty envelope, not a transmission range,
+  /// not a coverage guarantee, and never converted from another unit. Zero
+  /// means unpublished.
+  RANGE_M:double;
+  /// Independent observations behind the winning report. Zero means the source
+  /// publishes no observation count, never that the site was never observed.
+  SAMPLES:uint;
+  /// Mean received signal strength in dBm across those observations, as the
+  /// source publishes it. Carried in dBm unconverted; a consumer needing watts
+  /// converts at the join, explicitly. Zero means unpublished.
+  AVERAGE_SIGNAL_DBM:double;
+  /// RFC 3339 UTC fixed-millisecond bounds of the observation window backing
+  /// the winning report.
+  FIRST_OBSERVED:string;
+  LAST_OBSERVED:string;
+  /// Network operator name verbatim as the cited source states it. A display
+  /// name, never an identifier: consumers must not treat it as a stable key.
+  OPERATOR:string;
+  /// Operating centre frequency in MHz, following the $RFB convention. A
+  /// consumer joining to $IQC, which carries hertz, converts at the join,
+  /// explicitly. Zero means unpublished.
+  FREQUENCY_MHZ:double;
+  /// Site or structure name verbatim when the source publishes one. Never
+  /// synthesized from coordinates, operator, or cell identity.
+  SITE_NAME:string;
+  /// ISO 3166-1 alpha-2 country code, uppercase, as the source states it.
+  /// Derived from MCC only when the source itself derives it.
+  COUNTRY_CODE:string;
+  /// Every provider consulted for this site, including providers that returned
+  /// nothing. Required: a site with no named sources is not publishable.
+  SOURCES:[TBSProvenance] (required);
+  /// How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:
+  /// a published position always states the rule that produced it, including
+  /// SINGLE_SOURCE.
+  CONSENSUS:TBSConsensus (required);
+}
+
+root_type TBS;
+file_identifier "$TBS";`,
+      files: [
+        "./dist/TBS/TBS.sw.tar.gz",
+        "./dist/TBS/TBS.py.tar.gz",
+        "./dist/TBS/TBS.lob.tar.gz",
+        "./dist/TBS/TBS.go.tar.gz",
+        "./dist/TBS/TBS.js.tar.gz",
+        "./dist/TBS/TBS.dart.tar.gz",
+        "./dist/TBS/TBS.cs.tar.gz",
+        "./dist/TBS/TBS.java.tar.gz",
+        "./dist/TBS/TBS.rs.tar.gz",
+        "./dist/TBS/TBS.php.tar.gz",
+        "./dist/TBS/TBS.json.tar.gz",
+        "./dist/TBS/TBS.cpp.tar.gz",
+        "./dist/TBS/TBS.kt.tar.gz",
+        "./dist/TBS/TBS.ts.tar.gz"
       ]
     },
     TDM: {
@@ -53431,6 +53670,29 @@ ed25519 hardened)`
             "Lapsed"
           ]
         },
+        tbsRadioClass: {
+          type: "string",
+          enum: [
+            "GSM",
+            "CDMA",
+            "UMTS",
+            "LTE",
+            "NR",
+            "OTHER",
+            "UNKNOWN"
+          ]
+        },
+        tbsMergeMethod: {
+          type: "string",
+          enum: [
+            "SINGLE_SOURCE",
+            "HIGHEST_SAMPLE_COUNT",
+            "MOST_RECENT",
+            "AUTHORITY_PRECEDENCE",
+            "CENTROID",
+            "UNSPECIFIED"
+          ]
+        },
         FilterType: {
           type: "string",
           enum: [
@@ -54195,7 +54457,8 @@ ed25519 hardened)`
             "OPP",
             "IQC",
             "CNP",
-            "CMR"
+            "CMR",
+            "TBS"
           ]
         },
         GrantFieldStreamPolicy: {
@@ -85836,6 +86099,219 @@ turned into a number.`
           },
           additionalProperties: false
         },
+        TBSProvenance: {
+          type: "object",
+          description: `Replayable provenance for ONE provider's report of ONE site.
+
+Every provider consulted gets its own entry, including providers that
+returned nothing, so a consumer can tell "not looked for" from "looked for
+and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+carry verbatim what that provider states about itself. The standard names
+no provider, dataset, or site.`,
+          properties: {
+            PROVIDER_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the consulted provider,\nunique within the publisher's own provider registry. Never a display\nname and never a URL."
+            },
+            AUTHORITY: {
+              type: "string",
+              description: "The authority under which that provider publishes, verbatim as the\nprovider states it: a spectrum regulator, a network operator, a\ncrowd-sourced observation programme, or a research dataset. Never\ninferred by the publisher."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material."
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed site whose terms are unstated. A provider that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that provider publishes it."
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display."
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product."
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "This provider's own row, cell, or site identifier, verbatim."
+            },
+            REPORTED_LATITUDE: {
+              type: "number",
+              description: "Position this provider reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the provider was consulted and reported no position."
+            },
+            REPORTED_LONGITUDE: {
+              type: "number"
+            },
+            CONTRIBUTED: {
+              type: "boolean",
+              description: "This provider's report materially contributed to the published CONSENSUS\nposition. False marks a provider that was consulted and either returned\nnothing or was outvoted; its entry is published either way."
+            }
+          },
+          required: [
+            "PROVIDER_ID",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        TBSConsensus: {
+          type: "object",
+          description: "How one site's independent provider reports were reduced to the single\npublished position, and how strongly those reports agreed.",
+          properties: {
+            METHOD: {
+              $ref: "#/definitions/tbsMergeMethod"
+            },
+            PROVIDERS_CONSULTED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers queried for this site, including those that returned nothing.\nNever fewer than the number of SOURCES entries."
+            },
+            PROVIDERS_AGREEING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated."
+            },
+            WINNING_PROVIDER_ID: {
+              type: "string",
+              description: "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single provider."
+            },
+            POSITION_SPREAD_M: {
+              type: "number",
+              description: "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1."
+            },
+            CONFIDENCE: {
+              type: "number",
+              description: "The publisher's own confidence in the merged position, on [0,1]. Never a\nprovider's figure and never a probability from a model this standard does\nnot name."
+            },
+            MERGED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond instant at which the merge was performed."
+            }
+          },
+          additionalProperties: false
+        },
+        TBS: {
+          type: "object",
+          description: "Terrestrial Base Station Site.\n\nOne record describes ONE terrestrial cellular base-station site as\nreconciled from every provider the publisher consulted. It is the wire\nrecord for terrestrial mobile-network infrastructure, and it is not an\nemitter model ($RFE), a band specification ($RFB), a geodetic tracking\nstation ($GST), a satellite ground station ($SIT), or an observation.\n\nA site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both\nrequired, so every published position carries the providers it came from and\nthe rule that reconciled them; a consumer that strips attribution has to\nleave the standard to do it. Unknown values are ABSENT \u2014 never zero, never a\nplaceholder, never carried across from a neighbouring site.\n\nIdentity is ID, the publisher's own. The network addressing fields are the\nmobile network's, are assigned by its operator, and are reused worldwide;\nnone of them is a global key on its own.",
+          properties: {
+            ID: {
+              type: "string",
+              description: 'Publisher-stable identifier for this site, unique within its record set.\nRecommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".'
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "Winning provider's native site identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across providers."
+            },
+            RADIO: {
+              $ref: "#/definitions/tbsRadioClass"
+            },
+            MCC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile country code from the international mobile-subscriber identity\nnumbering plan. Zero means the source published none."
+            },
+            MNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile network code within MCC. Carried as an integer, so decimal leading\nzeros are NOT preserved: a two- versus three-digit network code is\ndistinguished by the numbering plan of MCC, and the source's own text is\nretained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished."
+            },
+            LAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means\nunpublished. A site published with a location area code does not also\ncarry a tracking area code; publishing both asserts two access\ngenerations for one cell."
+            },
+            TAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Tracking area code, used by LTE- and NR-class access. Zero means\nunpublished."
+            },
+            CELL_ID: {
+              type: "string",
+              description: "Cell identity verbatim from the source. A string because width, radix and\nleading zeros are significant and differ by access class: a 16-bit cell\nidentity, a 28-bit evolved cell identity and a 36-bit new-radio cell\nidentity are not interchangeable integers, and this field never converts\nbetween them."
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Reconciled site position in decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. Per-provider positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value."
+            },
+            LONGITUDE: {
+              type: "number"
+            },
+            RANGE_M: {
+              type: "number",
+              description: "Radius in metres of the area within which the site's observations were\ncollected \u2014 a positional-uncertainty envelope, not a transmission range,\nnot a coverage guarantee, and never converted from another unit. Zero\nmeans unpublished."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Independent observations behind the winning report. Zero means the source\npublishes no observation count, never that the site was never observed."
+            },
+            AVERAGE_SIGNAL_DBM: {
+              type: "number",
+              description: "Mean received signal strength in dBm across those observations, as the\nsource publishes it. Carried in dBm unconverted; a consumer needing watts\nconverts at the join, explicitly. Zero means unpublished."
+            },
+            FIRST_OBSERVED: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe winning report."
+            },
+            LAST_OBSERVED: {
+              type: "string"
+            },
+            OPERATOR: {
+              type: "string",
+              description: "Network operator name verbatim as the cited source states it. A display\nname, never an identifier: consumers must not treat it as a stable key."
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Operating centre frequency in MHz, following the $RFB convention. A\nconsumer joining to $IQC, which carries hertz, converts at the join,\nexplicitly. Zero means unpublished."
+            },
+            SITE_NAME: {
+              type: "string",
+              description: "Site or structure name verbatim when the source publishes one. Never\nsynthesized from coordinates, operator, or cell identity."
+            },
+            COUNTRY_CODE: {
+              type: "string",
+              description: "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.\nDerived from MCC only when the source itself derives it."
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/TBSProvenance"
+              },
+              description: "Every provider consulted for this site, including providers that returned\nnothing. Required: a site with no named sources is not publishable."
+            },
+            CONSENSUS: {
+              $ref: "#/definitions/TBSConsensus",
+              description: "How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:\na published position always states the rule that produced it, including\nSINGLE_SOURCE."
+            }
+          },
+          required: [
+            "ID",
+            "SOURCES",
+            "CONSENSUS"
+          ],
+          additionalProperties: false
+        },
         TCF: {
           type: "object",
           description: "Telecommand Transfer Frame (CCSDS 232.0-B-3)",
@@ -91162,6 +91638,9 @@ turned into a number.`
                 },
                 {
                   $ref: "#/definitions/CMR"
+                },
+                {
+                  $ref: "#/definitions/TBS"
                 }
               ],
               description: "The record data (union of all supported standards)"
@@ -118485,6 +118964,248 @@ ed25519 hardened)`
         }
       },
       $ref: "#/definitions/OOA"
+    },
+    TBS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        tbsRadioClass: {
+          type: "string",
+          enum: [
+            "GSM",
+            "CDMA",
+            "UMTS",
+            "LTE",
+            "NR",
+            "OTHER",
+            "UNKNOWN"
+          ]
+        },
+        tbsMergeMethod: {
+          type: "string",
+          enum: [
+            "SINGLE_SOURCE",
+            "HIGHEST_SAMPLE_COUNT",
+            "MOST_RECENT",
+            "AUTHORITY_PRECEDENCE",
+            "CENTROID",
+            "UNSPECIFIED"
+          ]
+        },
+        TBSProvenance: {
+          type: "object",
+          description: `Replayable provenance for ONE provider's report of ONE site.
+
+Every provider consulted gets its own entry, including providers that
+returned nothing, so a consumer can tell "not looked for" from "looked for
+and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+carry verbatim what that provider states about itself. The standard names
+no provider, dataset, or site.`,
+          properties: {
+            PROVIDER_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the consulted provider,\nunique within the publisher's own provider registry. Never a display\nname and never a URL."
+            },
+            AUTHORITY: {
+              type: "string",
+              description: "The authority under which that provider publishes, verbatim as the\nprovider states it: a spectrum regulator, a network operator, a\ncrowd-sourced observation programme, or a research dataset. Never\ninferred by the publisher."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material."
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed site whose terms are unstated. A provider that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant."
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that provider publishes it."
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display."
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product."
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "This provider's own row, cell, or site identifier, verbatim."
+            },
+            REPORTED_LATITUDE: {
+              type: "number",
+              description: "Position this provider reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the provider was consulted and reported no position."
+            },
+            REPORTED_LONGITUDE: {
+              type: "number"
+            },
+            CONTRIBUTED: {
+              type: "boolean",
+              description: "This provider's report materially contributed to the published CONSENSUS\nposition. False marks a provider that was consulted and either returned\nnothing or was outvoted; its entry is published either way."
+            }
+          },
+          required: [
+            "PROVIDER_ID",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        TBSConsensus: {
+          type: "object",
+          description: "How one site's independent provider reports were reduced to the single\npublished position, and how strongly those reports agreed.",
+          properties: {
+            METHOD: {
+              $ref: "#/definitions/tbsMergeMethod"
+            },
+            PROVIDERS_CONSULTED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers queried for this site, including those that returned nothing.\nNever fewer than the number of SOURCES entries."
+            },
+            PROVIDERS_AGREEING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated."
+            },
+            WINNING_PROVIDER_ID: {
+              type: "string",
+              description: "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single provider."
+            },
+            POSITION_SPREAD_M: {
+              type: "number",
+              description: "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1."
+            },
+            CONFIDENCE: {
+              type: "number",
+              description: "The publisher's own confidence in the merged position, on [0,1]. Never a\nprovider's figure and never a probability from a model this standard does\nnot name."
+            },
+            MERGED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond instant at which the merge was performed."
+            }
+          },
+          additionalProperties: false
+        },
+        TBS: {
+          type: "object",
+          description: "Terrestrial Base Station Site.\n\nOne record describes ONE terrestrial cellular base-station site as\nreconciled from every provider the publisher consulted. It is the wire\nrecord for terrestrial mobile-network infrastructure, and it is not an\nemitter model ($RFE), a band specification ($RFB), a geodetic tracking\nstation ($GST), a satellite ground station ($SIT), or an observation.\n\nA site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both\nrequired, so every published position carries the providers it came from and\nthe rule that reconciled them; a consumer that strips attribution has to\nleave the standard to do it. Unknown values are ABSENT \u2014 never zero, never a\nplaceholder, never carried across from a neighbouring site.\n\nIdentity is ID, the publisher's own. The network addressing fields are the\nmobile network's, are assigned by its operator, and are reused worldwide;\nnone of them is a global key on its own.",
+          properties: {
+            ID: {
+              type: "string",
+              description: 'Publisher-stable identifier for this site, unique within its record set.\nRecommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".'
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "Winning provider's native site identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across providers."
+            },
+            RADIO: {
+              $ref: "#/definitions/tbsRadioClass"
+            },
+            MCC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile country code from the international mobile-subscriber identity\nnumbering plan. Zero means the source published none."
+            },
+            MNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile network code within MCC. Carried as an integer, so decimal leading\nzeros are NOT preserved: a two- versus three-digit network code is\ndistinguished by the numbering plan of MCC, and the source's own text is\nretained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished."
+            },
+            LAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means\nunpublished. A site published with a location area code does not also\ncarry a tracking area code; publishing both asserts two access\ngenerations for one cell."
+            },
+            TAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Tracking area code, used by LTE- and NR-class access. Zero means\nunpublished."
+            },
+            CELL_ID: {
+              type: "string",
+              description: "Cell identity verbatim from the source. A string because width, radix and\nleading zeros are significant and differ by access class: a 16-bit cell\nidentity, a 28-bit evolved cell identity and a 36-bit new-radio cell\nidentity are not interchangeable integers, and this field never converts\nbetween them."
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Reconciled site position in decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. Per-provider positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value."
+            },
+            LONGITUDE: {
+              type: "number"
+            },
+            RANGE_M: {
+              type: "number",
+              description: "Radius in metres of the area within which the site's observations were\ncollected \u2014 a positional-uncertainty envelope, not a transmission range,\nnot a coverage guarantee, and never converted from another unit. Zero\nmeans unpublished."
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Independent observations behind the winning report. Zero means the source\npublishes no observation count, never that the site was never observed."
+            },
+            AVERAGE_SIGNAL_DBM: {
+              type: "number",
+              description: "Mean received signal strength in dBm across those observations, as the\nsource publishes it. Carried in dBm unconverted; a consumer needing watts\nconverts at the join, explicitly. Zero means unpublished."
+            },
+            FIRST_OBSERVED: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe winning report."
+            },
+            LAST_OBSERVED: {
+              type: "string"
+            },
+            OPERATOR: {
+              type: "string",
+              description: "Network operator name verbatim as the cited source states it. A display\nname, never an identifier: consumers must not treat it as a stable key."
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Operating centre frequency in MHz, following the $RFB convention. A\nconsumer joining to $IQC, which carries hertz, converts at the join,\nexplicitly. Zero means unpublished."
+            },
+            SITE_NAME: {
+              type: "string",
+              description: "Site or structure name verbatim when the source publishes one. Never\nsynthesized from coordinates, operator, or cell identity."
+            },
+            COUNTRY_CODE: {
+              type: "string",
+              description: "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.\nDerived from MCC only when the source itself derives it."
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/TBSProvenance"
+              },
+              description: "Every provider consulted for this site, including providers that returned\nnothing. Required: a site with no named sources is not publishable."
+            },
+            CONSENSUS: {
+              $ref: "#/definitions/TBSConsensus",
+              description: "How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:\na published position always states the rule that produced it, including\nSINGLE_SOURCE."
+            }
+          },
+          required: [
+            "ID",
+            "SOURCES",
+            "CONSENSUS"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/TBS"
     },
     TDM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -225068,6 +225789,89 @@ ed25519 hardened)`,
             }
           }
         },
+        tbsRadioClass: {
+          type: "string",
+          enum: [
+            "GSM",
+            "CDMA",
+            "UMTS",
+            "LTE",
+            "NR",
+            "OTHER",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            GSM: {
+              value: 0,
+              description: "Second-generation circuit-switched cellular access."
+            },
+            CDMA: {
+              value: 1,
+              description: "Code-division multiple-access cellular access."
+            },
+            UMTS: {
+              value: 2,
+              description: "Third-generation wideband code-division cellular access."
+            },
+            LTE: {
+              value: 3,
+              description: "Fourth-generation long-term-evolution cellular access."
+            },
+            NR: {
+              value: 4,
+              description: "Fifth-generation new-radio cellular access."
+            },
+            OTHER: {
+              value: 5,
+              description: "An access technology the source names but this enum does not model. The source's own term is retained in the provenance entry, never discarded."
+            },
+            UNKNOWN: {
+              value: 6,
+              description: "The source publishes no access technology. RADIO defaults here so an unset field can never be read as GSM, which holds ordinal 0."
+            }
+          }
+        },
+        tbsMergeMethod: {
+          type: "string",
+          enum: [
+            "SINGLE_SOURCE",
+            "HIGHEST_SAMPLE_COUNT",
+            "MOST_RECENT",
+            "AUTHORITY_PRECEDENCE",
+            "CENTROID",
+            "UNSPECIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SINGLE_SOURCE: {
+              value: 0,
+              description: "Exactly one provider reported the site; nothing was reconciled."
+            },
+            HIGHEST_SAMPLE_COUNT: {
+              value: 1,
+              description: "The report backed by the largest independent observation count won."
+            },
+            MOST_RECENT: {
+              value: 2,
+              description: "The report with the most recent observation window won."
+            },
+            AUTHORITY_PRECEDENCE: {
+              value: 3,
+              description: "A declared precedence ranking over publishing authorities selected the winning report, regardless of sample count or recency."
+            },
+            CENTROID: {
+              value: 4,
+              description: "The published position is computed from the agreeing reports and belongs to no single provider."
+            },
+            UNSPECIFIED: {
+              value: 5,
+              description: "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as SINGLE_SOURCE, which holds ordinal 0."
+            }
+          }
+        },
         FilterType: {
           type: "string",
           enum: [
@@ -227029,7 +227833,8 @@ ed25519 hardened)`,
             "OPP",
             "IQC",
             "CNP",
-            "CMR"
+            "CMR",
+            "TBS"
           ]
         },
         GrantFieldStreamPolicy: {
@@ -274813,6 +275618,328 @@ turned into a number.`,
           },
           additionalProperties: false
         },
+        TBSProvenance: {
+          type: "object",
+          description: `Replayable provenance for ONE provider's report of ONE site.
+
+Every provider consulted gets its own entry, including providers that
+returned nothing, so a consumer can tell "not looked for" from "looked for
+and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+carry verbatim what that provider states about itself. The standard names
+no provider, dataset, or site.`,
+          properties: {
+            PROVIDER_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the consulted provider,\nunique within the publisher's own provider registry. Never a display\nname and never a URL.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            AUTHORITY: {
+              type: "string",
+              description: "The authority under which that provider publishes, verbatim as the\nprovider states it: a spectrum regulator, a network operator, a\ncrowd-sourced observation programme, or a research dataset. Never\ninferred by the publisher.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed site whose terms are unstated. A provider that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that provider publishes it.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display.",
+              "x-flatbuffer-type": "string"
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "This provider's own row, cell, or site identifier, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REPORTED_LATITUDE: {
+              type: "number",
+              description: "Position this provider reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the provider was consulted and reported no position.",
+              "x-flatbuffer-type": "double"
+            },
+            REPORTED_LONGITUDE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            CONTRIBUTED: {
+              type: "boolean",
+              description: "This provider's report materially contributed to the published CONSENSUS\nposition. False marks a provider that was consulted and either returned\nnothing or was outvoted; its entry is published either way.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            }
+          },
+          required: [
+            "PROVIDER_ID",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        TBSConsensus: {
+          type: "object",
+          description: "How one site's independent provider reports were reduced to the single\npublished position, and how strongly those reports agreed.",
+          properties: {
+            METHOD: {
+              $ref: "#/definitions/tbsMergeMethod",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SINGLE_SOURCE: {
+                  value: 0,
+                  description: "Exactly one provider reported the site; nothing was reconciled."
+                },
+                HIGHEST_SAMPLE_COUNT: {
+                  value: 1,
+                  description: "The report backed by the largest independent observation count won."
+                },
+                MOST_RECENT: {
+                  value: 2,
+                  description: "The report with the most recent observation window won."
+                },
+                AUTHORITY_PRECEDENCE: {
+                  value: 3,
+                  description: "A declared precedence ranking over publishing authorities selected the winning report, regardless of sample count or recency."
+                },
+                CENTROID: {
+                  value: 4,
+                  description: "The published position is computed from the agreeing reports and belongs to no single provider."
+                },
+                UNSPECIFIED: {
+                  value: 5,
+                  description: "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as SINGLE_SOURCE, which holds ordinal 0."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROVIDERS_CONSULTED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers queried for this site, including those that returned nothing.\nNever fewer than the number of SOURCES entries.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROVIDERS_AGREEING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated.",
+              "x-flatbuffer-type": "uint"
+            },
+            WINNING_PROVIDER_ID: {
+              type: "string",
+              description: "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single provider.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_SPREAD_M: {
+              type: "number",
+              description: "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1.",
+              "x-flatbuffer-type": "double"
+            },
+            CONFIDENCE: {
+              type: "number",
+              description: "The publisher's own confidence in the merged position, on [0,1]. Never a\nprovider's figure and never a probability from a model this standard does\nnot name.",
+              "x-flatbuffer-type": "double"
+            },
+            MERGED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond instant at which the merge was performed.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        TBS: {
+          type: "object",
+          description: "Terrestrial Base Station Site.\n\nOne record describes ONE terrestrial cellular base-station site as\nreconciled from every provider the publisher consulted. It is the wire\nrecord for terrestrial mobile-network infrastructure, and it is not an\nemitter model ($RFE), a band specification ($RFB), a geodetic tracking\nstation ($GST), a satellite ground station ($SIT), or an observation.\n\nA site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both\nrequired, so every published position carries the providers it came from and\nthe rule that reconciled them; a consumer that strips attribution has to\nleave the standard to do it. Unknown values are ABSENT \u2014 never zero, never a\nplaceholder, never carried across from a neighbouring site.\n\nIdentity is ID, the publisher's own. The network addressing fields are the\nmobile network's, are assigned by its operator, and are reused worldwide;\nnone of them is a global key on its own.",
+          properties: {
+            ID: {
+              type: "string",
+              description: 'Publisher-stable identifier for this site, unique within its record set.\nRecommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "Winning provider's native site identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across providers.",
+              "x-flatbuffer-type": "string"
+            },
+            RADIO: {
+              $ref: "#/definitions/tbsRadioClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GSM: {
+                  value: 0,
+                  description: "Second-generation circuit-switched cellular access."
+                },
+                CDMA: {
+                  value: 1,
+                  description: "Code-division multiple-access cellular access."
+                },
+                UMTS: {
+                  value: 2,
+                  description: "Third-generation wideband code-division cellular access."
+                },
+                LTE: {
+                  value: 3,
+                  description: "Fourth-generation long-term-evolution cellular access."
+                },
+                NR: {
+                  value: 4,
+                  description: "Fifth-generation new-radio cellular access."
+                },
+                OTHER: {
+                  value: 5,
+                  description: "An access technology the source names but this enum does not model. The source's own term is retained in the provenance entry, never discarded."
+                },
+                UNKNOWN: {
+                  value: 6,
+                  description: "The source publishes no access technology. RADIO defaults here so an unset field can never be read as GSM, which holds ordinal 0."
+                }
+              },
+              "x-flatbuffer-default": "UNKNOWN"
+            },
+            MCC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile country code from the international mobile-subscriber identity\nnumbering plan. Zero means the source published none.",
+              "x-flatbuffer-type": "uint"
+            },
+            MNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile network code within MCC. Carried as an integer, so decimal leading\nzeros are NOT preserved: a two- versus three-digit network code is\ndistinguished by the numbering plan of MCC, and the source's own text is\nretained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means\nunpublished. A site published with a location area code does not also\ncarry a tracking area code; publishing both asserts two access\ngenerations for one cell.",
+              "x-flatbuffer-type": "uint"
+            },
+            TAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Tracking area code, used by LTE- and NR-class access. Zero means\nunpublished.",
+              "x-flatbuffer-type": "uint"
+            },
+            CELL_ID: {
+              type: "string",
+              description: "Cell identity verbatim from the source. A string because width, radix and\nleading zeros are significant and differ by access class: a 16-bit cell\nidentity, a 28-bit evolved cell identity and a 36-bit new-radio cell\nidentity are not interchangeable integers, and this field never converts\nbetween them.",
+              "x-flatbuffer-type": "string"
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Reconciled site position in decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. Per-provider positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value.",
+              "x-flatbuffer-type": "double"
+            },
+            LONGITUDE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            RANGE_M: {
+              type: "number",
+              description: "Radius in metres of the area within which the site's observations were\ncollected \u2014 a positional-uncertainty envelope, not a transmission range,\nnot a coverage guarantee, and never converted from another unit. Zero\nmeans unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Independent observations behind the winning report. Zero means the source\npublishes no observation count, never that the site was never observed.",
+              "x-flatbuffer-type": "uint"
+            },
+            AVERAGE_SIGNAL_DBM: {
+              type: "number",
+              description: "Mean received signal strength in dBm across those observations, as the\nsource publishes it. Carried in dBm unconverted; a consumer needing watts\nconverts at the join, explicitly. Zero means unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_OBSERVED: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe winning report.",
+              "x-flatbuffer-type": "string"
+            },
+            LAST_OBSERVED: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            OPERATOR: {
+              type: "string",
+              description: "Network operator name verbatim as the cited source states it. A display\nname, never an identifier: consumers must not treat it as a stable key.",
+              "x-flatbuffer-type": "string"
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Operating centre frequency in MHz, following the $RFB convention. A\nconsumer joining to $IQC, which carries hertz, converts at the join,\nexplicitly. Zero means unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_NAME: {
+              type: "string",
+              description: "Site or structure name verbatim when the source publishes one. Never\nsynthesized from coordinates, operator, or cell identity.",
+              "x-flatbuffer-type": "string"
+            },
+            COUNTRY_CODE: {
+              type: "string",
+              description: "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.\nDerived from MCC only when the source itself derives it.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/TBSProvenance"
+              },
+              description: "Every provider consulted for this site, including providers that returned\nnothing. Required: a site with no named sources is not publishable.",
+              "x-flatbuffer-type": "[TBSProvenance]",
+              "x-flatbuffer-required": true
+            },
+            CONSENSUS: {
+              $ref: "#/definitions/TBSConsensus",
+              description: "How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:\na published position always states the rule that produced it, including\nSINGLE_SOURCE.",
+              "x-flatbuffer-type": "TBSConsensus",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "ID",
+            "SOURCES",
+            "CONSENSUS"
+          ],
+          additionalProperties: false
+        },
         TCF: {
           type: "object",
           description: "Telecommand Transfer Frame (CCSDS 232.0-B-3)",
@@ -281908,6 +283035,9 @@ turned into a number.`,
                 },
                 {
                   $ref: "#/definitions/CMR"
+                },
+                {
+                  $ref: "#/definitions/TBS"
                 }
               ],
               description: "The record data (union of all supported standards)",
@@ -334227,6 +335357,419 @@ ed25519 hardened)`,
       "x-flatbuffer-root-type": "OOA",
       "x-flatbuffer-file-identifier": "$OOA"
     },
+    TBS: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        tbsRadioClass: {
+          type: "string",
+          enum: [
+            "GSM",
+            "CDMA",
+            "UMTS",
+            "LTE",
+            "NR",
+            "OTHER",
+            "UNKNOWN"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            GSM: {
+              value: 0,
+              description: "Second-generation circuit-switched cellular access."
+            },
+            CDMA: {
+              value: 1,
+              description: "Code-division multiple-access cellular access."
+            },
+            UMTS: {
+              value: 2,
+              description: "Third-generation wideband code-division cellular access."
+            },
+            LTE: {
+              value: 3,
+              description: "Fourth-generation long-term-evolution cellular access."
+            },
+            NR: {
+              value: 4,
+              description: "Fifth-generation new-radio cellular access."
+            },
+            OTHER: {
+              value: 5,
+              description: "An access technology the source names but this enum does not model. The source's own term is retained in the provenance entry, never discarded."
+            },
+            UNKNOWN: {
+              value: 6,
+              description: "The source publishes no access technology. RADIO defaults here so an unset field can never be read as GSM, which holds ordinal 0."
+            }
+          }
+        },
+        tbsMergeMethod: {
+          type: "string",
+          enum: [
+            "SINGLE_SOURCE",
+            "HIGHEST_SAMPLE_COUNT",
+            "MOST_RECENT",
+            "AUTHORITY_PRECEDENCE",
+            "CENTROID",
+            "UNSPECIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            SINGLE_SOURCE: {
+              value: 0,
+              description: "Exactly one provider reported the site; nothing was reconciled."
+            },
+            HIGHEST_SAMPLE_COUNT: {
+              value: 1,
+              description: "The report backed by the largest independent observation count won."
+            },
+            MOST_RECENT: {
+              value: 2,
+              description: "The report with the most recent observation window won."
+            },
+            AUTHORITY_PRECEDENCE: {
+              value: 3,
+              description: "A declared precedence ranking over publishing authorities selected the winning report, regardless of sample count or recency."
+            },
+            CENTROID: {
+              value: 4,
+              description: "The published position is computed from the agreeing reports and belongs to no single provider."
+            },
+            UNSPECIFIED: {
+              value: 5,
+              description: "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as SINGLE_SOURCE, which holds ordinal 0."
+            }
+          }
+        },
+        TBSProvenance: {
+          type: "object",
+          description: `Replayable provenance for ONE provider's report of ONE site.
+
+Every provider consulted gets its own entry, including providers that
+returned nothing, so a consumer can tell "not looked for" from "looked for
+and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
+carry verbatim what that provider states about itself. The standard names
+no provider, dataset, or site.`,
+          properties: {
+            PROVIDER_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the consulted provider,\nunique within the publisher's own provider registry. Never a display\nname and never a URL.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            AUTHORITY: {
+              type: "string",
+              description: "The authority under which that provider publishes, verbatim as the\nprovider states it: a spectrum regulator, a network operator, a\ncrowd-sourced observation programme, or a research dataset. Never\ninferred by the publisher.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact query, filter, or request parameters used, so the same rows can\nbe recovered by repeating the fetch.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: there is no encoding for a\nredistributed site whose terms are unstated. A provider that publishes no\nterms is recorded as publishing no terms; unknown terms are never public\ndomain and never an implied grant.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that provider publishes it.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display.",
+              "x-flatbuffer-type": "string"
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use. Rides PER SOURCE because one record\nmay merge an open-terms lane beside a non-commercial cross-check, and the\nstrictest consulted lane governs any derived product.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "This provider's own row, cell, or site identifier, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REPORTED_LATITUDE: {
+              type: "number",
+              description: "Position this provider reported, in decimal degrees on WGS 84, before\nreconciliation. Retained unrounded so the merge stays auditable. Absent\nwhen the provider was consulted and reported no position.",
+              "x-flatbuffer-type": "double"
+            },
+            REPORTED_LONGITUDE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            CONTRIBUTED: {
+              type: "boolean",
+              description: "This provider's report materially contributed to the published CONSENSUS\nposition. False marks a provider that was consulted and either returned\nnothing or was outvoted; its entry is published either way.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            }
+          },
+          required: [
+            "PROVIDER_ID",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        TBSConsensus: {
+          type: "object",
+          description: "How one site's independent provider reports were reduced to the single\npublished position, and how strongly those reports agreed.",
+          properties: {
+            METHOD: {
+              $ref: "#/definitions/tbsMergeMethod",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                SINGLE_SOURCE: {
+                  value: 0,
+                  description: "Exactly one provider reported the site; nothing was reconciled."
+                },
+                HIGHEST_SAMPLE_COUNT: {
+                  value: 1,
+                  description: "The report backed by the largest independent observation count won."
+                },
+                MOST_RECENT: {
+                  value: 2,
+                  description: "The report with the most recent observation window won."
+                },
+                AUTHORITY_PRECEDENCE: {
+                  value: 3,
+                  description: "A declared precedence ranking over publishing authorities selected the winning report, regardless of sample count or recency."
+                },
+                CENTROID: {
+                  value: 4,
+                  description: "The published position is computed from the agreeing reports and belongs to no single provider."
+                },
+                UNSPECIFIED: {
+                  value: 5,
+                  description: "The publisher does not state how the reports were reduced. METHOD defaults here so an unset field can never be read as SINGLE_SOURCE, which holds ordinal 0."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROVIDERS_CONSULTED: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers queried for this site, including those that returned nothing.\nNever fewer than the number of SOURCES entries.",
+              "x-flatbuffer-type": "uint"
+            },
+            PROVIDERS_AGREEING: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Providers whose reported position fell within the publisher's agreement\nthreshold. A value of 1 means the published position rests on a single\nreport and was never independently corroborated.",
+              "x-flatbuffer-type": "uint"
+            },
+            WINNING_PROVIDER_ID: {
+              type: "string",
+              description: "PROVIDER_ID of the report the merge selected, copied verbatim from the\nmatching SOURCES entry. Absent when METHOD is CENTROID: a computed\nposition belongs to no single provider.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_SPREAD_M: {
+              type: "number",
+              description: "Greatest surface distance in metres between any two agreeing reported\npositions. Zero is meaningful only when PROVIDERS_AGREEING is 1.",
+              "x-flatbuffer-type": "double"
+            },
+            CONFIDENCE: {
+              type: "number",
+              description: "The publisher's own confidence in the merged position, on [0,1]. Never a\nprovider's figure and never a probability from a model this standard does\nnot name.",
+              "x-flatbuffer-type": "double"
+            },
+            MERGED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond instant at which the merge was performed.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        TBS: {
+          type: "object",
+          description: "Terrestrial Base Station Site.\n\nOne record describes ONE terrestrial cellular base-station site as\nreconciled from every provider the publisher consulted. It is the wire\nrecord for terrestrial mobile-network infrastructure, and it is not an\nemitter model ($RFE), a band specification ($RFB), a geodetic tracking\nstation ($GST), a satellite ground station ($SIT), or an observation.\n\nA site cannot be re-serialized unattributed. SOURCES and CONSENSUS are both\nrequired, so every published position carries the providers it came from and\nthe rule that reconciled them; a consumer that strips attribution has to\nleave the standard to do it. Unknown values are ABSENT \u2014 never zero, never a\nplaceholder, never carried across from a neighbouring site.\n\nIdentity is ID, the publisher's own. The network addressing fields are the\nmobile network's, are assigned by its operator, and are reused worldwide;\nnone of them is a global key on its own.",
+          properties: {
+            ID: {
+              type: "string",
+              description: 'Publisher-stable identifier for this site, unique within its record set.\nRecommended form: "<mcc>-<mnc>-<area-code>-<cell-id>".',
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "Winning provider's native site identifier, copied verbatim from the\nSOURCES entry named by CONSENSUS.WINNING_PROVIDER_ID. Never a substitute\nfor ID and never stable across providers.",
+              "x-flatbuffer-type": "string"
+            },
+            RADIO: {
+              $ref: "#/definitions/tbsRadioClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GSM: {
+                  value: 0,
+                  description: "Second-generation circuit-switched cellular access."
+                },
+                CDMA: {
+                  value: 1,
+                  description: "Code-division multiple-access cellular access."
+                },
+                UMTS: {
+                  value: 2,
+                  description: "Third-generation wideband code-division cellular access."
+                },
+                LTE: {
+                  value: 3,
+                  description: "Fourth-generation long-term-evolution cellular access."
+                },
+                NR: {
+                  value: 4,
+                  description: "Fifth-generation new-radio cellular access."
+                },
+                OTHER: {
+                  value: 5,
+                  description: "An access technology the source names but this enum does not model. The source's own term is retained in the provenance entry, never discarded."
+                },
+                UNKNOWN: {
+                  value: 6,
+                  description: "The source publishes no access technology. RADIO defaults here so an unset field can never be read as GSM, which holds ordinal 0."
+                }
+              },
+              "x-flatbuffer-default": "UNKNOWN"
+            },
+            MCC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile country code from the international mobile-subscriber identity\nnumbering plan. Zero means the source published none.",
+              "x-flatbuffer-type": "uint"
+            },
+            MNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Mobile network code within MCC. Carried as an integer, so decimal leading\nzeros are NOT preserved: a two- versus three-digit network code is\ndistinguished by the numbering plan of MCC, and the source's own text is\nretained verbatim in TBSProvenance.NATIVE_ID. Zero means unpublished.",
+              "x-flatbuffer-type": "uint"
+            },
+            LAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Location area code, used by GSM-, CDMA- and UMTS-class access. Zero means\nunpublished. A site published with a location area code does not also\ncarry a tracking area code; publishing both asserts two access\ngenerations for one cell.",
+              "x-flatbuffer-type": "uint"
+            },
+            TAC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Tracking area code, used by LTE- and NR-class access. Zero means\nunpublished.",
+              "x-flatbuffer-type": "uint"
+            },
+            CELL_ID: {
+              type: "string",
+              description: "Cell identity verbatim from the source. A string because width, radix and\nleading zeros are significant and differ by access class: a 16-bit cell\nidentity, a 28-bit evolved cell identity and a 36-bit new-radio cell\nidentity are not interchangeable integers, and this field never converts\nbetween them.",
+              "x-flatbuffer-type": "string"
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Reconciled site position in decimal degrees on WGS 84, produced by the\nmerge described in CONSENSUS. Per-provider positions before\nreconciliation live in SOURCES[].REPORTED_LATITUDE/REPORTED_LONGITUDE and\nare never overwritten by this value.",
+              "x-flatbuffer-type": "double"
+            },
+            LONGITUDE: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            RANGE_M: {
+              type: "number",
+              description: "Radius in metres of the area within which the site's observations were\ncollected \u2014 a positional-uncertainty envelope, not a transmission range,\nnot a coverage guarantee, and never converted from another unit. Zero\nmeans unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            SAMPLES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Independent observations behind the winning report. Zero means the source\npublishes no observation count, never that the site was never observed.",
+              "x-flatbuffer-type": "uint"
+            },
+            AVERAGE_SIGNAL_DBM: {
+              type: "number",
+              description: "Mean received signal strength in dBm across those observations, as the\nsource publishes it. Carried in dBm unconverted; a consumer needing watts\nconverts at the join, explicitly. Zero means unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            FIRST_OBSERVED: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond bounds of the observation window backing\nthe winning report.",
+              "x-flatbuffer-type": "string"
+            },
+            LAST_OBSERVED: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            OPERATOR: {
+              type: "string",
+              description: "Network operator name verbatim as the cited source states it. A display\nname, never an identifier: consumers must not treat it as a stable key.",
+              "x-flatbuffer-type": "string"
+            },
+            FREQUENCY_MHZ: {
+              type: "number",
+              description: "Operating centre frequency in MHz, following the $RFB convention. A\nconsumer joining to $IQC, which carries hertz, converts at the join,\nexplicitly. Zero means unpublished.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_NAME: {
+              type: "string",
+              description: "Site or structure name verbatim when the source publishes one. Never\nsynthesized from coordinates, operator, or cell identity.",
+              "x-flatbuffer-type": "string"
+            },
+            COUNTRY_CODE: {
+              type: "string",
+              description: "ISO 3166-1 alpha-2 country code, uppercase, as the source states it.\nDerived from MCC only when the source itself derives it.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/TBSProvenance"
+              },
+              description: "Every provider consulted for this site, including providers that returned\nnothing. Required: a site with no named sources is not publishable.",
+              "x-flatbuffer-type": "[TBSProvenance]",
+              "x-flatbuffer-required": true
+            },
+            CONSENSUS: {
+              $ref: "#/definitions/TBSConsensus",
+              description: "How the entries in SOURCES were reduced to LATITUDE/LONGITUDE. Required:\na published position always states the rule that produced it, including\nSINGLE_SOURCE.",
+              "x-flatbuffer-type": "TBSConsensus",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "ID",
+            "SOURCES",
+            "CONSENSUS"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/TBS",
+      "x-flatbuffer-root-type": "TBS",
+      "x-flatbuffer-file-identifier": "$TBS"
+    },
     TDM: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -354343,7 +355886,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../../../spacedatanetwork-stack/repos/main-packages/spacedatastandards.org/node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

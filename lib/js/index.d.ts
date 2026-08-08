@@ -183,6 +183,7 @@ export * as STV from './STV/main.js';
 export * as SUB from './SUB/main.js';
 export * as SWR from './SWR/main.js';
 export * as TAB from './TAB/main.js';
+export * as TBS from './TBS/main.js';
 export * as TCF from './TCF/main.js';
 export * as TDM from './TDM/main.js';
 export * as TIM from './TIM/main.js';

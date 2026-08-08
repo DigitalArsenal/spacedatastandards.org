@@ -67,7 +67,14 @@ describe("RecordType union ordinal freeze", () => {
   });
 
   it("accepts an append without moving anything", () => {
-    const appended = REC_SCHEMA.replace("  CNP, CMR\n}", "  CNP, CMR, ZZZ\n}");
+    // Append at the end of the union without hard-coding its tail: every new
+    // standard changes the last member, and a stale literal here would silently
+    // turn this guard into a no-op.
+    const appended = REC_SCHEMA.replace(
+      /(union RecordType\s*\{[^}]*?)(\s*)\}/s,
+      "$1, ZZZ$2}"
+    );
+    assert.notEqual(appended, REC_SCHEMA, "append fixture must actually append");
     const current = parseUnionOrdinals(appended);
     assert.equal(current.ZZZ, CONTRACT.frozen_through + 1);
     for (const [name, ordinal] of Object.entries(CONTRACT.ordinals)) {

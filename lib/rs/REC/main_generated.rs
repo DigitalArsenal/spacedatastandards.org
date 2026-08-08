@@ -203,6 +203,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 /// FlatBuffers field-level encryption support using AES-256-CTR.
@@ -337,10 +338,10 @@ pub mod flatbuffers_encryption {
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 202;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 203;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 203] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 204] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
@@ -544,6 +545,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 203] = [
   RecordType::IQC,
   RecordType::CNP,
   RecordType::CMR,
+  RecordType::TBS,
 ];
 
 /// ORDINAL FREEZE -- APPEND ONLY, FOREVER.
@@ -768,9 +770,10 @@ impl RecordType {
   pub const IQC: Self = Self(200);
   pub const CNP: Self = Self(201);
   pub const CMR: Self = Self(202);
+  pub const TBS: Self = Self(203);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 202;
+  pub const ENUM_MAX: u8 = 203;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
@@ -975,6 +978,7 @@ impl RecordType {
     Self::IQC,
     Self::CNP,
     Self::CMR,
+    Self::TBS,
   ];
   /// Returns the variant's name or "" if unknown.
   pub fn variant_name(self) -> Option<&'static str> {
@@ -1182,6 +1186,7 @@ impl RecordType {
       Self::IQC => Some("IQC"),
       Self::CNP => Some("CNP"),
       Self::CMR => Some("CMR"),
+      Self::TBS => Some("TBS"),
       _ => None,
     }
   }
@@ -1445,6 +1450,7 @@ pub enum RecordTypeT {
   IQC(alloc::boxed::Box<IQCT>),
   CNP(alloc::boxed::Box<CNPT>),
   CMR(alloc::boxed::Box<CMRT>),
+  TBS(alloc::boxed::Box<TBST>),
 }
 impl Default for RecordTypeT {
   fn default() -> Self {
@@ -1657,6 +1663,7 @@ impl RecordTypeT {
       Self::IQC(_) => RecordType::IQC,
       Self::CNP(_) => RecordType::CNP,
       Self::CMR(_) => RecordType::CMR,
+      Self::TBS(_) => RecordType::TBS,
     }
   }
   pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(&self, fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>) -> Option<::flatbuffers::WIPOffset<::flatbuffers::UnionWIPOffset>> {
@@ -1864,6 +1871,7 @@ impl RecordTypeT {
       Self::IQC(v) => Some(v.pack(fbb).as_union_value()),
       Self::CNP(v) => Some(v.pack(fbb).as_union_value()),
       Self::CMR(v) => Some(v.pack(fbb).as_union_value()),
+      Self::TBS(v) => Some(v.pack(fbb).as_union_value()),
     }
   }
   /// If the union variant matches, return the owned ACLT, setting the union to NONE.
@@ -6108,6 +6116,27 @@ impl RecordTypeT {
   pub fn as_cmr_mut(&mut self) -> Option<&mut CMRT> {
     if let Self::CMR(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned TBST, setting the union to NONE.
+  pub fn take_tbs(&mut self) -> Option<alloc::boxed::Box<TBST>> {
+    if let Self::TBS(_) = self {
+      let v = ::core::mem::replace(self, Self::NONE);
+      if let Self::TBS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the TBST.
+  pub fn as_tbs(&self) -> Option<&TBST> {
+    if let Self::TBS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the TBST.
+  pub fn as_tbs_mut(&mut self) -> Option<&mut TBST> {
+    if let Self::TBS(v) = self { Some(v.as_mut()) } else { None }
+  }
 }
 pub enum RecordOffset {}
 #[derive(Copy, Clone, PartialEq)]
@@ -7157,6 +7186,11 @@ impl<'a> Record<'a> {
       RecordType::CMR => RecordTypeT::CMR(alloc::boxed::Box::new(
         self.value_as_cmr()
             .expect("Invalid union table, expected `RecordType::CMR`.")
+            .unpack()
+      )),
+      RecordType::TBS => RecordTypeT::TBS(alloc::boxed::Box::new(
+        self.value_as_tbs()
+            .expect("Invalid union table, expected `RecordType::TBS`.")
             .unpack()
       )),
       _ => RecordTypeT::NONE,
@@ -10223,6 +10257,21 @@ impl<'a> Record<'a> {
     }
   }
 
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_tbs(&self) -> Option<TBS<'a>> {
+    if self.value_type() == RecordType::TBS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { TBS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
 }
 
 impl ::flatbuffers::Verifiable for Record<'_> {
@@ -10435,6 +10484,7 @@ impl ::flatbuffers::Verifiable for Record<'_> {
           RecordType::IQC => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<IQC>>("RecordType::IQC", pos),
           RecordType::CNP => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CNP>>("RecordType::CNP", pos),
           RecordType::CMR => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<CMR>>("RecordType::CMR", pos),
+          RecordType::TBS => v.verify_union_variant::<::flatbuffers::ForwardsUOffset<TBS>>("RecordType::TBS", pos),
           _ => Ok(()),
         }
      })?
@@ -11905,6 +11955,13 @@ impl ::core::fmt::Debug for Record<'_> {
         },
         RecordType::CMR => {
           if let Some(x) = self.value_as_cmr() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::TBS => {
+          if let Some(x) = self.value_as_tbs() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

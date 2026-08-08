@@ -28,7 +28,7 @@ const CATEGORY_MAP = {
   // Tracking
   'TDM': 'Tracking', 'RFM': 'Tracking', 'EOO': 'Tracking', 'TRK': 'Tracking',
   'DOA': 'Tracking', 'RFO': 'Tracking', 'RFB': 'Tracking', 'RFE': 'Tracking',
-  'IQC': 'Communications', 'CNP': 'Communications',
+  'IQC': 'Communications', 'CNP': 'Communications', 'TBS': 'Communications',
 
   // Telemetry
   'XTC': 'Telemetry', 'TIM': 'Telemetry', 'TME': 'Telemetry', 'TMF': 'Telemetry',
