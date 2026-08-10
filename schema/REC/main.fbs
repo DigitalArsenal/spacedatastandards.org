@@ -22,6 +22,7 @@ include "../BSP/main.fbs";
 include "../BUS/main.fbs";
 include "../CAQ/main.fbs";
 include "../CAT/main.fbs";
+include "../CCT/main.fbs";
 include "../CDM/main.fbs";
 include "../CES/main.fbs";
 include "../CFP/main.fbs";
@@ -270,7 +271,7 @@ union RecordType {
   FSO, GST, MDP, MDS,
   PNL, SHC, CES, QEM,
   SBM, PMM, OPP, IQC,
-  CNP, CMR, TBS
+  CNP, CMR, TBS, CCT
 }  // Union of all record types
 
 /// Individual record wrapper for any standard type
