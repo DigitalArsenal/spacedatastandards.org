@@ -1,6 +1,8 @@
 // Hash: 69ad94651a445542e7b97ecaa4b6cf01cf51330fd6c13cd70ffd4b061555051f
 // Version: 1.151.2
 // -----------------------------------END_HEADER
+include "../CCT/main.fbs";
+
 /// Application Package Manifest
 ///
 /// An app is a launchable collection of WASM modules, the SDS data types it
@@ -308,6 +310,19 @@ table APP {
   /// with one PAGE-capable module). Defaults to NODE to preserve the prior
   /// node-only assumption of manifests written before this field existed.
   RUNTIME_CLASS:appRuntimeTarget = NODE;
+  /// The one ratified $CCT category this app is shelved under, using the same
+  /// vocabulary and the same semantics as PLG.PRIMARY_CATEGORY, so a storefront
+  /// or library shelf holds apps and modules together without translating
+  /// between two classification schemes. RUNTIME_CLASS says WHERE an app runs;
+  /// PRIMARY_CATEGORY says WHAT IT DOES. They are independent: a NODE-class app
+  /// and a PAGE-class app can share a category.
+  /// UNSPECIFIED means the publisher did not classify the app; a consumer
+  /// renders it ungrouped and never infers a class.
+  PRIMARY_CATEGORY:capabilityClass = UNSPECIFIED;
+  /// Every ratified $CCT category this app belongs to, for browse, filter and
+  /// per-category counting. An app MAY carry several. If nonempty it MUST
+  /// include PRIMARY_CATEGORY. Codes MUST NOT repeat.
+  CATEGORIES:[capabilityClass];
 }
 
 root_type APP;

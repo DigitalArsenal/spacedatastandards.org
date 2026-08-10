@@ -2,6 +2,7 @@
 // Version: 1.0.15
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
+include "../CCT/main.fbs";
 
 /// Plugin type category
 enum pluginCategory : byte {
@@ -504,6 +505,38 @@ table PLG {
   FLOW_TRIGGERS: [PLGFlowTrigger];
   /// Bindings from triggers to the node + input port they deliver to.
   FLOW_TRIGGER_BINDINGS: [PLGFlowTriggerBinding];
+
+  /// The one ratified $CCT category this module is shelved under. This is the
+  /// category a storefront capsule, a library shelf and a breadcrumb show when
+  /// exactly one must be chosen. UNSPECIFIED means the publisher did not
+  /// classify the module; a consumer renders it ungrouped and never guesses.
+  ///
+  /// This supersedes PLUGIN_TYPE for all storefront, library and search
+  /// surfaces. PLUGIN_TYPE remains on the wire and is not removed, but its
+  /// `pluginCategory` vocabulary mixes capability families with node-internal
+  /// plumbing, carries a legacy vendor-derived member, holds a real family at
+  /// ordinal 0, and admits only one value. Canonical migration, applied by a
+  /// publisher rewriting an old manifest:
+  ///   Sensor->SENSORS_AND_COVERAGE, Propagator->PROPAGATION,
+  ///   Renderer->VISUALIZATION_AND_RENDERING,
+  ///   Analysis->MISSION_DESIGN_AND_ANALYSIS,
+  ///   DataSource->DATA_SOURCES_AND_INGEST, EW->ELECTRONIC_WARFARE,
+  ///   Comms->RF_AND_COMMUNICATIONS, Physics->SPACE_ENVIRONMENT,
+  ///   Shader->VISUALIZATION_AND_RENDERING, Parser->DATA_SOURCES_AND_INGEST,
+  ///   Validator->DATA_VALIDATION_AND_QUALITY, Interpolator->PROPAGATION,
+  ///   Exporter->DATA_SOURCES_AND_INGEST, Foundation->FOUNDATION_AND_MATH,
+  ///   Infrastructure->NODE_INFRASTRUCTURE, Licensing->COMMERCE_AND_LICENSING,
+  ///   Storefront->COMMERCE_AND_LICENSING, Publisher->NODE_INFRASTRUCTURE,
+  ///   Basilisk->PROPAGATION, Maneuver->MANEUVER_PLANNING,
+  ///   Flow->FLOW_AND_COMPOSITION, Unspecified->UNSPECIFIED.
+  /// The mapping is one-way: PRIMARY_CATEGORY is never back-derived into
+  /// PLUGIN_TYPE.
+  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;
+  /// Every ratified $CCT category this module belongs to, for browse, filter
+  /// and per-category counting. A module MAY carry several. If nonempty it
+  /// MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat. An empty list with
+  /// a set PRIMARY_CATEGORY means the module belongs to that one category.
+  CATEGORIES: [capabilityClass];
 }
 
 root_type PLG;
